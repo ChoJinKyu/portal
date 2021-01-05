@@ -168,7 +168,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Buyer" labelFor="Buyer"  />
-                            <Input />
+                            <Input id="inputBuyer" valueHelpRequest="onPressManagerAdd" showValueHelp="true"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S3" />
                             </layoutData>
@@ -212,7 +212,11 @@
                         
                         <VBox>
                             <Label text="Status"  />
-                            <ComboBox placeholder="1개 선택됨" width="100%" />
+                            <MultiComboBox id="multiStatus" placeholder="1개 선택됨" width="100%" selectionChange="multiSelection" 
+                                            items="{    path: 'BBB>/status'	}" >
+                                
+                                <core:Item key="{BBB>key}" text="{BBB>text}" />
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -240,30 +244,285 @@
         <f:content>
             
 
-            <VBox>
-             <!-- <ScrollContainer id="scrollContainer" vertical="true" height="500px" width="100%" class="sapUiContentPadding" > -->
-                <!-- <Panel height="50%">  visibleRowCount="30"  minAutoRowCount  firstVisibleRowChanged="firstVisibleRowChanged"
-                        visibleRowCountMode="Auto"-->
-                    
-                    <!-- <smartTable:SmartTable id="smartListTable" entitySet="LineItemsSet"
-                        smartFilterId="smartFilterBar" tableType="ResponsiveTable"
-                        useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="false"
-                        useTablePersonalisation="true" header="Line Items" showRowCount="true"
-                        persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true"
-                        demandPopin="true" class="sapUiResponsiveContentPadding"> -->
-                        <Table id="ListTable" mode="MultiSelect" itemPress="ListTableItemPress" width="auto" class="sapFDynamicPageAlignContent" >
+            <!-- <VBox> -->
+            <!-- <smartTable:SmartTable id="stable1" tableBindingPath="{main>/list}" entitySet="{main>/list}"
+                tableType="Table"
+                app:p13nDialogSettings="{group:{visible:false}}"
+                useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="false"
+                useTablePersonalisation="true" showTablePersonalisation="false" header="Negotiation Workbench List" showRowCount="true"
+                persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true"
+                demandPopin="true" class="sapUiResponsiveContentPadding"> -->
+                
+                <t:Table id="table1"
+				rows="{main>/list}"
+				selectionMode="MultiToggle"
+				visibleRowCount="14"
+                cellClick="tableCellClick"
+                showColumnVisibilityMenu="true"
+                threshold="10"
+                enableColumnFreeze="true"
+                rowSelectionChange="rowSelection"
+				ariaLabelledBy="title">
+				<t:extension>
+					<OverflowToolbar>
+						<Title text="Negotiation Workbench List"/>
+						<ToolbarSpacer/>
+                        <Button text="Ariba" type="Transparent" enabled="true"  />
+                        <Button id="mainTableButtonAllOpen" text="Create" type="Transparent" press=".onMainTableCreate" enabled="true"  />
+                        <Button
+                            icon="sap-icon://sort" type="Transparent"
+                            tooltip="Sort"
+                            press="getSelectedIndices"/>
+                        <Button
+                            icon="sap-icon://filter" type="Transparent"
+                            tooltip="Filter"
+                            press="getSelectedIndices"/>
+                        <Button
+                            icon="sap-icon://settings" type="Transparent"
+                            tooltip="setting"
+                            press="getSelectedIndices"/>
+					</OverflowToolbar>
+				</t:extension>
+
+				<t:columns>
+					<t:Column width="10rem">
+						<Label text="Negotiation No" design="Bold"/>
+						<t:template>
+							<Text text="{c1}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="4rem">
+						<Label text="Rev." design="Bold"/>
+						<t:template>
+							<Text text="{c2}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="5rem">
+						<Label text="Status" design="Bold"/>
+						<t:template>
+							<Text text="{c3}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="7rem">
+						<Label text="Award Status" design="Bold" />
+						<t:template>
+							<Text text="{c4}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="6rem" hAlign="End">
+						<Label text="회신횟수" design="Bold"/>
+						<t:template>
+							<Text text="{c5}" wrapping="false"  />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="6rem" hAlign="End">
+						<Label text="협력사수" design="Bold"/>
+						<t:template>
+							<Text text="{c6}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="7rem">
+						<Label text="Participation" design="Bold"/>
+						<t:template>
+							<Text text="{c7}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="6rem" hAlign="Center">
+						<Label text="잔여시간" design="Bold"/>
+						<t:template>
+							<Text text="{c8}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="18rem" hAlign="Center">
+						<Label text="제목" design="Bold" />
+						<t:template>
+							<Text text="{c9}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="5rem" hAlign="End">
+						<Label text="품목수" design="Bold"/>
+						<t:template>
+							<Text text="{c10}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="10rem">
+						<Label text="Negotiation 유형"  design="Bold"/>
+						<t:template>
+							<Text text="{c11}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="8rem" hAlign="Center">
+						<Label text="Quote Style" design="Bold"/>
+						<t:template>
+							<Text text="{c12}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="8rem" hAlign="Center">
+						<Label text="Bid Open Status" design="Bold"/>
+						<t:template>
+							<Text text="{c13}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="12rem" hAlign="Center">
+						<Label text="Outcome" design="Bold"/>
+						<t:template>
+							<Text text="{c14}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="10rem">
+						<Label text="Req Submission No" design="Bold"/>
+						<t:template>
+							<Text text="{c15}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="10rem">
+						<Label text="Submission Status" design="Bold"/>
+						<t:template>
+							<Text text="{c16}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="8rem" hAlign="Center">
+						<Label text="Req Reapproval" design="Bold"/>
+						<t:template>
+							<Text text="{c17}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="10rem">
+						<Label text="Part No" design="Bold"/>
+						<t:template>
+							<Text text="{c18}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="10rem">
+						<Label text="Description" design="Bold"/>
+						<t:template>
+							<Text text="{c19}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="8rem" hAlign="Center">
+						<Label text="요청자" design="Bold"/>
+						<t:template>
+							<Text text="{c20}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="10rem" hAlign="Center">
+						<Label text="요청 부서" design="Bold"/>
+						<t:template>
+							<Text text="{c21}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="12rem" hAlign="Center">
+						<Label text="Award 유형" design="Bold"/>
+						<t:template>
+							<Text text="{c22}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="구매담당자" design="Bold" />
+						<t:template>
+							<Text text="{c23}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="구매팀" design="Bold"/>
+						<t:template>
+							<Text text="{c24}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Open Date" design="Bold"/>
+						<t:template>
+							<Text text="{c25}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Close Date" design="Bold"/>
+						<t:template>
+							<Text text="{c26}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Extention Period" design="Bold"/>
+						<t:template>
+							<Text text="{c27}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Extention Times" design="Bold" />
+						<t:template>
+							<Text text="{c28}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Actual Extension Times" design="Bold"/>
+						<t:template>
+							<Text text="{c29}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Requisition Flag" design="Bold"/>
+						<t:template>
+							<Text text="{c30}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Price Submission No" design="Bold"/>
+						<t:template>
+							<Text text="{c31}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Price Submission Status" design="Bold"/>
+						<t:template>
+							<Text text="{c32}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="생성 날짜" design="Bold"/>
+						<t:template>
+							<Text text="{c33}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+                    <t:Column width="14rem" hAlign="Center">
+						<Label text="Interface Source" design="Bold"/>
+						<t:template>
+							<Text text="{c34}" wrapping="false" />
+						</t:template> 
+					</t:Column>
+					
+				</t:columns>
+			</t:Table>
+            <!-- </smartTable:SmartTable> -->
+                <!-- <t:table> -->
+
+
+
+                 <!-- <ScrollContainer vertical="true" height="400px"> -->
+                        <!-- <Table id="ListTable" mode="MultiSelect" itemPress="ListTableItemPress" width="auto" class="sapFDynamicPageAlignContent " >
                             <headerToolbar>
-                                <OverflowToolbar>
+                                <OverflowToolbar asyncMode="true">   
                                     <Title id="title" text="Negotiation Workbench List (2)" level="H2"/> 
                                     <ToolbarSpacer/>
+                                    <Button text="Ariba" type="Transparent" enabled="true"  />
                                     <Button id="mainTableButtonAllOpen" text="Create" type="Transparent" press=".onMainTableCreate" enabled="true"  />
-                                    
+                                    <Button
+                                        icon="sap-icon://sort"
+                                        tooltip="Sort"
+                                        press="getSelectedIndices"/>
+                                    <Button
+                                        icon="sap-icon://filter"
+                                        tooltip="Sort"
+                                        press="getSelectedIndices"/>
+                                    <Button
+                                        icon="sap-icon://settings"
+                                        tooltip="Sort"
+                                        press="getSelectedIndices"/>
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </headerToolbar>
                             <columns>
-                                <Column  width="100px" hAlign="Begin" >
-                                    <Text text="Negotiation No"  />
+                                <Column  width="6rem" hAlign="Begin">
+                                    <Text text="Negotiation No" />
                                 </Column>
                                 <Column  width="4rem" hAlign="Begin">
                                     <Text text="Rev." />
@@ -316,98 +575,11 @@
                                 
                             </columns>
                             <items   type="Active">
-                                <!-- <ColumnListItem  type="Active" >
-                                    <cells>
-                                        <Text
-                                            text="2426536-1" />
-                                    </cells>
-                                    <cells>
-                                        <Text
-                                            text="1" />
-                                    </cells>
-                                </ColumnListItem> -->
                             </items>
-                        </Table>
-                    <!-- </smartTable:SmartTable> -->
-                
-                    <!-- <t:TreeTable 
-                        id="treeTable"
-                        filter="treetablefilter"
-                        sort="sort"
-                        toggleOpenState="toggleOpenState"
-                        visibleRowCountMode="Auto"
-                        enableSelectAll="false"
-                        minAutoRowCount="16"
-                        onAfterRendering="onAfterRendering"
-                        enableColumnReordering="false"
-                        
-                        class="sapFDynamicPageAlignContent" 
-                        rowSelectionChange="treeTableSelection"
-                        cellClick="treeTableCellClick"
-                        selectionMode="{= ${sm>/screen} === 'M' ? 'MultiToggle' : 'None'}"
-                        rows="{
-                            path : '/MICategoryHierarchyStructureView',
-                            parameters : {
-                                countMode: 'Inline',
-                                treeAnnotationProperties : {
-                                    hierarchyLevelFor : 'hierarchy_level',
-                                    hierarchyNodeFor : 'node_id',
-                                    hierarchyParentNodeFor : 'parent_node_id',
-                                    hierarchyDrillStateFor : 'drillstate'
-                                }
-                            }
-                        }">
-                        <t:extension>
-                            <OverflowToolbar>
-                                <Title id="title" text="Category" level="H2"/> 
-                                <ToolbarSpacer/>
-                                <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                                <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                                <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
-                                <Button id="mainTableCreate1Button" text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press=".onMainTableCreate1ButtonPress" enabled="{= ${master>/indices} === 1 ? ${master>/level} === 0 ? ${sm>/screen} === 'M' ? true : false : false : false}" />
-                                <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/>
-                                <ToolbarSeparator/>
-                            </OverflowToolbar>
-                        </t:extension>
-                        
-                        <t:columns>
-                            <t:Column label="{I18N>/CATEGORY_CODE}">    
-                                <t:template>
-                                    <Text text="{category_code}" wrapping="false" />
-                                </t:template>
-                            </t:Column>
-                            <t:Column label="{I18N>/CATEGORY_NAME}">    
-                                <t:template>
-                                    <Text text="{category_name}" wrapping="false" />
-                                </t:template>
-                            </t:Column>
-                            <t:Column label="{I18N>/USE_FLAG}">    
-                                <t:template>
-                                    <Text text="{= ${use_flag} === true ? 'Yes' : 'No'}"/>
-                                </t:template>
-                            </t:Column>
-                            <t:Column label="{I18N>/WRITER}">    
-                                <t:template>
-                                    <Text text="{create_user_id}" wrapping="false" />
-                                </t:template>
-                            </t:Column>
-                            <t:Column label="{I18N>/WRITE_DATE}">    
-                                <t:template>
-                                    <Text text="{path: 'system_create_dtm',
-                                    type: 'sap.ui.model.type.Date'}" wrapping="false" />
-                                </t:template>
-                            </t:Column>
-
-                            <t:Column label="" width="2rem" >
-                                <t:template>
-                                    <ObjectStatus
-                                        icon="sap-icon://feeder-arrow"   />
-                                </t:template>
-                            </t:Column>
-                        </t:columns>
-                    </t:TreeTable> -->
-                <!-- </ScrollContainer> -->
-            </VBox>
+                        </Table> -->
+                        <!-- </ScrollContainer> -->
+                    
+            <!-- </VBox> -->
             
             
         </f:content>

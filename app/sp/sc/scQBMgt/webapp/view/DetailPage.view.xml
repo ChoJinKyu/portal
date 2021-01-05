@@ -8,6 +8,8 @@
     xmlns:rte="sap.ui.richtexteditor"
     xmlns:co="sap.suite.ui.commons"
     xmlns:si="sap.suite.ui.commons.statusindicator"
+    xmlns:u="sap.ui.unified"
+    xmlns:t="sap.ui.table"
 	height="100%">
     <!-- <Page showNavButton="true" navButtonPress=".onNavBack"  title="견적계획"> -->
 	<uxap:ObjectPageLayout id="page"
@@ -176,103 +178,66 @@
                             <form:SimpleForm id="formHeader3" editable="true"  layout="ColumnLayout"
                                             columnsM="1"
                                             columnsL="1"
-                                            columnsXL="2" >
-
-                                <form:content>
-                                    <HBox>
-                                        <Button text="111" />
-                                    </HBox>
-
-                                    <Label  text="Bid Style" 
-                                            design="Bold" 
-                                            class="sapMLabelNoText"/>
-                                    <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
-                                        <RadioButton id="RB1-1" text="Round Bidding(Sealed)" />
-                                        <RadioButton id="RB1-2" text="Reserve Auction(Open)" />
-                                    </RadioButtonGroup>
-                                    <Label  text="Incoterms" 
-                                            design="Bold" 
-                                            class="sapMLabelNoText"/>
-                                    <ComboBox />
-                                </form:content>          
+                                            columnsXL="3" >
+                                <Label  text="Bid Style" 
+                                        design="Bold" 
+                                        class="sapMLabelNoText"/>
+                                <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
+                                    <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
+                                    <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
+                                </RadioButtonGroup>
+                                <Label  text="Incoterms" 
+                                        design="Bold" 
+                                        class="sapMLabelNoText"/>
+                                <ComboBox />
                             </form:SimpleForm>
                             
                             <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
                                                 adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                                 <form:content >
-                                    <VBox >
+                                    
+
+                                    <VBox width="50%" >
                                         <Label  text="Period" 
                                                 required="true"
                                                 class="sapMLabelNoText"/> 
-                                        <CheckBox />  
-                                        <layoutData>
-                                            <layout:GridData span="XL1 L1 M1 S1" />
-                                        </layoutData> 
-                                    </VBox>
-                                    <VBox>
-                                        <Label text="Immediately" class="sapMLabelNoText"/>   
-                                        <DateRangeSelection
-                                            placeholder="YYYY/MM/DD ~ YYYY/MM/DD"
-                                            change="handleChange"
-                                            class="sapUiSmallMarginBottom"/> 
-                                        <layoutData>
+
+                                        <HBox >
+                                            <CheckBox text="Immediately"/> 
+                                            <ToolbarSpacer width="1rem"/> 
+                                            <HBox id="hboxDateRanges">
+                                                <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
+                                                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                                <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
+                                            </HBox>
+                                        </HBox>
+                                        <!-- <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData> 
+                                        </layoutData>  -->
                                     </VBox>
-                                    <HBox >
-                                        <VBox class="sapUiTinyMarginBeginEnd">
-                                        <Label  text="Max Round Count" 
-                                            required="true"
-                                            class="sapMLabelNoText "/> 
-                                        <Input value="3"/>
                                         
-                                            <!-- <layoutData>
-                                                <layout:GridData span="XL1 L1 M1 S1" />
-                                            </layoutData>  -->
-                                        </VBox>
-                                        <VBox justifyContent="Center" alignContent="Center" alignItems="Center" class="">
-                                            <Label  text="" 
-                                            class="sapMLabelNoText"/> 
-                                            <CheckBox class="sapUiMediumMarginBegin" />
-                                        </VBox>
-                                        <VBox >
-                                            <Label  text="" 
-                                            class="sapMLabelNoText"/> 
-                                            <Text text="Auto Round"/>   
-                                        </VBox>
-                                        <VBox class="sapUiTinyMarginBeginEnd" >
-                                            <Label  text="" 
-                                            class="sapMLabelNoText"/> 
-                                            <Input value="5" />
-                                        </VBox>
-                                        <VBox >
-                                            <Label  text="" 
-                                            class="sapMLabelNoText"/> 
-                                            <Text text="Minute"/>
-                                        </VBox>
+                                    <HBox >
+                                        <!-- <VBox class="sapUiTinyMarginBeginEnd"> -->
+                                            <Label  text="Extension Period" labelFor="inputEP" class="sapMLabelNoText "/> 
 
+                                            <Input id="inputEP" value="" type="Number"/>
+                                            <Label  text="Hr" />   
 
-                                        <layoutData>
+                                            <ToolbarSpacer width="1rem"/>
+
+                                            <Label  text="Extension Count" labelFor="inputEC" class="sapMLabelNoText "/> 
+
+                                            <Input id="inputEC" value="" type="Number"/>
+                                            <Label  text="Times" />   
+
+                                        <!-- <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S4" />
-                                        </layoutData> 
+                                        </layoutData>  -->
                                     </HBox>
 
-                                    <VBox>
-                                        <Label  text="Previous Round" 
-                                            class="sapMLabelNoText"/>
-                                        <RadioButtonGroup id="rbg6" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom" >
-                                                <RadioButton id="RB6-1" text="Yes" />
-                                                <RadioButton id="RB6-2" text="No" />
-                                            </RadioButtonGroup>
-                                        <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData> 
-                                    </VBox>
-                                    
-                                    
+                                   
                                 </form:content>
                             </form:SimpleForm>
-
 
                             <!-- <layout:Splitter class="sapUiSmallMarginBegin sapUiTinyMarginTop">
                                 <layout:layoutData>
@@ -284,7 +249,11 @@
                                             <layout:SplitterLayoutData size="auto" resizable="false"/>
                                         </layoutData>
                                         <HBox>
-                                            <Label width="" text="Bid Style" class="sapMLabelNoText"/>
+                                            <Label width="" text="Bid Style" labelFor="rbg1" class="sapMLabelNoText">
+                                                <layoutData>
+                                                    <layout:GridData span="L1 M1 S1" />
+                                                </layoutData>
+                                            </Label>
                                             <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
                                                 <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
                                                 <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
@@ -292,11 +261,11 @@
                                         </HBox>
 
                                         <HBox>
-                                            <Label  text="Period" 
+                                            <Label  text="Period" labelFor="hboxDateRanges"
                                                     required="true"
                                                     class="sapMLabelNoText"/> 
                                             <CheckBox text="Immediately"/>  
-                                            <HBox>
+                                            <HBox id="hboxDateRanges">
                                                 <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
                                                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                                                 <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
@@ -330,58 +299,18 @@
 
                             </layout:Splitter> -->
 
-                            <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
-                                 labelSpanL="2" labelSpanM="2" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                                <form:content>
-                                    <HBox >
-                                        <!-- <Label width="" text="Bid Style" class="sapMLabelNoText"/>
-                                        <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
-                                            <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
-                                            <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
-                                        </RadioButtonGroup> -->
-                                    </HBox>
-
-                                    <!-- <HBox>
-                                        <Label  text="Incoterms" />
-                                        <ComboBox width="100%"/>
-                                    </HBox> -->
-
-                                    <!-- <HBox >
-                                        <Label  text="Period" 
-                                                required="true"
-                                                class="sapMLabelNoText"/> 
-                                        <CheckBox text="Immediately"/>  
-                                        <HBox>
-                                            <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
-                                            <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                            <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
-                                        </HBox>
-                                    </HBox> -->
-
-                                    <!-- <HBox>
-                                        <Label  text="Extension Period" 
-                                                class="sapMLabelNoText"/> 
-                                        <Input />   
-                                        <Text text="Hr" />
-
-                                         <Label  text="Extension Count" 
-                                                class="sapMLabelNoText"/> 
-                                        <Input />   
-                                        <Text text="times" />
-                                    </HBox> -->
-                                </form:content>
-                            </form:SimpleForm>
+                            
              
                             <VBox class="sapUiSmallMarginBegin">
                                 <Label  text="Note To Supplier" class="sapMLabelNoText"/>
-                                <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>
+                                <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                             </VBox>
 
                             <Table id="tableAttachments" 
                                 sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
 								class="sapUiSmallMarginBegin sapFDynamicPageAlignContent" 
-								mode="None"
+								mode="None" noDataText="파일 없음"
 								width="auto">
                                 <headerToolbar>
                                     <OverflowToolbar>
@@ -390,9 +319,7 @@
                                         
                                         <Button  text="Load Attached file From Requisition" type="Transparent" press=".onMidTableAddButtonPress"  />
                                         <Button  text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
-                                        <!-- <ToolbarSeparator/>
-                                        <SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" visible="false" enabled="false" />
-                                        <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" enabled="false" visible="false"/> -->
+                                       
                                     </OverflowToolbar>
                                 </headerToolbar>
                                 <columns>
@@ -445,60 +372,13 @@
 						    </Table>
 
                         </Panel>
-                        
-                        <!-- <layout:Splitter>
-                            <form:SimpleForm id="formHeader3" editable="true"  layout="ColumnLayout"
-                                            columnsM="1"
-                                            columnsL="1"
-                                            columnsXL="3" >
-                                <Label  text="Bid Style" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
-                                    <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
-                                    <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
-                                    <layoutData>
-                                        <layout:SplitterLayoutData size="50%" resizable="false" />
-                                    </layoutData>
-                                </RadioButtonGroup>
-                                <Label  text="Incoterms" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                        
-                                <ComboBox ><layoutData>
-                                    <layout:SplitterLayoutData size="50%" resizable="false" />
-                                </layoutData> </ComboBox>
-                                
-                                
-                            </form:SimpleForm> -->
-                            
-
-
-
-
-                                <!-- <Text text="Content 1">
-                                    <layoutData>
-                                        <layout:SplitterLayoutData size="50%" resizable="false" />
-                                    </layoutData>
-                                </Text>
-                                <Text text="Content 2">
-                                    <layoutData>
-                                        <layout:SplitterLayoutData size="auto" />
-                                    </layoutData>
-                                </Text> -->
-                            <!-- </layout:Splitter> -->
-                        
-                        <!-- </VBox> -->
-                        
+                       
 					</uxap:ObjectPageSubSection>
-                    <!-- <uxap:ObjectPageSubSection>
-                    
-                    </uxap:ObjectPageSubSection> -->
-                    
+                    <!-- <uxap:ObjectPageSubSection></uxap:ObjectPageSubSection> -->
 				</uxap:subSections>
-                
 			</uxap:ObjectPageSection>
-
+            <!-- Header End -->
+            <!-- Control Start -->
             <uxap:ObjectPageSection titleUppercase="false" title="Control" visible="true">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -515,10 +395,13 @@
                             <Input /> 
                             <Label  text="Partial Response" 
                                     class="sapMLabelNoText"/>
-                            <RadioButtonGroup id="rbg2" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
-                                <RadioButton id="RB2-1" text="Yes" />
-                                <RadioButton id="RB2-2" text="No" />
-                            </RadioButtonGroup>
+                           <SegmentedButton id="SegmentButtonUsed"  selectedKey="true"
+                                                class="sapUiSmallMarginEnd"           >
+                                <items>
+                                    <SegmentedButtonItem key="true" text="Yes"/>
+                                    <SegmentedButtonItem key="false" text="No" />
+                                </items>
+                            </SegmentedButton>    
                              
 						</form:SimpleForm>
                         </Panel>
@@ -530,182 +413,271 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <Panel id="panel_Content" expandable="true" expanded="true" headerText="Line Content">
-                             <Table 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								class="sapFDynamicPageAlignContent" 
-								mode="MultiSelect"
-								width="auto">
-                                <headerToolbar>
+                            <t:Table id="table1"
+                                rows="{list>/list}"
+                                selectionMode="MultiToggle"
+                                ariaLabelledBy="title">
+                                <t:extension>
                                     <OverflowToolbar>
-                                        <!-- <Title text="Attachments (2)" level="H2"/> -->
-                                        <Button  text="Add Supplier in bulk" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                        <Button  text="일괄 Supplier 추가" type="Transparent" press=".onMidTableAddButtonPress"  />
                                         <Button  text="Exclude Supplier From Vender Pool" type="Transparent" press=".onMidTableDeleteButtonPress" />
                                         <ToolbarSpacer/>
                                         
+                                        <Button  text="Vendor Pool Change" type="Transparent" press=".onMidTableAddButtonPress"  />
                                         <Button  text="Simple Change" type="Transparent" press=".onMidTableAddButtonPress"  />
                                         <Button  text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
                                         <Button  text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
-                                        <!-- <ToolbarSeparator/>
-                                        <SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" visible="false" enabled="false" />
-                                        <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" enabled="false" visible="false"/> -->
+
+
+                                        <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
+                                            buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
+                                        
+                                        <MenuButton id="button_Export" buttonMode="Split" useDefaultActionOnly="true" type="Default"
+                                                    icon="sap-icon://excel-attachment" defaultAction=".onExport">
+                                            <menu>
+                                                <!-- <Menu itemSelected="onMenuAction">
+                                                    <MenuItem text="basic" icon="sap-icon://chalkboard">
+                                                        <items>
+                                                            <MenuItem text="add" icon="sap-icon://add" />
+                                                            <MenuItem text="subtract" icon="sap-icon://less" />
+                                                            <MenuItem text="multiply" icon="sap-icon://decline" />
+                                                        </items>
+                                                    </MenuItem>
+                                                    <MenuItem text="complex" icon="sap-icon://display">
+                                                        <items>
+                                                            <MenuItem text="square" icon="sap-icon://status-completed" />
+                                                        </items>
+                                                    </MenuItem>
+                                                </Menu> -->
+                                            </menu>
+                                        </MenuButton>
                                     </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    
-                                    <!-- language_code -->
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text=" " />
-                                    </Column>
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                </t:extension>
+
+                                <!-- visible="{= ${/propInfo/outCome} === '' }" -->
+                                <t:columns>
+                                    <t:Column width="5rem" hAlign="Center" >
+                                        <Label text="Suppliers" />
+                                        <t:template>
+                                            <Button class="sapUiLargeMarginTop sapUiLargeMarginBottom"
+                                                icon="sap-icon://account" press="press">
+                                            </Button>
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
                                         <Label text="Operating Unit" required="true" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Requisition No" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Submission No" />
-                                    </Column>
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
-                                        <Label text="Line Type" required="true" />
-                                    </Column>
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
-                                        <Label text="Part No" required="true" />
-                                    </Column>
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <t:template>
+                                            <Input value="{col1}"/>
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="6rem" hAlign="Center">
+                                        <Label text="Requisition No" />
+                                        <t:template>
+                                            <Label text="{col2}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="9rem" hAlign="Center">
+                                        <Label text="Submission No" />
+                                        <t:template>
+                                           <Label text="{col3}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="9rem" hAlign="Center">
+                                        <Label text="Line Type"  required="true" />
+                                        <t:template>
+                                            <Label text="{col4}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="12rem"  hAlign="Center">
+                                        <Label text="Part No"  required="true" />
+                                        <t:template>
+                                            <Label text="{col5}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="9rem"  hAlign="Center">
                                         <Label text="Description" required="true" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Specification" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Vender Pool" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Button text="Apply" />
-                                            <Text text="LG Display Korea"/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text="AA"/>
-                                            <Text text="0ISWL-0236B"/>
-                                            <Text text="Timing Controller ** SW0887A ,SI"/>
-                                            <Text text=""/>
-                                            <Text text="T-Con"/>
-                                        </cells>
-                                    </ColumnListItem>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Button text="Apply" />
-                                            <Text text="LG Display Korea"/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text="AA"/>
-                                            <Text text="6870S-18748"/>
-                                            <Text text="Bare PCB ** LM195WF1-SPA1 -T"/>
-                                            <Text text=""/>
-                                            <Text text="PCB_MLB"/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-						    </Table>
-
-
-                            <Table 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								class="sapFDynamicPageAlignContent" 
-								mode="None"
-								width="auto">
-                                
-                                <columns>
-                                    
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Specific Supplier" />
-                                    </Column>
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
-                                        <Label text="Quantity" required="true" />
-                                    </Column>
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <t:template>
+                                            <Label text="{col6}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="7rem"  hAlign="Center">
+                                        <Label text="사양/규격" />
+                                        <t:template>
+                                            <Label text="{col6}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="12rem"  hAlign="Center">
+                                        <Label text="BPA Price" />
+                                        <t:template>
+                                            <Label text="{col7}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="6rem" hAlign="Center">
+                                        <Label text="상세단가" />
+                                        <t:template>
+                                            <Label text="{col8}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="추천정보" />
+                                        <t:template>
+                                            <Label text="{col9}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="Group Id" />
+                                        <t:template>
+                                            <Label text="{col10}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="Vendor Pool" />
+                                        <t:template>
+                                            <Label text="{col11}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="Specific Supplier" />
+                                        <t:template>
+                                            <Label text="{col12}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="수량" />
+                                        <t:template>
+                                            <Label text="{col13}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
                                         <Label text="UOM" required="true" />
-                                    </Column>
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
-                                        <Label text="Currency" required="true" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Response Currency" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="SExchange Rate Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Exchange Rate Date" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Start Price" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Display to Supplier" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Target Price" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Current Price" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="S/Parts Supply Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Attachments" />
-                                    </Column>
-                                    
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <!-- <Button text="Apply" /> -->
-                                            <Text text="0"/>
-                                            <Text text=""/>
-                                            <Text text="EA"/>
-                                            <ComboBox selectedKey="1">
-                                                <core:Item key="1" text="KRW" />
-                                            </ComboBox>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text="N"/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                        </cells>
-                                    </ColumnListItem>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <!-- <Button text="Apply" /> -->
-                                            <Text text="0"/>
-                                            <Text text=""/>
-                                            <Text text="EA"/>
-                                            <ComboBox selectedKey="1">
-                                                <core:Item key="1" text="KRW" />
-                                            </ComboBox>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text="N"/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-						    </Table>
+                                        <t:template>
+                                            <Label text="{col14}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="납기요청일" required="true" />
+                                        <t:template>
+                                            <Label text="{col15}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="통화" required="true" />
+                                        <t:template>
+                                            <Label text="{col16}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="회신 통화" />
+                                        <t:template>
+                                            <Label text="{col17}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="Excange Rate Type" />
+                                        <t:template>
+                                            <Label text="{col18}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="환율 적용날짜" />
+                                        <t:template>
+                                            <Label text="{col19}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="Start Price" />
+                                        <t:template>
+                                            <Label text="{col20}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="협력사 공개" />
+                                        <t:template>
+                                            <Label text="{col21}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="Target Price" />
+                                        <t:template>
+                                            <Label text="{col22}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="현재 단가" />
+                                        <t:template>
+                                            <Label text="{col23}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="S/Parts 공급유형" />
+                                        <t:template>
+                                            <Label text="{col24}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="Location" />
+                                        <t:template>
+                                            <Label text="{col25}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="목적" />
+                                        <t:template>
+                                            <Label text="{col26}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="사유" />
+                                        <t:template>
+                                            <Label text="{col27}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="예산 부서"  />
+                                        <t:template>
+                                            <Label text="{col28}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="요청자" />
+                                        <t:template>
+                                            <Label text="{col29}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="요청 부서" />
+                                        <t:template>
+                                            <Label text="{col30}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
+                                        <Label text="요청 날짜" />
+                                        <t:template>
+                                            <Label text="{col31}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="첨부파일" />
+                                        <t:template>
+                                            <Label text="{col32}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="11rem" hAlign="Center">
+                                        <Label text="협력사 제공정보" />
+                                        <t:template>
+                                            <Label text="{col33}" />
+                                        </t:template>
+                                    </t:Column>
+                                </t:columns>
+                            </t:Table>
+
+                             
+                             
+                             
+                             
+                             
+                             
+                            
                         </Panel>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>

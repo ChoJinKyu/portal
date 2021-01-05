@@ -3,15 +3,14 @@ sap.ui.define([
         "sap/ui/model/Filter",						
         "sap/ui/model/FilterOperator",
         "sap/m/MessageBox",
-        "ext/lib/util/Multilingual"
-        // ,
-        // "sap/ui/model/json/JSONModel", 
+        "ext/lib/util/Multilingual",
+        "sap/ui/model/json/JSONModel", 
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON) {
+	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSONModel) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBMgt.controller.DetailPage", {
@@ -20,12 +19,57 @@ sap.ui.define([
                 
                 this.oRouter = this.getOwnerComponent().getRouter();
                 // this.oRouter.attachBeforeRouteMatched(this._onProductMatched, this);
-                this.oRouter.getRoute("detailPage").attachPatternMatched(this._onProductMatched, this);
+                this.oRouter.getRoute("detailPage").attachPatternMatched(this._onRouteMatched, this);
 
                 this.getView().byId("panel_Header").setExpanded(true);
                 
+                var temp = {
+                    "list": [
+                        {
+                            "col1": "cm",
+                            "col2": "cm",
+                            "col3": "cm",
+                            "col4": "cm",
+                            "col5": "cm",
+                            "col6": "cm",
+                            "col7": "cm",
+                            "col8": "cm",
+                            "col9": "cm",
+                            "col10": "cm",
+                            "col11": "cm",
+                            "col12": "cm",
+                            "col13": "cm",
+                            "col14": "cm",
+                            "col15": "cm",
+                            "col16": "cm",
+                            "col17": "cm",
+                            "col18": "cm",
+                            "col19": "cm",
+                            "col20": "cm",
+                            "col21": "cm",
+                            "col22": "cm",
+                            "col23": "cm",
+                            "col24": "cm",
+                            "col25": "cm",
+                            "col26": "cm",
+                            "col27": "cm",
+                            "col28": "cm",
+                            "col29": "cm",
+                            "col30": "cm",
+                            "col31": "cm",
+                            "col32": "cm",
+                            "col33": "cm",
+                            "col34": "cm"
+                        }
+                    ],
+                    "propInfo": {
+                        outCome: "etc"
+                    }
+                };
 
-
+                // var oModel = new JSONModel(temp.list);
+                this.getView().setModel( new JSONModel(temp.list), "list");
+                this.getView().setModel( new JSONModel(temp.propInfo), "propInfo");
 
                 var that = this,
                 sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
@@ -77,7 +121,17 @@ sap.ui.define([
             onNavBack: function(e){
                 this.getOwnerComponent().getRouter().navTo("mainPage", {} );
             },
-            _onProductMatched: function (e) {
+            _onRouteMatched: function (e) {
+
+                var outcome = e.getParameter("arguments").outcome;
+
+                if( outcome == "0" || outcome == "1" ) {
+                    this.getView().getModel("propInfo").setProperty("/outCome","");
+                }else {
+
+                    this.getView().getModel("propInfo").setProperty("/outCome","view");
+                }
+
 
                 this.getView().byId("panel_Header").setExpanded(true);
                 this.getView().byId("panel_Control").setExpanded(true);
@@ -88,7 +142,7 @@ sap.ui.define([
                 this.getView().byId("panel_Specific").setExpanded(true);
 
                
-                console.log("_onProductMatched ");
+                console.log("_onRouteMatched ");
                 
                 this._type = e.getParameter("arguments").type;
 

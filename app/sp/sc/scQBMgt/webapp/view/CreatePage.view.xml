@@ -10,44 +10,401 @@
 
 	<App id="app">
 			<pages>
-				<Page id="page" title="Create Page">
+				<Page id="page" title="Negotation Create" showNavButton="true" navButtonPress=".onNavBack" >
 					<content>
                         <form:SimpleForm editable="true"  layout="ResponsiveGridLayout">
+
                             <form:content>
-                            <VBox>
-                                <Label text="Negociation Type "  class="sapUitinyMargin" />
-                                <ComboBox selectedKey="1" width="90%">
-                                    <core:Item key="1" text="RFQ"/>
-                                </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S3"/>
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Outcome " class="sapUitinyMargin" />
-                                <ComboBox selectedKey="1" width="90%">
-                                    <core:Item key="1" text="BPA"/>
-                                </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S3"/>
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <HBox justifyContent="End" >
-                                    <Button text="Cancel" press="onCancelPrss" class="sapUiSmallMarginEnd" />
-                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" />
-                                </HBox>
-                            </VBox>
+                                <VBox height="auto" class="sText">
+                                    <HBox height="auto" >
+                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" class="whiteBG"
+                                            width="10%" height="auto" id= "aaa"  >
+                                            <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd "
+                                                alignContent="Center" alignItems="Center" justifyContent="Center" >
+                                                <Text text="가격" class="mText "/>
+                                            </VBox>
+                                        </VBox>
+                                        <VBox width="90%" height="100%" class="" >
+                                            <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom mouseP whiteBG" displayInline="true"  id="vboxB1">
+                                                <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
+                                                    <Text id="text1"  class="sText oMouseP" />
+                                                </VBox>
+                                                <VBox class="sapUiSmallMarginBegin">
+                                                    <HBox>
+                                                        <VBox width="100px"/>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                size="3rem"
+                                                                backgroundColor="white" 
+                                                                color="darkgray"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"  
+                                                                backgroundColor="darkblue" 
+                                                                color="white"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                size="3rem" 
+                                                                backgroundColor="darkblue" 
+                                                                color="white"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                size="3rem"
+                                                                backgroundColor="white"
+                                                                color="darkgray"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                    </HBox>
+                                                    <HBox>
+                                                        <VBox width="70px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
+                                                            <Text text="구매요청/접수" class="oMouseP" />
+                                                        </VBox>
+                                                        <VBox width="45px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
+                                                            <Text text="RFQ (가격평가)" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="70px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
+                                                            <Text text="협상" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="85px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
+                                                            <Text text="계약" class="oMouseP"/>
+                                                        </VBox>
+                                                    </HBox>
+                                                </VBox>
+                                            </VBox>    
+                                            <VBox visible="{= ${AAA>/flag} === 1 ? true : false }" class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom ">
+                                                <VBox>
+                                                    <!-- <Label text="Out Come" /> -->
+                                                    <Label labelFor="rbg1" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                                    <RadioButtonGroup id="rbg1"  >
+                                                        <RadioButton id="RB1-1" text="BPA" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB1-2" text="Tenative Price" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB1-3" text="Supplier Development" />
+                                                        <RadioButton id="RB1-4" text="Investment PO" />
+                                                        <RadioButton id="RB1-5" text="Budget Price" />
+                                                        <RadioButton id="RB1-6" text="Negotiation Price" />
+                                                        <RadioButton id="RB1-7" text="Subsidiary Dev Unit Price" />
+                                                    </RadioButtonGroup>
+                                                </VBox>
+                                                <HBox justifyContent="End" >
+                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                </HBox>
+                                            </VBox >
+                                            
+                                            <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd mouseP whiteBG" displayInline="true"  id="vboxB2"  >
+                                                <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
+                                                    <Text id="text2" class="sText oMouseP" />
+                                                </VBox>
+                                                <VBox class="sapUiSmallMarginBegin">
+                                                    <HBox>
+                                                        <VBox width="100px"/>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                color="darkgray"
+                                                                backgroundColor="white"
+                                                                src="sap-icon://employee"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                size="3rem"
+                                                                backgroundColor="darkblue" 
+                                                                color="white"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                color="darkgray"
+                                                                backgroundColor="white"
+                                                                src="sap-icon://employee"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                    </HBox>
+                                                    <HBox>
+                                                        <VBox width="70px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
+                                                            <Text text="구매요청/접수" class="oMouseP" />
+                                                        </VBox>
+                                                        <VBox width="70px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
+                                                            <Text text="Competitive Bidding" class="oMouseP" />
+                                                        </VBox>
+                                                        <VBox width="45px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
+                                                            <Text text="계약" class="oMouseP"/>
+                                                        </VBox>
+                                                    </HBox>
+                                                </VBox>
+                                            </VBox>
+                                            <VBox visible="{= ${AAA>/flag} === 2 ? true : false }" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                                                <VBox>
+                                                    <!-- <Label text="Out Come" /> -->
+                                                    <Label labelFor="rbg2" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                                    <RadioButtonGroup id="rbg2"  >
+                                                        <RadioButton id="RB2-1" text="BPA" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB2-2" text="Tenative Price" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB2-3" text="Supplier Development" />
+                                                        <RadioButton id="RB2-4" text="Investment PO" />
+                                                        <RadioButton id="RB2-5" text="Budget Price" />
+                                                        <RadioButton id="RB2-6" text="Negotiation Price" />
+                                                        <RadioButton id="RB2-7" text="Subsidiary Dev Unit Price" />
+                                                    </RadioButtonGroup>
+                                                </VBox>
+                                                <HBox justifyContent="End" >
+                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                </HBox>
+                                            </VBox >
+
+
+                                        </VBox>
+                                    </HBox>
+
+
+                                    <HBox height="auto" >
+                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center"  class=""
+                                            width="10%" height="auto"   >
+                                            <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMargin whiteBG"
+                                                alignContent="Center" alignItems="Center" justifyContent="Center" >
+                                                <Text text="가격 + 비가격" class="mText" />
+                                            </VBox>
+                                        </VBox>
+                                        <VBox width="90%" height="100%" >
+                                            <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop mouseP whiteBG" displayInline="true" id="vboxB3" >
+                                                <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
+                                                    <Text id="text3" class="sText oMouseP" />
+                                                </VBox>
+                                                <VBox class="sapUiSmallMarginBegin">
+                                                    <HBox>
+                                                        <VBox width="100px"/>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                color="darkgray"
+                                                                backgroundColor="white"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                backgroundColor="darkblue" 
+                                                                color="white"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                color="darkgray"
+                                                                backgroundColor="white"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                    </HBox>
+                                                    <HBox>
+                                                        <VBox width="70px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
+                                                            <Text text="구매요청/접수" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="60px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
+                                                            <Text text="RFP Price+Non Price evaluation" class="oMouseP" />
+                                                        </VBox>
+                                                        <VBox width="55px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
+                                                            <Text text="계약" class="oMouseP" />
+                                                        </VBox>
+                                                    </HBox>
+                                                </VBox>
+                                            </VBox>
+                                            <VBox visible="{= ${AAA>/flag} === 3 ? true : false }" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                                                <VBox>
+                                                    <!-- <Label text="Out Come" /> -->
+                                                    <Label labelFor="rbg3" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                                    <RadioButtonGroup id="rbg3"  >
+                                                        <RadioButton id="RB3-1" text="BPA" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB3-2" text="Tenative Price" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB3-3" text="Supplier Development" />
+                                                        <RadioButton id="RB3-4" text="Investment PO" />
+                                                        <RadioButton id="RB3-5" text="Budget Price" />
+                                                        <RadioButton id="RB3-6" text="Negotiation Price" />
+                                                        <RadioButton id="RB3-7" text="Subsidiary Dev Unit Price" />
+                                                    </RadioButtonGroup>
+                                                </VBox>
+                                                <HBox justifyContent="End" >
+                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                </HBox>
+                                            </VBox >
+
+                                            <VBox width="100%" height="50%" class="sapUiSmallMargin mouseP whiteBG" displayInline="true"  id="vboxB4">
+                                                <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
+                                                    <Text id="text4"  class="sText oMouseP"/>
+                                                </VBox>
+                                                <VBox class="sapUiSmallMarginBegin">
+                                                    <HBox>
+                                                        <VBox width="100px"/>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                color="darkgray"
+                                                                backgroundColor="white"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                backgroundColor="darkblue" 
+                                                                color="white"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP" />
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                backgroundColor="darkblue" 
+                                                                color="white"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="120px" alignContent="Center" alignItems="Center" justifyContent="Center">
+                                                            <Text text=">>>" class="oMouseP"/>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <core:Icon
+                                                                src="sap-icon://employee"
+                                                                backgroundColor="white"
+                                                                color="darkgray"
+                                                                size="3rem"
+                                                                class="oMouseP"/>
+                                                        </VBox>
+                                                    </HBox>
+                                                    <HBox>
+                                                        <VBox width="70px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
+                                                            <Text text="구매요청/접수" class="sText oMouseP"/>
+                                                        </VBox>
+                                                        <VBox width="60px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
+                                                            <Text text="1-Step Non Price evaluation" class="oMouseP" />
+                                                        </VBox>
+                                                        <VBox width="55px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
+                                                            <Text text="2-Step Price evaluation" class="oMouseP" />
+                                                        </VBox>
+                                                        <VBox width="45px"/>
+                                                        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
+                                                            <Text text="계약" class="oMouseP"/>
+                                                        </VBox>
+                                                    </HBox>
+                                                </VBox>
+                                            </VBox>
+                                            <VBox visible="{= ${AAA>/flag} === 4 ? true : false }" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                                                <VBox>
+                                                    <!-- <Label text="Out Come" /> -->
+                                                    <Label labelFor="rbg4" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                                    <RadioButtonGroup id="rbg4"  >
+                                                        <RadioButton id="RB4-1" text="BPA" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB4-2" text="Tenative Price" class="sapMLabelNoText" />
+                                                        <RadioButton id="RB4-3" text="Supplier Development" />
+                                                        <RadioButton id="RB4-4" text="Investment PO" />
+                                                        <RadioButton id="RB4-5" text="Budget Price" />
+                                                        <RadioButton id="RB4-6" text="Negotiation Price" />
+                                                        <RadioButton id="RB4-7" text="Subsidiary Dev Unit Price" />
+                                                    </RadioButtonGroup>
+                                                </VBox>
+                                                <HBox justifyContent="End" >
+                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                </HBox>
+                                            </VBox >
+                                            
+                                        </VBox>
+                                    </HBox>
+
+
+
+
+
+
+
+                                </VBox>
+
+                                <!-- <VBox>
+                                    <Label text="Negociation Type "  class="sapUitinyMargin" />
+                                    <ComboBox selectedKey="1" width="90%">
+                                        <core:Item key="1" text="RFQ"/>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M3 S3"/>
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Outcome " class="sapUitinyMargin" />
+                                    <ComboBox selectedKey="1" width="90%">
+                                        <core:Item key="1" text="BPA"/>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M3 S3"/>
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <HBox justifyContent="End" >
+                                        <Button text="Cancel" press="onCancelPrss" class="sapUiSmallMarginEnd" />
+                                        <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                    </HBox>
+                                </VBox> -->
+
                             </form:content>
                             
                         </form:SimpleForm>
-                        <!-- <Panel width="50%">
-                            <ToolbarSpacer/> 
-                            <Text text="                                   " />
-                            <Button text="Cancel" press="onCancelPrss" />
-                            <Button text="Apply" />
-                        </Panel> -->
-                        
+                       
                     </content>
                     	
 			

@@ -14,7 +14,15 @@
 		"sourceTemplate": {
 			"id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
 			"version": "1.40.12"
-		}
+		},
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }
+        }
 	},
 	
 	"sap.cloud": {
@@ -65,7 +73,14 @@
 				"settings": {
 					"bundleName": "sp.sc.scQBMgt.i18n.i18n"
 				}
-			}
+			},
+            "": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "odataVersion": "2.0"
+                },
+                "dataSource": "mainService"
+            }
 		},
 		"resources": {
 			"css": [{
@@ -95,11 +110,11 @@
                     "target": ["createObject"]
                 },{
                     "name": "detailPage",
-                    "pattern": "detailObject/{type}",
+                    "pattern": "detailObject/{type},{outcome}",
                     "target": ["detailObject"]
                 },{
                     "name": "detailPage2",
-                    "pattern": "detailObject2/{type}",
+                    "pattern": "detailObject2/{type},{outcome}",
                     "target": ["detailObject2"]
                 }
             
