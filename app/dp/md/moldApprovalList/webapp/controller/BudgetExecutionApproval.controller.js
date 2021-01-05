@@ -88,19 +88,35 @@ sap.ui.define([
                 // this.getView().setModel(new ManagedModel(), "mdCommon");
                 var md = this.getModel('mdCommon');
                 this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) { 
-                    md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
-                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
-                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
-                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
-                    md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
-                    md.setProperty("/project_code", oData.results[0].project_code);
-                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
-                    md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
-                    md.setProperty("/account_code", oData.results[0].account_code);
-                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
-                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
-                    console.log("md >>>>>>", md); 
-                    that._bindComboPlant(oData.results[0].import_company_code);
+
+                    if(oData.results != undefined && oData.results.length > 0){
+                        md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
+                        md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                        md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
+                        md.setProperty("/import_company_code", oData.results[0].import_company_code);
+                        md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
+                        md.setProperty("/project_code", oData.results[0].project_code);
+                        md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
+                        md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
+                        md.setProperty("/account_code", oData.results[0].account_code);
+                        md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
+                        md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
+                        that._bindComboPlant(oData.results[0].import_company_code);
+                    }else{
+                        md.setProperty("/investment_ecst_type_code", "");
+                        md.setProperty("/investment_ecst_type_code_nm", "");
+                        md.setProperty("/accounting_department_code", "");
+                        md.setProperty("/import_company_code","");
+                        md.setProperty("/import_company_code_nm", "");
+                        md.setProperty("/project_code", "");
+                        md.setProperty("/import_company_org_code", "");
+                        md.setProperty("/import_company_org_code_nm", "");
+                        md.setProperty("/account_code", "");
+                        md.setProperty("/account_code_nm", "");
+                        md.setProperty("/provisional_budget_amount", "");
+                    }
+
+                   
                 });
                 this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }

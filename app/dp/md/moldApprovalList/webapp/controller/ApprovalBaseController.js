@@ -52,16 +52,17 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-            this._showFormFragment();
+            this._showFormFragment(); 
         },
 
         onAfterRendering: function () {
 
         },
         /**
-         * 폅집기 창 
+         * 폅집기 창  
          */
-        setRichEditor: function () {
+        // 여기서 호출 안하고 화면으로 감 
+       /* setRichEditor: function () {
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
                 function (RTE, EditorType) {
                     this.oRichTextEditor = new RTE("myRTE", {
@@ -85,6 +86,7 @@ sap.ui.define([
                     });
                 }.bind(this));
         },
+        */ 
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -114,8 +116,6 @@ sap.ui.define([
             this._toShowMode();
         },
 
-
-
 		/**
 		 * Event handler for cancel page editing
 		 * @public
@@ -134,7 +134,8 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-        _onObjectMatched: function (oEvent) {
+        _onObjectMatched: function (oEvent) { 
+           
             /**
              * init 에서 해당 모델을 선언하면 create 계속 연속 했을때 기존 데이터가 남아있어서
              * 비정상적으로 나옴 
@@ -158,7 +159,6 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("approver"));
             oTransactionManager.addDataModel(this.getModel("referer"));
 
-
             var oArgs = oEvent.getParameter("arguments");
             console.log(oArgs);
             this._createViewBindData(oArgs);
@@ -177,9 +177,6 @@ sap.ui.define([
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
             console.log(" contrl " , this.getModel("contModel"));
-
-           // this.getModel("purOrderItemLocalApprovalView").setProperty('/editMode', this.plant_code != undefined ? true : false);
-
             var oModel = this.getModel("company");
 
             oModel.setTransactionModel(this.getModel("org"));
@@ -210,7 +207,8 @@ sap.ui.define([
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
             }
-             this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
+            
+            this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
         },
 
