@@ -45,6 +45,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            console.log("1111");
         // Model used to manipulate controlstates. The chosen values make sure,
         // detail page shows busy indication immediately so there is no break in
         // between the busy indication for loading the view's meta data
@@ -73,7 +74,7 @@ sap.ui.define([
         chainComboChange: function (event) {
             var predicates = [];
             predicates.push(new Filter("chain_code", FilterOperator.Contains, this.byId("searchChain").getSelectedKey()));
-            predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
+            //predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
 
             this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel("menu"));
             
@@ -93,6 +94,7 @@ sap.ui.define([
                 })
                 // 모래시계해제
                 .finally((function () {
+                    debugger;
                     var treeTable = this.byId("midTable");
                     var tableData = treeTable.mAggregations.rows;
                     var detailData = this.getModel("details").getData().Role_Menu;
@@ -293,7 +295,25 @@ sap.ui.define([
                 "local_update_dtm": new Date()
             }, "/Role", 0);
 
+            var oDetailsModel = this.getModel("details");
+            oDetailsModel.setTransactionModel(this.getModel());
+            oDetailsModel.read("/Role_Menu", {
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                    new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
+                ],
+                success: function (oData) {
+                    console.log("_else_", oData, oDetailsModel);
+                    console.log(oData.results);
+                }
+            });
+
             this.byId("searchChain").fireChange();
+            this._toEditMode();
+            
+        } else {
+            this.getModel("midObjectView").setProperty("/isAddedMode", false);
+            this._bindView("/Role(tenant_id='" + this._sTenantId + "',role_code='" + this._sRoleCode + "')");
 
             var oDetailsModel = this.getModel("details");
             oDetailsModel.setTransactionModel(this.getModel());
@@ -308,29 +328,10 @@ sap.ui.define([
                 }
             });
 
-            this._toEditMode();
-            
-        } else {
-            this.getModel("midObjectView").setProperty("/isAddedMode", false);
-            this._bindView("/Role(tenant_id='" + this._sTenantId + "',role_code='" + this._sRoleCode + "')");
-            oView.setBusy(true);
-
             this.byId("searchChain").fireChange();
-
-            var oDetailsModel = this.getModel("details");
-            oDetailsModel.setTransactionModel(this.getModel());
-            oDetailsModel.read("/Role_Menu", {
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                    new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
-                ],
-                success: function (oData) {
-                    console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);                
-                }.bind(this)
-            });
-
             this._toShowMode();
         }
+
         oTransactionManager.setServiceModel(this.getModel());
 
         },
@@ -342,36 +343,36 @@ sap.ui.define([
          * @private
          */
         _bindView: function (sObjectPath) {
-        var oView = this.getView(),
-            oMasterModel = this.getModel("master");
-        oView.setBusy(true);
-        oMasterModel.setTransactionModel(this.getModel());
-        oMasterModel.read(sObjectPath, {
-            success: function (oData) {
-                console.log("_bindView======>" , oData);
-            oView.setBusy(false);
-            }
-        });
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master");
+            oView.setBusy(true);
+            oMasterModel.setTransactionModel(this.getModel());
+            oMasterModel.read(sObjectPath, {
+                success: function (oData) {
+                    console.log("_bindView======>" , oData);
+                oView.setBusy(false);
+                }
+            });
         },
 
         _toEditMode: function () {
-        var FALSE = false;
-        this._showFormFragment('MidObject_Edit');
-        this.byId("page").setSelectedSection("pageSectionMain");
-        this.byId("page").setProperty("showFooter", !FALSE);
-        this.byId("pageEditButton").setEnabled(FALSE);
-        this.byId("pageDeleteButton").setEnabled(FALSE);
-        this.byId("pageNavBackButton").setEnabled(FALSE);
+            var FALSE = false;
+            this._showFormFragment('MidObject_Edit');
+            this.byId("page").setSelectedSection("pageSectionMain");
+            this.byId("page").setProperty("showFooter", !FALSE);
+            this.byId("pageEditButton").setEnabled(FALSE);
+            this.byId("pageDeleteButton").setEnabled(FALSE);
+            this.byId("pageNavBackButton").setEnabled(FALSE);
         },
 
         _toShowMode: function () {
-        var TRUE = true;
-        this._showFormFragment('MidObject_Show');
-        this.byId("page").setSelectedSection("pageSectionMain");
-        this.byId("page").setProperty("showFooter", !TRUE);
-        this.byId("pageEditButton").setEnabled(TRUE);
-        this.byId("pageDeleteButton").setEnabled(TRUE);
-        this.byId("pageNavBackButton").setEnabled(TRUE);
+            var TRUE = true;
+            this._showFormFragment('MidObject_Show');
+            this.byId("page").setSelectedSection("pageSectionMain");
+            this.byId("page").setProperty("showFooter", !TRUE);
+            this.byId("pageEditButton").setEnabled(TRUE);
+            this.byId("pageDeleteButton").setEnabled(TRUE);
+            this.byId("pageNavBackButton").setEnabled(TRUE);
         },
 
         _oFragments: {},
@@ -407,7 +408,6 @@ sap.ui.define([
             var state = oEvent.mParameters.state;
            
             if(state){
-               
                 oRoleModel.addRecord({
                     "tenant_id": tenantId,
                     "role_code": roleCode,
