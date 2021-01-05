@@ -324,7 +324,6 @@ sap.ui.define([
                         oView.setBusy(false);
                     }
                 });
-                debugger;
 
                 oView.setBusy(true);
                 var oDetailsModel = this.getModel("details");
