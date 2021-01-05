@@ -235,7 +235,7 @@ sap.ui.define([
 
             if (this._sTenantId !== "new"){
                 if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                     return;
                 }
             }
@@ -243,7 +243,7 @@ sap.ui.define([
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
 
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -254,7 +254,7 @@ sap.ui.define([
 								that._toShowMode();
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+								MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 							}
 						});
 					};
@@ -278,7 +278,7 @@ sap.ui.define([
             var oView = this.getView();
             var sTenantId = this._sTenantId;
             if (sTenantId === "new"){
-                this.onPageNavBackButtonPress();
+                this.handleClose();
             }else if (sTenantId !== "new"){
                 
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);                
@@ -479,7 +479,7 @@ sap.ui.define([
                     ],
                     template: new Item({
                         key: "{util>code}",
-                        text: "{util>code_description}"
+                        text: "{util>code_name}"
                     })
                 });                
 			this.oEditableTemplate = new ColumnListItem({
@@ -516,7 +516,7 @@ sap.ui.define([
 			this.byId("midTable").bindItems({
 				path: "details>/UomClassLng",
 				template: oTemplate
-				// templateShareable: true,
+				// templateShareable: false,
 				// key: ""
 			}).setKeyboardMode(sKeyboardMode);
 		},

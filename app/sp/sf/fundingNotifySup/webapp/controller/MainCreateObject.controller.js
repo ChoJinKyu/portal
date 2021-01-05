@@ -13,7 +13,7 @@ sap.ui.define([
 
     "use strict";
 
-    return BaseController.extend("sp.sf.fundingNotifySup.controller.MainObject", {
+    return BaseController.extend("sp.sf.fundingNotifySup.controller.MainCreateObject", {
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */

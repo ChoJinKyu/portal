@@ -11,6 +11,6 @@ entity Se_Eval_Result_Item_Group {
   key regular_evaluation_id          : String(100) not null @title: '정기평가ID' ;	
   key supplier_group_code            : String(30)  not null @title: '공급업체그룹코드' ;	
   key evaluation_article_group_code  : String(15)  not null @title: '평가항목그룹코드' ;	
-      evaluation_score               : Integer              @title: '평가점수' ;	
+      evaluation_score               : Decimal(5,2)         @title: '평가점수' ;	
 }	
 extend Se_Eval_Result_Item_Group with util.Managed;	

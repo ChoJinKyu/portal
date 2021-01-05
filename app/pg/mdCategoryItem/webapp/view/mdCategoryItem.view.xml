@@ -36,6 +36,19 @@
             <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                 <form:content>
                     <VBox>
+                    
+                        <!-- <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
+                        <ComboBox id="search_Operation_ORG_S" width="10rem" selectedKey="BIZ00200" items="{
+                                path: '/VpOperationOrg',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ],
+                                sorter: { path: 'operation_org_code'}
+                            }">
+                            <items>
+                                <core:Item key="{operation_org_code}" text="{operation_org_name}" />
+                            </items>
+                        </ComboBox> -->
                         <Label text="사업본부: " labelFor="searchDeptS"></Label>
                         <ComboBox id="searchDeptS" width="100%" items="{
                                 path: 'util>/CodeDetails',
@@ -105,9 +118,9 @@
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="3em" >
                     <Text text="" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                <!-- <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="범주코드(임시:확인용)" />
-                </Column>
+                </Column> -->
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="사업본부코드" />
                 </Column>
@@ -166,9 +179,9 @@
                             }" />
                             <!-- <Text text="{list>_row_state_}"></Text> -->
                         </HBox>
-                        <HBox alignItems="Center">
+                        <!-- <HBox alignItems="Center">
                             <Text text="{list>spmd_category_code}"></Text>
-                        </HBox>
+                        </HBox> -->
                         <HBox alignItems="Center">
                             <Text text="{list>org_code}"></Text>
                         </HBox>
@@ -196,11 +209,10 @@
                             <Text text="{list>update_user_id}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                        <!-- , formatter: '.dateFormatter.toUTCDateTimeString' -->
-                            <Text text="{path : 'list>local_create_dtm'}"></Text> 
+                            <Text text="{path : 'list>local_create_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text> 
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{path : 'list>local_update_dtm'}"></Text>
+                            <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
                         </HBox>
                     </cells>
                 </ColumnListItem>

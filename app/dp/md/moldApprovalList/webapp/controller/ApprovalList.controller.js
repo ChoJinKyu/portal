@@ -93,24 +93,11 @@ sap.ui.define([
 
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
-            this._oTPC = new TablePersoController({
-                customDataKey: "approvalList",
-                persoService: ApprovalListPersoService
-            }).setTable(this.byId("mainTable"));
-            //console.log(this.byId("moldMstTable"));
             this._doInitTablePerso();
 
         },
        
-        _doInitTablePerso: function () {
-            // init and activate controller
-            this._oTPC = new TablePersoController({
-                table: this.byId("mainTable"),
-                componentName: "Approvals",
-                persoService: ApprovalListPersoService,
-                hasGrouping: true
-            }).activate();
-        },
+        
         /**
          * @private
          * @see init 이후 바로 실행됨
@@ -291,13 +278,17 @@ sap.ui.define([
                     plantFilters.push(new Filter({
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
                     }));
                 });
             } else {
-                plantFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+                plantFilters.push(
+                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                );
             }
 
             var filter = new Filter({
@@ -618,6 +609,7 @@ sap.ui.define([
             plantFilter.push(new Filter({
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
                 ],
                 and: true
@@ -1052,6 +1044,16 @@ sap.ui.define([
                 data: oData
             });
         },
+        
+        _doInitTablePerso: function () {
+            // init and activate controller
+            this._oTPC = new TablePersoController({
+                table: this.byId("mainTable"),
+                componentName: "moldApprovalList",
+                persoService: ApprovalListPersoService,
+                hasGrouping: true
+            }).activate();
+        }
         
     });
 });

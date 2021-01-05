@@ -12,9 +12,10 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
+    "ext/lib/util/ExcelUtil"
 ], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, Validator,
     TablePersoController, MainListPersoService,
-    Filter, FilterOperator, MessageBox, MessageToast, Fragment) {
+    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil) {
     "use strict";
 
     var toggleButtonId = "";
@@ -37,6 +38,7 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
+            this.setModel(new JSONModel(), "excelModel");
 
             var today = new Date();
             this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
@@ -107,6 +109,26 @@ sap.ui.define([
             MainListPersoService.resetPersData();
             this._oTPC.refresh();
         },
+
+
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "PR List"
+            var oData = oTable.getModel("list").getProperty("/Pr_MstView");
+            console.log(oTable);
+            console.log(sFileName);
+            console.log(oData);
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
+
 
 		/**
 		 * Event handler when a table add button pressed

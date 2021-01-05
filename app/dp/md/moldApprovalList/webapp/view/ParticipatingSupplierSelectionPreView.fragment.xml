@@ -9,8 +9,9 @@
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
     xmlns="sap.m" >
-<Dialog id="participatingSupplierSelectionPreview" class="sapUiSmallMargin" title="" contentWidth="100%" contentHeight="900px" >
+<Dialog id="participatingSupplierSelectionPreview" class="sapUiSmallMargin" title="" contentWidth="100%" contentHeight="630px" >
 	<uxap:ObjectPageLayout 
+        height="600px"
         id="page_ps_preview"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 

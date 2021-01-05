@@ -124,7 +124,7 @@
             <uxap:ObjectPageSection titleUppercase="false" title="Receipt Item">
 				<uxap:subSections>
                 <uxap:ObjectPageSubSection>
-                    	<HBox>
+                    <HBox>
                         <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/AFFILIATE}"/>
                             <ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
@@ -133,10 +133,10 @@
                             <Label text="{I18N>/BUSINESS_DIVISION}"/>
                             <ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
                         </VBox>
-                        </HBox>
-                     </uxap:ObjectPageSubSection>
+                    </HBox>
+                </uxap:ObjectPageSubSection>
                     <uxap:ObjectPageSubSection id="moldRecepitTableFragment">
-                  
+                        <!-- 바뀌는 영역 -->
                     </uxap:ObjectPageSubSection>
                     
 				</uxap:subSections>

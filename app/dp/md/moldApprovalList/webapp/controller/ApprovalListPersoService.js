@@ -100,7 +100,6 @@ sap.ui.define(["jquery.sap.global"],
             }
         };
 
-        ApprovalListPersoService.delPersData = ApprovalListPersoService.resetPersData;
         return ApprovalListPersoService;
 
     });

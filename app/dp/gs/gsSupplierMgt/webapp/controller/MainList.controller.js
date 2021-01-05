@@ -6,7 +6,8 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/TransactionManager",
     "ext/lib/model/ManagedModel",
-	"ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedListModel",
+    "sap/f/LayoutType",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
@@ -23,7 +24,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
 ], function (BaseController, Multilingual, Validator, History, JSONModel, TransactionManager, ManagedModel,
-    ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, 
+    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, 
     MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
     "use strict";
     
@@ -157,7 +158,7 @@ sap.ui.define([
 				oRecord = this.getModel("list").getProperty(sPath);
 
 			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
+				layout: LayoutType.OneColumn,
 				tenantId: oRecord.tenant_id,
 				uomCode: oRecord.uom_code
 			});
@@ -235,34 +236,42 @@ sap.ui.define([
                 that = this;
             var tenantId = "L2100";           
             
-            var ssn = this.getView().byId("ssn").getValue();         
-                
-            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;            
+            // var ssn = this.getView().byId("ssn").getValue();   
+            var ssn = "ZKH"  
+            
+            // if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;       
+            this.byId("dialogAddSupplier").close();
+            this.getRouter().navTo("suppliePage", {
+				layout: LayoutType.OneColumn,
+				tenantId: tenantId,
+                ssn: ssn,
+                mode: "edit"
+			});
 
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
-				title : this.getModel("I18N").getText("/SAVE"),
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oTransactionManager.submit({						
-							success: function(ok){
-								// that._toShowMode();
-                                oView.setBusy(false);
-                                // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
-                                    that.byId("dialogAddSupplier").close();
-                                    that.byId("pageSearchButton").firePress();
-                                    // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-                                    // that.getRouter().navTo("addSupplierPage", {                                        
-                                    //     tenantId: tenantId,
-                                    //     ssn: ssn
-                                    // });
-							}
-						});
-					};
-				}
-            });
+			// MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+			// 	title : this.getModel("I18N").getText("/SAVE"),
+			// 	initialFocus : sap.m.MessageBox.Action.CANCEL,
+			// 	onClose : function(sButton) {
+			// 		if (sButton === MessageBox.Action.OK) {
+			// 			oView.setBusy(true);
+			// 			oTransactionManager.submit({						
+			// 				success: function(ok){
+			// 					// that._toShowMode();
+            //                     oView.setBusy(false);
+            //                     // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+            //                     MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+            //                         that.byId("dialogAddSupplier").close();
+            //                         that.byId("pageSearchButton").firePress();
+            //                         // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+            //                         // that.getRouter().navTo("addSupplierPage", {                                        
+            //                         //     tenantId: tenantId,
+            //                         //     ssn: ssn
+            //                         // });
+			// 				}
+			// 			});
+			// 		};
+			// 	}
+            // });
             this.validator.clearValueState(this.byId("dialogAddSupplier"));            
             
         },        
@@ -277,7 +286,10 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){            
-            this.getModel("mainListView").setProperty("/headerExpanded", true);            
+            this.getModel("mainListView").setProperty("/headerExpanded", true);      
+            var sThisViewId = this.getView().getId();
+            var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");
+            oFcl.to(sThisViewId);      
 		},
 
 		/**

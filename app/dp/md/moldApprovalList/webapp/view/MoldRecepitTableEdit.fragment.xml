@@ -11,7 +11,9 @@
         xmlns:co="sap.suite.ui.commons" 
         xmlns:si="sap.suite.ui.commons.statusindicator" 
         xmlns:u="sap.ui.unified" 
-        xmlns:table="sap.ui.table" >
+        xmlns:table="sap.ui.table" 
+        xmlns:lib-m="ext.lib.m"
+        >
 
       		<!-- budgetExecutionTable Table -->
 				    <table:Table id="moldRecepitTable" 
@@ -39,34 +41,34 @@
 								<Text text="{mdRecepit>mold_id}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_approval_number" visible="false">
+						<table:Column visible="false">
 							<Label text="approval_number"/>
 							<table:template>
-								<Text id="t_approval_number" text="{mdRecepit>approval_number}"/>
+								<Text  text="{mdRecepit>approval_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_model" width="20em" hAlign="Center">
+						<table:Column  width="20em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
-								<Text id="t_model" text="{mdRecepit>model}"/>
+								<Text  text="{mdRecepit>model}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_moldPartNo" width="10em" hAlign="Center">
+						<table:Column  width="10em" hAlign="Center">
 							<Label text="Mold No"/>
 							<table:template>
-								<Text id="t_mold_part_no" text="{mdRecepit>mold_number}"/>
+								<Text  text="{mdRecepit>mold_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_seq" width="5em" hAlign="Center">
+						<table:Column width="5em" hAlign="Center">
 							<Label text="Seq"/>
 							<table:template>
-								<Text id="t_seq" text="{mdRecepit>mold_sequence}"/>
+								<Text  text="{mdRecepit>mold_sequence}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_description" width="15em" hAlign="Center">
+						<table:Column  width="15em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
-								<Text id="description" text="{mdRecepit>spec_name}"/>
+								<Text  text="{mdRecepit>spec_name}"/>
 							</table:template>
 						</table:Column>
                         <!--  여기까지 픽스 -->
@@ -133,37 +135,37 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Plan"/>
 					        <table:template>
-                               <Text text="{mdRecepit>drawing_consent_plan}"/>
+                               <Text text="{path: 'mdRecepit>drawing_consent_plan', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Result"/>
 					        <table:template>
-                                <Text text="{mdRecepit>drawing_consent_result}"/>
+                                <Text text="{path:'mdRecepit>drawing_consent_result', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Plan"/>
 					        <table:template>
-								<Text text="{mdRecepit>production_plan}"/>
+								<Text text="{path:'mdRecepit>production_plan', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Result"/>
 					        <table:template>
-								<Text text="{mdRecepit>production_result}"/>
+								<Text text="{path:'mdRecepit>production_result', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Plan"/>
 					        <table:template>
-								<Text text="{mdRecepit>completion_plan}" />
+								<Text text="{path:'mdRecepit>completion_plan', formatter: '.dateFormatter.toDateString'}"  />
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Result"/>
 					        <table:template>
-								<Text text="{mdRecepit>completion_result}" />
+								<Text text="{path:'mdRecepit>completion_result' , formatter: '.dateFormatter.toDateString'}" />
 							</table:template>
 						</table:Column>
 

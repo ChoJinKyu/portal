@@ -48,7 +48,7 @@
                             class="sapFDynamicPageAlignContent" 
                             updateFinished="" 
                             selectionChange=".selectDeptChange" 
-                            mode="SingleSelect"
+                            mode="SingleSelectMaster"
                             width="auto"
                             items="{deptPopList>/Department}"
                             >

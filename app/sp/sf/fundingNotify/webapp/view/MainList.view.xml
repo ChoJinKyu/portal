@@ -70,12 +70,12 @@
                             <ToolbarSpacer/>
                             <Button id="mainTableSandMailButton" text="{I18N>/MAIL_TRANSFER}" type="Transparent" press=".onMainSendMailButtonPress" />
                             <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <ToolbarSeparator/>
+                            <!-- <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
-                            </Button>
+                            </Button> -->
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>

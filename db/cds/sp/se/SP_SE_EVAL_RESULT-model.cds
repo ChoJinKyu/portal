@@ -10,7 +10,7 @@ entity Se_Eval_Result {
   key evaluation_type_code           : String(30)  not null @title: '평가유형코드' ;	
   key regular_evaluation_id          : String(100) not null @title: '정기평가ID' ;	
   key supplier_group_code            : String(30)  not null @title: '공급업체그룹코드' ;	
-      evaluation_score               : Integer              @title: '평가점수' ;	
+      evaluation_score               : Decimal(5,2)         @title: '평가점수' ;	
       evaluation_grade               : String(10)           @title: '평가등급' ;	
       evaluation_person_info         : String(100)          @title: '평가담당자정보' ;	
       appeal_flag                    : Boolean              @title: '이의제기여부' ;	

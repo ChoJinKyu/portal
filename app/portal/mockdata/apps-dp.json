@@ -62,9 +62,14 @@
             "icon": "sap-icon://locate-me",
             "subMenus": [
                 {
-                    "name": "Base Price Progress Status",
+                    "name": "개발VI품의목록",
                     "url": "../dp/vi/basePriceArlMgt/webapp",
-                    "component": "dp.vi.basePriceArl"
+                    "component": "dp.vi.basePriceArlMgt"
+                },
+                {
+                    "name": "품의진행상태조회",
+                    "url": "../dp/vi/basePriceProgressStatusMgt/webapp",
+                    "component": "dp.vi.basePriceProgressStatusMgt"
                 }
             ]
         }

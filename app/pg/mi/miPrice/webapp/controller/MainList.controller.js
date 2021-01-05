@@ -63,15 +63,17 @@ sap.ui.define([
 					intent: "#Template-display"
                 }, true);
                 
-                var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-                $.each(b, function(index, item) {
+                // var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+                // $.each(b, function(index, item) {
 
-                    if (item.sId.search("btnGo") !== -1) {
-                        item.setText(this.oi18nModel.getText("/EXECUTE"));
-                    }
+                //     if (item.sId.search("btnGo") !== -1) {
+                //         item.setText(this.oi18nModel.getText("/EXECUTE"));
+                //     }
 
-                }.bind(this));
+                // }.bind(this));
             }.bind(this));
+
+            this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
             
            //this._doInitTablePerso();
             this.enableMessagePopover();

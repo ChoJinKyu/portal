@@ -67,14 +67,14 @@
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="{I18N>/FUNDING_NOTIFICATION} ({= ${list>/SfFundingNotify}.length || 0})" level="H2"/>
-                            <ToolbarSpacer/>
+                            <!-- <ToolbarSpacer/> -->
                             <!-- <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddButtonPress" /> -->
-                            <ToolbarSeparator/>
-                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <!-- <ToolbarSeparator/> -->
+                            <!-- <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
-                            </Button>
+                            </Button> -->
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
@@ -143,7 +143,7 @@
                                     }"/>
                                 <HBox justifyContent="Center">
                                     <Button id="applicationCreateBtn" text="작성" type="Emphasized" press=".onCreateFundingNotify" visible="{list>btnCreate}"/>
-                                    <Button id="applicationCloseBtn" text="마감" editable="false" visible="{list>btnClose}"/>
+                                    <Button id="applicationCloseBtn" text="마감" visible="{list>btnClose}"/>
                                 </HBox>
                             </cells>
                         </ColumnListItem>

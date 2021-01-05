@@ -6,8 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
-// import java.util.HashMap;
-// import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,12 +20,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 // import com.sap.cds.services.cds.CdsCreateEventContext;
-// import com.sap.cds.services.cds.CdsReadEventContext;
+import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.request.ParameterInfo;
+import com.sap.cds.services.request.UserInfo;
 
 import cds.gen.dp.basepricearlservice.BasePriceArlMaster;
 import cds.gen.dp.basepricearlservice.BasePriceArlMaster_;
@@ -43,12 +45,30 @@ public class BasePriceArlService implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
+    @Autowired
+    UserInfo userInfo;
+
+    @Autowired
+    ParameterInfo parameterInfo;
+
+    // private Map<Object, Map<String, Object>> masters = new HashMap<>();
+
+    // @On(event = CdsService.EVENT_READ, entity = BasePriceArlMaster_.CDS_NAME)
+    //  public void onRead(CdsReadEventContext  context) {
+    //     UserInfo userInfo = context.getUserInfo();
+    //     log.info("## user ID : " + userInfo.getId());
+    //     log.info("## user isAuth : " + Boolean.toString(userInfo.isAuthenticated()));
+
+    //     // context.getCqn().entries().forEach(e -> masters.put(e.get("ID"), e));
+    //     context.setResult(masters.values());
+    //  }
+
     /**
      * BasePriceArlMaster의 Update Before Event Handler
      */
     @Before(event = { CdsService.EVENT_UPDATE }, entity = BasePriceArlMaster_.CDS_NAME)
     public void beforeUpdateBasePriceArlMaster(List<BasePriceArlMaster> basePriceArlMasters) {
-        System.out.println("#### beforeUpdateBasePriceArlMaster Started....");
+        log.info("#### beforeUpdateBasePriceArlMaster Started....");
 
         CallableStatement cstmt;
         ResultSet rs;
@@ -443,10 +463,9 @@ public class BasePriceArlService implements EventHandler {
     //     }
     // }
 
-    // @On(event = CdsService.EVENT_READ, entity =
-    // "BasePriceArlService.Base_Price_Arl_Master")
+    // @On(event = CdsService.EVENT_READ, entity = "BasePriceArlService.Base_Price_Arl_Master")
     // public void onRead(CdsReadEventContext context) {
-    // context.setResult(Base_Price_Arl_Master.values());
+    //     context.setResult(Base_Price_Arl_Master.values());
     // }
 
 }

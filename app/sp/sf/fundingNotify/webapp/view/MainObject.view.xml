@@ -65,7 +65,7 @@
 
 		<uxap:sections>
 			<!-- General Infomation -->
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="true" title="Genaral Infomation">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="true" title="일반정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
                         <form:SimpleForm
@@ -84,12 +84,17 @@
                                     <Label text="{I18N>/APPLICATION_PERIOD} :" required="true"/>
                                     <DateRangeSelection editable="{midObjectView>/editMode}"
                                         id="AnnouncementPeriodEdit" 
-                                        displayFormat="yyyy-MM-dd" 
-                                        dateValue="{master>/funding_notify_start_date}"
-                                        secondDateValue="{master>/funding_notify_end_date}"
+                                        value="{
+                                            parts: [
+                                                {path: 'master>/funding_notify_start_date'}, 
+                                                {path: 'master>/funding_notify_end_date'}
+                                            ], 
+                                            type: 'sap.ui.model.type.DateInterval',
+                                            formatOptions: { UTC: true, format: 'yMd' }
+                                        }" 
                                         placeholder="YYYY-MM-DD - YYYY-MM-DD"
                                         change=".onApplicationPeriodChange"
-                                        />
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData>
@@ -102,7 +107,7 @@
                                             path:'master>/funding_appl_closing_date',
                                             type:'sap.ui.model.odata.type.DateTime',
                                             formatOptions: {
-                                                pattern: 'yyyy-MM-dd'
+                                                UTC: true, format: 'yMd'
                                             }
                                         }"/>
                                     <layoutData>
@@ -148,7 +153,7 @@
 			</uxap:ObjectPageSection>
 
 			<!-- 파일 첨부 -->
-			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="Attachment">
+			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="첨부파일">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm>
@@ -183,12 +188,12 @@
 		<!-- 하단 버튼 처리 툴바 -->
 		<uxap:footer>
 			<OverflowToolbar>
-        <Button
-            icon="sap-icon://alert"
-            type="Emphasized"
-            text="{= ${message>/}.length }"
-            visible="{= ${message>/}.length > 0 }"
-            press=".onMessagePopoverPress" />
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />
                 <Button id="pageDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPageDeleteButtonPress" />

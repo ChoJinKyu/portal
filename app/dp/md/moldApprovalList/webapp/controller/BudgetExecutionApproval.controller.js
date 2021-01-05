@@ -102,14 +102,11 @@ sap.ui.define([
                     console.log("md >>>>>>", md); 
                     that._bindComboPlant(oData.results[0].import_company_code);
                 });
+                this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }
             
-            if(this.getView().getModel("mode").getProperty("/editFlag")){
-               this._budgetEditFragment();
-            }else{
-               this._budgetViewFragment();
-            }
         },
+
         _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
                     oModel = this.getModel(sModel);
@@ -288,13 +285,23 @@ sap.ui.define([
                 }
             }
             
-            console.log("onPagePreviewButtonPress >>> this._oDialog " , this._oDialogPrev);
+           var ref = this.getModel("referer");
+           this.getView().setModel(new ManagedModel(), "refererPreview");
+
+           var rArr = [];
+           if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
+                ref.getData().Referers.forEach(function(item){
+                    rArr.push(item.referer_empno); 
+                });
+            }
+            this.getModel("refererPreview").setProperty("/refArr", rArr);
+
             var oView = this.getView();
 
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView", 
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -330,7 +337,16 @@ sap.ui.define([
             var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            console.log("bModel.getData().length " , bModel);
+
+            if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+            if(this.validator.validate(this.byId("account") ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
             if(bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0){
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;

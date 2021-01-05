@@ -16,7 +16,7 @@
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="true">
+		showFooter="{master>/btnCreate}">
 		<uxap:headerTitle>
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
@@ -63,7 +63,7 @@
 
 		<uxap:sections>
 			<!-- General Infomation -->
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="true" title="Genaral Infomation">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="true" title="일반정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
                         <form:SimpleForm
@@ -80,27 +80,31 @@
                             <form:content>
                                 <VBox>
                                     <Label design="Bold" text="{I18N>/APPLICATION_PERIOD} :" />
-                                    <DateRangeSelection editable="{midObjectView>/editMode}"
-                                        id="AnnouncementPeriodEdit" 
-                                        displayFormat="yyyy-MM-dd" 
-                                        dateValue="{master>/funding_notify_start_date}"
-                                        secondDateValue="{master>/funding_notify_end_date}"
-                                        placeholder="YYYY-MM-DD - YYYY-MM-DD"
-                                        />
+                                    <ObjectIdentifier 
+                                        text="{
+                                            parts: [
+                                                {path: 'master>/funding_notify_start_date'}, 
+                                                {path: 'master>/funding_notify_end_date'}
+                                            ], 
+                                            type: 'sap.ui.model.type.DateInterval',
+                                            formatOptions: {pattern: 'yyyy-MM-dd'} ,
+                                            UTC: true
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label design="Bold" text="{I18N>/APPLICATION_DUE_DATE} :" />
-                                    <DatePicker editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path:'master>/funding_appl_closing_date',
-                                            type:'sap.ui.model.odata.type.DateTime',
-                                            formatOptions: {
-                                                UTC: true, format: 'yMd'
-                                            }
-                                        }"/>
+                                    <ObjectIdentifier 
+                                        text="{
+                                            path: 'master>/funding_appl_closing_date', 
+                                            type: 'sap.ui.model.type.Date', 
+                                            formatOptions: {pattern: 'yyyy-MM-dd'} ,
+                                            UTC: true
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData>
@@ -133,7 +137,7 @@
 			</uxap:ObjectPageSection>
 
 			<!-- 파일 첨부 -->
-			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="Attachment">
+			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="첨부파일">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm>
@@ -170,14 +174,7 @@
 		<!-- 하단 버튼 처리 툴바 -->
 		<uxap:footer>
 			<OverflowToolbar>
-        <Button
-            icon="sap-icon://alert"
-            type="Emphasized"
-            text="{= ${message>/}.length }"
-            visible="{= ${message>/}.length > 0 }"
-            press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
                 <Button id="pageCreateNotifyButton" type="Emphasized" visible="{master>/btnCreate}" text="신청서작성" press=".onCreateFundingNotify"/>
 			</OverflowToolbar>
 		</uxap:footer>

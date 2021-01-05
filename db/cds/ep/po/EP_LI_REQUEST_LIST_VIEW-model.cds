@@ -13,10 +13,18 @@ entity Li_Request_List_View {
         loi_request_title          : String(100)            @title : 'LOI요청제목';
         loi_publish_purpose_desc   : String(1000)           @title : 'LOI발행목적설명';
         loi_request_status_code    : String(30)             @title : 'LOI요청상태코드';
+        loi_request_status_name    : String(30)             @title : 'LOI요청상태';
         investment_review_flag     : Boolean                @title : '투자심의여부';
         buyer_empno                : String(30)             @title : '구매자사번';
         publish_date               : Date                   @title : '발행일자';
         supplier_code              : String(15)             @title : '공급업체코드';
+        special_note               : LargeString            @title : '특기사항';
+        requestor_empno            : String(30)             @title : '요청자사번';
+        requestor_name             : String(50)             @title : '요청자명';
+        request_department_code    : String(50)             @title : '요청부서코드';
+        request_department_name    : String(50)             @title : '요청부서명';
+        
+
 
 }
 

@@ -28,7 +28,7 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 -H "Content-Type: application/json" \
 -d '{"tenant_id": "L2100", "approval_title": "개발VI 품의서 테스트", 
 "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 테스트", 
-"approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
+"approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": []}'
 
@@ -37,7 +37,7 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 -H "Content-Type: application/json" \
 -d '{"tenant_id": "L2100", "approval_title": "개발VI 품의서 테스트",
 "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 테스트", 
-"approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
+"approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": [ 
 { "company_code": "LGEKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "1", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"},
@@ -49,7 +49,7 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 -H "Content-Type: application/json" \
 -d '{"tenant_id": "L2100", "approval_title": "개발VI 품의서 테스트",
 "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 테스트", 
-"approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
+"approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": [ 
 { "company_code": "LGEKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
@@ -64,7 +64,7 @@ curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_A
 -d '{
     "approval_title": "개발VI 품의서 수정 테스트 중....",
     "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 수정 테스트 중....", 
-    "approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
+    "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
     "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2021-01-04T10:18:46Z",
     "details": [ 
         { 
@@ -82,7 +82,7 @@ curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_A
 -d '{
     "approval_title": "개발VI 품의서 수정 테스트",
     "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 수정 테스트", 
-    "approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
+    "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
     "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2021-01-04T10:18:46Z"
 }'
 

@@ -84,7 +84,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMaterialCodeBOMManagementHeaderView"
                     tableBindingPath="{MIMaterialCodeBOMManagementHeaderView}"
-                    initiallyVisibleFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,mi_bom_id"
+                    initiallyVisibleFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,mi_bom_id,system_update_dtm"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
@@ -99,6 +99,7 @@
                     persistencyKey="SmartTablePKey"                    
                     class="sapUiResponsiveContentPadding"
                     demandPopin="true"
+                    enableAutoBinding="true"
                     customData:useSmartField="true"
                     showFullScreenButton="false">
                     <smartTable:customToolbar>
@@ -187,15 +188,22 @@
                                         <Column visible="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "mi_bom_id", "leadingProperty": "mi_bom_id", "sortProperty": "mi_bom_id", "filterProperty": "mi_bom_id", "columnIndex": 99}'/>
+                                        value='\{"columnKey": "mi_bom_id", "leadingProperty": "mi_bom_id", "columnIndex": 99}'/>
                                         </customData>
                                              <Text text="mi_bom_id"></Text>
-                                        </Column>                      
+                                        </Column>     
+                                        <Column visible="false">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
+                                        </customData>
+                                             <Text text="system_update_dtm"></Text>                                                                             
+                                        </Column>
+
                                     </columns>
                                     <items>
                                         <ColumnListItem 
-                                        type="Navigation" 
-                                        hAlign="Middle" 
+                                        type="Navigation"                                         
                                         press=".onMainTableItemPress">
                                             <Text text="{material_code}"></Text>
                                             <Text text="{material_desc}"></Text>
@@ -205,6 +213,7 @@
                                             <Text text="{processing_cost}"></Text>
                                             <Text text="{pcst_currency_unit}"></Text>
                                             <Text text="{mi_bom_id}"></Text>                   
+                                            <Text text="{system_update_dtm}"></Text>                   
                                         </ColumnListItem>
                                     </items>
                                 </Table>

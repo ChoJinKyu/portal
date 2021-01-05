@@ -30,8 +30,7 @@ sap.ui.define([
 			},
 			deleteCheckItemCount : 0,
 			deleteHeaderItemCount : 0,
-			deleteItemCount : 0,
-
+			deleteItemCount : 0
         },
 		
 		_sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
@@ -54,20 +53,12 @@ sap.ui.define([
 		onInit : function () {
 			
 			console.group("onInit");
-			var oUi, oDeleteInfo, oResourceBundle = this.getResourceBundle();
-
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
-
 
 			var oi18nSearch = this.getModel("I18N").getText("/SEARCH");		
             oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
-				// this.addHistoryEntry({
-				// 	title: oi18nModel.getText("/USER_MANAGEMENT"),
-				// 	icon: "sap-icon://table-view",
-				// 	intent: "#Template-display"
-				// }, true);
 
 				// Smart Filter Button 명 처리 START
 				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
@@ -78,25 +69,32 @@ sap.ui.define([
 						}
 						item.setText(oi18nSearch);
 					}
-				}.bind(this));
-					
-			
+				}.bind(this));								
 			}.bind(this));
-			
 
-			oDeleteInfo = new JSONModel({oData:[]});
+			var oUi = new JSONModel({
+				headerExpanded: true,
+				busy : false
+			});
+
+
+			var oDeleteInfo = new JSONModel({oData:[]});
+
 			this.setModel(oUi, "oUi");
-			this.setModel(oDeleteInfo, "oDeleteInfo");
 
+			this.setModel(oDeleteInfo, "oDeleteInfo");
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._mainTable = this.getView().byId("mainTable");
 		
-            this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
+			this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
+			
+			this._deleteMessageCount = 0;
+
 		   	// var view = this.getView().byId("page"); 
 		   	// view.setBusy(true);
-			// console.groupEnd();
+			console.groupEnd();
 		},
 		
 		/**
@@ -174,6 +172,7 @@ sap.ui.define([
          */
 		onBeforeRebindTable: function (oEvent) {
 			console.log("onBeforeRebindTable");
+			var that = this;
 			
 			this._getSmartTableById().getTable().removeSelections(true);
 			var mBindingParams = oEvent.getParameter("bindingParams");
@@ -196,7 +195,21 @@ sap.ui.define([
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
 			}         
 
+			//var firstItem = this._getSmartTableById.getItems()[0];
+			//this._getSmartTableById().getTable().setSelectedItem(firstItem);
+
 			this._getSmartTableById().getTable().removeSelections(true);
+
+			if (that._isOnInit == null) that._isOnInit = true; 
+			if (that._isOnInit) {
+
+				mBindingParams.sorter = [
+					new sap.ui.model.Sorter("system_update_dtm", true)
+				];
+
+				that._isOnInit = false;
+			}
+
         },
 		
 			
@@ -472,6 +485,8 @@ sap.ui.define([
 				
 				oDeleteInfo.setData(null);
 
+				that._deleteMessageCount = 0;
+
 				//해당 테이블에 바인딩 되지 않아도 ITEM이 모두 삭제 되면 Header 정보도 삭제 되어야 한다. 
 				
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
@@ -596,7 +611,10 @@ sap.ui.define([
 
 		_setUseBatch : function () {
             var oModel = this.getModel(),
-                that = this;
+				that = this;
+				
+				that._setBusy(true);   
+								
                 oModel.setUseBatch(true);
                 
 				oModel.submitChanges({
@@ -605,9 +623,6 @@ sap.ui.define([
 					error: that._handleDeleteError.bind(this)
 				});
 
-				// oModel.updateBindings(true);
-				// oModel.refresh(true); 
-				// that.getView().byId("smartTable_MainTable_ResponsiveTable").getModel().refresh(true);
                 that._setBusy(false);   
 		},
        /**
@@ -616,14 +631,16 @@ sap.ui.define([
          * @private
          */
         _handleDeleteSuccess: function (oData) {
-			var that = this;
+			var that = this;			
 			
-            this._showMessageBox(
-                this.getModel("I18N").getText("/DELETE + SUCCESS"),
-                this.getModel("I18N").getText("/NCM01002"),
-                this._m.messageType.Error,
-                function(){return;}
-			);
+			if(that._deleteMessageCount<1){
+            	that._showMessageBox(
+					that.getModel("I18N").getText("/DELETE + SUCCESS"),
+					that.getModel("I18N").getText("/NCM01002"),
+					that._m.messageType.Error,
+					function(){return;}
+				);
+			}
         },
 
         /**
@@ -655,9 +672,9 @@ sap.ui.define([
 
 
 		_setBusy : function (bIsBusy) {
-			// var that = this;
-			// var oModel = that.getModel("oUi");
-			// oModel.setProperty("/busy", bIsBusy);
+			var that = this;
+			var oModel = that.getModel("oUi");
+			oModel.setProperty("/busy", bIsBusy);
 		},
         /**
          * MESSAGE

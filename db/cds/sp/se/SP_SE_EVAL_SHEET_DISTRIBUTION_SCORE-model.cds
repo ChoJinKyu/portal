@@ -12,10 +12,10 @@ entity Se_Eval_Sheet_Distribution_Score {
   key regular_evaluation_id          : String(100) not null @title: '정기평가ID' ;	
   key vendor_pool_code               : String(20)  not null @title: '협력사풀코드' ;	
   key evaluation_article_group_code  : String(15)  not null @title: '평가항목그룹코드' ;	
-      pyear_planning_distrb_score    : Integer              @title: '전년기획배분점수' ;	
-      tyear_planning_distrb_score    : Integer              @title: '금년기획배분점수' ;	
-      pyear_eng_distrb_score         : Integer              @title: '전년설계배분점수' ;	
-      tyear_eng_distrb_score         : Integer              @title: '금년설계배분점수' ;	
+      pyear_planning_distrb_score    : Decimal(5,2)         @title: '전년기획배분점수' ;	
+      tyear_planning_distrb_score    : Decimal(5,2)         @title: '금년기획배분점수' ;	
+      pyear_eng_distrb_score         : Decimal(5,2)         @title: '전년설계배분점수' ;	
+      tyear_eng_distrb_score         : Decimal(5,2)         @title: '금년설계배분점수' ;	
       distrb_score_change_flag       : Boolean              @title: '배분점수변경여부' ;	
       approval_number                : String(50)           @title: '품의번호' ;	
 }	
