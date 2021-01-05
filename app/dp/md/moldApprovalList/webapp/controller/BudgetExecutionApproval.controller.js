@@ -102,6 +102,7 @@ sap.ui.define([
                     console.log("md >>>>>>", md); 
                     that._bindComboPlant(oData.results[0].import_company_code);
                 });
+                this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }
             
         },
@@ -336,7 +337,16 @@ sap.ui.define([
             var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            console.log("bModel.getData().length " , bModel);
+
+            if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+            if(this.validator.validate(this.byId("account") ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
             if(bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0){
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;

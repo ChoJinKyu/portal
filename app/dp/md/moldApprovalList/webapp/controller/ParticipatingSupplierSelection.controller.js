@@ -235,6 +235,7 @@ sap.ui.define([
                 oModel = this.getModel("mdItemMaster"),
                 mstModel = this.getModel("appMaster");
             ;
+            console.log(data);
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.approval_number;
             oModel.addRecord({
@@ -291,11 +292,14 @@ sap.ui.define([
         //     this._participatingEditFragment();
         //     this._editMode();
         // },
-
+        
         onPageCancelButtonPress: function () {
             this._participatingViewFragment();
             this._viewMode();
         },
+
+        _toEditModeEachApproval : function(){ this._participatingEditFragment() } ,
+        _toShowModeEachApproval : function(){ this._participatingViewFragment() } ,
 
         _participatingEditFragment : function(){
             console.log("_participatingEditFragment");

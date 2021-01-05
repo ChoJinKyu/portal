@@ -279,6 +279,10 @@ sap.ui.define([
             this._fnSetMode("edit");
         },
 
+        _fnSetCopyMode : function() {
+            this._fnSetMode("copy");
+        },
+
         _fnSetDeleteMode : function(){
             this._fnSetMode("delete");
         },        
@@ -289,9 +293,10 @@ sap.ui.define([
 
         _fnSetMode : function(mode){
             var bRead = false,
-            bCreate = false,
-            bEdit = false,
-            bDelete = false;
+                bCreate = false,
+                bEdit = false,
+                bCopy = false,
+                bDelete = false;
 
             if(mode === "read"){
                 bRead = true;
@@ -302,11 +307,16 @@ sap.ui.define([
             }else if(mode ==="delete"){
                 bDelete = true;                
             }
+            else if(mode ==="copy"){
+                bCopy = true;                
+            }            
+
             var oUi = this.getModel("oUi");
             oUi.setProperty("/readMode", bRead);
             oUi.setProperty("/createMode", bCreate);
             oUi.setProperty("/editMode", bEdit);
             oUi.setProperty("/deleteMode", bDelete);
+            oUi.setProperty("/copyMode", bCopy);
         },
 
         /**
@@ -919,7 +929,18 @@ sap.ui.define([
             this._initialControlValue();
             this._initialFilter();
         },
-		/**
+
+        _fnGuid : function(){
+            function guid() {
+                function s4() {
+                    return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+                }
+                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+            };
+
+            return guid();
+        },
+        /**
 		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
@@ -934,14 +955,7 @@ sap.ui.define([
                 oArgs = oEvent.getParameter("arguments"),
                 oModel = this.getOwnerComponent().getModel();
 
-            function guid() {
-                function s4() {
-                    return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
-                }
-                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-            }
-            
-            this._m.mi_bom_id = guid();
+            this._m.mi_bom_id = this._fnGuid();
             this._m.filter.tenant_id = oArgs.tenant_id;
             this._m.filter.material_code = oArgs.material_code;
             this._m.filter.supplier_code = oArgs.supplier_code;
@@ -1017,6 +1031,21 @@ sap.ui.define([
          */
         onEdit: function () {
             this._fnSetEditMode();         
+        },
+
+        /**
+         * 화면에서 버튼 이벤트 수정모드 전환
+         * @public
+         */        
+        onCopy : function () {
+            console.log("onCopy");
+            var oUiData = this.getModel("oUiData");
+
+            this._fnSetCopyMode();  
+
+            this.getView().byId("input_base_quantity").setValue(oUiData.getProperty("/base_quantity"));
+            this.getView().byId("input_processing_cost").setValue(oUiData.getProperty("/processing_cost"));
+
         },
 
         /**
@@ -1494,6 +1523,7 @@ sap.ui.define([
             
                         var input_material_code = that.getView().byId("input_material_code");
                         input_material_code.setValue(sourceName);
+                        input_material_code.setValueState(ValueState.None);
             
                         var input_hidden_material_code = that.getView().byId("input_hidden_material_code");
                         var input_hidden_material_desc = that.getView().byId("input_hidden_material_desc");
@@ -1506,6 +1536,7 @@ sap.ui.define([
                         input_hidden_supplier_code.setValue(supplier_code);
                         input_hidden_supplier_local_name.setValue(supplier_local_name);
 
+                        
                         that.onMaterialDialog_close();
                     }
                 }
@@ -1687,17 +1718,23 @@ sap.ui.define([
             var _oUi = this.getModel("oUi"),
                 bCheckValidate = true;
 
-            if(_oUi.getProperty("/createMode")){
+            if(_oUi.getProperty("/createMode")==true || _oUi.getProperty("/copyMode")==true){
                 bCheckValidate =  this.validator.validate(this.byId(this._m.page));
                 if(bCheckValidate) {
                     this.validator.clearValueState(this.byId(this._m.page));
+                }else{
+                    return false;
                 }
             }
             
             bCheckValidate =  this.validator.validate(this.byId("midTable"));
             if(bCheckValidate){
                 this.validator.clearValueState(this.byId("midTable"));
+            }else{
+                return false;
             }
+
+            
             return bCheckValidate;
 
         },
@@ -1778,9 +1815,11 @@ sap.ui.define([
             // this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
              var oUi = this.getModel("oUi");
              var bCreateFlag = oUi.getProperty("/createMode");
+             var bCopyFlag = oUi.getProperty("/copyMode");
  
              var bValidate = this._onPageValidate();
              console.log("bValidate", bValidate);
+
              if(!bValidate){
                  return false;
              }
@@ -1789,7 +1828,6 @@ sap.ui.define([
                 return false;
             }
 
-            console.log("bCreateFlag");
             if(bCreateFlag){
 
                     MessageBox.confirm(this.getModel("I18N").getText("/NPG00014"), {
@@ -1804,9 +1842,24 @@ sap.ui.define([
                         }.bind(this)
                     });
                
-             }else{
+             }
+             else if(bCopyFlag){
+
+                MessageBox.confirm("복사 하시겠습니까?", {
+                    title : "복사 확인",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            this._onSave();
+                        }else{
+                            return;
+                        }
+                    }.bind(this)
+                });
+             }
+             else{
                 MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
-                    title : "Update",
+                    title : this.getModel("I18N").getText("/UPDATE"),
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
@@ -1828,6 +1881,7 @@ sap.ui.define([
 
             var oUi = this.getModel("oUi"),
                 bCreateFlag = oUi.getProperty("/createMode"),
+                bCopyFlag = oUi.getProperty("/copyMode"),
                 bEditFlag = oUi.getProperty("/editMode"),
                 that = this,
                 oModel = this.getModel(),
@@ -1850,7 +1904,7 @@ sap.ui.define([
                 
 
                 //Crate
-                if(bCreateFlag){
+                if(bCreateFlag==true || bCopyFlag ==true){
                     //material_code, supplier_code, 기준수량, 가공비, 가공비 통화
                     midList.oData[i].material_code = that.byId("input_hidden_material_code").getValue(),
                     midList.oData[i].supplier_code = that.byId("input_hidden_supplier_code").getValue(),
@@ -1858,6 +1912,11 @@ sap.ui.define([
                     midList.oData[i].processing_cost = that.byId("input_processing_cost").getValue(),
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();
                   
+                    if(bCopyFlag){
+                        
+                        midList.oData[i].mi_bom_id =  that._fnGuid();
+                    }
+
                     if(i==0){
                         if(that._fnCreateEntryHeader(oModel, midList.oData[i])){
                             createHeader++;
@@ -1870,8 +1929,6 @@ sap.ui.define([
                 }
                 else {  //Update
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();   
-                                  
-
 
                     if(i==0){
 
@@ -2010,6 +2067,12 @@ sap.ui.define([
                         groupId: that._m.groupID,
                         success: that._handleUpdateSuccess.bind(this),
                         error: that._handleUpdateError.bind(this)
+                    });
+                }else if(oUi.getProperty("/copyMode")){
+                    oModel.submitChanges({
+                        groupId: that._m.groupID,
+                        success: that._handleCopySuccess.bind(this),
+                        error: that._handleCopyError.bind(this)
                     });
                 }else{
                     oModel.submitChanges({
@@ -2418,6 +2481,7 @@ sap.ui.define([
                 }
             });
         },
+       
         
         _handleUpdateError: function (oError) {
             this._showMessageBox(
@@ -2427,6 +2491,33 @@ sap.ui.define([
                 function(){return;}
             );
         },
+
+        _handleCopySuccess: function (oData) {
+            var that = this;
+            MessageBox.show("복사 성공 하였습니다.", {
+                icon: MessageBox.Icon.SUCCESS,
+                title: "복사 성공",
+                actions: [MessageBox.Action.OK],
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                        that._onExit();
+                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
+                    }
+                }
+            });
+        },
+       
+        
+        _handleCopyError: function (oError) {
+            this._showMessageBox(
+                "복사 실패",
+                "복사 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
+        },
+
         /**
          * 삭제 성공
          * @param {ODATA} oData 

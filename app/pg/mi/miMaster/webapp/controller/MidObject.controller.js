@@ -174,15 +174,15 @@ sap.ui.define([
 
             if(mode === "read"){
                 bRead = true;
-                bCreate = false,
+                bCreate = false;
                 bEdit = false;
             }else if(mode === "create"){
                 bRead = false;
-                bCreate = true,
+                bCreate = true;
                 bEdit = false;
             }else if(mode === "edit"){
                 bRead = false;
-                bCreate = false,
+                bCreate = false;
                 bEdit = true;
             }
 

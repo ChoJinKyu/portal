@@ -2,6 +2,7 @@ using {dp as arlMaster} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_M
 using {dp as arlDetail} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
 using {dp as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
 using {cm.Code_Dtl as code} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
+using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as comp} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using {cm.Hr_Employee as employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
@@ -19,6 +20,8 @@ service BasePriceArlService {
 
     @readonly
     entity Code_Dtl              as projection on code;
+    @readonly
+    entity Code_Lng              as projection on codeLng;
     
     @readonly
     entity Org_Tenant            as projection on tenant;

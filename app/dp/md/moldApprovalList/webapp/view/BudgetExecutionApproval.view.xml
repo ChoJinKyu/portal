@@ -137,6 +137,7 @@
                          columnsXL="2" 
                          columnsL="1" 
                          columnsM="1" 
+                         width="70%"
                          singleContainerFullSize="true">
 			        <form:content>
                     <VBox>
@@ -165,7 +166,7 @@
 				<VBox>
 					<Label text="Acquisition Department" required="true"/>
                     <!-- edit Mode -->
-					<Input value="" showValueHelp="true" visible="{mode>/editFlag}"/>
+					<Input value="" showValueHelp="true" visible="{mode>/editFlag}" />
                     <!-- view Mode -->
                     <Text text="" visible="{mode>/viewFlag}"/>
 					<layoutData>
@@ -209,7 +210,6 @@
 					</ComboBox>
                     <!-- view Mode -->
                     <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
-
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -255,6 +255,7 @@
 					<ComboBox visible="{mode>/editFlag}"  
                               width="100%" 
                               id="account" 
+                              required="true"
                               selectedKey="{mdCommon>/account_code}" 
                               items="{ path : 'util>/Code',
                                         filters : [
