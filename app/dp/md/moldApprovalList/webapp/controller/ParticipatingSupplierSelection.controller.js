@@ -376,15 +376,7 @@ sap.ui.define([
             this.quotation_data = [];
             var qtnArr = [];
             var that = this;
-           // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
-                var account_code = bModel.getData().ParticipatingSupplier[0].account_code;
-                var investment_ecst_type_code =  bModel.getData().ParticipatingSupplier[0].investment_ecst_type_code;
-                var accounting_department_code =  bModel.getData().ParticipatingSupplier[0].accounting_department_code;
-                var import_company_code =  bModel.getData().ParticipatingSupplier[0].import_company_code;
-                var project_code =  bModel.getData().ParticipatingSupplier[0].project_code;
-                var import_company_org_code =  bModel.getData().ParticipatingSupplier[0].import_company_org_code;
-               // var provisional_budget_amount =  bModel.getData().ParticipatingSupplier[0].provisional_budget_amount;
 
                 bModel.getData().ParticipatingSupplier.forEach(function(item){
                     console.log(item);
