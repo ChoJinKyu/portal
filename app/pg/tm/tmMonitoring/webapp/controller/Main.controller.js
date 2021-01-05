@@ -28,16 +28,21 @@ sap.ui.define([
                 var oMultilingual = new Multilingual();
                 this.setModel(oMultilingual.getModel(), "I18N");
 
-                // Smart Filter Button 명 처리 START
-                var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-                $.each(b, function (index, item) {
-                    if (item.sId.search("btnGo") !== -1) {
-                        item.setText(this.oi18nModel.getText("/EXECUTE"));
-                    }
-                }.bind(this));
-                console.log(this.byId("MonitorListTable"));
+                this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
 
-                
+                // oMultilingual.attachEvent("ready", function (oEvent) {
+                //     // Smart Filter Button 명 처리 START
+                //     var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+                //     $.each(b, function (index, item) {
+                //         if (item.sId.search("btnGo") !== -1) {
+                //             item.setText("조회");
+                //         }
+                //     }.bind(this));
+                //     // Smart Filter Button 명 처리 END
+                // }.bind(this));
+
+
+
 
             },
 
@@ -105,7 +110,7 @@ sap.ui.define([
                     company_name = company_combo.getSelectedItems(),
                     bizunit_combo = this.getView().byId("bizunit_combo"),           //사업본부 콤보박스
                     bizunit_name = bizunit_combo.getSelectedItems();
-                
+
                 var aSearchFilters = [];
                 if (tenant_name.length > 0) {
                     aSearchFilters.push(new Filter("tenant_name", FilterOperator.Contains, tenant_name));

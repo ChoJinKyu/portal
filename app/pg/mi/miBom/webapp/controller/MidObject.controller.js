@@ -640,13 +640,14 @@ sap.ui.define([
         onReqmQuantityUnitApply : function () {
             console.log("onReqmQuantityUnitApply");
             var that = this;
-            var reqmTable =  that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable"), 
-            midList = that.getModel("midList");
+            var mTitle = this.getModel("I18N").getText("/OPTION") + " " + this.getModel("I18N").getText("/CONFIRM");
+            var reqmTable =  that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable"); 
+            var midList = that.getModel("midList");
                 
 
             if(reqmTable.getSelectedItems().length<1){
                 that._showMessageBox(
-                    that.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    mTitle,
                     that.getModel("I18N").getText("/NPG00016"),
                     that._m.messageType.Warning,
                     function(){return;}
@@ -1132,9 +1133,10 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
+            var mTitle = this.getModel("I18N").getText("/SAVE") + " " + this.getModel("I18N").getText("/SUCCESS");
             MessageBox.show(this.getModel("I18N").getText("/NCM01001"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: this.getModel("I18N").getText("/SAVE"),
+                title: mTitle,
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -1295,11 +1297,12 @@ sap.ui.define([
                 rightTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable"),
                 oModel = this.getModel(),
                 oUi = this.getModel("oUi"),
+                mTitle = this.getModel("I18N").getText("/OPTION") + " " + this.getModel("I18N").getText("/CONFIRM"),            
                 that = this;            
 
             if(rightTable.getSelectedItems().length<1){
                 this._showMessageBox(
-                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    mTitle,
                     this.getModel("I18N").getText("/NPG00016"),
                     this._m.messageType.Warning,
                     function(){return;}
@@ -1425,12 +1428,13 @@ sap.ui.define([
          */
         onValueHelpMaterialDialogApply : function () {
             console.log("onValueHelpMaterialDialogApply");
-            var oTable = this._findFragmentControlId(this._m.fragementId.materialDialog, "materialTable"),            
+            var oTable = this._findFragmentControlId(this._m.fragementId.materialDialog, "materialTable"),
+                mTitle = this.getModel("I18N").getText("/OPTION") + " " + this.getModel("I18N").getText("/CONFIRM"),              
                 oSelected = oTable.getSelectedContexts();
 
             if(oSelected.length<1){
                 this._showMessageBox(
-                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    mTitle,
                     this.getModel("I18N").getText("/NPG00016"),
                     this._m.messageType.Warning,
                     function(){return;}
@@ -1646,15 +1650,17 @@ sap.ui.define([
          */
         onMidListItemDelete : function () {
             console.log("onMidListItemDelete");
+            
             var oModel = this.getModel("midList"),
                 _deleteItem = this.getModel("_deleteItem"),
                 that = this,
                 oTable = this.getView().byId("midTable"),
-                oSelected = oTable.getSelectedContexts();
+                oSelected = oTable.getSelectedContexts(),
+                mTitle = this.getModel("I18N").getText("/OPTION") + " " + this.getModel("I18N").getText("/CONFIRM");
                 
             if(oSelected.length<1){
                 this._showMessageBox(
-                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    mTitle,
                     this.getModel("I18N").getText("/NCM01010"),
                     this._m.messageType.Warning,
                     function(){return;}
@@ -1670,6 +1676,7 @@ sap.ui.define([
                 //수정
                 if(oModel.oData[idx].itemMode == this._m.itemMode.read){
                     _deleteItemOdata.push(oModel.oData[idx]);
+                    _deleteItem.setProperty("/delData", _deleteItemOdata);
                 }
 
                 oModel.oData.splice(idx, 1);              
@@ -1889,11 +1896,16 @@ sap.ui.define([
                 updateHeader = 0, 
                 createHeader = 0,
                 updateItem = 0, 
-                createItem = 0, 
+                createItem = 0,
+                copyBomId = "" ,
                 deleteItem = 0;
                 //that._setBusy(true);
 
 
+
+            if(bCopyFlag){
+                copyBomId = that._fnGuid();
+            }
 
             for(var i=0;i<midList.oData.length;i++){
 
@@ -1914,7 +1926,7 @@ sap.ui.define([
                   
                     if(bCopyFlag){
                         
-                        midList.oData[i].mi_bom_id =  that._fnGuid();
+                        midList.oData[i].mi_bom_id =  copyBomId;
                     }
 
                     if(i==0){
@@ -2082,11 +2094,10 @@ sap.ui.define([
                     });
                 }
 
-
-                oModel.refresh(true); 
-                // this._onMidServiceRead();
-                 this._fnSetReadMode();
-                that._onExit();  
+                setTimeout(oModel.refresh(true), 500);
+                setTimeout(this._fnSetReadMode(), 500);
+                setTimeout(that._onExit(), 500);
+               
                 that._setBusy(false);   
         },
         /*
@@ -2310,9 +2321,10 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
         onDeleteAction : function (oEvent){
-            console.log("onMidDelete");            
+            console.log("onMidDelete");      
+            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/CONFIRM");      
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
-                    title: this.getModel("I18N").getText("/DELETE + CONFIRM"),                                    
+                    title: mTitle,                                    
                     onClose: this._deleteAction.bind(this),                                    
                     actions: [MessageBox.Action.DELETE, MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
@@ -2323,6 +2335,7 @@ sap.ui.define([
          * delete MIMaterialCodeBOMManagementItem
          */
         _deleteMIMaterialCodeBOMManagementItem : function () {
+            console.log("_deleteMIMaterialCodeBOMManagementItem");
             var oModel = this.getOwnerComponent().getModel(),
                 _deleteItem = this.getModel("_deleteItem"),
                 that = this,
@@ -2361,8 +2374,9 @@ sap.ui.define([
                         );
                         deleteItem++; 
                     }catch(error){
+                        var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/FAILURE");
                         that._showMessageBox(
-                            this.getModel("I18N").getText("/DELETE + FAILURE"),
+                            mTitle,
                             error,
                             this._m.messageType.Error,
                             function(){return;}
@@ -2408,6 +2422,8 @@ sap.ui.define([
                             deleteItem++;
                         } 
                     }   
+
+                    //that._deleteMIMaterialCodeBOMManagementItem();
                     //header delete
                     //if(that._fnDeleteHeader(oModel, midList.oData[0])) deleteHeader++;
                 }           
@@ -2458,8 +2474,9 @@ sap.ui.define([
         },
 
         _handleCreateError: function (oError) {
+            var mTitle = this.getModel("I18N").getText("/SAVE") + " " + this.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
-                this.getModel("I18N").getText("/SAVE + FAILURE"),
+                mTitle,
                 this.getModel("I18N").getText("/EPG00003"),
                 this._m.messageType.Error,
                 function(){return;}
@@ -2468,9 +2485,10 @@ sap.ui.define([
 
         _handleUpdateSuccess: function (oData) {
             var that = this;
+            var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/SUCCESS");
             MessageBox.show(this.getModel("I18N").getText("/NPG00008"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: this.getModel("I18N").getText("/UPDATE + SUCCESS"),
+                title: mTitle,
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -2484,8 +2502,9 @@ sap.ui.define([
        
         
         _handleUpdateError: function (oError) {
+            var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
-                this.getModel("I18N").getText("/UPDATE + FAILURE"),
+                mTitle,
                 this.getModel("I18N").getText("/EPG00002"),
                 this._m.messageType.Error,
                 function(){return;}
@@ -2525,9 +2544,10 @@ sap.ui.define([
          */
         _handleDeleteSuccess: function (oData) {
             var that = this;
+            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/SUCCESS");
             MessageBox.show(this.getModel("I18N").getText("/NCM01002"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: this.getModel("I18N").getText("/DELETE + SUCCESS"),
+                title: mTitle,
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -2545,8 +2565,9 @@ sap.ui.define([
          * @private
          */
         _handleDeleteError: function (oError) {
+            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/FAILURE");            
             this._showMessageBox(
-                this.getModel("I18N").getText("/DELETE + FAILURE"),
+                mTitle,
                 this.getModel("I18N").getText("/EPG00001"),
                 this._m.messageType.Error,
                 function(){return;}

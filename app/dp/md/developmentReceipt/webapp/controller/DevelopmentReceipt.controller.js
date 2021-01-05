@@ -4,6 +4,8 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
+    "ext/lib/util/ExcelUtil",
+    "dp/md/util/controller/ModelDeveloperSelection",
     "./DevelopmentReceiptPersoService",
     "sap/ui/base/ManagedObject",
     "sap/ui/core/routing/History",
@@ -26,7 +28,7 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, DevelopmentReceiptPersoService,
+], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, ModelDeveloperSelection, DevelopmentReceiptPersoService,
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item,
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
@@ -36,6 +38,8 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
+
+        modelDeveloperSelection: new ModelDeveloperSelection(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -191,9 +195,8 @@ sap.ui.define([
             this._showMainObject(oEvent.getSource());
         },
 
-        onMoldMstTableUserSearch: function (event) {
-            var oItem = event.getParameter("suggestionItem");
-            this.handleEmployeeSelectDialogPress(event);
+        onMoldMstTableUserSearch: function (oEvent) {
+            this.modelDeveloperSelection.showModelDeveloperSelection(this, oEvent);
         },
 
         /**

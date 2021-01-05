@@ -10,3 +10,4 @@ using from './moldApprovalList/moldRecepitApproval-service';
 //Util
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';
+using from './util/modelDeveloperSelection-service';

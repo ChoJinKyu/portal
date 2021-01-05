@@ -624,10 +624,16 @@
                     <table:Column id="moldMoldDeveloperColumn" width="12em" hAlign="Center">
                         <Label text="Mold Developer" required="true" wrapping="true"/>
                         <table:template>
-                            <VBox>
-                            <Text id="mold_developer_empno" text="{list>mold_developer_empno}" visible="{mode>/viewFlag}" />
-                            <!--<SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" required="true" />-->
-                            </VBox>
+                            <!--<Text id="mold_developer_empno" text="{list>mold_developer_empno}" visible="{mode>/viewFlag}" />-->
+                            <SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" search=".onMoldMstTableUserSearch" required="true"
+                                enabled="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" />
+                            <!--<Input id=""
+                                value="{list>mold_developer_empno}" 
+                                showValueHelp="true"
+                                valueHelpOnly="true"
+                                valueHelpRequest=".onMoldMstTableUserSearch"
+                                required="true"
+                            />-->
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRemarkColumn" width="20em" hAlign="Center">
