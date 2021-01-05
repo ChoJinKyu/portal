@@ -77,23 +77,19 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage : function () {
- 
             this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
             console.log(" mode "  ,  this.getView().getModel("mode"));
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
-                // ApprovalBaseController.prototype.onInit.call(this);
-
-               // this._mdraEditFragment();
+     
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { 
-                 
-                });
+                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { });
+                this._mdraViewFragment(); // New 가 아닐때는 초기 로드 안해줌 
             }  
         },
 

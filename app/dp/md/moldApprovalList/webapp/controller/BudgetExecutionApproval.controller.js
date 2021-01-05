@@ -102,6 +102,7 @@ sap.ui.define([
                     console.log("md >>>>>>", md); 
                     that._bindComboPlant(oData.results[0].import_company_code);
                 });
+                this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }
             
         },
