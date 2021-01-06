@@ -99,7 +99,6 @@ sap.ui.define([
         onPageReload: function(){
             console.log(window);
             window.location.reload();
-            console.log("항상여기를 타나?");
         },
        
         
@@ -226,7 +225,7 @@ sap.ui.define([
             if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
 
             var aSearchFilters = this._getSearchStates();
-            console.log(aSearchFilters);
+            console.log("aSearchFilters :::", aSearchFilters);
             this._applySearch(aSearchFilters);
         },
 
@@ -827,7 +826,7 @@ sap.ui.define([
                                 } 
                             }
                             that.callAjax(data,"deleteApproval");
-                            that.onPageSearchButtonPress();
+                            //console.log(":::::::::::::::::::::::::", that.byId("pageSearchButton"));
                         }
                     }
                 });
@@ -859,6 +858,7 @@ sap.ui.define([
                     if(result.resultCode > -1){
                         that.onLoadThisPage(result);
                     }
+                    that.onPageSearchButtonPress();
                 },
                 error: function(e){
                     
