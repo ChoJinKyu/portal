@@ -56,12 +56,11 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
-            this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change
-           
+            this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
         },
    
+        
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
