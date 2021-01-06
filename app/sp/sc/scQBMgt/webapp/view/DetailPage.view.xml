@@ -467,55 +467,55 @@
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="Operating Unit" required="true" />
                                         <t:template>
-                                            <Input value="{col1}"/>
+                                            <Label text="{col1}"/>
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="6rem" hAlign="Center">
+                                    <t:Column width="11rem" hAlign="Center">
                                         <Label text="Requisition No" />
                                         <t:template>
                                             <Label text="{col2}" />
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="9rem" hAlign="Center">
+                                    <t:Column width="11rem" hAlign="Center">
                                         <Label text="Submission No" />
                                         <t:template>
                                            <Label text="{col3}" />
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="9rem" hAlign="Center">
+                                    <t:Column width="11rem" hAlign="Center">
                                         <Label text="Line Type"  required="true" />
                                         <t:template>
-                                            <Label text="{col4}" />
+                                            <Input showValueHelp="true" ></Input>
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="12rem"  hAlign="Center">
+                                    <t:Column width="11rem"  hAlign="Center">
                                         <Label text="Part No"  required="true" />
                                         <t:template>
-                                            <Label text="{col5}" />
+                                            <Input showValueHelp="true" ></Input>
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="9rem"  hAlign="Center">
+                                    <t:Column width="11rem"  hAlign="Center">
                                         <Label text="Description" required="true" />
                                         <t:template>
                                             <Label text="{col6}" />
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="7rem"  hAlign="Center">
+                                    <t:Column width="11rem"  hAlign="Center">
                                         <Label text="사양/규격" />
                                         <t:template>
                                             <Label text="{col6}" />
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="12rem"  hAlign="Center">
+                                    <t:Column width="11rem"  hAlign="Center">
                                         <Label text="BPA Price" />
                                         <t:template>
                                             <Label text="{col7}" />
                                         </t:template>
                                     </t:Column>
-                                    <t:Column width="6rem" hAlign="Center">
+                                    <t:Column width="11rem" hAlign="Center">
                                         <Label text="상세단가" />
                                         <t:template>
-                                            <Label text="{col8}" />
+                                            <Input showValueHelp="true" ></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem" hAlign="Center">
@@ -533,13 +533,13 @@
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="Vendor Pool" />
                                         <t:template>
-                                            <Label text="{col11}" />
+                                            <Input showValueHelp="true" ></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="Specific Supplier" />
                                         <t:template>
-                                            <Label text="{col12}" />
+                                            <Input showValueHelp="true" ></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem" hAlign="Center">
@@ -563,13 +563,13 @@
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="통화" required="true" />
                                         <t:template>
-                                            <Label text="{col16}" />
+                                            <ComboBox ></ComboBox>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="회신 통화" />
                                         <t:template>
-                                            <Label text="{col17}" />
+                                            <Input showValueHelp="true" ></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem" hAlign="Center">
