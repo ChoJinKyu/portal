@@ -11,7 +11,7 @@
 	height			= "50%"    
     displayBlock="true">
 	
-	<Dialog title="1. 시황자재 선택">
+	<Dialog title="{I18N>/MI_MATERIAL_CHOOICE}">
 		<content>
         <HBox width="100%">
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop" width="500px">
@@ -21,14 +21,14 @@
                              required="true" 
                              search=".onMaterialSearch" 
                              selectOnFocus="false"
-                             placeholder="Search Name or Code"
+                             placeholder="{I18N>/SEARCH} {I18N>/NAME} or {I18N>/CODE}" 
                              class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
                 <SearchField id="searchField_category_name" 
                              width="90%" 
                              visible="{=!${oUi>/changeItem}}"
                              search=".onMaterialSearch" 
                              selectOnFocus="false"                             
-                             placeholder="Search Category"
+                             placeholder="{I18N>/SEARCH} {I18N>/CATEGORY}"
                              class="sapUiTinyMarginTop sapUiTinyMarginBegin  sapUiSmallMarginBottom" />
                 <Table  id="leftTable"
                         mode="SingleSelectLeft"
@@ -69,12 +69,12 @@
                     <columns>
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="화폐단위"/>                            
+                                <Label text="{I18N>/CURRENCY}{I18N>/UNIT}"/>                            
                             </header>
                         </Column>
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="수량단위"/>                            
+                                <Label text="{I18N>/QUANTITY}{I18N>/UNIT}"/>                            
                             </header>
                         </Column>
                         <Column hAlign="Center" >

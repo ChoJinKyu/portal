@@ -176,7 +176,7 @@ sap.ui.define([
                     create_user_id: this._sso.user.id,
                     update_user_id: this._sso.user.id,
                     system_create_dtm : new Date(),
-                    number:0                    
+                    number:1                    
                 });
 
                 
@@ -923,7 +923,7 @@ sap.ui.define([
             console.log("_initialControlValue");
             var that = this;
 
-            that.getView().byId("input_base_quantity").setValue("");
+            that.getView().byId("input_base_quantity").setValue("1");
             that.getView().byId("input_processing_cost").setValue("");
             that.getView().byId("input_hidden_material_code").setValue("");
             that.getView().byId("input_hidden_material_desc").setValue("");
@@ -1721,25 +1721,32 @@ sap.ui.define([
                 return;
             }
             that._setBusy(true);
+
             var _deleteItemOdata = _deleteItem.getProperty("/delData");
+            
+            function fnUndefined(t){
+                if (t === undefined) return true;
+                else return false;
+            }
+
             for(var i=0;i<oSelected.length;i++){
 
                 var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
-                //수정
                 if(oModel.oData[idx].itemMode == that._m.itemMode.read){
                     _deleteItemOdata.push(oModel.oData[idx]);
-                    //_deleteItem.setProperty("/delData", _deleteItemOdata);
-                }             
+                }
             }
 
-            for(var i=0;i<oSelected.length;i++){
+            _deleteItem.setProperty("/delData", _deleteItemOdata);
 
-                var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
-                oModel.oData.splice(idx, 1);              
+            for ( var i = oSelected.length - 1; i >= 0; i--) {
+
+                if(!fnUndefined(oSelected[i])){
+                    var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));                    
+                    oModel.oData.splice(idx, 1); 
+                }
             }
-
-            //_deleteItem.setProperty("/oData", _deleteItemOdata);
-            
+                      
             that._setBusy(false);
             oTable.removeSelections();
             oTable.getBinding("items").refresh();
@@ -1834,6 +1841,13 @@ sap.ui.define([
             var oTable = that.getView().byId("midTable");
 
             var tableCoutnt = 0;
+
+            if(oTable.getItems().length<1){
+                 that._showMessageToast(that.getModel("I18N").getText("/EPG00013")); 
+                bValueCheckFlag  =false;                              
+                return false;
+            }
+
             for (var idx = 0; idx < oTable.getItems().length; idx++) {
                 
                 var items = oTable.getItems()[idx];
@@ -1865,7 +1879,7 @@ sap.ui.define([
             }
             if(tableCoutnt<1){
 
-                that._showMessageToast("필수 입력 내용과 시황자재를 추가 하셔야 합니다.");
+                that._showMessageToast(that.getModel("I18N").getText("/NPG00023"));
                 bValueCheckFlag = false;
             } 
 
@@ -2069,7 +2083,9 @@ sap.ui.define([
                     console.log("======================= setUseBatch =========================");
                     that._setUseBatch();
                 } 
-            }      
+            }    
+            var _deleteItem = that.getModel("_deleteItem");
+            _deleteItem.setProperty("/delData",[]);  
         },
 
         readChecklistEntity: function(oDeleteInfoOdata) {

@@ -25,7 +25,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="자재별 시황자재 BOM"/>
+                    <Title text="{I18N>/MIMATERIAL_BOM_TITLE}"/>
                 </f:heading>
                 <f:snappedContent></f:snappedContent>
                 <f:expandedContent></f:expandedContent>
@@ -93,7 +93,7 @@
                     useVariantManagement="false"
                     useTablePersonalisation="true"
                     showTablePersonalisation="false"
-                    header="자재별 시황자재 BOM List"
+                    header="{I18N>/MIMATERIAL_BOM_TITLE} List"
                     showRowCount="true"
                     editTogglable="false"
                     persistencyKey="SmartTablePKey"                    
