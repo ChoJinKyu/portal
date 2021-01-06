@@ -8,8 +8,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
-    "ext/lib/util/Validator"
-], function (BaseController, Multilingual, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
+    "ext/lib/util/Validator",
+    "sap/ui/core/Fragment"
+], function (BaseController, Multilingual, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator, Fragment) {
     "use strict";
     return BaseController.extend("pg.mi.miBom.controller.MidObject", {
 
@@ -417,18 +418,25 @@ sap.ui.define([
             var that = this;    
             _oUiData.setProperty("/radioButtonGroup", that.getView().byId("radioButtonGroup").getSelectedIndex());
 
-			// create value help dialog
-			if (!this._valueHelpMaterialDialog) {
-                that._valueHelpMaterialDialog = sap.ui.xmlfragment(
-                    that._m.fragementId.materialDialog, 
-                    that._m.fragementPath.materialDialog,this
-                );
-                that.getView().addDependent(that._valueHelpMaterialDialog);
-            }                
-            
-            //기존 검색 데이타 초기화
+            var oView = that.getView();   
+
+			if (!that._valueHelpMaterialDialog) {
+
+                that._valueHelpMaterialDialog = Fragment.load({
+                    id: that._m.fragementId.materialDialog,
+                    name: that._m.fragementPath.materialDialog,
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }               
+
             that.setModelNullAndUpdateBindings(materialTable);
-			that._openValueHelpMaterialDialog();
+
+            that._valueHelpMaterialDialog.then(function(oDialog) {
+				oDialog.open();
+            });
 		},
 
         /**
@@ -441,19 +449,6 @@ sap.ui.define([
             // open value help dialog filtered by the input value
             //기존 모델 초기화 
             that.setArrayModelNullAndUpdateBindings("materialTable");
-
-			if (!that._valueHelpMaterialDialog) {
-
-                that._valueHelpMaterialDialog = sap.ui.xmlfragment(
-                    that._m.fragementId.materialDialog, 
-                    that._m.fragementPath.materialDialog,this
-                );
-              
-                that.getView().addDependent(that._valueHelpMaterialDialog);
-
-            }  
-            
-            that._valueHelpMaterialDialog.open();
 		},
 
         /**
@@ -566,20 +561,34 @@ sap.ui.define([
                 midList = that.getModel("midList");
                 that._selectedIndex = parseInt(obj.substring(1));
 
+            var oView = that.getView();   
+
 			if (!that._valueHelpReqmQuantityUnit) {
 
-                that._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
-                    that._m.fragementId.reqmQuantityUnit, 
-                    that._m.fragementPath.reqmQuantityUnit,this
-                );
-                that.getView().addDependent(that._valueHelpReqmQuantityUnit);
+                that._valueHelpReqmQuantityUnit = Fragment.load({
+                    id: that._m.fragementId.reqmQuantityUnit,
+                    name: that._m.fragementPath.reqmQuantityUnit,
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+
             }   
-            that._openValueHelpReqmQuantityUnit();
+            // that._openValueHelpReqmQuantityUnit();
+            var unitOfMeasureView = that.getModel("unitOfMeasureView");
+            that.setModelNullAndUpdateBindings(unitOfMeasureView);
+
+            that._valueHelpReqmQuantityUnit.then(function(oDialog) {
+                oDialog.open();
+                var uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
+                uom_name.setValue(midList.oData[that._selectedIndex].reqm_quantity_unit);     
+                 that.onUomNameSearch();             
+            });
             
-            
-            var uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
-            uom_name.setValue(midList.oData[that._selectedIndex].reqm_quantity_unit);            
-            that.onUomNameSearch();
+  
+
+           
          },
 
         /**
@@ -633,24 +642,23 @@ sap.ui.define([
             var unitOfMeasureView = that.getModel("unitOfMeasureView");
          
             that.setModelNullAndUpdateBindings(unitOfMeasureView);
-			if (!that._valueHelpReqmQuantityUnit) {
 
-                that._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
-                    that._m.fragementId.reqmQuantityUnit, 
-                    that._m.fragementPath.reqmQuantityUnit,this
-                );
-                that.getView().addDependent(that._valueHelpReqmQuantityUnit);
-            }    
+            that._valueHelpReqmQuantityUnit.then(function(oDialog) {
+                oDialog.open();
+            });
 
-			that._valueHelpReqmQuantityUnit.open();
 		},
 
         /**
          * 소요량 단위 close
          */
-        closeValueHelpReqmQuantityUnit : function(evt){
+        _closeValueHelpReqmQuantityUnit : function(evt){
             var that = this;
-			that._valueHelpReqmQuantityUnit.close();
+            that._valueHelpReqmQuantityUnit.then(function(oDialog) {
+                oDialog.close();
+            });             
+
+			//that._valueHelpReqmQuantityUnit.close(); 
         },
 
         /**
@@ -679,7 +687,7 @@ sap.ui.define([
 
             midList.oData[that._selectedIndex].reqm_quantity_unit = uom_code;
             midList.refresh(true);
-            that.closeValueHelpReqmQuantityUnit();
+            that._closeValueHelpReqmQuantityUnit();
 		},
 		/**
 		 * Event handler for Enter Full Screen Button pressed
@@ -1100,13 +1108,6 @@ sap.ui.define([
                 that._selectedIndex = parseInt(obj.substring(1)); 
 
                 that.onMaterialDetail(true);
-
-            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
-            searchField_material_code.setValue(midList.oData[that._selectedIndex].mi_material_code);            
-            
-            that.onMaterialSearch();
-    
-
         },
 
         /**
@@ -1117,23 +1118,50 @@ sap.ui.define([
             console.log("call funtion onMaterialDetail");
             var that = this;
             var oUi = that.getModel("oUi");
+            var oView = that.getView();   
+            var midList =this.getModel("midList");
+
 			if (!that._valueHelpMaterialDetail) {
-                that._valueHelpMaterialDetail = sap.ui.xmlfragment(that._m.fragementId.materialDetail, that._m.fragementPath.materialDetail, this);
-                that.getView().addDependent(that._valueHelpMaterialDetail);
+
+                that._valueHelpMaterialDetail = Fragment.load({
+                    id: that._m.fragementId.materialDetail,
+                    name: that._m.fragementPath.materialDetail,
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
             }          
 
-            that._openValueHelpMaterialDetail();
+            var arrayModel = [               
+                        "mIMaterialCostInformationView",
+                        "mIMatListView"
+                    ];
+          
+            that.setArrayModelNullAndUpdateBindings(arrayModel);
 
-            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
-            var searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name");
+            that._valueHelpMaterialDetail.then(function(oDialog) {
 
-            oUi.setProperty("/changeItem", bflag);
+                oDialog.open();
 
-            if(!bflag){
-                searchField_material_code.setValue("");
-                searchField_category_name.setValue("");
-            }
-                                          
+                var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+                var searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name");
+
+                oUi.setProperty("/changeItem", bflag);
+
+                if(bflag){
+                    var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+                    searchField_material_code.setValue(midList.oData[that._selectedIndex].mi_material_code);            
+                    
+                    that.onMaterialSearch();
+                }
+
+                if(!bflag){
+                    searchField_material_code.setValue("");
+                    searchField_category_name.setValue("");
+                }                
+            });            
+
         },
 
         /**
@@ -1150,7 +1178,10 @@ sap.ui.define([
             ];
           
             that.setArrayModelNullAndUpdateBindings(arrayModel);
-            that._valueHelpMaterialDetail.open();
+            that._valueHelpMaterialDetail.then(function(oDialog) {
+                oDialog.open();
+            });
+            //that._valueHelpMaterialDetail.open();
         },
        
         /**
@@ -1167,15 +1198,15 @@ sap.ui.define([
         _fragmentDistory : function(){
             var that = this;
 
-            // if (that._valueHelpMaterialDetail) {
-            //     that._valueHelpMaterialDetail.destroy(true);
-            // }
-            // if (that._valueHelpMaterialDialog) {
-            //     that._valueHelpMaterialDialog.destroy(true);
-            // }
-            // if (that._valueHelpReqmQuantityUnit) {
-            //     that._valueHelpReqmQuantityUnit.destroy(true);
-            // }
+            if (that._valueHelpMaterialDetail) {
+                that._valueHelpMaterialDetail.destroy(true);
+            }
+            if (that._valueHelpMaterialDialog) {
+                that._valueHelpMaterialDialog.destroy(true);
+            }
+            if (that._valueHelpReqmQuantityUnit) {
+                that._valueHelpReqmQuantityUnit.destroy(true);
+            }
 
         },
         _handleCreateSuccess: function (oData) {
@@ -1604,7 +1635,11 @@ sap.ui.define([
          */
         onMaterialDialog_close : function (){
             var that = this;
-            that._valueHelpMaterialDialog.close();
+            that._valueHelpMaterialDialog.then(function(oDialog) {
+                oDialog.close();
+            });                    
+           // that.getView().byId("materialDialog").close();
+           // that._valueHelpMaterialDialog.close();
         },
         /**     
          * 시황재재 선택 및 가격정보 선택 페이지 close
@@ -1612,7 +1647,10 @@ sap.ui.define([
          */
         onMaterialDetailClose : function() {
             var that = this;
-            that._valueHelpMaterialDetail.close();
+            that._valueHelpMaterialDetail.then(function(oDialog) {
+                oDialog.close();
+            }); 
+            //that.byId("materialDetail").close();
         },
         
         /**
