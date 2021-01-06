@@ -84,8 +84,12 @@ sap.ui.define([
 
             var today = new Date();
 
-            this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
-            this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
+            // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchBuyer").setValue("(5450) **희");
+            this.getView().byId("searchPurchasingDepartment").setValue("(58665481) 미래기술.신규과제탐색그룹");
+            //5450, **희
+            //58665481 미래기술.신규과제탐색그룹
         },
 
         onRenderedFirst: function () {
@@ -157,7 +161,7 @@ sap.ui.define([
 
             var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiVosProc";
 
-            MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
@@ -171,12 +175,12 @@ sap.ui.define([
                             success: function (data) {
                                 oView.setBusy(false);
                                 console.log("#########Success#####", data.value);
-                                MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.onExitVos();
                                 that.byId("pageSearchButton").firePress();
                             },
                             error: function (e) {
-                                alert(e);
+                                console.log(e);
                             }
                         });
                     };
@@ -266,7 +270,7 @@ sap.ui.define([
 
             var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRmkProc";
 
-            MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
@@ -280,12 +284,12 @@ sap.ui.define([
                             success: function (data) {
                                 oView.setBusy(false);
                                 console.log("#########Success#####", data.value);
-                                MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.onExitRmk();
                                 that.byId("pageSearchButton").firePress();
                             },
                             error: function (e) {
-                                alert(e);
+                                console.log(e);
                             }
                         });
                     };
@@ -385,7 +389,7 @@ sap.ui.define([
 
             var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiQuotationNumberProc";
 
-            MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
@@ -400,7 +404,7 @@ sap.ui.define([
 
                                 console.log("#########Success#####", data.value);
 
-                                MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 
                                 // if(data.value.rsltCnt > 0) {
                                 //     MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
@@ -411,7 +415,7 @@ sap.ui.define([
                                 that.byId("pageSearchButton").firePress();
                             },
                             error: function (e) {
-                                alert(e);
+                                console.log(e);
                             }
                         });
                     };
@@ -464,6 +468,7 @@ sap.ui.define([
                     console.log("loi_item_number========", oModel.getData().LOIPublishItemView[chkIdx].loi_item_number);
                     console.log("loi_number========", oModel.getData().LOIPublishItemView[chkIdx].loi_number);
                     console.log("loi_request_title========", oModel.getData().LOIPublishItemView[chkIdx].loi_request_title);
+                    console.log("loi_request_title========", oModel.getData().LOIPublishItemView[chkIdx].item_sequence);
                     console.log("quotation_number=========", oModel.getData().LOIPublishItemView[chkIdx].quotation_number);
                     /*
                         1번 로직
@@ -564,6 +569,21 @@ sap.ui.define([
             }
         },
 
+        onTableSupplierSelectionPress: function (oEvent) {
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
+
+            this.getRouter().navTo("midPage", {
+                //layout: oNextUIState.layout,
+                tenantId: oRecord.tenant_id,
+                companyCode: oRecord.company_code,
+                loiWriteNumber: oRecord.loi_write_number,
+                loiItemNumber: oRecord.loi_item_number,
+                loiSelectionNumber: oRecord.loi_selection_number,
+                loiNumber: oRecord.loi_number
+            }, true);
+        },
+
 		/**
 		 * Event handler when pressed the item of table
 		 * @param {sap.ui.base.Event} oEvent
@@ -611,6 +631,12 @@ sap.ui.define([
                     console.log("sLoiItemNumber=", sLoiItemNumber);
                     console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
                     console.log("sLoiNumber=", sLoiNumber);
+
+                    //업체선정번호가 있으면 링크불가
+                    if (sLoiSelectionNumber) {
+                        canSelect = false;
+                        return false;
+                    }
 
                     /*
                         향후 견적테이블이 생성되면 1번로직 주석 2번 로직 주석해제
@@ -671,7 +697,7 @@ sap.ui.define([
                 console.log("sTenantId=", sTenantId);
                 var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
                 this.getRouter().navTo("midPage", {
-                    layout: oNextUIState.layout,
+                    //layout: oNextUIState.layout,
                     tenantId: sTenantId,
                     companyCode: sCompanyCode,
                     loiWriteNumber: sLoiWriteNumber,
@@ -680,38 +706,11 @@ sap.ui.define([
                     loiNumber: sLoiNumber
                 }, true);
 
-                if (oNextUIState.layout === "TwoColumnsMidExpanded") {
-                    this.getView().getModel("mainListViewModel").setProperty("/headerExpanded", false);
-                }
+                // if (oNextUIState.layout === "TwoColumnsMidExpanded") {
+                //     this.getView().getModel("mainListViewModel").setProperty("/headerExpanded", false);
+                // }
             }
 
-            // console.log("table=", table.columns());  
-
-            // var oRow = oEvent.getParameter("row");
-            // console.log("oRow=", oRow);
-            // var oItem = oEvent.getParameter("item");
-            // console.log("table=", this.getView().getModel("list").getProperty("loi_number", oRow.getBindingContext()));  
-
-
-
-            // var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-            // 	sPath = oEvent.getSource().getBindingContext("list").getPath(),
-            // 	oRecord = this.getModel("list").getProperty(sPath);
-
-            // this.getRouter().navTo("midPage", {
-            // 	layout: oNextUIState.layout, 
-            // 	tenantId: oRecord.tenant_id,
-            //     companyCode: oRecord.company_code,
-            //     loiWriteNumber: oRecord.loi_write_number,
-            //     loiItemNumber: oRecord.loi_item_number
-
-            // });
-
-            // var oItem = oEvent.getSource();
-            // oItem.setNavigated(true);
-            // var oParent = oItem.getParent();
-            // // store index of the item clicked, which can be used later in the columnResize event
-            // this.iIndex = oParent.indexOfItem(oItem);
         },
 
         /* =========================================================== */
@@ -725,6 +724,7 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+            this.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -764,6 +764,13 @@ sap.ui.define([
             var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
                 requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
 
+            // var requestDate = this.getView().byId("searchRequestDate").getValue();   
+
+            // console.log(requestDate);
+            // var a = requestDate.replaceAll(" ", "");
+            // var requestFromDate = new Date(a.substring(0, 10));
+            // var requestToDate = new Date(a.substring(11, 22)); 
+
             var createFromDate = this.getView().byId("searchSystemCreateDate").getDateValue(),
                 createToDate = this.getView().byId("searchSystemCreateDate").getSecondDateValue();
 
@@ -773,6 +780,23 @@ sap.ui.define([
             var sPurchasingDepartment = this.getView().byId("searchPurchasingDepartment").getValue(),
                 sBuyer = this.getView().byId("searchBuyer").getValue(),
                 sLoiPoStatus = this.getView().byId("searchPoStatus").getSelectedKeys();
+
+            var found1 = sRequestDepartment.match(/\((.*?)\)/);
+            if (found1) {
+                sRequestDepartment = found1[1];
+            }
+            var found2 = sRequestor.match(/\((.*?)\)/);
+            if (found2) {
+                sRequestor = found2[1];
+            }
+            var found3 = sPurchasingDepartment.match(/\((.*?)\)/);
+            if (found3) {
+                sPurchasingDepartment = found3[1];
+            }
+            var found4 = sBuyer.match(/\((.*?)\)/);
+            if (found4) {
+                sBuyer = found4[1];
+            }
 
             console.log("sLoiNumber==", sLoiNumber);
             console.log("requestFromDate==", requestFromDate);

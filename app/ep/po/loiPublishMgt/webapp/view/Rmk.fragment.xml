@@ -8,19 +8,19 @@
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm id="RmkForm" editable="false" >
                 <Label text="비고"/>
-                <Input id="saveRemark" value="{
+                <TextArea id="saveRemark" value="{
                     type: 'sap.ui.model.type.String',
                     constraints: {
-                        maxLength: 50
+                        maxLength: 1500
                     }
-                }" required="true" editable="true"/>
+                }" required="true" rows="4" />                
             </form:SimpleForm> 
         </VBox>       
       
         <ToolbarSpacer/>
         <HBox alignItems="Center" justifyContent="Center" >
             <Button text="Cancel" class="sapUiSmallMargin" press=".onExitRmk"/>
-            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onSaveRmk"/>
+            <Button text="Save" class="sapUiSmallMargin" type="Emphasized" press=".onSaveRmk"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

@@ -12,7 +12,7 @@
     showHeader="false"    
     displayBlock="true">
 	
-	<Dialog title="{I18N>/MIMATERIAM_BOM_SEARCH_TITLE}" contentWidth="50%">
+	<Dialog id="materialDialog" title="{I18N>/MIMATERIAM_BOM_SEARCH_TITLE}" contentWidth="50%">
 		<content>
             <Panel>
             <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
