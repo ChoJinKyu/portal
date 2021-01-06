@@ -332,8 +332,8 @@ sap.ui.define([
             console.log("approverPreview " , this.getModel("approverPreview").getData());
             var oView = this.getView();
 
-            if (!this._oDialog) {
-                this._oDialog = Fragment.load({
+            if (!this._oDialogPreview) {
+                this._oDialogPreview = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.ParticipatingSupplierSelectionPreView",
                     controller: this
@@ -343,7 +343,7 @@ sap.ui.define([
                 }.bind(this));
             }
 
-            this._oDialog.then(function (oDialog) {
+            this._oDialogPreview.then(function (oDialog) {
                 oDialog.open();
             });
 
@@ -376,15 +376,7 @@ sap.ui.define([
             this.quotation_data = [];
             var qtnArr = [];
             var that = this;
-           // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
-                var account_code = bModel.getData().ParticipatingSupplier[0].account_code;
-                var investment_ecst_type_code =  bModel.getData().ParticipatingSupplier[0].investment_ecst_type_code;
-                var accounting_department_code =  bModel.getData().ParticipatingSupplier[0].accounting_department_code;
-                var import_company_code =  bModel.getData().ParticipatingSupplier[0].import_company_code;
-                var project_code =  bModel.getData().ParticipatingSupplier[0].project_code;
-                var import_company_org_code =  bModel.getData().ParticipatingSupplier[0].import_company_org_code;
-               // var provisional_budget_amount =  bModel.getData().ParticipatingSupplier[0].provisional_budget_amount;
 
                 bModel.getData().ParticipatingSupplier.forEach(function(item){
                     console.log(item);
@@ -491,16 +483,11 @@ sap.ui.define([
                     that.moldMaster_data.push({
                          tenant_id : that.tenant_id 
                         , mold_id : item.mold_id 
-                        , account_code : account_code 
-                        , investment_ecst_type_code : investment_ecst_type_code 
-                        , accounting_department_code : accounting_department_code 
-                        , import_company_code : import_company_code 
-                        , project_code : project_code 
-                        , import_company_org_code : import_company_org_code 
-                        , mold_production_type_code : item.mold_production_type_code 
-                        , mold_item_type_code :  item.mold_item_type_code 
-                        , provisional_budget_amount : item.provisional_budget_amount 
-                        , asset_type_code : item.asset_type_code 
+                        , mold_item_type_code : item.mold_item_type_code
+                        , book_currency_code : item.book_currency_code
+                        , provisional_budget_amount : item.provisional_budget_amount
+                        , currency_code : item.currency_code
+                        , target_amount : item.target_amount
                         , _row_state_ : "D"
                     });
                 });

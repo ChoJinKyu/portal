@@ -18,9 +18,10 @@ sap.ui.define([
   "sap/m/ComboBox",
   "sap/ui/core/Item",
   "sap/f/LayoutType",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
+  "ext/lib/util/Multilingual",
+], function (BaseController, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
   Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-  ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, LayoutType) {
+  ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, LayoutType, Multilingual) {
 
   "use strict";
 
@@ -60,6 +61,11 @@ sap.ui.define([
      * @public
      */
     onInit: function () {
+
+      // Multilingual
+      this.getView().setModel((new Multilingual()).getModel(), "I18N");
+
+      // midObjectView
       this.getView().setModel(new JSONModel({
         busy: true,
         delay: 0,
@@ -181,7 +187,6 @@ sap.ui.define([
       // 하단의 Message 처리를 위함
       this.enableMessagePopover();
     },
-
     /* =========================================================== */
     /* event handlers                                              */
     /* =========================================================== */
@@ -223,7 +228,7 @@ sap.ui.define([
       var oView = this.getView(),
         oMasterModel = this.getModel("master"),
         that = this;
-      MessageBox.confirm("메뉴정보를 삭제하시겠습니까?", {
+      MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
         title: "Comfirmation",
         initialFocus: sap.m.MessageBox.Action.CANCEL,
         onClose: function (sButton) {
@@ -236,7 +241,7 @@ sap.ui.define([
                 oView.setBusy(false);
                 that.onNavBack.call(that);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                MessageToast.show("Success to delete.");
+                MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
               }
             });
           };
@@ -288,7 +293,6 @@ sap.ui.define([
         "local_create_dtm": utc(new Date()),
         "local_update_dtm": utc(new Date())
       }, 0);
-
     },
 
     onDelete: function () {
@@ -308,6 +312,7 @@ sap.ui.define([
       table
         //.clearSelection()
         .removeSelections(true);
+
     },
 
     /**
@@ -322,19 +327,15 @@ sap.ui.define([
         length = 0,
         that = this;
 
-      // Validation
-      if (!master.getData()["chain_code"]) {
-        MessageBox.alert("Chain을 입력하세요");
-        return;
-      }
-      if (!master.getData()["menu_code"]) {
-        MessageBox.alert("메뉴코드를 입력하세요");
-        return;
-      }
-    //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-    //     MessageBox.alert("변경사항이 없습니다.");
+    //   // Validation
+    //   if(!oModel.isChanged()) {
+    //     MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
     //     return;
     //   }
+      // Master
+      if (!Validator.isValid(this.byId("pageSectionMainForm"))) return ;
+      // Detail
+      if (!Validator.isValid(this.byId("midTable"))) return ;
       // Set Details (New)
       (length = detail.getData()["MenuLng"].length) 
       && 
@@ -347,7 +348,7 @@ sap.ui.define([
       });
 
       if (length <= 0) {
-          MessageBox.alert("다국어 메뉴명을 등록하세요.");
+          MessageBox.alert("다국어를 등록하세요.");
           return;
       }
 

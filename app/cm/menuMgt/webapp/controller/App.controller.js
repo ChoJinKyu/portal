@@ -1,6 +1,7 @@
 sap.ui.define([
-  "ext/lib/controller/BaseController"
-], function (BaseController) {
+  "ext/lib/controller/BaseController",
+  "ext/lib/util/Multilingual",
+], function (BaseController, Multilingual) {
   "use strict";
 
   return BaseController.extend("cm.menuMgt.controller.App", {
@@ -11,6 +12,7 @@ sap.ui.define([
       this.oRouter = this.getOwnerComponent().getRouter();
       this.oRouter.attachRouteMatched(this.onRouteMatched, this);
       this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+      this.setModel((new Multilingual()).getModel(), "I18N");
     },
 
     onBeforeRouteMatched: function (oEvent) {

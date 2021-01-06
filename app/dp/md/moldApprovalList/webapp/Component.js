@@ -41,6 +41,15 @@ sap.ui.define([
             });
 
             this.setModel(oMode, "mode");
+
+            /** 선정품의 취소를 위한 모델 */
+            var Cancellation = new JSONModel({
+                approvalNumber : null,
+                isCreate : false 
+            });
+
+            this.setModel(Cancellation, "Cancellation");
+
 		},
 
 		/**

@@ -2,7 +2,7 @@
 namespace pg;
 
 @cds.persistence.exists
-entity Md_Vp_Mapping_Item_View {
+entity Md_Vp_Mapping_Item_View( language_code: String )  {
 	key	tenant_id						: String(5)		@title : '테넌트ID';
 	key	company_code					: String(10)	@title : '회사코드';
 	key	org_type_code					: String(30)	@title : '조직유형코드';

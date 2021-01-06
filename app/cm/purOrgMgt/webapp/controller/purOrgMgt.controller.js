@@ -27,6 +27,8 @@ sap.ui.define([
             //             }
             //         }
             //     });
+                // this.getView().setModel(new JSONModel({
+                // }), "search");
             },
             onSelect: function (event) {
                 // event 객체를 통해 레코드(ROW)를 가져온다.

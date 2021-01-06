@@ -28,11 +28,6 @@ service MdCategoryService {
 
     entity MdVpItemMappingAttr as projection on vpItemMappingAttr.Md_Vp_Item_Mapping_Attr;
 
-    // DB Object로 생성된 View를 조회 하는 경우 (model-cds가 존재해야함)
-    //@cds.query.limit.default: 10
-    //@cds.query.limit.max: 20
-    view MdVpMappingItemView as select from vpItemMappingView.Md_Vp_Mapping_Item_View;
-
     // Category별 Item View
     view MdCategoryCodeItemView @(title : 'Category Item Mapping View') as
     	select 

@@ -328,10 +328,10 @@
                     ]
                 },
                 {
-                    "pattern": "BeaObject/{approval_number}",
-                    "name": "beaObject",
+                    "pattern": "participatingSupplierSelectionCancelApproval/{company_code}/{plant_code}/{approval_number}",
+                    "name": "participatingSupplierSelectionCancelApproval",
                     "target": [
-                        "beaObject"
+                        "participatingSupplierSelectionCancelApproval"
                     ]
                 },
                 {
@@ -379,11 +379,11 @@
                     "viewLevel": 2,
                     "title": "{i18n>purchaseOrderLocalApprovalTitle}"
                 },
-                "beaObject": {
-                    "viewName": "BeaObject",
-                    "viewId": "beaObject",
+                "participatingSupplierSelectionCancelApproval": {
+                    "viewName": "ParticipatingSupplierSelectionCancelApproval",
+                    "viewId": "participatingSupplierSelectionCancelApproval",
                     "viewLevel": 2,
-                    "title": "{i18n>beaObjectTitle}"
+                    "title": "{i18n>participatingSupplierSelectionCancelApprovalTitle}"
                 },
                 "pssaObject": {
                     "viewName": "PssaObject",

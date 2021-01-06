@@ -105,13 +105,15 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<!-- Detail 에 관한 정보 -->
+			<!-- Detail 에 관한 정보 Interactive-->
 			<uxap:ObjectPageSection titleUppercase="false" title="역할별 메뉴관리">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <table:TreeTable
                             id="midTable"
-                            selectionMode="None"
+                            visibleRowCountMode="Fixed"
+                            visibleRowCount="20"
+                            selectionMode="Single"
                             selectionBehavior="Row"
                             enableColumnReordering="false"
                             expandFirstLevel="true"

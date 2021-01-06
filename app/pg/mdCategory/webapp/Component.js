@@ -1,9 +1,12 @@
 sap.ui.define([
+	"jquery.sap.global",
   "sap/ui/core/UIComponent",
+	"sap/ui/model/json/JSONModel",
   "sap/ui/Device",
   "ext/lib/model/models",
-  "ext/lib/controller/ErrorHandler"
-], function (UIComponent, Device, models, ErrorHandler) {
+  "ext/lib/controller/ErrorHandler",
+  "sap/f/FlexibleColumnLayoutSemanticHelper"
+], function (jQuery, UIComponent, JSONModel, Device, models, ErrorHandler, FlexibleColumnLayoutSemanticHelper) {
   "use strict";
 
   return UIComponent.extend("pg.mdCategory.Component", {
@@ -28,8 +31,27 @@ sap.ui.define([
       // set the device model
       this.setModel(models.createDeviceModel(), "device");
 
+      this.setModel(new JSONModel(), "fcl");
+
       // create the views based on the url/hash
       this.getRouter().initialize();
+    },
+
+    /**
+     * Returns an instance of the semantic helper
+     * @returns {sap.f.FlexibleColumnLayoutSemanticHelper} An instance of the semantic helper
+     */
+    getHelper: function () {
+        var oFCL = this.getRootControl().byId("fcl"),
+            oParams = jQuery.sap.getUriParameters(),
+            oSettings = {
+                defaultTwoColumnLayoutType: sap.f.LayoutType.TwoColumnsMidExpanded,
+                //defaultThreeColumnLayoutType: sap.f.LayoutType.ThreeColumnsMidExpanded,
+                mode: oParams.get("mode"),
+                maxColumnsCount: oParams.get("max")
+            };
+
+        return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
     },
 
 		/**

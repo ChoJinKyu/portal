@@ -15,7 +15,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/PURCHASE_REQUISITION} {I18N>/SEARCH}" />
+                    <Title text="{I18N>/PURCHASE_REQUISITION} {I18N>/WRITE} {I18N>/CURST}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -38,9 +38,9 @@
                                         columnsL="2" columnsM="2" >
                     <form:content>
                         <VBox>
-                            <Label text="{i18n>listHDRequestDate}" labelFor="searchRequestDate" required="true"></Label>
+                            <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" labelFor="searchRequestDate" required="true"></Label>
                             <DateRangeSelection id="searchRequestDate" width="100%" change="handleChange"/>
-                            <Label text="구매요청 진행상태" labelFor="SearchBStatus" required="false"></Label>
+                            <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchBStatus" required="false"></Label>
                             <MultiComboBox
                               id="SearchBStatus"
                               width="100%"
@@ -60,7 +60,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="구매요청 유형" labelFor="searchBsart" required="false"></Label>
+                            <Label text="{I18N>/PR_TYPE_CODE}" labelFor="searchBsart" required="false"></Label>
                             <MultiComboBox
                               id="searchBsart"
                               showSecondaryValues="true"
@@ -76,7 +76,7 @@
                                 <core:ListItem key="{util>code}" text="{util>code_description}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
-                            <Label text="조직코드" labelFor="searchOrgCombo4" required="false"></Label>
+                            <Label text="{I18N>/ORG_CODE}" labelFor="searchOrgCombo4" required="false"></Label>
                             <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
@@ -94,9 +94,9 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{i18n>listHDBanfn}" labelFor="searchBanfn" required="true"></Label>
+                            <Label text="{I18N>/PR_NUMBER}" labelFor="searchBanfn" required="true"></Label>
                             <Input id="searchBanfn" placeholder="Search"></Input>
-                            <Label text="{i18n>listHDBOprater}" labelFor="searchBOprater" required="false"></Label>
+                            <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchBOprater" required="false"></Label>
                             <Input id="searchBOprater" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -104,9 +104,9 @@
                         </VBox>
                         
                         <VBox>
-                            <Label text="{i18n>listHDBCreater}" labelFor="searchCreater2" required="false"></Label>
+                            <Label text="{I18N>/BUYER_EMPNO}" labelFor="searchCreater2" required="false"></Label>
                             <Input id="searchKeyword2" placeholder="Search"></Input>
-                            <Label text="{i18n>listHDBMaktx}" labelFor="searchBMaktx"></Label>
+                            <Label text="{I18N>/PR_DESC}" labelFor="searchBMaktx"></Label>
                             <Input id="searchBMaktx" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -150,38 +150,39 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="구매요청 번호" />
+                            <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
                         <Column id="mainColumnName1" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="구매요청 대표품명" />
+                            <Text text="{I18N>/PR_DESC}" />
                         </Column>                       
                         <Column id="mainColumnSiteFlag2" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="구매요청 유형" />
+                            <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
                         <Column id="mainColumnSiteFlag4" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="구매요청 품목그룹" />
+                            <Text text="{I18N>/PR_TYPE_CODE_2}" />
                         </Column>
                         <Column id="mainColumnSiteFlag5" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="구매요청 Category" />
+                            <Text text="{I18N>/PR_TYPE_CODE_3}" />
                         </Column>
                         <Column id="mainColumnSiteFlag6" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="구매요청 Template" />
+                            <Text text="{I18N>/PR_TEMPLATE_NUMBER}" />
                         </Column>
                         <Column id="mainColumnCompanyFlag7" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="구매요청 생성자" />
+                            <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
+                        </Column>
+                        <Column id="mainColumnCompanyFlag17" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
                         </Column>
                          <Column id="mainColumnStartDate111" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="구매요청자 부서명" />
+                            <Text text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" />
                         </Column>
                         <Column id="mainColumnStartDate11" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="구매요청 생성일자" />
+                            <Text text="{I18N>/PR_COUNT}" />
                         </Column>
-                        <Column id="mainColumnStartDate12" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="구매진행건수" />
+                        <Column id="mainColumnStartDate1211" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="{I18N>/PR_CREATE_STATUS_CODE}" />
                         </Column>
-                         <Column id="mainColumnpr_create_system_code11" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="구매요청 상태" />
-                        </Column>
+                       
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">

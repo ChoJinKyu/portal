@@ -34,10 +34,10 @@ service MtlCommodityMgtService {
            m.use_flag,
            l.language_code
     from  Commodity.Mm_Material_Commodity m
-    left outer join CommodityLng.Mm_Material_Commodity_Lng l
+    left join CommodityLng.Mm_Material_Commodity_Lng l
     on l.tenant_id = m.tenant_id
       and l.commodity_code = m.commodity_code
-      and l.language_code = 'EN'
+      and l.language_code = 'KO'
     ;
 
 

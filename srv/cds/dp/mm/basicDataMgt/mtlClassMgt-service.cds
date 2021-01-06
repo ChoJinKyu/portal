@@ -34,10 +34,10 @@ service MtlClassMgtService {
            m.use_flag,
            l.language_code
     from  Class.Mm_Material_Class m
-    left outer join ClassLng.Mm_Material_Class_Lng l
+    left join ClassLng.Mm_Material_Class_Lng l
     on l.tenant_id = m.tenant_id
       and l.material_class_code = m.material_class_code
-      and l.language_code = 'EN'
+      and l.language_code = 'KO'
     ;
 
 }

@@ -60,6 +60,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
@@ -246,6 +247,11 @@ sap.ui.define([
                 approvalTarget = "participatingSupplierSelection"
             }if(oRecord.approval_type_code == "I"){
                 approvalTarget = "moldRecepitApproval"
+            }if(oRecord.approval_type_code == "A"){ 
+                var Cancellation = this.getView().getModel('Cancellation');
+                Cancellation.setProperty("/approvalNumber", null);
+                Cancellation.setProperty("/isCreate", false);
+                approvalTarget = "participatingSupplierSelectionCancelApproval"
             }
 
             console.log(approvalTarget);

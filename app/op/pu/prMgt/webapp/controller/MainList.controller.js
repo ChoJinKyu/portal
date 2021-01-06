@@ -41,13 +41,13 @@ sap.ui.define([
             this.setModel(new JSONModel(), "excelModel");
 
             var today = new Date();
-            this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
             oMultilingual.attachEvent("ready", function (oEvent) {
                 var oi18nModel = oEvent.getParameter("model");
                 this.addHistoryEntry({
-                    title: oi18nModel.getText("/CONTROL_OPTION_MANAGEMENT"),   //제어옵션관리
+                    title: oi18nModel.getText("/prMgt"),   //제어옵션관리
                     icon: "sap-icon://table-view",
                     intent: "#Template-display"
                 }, true);

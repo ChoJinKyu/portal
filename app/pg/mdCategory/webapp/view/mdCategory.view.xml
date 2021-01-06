@@ -1,7 +1,9 @@
 <mvc:View controllerName="pg.mdCategory.controller.mdCategory"
+    class="sapUiSizeCompact"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
+	xmlns:dnd="sap.ui.core.dnd"
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
@@ -34,20 +36,28 @@
       <f:content>
         <VBox>
         <Table id="mainTable"
+                sticky="HeaderToolbar,ColumnHeaders" 
+                inset="false" 
+                growing="true"
+                growingThreshold="15"
                 mode="SingleSelectLeft" 
-                selectionBehavior="Row"
+                selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{
                     path: 'list>/MdCategory'
+
                 }"
-                columnResize="onColumnResize">
+				class="sapFDynamicPageAlignContent"
+                columnResize="onColumnResize"
+		        beforeOpenContextMenu="onBeforeOpenContextMenu"
+                width="auto">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
               <Title text="SPMD Category List" level="H2"/>
               <ToolbarSpacer/>
-              <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
-              <Button text="{I18N>/UPDATE}" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
-              <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/>
+              <Button text="{I18N>/NEW}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <!-- <Button text="{I18N>/UPDATE}" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/> -->
+              <!-- <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/> -->
               <Button text="{I18N>/ROW_DELETE}" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
               <Button text="{I18N>/SAVE}" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
@@ -87,16 +97,10 @@
                 <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
                     <Text text="수정 시간" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
-                    <Text text="시스템 생성 시간" />
-                </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
-                    <Text text="시스템 수정 시간" />
-                </Column>
             </columns>
 
             <items>
-                <ColumnListItem>
+                <ColumnListItem type="Navigation" press="onListItemPress">
                     <cells>
                         <HBox alignItems="Center">
                             <Text text="{list>spmd_category_code}"></Text>
@@ -128,12 +132,6 @@
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
-                        </HBox>
-                        <HBox alignItems="Center">
-                            <Text text="{path : 'list>system_create_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
-                        </HBox>
-                        <HBox alignItems="Center">
-                            <Text text="{path : 'list>system_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
                         </HBox>
                     </cells>
                 </ColumnListItem>

@@ -9,15 +9,17 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/f/LayoutType",
+    "ext/lib/util/Multilingual",
 ],
 	/**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-    function (Controller, JSONModel, TreeListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, LayoutType) {
+    function (Controller, JSONModel, TreeListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, LayoutType, Multilingual) {
         "use strict";
 
         return Controller.extend("cm.menuMgt.controller.menuMgt", {
             onInit: function () {
+                this.setModel((new Multilingual()).getModel(), "I18N");
             },
             onAfterRendering: function() {
                 this.onSearch();
@@ -60,7 +62,7 @@ sap.ui.define([
                     layout: LayoutType.TwoColumnsBeginExpanded,//this.getOwnerComponent().getHelper().getNextUIState(1).layout,
                     "?query": {
                         menuCode: row.menu_code,
-                        menuName: row.menu_name.replaceAll("#", "^"),
+                        menuName: "",//row.menu_name.replaceAll("#", "^"),
                         parentMenuCode: row.parent_menu_code,
                         chainCode: row.chain_code || ""
                     }
