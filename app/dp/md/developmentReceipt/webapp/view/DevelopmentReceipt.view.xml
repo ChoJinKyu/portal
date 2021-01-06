@@ -353,7 +353,8 @@
                         <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"             press=".onMoldMstTableDeleteButtonPress"  />
                         <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"            press=".onMoldMstTableReceiptButtonPress" />
                         <ToolbarSeparator/>
-                        <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
+                        <Button icon="sap-icon://excel-attachment" press=".onExportPress" />
+                        <Button icon="sap-icon://action-settings"  press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="NeverOverflow" />
                             </layoutData>

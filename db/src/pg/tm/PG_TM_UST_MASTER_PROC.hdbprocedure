@@ -99,108 +99,7 @@ procedure pg_tm_ust_master_proc (
 										system_create_dtm  timestamp,
 										system_update_dtm  timestamp
 								),
-
-    out	o_table_master			table (  
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										monitoring_type_code  nvarchar(30),
-										activate_flag  boolean,
-										monitoring_purpose  blob,
-										scenario_desc  blob,
-										source_system_desc  blob,
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-    out	o_table_company			table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										company_code  nvarchar(10),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	out	o_table_bizunit			table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										bizunit_code  nvarchar(10),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	out	o_table_manager			table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										monitoring_manager_empno  nvarchar(30),
-										monitoring_super_authority_flag  boolean,
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	out	o_table_operation		table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										monitoring_operation_mode_code  nvarchar(30),
-										language_code  nvarchar(10),
-										monitoring_operation_mode_name  nvarchar(240),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp	
-								),
-	out	o_table_purchasing_type	table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										monitoring_purchasing_type_code  nvarchar(30),
-										language_code  nvarchar(10),
-										monitoring_purchasing_type_name  nvarchar(240),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	out	o_table_scenario		table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										language_code  nvarchar(10),
-										scenario_name  nvarchar(240),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	out	o_table_type			table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										monitoring_type_code  nvarchar(30),
-										language_code  nvarchar(10),
-										monitoring_type_name  nvarchar(240),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	out o_table_message			nvarchar(5000)
+	out o_table_message			pg_tm_proc_out_type
 )
 language sqlscript
 sql security invoker
@@ -215,7 +114,7 @@ begin
 	declare exit handler for sqlexception
 		begin
 			exec (:var_rollback);
-			select ::sql_error_code||'-'||::sql_error_message into o_table_message from dummy;
+			o_table_message = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnmessage from dummy;
 		end;
 -- master table
 	o_table_master =
@@ -691,7 +590,7 @@ begin
 	;
 -- commit message	
 	exec (:var_commit);
-	o_table_message :=  'success~!';
+	o_table_message =  select 'OK' as returncode, 'Success Saved!' as returnmessage from dummy;
 
 end
 ;

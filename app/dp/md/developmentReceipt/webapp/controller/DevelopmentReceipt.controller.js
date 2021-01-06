@@ -709,6 +709,21 @@ sap.ui.define([
             }
         },
         
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            
+            var oData = oTable.getModel('list').getProperty("/MoldMstView");
+            
+            ExcelUtil.fnExportExcel({
+                fileName: "MoldDevelopmentReceipt",
+                table: oTable,
+                data: oData
+            });
+        },
+
         onCheckAll : function (oEvent) {
             var oTable = this.byId("moldMstTable");
 

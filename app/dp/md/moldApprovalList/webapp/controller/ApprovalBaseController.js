@@ -889,7 +889,9 @@ sap.ui.define([
                 } 
             }
 
-            this.callAjax(data,"saveMoldApproval")
+            console.log("data>>>> " , data);
+
+           this.callAjax(data,"saveMoldApproval")
         } , 
 
         callAjax : function (data,fn) {  

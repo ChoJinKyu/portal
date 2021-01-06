@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "cm.currencyMgt",
+    "id": "cm.curMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "cm.currencyMgt.view.App",
+      "viewName": "cm.curMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -72,7 +72,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "cm.currencyMgt.i18n.i18n"
+          "bundleName": "cm.curMgt.i18n.i18n"
         }
       },
       "util": {
@@ -103,7 +103,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "cm.currencyMgt.view",
+        "viewPath": "cm.curMgt.view",
         "controlId": "fcl",
 				"transition": "slide",
         "bypassed": {
