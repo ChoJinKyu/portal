@@ -15,21 +15,43 @@ sap.ui.define([
          *      table    : 대상 Table Control,
          *      data     : model data
          * }
+         * @param {Array} binding code 대신 code_name 을 출력하기 위한 추가 정보
+         * [{aListItem: [code list], sBindName: 'the name of binded on Table', sKeyName: code key name}]
          */
-        fnExportExcel: function(_oParam) {
+        fnExportExcel: function(_oParam, _aListItemObj) {
             //debugger;
             if(!_oParam.data || _oParam.data.length < 1) {
                 alert("No Data to Exporting!");
                 return;
             }
             var aCols = this._fnGetColumnConfig(_oParam.table);
+            var aNewData = [];
+            if(_aListItemObj && _aListItemObj.length > 0) {
+
+                $.each(_oParam.data, function(iRowIdx, oRowItem) {// row list
+                    $.each(_aListItemObj, function(iCodeListIdx, oCodeListItem) {// code lists passed
+                        if(oRowItem.hasOwnProperty(oCodeListItem.sBindName)) {
+                            $.each(oCodeListItem.aListItem, function(iCodeIdx, oCodeItem) {// code items
+                                if(oRowItem[oCodeListItem.sBindName] === oCodeItem[oCodeListItem.sKeyName]) {
+                                    oRowItem[oCodeListItem.sBindName] = oCodeItem[oCodeListItem.sTextName];
+                                    aNewData.push(oRowItem);
+                                    return false;
+                                }
+                            });
+                            return true;
+                        }
+                    });
+                    
+                });
+            }
+            debugger;
             var oSettings = {
                 fileName: _oParam.fileName,
                 workbook: {
                     columns: aCols,
                     hierarchyLevel: _oParam.hierarchyLevel
                 },
-                dataSource: _oParam.data
+                dataSource: aNewData.length > 0 ? aNewData : _oParam.data
             };
             var oSheet = new Spreadsheet(oSettings);
             oSheet.build().finally(function() {
@@ -54,8 +76,35 @@ sap.ui.define([
 	    			if(oCol.data("noExcel") || !(typeof oCol.getVisible === "function" ? oCol.getVisible() : oCol.getHeader().getVisible())) {// passing column, invisible column
 						return;
                     }
-                   
-                    var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();
+                    
+                    //label 을 FlexBox 로 감싸는 부분 대비
+                    //var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();
+                    var sLabel = "";
+                    if(typeof oCol.getLabel === "function") {
+                        if(typeof oCol.getLabel().getText === "function") {
+                            sLabel = oCol.getLabel().getText();
+                        } else if(typeof oCol.getLabel().getItems === "function") {
+                            $.each(oCol.getLabel().getItems(), function(idx, oItem) {
+                                if(oItem.getText()) {
+                                    sLabel = oItem.getText();
+                                    return false;
+                                }
+                            });   
+                        }
+                        
+                    } else if(typeof oCol.getHeader === "function") {
+                        if(typeof oCol.getText === "function" && oCol.getText() !== "State") {
+                            sLabel = oCol.getText();
+                        } else if(typeof oCol.getHeader().getItems === "function" && oCol.getHeader().getItems().length > 0) {
+                            $.each(oCol.getHeader().getItems(), function(idx, oItem) {
+                                if(oItem.getText()) {
+                                    sLabel = oItem.getText()
+                                    return false;
+                                }
+                            })
+                        }    
+                    }
+
                     var oBindingInfo = this._getBindingInfo(aCells ? aCells[idx] : oCol.getTemplate());
 
                     if(oBindingInfo.prop === "") {//binding 정보가 없으면 pass

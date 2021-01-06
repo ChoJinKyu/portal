@@ -35,13 +35,28 @@ sap.ui.define([
 
             var oTable = this.byId(sTableId);
             var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
-            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
-            var oData = oTable.getModel().getProperty("/Message");
+            var oData = oTable.getModel().getProperty("/Message");//binded Data
+
+            //CM_CHAIN_CD code list
+            var aCtxtChainCode = [];//Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
+            var aChainCode = aCtxtChainCode.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getModel().getProperty("/"+sCtxt));
+
+            //CM_LANG_CODE code List
+            var aCtxtLang = [];//Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
+            var aLangCode = aCtxtLang.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_LANG_CODE')").getModel().getProperty("/"+sCtxt));
+
+            //optional object param
+            //aListItem - 코드목록, sBindName - Table 칼럼에 바인딩한 property, sKeyName - 코드목록의 key, sTextName - 코드목록의 text
+            var oOption = [
+                {aListItem : aChainCode, sBindName : "chain_code", sKeyName : "code", sTextName : "code_name"},
+                {aListItem : aLangCode, sBindName : "language_code", sKeyName : "code", sTextName : "code_name"}
+            ];// code data는 복수개일 수 있으므로 배열로 전달.
+
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
                 data: oData
-            });
+            }, oOption);
         },
 
         onImportChange: function (_oEvent) {
@@ -67,7 +82,22 @@ sap.ui.define([
                                 newObj = {};
                             aCols.forEach(function (oCol, idx) {
                                 debugger;
-                                var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
+                                //var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
+                                var sLabel = "";
+                                if(typeof oCol.getLabel === "function") {
+                                    if(typeof oCol.getLabel().getText === "function") {
+                                        sLabel = oCol.getLabel().getText();
+                                    } else if(typeof oCol.getLabel().getItems === "function") {
+                                        $.each(oCol.getLabel().getItems(), function(idx2, oItem) {
+                                            if(oItem.getText()) {
+                                                sLabel = oItem.getText();
+                                                return false;
+                                            }
+                                        });   
+                                    }
+                                    
+                                }
+
                                 var sName = oCol.data("bindName") || "";
                                 var iKeyIdx = aKeys.indexOf(sLabel);
                                 if (iKeyIdx > -1 && sName) {
