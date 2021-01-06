@@ -88,19 +88,19 @@ sap.ui.define([
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
 
-                schFilter2 = [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
-                    new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
-                    new Filter("language_cd", FilterOperator.EQ, 'KO' ),
-                    new Filter("org_code", FilterOperator.EQ, this.company_code)
-                ]; 
+                // schFilter2 = [
+                //     new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                //     new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
+                //     new Filter("language_cd", FilterOperator.EQ, 'KO' ),
+                //     new Filter("org_code", FilterOperator.EQ, this.org_code)
+                // ]; 
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
-                this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
-                    console.log("OrgCodeLanguages >>>>>>", oData);
-                });
+                // this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                //     console.log("OrgCodeLanguages >>>>>>", oData);
+                // });
             }  
         },
 
@@ -235,6 +235,16 @@ sap.ui.define([
                 oModel = this.getModel("mdItemMaster"),
                 mstModel = this.getModel("appMaster");
             ;
+            var schFilter2 = [];
+            schFilter2 = [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                    new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
+                    new Filter("language_cd", FilterOperator.EQ, 'KO' ),
+                    new Filter("org_code", FilterOperator.EQ, data.company_code)
+            ]; 
+            this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                    console.log("OrgCodeLanguages >>>>>>", oData);
+            });
             console.log(data);
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.approval_number;
@@ -330,6 +340,18 @@ sap.ui.define([
             }
             
             console.log("approverPreview " , this.getModel("approverPreview").getData());
+
+            var ref = this.getModel("referer");
+            this.getView().setModel(new ManagedModel(), "refererPreview");
+
+            var rArr = [];
+            if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
+                ref.getData().Referers.forEach(function(item){
+                    rArr.push(item.referer_empno); 
+                });
+            }
+            this.getModel("refererPreview").setProperty("/refArr", rArr);
+
             var oView = this.getView();
 
             if (!this._oDialogPreview) {
