@@ -19,23 +19,24 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    "./ApprovalList.controller"
+    //  "./ApprovalList.controller",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
+
 ) {
     "use strict";
 
     var oTransactionManager;
     //var oRichTextEditor;
-   
+
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
 
-        approvalList: new ApprovalList(),
+        //  approvalList: new ApprovalList(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -46,19 +47,18 @@ sap.ui.define([
 		 */
         onInit: function () {
             // 각자 fragment 에서 세팅할 테이터 
-            this.approvalDetails_data = [] ;
-            this.moldMaster_data = [] ;
+            this.approvalDetails_data = [];
+            this.moldMaster_data = [];
             this.quotation_data = [];  // supplier 전용 
             var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N"); 
-            this._showFormFragment();   
+            this.setModel(oMultilingual.getModel(), "I18N");
+            this._showFormFragment();
         },
 
-        onAfterRendering: function () { 
+        onAfterRendering: function () {
             console.log(" >>>> onAfterRendering");
-            
+
         },
-    
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -72,7 +72,8 @@ sap.ui.define([
         onPageNavBackButtonPress: function () {
             this._toShowMode();
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
-            this.approvalList.onPageReload();
+
+            //  this.approvalList.onPageReload();
             /*
             var sPreviousHash = History.getInstance().getPreviousHash();
             if (sPreviousHash !== undefined) {
@@ -92,13 +93,13 @@ sap.ui.define([
         },
 
         // 입찰대상 협력사 취소품의 이동 
-         onPageCancellationButtonPress: function () { 
+        onPageCancellationButtonPress: function () {
             var Cancellation = this.getView().getModel('Cancellation');
             Cancellation.setProperty("/approvalNumber", this.approval_number);
             Cancellation.setProperty("/isCreate", true);
-             this.getRouter().navTo("participatingSupplierSelectionCancelApproval" , {
-                  company_code: this.company_code 
-                , plant_code: this.plant_code 
+            this.getRouter().navTo("participatingSupplierSelectionCancelApproval", {
+                company_code: this.company_code
+                , plant_code: this.plant_code
                 , approval_number: "New"
             });
         },
@@ -113,12 +114,12 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-        _onObjectMatched: function (oEvent) { 
-           
+        _onObjectMatched: function (oEvent) {
+
             /**
              * init 에서 해당 모델을 선언하면 create 계속 연속 했을때 기존 데이터가 남아있어서
              * 비정상적으로 나옴 
-             */        
+             */
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
@@ -144,7 +145,7 @@ sap.ui.define([
             var oArgs = oEvent.getParameter("arguments");
             console.log(oArgs);
             this._createViewBindData(oArgs);
-            
+
             this.oSF = this.getView().byId("approverSearch");
         },
         /**
@@ -172,87 +173,87 @@ sap.ui.define([
             var oModel2 = this.getModel("plant");
             oModel2.setTransactionModel(this.getModel("purOrg"));
 
-            oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id 
-                        + "',company_code='" + this.company_code 
-                        + "',org_type_code='" + "AU" 
-                        + "',org_code='" + this.plant_code + "')", {
+            oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id
+                + "',company_code='" + this.company_code
+                + "',org_type_code='" + "AU"
+                + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
-                    console.log("orgName " , oData);
+                    console.log("orgName ", oData);
                 }
             });
 
-            this._onRoutedThisPage(this.approval_number); 
+            this._onRoutedThisPage(this.approval_number);
 
             if (this.approval_number === "New") {
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
             }
-            
+
             this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
         },
 
-        _toEditMode: function(){
+        _toEditMode: function () {
             this._onEditApproverRow();
-            
+
             var oUiModel = this.getView().getModel("mode");
-                oUiModel.setProperty("/editFlag", true);
-                oUiModel.setProperty("/viewFlag", false);
+            oUiModel.setProperty("/editFlag", true);
+            oUiModel.setProperty("/viewFlag", false);
             //this.byId("titleInput").removeStyleClass("readonlyField");
 
             this._toEditModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
-		},
+        },
 
-		_toShowMode: function(){
+        _toShowMode: function () {
             this._onShowApproverRow();
 
             var oUiModel = this.getView().getModel("mode");
-                oUiModel.setProperty("/editFlag", false);
-                oUiModel.setProperty("/viewFlag", true);
+            oUiModel.setProperty("/editFlag", false);
+            oUiModel.setProperty("/viewFlag", true);
             //this.byId("titleInput").addStyleClass("readonlyField");
 
             this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
-		},
+        },
 
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
-           
+
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection");
             oPageGeneralInfoSection.removeAllBlocks();
-                
+
             this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
-            
+
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
-                
+
             this._loadFragment("Attachments", function (oFragment) {
                 oPageAttachmentsSection.addBlock(oFragment);
             }.bind(this))
-            
+
             var oPageApprovalLineSection = this.byId("pageApprovalLineSection");
             oPageApprovalLineSection.removeAllBlocks();
-                
+
             this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
             }.bind(this));
- 
+
         },
 
         _onRoutedThisPage: function (approvalNumber) {
-            console.log(" approvalNumber >>> " , approvalNumber);
-           
+            console.log(" approvalNumber >>> ", approvalNumber);
+
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
             ];
 
-            if(approvalNumber !== "New"){
+            if (approvalNumber !== "New") {
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
-                
-                    console.log(" oData >>> " , oData);
+
+                    console.log(" oData >>> ", oData);
                     //this.oRichTextEditor.setValue(oData.approval_contents);
                 }.bind(this));
             }
@@ -260,20 +261,20 @@ sap.ui.define([
 
             }.bind(this));
 
-            this._bindView("/Approvers", "approver", filter, function (oData) { 
-                if(approvalNumber === "New"){
+            this._bindView("/Approvers", "approver", filter, function (oData) {
+                if (approvalNumber === "New") {
                     this._toEditMode();
                 }
             }.bind(this));
 
-            console.log(" Approvers >>> " , approvalNumber);
-           var refererMultiCB = this.getModel('refererMultiCB');
+            console.log(" Approvers >>> ", approvalNumber);
+            var refererMultiCB = this.getModel('refererMultiCB');
             this._bindView("/Referers", "referer", filter, function (oData) {
-                if (oData.results.length > 0) { 
+                if (oData.results.length > 0) {
                     var rList = [];
-                    oData.results.forEach(function (item) { 
+                    oData.results.forEach(function (item) {
                         rList.push(item.referer_empno);
-                       // this.getView().byId("refererMultiCB").mProperties.selectedKeys.push(item.referer_empno);
+                        // this.getView().byId("refererMultiCB").mProperties.selectedKeys.push(item.referer_empno);
                     }.bind(this));
                     refererMultiCB.setProperty("/refer", rList);
                 }
@@ -332,7 +333,7 @@ sap.ui.define([
          */
         _onApproverAddRow: function (appSeq) {
             var oModel = this.getModel("approver");
-            
+
             oModel.addRecord({
                 "tenant_id": this.tenant_id,
                 "approval_number": this.approval_number,
@@ -360,8 +361,8 @@ sap.ui.define([
                     oModel.getData().Approvers[i].editMode = false;
                     oModel.getData().Approvers[i].trashShow = false;
                 }
-                if (approverData[approverData.length-1].approver_empno === "") {
-                    oModel.removeRecord(approverData.length-1);
+                if (approverData[approverData.length - 1].approver_empno === "") {
+                    oModel.removeRecord(approverData.length - 1);
                 }
             }
         },
@@ -502,7 +503,7 @@ sap.ui.define([
                 MessageToast.show("Type 을 먼저 선택해주세요.");
             } else {
                 var oView = this.getView();
-                 console.log("handleEmployeeSelectDialogPress >>> this._oDialog " , this._oDialog);
+                console.log("handleEmployeeSelectDialogPress >>> this._oDialog ", this._oDialog);
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
@@ -528,8 +529,8 @@ sap.ui.define([
 
             aItems.forEach(function (oItem) {
                 var obj = new JSONModel({
-                    approver_empno: oItem.getCells()[0].getText() ,
-                    approver_name : oItem.getCells()[1].getText()
+                    approver_empno: oItem.getCells()[0].getText(),
+                    approver_name: oItem.getCells()[1].getText()
                 });
                 this._approverAddRow(obj);
             }.bind(this));
@@ -575,7 +576,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i - 1].approve_sequence) + 1) + "",
                         "approver_type_code": approverData[i - 1].approver_type_code,
                         "approver_empno": approverData[i - 1].approver_empno,
-                        "approver_name": approverData[i -1].approver_name,
+                        "approver_name": approverData[i - 1].approver_name,
                         "arrowUp": approverData[i].arrowUp,
                         "arrowDown": approverData[i].arrowDown,
                         "editMode": approverData[i].editMode,
@@ -777,13 +778,13 @@ sap.ui.define([
             this.setRefererList();
         },
 
-        setRefererList : function(){ 
+        setRefererList: function () {
             this.getView().setModel(new ManagedModel(), "refererMultiCB");
-            var refererMultiCB = this.getModel('refererMultiCB'); 
+            var refererMultiCB = this.getModel('refererMultiCB');
             var referModel = this.getModel('referer');
-            if(referModel.getData().Referers.length > 0){
-                 var rList = [];
-                referModel.getData().Referers.forEach(function (item) { 
+            if (referModel.getData().Referers.length > 0) {
+                var rList = [];
+                referModel.getData().Referers.forEach(function (item) {
                     rList.push(item.referer_empno);
                 }.bind(this));
                 refererMultiCB.setProperty("/refer", rList);
@@ -810,126 +811,120 @@ sap.ui.define([
             return year + "" + month + "" + date;
         },
 
-        _commonDataSettingAndSubmit : function (){ 
+        _commonDataSettingAndSubmit: function () {
 
-            var mst = this.getModel("appMaster").getData() ,
-                apr = this.getModel("approver").getData() ,
-                ref = this.getModel("referer").getData(); 
+            var mst = this.getModel("appMaster").getData(),
+                apr = this.getModel("approver").getData(),
+                ref = this.getModel("referer").getData();
             var data = {};
             var that = this;
             var approvalMaster = {
-                    tenant_id : this.tenant_id 
-                 ,  approval_number : this.approval_number 
-                 ,  company_code : this.company_code 
-                 ,  org_code : this.plant_code 
-                 ,  chain_code : 'DP'
-                 ,  approval_type_code : this.approval_type_code 
-                 ,  approval_title : mst.approval_title 
-                 ,  approval_contents : mst.approval_contents 
-                 ,  approve_status_code : mst.approve_status_code 
-                 ,  requestor_empno : mst.requestor_empno 
-                 ,  request_date : this._getToday() 
-                 ,  create_user_id : mst.requestor_empno 
-                 ,  update_user_id : mst.requestor_empno 
-                 ,  local_create_dtm : new Date() 
-                 ,  local_update_dtm : new Date()
+                tenant_id: this.tenant_id
+                , approval_number: this.approval_number
+                , company_code: this.company_code
+                , org_code: this.plant_code
+                , chain_code: 'DP'
+                , approval_type_code: this.approval_type_code
+                , approval_title: mst.approval_title
+                , approval_contents: mst.approval_contents
+                , approve_status_code: mst.approve_status_code
+                , requestor_empno: mst.requestor_empno
+                , request_date: this._getToday()
+                , create_user_id: mst.requestor_empno
+                , update_user_id: mst.requestor_empno
+                , local_create_dtm: new Date()
+                , local_update_dtm: new Date()
             };
 
             var aprArr = [];
-            if(apr.Approvers != undefined && apr.Approvers.length > 0){
-                apr.Approvers.forEach(function(item){ 
+            if (apr.Approvers != undefined && apr.Approvers.length > 0) {
+                apr.Approvers.forEach(function (item) {
                     aprArr.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , approve_comment : item.approve_comment 
-                        , approve_sequence : item.approve_sequence 
-                        , approve_status_code : item.approve_status_code 
-                        , approver_type_code : item.approver_type_code 
-                        , approver_empno : item.approver_empno
+                        tenant_id: that.tenant_id
+                        , approval_number: that.approval_number
+                        , approve_comment: item.approve_comment
+                        , approve_sequence: item.approve_sequence
+                        , approve_status_code: item.approve_status_code
+                        , approver_type_code: item.approver_type_code
+                        , approver_empno: item.approver_empno
                     });
                 });
             }
 
             var refArr = [];
-            if(ref.Referers != undefined && ref.Referers.length  > 0){
-                ref.Referers.forEach(function(item){ 
+            if (ref.Referers != undefined && ref.Referers.length > 0) {
+                ref.Referers.forEach(function (item) {
                     console.log("item", item);
-                    if(item._row_state_ != "D"){
+                    if (item._row_state_ != "D") {
                         refArr.push({
-                            tenant_id : that.tenant_id 
-                            , approval_number : that.approval_number 
-                            , referer_empno : item.referer_empno 
+                            tenant_id: that.tenant_id
+                            , approval_number: that.approval_number
+                            , referer_empno: item.referer_empno
                         });
                     }
-                   
+
                 });
             }
 
 
             data = {
-              inputData : { 
-                  approvalMaster : approvalMaster 
-                , approvalDetails : this.approvalDetails_data 
-                , approver : aprArr 
-                , moldMaster : this.moldMaster_data  
-                , referer : refArr 
-                , quotation : this.quotation_data 
-                } 
+                inputData: {
+                    approvalMaster: approvalMaster
+                    , approvalDetails: this.approvalDetails_data
+                    , approver: aprArr
+                    , moldMaster: this.moldMaster_data
+                    , referer: refArr
+                    , quotation: this.quotation_data
+                }
             }
 
-            console.log("data>>>> " , data);
+            console.log("data>>>> ", data);
 
-           this.callAjax(data,"saveMoldApproval")
-        } , 
-
-        callAjax : function (data,fn) {  
-            console.log("send data >>>> " , data);
+            var oView = this.getView();
             var that = this;
-            //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
-            //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
-           var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
+             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        that.callAjax(data, "saveMoldApproval"
+                            , function(result){
+                                oView.setBusy(false);
+                                MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                            if (result.resultCode > -1) {
+                                that.onLoadThisPage(result);
+                            }
+
+                        });
+                    };
+                }
+            });
+        },
+
+        callAjax: function (data, fn , callback) {
+            console.log("send data >>>> ", data);
+            var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/" + fn;
 
             $.ajax({
                 url: url,
                 type: "POST",
                 //datatype: "json",
-                data : JSON.stringify(data),
+                data: JSON.stringify(data),
                 contentType: "application/json",
-                success: function(result){
-                    console.log("result>>>> " , result);
-                    MessageToast.show(that.getModel("I18N").getText("/"+result.messageCode));
-                    if(result.resultCode > -1){
-                        that.onLoadThisPage(result);
-                    }
+                success: function (result) { 
+                    callback(result);
                 },
-                error: function(e){
-                    
+                error: function (e) {
+                    callback(e);
                 }
             });
-        }, 
-        onLoadThisPage : function (param) { 
+        },
+        onLoadThisPage: function (param) {
             this.approval_number = param.approval_number;  //  저장후  this.approval_number 를 세팅 하여 한번 저장 후에는 업데이트 처리 되도록 !! 
-            this._onRoutedThisPage(param.approval_number); 
+            this._onRoutedThisPage(param.approval_number);
             this._onApprovalPage();
             this._toShowMode();
-
-           /* console.log("param >>>> " , param);
-            var that = this;
-            var target = "";
-            if(this.approval_type_code  == "B"){
-                target = "budgetExecutionApproval"
-            }if(this.approval_type_code  == "V"){
-                target = "purOrderItemLocalApproval"
-            }if(this.approval_type_code  == "E"){
-                target = "participatingSupplierSelection"
-            }
-   
-            that.getRouter().navTo(target , {
-                company_code: param.company_code
-                , plant_code: param.plant_code
-                , approval_number: param.approval_number
-            },true); */ 
-
         }
 
         /*

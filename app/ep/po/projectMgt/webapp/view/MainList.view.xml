@@ -88,7 +88,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="Project {= ${list>/ProjectView}.length > 0 ? '(' + ${list>/ProjectView}.length + ')' : ''}" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>

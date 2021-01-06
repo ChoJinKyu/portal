@@ -27,7 +27,7 @@ service MdCategoryService {
     entity MdVpItemMapping as projection on vpItemMapping.Md_Vp_Item_Mapping;
 
     entity MdVpItemMappingAttr as projection on vpItemMappingAttr.Md_Vp_Item_Mapping_Attr;
-
+    
     // Category별 Item View
     view MdCategoryCodeItemView @(title : 'Category Item Mapping View') as
     	select 

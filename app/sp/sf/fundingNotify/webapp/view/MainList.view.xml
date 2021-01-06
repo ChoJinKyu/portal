@@ -62,13 +62,11 @@
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onMainTableUpdateFinished"
                     items="{list>/SfFundingNotify}"
-                    mode="MultiSelect" 
                     width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="{I18N>/FUNDING_NOTIFICATION} ({= ${list>/SfFundingNotify}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableSandMailButton" text="{I18N>/MAIL_TRANSFER}" type="Transparent" press=".onMainSendMailButtonPress" />
                             <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddButtonPress" />
                             <!-- <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
@@ -82,7 +80,7 @@
                         <Column id="mainFundingNumberColumn" minScreenWidth="Tablet" width="6em" hAlign="Center">
                             <Text text="{I18N>/NOTIFICATION_NUMBER}" />
                         </Column>
-                        <Column id="mainFundingTitleComlumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainFundingTitleComlumn" minScreenWidth="Tablet" width="30em" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="{I18N>/TITLE}" />
                         </Column>
                         <Column id="mainFundingCreateUser" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">

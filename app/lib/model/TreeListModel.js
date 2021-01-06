@@ -9,8 +9,14 @@ sap.ui.define([
 
     var TreeListModel = JSONModel.extend("ext.lib.model.TreeListModel", {
 
-        constructor: function (model) {
+        constructor: function (model, config) {
             this.model = model;
+            this.config = config || {};
+        },
+
+        setConfig: function(config) {
+            this.config = config;
+            return this;
         },
 
         convToJsonTree: function (oData) {
@@ -115,7 +121,8 @@ sap.ui.define([
                 }
                 return t;
             }, JSON.parse(JSON.stringify(tree)));
-            return tree;
+
+            return this.config.returnType == "Array" ? [ tree, oData ] : tree;
         },
 
         read: function (path, parameters) {

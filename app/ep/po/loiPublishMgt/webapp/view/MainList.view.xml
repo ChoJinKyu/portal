@@ -6,11 +6,11 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:t="sap.ui.table"
     xmlns:core="sap.ui.core" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.control.m"
     xmlns:u="sap.ui.unified"
     height="100%">
 
-    <f:DynamicPage id="page"
+    <f:DynamicPage id="page2"
         headerExpanded="{mainListViewModel>/headerExpanded}" 
         toggleHeaderOnTitleClick="true">        
         <!-- DynamicPage Title -->
@@ -44,12 +44,12 @@
                                 suggestionItems="{
                                     path: '/LoiNumberGroupbyView',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: '1000'},
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'company_code', operator: 'EQ', value1: 'C100'}
                                     ],         
                                     sorter: { path: 'loi_number' }
                                 }"
-                                showValueHelp="false" placeholder="">
+                                showValueHelp="false" placeholder="" submit=".onPageSearchButtonPress">
                                 <core:Item key="{loi_number}" text="{loi_number}" />
                             </MultiInput>                            
                             <layoutData>
@@ -58,10 +58,6 @@
                         </VBox>
                         <VBox>
                             <Label text="요청일자 : " labelFor="searchRequestDate"/>
-                            <!-- <DatePicker
-                                id="searchRequestDate"
-                                visible="true"
-                                placeholder="Date"/>                             -->
                             <DateRangeSelection id="searchRequestDate" width="100%" placeholder="" />                                
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -69,21 +65,49 @@
                         </VBox>
                         <VBox>
                             <Label text="요청부서 :" labelFor="searchRequestDepartment"></Label>
-                            <Input id="searchRequestDepartment" placeholder=""></Input>
+                            <lib-m:CodePicker id="searchRequestDepartment"
+                                placeholder="Enter a department name"
+                                keyField="department_id"
+                                textField="department_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="요청자 :" labelFor="searchRequestor"></Label>
-                            <Input id="searchRequestor" placeholder=""></Input>
+                            <lib-m:CodePicker id="searchRequestor"
+                                placeholder="Enter a Employee name"
+                                keyField="employee_number"
+                                textField="user_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Employee'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M12 S12" />
                             </layoutData>
                         </VBox>    
                         <VBox>
                             <Label text="LOI발행상태 :" labelFor="searchLoiPublishStatus"></Label>
-                            <MultiComboBox id="searchLoiPublishStatus" width="100%" selectedKey=""
+                            <MultiComboBox id="searchLoiPublishStatus" width="100%"
                                             items="{
                                                 path: 'common>/CodeDetails',
                                                 filters: [
@@ -130,21 +154,49 @@
                         </VBox>
                         <VBox>
                             <Label text="구매부서 :" labelFor="searchPurchasingDepartment"></Label>
-                            <Input id="searchPurchasingDepartment" placeholder=""></Input>
+                            <lib-m:CodePicker id="searchPurchasingDepartment"
+                                placeholder="Enter a Employee name"
+                                keyField="employee_number"
+                                textField="user_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Employee'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M12 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="구매자 :" labelFor="searchBuyer"></Label>
-                            <Input id="searchBuyer" placeholder=""></Input>
+                            <lib-m:CodePicker id="searchBuyer"
+                                placeholder="Enter a Employee name"
+                                keyField="employee_number"
+                                textField="user_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Employee'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M12 S12" />
                             </layoutData>
                         </VBox>    
                         <VBox>
                             <Label text="발주상태 :" labelFor="searchPoStatus"></Label>
-                            <MultiComboBox id="searchPoStatus" width="100%" selectedKey=""
+                            <MultiComboBox id="searchPoStatus" width="100%"
                                             items="{
                                                 path: 'common>/CodeDetails',
                                                 filters: [
@@ -276,7 +328,7 @@
                 <t:template>
                     <Text text="{
                                 path: 'list>delivery_request_date',
-                                formatter: '.dateFormatter.toDateString'
+                                formatter: '.dateFormatter.toUTCDateString'
                             }"/>
                 </t:template>
                 </t:Column>
@@ -301,13 +353,13 @@
                 <t:Column id="mainLoiSelectionStatusCode" width="4rem">
                 <Label text="업체선정진행상태" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
                 <t:template>
-                    <Text text="{list>loi_selection_status_code}"/>
+			    <Link text="{list>loi_selection_status_name}" press="onTableSupplierSelectionPress" />                
                 </t:template>
                 </t:Column>
                 <t:Column id="mainLoiPublishStatusCode" width="4rem">
                 <Label text="LOI발행상태" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
                 <t:template>
-                    <Text text="{list>loi_publish_status_code}"/>
+                    <Text text="{list>loi_publish_status_name}"/>
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainPoStatusCode" width="4rem">
@@ -321,7 +373,7 @@
                 <t:template>
                     <Text text="{
                                 path: 'list>request_date',
-                                formatter: '.dateFormatter.toDateString'
+                                formatter: '.dateFormatter.toUTCDateString'
                             }"/>
                 </t:template>
                 </t:Column>
@@ -330,7 +382,7 @@
                 <t:template>
                     <Text text="{
                                 path: 'list>system_create_dtm',
-                                formatter: '.dateFormatter.toDateString'
+                                formatter: '.dateFormatter.toUTCDateString'
                             }"/>
                 </t:template>
                 </t:Column>      
@@ -338,7 +390,7 @@
                 <Label text="VOS" textAlign="Center" width="100%"/>
                 <t:template>
                     <!-- <Text text="{list>supplier_opinion}"/> -->
-                    <Button id="vosButton" text="Show" type="Default" press=".onVosButtonPress" />
+                    <Button id="vosButton" text="조회" type="Default" press=".onVosButtonPress" />
                 </t:template>
                 </t:Column>   
                 <t:Column id="mainPoNumber" width="4rem">

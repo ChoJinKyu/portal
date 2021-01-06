@@ -5,6 +5,7 @@
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
+    xmlns:lib-m="ext.lib.control.m"
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
@@ -16,7 +17,7 @@
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
@@ -34,10 +35,6 @@
 				<uxap:snappedTitleOnMobile>
 					<Title text="Control Option Details" />
 				</uxap:snappedTitleOnMobile>
-				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
-				</uxap:actions>
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
@@ -119,7 +116,6 @@
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<ToolbarSeparator/>
 									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -142,7 +138,10 @@
 							<items>
 								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
 									<cells>
-										<Text text="{details>_row_state_}"/>
+										<ObjectStatus icon="{
+											path: 'details>_row_state_',
+											formatter: '.formatter.toModelStateColumnIcon'
+										}" />
 										<Text text="{details>control_option_code}"/>
 										<Input value="{details>control_option_level_code}"/>
 										<Input value="{details>control_option_level_val}"/>
@@ -167,8 +166,9 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+				<lib-m:EditModeButton type="Transparent" id="pageEditButton" editPress=".onPageEditButtonPress" cancelPress=".onPageCancelEditButtonPress" />
+				<Button type="Transparent" id="pageDeleteButton" text="Delete" press=".onPageDeleteButtonPress" />
+				<Button type="Emphasized" id="pageSaveButton" text="Save" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

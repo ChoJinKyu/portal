@@ -6,6 +6,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:sc="sap.suite.ui.commons"
 	xmlns:core="sap.ui.core"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
@@ -23,10 +24,10 @@
 				<uxap:expandedHeading>
 					<Title text="LOI 업체선정 품의" wrapping="true" />
 				</uxap:expandedHeading>
-				<!-- <uxap:snappedHeading>
-					<Title text="Control Option Details" wrapping="true" />
+				<uxap:snappedHeading>
+					<Title text="LOI 업체선정 품의" wrapping="true" />
 				</uxap:snappedHeading>
-				<uxap:expandedContent>
+				<!-- <uxap:expandedContent>
 					<Text text="Details for control option {control_option_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
@@ -40,8 +41,8 @@
 					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
 				</uxap:actions> -->
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/> -->
 					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -54,50 +55,53 @@
                         title="LOI 번호: "
                         text="{midObjectViewModel>/viewLoiNumber}"/>
                     <ObjectStatus
-                    title="작성자"
-                    text=""/>
+                        id="createUser"         
+                        title="작성자"
+                        text="**희"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus
+                    <ObjectStatus 
+                        id="createDate"
                         title="작성일자"
                         text="{
                                 path: 'master>/system_create_dtm',
-                                formatter: '.dateFormatter.toDateString'
+                                formatter: '.dateFormatter.toUTCDateString'
                             }" />
 
                     <ObjectStatus
+                        id="createDepartment"
                         title="작성부서"
-                        text=""/>
+                        text="미래기술.신규과제탐색그룹"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{master>/loi_selection_status_code}"
+                        text="{master>/loi_selection_status_name}"
                         state="Error" />
-                            </layout:VerticalLayout>
+                </layout:VerticalLayout>
 
-                            <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="Process : "/>
-                        <HBox>
-                            <sc:MicroProcessFlow>
-                                <sc:content>
-                                    <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                    <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                    <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                    <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                </sc:content>
-                            </sc:MicroProcessFlow>
-                        </HBox>
-                        <HBox>
-                            <Text text="LOI요청"  width="4em" renderWhitespace="true" />
-                            <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
-                            <Text text="LOI발행" width="6em" textAlign="Center" />
-                            <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
-                        </HBox>
-                </layout:VerticalLayout>  
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <HBox>
+                        <Text text="LOI요청"  width="4em" renderWhitespace="true" />
+                        <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
+                        <Text text="LOI발행" width="6em" textAlign="Center" />
+                        <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
+                    </HBox>
+                </layout:VerticalLayout>   -->
 
 			</FlexBox>
 		</uxap:headerContent>
@@ -106,49 +110,136 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
+                    <form:SimpleForm id="midObjectForm" editable="true">                    
+                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
+                            <Label  text="* 품의명" 
+                                    required="true"
+                                    design="Bold" 
+                                    class="sapUiSmallMarginBottom" visible="{midObjectViewModel>/isEditMode}"/>
+                            <Input value="{
+                                path: 'master>/loi_selection_title',
+                                type: 'sap.ui.model.type.String',
+                                constraints: {
+                                    maxLength: 50
+                                }
+                            }" class="sapMLabelNoText" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
+                            <Label  text="* 품의명" 
+                                    design="Bold" 
+                                    class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
+                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>
+
+                            <Label  text="* 업체선정결과" 
+                                    design="Bold" 
+                                    class="sapUiSmallMarginTop"/>
+                            <Table id="tableAttachments" 
+                                sticky="HeaderToolbar,ColumnHeaders" 
+                                inset="false" 
+                                class="sapFDynamicPageAlignContent" 
+                                mode="None"
+                                width="98%">
+                                <columns>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Line No." />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="플랜트" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="품명" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="단위" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="수량" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="통화" />
+                                    </Column>  
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="요청금액" />
+                                    </Column> 
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="선정결과" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="참여업체" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="환산견적금액" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="요청납기일자" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="회신납기일자" />
+                                    </Column>
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="비고" />
+                                    </Column>  
+                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="견적번호" />
+                                    </Column>                                                                                                                                                                                    
+                                </columns>
+                                <items>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <Text text="10"/>
+                                            <Text text="여수"/>
+                                            <Text text="FFU"/>
+                                            <Text text="EA"/>
+                                            <Text text="3,260"/>
+                                            <Text text="KRW"/>
+                                            <Text text="10,000,000"/>
+                                            <Text text="1(선정)"/>
+                                            <Text text="신성이엔지"/>
+                                            <Text text="10,000,000"/>
+                                            <Text text="2021-02-01"/>
+                                            <Text text="2021-02-01"/>
+                                            <Text text=""/>
+                                            <Text text="RFQ123400"/>
+                                         </cells>
+                                    </ColumnListItem>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <Text text="20"/>
+                                            <Text text="대산"/>
+                                            <Text text="FFU용 Filter"/>
+                                            <Text text="EA"/>
+                                            <Text text="1"/>
+                                            <Text text="KRW"/>
+                                            <Text text="10,000,000"/>
+                                            <Text text="1(선정)"/>
+                                            <Text text="OO공조"/>
+                                            <Text text="10,000,000"/>
+                                            <Text text="2021-03-01"/>
+                                            <Text text="2021-02-25"/>
+                                            <Text text=""/>
+                                            <Text text="RFQ123400"/>
+                                         </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
+                            <Label  text="* 특기사항" 
+                                        design="Bold" 
+                                        class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
+                            <richtexteditor:RichTextEditor
+                                editorType="TinyMCE4"
+                                width="98%"
+                                height="200px"
+                                editable="{midObjectViewModel>/isEditMode}"
+                                customToolbar="true"
+                                showGroupFont="true"
+                                showGroupLink="true"
+                                showGroupInsert="true"
+                                value="{master>/special_note}">
+                            </richtexteditor:RichTextEditor>                            
+                        </VBox>
+                        </form:SimpleForm>                    
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-
-			<uxap:ObjectPageSection titleUppercase="false" title="업체선정결과">
-				<uxap:subSections>
-    				<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                            <VBox>
-                                <!-- 업체선정결과 시작 -->
-                                <layout:VerticalLayout width="100%">
-                                </layout:VerticalLayout>                                
-                                <!-- <Panel>
-                                    <headerToolbar>
-                                        <OverflowToolbar>
-                                            <Title text="업체선정결과"/>
-                                        </OverflowToolbar>
-                                    </headerToolbar>
-                                    <content>
-                                        <layout:VerticalLayout width="100%">
-                                        </layout:VerticalLayout>
-                                    </content>
-                                </Panel>                                 -->
-                                <!-- 업체선정결과 끝 -->
-
-                            </VBox>
-						</uxap:blocks>
-					</uxap:ObjectPageSubSection>
-                </uxap:subSections>                
-			</uxap:ObjectPageSection>            
-
-			<!-- <uxap:ObjectPageSection titleUppercase="false" title="특기사항">
-				<uxap:subSections>
-    				<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                            <VBox>
-                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
-                                </layout:VerticalLayout>
-                            </VBox>
-						</uxap:blocks>
-					</uxap:ObjectPageSubSection>
-                </uxap:subSections>                
-			</uxap:ObjectPageSection>             -->
 
             <!-- 첨부파일 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
@@ -211,7 +302,7 @@
 				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress('S')" />
                 <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
                 <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
-				<Button id="pageCacelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

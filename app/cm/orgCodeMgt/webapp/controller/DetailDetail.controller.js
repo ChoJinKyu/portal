@@ -21,12 +21,11 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "languages");
 
             // 다국어 라벨/메시지
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
+            //var oMultilingual = new Multilingual();
+            //this.setModel(oMultilingual.getModel(), "I18N");
         },
         
         onAfterRendering : function(){
-
         },
 
         _fnSetReadMode : function(){
