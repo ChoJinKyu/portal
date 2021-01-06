@@ -18,10 +18,11 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/richtexteditor/RichTextEditor"
+    "sap/ui/richtexteditor/RichTextEditor",
+    "./ApprovalList.controller"
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
 ) {
     "use strict";
 
@@ -34,6 +35,7 @@ sap.ui.define([
 
         validator: new Validator(),
 
+        approvalList: new ApprovalList(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -70,6 +72,7 @@ sap.ui.define([
         onPageNavBackButtonPress: function () {
             this._toShowMode();
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
+            this.approvalList.onPageReload();
             /*
             var sPreviousHash = History.getInstance().getPreviousHash();
             if (sPreviousHash !== undefined) {

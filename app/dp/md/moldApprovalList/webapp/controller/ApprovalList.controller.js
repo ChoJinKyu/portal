@@ -90,12 +90,16 @@ sap.ui.define([
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
 
-    
-
+        
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
 
+        },
+        onPageReload: function(){
+            console.log(window);
+            window.location.reload();
+            console.log("항상여기를 타나?");
         },
        
         
