@@ -204,7 +204,7 @@
                                              <Text visible="false" text="{I18N>/CATEGORY_CODE}"></Text>                                                                             
                                         </Column>
 
-                                        <Column width="0px">
+                                        <Column visible="false" width="0px">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "tenant_id", "leadingProperty": "tenant_id", "columnIndex": -101}'/>
@@ -212,9 +212,9 @@
                                              <Text visible="false" text="{I18N>/TENANT_ID}"></Text>                                                                             
                                         </Column>
 
-                                        <Column >
+                                        <Column visible="false" width="0px">
                                           <customData>
-                                        <core:CustomData key="p13nData"
+                                        <core:CustomData  key="p13nData"
                                         value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
                                         </customData>
                                              <Text text="system_update_dtm"></Text>                                                                             
@@ -228,7 +228,7 @@
                                              <Text textAlign="Center" text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
                                              <Text visible="false"  text="{category_code}"></Text>
                                              <Text visible="false"  text="{tenant_id}"></Text>
-                                             <Text text="{system_update_dtm}"></Text>
+                                             <Text visible="false" text="{system_update_dtm}"></Text>
                                         </ColumnListItem>
                                     </items> 
                                 </Table>

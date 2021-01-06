@@ -5,9 +5,10 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/f/LayoutType",
     "sap/m/MessageBox",
     "sap/m/MessageToast"	
-], function (BaseController, Multilingual, History, JSONModel,  Filter, FilterOperator, MessageBox, MessageToast) {
+], function (BaseController, Multilingual, History, JSONModel,  Filter, FilterOperator, LayoutType, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("pg.mi.miMaster.controller.MainList", {
@@ -481,7 +482,7 @@ sap.ui.define([
 						console.log("oPriceCount", oPriceCount);
 						console.log("oLngEntity", oLngEntity);
 						if(oBomCount>0 || oPriceCount>0){
-							MessageToast.show("시황정보 등록이 되어 삭제 할수 없습니다.");
+							MessageToast.show(this.getModel("I18N").getText("/NPG00017"));  
 							return; 
 						}else{
 							if(oLngEntity>0){
@@ -513,7 +514,8 @@ sap.ui.define([
 								console.log("oDeleteMaterialCodePath", oDeleteMaterialCodePath);
 								setTimeout(_deleteMiMaterialCode(oDeleteMaterialCodePath), 500);
 								setTimeout(that._setUseBatch(oModel), 500);
-								setTimeout(dataRefresh, 500);
+                                setTimeout(dataRefresh, 500);
+                                that._handleClose();
 							}
 						}
 					}
@@ -545,6 +547,13 @@ sap.ui.define([
             } 
             console.groupEnd();
 		},
+
+		_handleClose: function () {
+            var sLayout = LayoutType.OneColumn;
+            // var oFclModel = this.getModel("fcl");
+            // oFclModel.setProperty("/layout", sLayout);
+            this.getRouter().navTo("mainPage", {layout: sLayout});
+        },
 
 		_setUseBatch : function(oModel) {
             var that = this;
