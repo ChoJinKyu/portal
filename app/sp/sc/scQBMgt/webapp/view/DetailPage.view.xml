@@ -414,7 +414,7 @@
 					<uxap:ObjectPageSubSection>
                         <Panel id="panel_Content" expandable="true" expanded="true" headerText="Line Content">
                             <t:Table id="table1"
-                                rows="{list>/list}"
+                                rows="{/list}"
                                 selectionMode="MultiToggle"
                                 ariaLabelledBy="title">
                                 <t:extension>

@@ -4,49 +4,49 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "currencyMgt-mainList-mainColumnCode",
+                id: "curMgt-mainList-mainColumnCode",
                 order: 0,
                 text: "Code",
                 visible: true
             },
             {
-                id: "currencyMgt-mainList-mainColumnName",
+                id: "curMgt-mainList-mainColumnName",
                 order: 1,
                 text: "Name",
                 visible: false
             },
             {
-                id: "currencyMgt-mainList-mainColumnStartDate",
+                id: "curMgt-mainList-mainColumnStartDate",
                 order: 2,
                 text: "Start Date",
                 visible: false
             },
             {
-                id: "currencyMgt-mainList-mainColumnEndDate",
+                id: "curMgt-mainList-mainColumnEndDate",
                 order: 3,
                 text: "End Date",
                 visible: true
             },
             {
-                id: "currencyMgt-mainList-mainColumnSiteFlag",
+                id: "curMgt-mainList-mainColumnSiteFlag",
                 order: 4,
                 text: "Site",
                 visible: true
             },
             {
-                id: "currencyMgt-mainList-mainColumnCompanyFlag",
+                id: "curMgt-mainList-mainColumnCompanyFlag",
                 order: 5,
                 text: "Company",
                 visible: true
             },
             {
-                id: "currencyMgt-mainList-mainColumnOrganizationFlag",
+                id: "curMgt-mainList-mainColumnOrganizationFlag",
                 order: 6,
                 text: "Organization",
                 visible: true
             },
             {
-                id: "currencyMgt-mainList-mainColumnUserFlag",
+                id: "curMgt-mainList-mainColumnUserFlag",
                 order: 7,
                 text: "User",
                 visible: true
