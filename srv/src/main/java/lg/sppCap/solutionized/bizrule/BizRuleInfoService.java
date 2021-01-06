@@ -14,7 +14,7 @@ public class BizRuleInfoService {
   @Autowired
   private PersistenceService db;
 
-  public Result retrieveBizRuleInfo(String tenantId, String bizRuleId, String altFlag){
+  public BizRuleInfo retrieveBizRuleInfo(String tenantId, String bizRuleId, String altFlag){
       BizRuleInfo info = new BizRuleInfo();
       info.setTenantId(tenantId);
       info.setBizRuleId(bizRuleId);
@@ -30,7 +30,12 @@ public class BizRuleInfoService {
         );
 
       Result result = db.run(infoSelect);
-        
+      info.setTenantId((String)result.first().get().get("TENANT_ID"));
+      info.setTenantId((String)result.first().get().get("BIZRULE_ID"));
+      info.setTenantId((String)result.first().get().get("ALT_FLG"));
+      info.setTenantId((String)result.first().get().get("CALL_TYPE"));
+      info.setTenantId((String)result.first().get().get("CALL_HOST"));
+      info.setTenantId((String)result.first().get().get("CALL_INFO"));
       /*
       Connection conn = DataSourceConnection.getInstance().getConnection();
  
@@ -50,7 +55,7 @@ public class BizRuleInfoService {
         info.setCallInfo(rs.getString(6));
       }
       */
-      return result;
+      return info;
  
   }
 }
