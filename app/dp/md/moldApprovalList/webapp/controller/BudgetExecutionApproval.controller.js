@@ -341,8 +341,8 @@ sap.ui.define([
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
             this._budgetExecutionDataSetting();
         } , 
-         onPageRequestCancelButtonPress : function () { 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+        onPageRequestCancelButtonPress : function () { 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
             this._budgetExecutionDataSetting();
          },
         _budgetExecutionDataSetting : function(){
