@@ -129,10 +129,6 @@ sap.ui.define([
             });
         },
 
-        onMainSendMailButtonPress: function(){
-            alert("준비중");
-        },
-
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -231,7 +227,7 @@ sap.ui.define([
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("funding_notify_title", FilterOperator.EQ, sTitle)
+                        new Filter("funding_notify_title", FilterOperator.Contains, sTitle)
                     ]
                 }));
 

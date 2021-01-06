@@ -15,10 +15,8 @@ sap.ui.define([
 	return BaseController.extend("cm.orgCodeMgt.controller.Detail", {
 
 		onInit: function () {            
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-
-            //this._fnInitControlModel();
+            //var oMultilingual = new Multilingual();
+            //this.setModel(oMultilingual.getModel(), "I18N");
             
             this.oRouter = this.getOwnerComponent().getRouter();
             this.oRouter.getRoute("detail").attachPatternMatched(this._onOrgCodeGroupDetailMatched, this);
@@ -26,28 +24,27 @@ sap.ui.define([
         },
 
         onBeforeRendering : function(){
-
-        },
-
-        onAfterRendering : function(){
-           
-        },
-
-        onExit : function(){
-            
-        },
-
-        _fnInitControlModel : function(){
-            var oData = {
-                readMode : true,
-                createMode : false,
-                editMode : false,
-                footer : true
-            }
-
             var oContModel = this.getModel("contModel");
-            oContModel.setProperty("/detail", oData);                       
+            oContModel.setProperty("/detail", {readMode : true, createMode : false, editMode : false, footer : true}); 
         },
+
+        onAfterRendering : function(){           
+        },
+
+        onExit : function(){            
+        },
+
+        // _fnInitControlModel : function(){
+        //     var oData = {
+        //         readMode : true,
+        //         createMode : false,
+        //         editMode : false,
+        //         footer : true
+        //     }
+
+        //     var oContModel = this.getModel("contModel");
+        //     oContModel.setProperty("/detail", oData);                       
+        // },
 
         _fnSetReadMode : function(){
             this._fnSetMode("read");
@@ -84,7 +81,6 @@ sap.ui.define([
             oContModel.setProperty("/detail/readMode", bRead);
             oContModel.setProperty("/detail/createMode", bCreate);
             oContModel.setProperty("/detail/editMode", bEdit);
-            oContModel.refresh();
         },
 
         onEditPress : function(){
@@ -113,8 +109,7 @@ sap.ui.define([
             };
 
             var oViewModel = this.getModel("viewModel");
-            oViewModel.setProperty("/detail", oInitData);
-            
+            oViewModel.setProperty("/detail", oInitData);            
             oViewModel.setProperty("/OrgCodeDetails", []);
         },
 
@@ -272,7 +267,7 @@ sap.ui.define([
         },
 
 		_onOrgCodeGroupDetailMatched: function (oEvent) {
-            this._fnInitControlModel();
+            //this._fnInitControlModel();
 
             var sTenantId = oEvent.getParameter("arguments").tenantId;
             var sGroupCode = oEvent.getParameter("arguments").groupCode;

@@ -71,61 +71,66 @@ public class MdCategoryService implements EventHandler {
 
 			for(MdCategory cateId : cateIds) {
 
-				cateId.setLocalCreateDtm(current);
-				cateId.setLocalUpdateDtm(current);
+                cateCode = cateId.getSpmdCategoryCode();
 
-                // DB처리
-				try {
-					Connection conn = jdbc.getDataSource().getConnection();
-                    // Item SPMD범주코드 생성 Function
-					StringBuffer v_sql_get_code_fun = new StringBuffer();
-                    v_sql_get_code_fun.append("SELECT ")
-                        .append("   PG_MD_CATEGORY_CODE_FUNC(?, ?, ?, ?) AS CATE_CODE ")
-                        .append("   , ( SELECT ")
-                        .append("           IFNULL(MAX(SUBSTRING(SPMD_CATEGORY_CODE,2)), 0)+1 ")
-                        .append("       FROM PG_MD_CATEGORY_ID ")
-                        .append("       WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ")
-                        .append("     ) AS MAX_COUNT ")
-                        .append(" FROM DUMMY ");                        
-                    PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
+                if (StringUtils.isEmpty(cateCode)) {
 
-                    v_statement_select.setObject(1, cateId.getTenantId());
-                    v_statement_select.setObject(2, cateId.getCompanyCode());
-                    v_statement_select.setObject(3, cateId.getOrgTypeCode());
-                    v_statement_select.setObject(4, cateId.getOrgCode());
+                    cateId.setLocalCreateDtm(current);
+                    cateId.setLocalUpdateDtm(current);
 
-                    v_statement_select.setObject(5, cateId.getTenantId());
-                    v_statement_select.setObject(6, cateId.getCompanyCode());
-                    v_statement_select.setObject(7, cateId.getOrgTypeCode());
-                    v_statement_select.setObject(8, cateId.getOrgCode());
-            
-					ResultSet rslt = v_statement_select.executeQuery();
-					if(rslt.next()) {
-                        if (iMultiArrayCnt > 0) {
-                            iMultiArrayCnt = iMultiArrayCnt+1;
-                        } else {
-                            //cateCode = rslt.getString("CATE_CODE");
-                            iMultiArrayCnt = rslt.getInt("MAX_COUNT");
+                    // DB처리
+                    try {
+                        Connection conn = jdbc.getDataSource().getConnection();
+                        // Item SPMD범주코드 생성 Function
+                        StringBuffer v_sql_get_code_fun = new StringBuffer();
+                        v_sql_get_code_fun.append("SELECT ")
+                            .append("   PG_MD_CATEGORY_CODE_FUNC(?, ?, ?, ?) AS CATE_CODE ")
+                            .append("   , ( SELECT ")
+                            .append("           IFNULL(MAX(SUBSTRING(SPMD_CATEGORY_CODE,2)), 0)+1 ")
+                            .append("       FROM PG_MD_CATEGORY_ID ")
+                            .append("       WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ")
+                            .append("     ) AS MAX_COUNT ")
+                            .append(" FROM DUMMY ");                        
+                        PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
+
+                        v_statement_select.setObject(1, cateId.getTenantId());
+                        v_statement_select.setObject(2, cateId.getCompanyCode());
+                        v_statement_select.setObject(3, cateId.getOrgTypeCode());
+                        v_statement_select.setObject(4, cateId.getOrgCode());
+
+                        v_statement_select.setObject(5, cateId.getTenantId());
+                        v_statement_select.setObject(6, cateId.getCompanyCode());
+                        v_statement_select.setObject(7, cateId.getOrgTypeCode());
+                        v_statement_select.setObject(8, cateId.getOrgCode());
+                
+                        ResultSet rslt = v_statement_select.executeQuery();
+                        if(rslt.next()) {
+                            if (iMultiArrayCnt > 0) {
+                                iMultiArrayCnt = iMultiArrayCnt+1;
+                            } else {
+                                //cateCode = rslt.getString("CATE_CODE");
+                                iMultiArrayCnt = rslt.getInt("MAX_COUNT");
+                            }
+                            cateCode = "C"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
                         }
-                        cateCode = "C"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
+                        
+
+                        log.info("###[LOG-10]=> ["+cateCode+"]");
+
+                        v_statement_select.close();
+                        conn.close();
+                    } catch (SQLException sqlE) {
+                        sqlE.printStackTrace();
+                        log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
+                        log.error("### ErrMesg : "+sqlE.getMessage()+"###");
+                    } finally {
+
                     }
-                    
 
-                    log.info("###[LOG-10]=> ["+cateCode+"]");
+                    //log.info("###[LOG-11]=> ["+cateCode+"]");
 
-                    v_statement_select.close();
-                    conn.close();
-				} catch (SQLException sqlE) {
-					sqlE.printStackTrace();
-					log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
-					log.error("### ErrMesg : "+sqlE.getMessage()+"###");
-				} finally {
-
+                    cateId.setSpmdCategoryCode(cateCode);
                 }
-
-				//log.info("###[LOG-11]=> ["+cateCode+"]");
-
-				cateId.setSpmdCategoryCode(cateCode);
 			}
 		}
 
@@ -333,14 +338,13 @@ public class MdCategoryService implements EventHandler {
 						sqlE.printStackTrace();
 						log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
 						log.error("### ErrMesg : "+sqlE.getMessage()+"###");
-					}
+                    }
+                        
+                    item.setSpmdCharacterCode(charCode);
+                    item.setSpmdCharacterSerialNo(new Long(charSerialNo));
 				}
-
 				//charCode = item.getSpmdCharacterCode();
 				log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
-
-				item.setSpmdCharacterCode(charCode);
-				item.setSpmdCharacterSerialNo(new Long(charSerialNo));
 
 			}
 		}

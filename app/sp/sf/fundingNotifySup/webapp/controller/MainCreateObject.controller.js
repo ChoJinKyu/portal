@@ -27,6 +27,7 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
+
             //this.getRouter().getRoute("mainCreateObject").attachPatternMatched(this._onRoutedThisPage, this);
 
         },
@@ -47,7 +48,7 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView(),
-                oModel = this.getModel
+                oModel = this.getModel("");
             
             this._sTenantId = oArgs.tenantId;
             this._sFundingNotifyNumber = oArgs.fundingNotifyNumber;

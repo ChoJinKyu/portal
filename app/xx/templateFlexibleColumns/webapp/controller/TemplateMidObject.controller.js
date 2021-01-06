@@ -6,6 +6,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
     "ext/lib/util/Validator",
+	"ext/lib/formatter/Formatter",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
@@ -13,25 +14,26 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
+	"sap/m/ObjectStatus",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
 	"sap/m/Input",
-	"sap/m/ComboBox",
+	"ext/lib/control/m/CodeComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter, 
+], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-        ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item) {
 	"use strict";
 
 	var oTransactionManager;
 
 	return BaseController.extend("xx.templateFlexibleColumns.controller.TemplateMidObject", {
 
+		validator: new Validator(),
+		
+		formatter: Formatter,
 		dateFormatter: DateFormatter,
-        
-        validator: new Validator(),
-
-		formatter: (function(){
+		viewFormatter: (function(){
 			return {
 				toYesNo: function(oData){
 					return oData === true ? "YES" : "NO"
@@ -213,12 +215,30 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
-				this.onPageNavBackButtonPress.call(this);
-			}else{
-                this.validator.clearValueState(this.byId("page"));
-				this._toShowMode();
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                oDetailsModel = this.getModel("details"),
+				cancelEdit = function(){
+					if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
+						this.onPageNavBackButtonPress.call(this);
+					}else{
+						this.validator.clearValueState(this.byId("page"));
+						this._toShowMode();
+					}
+				}.bind(this);
+				
+			if(oMasterModel.isChanged() || oDetailsModel.isChanged()) {
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
+					title : "Comfirmation",
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						cancelEdit();
+					}
+				});
+            }else{
+				cancelEdit();
 			}
+
         },
 
 		/* =========================================================== */
@@ -316,16 +336,15 @@ sap.ui.define([
 			var FALSE = false;
             this._showFormFragment('TemplateMidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !FALSE);
-			this.byId("pageEditButton").setEnabled(FALSE);
 			this.byId("pageDeleteButton").setEnabled(FALSE);
+			this.byId("pageSaveButton").setEnabled(!FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
 			this.byId("midTableSearchField").setEnabled(FALSE);
-			this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
+			this.byId("midTable").getColumns()[0].setVisible(!FALSE);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
@@ -333,24 +352,26 @@ sap.ui.define([
 			var TRUE = true;
 			this._showFormFragment('TemplateMidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !TRUE);
-			this.byId("pageEditButton").setEnabled(TRUE);
 			this.byId("pageDeleteButton").setEnabled(TRUE);
+			this.byId("pageSaveButton").setEnabled(!TRUE);
 			this.byId("pageNavBackButton").setEnabled(TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
 			this.byId("midTableSearchField").setEnabled(TRUE);
-			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
+			this.byId("midTable").getColumns()[0].setVisible(!TRUE);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
 		},
 
 		_initTableTemplates: function(){
 			this.oReadOnlyTemplate = new ColumnListItem({
 				cells: [
-					new Text({
-						text: "{details>_row_state_}"
+					new ObjectStatus({
+						icon: {
+							path: 'details>_row_state_',
+							formatter: this.formatter.toModelStateColumnIcon
+						}
 					}), 
 					new ObjectIdentifier({
 						text: "{details>control_option_code}"
@@ -370,25 +391,26 @@ sap.ui.define([
 
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
-					new Text({
-						text: "{details>_row_state_}"
-					}), 
+					new ObjectStatus({
+						icon: {
+							path: 'details>_row_state_',
+							formatter: this.formatter.toModelStateColumnIcon
+						}
+					}),
 					new Text({
 						text: "{details>control_option_code}"
 					}), 
-					new ComboBox({
-                        selectedKey: "{details>control_option_level_code}",
+					new CodeComboBox({
+						selectedKey: "{details>control_option_level_code}",
+						emptyText: "Choose One",
                         items: {
-                            id: "testCombo1",
-                            path: 'common>/CodeDetails',
+                            path: '/',
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                                new Filter("group_code", FilterOperator.EQ, 'TEST')
-                            ],
-                            template: new Item({
-                                key: "{common>code}",
-                                text: "{common>code_description}"
-                            })
+                                new Filter("group_code", FilterOperator.EQ, 'CM_CHAIN_CD')
+							],
+							serviceName: 'cm.util.CommonService',
+							entityName: 'Code'
                         },
                         required: true
                     }), 

@@ -440,7 +440,7 @@ sap.ui.define([
             // this.getModel("addSupplierView").setProperty("/isAddedMode", false);
 
             this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
-            oView.setBusy(true);
+            
             var oDetailsModel = this.getModel("SupplierFin");
             var oDetailsModel2 = this.getModel("SupplierSal");
             var oDetailsModel3 = this.getModel("SupplierGenView");
@@ -453,7 +453,7 @@ sap.ui.define([
                     new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
                 ],
                 success: function(oData){
-                    oView.setBusy(false);
+                    
                 }
             });
             oDetailsModel2.read("/SupplierSal", {
@@ -462,12 +462,12 @@ sap.ui.define([
                     new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
                 ],
                 success: function(oData){
-                    oView.setBusy(false);
+                   
                 }
             });            
             oDetailsModel3.read("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
                 success: function (oData) {
-                    oView.setBusy(false);
+                    
                 }
             });
 
