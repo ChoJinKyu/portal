@@ -1198,15 +1198,15 @@ sap.ui.define([
         _fragmentDistory : function(){
             var that = this;
 
-            if (that._valueHelpMaterialDetail) {
-                that._valueHelpMaterialDetail.destroy(true);
-            }
-            if (that._valueHelpMaterialDialog) {
-                that._valueHelpMaterialDialog.destroy(true);
-            }
-            if (that._valueHelpReqmQuantityUnit) {
-                that._valueHelpReqmQuantityUnit.destroy(true);
-            }
+            // if (that._valueHelpMaterialDetail) {
+            //     that._valueHelpMaterialDetail.destroy(true);
+            // }
+            // if (that._valueHelpMaterialDialog) {
+            //     that._valueHelpMaterialDialog.destroy(true);
+            // }
+            // if (that._valueHelpReqmQuantityUnit) {
+            //     that._valueHelpReqmQuantityUnit.destroy(true);
+            // }
 
         },
         _handleCreateSuccess: function (oData) {
