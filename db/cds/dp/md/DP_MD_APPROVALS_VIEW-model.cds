@@ -8,8 +8,8 @@ entity Md_Approvals_View {
     approval_type_code  : String(30)            @title:'품의유형코드';
     approval_type       : String(240)            @title:'요청자사번';
     approval_title      : String(300)           @title:'품의제목';
-    company_name        : String(50)                            ;
-    org_name            : String(50)                            ;
+    company_name        : String(240)                            ;
+    org_name            : String(240)                            ;
     company_code        : String(10)                            ;
     org_type_code       : String(10)                            ;
     org_code            : String(10)                            ;
