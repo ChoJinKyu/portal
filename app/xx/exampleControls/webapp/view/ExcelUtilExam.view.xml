@@ -37,6 +37,9 @@
                     <Column minScreenWidth="Tablet" hAlign="Center" width="40px">
                         <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                     </Column>
+                    <Column width="10em">
+                        <Text text="Product" />
+                    </Column>
                     <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em">
                         <VBox>
                         <Text text="Chain" />
@@ -90,6 +93,9 @@
                                 path: 'rModelList>_row_state_',
                                 formatter: '.formatter.toModelStateColumnIcon'
                             }" />
+                            <ObjectIdentifier
+                                title="{rModelList>name}"
+                                text="{rModelList>product_id}"/>
                             <ComboBox selectedKey="{rModelList>chain_code}" width="100%" items="{
                                     path: 'common>/Code',
                                     filters: [

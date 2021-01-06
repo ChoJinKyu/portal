@@ -93,8 +93,8 @@ sap.ui.define([
                         }
                         
                     } else if(typeof oCol.getHeader === "function") {
-                        if(typeof oCol.getText === "function" && oCol.getText() !== "State") {
-                            sLabel = oCol.getText();
+                        if(typeof oCol.getHeader().getText === "function" && oCol.getHeader().getText() !== "State") {
+                            sLabel = oCol.getHeader().getText();
                         } else if(typeof oCol.getHeader().getItems === "function" && oCol.getHeader().getItems().length > 0) {
                             $.each(oCol.getHeader().getItems(), function(idx, oItem) {
                                 if(oItem.getText()) {
@@ -131,7 +131,11 @@ sap.ui.define([
                 case "sap.m.Text" :
                 case "sap.m.ObjectIdentifier" :
                     oBindingInfo.prop = oCell.getBindingInfo("text") || "";
-                    oBindingInfo.align = this._convAlign(oCell.getTextAlign());
+                    
+                    if(typeof oCell.getTextAlign === "function") {
+                        oBindingInfo.align = this._convAlign(oCell.getTextAlign());
+                    }
+                    
                     break;
                 case "sap.m.Input" :
                 case "sap.m.DatePicker" :
