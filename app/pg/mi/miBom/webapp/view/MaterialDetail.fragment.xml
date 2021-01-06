@@ -69,12 +69,12 @@
                     <columns>
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="{I18N>/CURRENCY}{I18N>/UNIT}"/>                            
+                                <Label text="{I18N>/CURRENCY_UNIT}"/>                            
                             </header>
                         </Column>
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="{I18N>/QUANTITY}{I18N>/UNIT}"/>                            
+                                <Label text="{I18N>/QUANTITY_UNIT}"/>                            
                             </header>
                         </Column>
                         <Column hAlign="Center" >
@@ -89,7 +89,7 @@
                         </Column>
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="최근상황일지"/>                            
+                                <Label text="{I18N>/MI_DATE}"/>                            
                             </header>
                         </Column>    
                         <Column hAlign="Center" >

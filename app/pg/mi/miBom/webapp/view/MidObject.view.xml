@@ -112,7 +112,7 @@
                                         </FlexBox>                                          
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                                <Label  text="기준수량:" 
+                                                <Label  text="{I18N>/BASE_QUANTITY}:" 
                                                         required="{oUi>/createMode}"
                                                         class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}"
@@ -268,12 +268,12 @@
                                                 </Column>
                                                 <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량 단위"/>
+                                                        <Label text="{I18N>/REQM_QUANTITY_UNIT}"/>
                                                     </header>
                                                 </Column>                                                
                                                 <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량"/>
+                                                        <Label text="{I18N>/REQM_QUANTITY}"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center">
@@ -288,7 +288,7 @@
                                                 </Column>
                                                 <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="수량단위"/>
+                                                        <Label text="{I18N>/QUANTITY_UNIT}"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center">

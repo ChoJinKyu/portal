@@ -166,7 +166,7 @@
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
                                         </customData>
-                                             <Text text="기준수량"></Text>
+                                             <Text text="{I18N>/BASE_QUANTITY}"></Text>
                                         </Column>
 
                                         <Column minScreenWidth ="" demandPopin="false" importance="High">
@@ -182,7 +182,7 @@
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 7}'/>
                                         </customData>
-                                             <Text text="가공비통화"></Text>
+                                             <Text text="{I18N>/PCST_CURRENCY_UNIT}"></Text>
                                         </Column>     
 
                                         <Column visible="false">

@@ -12,7 +12,7 @@
     showHeader="false"    
     displayBlock="true">
 	
-	<Dialog title="Part (자재코드)  -> Masterial_Code 사용" contentWidth="50%">
+	<Dialog title="{I18N>/MIMATERIAM_BOM_SEARCH_TITLE}" contentWidth="50%">
 		<content>
             <Panel>
             <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
@@ -99,7 +99,7 @@
                 <columns>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="가격정보"/>                            
+                            <Label text="{I18N>/MATERIAL_CODE}"/>                            
                         </header>
                     </Column>
                     <Column hAlign="Center" >
