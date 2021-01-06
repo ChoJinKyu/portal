@@ -112,7 +112,7 @@
                                     <Label text="Supplier1"/>
                                 </VBox>
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_1}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_1}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -122,7 +122,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_2}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_2}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -132,7 +132,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_3}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_3}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -142,7 +142,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_4}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_4}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -152,7 +152,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_5}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_5}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -162,7 +162,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_6}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_6}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -172,7 +172,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_7}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_7}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -182,7 +182,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_8}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_8}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -192,7 +192,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_9}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_9}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -202,7 +202,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_10}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_10}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -212,7 +212,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_11}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_11}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -222,7 +222,7 @@
                                 </VBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
-                                    <Text text="{mdItemMaster>supplier_code_12}"/>
+                                    <Text text="{mdItemMaster>supplier_code_nm_12}"/>
                                 </table:template>
                             </table:Column>
                         </table:columns>
