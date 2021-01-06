@@ -1,10 +1,6 @@
-package lg.sppCap.solutionized;
+package lg.sppCap.solutionized.bizrule;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import lg.sppCap.solutionized.model.BizRuleInfo;
+import lg.sppCap.solutionized.bizrule.model.BizRuleInfo;
 
 public class BizRuleInfoService {
  
@@ -16,7 +12,7 @@ public class BizRuleInfoService {
       info.setTenantId(tenantId);
       info.setBizRuleId(bizRuleId);
       info.setAltFlag(altFlag);
-        
+
       /*
       Connection conn = DataSourceConnection.getInstance().getConnection();
  
