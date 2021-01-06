@@ -6,6 +6,8 @@ using { pg as partNoItemValue } from '../../../../db/cds/pg/md/PG_MD_MATERIAL_IT
 using { pg as vpItemMapping } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING-model';
 using { pg as vpItemMappingAttr } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING_ATTR-model';
 using { pg as vpItemMappingView } from '../../../../db/cds/pg/md/PG_MD_VP_MAPPING_ITEM_VIEW-model';
+using { pg as newCateCodeView } from '../../../../db/cds/pg/md/PG_MD_CATEGORY_CODE_VIEW-model';
+using { pg as newItemCodeView } from '../../../../db/cds/pg/md/PG_MD_CHARACTER_CODE_VIEW-model';
 
 namespace pg;
 
@@ -27,6 +29,14 @@ service MdCategoryService {
     entity MdVpItemMapping as projection on vpItemMapping.Md_Vp_Item_Mapping;
 
     entity MdVpItemMappingAttr as projection on vpItemMappingAttr.Md_Vp_Item_Mapping_Attr;
+
+        // Category범주코드 생성 DB Object로 생성된 View를 model-cds로 entity를 생성하는 경우
+    entity MdNewCategoryCode(tenant_id: String, company_code: String, org_type_code: String, org_code: String) as 
+            select from newCateCodeView.Md_Category_Code_View(tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code);
+
+    // CategoryItem특성코드 생성 DB Object로 생성된 View를 model-cds로 entity를 생성하는 경우
+    entity MdNewCategoryItemCode(tenant_id: String, company_code: String, org_type_code: String, org_code: String) as 
+            select from newItemCodeView.Md_Character_Code_View(tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code);
 
     // Category별 Item View
     view MdCategoryCodeItemView @(title : 'Category Item Mapping View') as
