@@ -39,19 +39,6 @@
             <Label text="비고"/>
 			<Input value="{SupplierGen>/remark}" editable="false" class="readonlyField"/>			
 	    </form:content>
-    </form:SimpleForm>
-
-    <form:SimpleForm 
-        editable="false"
-        layout="ColumnLayout"
-        columnsM="2"
-        columnsL="3"
-        columnsXL="3" >
-        <form:content>
-            <core:Title text="첨부" />  
-            <Label text="추후 개발 예정"/>
-			<Input value="" editable="false" class="readonlyField"/>        
-	    </form:content>
-	</form:SimpleForm>
+    </form:SimpleForm>   
 </VBox>
 </core:FragmentDefinition>
