@@ -459,7 +459,7 @@
                                     <t:Column width="5rem" hAlign="Center" >
                                         <Label text="Suppliers" />
                                         <t:template>
-                                            <Button class="sapUiLargeMarginTop sapUiLargeMarginBottom"
+                                            <Button 
                                                 icon="sap-icon://account" press="press">
                                             </Button>
                                         </t:template>
