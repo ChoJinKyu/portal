@@ -7,7 +7,6 @@
         ,a.approval_title
         ,'['||a.company_code||'] '||e.company_name as company_name
         ,'['||a.org_code||'] '||f.org_name as org_name
-        ,f.org_name
         ,a.company_code
         ,a.org_type_code
         ,a.org_code
