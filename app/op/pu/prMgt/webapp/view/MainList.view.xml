@@ -43,16 +43,17 @@
                             <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchBStatus" required="false"></Label>
                             <MultiComboBox
                               id="SearchBStatus"
+                              showSecondaryValues="true"
                               width="100%"
                               items="{
-                                path: 'util>/CodeDetails',
+                                path: 'util>/Code',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS'}
+                                    {path: 'group_code', operator: 'EQ', value1: 'CM_APPROVE_STATUS'}
                                 ]
                               }">
                               <items>
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
                             <layoutData>
@@ -66,37 +67,41 @@
                               showSecondaryValues="true"
                               width="100%"
                               items="{
-                                path: 'util>/CodeDetails',
+                                path: 'util>/Code',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
                                 ]
                               }">
                               <items>
-                                <core:ListItem key="{util>code}" text="{util>code_description}" additionalText="{util>code}" />
+                                <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
-                            <Label text="{I18N>/ORG_CODE}" labelFor="searchOrgCombo4" required="false"></Label>
-                            <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
-                                        path: 'purOrg>/Pur_Operation_Org',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
-                                    </items>
-                                </MultiComboBox>
+                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="search_DEPARTMENT_NAME" required="false"></Label>
+                            <Input id="search_DEPARTMENT_NAME" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/PR_NUMBER}" labelFor="searchBanfn" required="true"></Label>
-                            <Input id="searchBanfn" placeholder="Search"></Input>
-                            <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchBOprater" required="false"></Label>
+                            <Label text="{I18N>/PR_TEMPLATE_NUMBER}" labelFor="searchTemplate"></Label>
+                            <MultiComboBox 
+                                id="searchTemplage" 
+                                showSecondaryValues="true"
+                                width="100%" 
+                                items="{
+                                        path: '/Pr_TLng',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'language_code', operator: 'EQ', value1: 'KO'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:ListItem key="{pr_template_number}" text="{pr_template_name}"  
+                                            additionalText="{pr_template_number}" />
+                                    </items>
+                                </MultiComboBox>
+                            <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchBOprater" ></Label>
                             <Input id="searchBOprater" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -104,8 +109,8 @@
                         </VBox>
                         
                         <VBox>
-                            <Label text="{I18N>/BUYER_EMPNO}" labelFor="searchCreater2" required="false"></Label>
-                            <Input id="searchKeyword2" placeholder="Search"></Input>
+                            <Label text="{I18N>/PR_NUMBER}" labelFor="searchPrNumber" ></Label>
+                             <Input id="searchPrNumber" placeholder="Search"></Input>
                             <Label text="{I18N>/PR_DESC}" labelFor="searchBMaktx"></Label>
                             <Input id="searchBMaktx" placeholder="Search"></Input>
                             <layoutData>
@@ -126,9 +131,9 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/Pr_MstView}"
-                        mode="MultiSelect" 
+                        items="{list>/Pr_MstView}"                        
                         width="auto">
+                        <!-- mode="MultiSelect"  -->
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_MstView}.length || 0})" level="H2"/>
@@ -149,6 +154,9 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
+                        <Column width="4em" >
+                            <CheckBox selected="false" select=".onColumnChecBox"/>
+                        </Column>
                         <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
@@ -171,7 +179,7 @@
                             <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
                         </Column>
                         <Column id="mainColumnCompanyFlag17" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
+                            <Text text="{I18N>/REQUESTOR_NAME}" />
                         </Column>
                          <Column id="mainColumnStartDate111" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" />
@@ -186,21 +194,22 @@
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>                                
-                                <ObjectIdentifier text="{list>pr_number}"/>
-                                <ObjectIdentifier text="{list>pr_header_text}"/>
-                                <ObjectIdentifier text="{list>pr_type_name}"/>
-                                <ObjectIdentifier text="{list>pr_type_name_2}"/>
-                                <ObjectIdentifier text="{list>pr_type_name_3}"/>
-                                <ObjectIdentifier text="{list>pr_template_name}"/>
-                                <ObjectIdentifier text="{list>requestor_name}"/>
-                                <ObjectIdentifier text="{list>requestor_department_name}"/> 
-                                <ObjectIdentifier text="{
+                            <cells>             
+                                <CheckBox fieldGroupIds="{= ${list>pr_create_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>pr_create_status_code}==='DR'? true:false }" select=".onCheck" />  
+                                <Text text="{list>pr_number}"/>
+                                <Text text="{list>pr_desc}"/>
+                                <Text text="{list>pr_type_name}"/>
+                                <Text text="{list>pr_type_name_2}"/>
+                                <Text text="{list>pr_type_name_3}"/>
+                                <Text text="{list>pr_template_name}"/>
+                                <Text text="{list>requestor_name}"/>
+                                <Text text="{list>requestor_department_name}"/> 
+                                <Text text="{
                                         path: 'list>request_date',
                                         formatter: '.dateFormatter.toDateString'
                                     }"/>                                                                  
-                                <ObjectIdentifier text="{list>pr_dtl_cnt} / {list>pr_progress_status_cnt}"/>
-                                <ObjectIdentifier text="{list>pr_create_status_name}"/>
+                                <Text text="{list>pr_dtl_cnt} / {list>pr_progress_status_cnt}"/>
+                                <Text text="{list>pr_create_status_name}"/>
                             </cells>
                         </ColumnListItem>
                     </items>

@@ -223,6 +223,11 @@ sap.ui.define([
             this._sumbitDataSettingAndSend();
         },
 
+        onPageRequestCancelButtonPress : function () { 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소  
+            this._sumbitDataSettingAndSend();
+        },
+
         _sumbitDataSettingAndSend : function (){
             this.approval_type_code = "A";
             var bModel = this.getModel("mdItemMaster");

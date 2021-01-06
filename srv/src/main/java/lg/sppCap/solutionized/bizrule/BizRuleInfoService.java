@@ -1,18 +1,36 @@
 package lg.sppCap.solutionized.bizrule;
 
+import com.sap.cds.Result;
+import com.sap.cds.ql.Select;
+import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.services.persistence.PersistenceService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import lg.sppCap.solutionized.bizrule.model.BizRuleInfo;
 
 public class BizRuleInfoService {
  
-  public BizRuleInfo retrieveBizRuleInfo(String tenantId, String bizRuleId, String altFlag){
- 
-    try {
+  @Autowired
+  private PersistenceService db;
 
+  public Result retrieveBizRuleInfo(String tenantId, String bizRuleId, String altFlag){
       BizRuleInfo info = new BizRuleInfo();
       info.setTenantId(tenantId);
       info.setBizRuleId(bizRuleId);
       info.setAltFlag(altFlag);
 
+      CqnSelect infoSelect = Select
+        .from("tmp.bizrule_info")
+        .columns("TENANT_ID","BIZRULE_ID","ALT_FLG","CALL_TYPE","CALL_HOST","CALL_INFO")
+        .where(
+          b->b.get("TENANT_ID").eq(info.getTenantId())
+          .and(b.get("BIZRULE_ID").eq(info.getBizRuleId()))
+          .and(b.get("ALT_FLAG").eq(info.getAltFlag()))
+        );
+
+      Result result = db.run(infoSelect);
+        
       /*
       Connection conn = DataSourceConnection.getInstance().getConnection();
  
@@ -32,10 +50,7 @@ public class BizRuleInfoService {
         info.setCallInfo(rs.getString(6));
       }
       */
-      return info;
-    } catch (Exception e) {
-      throw new RuntimeException("Error Occurred while retrieve BizRuleInfo from DB : " + tenantId + ", " + bizRuleId + ", " + altFlag, e);
-    }
+      return result;
  
   }
 }

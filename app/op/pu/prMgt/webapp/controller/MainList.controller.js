@@ -110,6 +110,26 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
+        /**
+         * @public
+         * @see 리스트 체크박스 제어기능
+         */
+        onColumnChecBox: function (oEvent) {
+            var groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
+            var isChecked = oEvent.getSource().mProperties.selected;
+
+            if (isChecked) {
+                for (var i = 0; i < groupId.length; i++) {
+                    groupId[i].setSelected(true);
+
+                }
+            } else {
+                for (var i = 0; i < groupId.length; i++) {
+                    groupId[i].setSelected(false);
+                }
+            }
+        },
+
 
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();

@@ -308,7 +308,7 @@ sap.ui.define([
             this._moldRecepitApprovalDataSetting();
         } , 
         onPageRequestCancelButtonPress : function () { 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
             this._moldRecepitApprovalDataSetting();
         } , 
 
