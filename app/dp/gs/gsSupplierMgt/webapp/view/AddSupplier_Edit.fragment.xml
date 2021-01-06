@@ -27,9 +27,7 @@
             <Label text="발굴일자"/>			
             <DatePicker placeholder="Develop Date" value="{path: 'SupplierGen>/develop_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
             <Label text="발굴자"/>
-			<Input value="{SupplierGen>/developer_empno}" editable="false"/> -->
-            <Label text="공급업체 로컬명"/>
-			<Input value="{SupplierGen>/sourcing_supplier_local_name}" editable="true"/>            
+			<Input value="{SupplierGen>/developer_empno}" editable="false"/> -->                       
 			<Label text="공급업체 로컬명"/>
 			<Input value="{SupplierGen>/sourcing_supplier_local_name}" editable="true"/>
             <Label text="공급업체 영문명"/>

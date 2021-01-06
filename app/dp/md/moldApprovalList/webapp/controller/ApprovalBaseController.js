@@ -18,22 +18,25 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/richtexteditor/RichTextEditor"
+    "sap/ui/richtexteditor/RichTextEditor",
+  //  "./ApprovalList.controller",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList 
+  
 ) {
     "use strict";
 
     var oTransactionManager;
     //var oRichTextEditor;
-
+   
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
 
+      //  approvalList: new ApprovalList(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -47,45 +50,16 @@ sap.ui.define([
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             this.quotation_data = [];  // supplier 전용 
-
             var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-
-            this._showFormFragment(); 
+            this.setModel(oMultilingual.getModel(), "I18N"); 
+            this._showFormFragment();   
         },
 
-        onAfterRendering: function () {
-
+        onAfterRendering: function () { 
+            console.log(" >>>> onAfterRendering");
+            
         },
-        /**
-         * 폅집기 창  
-         */
-        // 여기서 호출 안하고 화면으로 감 
-       /* setRichEditor: function () {
-            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                function (RTE, EditorType) {
-                    this.oRichTextEditor = new RTE("myRTE", {
-                        editorType: EditorType.TinyMCE4,
-                        width: "100%",
-                        height: "600px",
-                        customToolbar: true,
-                        showGroupFont: true,
-                        showGroupLink: true,
-                        showGroupInsert: true,
-                        value: "",
-                        ready: function () {
-                            this.addButtonGroup("styleselect").addButtonGroup("table");
-                        }
-                    });
-
-                    this.getView().byId("approvalContents").addContent(this.oRichTextEditor);
-
-                    this.oRichTextEditor.attachEvent("change", function (oEvent) {
-                        this.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
-                    });
-                }.bind(this));
-        },
-        */ 
+    
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -98,20 +72,24 @@ sap.ui.define([
 		 */
         onPageNavBackButtonPress: function () {
             this._toShowMode();
+            this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
+     
+            //  this.approvalList.onPageReload();
+            /*
             var sPreviousHash = History.getInstance().getPreviousHash();
             if (sPreviousHash !== undefined) {
                 // eslint-disable-next-line sap-no-history-manipulation
                 history.go(-1);
             } else {
                 this.getRouter().navTo("approvalList", {}, true);
-            }
+            }*/
         },
 
-        onPageEditButtonPress: function () {
+        onPageEditButtonPress: function () { // Edit 버튼 
             this._toEditMode();
         },
 
-        onPageCancelEditButtonPress: function () {
+        onPageCancelEditButtonPress: function () { // 수정 취소 버튼 
             this._toShowMode();
         },
 
@@ -126,14 +104,6 @@ sap.ui.define([
                 , approval_number: "New"
             });
         },
-
-		/**
-		 * Event handler for cancel page editing
-		 * @public
-		 */
-        //onPageCancelEditButtonPress: function () {
-
-        //},
 
         /* =========================================================== */
         /* internal methods                                            */
@@ -163,6 +133,9 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "appDetail");
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
+
+            // refererMultiCB 
+            this.getView().setModel(new ManagedModel(), "refererMultiCB");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("moldMaster"));
@@ -228,8 +201,7 @@ sap.ui.define([
             var oUiModel = this.getView().getModel("mode");
                 oUiModel.setProperty("/editFlag", true);
                 oUiModel.setProperty("/viewFlag", false);
-
-            this.byId("titleInput").removeStyleClass("readonlyField");
+            //this.byId("titleInput").removeStyleClass("readonlyField");
 
             this._toEditModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
 		},
@@ -240,20 +212,19 @@ sap.ui.define([
             var oUiModel = this.getView().getModel("mode");
                 oUiModel.setProperty("/editFlag", false);
                 oUiModel.setProperty("/viewFlag", true);
-
-            this.byId("titleInput").addStyleClass("readonlyField");
+            //this.byId("titleInput").addStyleClass("readonlyField");
 
             this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
 		},
 
         _oFragments: {},
-        _showFormFragment: function () {
+        _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
+           
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection");
             oPageGeneralInfoSection.removeAllBlocks();
                 
             this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
-                //this.setRichEditor();
             }.bind(this))
             
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
@@ -268,7 +239,8 @@ sap.ui.define([
                 
             this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
-            }.bind(this))
+            }.bind(this));
+ 
         },
 
         _onRoutedThisPage: function (approvalNumber) {
@@ -297,12 +269,15 @@ sap.ui.define([
             }.bind(this));
 
             console.log(" Approvers >>> " , approvalNumber);
-
+           var refererMultiCB = this.getModel('refererMultiCB');
             this._bindView("/Referers", "referer", filter, function (oData) {
-                if (oData.results.length > 0) {
-                    oData.results.forEach(function (item) {
-                        this.getView().byId("refererMultiCB").mProperties.selectedKeys.push(item.referer_empno);
+                if (oData.results.length > 0) { 
+                    var rList = [];
+                    oData.results.forEach(function (item) { 
+                        rList.push(item.referer_empno);
+                       // this.getView().byId("refererMultiCB").mProperties.selectedKeys.push(item.referer_empno);
                     }.bind(this));
+                    refererMultiCB.setProperty("/refer", rList);
                 }
             }.bind(this));
 
@@ -801,6 +776,21 @@ sap.ui.define([
                     }
                 }
             }
+            this.setRefererList();
+        },
+
+        setRefererList : function(){ 
+            this.getView().setModel(new ManagedModel(), "refererMultiCB");
+            var refererMultiCB = this.getModel('refererMultiCB'); 
+            var referModel = this.getModel('referer');
+            if(referModel.getData().Referers.length > 0){
+                 var rList = [];
+                referModel.getData().Referers.forEach(function (item) { 
+                    rList.push(item.referer_empno);
+                }.bind(this));
+                refererMultiCB.setProperty("/refer", rList);
+            }
+
         },
 
         handleSelectionFinishReferer: function (oEvent) { // Referrer 

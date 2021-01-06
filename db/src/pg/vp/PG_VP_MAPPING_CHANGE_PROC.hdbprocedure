@@ -350,7 +350,7 @@ BEGIN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00012'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
-					    IF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  NOT IN ('D', 'C', 'U') THEN
+					    IF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  NOT IN ('C', 'R', 'U', 'D') THEN
 					        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
@@ -374,26 +374,23 @@ BEGIN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
-					    /*****************************************************
-					    현재 SUPPLIER 원본 데이터 확인 불가.
-					    VIEW에서 '*' 조회 대상 제외되어있고
-					    '*'가 아닌 데이터는 ITEM VIEW와 겹치는 데이터 X
-					    *****************************************************/
-					    /*  
+					    /*******************************************************************************
+					    SUPPLIER는 TENANT의 BIZUNIT_CODE 별로 공용으로 관리하기 때문에
+					    COMPANY_CODE, ORG_TYPE_CODE(BIZUNIT_CODE안에 ORG_TYPE_CODE에 대한 내용 포함)는 
+					    비교하지 않는다.
+					    *******************************************************************************/
 					    SELECT  COUNT(*)
 						INTO    V_SUPPLIER_AVLB_CNT
 						FROM    PG_VP_SUPPLIER_MST_VIEW A
 						WHERE   A.TENANT_ID           = loop_sup.TENANT_ID
-					    AND     A.COMPANY_CODE        = loop_sup.COMPANY_CODE
-					    AND     A.ORG_TYPE_CODE       = loop_sup.ORG_TYPE_CODE
-					    AND     A.ORG_CODE            = loop_sup.ORG_CODE
+					    AND     A.BIZUNIT_CODE        = loop_sup.ORG_CODE
 					    AND     A.SUPPLIER_CODE       = loop_sup.SUPPLIER_CODE
 					    ;
 					    
 					    IF V_SUPPLIER_AVLB_CNT = 0 THEN
 							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00023'||'-'||'Supplier Not Exist Error.['||V_SUPPLIER_LOOP_INDEX||']';
 						END IF;
-						*/
+						
 						
 						/************************************************************
 						등록된 PG_VP_VENDOR_POOL_SUPPLIER_TMP 정보는 후속 프로세스로
@@ -548,13 +545,16 @@ BEGIN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
 					    END IF;
 					    
+					    /*******************************************************************************
+					    MATERIAL는 TENANT의 BIZUNIT_CODE 별로 공용으로 관리하기 때문에
+					    COMPANY_CODE, ORG_TYPE_CODE(BIZUNIT_CODE안에 ORG_TYPE_CODE에 대한 내용 포함)는 
+					    비교하지 않는다.
+					    *******************************************************************************/
 					    SELECT  COUNT(*)
 						INTO    V_ITEM_AVLB_CNT
 						FROM    PG_VP_MATERIAL_MST_VIEW A
 						WHERE   A.TENANT_ID           = loop_itm.TENANT_ID
-					    AND     A.COMPANY_CODE        = loop_itm.COMPANY_CODE
-					    AND     A.ORG_TYPE_CODE       = loop_itm.ORG_TYPE_CODE
-					    AND     A.ORG_CODE            = loop_itm.ORG_CODE
+					    AND     A.BIZUNIT_CODE        = loop_itm.ORG_CODE
 					    AND     A.MATERIAL_CODE       = loop_itm.MATERIAL_CODE
 					    ;
 					    

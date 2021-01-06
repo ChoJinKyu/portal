@@ -59,14 +59,14 @@
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyS" required="true"></Label>
                                 <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey=""
-                                                items="{
-                                                    path: 'org>/Company',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'company_code'}
-                                                }"
-                                selectionFinish="handleSelectionFinishComp" required="true">
+                                        items="{
+                                            path: 'org>/Company',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            ],
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        selectionFinish="handleSelectionFinishComp" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -78,16 +78,17 @@
                             <VBox>
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
                                 <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" 
-                                                items="{
-                                                    path: '/Divisions',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'org_code'}
-                                                }"
-                                selectionFinish="handleSelectionFinishDiv" required="true">
+                                        items="{
+                                            path: 'purOrg>/Pur_Operation_Org',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                                {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
+                                            ],
+                                            sorter: { path: 'purOrg>org_code'}
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
-                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
@@ -155,14 +156,14 @@
                             <VBox>
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey=""
-                                                items="{
-                                                    path: 'org>/Company',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'company_code'}
-                                                }"
-                                selectionFinish="handleSelectionFinishComp" required="true">
+                                        items="{
+                                            path: 'org>/Company',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            ],
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        selectionFinish="handleSelectionFinishComp" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -174,16 +175,17 @@
                             <VBox>
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
                                 <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
-                                                items="{
-                                                    path: '/Divisions',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'org_code'}
-                                                }"
-                                selectionFinish="handleSelectionFinishDiv" required="true">
+                                        items="{
+                                            path: 'purOrg>/Pur_Operation_Org',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                                {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
+                                            ],
+                                            sorter: { path: 'purOrg>org_code'}
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
-                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>

@@ -64,7 +64,8 @@ sap.ui.define([
 			this.getRouter().getRoute("suppliePage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "addSupplierView");
 			
-			this.setModel(new ManagedModel(), "SupplierGen");
+            this.setModel(new ManagedModel(), "SupplierGenView");
+            this.setModel(new ManagedModel(), "SupplierGen");
             this.setModel(new ManagedListModel(), "SupplierFin");
             this.setModel(new ManagedListModel(), "SupplierSal");
 
@@ -269,10 +270,10 @@ sap.ui.define([
 						oView.setBusy(true);
 						oTransactionManager.submit({						
 							success: function(ok){
-								// that._toShowMode();
+								that._toShowMode();
                                 oView.setBusy(false);
                                 // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                // that._fnMasterSearch();
+                                that._fnMasterSearch();
 								MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 							}
 						});
@@ -289,7 +290,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-            this.onPageNavBackButtonPress();
+            // this.onPageNavBackButtonPress();
 			// if(this.getModel("addSupplierView").getProperty("/isAddedMode") == true){
 			// 	this.onPageNavBackButtonPress.call(this);
 			// }else{
@@ -320,25 +321,36 @@ sap.ui.define([
             // this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             // this.validator.clearValueState(this.byId("midTable"));
             var oView = this.getView();
-            var sTenantId = this._sMode;
-            if (sTenantId === "edit"){
+            var sMode = this._sMode;
+            if (sMode === "edit"){
                 this.onPageNavBackButtonPress();
-            }else if (sTenantId !== "edit"){
+            }else if (sMode !== "edit"){
                 
-                this.getModel("midObjectView").setProperty("/isAddedMode", false);                
-                this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
+                // this.getModel("midObjectView").setProperty("/isAddedMode", false);
+                this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
 				oView.setBusy(true);
-				var oDetailsModel = this.getModel("details");
-				oDetailsModel.setTransactionModel(this.getModel());				
-                oDetailsModel.read("/UomClassLng", {
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
-					],
-					success: function(oData){
-						oView.setBusy(false);
-					}
-				});
+                var oDetailsModel = this.getModel("SupplierFin");
+                var oDetailsModel2 = this.getModel("SupplierSal");
+                oDetailsModel.setTransactionModel(this.getModel());
+                oDetailsModel2.setTransactionModel(this.getModel());
+                oDetailsModel.read("/SupplierFin", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                        new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                    ],
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
+                oDetailsModel2.read("/SupplierSal", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                        new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                    ],
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
                 this._toShowMode();
             }
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
@@ -431,8 +443,10 @@ sap.ui.define([
             oView.setBusy(true);
             var oDetailsModel = this.getModel("SupplierFin");
             var oDetailsModel2 = this.getModel("SupplierSal");
+            var oDetailsModel3 = this.getModel("SupplierGenView");
             oDetailsModel.setTransactionModel(this.getModel());
             oDetailsModel2.setTransactionModel(this.getModel());
+            oDetailsModel3.setTransactionModel(this.getModel());
             oDetailsModel.read("/SupplierFin", {
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
@@ -450,6 +464,11 @@ sap.ui.define([
                 success: function(oData){
                     oView.setBusy(false);
                 }
+            });            
+            oDetailsModel3.read("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
+                success: function (oData) {
+                    oView.setBusy(false);
+                }
             });
 
             if(oArgs.mode == "edit"){
@@ -463,6 +482,11 @@ sap.ui.define([
             var sThisViewId = this.getView().getId();
             var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");
             oFcl.to(sThisViewId);
+
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
 		},
 
 		/**
@@ -833,19 +857,19 @@ sap.ui.define([
 			}
         },
         
-        onMidTableFilterPress: function() {
-            this._MidTableApplyFilter();
-        },
+        // onMidTableFilterPress: function() {
+        //     this._MidTableApplyFilter();
+        // },
 
-        _MidTableApplyFilter: function() {
+        // _MidTableApplyFilter: function() {
 
-            var oView = this.getView(),
-				sValue = oView.byId("midTableSearchField").getValue(),
-				oFilter = new Filter("uom_name", FilterOperator.Contains, sValue);
+        //     var oView = this.getView(),
+		// 		sValue = oView.byId("midTableSearchField").getValue(),
+		// 		oFilter = new Filter("uom_name", FilterOperator.Contains, sValue);
 
-			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+		// 	oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
 
-        }
+        // }
 
 	});
 });

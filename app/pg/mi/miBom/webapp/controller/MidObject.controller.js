@@ -1879,7 +1879,7 @@ sap.ui.define([
             }
             if(tableCoutnt<1){
 
-                that._showMessageToast(that.getModel("I18N").getText("/NPG00023"));
+                that._showMessageToast(that.getModel("I18N").getText("/NPG00024"));
                 bValueCheckFlag = false;
             } 
 
@@ -1925,8 +1925,8 @@ sap.ui.define([
              }
              else if(bCopyFlag){
 
-                MessageBox.confirm("복사 하시겠습니까?", {
-                    title : "복사 확인",
+                MessageBox.confirm(that.getModel("I18N").getText("/NPG00025"), {
+                    title : that.getModel("I18N").getText("/NPG00026"),
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {

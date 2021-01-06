@@ -121,16 +121,17 @@ sap.ui.define([
             var filter = new Filter({
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
                 and: true
             });
 
             var bindItemInfo = {
-                path: '/Divisions',
+                path: 'purOrg>/Pur_Operation_Org',
                 filters: filter,
                 template: new Item({
-                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    key: "{purOrg>org_code}", text: "[{purOrg>org_code}] {purOrg>org_name}"
                 })
             };
 
@@ -1061,18 +1062,22 @@ sap.ui.define([
                     divisionFilters.push(new Filter({
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
                     }));
                 });
             } else {
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+                divisionFilters.push(
+                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                );
             }
 
             var filter = new Filter({
                 filters: divisionFilters,
-                and: false
+                and: params.selectedItems.length == 1 ? true : false
             });
 
             this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");

@@ -131,10 +131,10 @@
                     </Toolbar>
                     <layout:VerticalLayout class="sapUiContentPadding" width="100%">
                         <MultiComboBox
-                            id="refererMultiCB"
                             selectionChange="handleSelectionChangeReferer"
                             selectionFinish="handleSelectionFinishReferer"
-                            width="100%"
+                            width="100%" 
+                            selectedKeys="{refererMultiCB>/refer}"
                             items="{ path: '/RefererSearch',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}

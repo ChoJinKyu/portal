@@ -20,7 +20,7 @@ sap.ui.define([
     
     var oTransactionManager;
     var that;
-	return BaseController.extend("vp.vpMgt.controller.MidObjectDetail", {
+	return BaseController.extend("pg.vp.vpMgt.controller.MidObjectDetail", {
 
         dateFormatter: DateFormatter,
         
@@ -127,7 +127,7 @@ sap.ui.define([
 			if (!this.pDialog) {
 				this.pDialog = Fragment.load({
 					id: oView.getId(),
-					name: "vp.vpMgt.view.DialogSupList",
+					name: "pg.vp.vpMgt.view.DialogSupList",
 					controller: this
 				}).then(function (oDialog) {
 					// connect dialog to the root view of this component (models, lifecycle)
