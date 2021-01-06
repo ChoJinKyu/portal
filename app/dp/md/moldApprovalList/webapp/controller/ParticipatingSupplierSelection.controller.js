@@ -59,7 +59,7 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-
+            
             this.setModel(oViewModel, "participatingSupplierSelectionView");//change
             this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
