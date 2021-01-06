@@ -89,7 +89,7 @@ sap.ui.define([
     
     var that;
     
-	return BaseController.extend("vp.vpMgt.controller.MainList", {
+	return BaseController.extend("pg.vp.vpMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
 
@@ -169,7 +169,7 @@ sap.ui.define([
 			if (!this.pDialog) {
 				this.pDialog = Fragment.load({
 					id: oView.getId(),
-					name: "vp.vpMgt.view.DialogCreate",
+					name: "pg.vp.vpMgt.view.DialogCreate",
 					controller: this
 				}).then(function (oDialog) {
 					// connect dialog to the root view of this component (models, lifecycle)
@@ -572,7 +572,7 @@ sap.ui.define([
             // };
             // this.getRouter().navTo("midPage", oNavParam); 
 			// if (this.currentRouteName === "MainList") { // last viewed route was master
-			// 	var oMasterView = this.oRouter.getView("vp.vpMgt.view.MainList");
+			// 	var oMasterView = this.oRouter.getView("pg.vp.vpMgt.view.MainList");
 			// 	this.getView().byId("fcl").removeBeginColumnPage(oMasterView);
 			// }
 
@@ -893,7 +893,7 @@ sap.ui.define([
 
             // // var aCols = this.oColModel.getData().cols;
 
-            // this._oValueHelpDialog = sap.ui.xmlfragment("vp.vpMgt.view.ValueHelpDialogAffiliate", this);
+            // this._oValueHelpDialog = sap.ui.xmlfragment("pg.vp.vpMgt.view.ValueHelpDialogAffiliate", this);
             // this.getView().addDependent(this._oValueHelpDialog);
 
             // this._oValueHelpDialog.getTableAsync().then(function (oTable) {

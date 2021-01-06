@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "vp.vpMgt",
+    "id": "pg.vp.vpMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -57,7 +57,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "vp.vpMgt.view.App",
+      "viewName": "pg.vp.vpMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -79,7 +79,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "vp.vpMgt.i18n.i18n"
+          "bundleName": "pg.vp.vpMgt.i18n.i18n"
         }
       },
       "util": {
@@ -129,7 +129,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "vp.vpMgt.view",
+        "viewPath": "pg.vp.vpMgt.view",
         "controlId": "fcl",
 		"transition": "slide",
         "bypassed": {

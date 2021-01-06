@@ -44,7 +44,7 @@ sap.ui.define([
     var pTempType = "";
     var oTransactionManager;
     var that;
-	return BaseController.extend("vp.vpMgt.controller.MidObject", {
+	return BaseController.extend("pg.vp.vpMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
         
@@ -231,7 +231,7 @@ sap.ui.define([
             // };
             // this.getRouter().navTo("midPage", oNavParam); 
 			// if (this.currentRouteName === "MainList") { // last viewed route was master
-			// 	var oMasterView = this.oRouter.getView("vp.vpMgt.view.MainList");
+			// 	var oMasterView = this.oRouter.getView("pg.vp.vpMgt.view.MainList");
 			// 	this.getView().byId("fcl").removeBeginColumnPage(oMasterView);
 			// }
 
@@ -469,7 +469,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "vp.vpMgt.view." + sFragmentName,
+					name: "pg.vp.vpMgt.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
