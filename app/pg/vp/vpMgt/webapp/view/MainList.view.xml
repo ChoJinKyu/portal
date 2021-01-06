@@ -19,7 +19,18 @@
                         <Title text="{i18n>appTitle}" />
                     </f:heading>
                     <f:snappedContent>
-                        <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:SimpleForm 
+                            id="pageSearchFormS" 
+                            maxContainerCols="3" 
+                            editable="true" 
+                            layout="ResponsiveGridLayout" 
+                            adjustLabelSpan="false" 
+                            labelSpanL="4" 
+                            labelSpanM="4" 
+                            emptySpanL="0" 
+                            emptySpanM="0" 
+                            columnsL="2" 
+                            columnsM="2">
                             <form:content>
 
                                 <VBox>
@@ -196,7 +207,7 @@
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <VBox>
+                <!-- <VBox> -->
                     <table:Table
                         id="mainTable"
                         selectionMode="MultiToggle"
@@ -212,7 +223,8 @@
                         rowSelectionChange=".onCheck"                    
                         enableColumnReordering="false"
                         filter="filterPrice"
-                        expandFirstLevel="false">
+                        visibleRowCountMode="Auto"
+                        >
                         <!-- visibleRowCountMode="Auto"> -->
                     <table:extension>
                         <OverflowToolbar>
@@ -379,7 +391,7 @@
 
                         </table:columns>
                     </table:Table>            
-                </VBox>
+                <!-- </VBox> -->
             </f:content>
             <!-- DynamicPage Footer -->
             <f:footer>

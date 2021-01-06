@@ -138,7 +138,7 @@
                                 enableColumnReordering="false"
                                 expandFirstLevel="true"
                                 rows="{
-                                    path : 'tree>/VpTreeView',
+                                    path : 'tree>/vpTreeLngView',
                                     parameters : {
                         	        arrayNames: ['nodes'],
                         	        numberOfExpandedLevels: 3
@@ -188,7 +188,13 @@
                                 </table:template>
                             </table:Column>
                     </table:columns>
-                                                                            
+                    <table:columns>
+                            <table:Column label="Temp Type"  width="0em" >
+                                <table:template>
+                                    <Text id="mt_tempTy" text="{tree>temp_type}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                    </table:columns>                                                                            
                     <table:columns>
                             <table:Column label="Department"  width="0em" >
                                 <table:template>
@@ -217,7 +223,7 @@
                                 </table:template>
                             </table:Column>
                     </table:columns>
-                                        <table:columns>
+                    <table:columns>
                             <table:Column label="SD Flag" width="0em"  >
                                 <table:template>
                                     <Text id="mt_sdFlag" text="{tree>sd_exception_flag}" wrapping="false" />

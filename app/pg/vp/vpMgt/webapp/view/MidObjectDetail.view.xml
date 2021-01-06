@@ -317,12 +317,24 @@
                                 </table:Column>
                                 <table:Column label="평가통제여부" width="8em" filterProperty="supeval_control_flag">
                                     <table:template>
-                                        <Text text="{suplist>supeval_control_flag}" wrapping="false" />
+                                        <Switch id="suptable_supeval_control_flag" state="{suplist>supeval_control_flag}" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
+                                        <!-- <Text text="{suplist>supeval_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="통제시작일" width="8em" filterProperty="supeval_control_start_date">
                                     <table:template>
-                                        <Text text="{suplist>supeval_control_start_date}" wrapping="false" />
+                                        <!-- <DatePicker  
+                                        placeholder="Date" 
+                                        value="{path: 'suplist>/supeval_control_start_date',type: 'sap.ui.model.odata.type.DateTime'}" 
+                                        valueFormat="yyyyMMdd" 
+                                        displayFormat="yyyy-MM-dd"/> -->
+                                    <DatePicker 
+                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                        <!-- <Text text="{suplist>supeval_control_start_date}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="통제종료일" width="8em" filterProperty="supeval_control_end_date">
@@ -332,7 +344,12 @@
                                 </table:Column>
                                 <table:Column label="RM 통제여부" width="8em" filterProperty="supplier_rm_control_flag">
                                     <table:template>
-                                        <Text text="{suplist>supplier_rm_control_flag}" wrapping="false" />
+                                        <Switch id="suptable_supplier_rm_control_flag" state="{suplist>supplier_rm_control_flag}" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
+                                        <!-- <Text text="{suplist>supplier_rm_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="Basic Portion(%)" width="8em" filterProperty="supplier_base_portion_rate">
@@ -342,7 +359,12 @@
                                 </table:Column>
                                 <table:Column label="Use Flag" width="8em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
-                                        <Text text="{suplist>vendor_pool_mapping_use_flag}" wrapping="false" />
+                                        <Switch id="suptable_vendor_pool_mapping_use_flag" state="{suplist>vendor_pool_mapping_use_flag}" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch>                                     
+                                        <!-- <Text text="{suplist>vendor_pool_mapping_use_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="등록근거" width="8em" filterProperty="register_reason">
@@ -352,7 +374,13 @@
                                 </table:Column>
                                 <table:Column label="등록일자" width="8em" filterProperty="local_update_dtm">
                                     <table:template>
-                                        <Text text="{suplist>local_update_dtm}" wrapping="false" />
+                                    <!-- <DatePicker  
+                                        placeholder="Date" 
+                                        value="{path: 'suplist>/local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" 
+                                        valueFormat="yyyy-MM-dd" 
+                                        displayFormat="yyyy-MM-dd"/>
+                                        <Text text="{suplist>local_update_dtm}" wrapping="false" /> -->
+                                        <Text  text="{path: 'suplist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="" width="0em" filterProperty="approval_number">
@@ -378,7 +406,7 @@
                             rows="{path: 'matlist>/vpMaterialDtlView'}">
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="List ({= ${metList>/vPSearchMetListView}.length || 0})" level="H2"/>
+                                    <Title text="List ({= ${matlist>/vPSearchMetListView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <Button id="metListtAdd"    type="Emphasized" text="Add"        press=".onMetListAddButtonPress"   enabled="{mode>/viewFlag}" />
                                     <Button id="metListDel"     type="Emphasized" text="Delete"     press=".onMetListDelButtonPress"   enabled="{mode>/viewFlag}" />
@@ -408,7 +436,13 @@
                                 </table:Column>
                                 <table:Column label="등록일자" width="15%" filterProperty="local_update_dtm">
                                     <table:template>
-                                        <Text text="{matlist>local_update_dtm}" wrapping="false" />
+                                        <!-- <DatePicker  
+                                            placeholder="Date" 
+                                            value="{path: 'tmatlist>/local_update_dtm',type: 'sap.ui.model.odata.type.DateTime'}" 
+                                            valueFormat="yyyy-MM-dd" 
+                                            displayFormat="yyyy-MM-dd"/> -->
+                                        <Text  text="{path: 'matlist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
+                                        <!-- <Text text="{matlist>local_update_dtm}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="" width="0em" filterProperty="approval_number">
@@ -485,7 +519,8 @@
                                 </table:Column>
                                 <table:Column label="등록일자" width="20%" filterProperty="local_update_dtm">
                                     <table:template>
-                                        <Text text="{manlist>local_update_dtm}" wrapping="false" />
+                                        <Text  text="{path: 'manlist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
+                                        <!-- <Text text="{manlist>local_update_dtm}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
                             </table:columns>

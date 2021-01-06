@@ -81,6 +81,7 @@ sap.ui.define([
     var pTenantId  = "";
     var pOrg_code  = "";
     var pOperation_unit_code = "";
+    var pTemp_type = "";
 
 
 
@@ -465,7 +466,7 @@ sap.ui.define([
                             //  oView.setBusy(false);
 
                         } else if (sButton === MessageBox.Action.CANCEL) {
-                            
+                                
                         };
                     }
                 });
@@ -559,6 +560,7 @@ sap.ui.define([
             pTenantId = rowData.tenant_id;
             pOrg_code  = rowData.org_code;
             pOperation_unit_code = rowData.operation_unit_code;
+            pTemp_type = rowData.temp_type;
 
             alert( "pVendorPool   : " + pVendorPool + 
                    "pTenantId     : " + pTenantId);
@@ -582,7 +584,9 @@ sap.ui.define([
 				tenantId: pTenantId,
                 vendorPool: pVendorPool,
                 orgCode : pOrg_code,
-                operationUnitCode : pOperation_unit_code
+                operationUnitCode : pOperation_unit_code,
+                temptype : pTemp_type,
+                target : "NEXT"
             });   
             // this.oRouter.navTo("midPage", {layout: LayoutType.OneColumn, tenantId: pTenantId, vendorPool: pVendorPool});         
 
@@ -713,62 +717,76 @@ sap.ui.define([
 		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
 		 * @private
 		 */
-		_applySearch: function(aSearchFilters) {
+		        
+        _applySearch: function(aSearchFilters) {
+            console.log("_applySearch!!!");
             that.mainTable = this.byId("mainTable");
             var oDataLen = 0;
-			var oView = this.getView(),
-				oModel = this.getModel("list");
-			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
-			oModel.read("/vPSearchView", {
-				filters: aSearchFilters,
-				success: function(oData){
-                    //ui.table merge 
-
+            var oView = this.getView(),
+                oModel = this.getModel("list");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
+            oModel.read("/vPSearchView", {
+                filters: aSearchFilters,
+                success: function(oData){
                     // oDataLen = oData.results.length;
-
-                    // that.mainTable.setVisibleRowCount(0);
+                    // console.log("oData.results!!!" + oData.results.length);
+                    // if (oData.results.length > 0) {
+                    //     that.mainTable.setVisibleRowCount(oData.results.length);
+                    // } else {
+                    //     that.mainTable.setVisibleRowCount(0);
+                    // }
                     // var oColumn = that.mainTable.getColumns()[0];
                     // that.mainTable.sort(oColumn);
-                    // console.log(oDataLen);
-        
+                    // //console.log(oDataLen);
+
                     // that.mainTable.onAfterRendering = function() {
-                    //     sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
-                    //     var aRows = that.mainTable.getRows();
-                    //     if (aRows && aRows.length > 0) {
-                    //         var pRow = {};
-                    //         for (var i = 0; i <  aRows.length; i++) {
-                    //             if (i > 0) {
-                    //                 var pCell = pRow.getCells()[0],
-                    //                     cCell = aRows[i].getCells()[0];
-                    //                     console.log(cCell.getText(), pCell.getText());
-                    //                 if (cCell.getText() === pCell.getText()) {
-                    //                     $("#" + cCell.getId()).css("visibility", "hidden");
-                    //                     $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
-                    //                 }
-
-                    //                 var pCell1 = pRow.getCells()[1],
-                    //                     cCell1 = aRows[i].getCells()[1];
-                    //                     console.log(cCell.getText(), pCell.getText());
-                    //                 if (cCell1.getText() === pCell1.getText()) {
-                    //                     $("#" + cCell1.getId()).css("visibility", "hidden");
-                    //                     $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
-                    //                 }
-
-                                  
-                    //             }
-                    //             pRow = aRows[i];
-                    //         }
-                    //     }
-                    //     console.log(oDataLen);
-                    //     that.mainTable.setVisibleRowCount(oDataLen);
-                    //     oView.setBusy(false);                        
+                    //     console.log("onAfterRendering");
+                    //     oView.setBusy(true);
+                    //     setTimeout(function demo() {
+                    //         that.fnSetRowMerge(oView, oDataLen);
+                    //     }, 200);
                     // };
+                    
+                    // if (oDataLen === 0) {
+                    // }
                     oView.setBusy(false);
-				}
+                }, error: function(e) {
+                    console.log("error occrupie!!!");
+                }
             });
-		},
-		
+        },
+        
+        fnSetRowMerge: function(oView, oDataLen) {
+            // TimeStamp.start();
+            var aRows = that.mainTable.getRows();
+            if (aRows && aRows.length > 0) {
+                var pRow = {};
+                for (var i = 0; i <   aRows.length; i++) {
+                    if (i > 0) {
+                        var pCell = pRow.getCells()[0],
+                            cCell = aRows[i].getCells()[0];
+                        if (cCell.getText() === pCell.getText()) {
+                            $("#" + cCell.getId()).css("visibility", "hidden");
+                            $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
+                        }
+
+                        var pCell1 = pRow.getCells()[1],
+                            cCell1 = aRows[i].getCells()[1];
+                        if (cCell1.getText() === pCell1.getText()) {
+                            $("#" + cCell1.getId()).css("visibility", "hidden");
+                            $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
+                        }
+                    }
+                    pRow = aRows[i];
+                }
+            }
+            // TimeStamp.finish();
+            //console.log(oDataLen);
+            that.mainTable.setVisibleRowCount(oDataLen);
+            oView.setBusy(false);
+        },
+
 		_getSearchStates: function(){
 
 
