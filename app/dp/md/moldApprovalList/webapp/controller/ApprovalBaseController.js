@@ -57,54 +57,6 @@ sap.ui.define([
         onAfterRendering: function () {
 
         },
-        onDataReset: function(){
-            var companyM = this.getView().getModel("company"); 
-            var plantM = this.getView().getModel("plant"); 
-            var appTypeM = this.getView().getModel("appType"); 
-            var deviceM = this.getView().getModel("device"); 
-            var appMasterM = this.getView().getModel("appMaster"); 
-            var moldMasterM = this.getView().getModel("moldMaster"); 
-            var appDetailM = this.getView().getModel("appDetail"); 
-            var approverM = this.getView().getModel("approver"); 
-            var refererM = this.getView().getModel("referer"); 
-           
-            if(companyM){
-                companyM.setData(null);
-                companyM.updateBindings(true);
-            }
-            if(plantM){
-                plantM.setData(null); 
-                plantM.updateBindings(true);
-            }
-            if(appTypeM){
-                appTypeM.setData(null);
-                appTypeM.updateBindings(true);
-            }
-            if(deviceM){
-                deviceM.setData(null);
-                deviceM.updateBindings(true);
-            }
-            if(appMasterM){
-                appMasterM.setData(null);
-                appMasterM.updateBindings(true);
-            }
-            if(moldMasterM){
-                moldMasterM.setData(null);
-                moldMasterM.updateBindings(true);
-            }
-            if(appDetailM){
-                appDetailM.setData(null);
-                appDetailM.updateBindings(true);
-            }
-            if(approverM){
-                approverM.setData(null);
-                approverM.updateBindings(true);
-            }
-             if(refererM){
-                refererM.setData(null);
-                refererM.updateBindings(true);
-            }
-        },
         /**
          * 폅집기 창  
          */
@@ -145,7 +97,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            //this._toShowMode();
+            this._toShowMode();
             var sPreviousHash = History.getInstance().getPreviousHash();
             if (sPreviousHash !== undefined) {
                 // eslint-disable-next-line sap-no-history-manipulation
@@ -153,7 +105,6 @@ sap.ui.define([
             } else {
                 this.getRouter().navTo("approvalList", {}, true);
             }
-            this.onDataReset();
         },
 
         onPageEditButtonPress: function () {
