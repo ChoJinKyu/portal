@@ -58,6 +58,8 @@
                         <OverflowToolbar>
                             <Title text="부품 일반정보" level="H2"/>
                             <ToolbarSpacer/>
+                            <Button id="testButton1" text="카테고리ItemCode채번테스트" type="Transparent" press=".callNewCategoryItemCode" />
+                            <Button id="testButton2" text="카테고리Code채번테스트" type="Transparent" press=".callNewCategoryCode" />
                             <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
                             <!-- <Button text="행삭제" type="Transparent" press=".onMainTableDelButtonPress" /> -->
                             <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
