@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "op.pu.PrMgt",
+    "id": "op.pu.prMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -64,7 +64,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "op.pu.PrMgt.view.App",
+      "viewName": "op.pu.prMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -86,7 +86,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "op.pu.PrMgt.i18n.i18n"
+          "bundleName": "op.pu.prMgt.i18n.i18n"
         }
       },
       "util": {
@@ -162,7 +162,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "op.pu.PrMgt.view",
+        "viewPath": "op.pu.prMgt.view",
         "controlId": "fcl",
 				"transition": "slide",
         "bypassed": {

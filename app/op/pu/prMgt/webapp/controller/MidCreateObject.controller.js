@@ -28,7 +28,7 @@ sap.ui.define([
      * @author OhVeryGood
      * @date 2020.12.01
      */
-	return BaseController.extend("op.pu.PrMgt.controller.MidCreateObject", {
+	return BaseController.extend("op.pu.prMgt.controller.MidCreateObject", {
 
         dateFormatter: DateFormatter,
         
@@ -257,7 +257,7 @@ sap.ui.define([
                 if (!this._oMaterialDialog) {
                     this._oMaterialDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "op.pu.PrMgt.view.MaterialDialog",
+                        name: "op.pu.prMgt.view.MaterialDialog",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);

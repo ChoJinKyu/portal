@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="op.pu.PrMgt.controller.App"
+	controllerName="op.pu.prMgt.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"
