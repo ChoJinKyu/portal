@@ -4,7 +4,8 @@
     xmlns:core="sap.ui.core" 
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
-    xmlns:layout="sap.ui.layout" >
+    xmlns:layout="sap.ui.layout" 
+    xmlns:lib-m="ext.lib.control.m">
     <Dialog id="dialogEmployeeSelection" 
         class="sapUiSmallMargin" 
         title="Setting" 
@@ -106,8 +107,25 @@
                                 <form:content>
                                     <Label
                                         text="Language"/>
-                                    <Text
-                                        text="English"/>
+                                    <ComboBox
+                                        visible="{contModel>/detailDetail/editMode}"
+                                        width="100%" 
+                                        showSecondaryValues= "true"
+                                        selectedKey="{languages>language_cd}"
+                                        items="{
+                                            path: 'utilModel>/CodeDetails',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                            ]
+                                        }">
+                                        <items>
+                                            <core:ListItem 
+                                                key="{utilModel>code}" 
+                                                text="{utilModel>code_description}"
+                                                additionalText="{utilModel>code}" />
+                                        </items>
+                                    </ComboBox>
                                     <Label
                                         text="Date Format"/>
                                     <Text
@@ -118,12 +136,21 @@
                                         text="xxx.xxx.xx"/>
                                     <Label
                                         text="TimeZone"/>
-                                    <SegmentedButton id="searchCodeSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
-                                        <items>
-                                            <SegmentedButtonItem text="12 h" key="all" />
-                                            <SegmentedButtonItem text="24 h" width="3em" />
-                                        </items>
-                                    </SegmentedButton>
+                                    <lib-m:CodePicker id="searchTimezonePicker"
+                                        placeholder="Enter a timezone name"
+                                        keyField="timezone_code"
+                                        textField="timezone_name"
+                                        suggestionItems="{
+                                            path: '/',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                            ],
+                                            serviceName: 'cm.util.CommonService',
+                                            entityName: 'Timezone'
+                                        }">
+                                        <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Timezone"
+                                            keyFieldHeaderText="Timezone Code" textFieldHeaderText="Region" />
+                                    </lib-m:CodePicker>
                                 </form:content>
                             </form:SimpleForm>
                         </content>
