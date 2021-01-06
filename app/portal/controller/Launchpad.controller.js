@@ -1,6 +1,8 @@
 sap.ui.define([
 	"sap/ui/Device",
     "./BaseController",
+    "sap/ui/core/Component",
+    "ext/lib/model/TreeListModel",
     "sap/ui/core/routing/HashChanger",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/Fragment",
@@ -10,52 +12,61 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/uxap/ObjectPageSection",
+    "sap/tnt/NavigationList",
+    "sap/tnt/NavigationListItem",
     "sap/ui/core/ComponentContainer"
-], function (Device, BaseController, HashChanger, JSONModel, Fragment, MessageToast, MessageBox, Filter, FilterOperator, Sorter, ObjectPageSection, ComponentContainer) {
+], function (Device, BaseController, Component, TreeListModel, HashChanger, JSONModel, Fragment, MessageToast, MessageBox, Filter, FilterOperator, Sorter, ObjectPageSection,  NavigationList, NavigationListItem, ComponentContainer) {
         "use strict";
 
         return BaseController.extend("spp.portal.controller.Launchpad", {
 
             onInit: function () {
-                var oMenuModel = new JSONModel(sap.ui.require.toUrl("spp/portal/mockdata") + "/menu.json");
-                this.getView().setModel(oMenuModel, "menu");
+                // var oMenuModel = new JSONModel(sap.ui.require.toUrl("spp/portal/mockdata") + "/menu.json");
+                // this.getView().setModel(oMenuModel, "menu");
 
-                var me = this;
-                oMenuModel.dataLoaded().then(function(){
-                    var oTab = me.byId("toolPageTabHeader");
-                    oTab.setSelectedKey('cm');
-                });
+                // var me = this;
+                // oMenuModel.dataLoaded().then(function(){
+                //     var oTab = me.byId("toolPageTabHeader");
+                //     oTab.setSelectedKey('XX');
+                // });
 
-                var oModel = new JSONModel(sap.ui.require.toUrl("spp/portal/mockdata") + "/apps-cm.json");
-                this.getView().setModel(oModel);
-
+                // var oModel = new JSONModel(sap.ui.require.toUrl("spp/portal/mockdata") + "/apps-cm.json");
+                this.getView().setModel(new JSONModel());
 			    this._setToggleButtonTooltip(!Device.system.desktop);
             },
 
             onAfterRendering : function(){
-                var oModel = this.getView().getModel('menuService');
-                oModel.read("/Menu",{
-                    filters : [
-                        new Filter("menu_code", FilterOperator.EQ, "CM1000")
-                    ],
-                    sorters : [
-                        new Sorter("sort_number", false)
-                    ],
-                    urlParameters : {
-                       $expand: "children,languages",
-                       $select : ["menu_code","menu_desc","children/languages"]
-                    },
-                    success : function(data){
-                        console.log(data)
-                        // oCodeMasterTable.setBusy(false);
-                    },
-                    error : function(data){
-                        console.log(data)
-                        // oCodeMasterTable.setBusy(false);
-                    }
-                });
-                this.onUserSettingPress();
+                var oModel = this.getView().getModel('menuModel');
+                this.treeListModel = this.treeListModel || new TreeListModel(oModel);
+                this.getView().setBusy(true);
+                this.treeListModel
+                    .read("/Menu_haa", {
+                        filters: [new Filter("language_code", FilterOperator.EQ, "KO")],
+                        sorters: [new Sorter("hierarchy_rank")]
+                    })
+                    // 성공시
+                    .then((function (jNodes) {
+                        this.getView().getModel("menu").setData(jNodes);
+                        var oModel = this.getView().getModel();
+                        
+                        oModel.setData({"menus":jNodes[0].nodes});
+
+                        var oTab = this.byId("toolPageTabHeader");
+                        oTab.setSelectedKey(jNodes[0].menu_code);
+
+                    }).bind(this))
+                    // 실패시
+                    .catch(function (oError) {
+                        console.log('oError',oError)
+                    })
+                    // 모래시계해제
+                    .finally((function () {
+                        this.getView().setBusy(false);
+                    }).bind(this));
+
+                // this.onUserSettingPress();
             },
+
 
             onSideNavButtonPress: function(){
                 var oToolPage = this.byId("toolPage");
@@ -85,6 +96,7 @@ sap.ui.define([
             },
 
             onMenuPress: function(oEvent){
+                /*
                 var sText = oEvent.getParameter("item").getProperty("text"),
                     oData = this.getView().getModel("menu").getData(),
                     id = "cm";
@@ -98,6 +110,20 @@ sap.ui.define([
 
                 var oModel = new JSONModel(sap.ui.require.toUrl("spp/portal/mockdata") + "/apps-"+id+".json");
                 this.getView().setModel(oModel);
+                */
+
+                var sKey = oEvent.getParameter("key");
+                var aTopMenu = this.getView().getModel("menu").getData();
+                var oSelectMenu = {};
+                aTopMenu.forEach(function(item){
+                    if(item.node_id === sKey){
+                        oSelectMenu = item;
+                    }
+                });
+                this.getView().getModel().setData({"menus":oSelectMenu.nodes});
+
+                var oToolPage = this.byId("toolPage");
+                oToolPage.getSideContent().setSelectedItem();
             },
 
             onAppPress: function(oEvent){
@@ -105,17 +131,37 @@ sap.ui.define([
                     sPath = oEvent.getSource().getBindingContext().getPath(),
                     oModel = this.getView().getModel(),
                     oToolPage = this.byId("toolPage"),
-                    sUrl = oModel.getProperty(sPath + "/url"),
-                    sComponent = oModel.getProperty(sPath + "/component");
-
+                    sComponent = oModel.getProperty(sPath + "/menu_path_info"),
+                    sUrl = "../"+sComponent.replace(/\./gi,"/")+"/webapp";
                 HashChanger.getInstance().replaceHash("");
-                
-                oToolPage.removeMainContent(0);
-                oToolPage.addMainContent(new ComponentContainer({
+
+                Component.load({
                     name: sComponent,
-                    async: true,
                     url: sUrl
-                }));
+                }).then(function(oComponent) {
+                    // var oContainer = new ComponentContainer({
+                    //     component: oComponent
+                    // });
+                    var oContainer = new ComponentContainer({
+                        name: sComponent,
+                        async: true,
+                        url: sUrl
+                    });
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oContainer);
+                }).catch(function(e){
+                    MessageToast.show("등록된 메뉴 경로가 올바르지 않습니다.");
+                })
+
+                // console.log("oToolPage",oToolPage)
+                // oToolPage.removeMainContent(0);
+                // oToolPage.removeAllMainContents();
+                // oToolPage.addMainContent(new ComponentContainer({
+                //     name: sComponent,
+                //     async: true,
+                //     url: sUrl
+                // }));
+                // console.log("oToolPage",oToolPage)
             },
 
             onTilePress: function(oEvent){
