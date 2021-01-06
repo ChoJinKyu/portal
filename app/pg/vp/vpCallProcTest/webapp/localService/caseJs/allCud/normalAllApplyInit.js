@@ -56,13 +56,13 @@ vpSupplierList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
-    , supplier_code: "KR00004000"
+    , supplier_code: "CN12341400"
     ,supeval_target_flag: false
     ,supplier_op_plan_review_flag: false
     ,supeval_control_flag: false
-    ,supeval_control_start_date: "20201229"
+    ,supeval_control_start_date: "20210104"
     ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20201229"
+    ,supeval_restrict_start_date: "20210104"
     ,supeval_restrict_end_date: "20211229"
     ,inp_code: "AAA"
     ,supplier_rm_control_flag: false
@@ -79,13 +79,13 @@ vpSupplierList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
-    , supplier_code: "KR12344200"
+    , supplier_code: 'US02689500'
     ,supeval_target_flag: false
     ,supplier_op_plan_review_flag: false
     ,supeval_control_flag: false
-    ,supeval_control_start_date: "20201229"
+    ,supeval_control_start_date: "20210104"
     ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20201229"
+    ,supeval_restrict_start_date: "20210104"
     ,supeval_restrict_end_date: "20211229"
     ,inp_code: "AAA"
     ,supplier_rm_control_flag: false
@@ -104,7 +104,7 @@ vpItemList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
-    , material_code: "PEEE"
+    , material_code: "TCMACR0013"
     , crud_type_code : "C"
 });
 
@@ -114,7 +114,7 @@ vpItemList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
-    , material_code: "PFFF"
+    , material_code: 'TCMACR0014'
     , crud_type_code : "C"
 });
 
@@ -126,7 +126,7 @@ vpManagerList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
-    , vendor_pool_person_empno: "EEEE"
+    , vendor_pool_person_empno: "5452"
     , crud_type_code : "C"
 });
 
@@ -136,8 +136,8 @@ vpManagerList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
-    , vendor_pool_person_empno: "EDDD"
+    , vendor_pool_person_empno: '5460'
     , crud_type_code : "C"
 });
 
-inputInfo.inputData.vpManager = vpManagerList; 
+inputInfo.inputData.vpManager = vpManagerList;
