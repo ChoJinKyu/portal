@@ -25,7 +25,7 @@
                         <m:OverflowToolbarLayoutData priority="NeverOverflow" shrinkable="true" />
                     </m:layoutData>
                     <m:items>
-                        <m:IconTabFilter text="{menu>name}" key="{menu>id}" />
+                        <m:IconTabFilter text="{menu>menu_name}" key="{menu>menu_code}" />
                     </m:items>
                 </m:IconTabHeader>
                 <m:Button icon="sap-icon://search" type="Transparent">
@@ -57,6 +57,22 @@
             </tnt:ToolHeader>
         </tnt:header>
         <tnt:sideContent>
+            <tnt:SideNavigation selectedKey="subItem3" expanded="true">
+                <tnt:NavigationList id="sideNavigation" width="320px" selectedKey="subItem3" items="{/menus}">
+                    <tnt:NavigationListItem text="{menu_name}" key="rootItem1" icon="sap-icon://bullet-text" items="{nodes}">
+                        <tnt:NavigationListItem text="{menu_name}" select=".onAppPress">
+                            <tnt:NavigationListItem text="{menu_name}" select=".onAppPress"/>
+                        </tnt:NavigationListItem>
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+				<tnt:fixedItem>
+					<tnt:NavigationList items="{path: '/fixedNavigation'}">
+						<tnt:NavigationListItem text="{title}" icon="{icon}" />
+					</tnt:NavigationList>
+				</tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+        <!-- <tnt:sideContent>
             <tnt:SideNavigation id="sideNavigation" selectedKey="subItem3">
                 <tnt:NavigationList width="320px" selectedKey="subItem3" items="{/menus}">
                     <tnt:NavigationListItem text="{name}" key="rootItem1" icon="{icon}" items="{subMenus}">
@@ -69,7 +85,7 @@
 					</tnt:NavigationList>
 				</tnt:fixedItem>
             </tnt:SideNavigation>
-        </tnt:sideContent>
+        </tnt:sideContent> -->
 		<tnt:mainContents>
             <m:ScrollContainer horizontal="false" vertical="true" height="100%">
                 <m:NavContainer id="pageContainer" initialPage="page2" >

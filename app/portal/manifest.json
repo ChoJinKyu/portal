@@ -10,7 +10,32 @@
         "title": "{{appTitle}}",
         "description": "{{appDescription}}",
         "resources": "resources.json",
-        "ach": "ach"
+        "ach": "ach",
+        "dataSources": {
+            "commonUtilService": {
+                "uri": "srv-api/odata/v2/cm.util.CommonService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "timeZoneService": {
+                "uri": "srv-api/odata/v2/cm.TimeZoneMgtService/",
+                "type": "OData",
+                "settings": {
+                "odataVersion": "2.0",
+                "localUri": "localService/metadata.xml"
+                }
+            },
+            "menuService": {
+                "uri": "srv-api/odata/v2/cm.menuMgtService/",
+                "type": "OData",
+                "settings": {
+                "odataVersion": "2.0",
+                "localUri": "localService/metadata.xml"
+                }
+            }
+        }
     },
     "sap.cloud": {
         "public": true,
@@ -58,6 +83,42 @@
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
                     "bundleName": "spp.portal.i18n.i18n"
+                }
+            },
+            "menu": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            },
+            "menuModel": {
+                "dataSource": "menuService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": false
+                }
+            },
+            "utilModel": {
+                "dataSource": "commonUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": false
+                }
+            },
+            "timeZoneModel": {
+                "dataSource": "timeZoneService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": false
                 }
             }
         },
