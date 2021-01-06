@@ -199,6 +199,7 @@ sap.ui.define([
             console.log("oMasterModel.getData()=", oMasterModel.getData());
             // this.validator.validate(this.byId("midObjectForm1Edit"))
             if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if (this.validator.validate(this.byId("midObjectForm2Edit")) !== true) return;
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
