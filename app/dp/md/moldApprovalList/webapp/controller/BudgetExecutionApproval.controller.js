@@ -60,7 +60,6 @@ sap.ui.define([
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
         },
    
-        
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
