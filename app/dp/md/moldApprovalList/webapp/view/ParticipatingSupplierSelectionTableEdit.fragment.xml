@@ -74,7 +74,8 @@
                             <Label text="Type"/>
                         </VBox>
                         <table:template>
-                            <ComboBox visible="{mode>/editFlag}"
+                            <Text id="description" text="{mdItemMaster>mold_item_type_code}"/>
+                            <!-- <ComboBox visible="{mode>/editFlag}"
                                     editable="false"
                                     selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/Code',
                                     filters : [
@@ -83,7 +84,7 @@
                                     ]
                                 }">
                                 <core:Item key="{util>code}" text="{util>code_name}"/> 
-                            </ComboBox>
+                            </ComboBox> -->
                             <!-- <Text id="moldItemTypeCodeNm" text="{mdItemMaster>mold_item_type_code_nm}"/> -->
                         </table:template>
                     </table:Column>
