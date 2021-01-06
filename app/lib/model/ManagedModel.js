@@ -8,7 +8,7 @@ sap.ui.define([
   var ManagedModel = JSONModel.extend("ext.lib.model.ManagedModel", {
 
     setData: function (oData, sPath, bMerge) {
-      var sPath = this._transactionPath;
+      var sPath = sPath || this._transactionPath;
       oData = oData || {};
       if (oData.__metadata && oData.__metadata.uri) {
         var sEntity = oData.__metadata.type.substring(oData.__metadata.type.lastIndexOf(".") +1);
