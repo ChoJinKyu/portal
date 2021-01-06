@@ -1,4 +1,4 @@
-package lg.sppCap.solutionized.model;
+package lg.sppCap.solutionized.bizrule.model;
 
 public class BizRuleInfo {
  
