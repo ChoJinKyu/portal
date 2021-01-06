@@ -84,7 +84,7 @@ sap.ui.define([
                     }));
                 }
                 //predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
-                this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
+                this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel(), { returnType: "Array" });
                 this.getView().setBusy(true);
                 this.treeListModel
                     .read("/Menu_haa", {
@@ -95,7 +95,8 @@ sap.ui.define([
                     .then((function (jNodes) {
                         this.getView().setModel(new JSONModel({
                             "Menu_haa": {
-                                "nodes": jNodes
+                                "nodes": jNodes[0],
+                                "list": jNodes[1]
                             }
                         }), "tree");
                     }).bind(this))

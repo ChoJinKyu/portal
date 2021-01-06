@@ -96,7 +96,7 @@
                 >
                   <table:extension>
                     <OverflowToolbar>
-                      <!-- <Title text="{I18N>/LIST} : ({= ${tree>/Menu_haa}.length || 0})" level="H2"/> -->
+                      <Title text="{I18N>/LIST} ({= ${tree>/Menu_haa/list/results}.length || 0})" level="H2"/>
                       <ToolbarSpacer/>
                       <!-- <Button id="mainTableCreateSameLevelButton" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onAdd('S')"> -->
                       <Button id="mainTableCreateSameLevelButton" text="Create Same Level" type="Transparent" press=".onAdd('S')">
