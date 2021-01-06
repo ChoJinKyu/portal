@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (BaseController) {
 	"use strict";
 
-	return BaseController.extend("cm.currencyMgt.controller.MidObjectNotFound", {
+	return BaseController.extend("cm.curMgt.controller.MidObjectNotFound", {
 
 		/**
 		 * Navigates to the worklist when the link is pressed

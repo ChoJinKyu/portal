@@ -29,7 +29,7 @@ sap.ui.define([
 
 	var oTransactionManager;
 
-	return BaseController.extend("cm.currencyMgt.controller.MidObject", {
+	return BaseController.extend("cm.curMgt.controller.MidObject", {
 
             // "sap/ui/model/FilterType", 사용불가??
 
@@ -583,7 +583,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "cm.currencyMgt.view." + sFragmentName,
+					name: "cm.curMgt.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
