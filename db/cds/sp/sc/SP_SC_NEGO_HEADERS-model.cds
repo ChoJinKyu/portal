@@ -12,4 +12,27 @@ entity Sc_Nego_Headers : util.Managed {
         effective_end_date              : String(8)                       @title : '유효종료일자';
         payterms_code                   : String(30)                      @title : '지불조건코드';
 }
-view Sc_Language as select * from cm.Currency_Lng where language_code = $user.locale;
+view Sc_Language as select 
+*
+,$user.locale               as locale
+,$user.id                   as user_id
+,$at.from                   as at_from
+,$at.to                     as at_to
+,$now                       as now
+,$projection.language_code  as projection_language_code
+,$self.language_code        as self_language_code
+// ,$session                   as session
+from cm.Currency_Lng ;
+
+ 
+/*  Deployed
+    SELECT
+    *,
+    SESSION_CONTEXT('LOCALE') AS locale,
+    SESSION_CONTEXT('APPLICATIONUSER') AS user_id,
+    SESSION_CONTEXT('VALID-FROM') AS at_from,
+    SESSION_CONTEXT('VALID-TO') AS at_to,
+    CURRENT_TIMESTAMP AS now,
+    Currency_Lng_0.language_code AS projection_language_code,
+    Currency_Lng_0.language_code AS self_language_code
+    FROM cm_Currency_Lng AS Currency_Lng_0; */
