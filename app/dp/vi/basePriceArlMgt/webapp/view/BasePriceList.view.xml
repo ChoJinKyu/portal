@@ -6,6 +6,7 @@
   xmlns:form="sap.ui.layout.form"
   xmlns:t="sap.ui.table"
   xmlns:layout="sap.ui.layout"
+  xmlns:tnt="sap.tnt"
   xmlns:lib-m="ext.lib.control.m"
   displayBlock="true"
   height="100%">
@@ -153,14 +154,20 @@
                         <Text text="{listModel>approval_title}" />
                     </t:template>
                 </t:Column>
-                <t:Column width="12rem">
+                <t:Column hAlign="Center" width="12rem">
                     <!-- <Label text="{I18N>/STATUS}"  textAlign="Center" width="100%" /> -->
-                    <Label text="Status"  textAlign="Center" width="100%" />
+                    <Label text="Status" textAlign="Center" width="100%" />
                     <t:template>
-                        <Text text="{listModel>approval_status_code_fk/code_description}" />
+                        <!-- <Text text="{listModel>approval_status_code_fk/code_description}" /> -->
+                        <tnt:InfoLabel 
+                            text="{listModel>approval_status_code_fk/code_description}" 
+                            colorScheme="{
+                                path: 'listModel>approval_status_code',
+                                formatter: '.onStatusColor'
+                            }" />
                     </t:template>
                 </t:Column>
-                <t:Column hAlign="Center"  width="7rem">
+                <t:Column hAlign="Center" width="7rem">
                     <!-- <Label text="{I18N>/REQUEST_DATE}" /> -->
                     <Label text="Request Date" />
                     <t:template>
@@ -169,7 +176,7 @@
                                 formatter: '.dateFormatter.toDateString'}" />
                     </t:template>
                 </t:Column>
-                <t:Column hAlign="Center"  width="12rem">
+                <t:Column hAlign="Center" width="12rem">
                     <!-- <Label text="{I18N>/REQUESTED_BY}" /> -->
                     <Label text="Requested By" />
                     <t:template>

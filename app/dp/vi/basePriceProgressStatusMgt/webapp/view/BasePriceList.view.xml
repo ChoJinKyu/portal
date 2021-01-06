@@ -129,7 +129,7 @@
                             <layout:GridData span="XL4 L4 M6 S12" />
                         </layoutData>
                     </VBox>
-                    <VBox>
+                    <!-- <VBox>
                         <Label text="임시 tenant"></Label>
                         <ComboBox
                             width="100%"
@@ -142,7 +142,7 @@
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
-                    </VBox>
+                    </VBox> -->
                 </form:content>
             </form:SimpleForm>
             <!--Filterbar 끝-->
