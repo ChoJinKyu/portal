@@ -38,11 +38,11 @@ sap.ui.define([
             var oData = oTable.getModel().getProperty("/Message");//binded Data
 
             //CM_CHAIN_CD code list
-            var aCtxtChainCode = [];//Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
+            var aCtxtChainCode = Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
             var aChainCode = aCtxtChainCode.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getModel().getProperty("/"+sCtxt));
 
             //CM_LANG_CODE code List
-            var aCtxtLang = [];//Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
+            var aCtxtLang = Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
             var aLangCode = aCtxtLang.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_LANG_CODE')").getModel().getProperty("/"+sCtxt));
 
             //optional object param
