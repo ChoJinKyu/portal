@@ -1,9 +1,9 @@
-package lg.sppCap.solutionized.model;
- 
+package lg.sppCap.solutionized;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
- 
+
 import lg.sppCap.solutionized.model.BizRuleInfo;
 
 public class BizRuleInfoService {
@@ -11,7 +11,7 @@ public class BizRuleInfoService {
   public BizRuleInfo retrieveBizRuleInfo(String tenantId, String bizRuleId, String altFlag){
  
     try {
- 
+
       BizRuleInfo info = new BizRuleInfo();
       info.setTenantId(tenantId);
       info.setBizRuleId(bizRuleId);
