@@ -121,7 +121,7 @@
                                             path: 'master>/funding_notify_title',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
-                                                maxLength: 30
+                                                maxLength: 100
                                             }
                                         }"/>
                                     <layoutData>
@@ -188,16 +188,17 @@
 		<!-- 하단 버튼 처리 툴바 -->
 		<uxap:footer>
 			<OverflowToolbar>
-                <Button
+                <!-- <Button
                     icon="sap-icon://alert"
                     type="Emphasized"
                     text="{= ${message>/}.length }"
                     visible="{= ${message>/}.length > 0 }"
-                    press=".onMessagePopoverPress" />
+                    press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
+                <Button id="pageSandMailButton" text="{I18N>/MAIL_TRANSFER}" type="Transparent" press=".onMainSendMailButtonPress" />
                 <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />
                 <Button id="pageDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPageDeleteButtonPress" />
-				<Button id="pageSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button id="pageSaveButton" text="{I18N>/SAVE}" type="Transparent" press=".onPageSaveButtonPress" />
 				<Button id="pageCancelButton" text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
