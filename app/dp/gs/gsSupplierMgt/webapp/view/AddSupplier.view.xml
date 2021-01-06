@@ -16,7 +16,7 @@
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
@@ -268,9 +268,9 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-                <!-- <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />-->							
-                <Button type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
-                <Button type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />	
+                <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />							
+                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />	
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

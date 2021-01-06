@@ -319,6 +319,30 @@ sap.ui.define([
             // }
             // this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             // this.validator.clearValueState(this.byId("midTable"));
+            var oView = this.getView();
+            var sTenantId = this._sMode;
+            if (sTenantId === "edit"){
+                this.onPageNavBackButtonPress();
+            }else if (sTenantId !== "edit"){
+                
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);                
+                this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
+				oView.setBusy(true);
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());				
+                oDetailsModel.read("/UomClassLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+				});
+                this._toShowMode();
+            }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
         },
 
 		/* =========================================================== */
@@ -463,10 +487,12 @@ sap.ui.define([
 			var FALSE = false;
             this._showFormFragment('AddSupplier_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !FALSE);
-			// this.byId("pageEditButton").setEnabled(FALSE);
+			// this.byId("page").setProperty("showFooter", !FALSE);
+			this.byId("pageEditButton").setEnabled(FALSE);
 			// this.byId("pageDeleteButton").setEnabled(FALSE);
-			// this.byId("pageNavBackButton").setEnabled(FALSE);
+            // this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageSaveButton").setEnabled(!FALSE);
+            this.byId("pageCancelButton").setEnabled(!FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
             this.byId("midTableDeleteButton").setEnabled(!FALSE);
@@ -484,10 +510,12 @@ sap.ui.define([
 			var TRUE = true;
 			this._showFormFragment('AddSupplier_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !TRUE);
-			// this.byId("pageEditButton").setEnabled(TRUE);
+			// this.byId("page").setProperty("showFooter", !TRUE);
+			this.byId("pageEditButton").setEnabled(TRUE);
 			// this.byId("pageDeleteButton").setEnabled(TRUE);
-			// this.byId("pageNavBackButton").setEnabled(TRUE);
+            // this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageSaveButton").setEnabled(!TRUE);
+            this.byId("pageCancelButton").setEnabled(!TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
             this.byId("midTableDeleteButton").setEnabled(!TRUE);
