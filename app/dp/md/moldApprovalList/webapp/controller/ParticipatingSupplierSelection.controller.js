@@ -382,14 +382,35 @@ sap.ui.define([
             console.log();
         },
 
+         // 승인요청 
+        onPageRequestButtonPress : function (){
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR"); 
+            this._sumbitDataSettingAndSend();
+        },
+         // 승인요청취소  
+        onPageRequestCancelButtonPress : function (){
+            if(this.getModel("appMaster").getProperty("/approve_status_code") !== "AR"){
+                MessageToast.show( "Request 상태일 때만 Request Cancel 가능합니다." );
+                return;
+            }else{
+                this.getModel("appMaster").setProperty("/approve_status_code", "DR"); 
+                this._sumbitDataSettingAndSend();
+
+            }
+        },
+
+        // 임시저장 
         onPageDraftButtonPress : function () { 
-            /**
-             * 'DR'
-            'AR'
-            'IA'
-            'AP'
-            'RJ' */ 
+            var status = this.getModel("appMaster").getProperty("/approve_status_code");
+            if(!(status === undefined || status === "DR")){
+                MessageToast.show( "Draft 상태 또는 신규일 때만 임시저장이 가능합니다." );
+                return;
+            }
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
+            this._sumbitDataSettingAndSend();
+        },
+
+        _sumbitDataSettingAndSend : function () { 
 
             this.approval_type_code = "E";
             var bModel = this.getModel("mdItemMaster");
