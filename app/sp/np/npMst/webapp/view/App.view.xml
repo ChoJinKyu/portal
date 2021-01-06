@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="np.npMst.controller.App"
+	controllerName="sp.np.npMst.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"

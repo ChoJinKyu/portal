@@ -1,7 +1,7 @@
 {
     "_version": "1.12.0",
     "sap.app": {
-        "id": "np.npMst",
+        "id": "sp.np.npMst",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
@@ -63,7 +63,7 @@
     "sap.ui5": {
         "flexEnabled": false,
         "rootView": {
-            "viewName": "np.npMst.view.App",
+            "viewName": "sp.np.npMst.view.App",
             "type": "XML",
             "async": true,
             "id": "app"
@@ -84,7 +84,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "np.npMst.i18n.i18n"
+                    "bundleName": "sp.np.npMst.i18n.i18n"
                 }
             },
             "vendorPool": {
@@ -133,7 +133,7 @@
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
-                "viewPath": "np.npMst.view",
+                "viewPath": "sp.np.npMst.view",
                 "controlId": "fcl",
                 "transition": "slide",
                 "bypassed": {

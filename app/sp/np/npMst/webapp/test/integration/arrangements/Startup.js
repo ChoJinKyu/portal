@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (Opa5) {
 	"use strict";
 
-	return Opa5.extend("np.npMst.test.integration.arrangements.Startup", {
+	return Opa5.extend("sp.np.npMst.test.integration.arrangements.Startup", {
 
 		iStartMyApp: function (oOptionsParameter) {
 			var oOptions = oOptionsParameter || {};
@@ -14,7 +14,7 @@ sap.ui.define([
 			// start the app UI component
 			this.iStartMyUIComponent({
 				componentConfig: {
-					name: "np.npMst",
+					name: "sp.np.npMst",
 					async: true
 				},
 				hash: oOptions.hash,

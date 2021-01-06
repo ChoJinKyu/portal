@@ -67,7 +67,7 @@ sap.ui.define([
     ) {
         "use strict";
         var that;
-        return BaseController.extend("np.npMst.controller.mainList", {
+        return BaseController.extend("sp.np.npMst.controller.mainList", {
             //dateFormatter: DateFormatter,
             onInit: function () {
                 console.log("MainList Init!!!");

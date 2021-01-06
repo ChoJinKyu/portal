@@ -10,7 +10,7 @@ sap.ui.define([
     // shortcut for sap.m.URLHelper
 	var URLHelper = mobileLibrary.URLHelper;
 
-	return BaseController.extend("np.npMst.controller.App", {
+	return BaseController.extend("sp.np.npMst.controller.App", {
 
         onInit : function () {
             var oMultilingual = new Multilingual();
@@ -118,7 +118,7 @@ sap.ui.define([
 			// to prevent the view being temporarily shown aside the next view (during the transition to the next route)
 			// if the views for both routes do not match semantically
 			if (this.currentRouteName === "mainPage") { // last viewed route was master
-				var oMainListView = this.oRouter.getView("np.npMst.view.MainList");
+				var oMainListView = this.oRouter.getView("sp.np.npMst.view.MainList");
                 this.getView().byId("fcl").removeBeginColumnPage(oMainListView);
                 
             }

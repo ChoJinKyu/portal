@@ -1,4 +1,4 @@
-<mvc:View controllerName="np.npMst.controller.MainList" 
+<mvc:View controllerName="sp.np.npMst.controller.MainList" 
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 

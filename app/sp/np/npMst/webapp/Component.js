@@ -11,7 +11,7 @@ sap.ui.define([
 
     var LayoutType = library.LayoutType;
 
-	return UIComponent.extend("np.npMst.Component", {
+	return UIComponent.extend("sp.np.npMst.Component", {
 
 		metadata : {
 			manifest: "json"
