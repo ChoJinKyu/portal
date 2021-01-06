@@ -68,7 +68,7 @@ sap.ui.define([
                 };
 
                 // var oModel = new JSONModel(temp.list);
-                this.getView().setModel( new JSONModel(temp.list), "list");
+                this.getView().setModel( new JSONModel(temp) );
                 this.getView().setModel( new JSONModel(temp.propInfo), "propInfo");
 
                 var that = this,

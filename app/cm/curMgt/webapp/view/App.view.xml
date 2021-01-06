@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="cm.currencyMgt.controller.App"
+	controllerName="cm.curMgt.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"

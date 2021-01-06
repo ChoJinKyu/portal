@@ -190,6 +190,20 @@ sap.ui.define([
                 "ncl_amount": "",
                 "equity_capital": ""                				
 			}, "/SupplierFin");
+        },
+        
+        onMidTable2AddButtonPress: function(){
+			var oTable = this.byId("salTable"),
+				oDetailsModel = this.getModel("SupplierSal");
+			oDetailsModel.addRecord({
+				"tenant_id": this._sTenantId,
+				"sourcing_supplier_nickname": this._sSsn,
+				"txn_year": "",
+				"customer_english_name": "",
+                "customer_local_name": "",
+                "annual_txn_amount": "",
+                "sales_weight": ""                				
+			}, "/SupplierSal");
 		},
 
 		onMidTableDeleteButtonPress: function(){
@@ -199,6 +213,22 @@ sap.ui.define([
 				aIndices = [];
 			aItems.forEach(function(oItem){
 				aIndices.push(oModel.getProperty("/SupplierFin").indexOf(oItem.getBindingContext("SupplierFin").getObject()));
+			});
+			aIndices = aIndices.sort(function(a, b){return b-a;});
+			aIndices.forEach(function(nIndex){
+				//oModel.removeRecord(nIndex);
+				oModel.markRemoved(nIndex);
+			});
+			oTable.removeSelections(true);
+        },
+        
+        onMidTable2DeleteButtonPress: function(){
+			var oTable = this.byId("salTable"),
+				oModel = this.getModel("SupplierSal"),
+				aItems = oTable.getSelectedItems(),
+				aIndices = [];
+			aItems.forEach(function(oItem){
+				aIndices.push(oModel.getProperty("/SupplierSal").indexOf(oItem.getBindingContext("SupplierSal").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
@@ -216,10 +246,11 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("SupplierGen"),
                 oDetailsModel = this.getModel("SupplierFin"),
+                oDetailsModel2 = this.getModel("SupplierSal"),
                 that = this;
 
             if (this._sTenantId !== "new"){
-                if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+                if(!oMasterModel.isChanged() && !oDetailsModel.isChanged() && !oDetailsModel2.isChanged()) {
                     MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                     return;
                 }
@@ -227,6 +258,8 @@ sap.ui.define([
                 
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("finTable")) !== true) return;
+            if(this.validator.validate(this.byId("salTable")) !== true) return;
+
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -236,9 +269,10 @@ sap.ui.define([
 						oView.setBusy(true);
 						oTransactionManager.submit({						
 							success: function(ok){
-								that._toShowMode();
+								// that._toShowMode();
                                 oView.setBusy(false);
-                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                // that._fnMasterSearch();
 								MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 							}
 						});
@@ -290,6 +324,12 @@ sap.ui.define([
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
+        
+        _fnMasterSearch : function(){
+            var oBeginColumnPage = this.getView().getParent().getParent().getBeginColumnPages()[0];
+            var oSearchBtn = oBeginColumnPage.byId('pageSearchButton');
+            oSearchBtn.firePress();
+        },
 
 		_onMasterDataChanged: function(oEvent){
 			// if(this.getModel("addSupplierView").getProperty("/isAddedMode") == true){
@@ -315,8 +355,9 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
-			this._sSsn = oArgs.ssn;
-
+            this._sSsn = oArgs.ssn;
+            this._sMode = oArgs.mode;            
+            
 			// if(oArgs.tenantId == "new" && oArgs.uomCode == "code"){
 			// 	//It comes Add button pressed from the before page.
 			// 	this.getModel("addSupplierView").setProperty("/isAddedMode", true);
@@ -387,7 +428,11 @@ sap.ui.define([
                 }
             });
 
-            this._toEditMode();
+            if(oArgs.mode == "edit"){
+                this._toEditMode();
+            } else {
+                this._toShowMode();
+            }
                 
             oTransactionManager.setServiceModel(this.getModel());
             
@@ -424,11 +469,15 @@ sap.ui.define([
 			// this.byId("pageNavBackButton").setEnabled(FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
-			this.byId("midTableDeleteButton").setEnabled(!FALSE);
+            this.byId("midTableDeleteButton").setEnabled(!FALSE);
+            this.byId("midTable2AddButton").setEnabled(!FALSE);
+			this.byId("midTable2DeleteButton").setEnabled(!FALSE);
 			// this.byId("midTableSearchField").setEnabled(FALSE);
 			//this.byId("midTableApplyFilterButton").setEnabled(FALSE);
-			this.byId("finTable").setMode(sap.m.ListMode.SingleSelectLeft);
-			this._bindMidTable(this.oEditableTemplate, "Edit");
+            this.byId("finTable").setMode(sap.m.ListMode.SingleSelectLeft);
+            this.byId("salTable").setMode(sap.m.ListMode.SingleSelectLeft);
+            this._bindMidTable(this.oEditableTemplate, "Edit");
+            this._bindMidTable2(this.oEditableTemplate2, "Edit");
 		},
 
 		_toShowMode: function(){
@@ -441,11 +490,15 @@ sap.ui.define([
 			// this.byId("pageNavBackButton").setEnabled(TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
-			this.byId("midTableDeleteButton").setEnabled(!TRUE);
+            this.byId("midTableDeleteButton").setEnabled(!TRUE);
+            this.byId("midTable2AddButton").setEnabled(!TRUE);
+			this.byId("midTable2DeleteButton").setEnabled(!TRUE);
 			// this.byId("midTableSearchField").setEnabled(TRUE);
 			//this.byId("midTableApplyFilterButton").setEnabled(TRUE);
-			this.byId("finTable").setMode(sap.m.ListMode.None);
-			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+            this.byId("finTable").setMode(sap.m.ListMode.None);
+            this.byId("salTable").setMode(sap.m.ListMode.None);
+            this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+            this._bindMidTable2(this.oReadOnlyTemplate2, "Navigation");
 		},
 
 		_initTableTemplates: function(){
@@ -489,87 +542,224 @@ sap.ui.define([
 					})
 				],
 				type: sap.m.ListType.Inactive
+            });
+            
+            this.oReadOnlyTemplate2 = new ColumnListItem({
+				cells: [
+					new Text({
+						text: "{SupplierSal>_row_state_}"
+					}), 
+					new Text({
+						text: "{SupplierSal>txn_year}"
+                    }),
+                    new Text({
+						text: "{SupplierSal>customer_english_name}"
+                    }),
+                    new Text({
+						text: "{SupplierSal>customer_local_name}"
+                    }),
+                    new Text({
+						text: "{SupplierSal>annual_txn_amount}"
+                    }),
+                    new Text({
+						text: "{SupplierSal>sales_weight}"
+                    })
+				],
+				type: sap.m.ListType.Inactive
 			});
 
             var oLanguageCode = new ComboBox({
                     selectedKey: "{SupplierFin>language_code}",
                     required : true
                 });
-                oLanguageCode.bindItems({
-                    path: 'util>/Code',
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2600'),                        
-                        new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
-                    ],
-                    template: new Item({
-                        key: "{util>code}",
-                        text: "{util>code_description}"
-                    })
-                });
+                // oLanguageCode.bindItems({
+                //     path: 'util>/Code',
+                //     filters: [
+                //         new Filter("tenant_id", FilterOperator.EQ, 'L2600'),                        
+                //         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
+                //     ],
+                //     template: new Item({
+                //         key: "{util>code}",
+                //         text: "{util>code_name}"
+                //     })
+                // });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
                         icon:{ path:'SupplierFin>_row_state_', formatter: this.formattericon
                                 }                              
                     }),
-                    oLanguageCode,
+                    // oLanguageCode,
                     new Input({
                         value: {
-                            path: 'SupplierFin>uom_name',
+                            path: 'SupplierFin>fiscal_year',
                             type: 'sap.ui.model.type.String',
                             constraints: {
                                 maxLength: 30
                             }
                         },
                         required : true
-                    }), 
-					// new Input({
-                    //     value: {
-                    //         path: 'SupplierFin>commercial_uom_code',
-                    //         type: 'sap.ui.model.type.String',
-                    //         constraints: {
-                    //             maxLength: 3
-                    //         }
-                    //     },
-                    //     required : true
-                    // }),
-                    // new Input({
-                    //     value: {
-                    //         path: 'SupplierFin>commercial_uom_name',
-                    //         type: 'sap.ui.model.type.String',
-                    //         constraints: {
-                    //             maxLength: 30
-                    //         }
-                    //     }						
-					// }), 
-					// new Input({
-                    //     value: {
-                    //         path: 'SupplierFin>technical_uom_code',
-                    //         type: 'sap.ui.model.type.String',
-                    //         constraints: {
-                    //             maxLength: 6
-                    //         }
-                    //     },
-                    //     required : true                        
-                    // }),                     
-					// new Input({
-                    //     value: {
-                    //         path: 'SupplierFin>technical_uom_name',
-                    //         type: 'sap.ui.model.type.String',
-                    //         constraints: {
-                    //             maxLength: 30
-                    //         }
-                    //     }						
-                    // }),
+                    }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>uom_desc',
+                            path: 'SupplierFin>fiscal_quarter',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 50
+                                maxLength: 30
                             }
-                        }						
-					})
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>sales_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>opincom_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>asset_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>curasset_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>nca_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>liabilities_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>curliablities_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>ncl_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierFin>equity_capital',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    })
+				]
+            });
+
+            this.oEditableTemplate2 = new ColumnListItem({
+				cells: [
+					new ObjectStatus({
+                        icon:{ path:'SupplierSal>_row_state_', formatter: this.formattericon
+                                }                              
+                    }),
+                    // oLanguageCode,
+                    new Input({
+                        value: {
+                            path: 'SupplierSal>txn_year',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierSal>customer_english_name',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierSal>customer_local_name',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierSal>annual_txn_amount',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    }),
+                    new Input({
+                        value: {
+                            path: 'SupplierSal>sales_weight',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        },
+                        required : true
+                    })
 				]
             });
 		},
@@ -577,6 +767,15 @@ sap.ui.define([
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("finTable").bindItems({
 				path: "SupplierFin>/SupplierFin",
+				template: oTemplate
+				// templateShareable: true,
+				// key: ""
+			}).setKeyboardMode(sKeyboardMode);
+        },
+
+        _bindMidTable2: function(oTemplate, sKeyboardMode){
+			this.byId("salTable").bindItems({
+				path: "SupplierSal>/SupplierSal",
 				template: oTemplate
 				// templateShareable: true,
 				// key: ""

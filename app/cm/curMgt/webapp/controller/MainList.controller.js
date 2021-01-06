@@ -21,7 +21,7 @@ sap.ui.define([
      MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Multilingual) {
 	"use strict";
 
-	return BaseController.extend("cm.currencyMgt.controller.MainList", {
+	return BaseController.extend("cm.curMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
 
@@ -248,7 +248,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "currencyMgt",
+				componentName: "curMgt",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();

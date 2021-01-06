@@ -4,7 +4,7 @@ sap.ui.define([
 ], function (BaseController, Multilingual) {
 	"use strict";
 
-	return BaseController.extend("cm.currencyMgt.controller.App", {
+	return BaseController.extend("cm.curMgt.controller.App", {
 
 		onInit : function () {
             var oMultilingual = new Multilingual();

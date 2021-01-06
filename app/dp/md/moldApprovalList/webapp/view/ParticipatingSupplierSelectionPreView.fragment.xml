@@ -445,6 +445,7 @@
                                 <MultiComboBox
                                     selectionChange="handleSelectionChangeReferer"
                                     selectionFinish="handleSelectionFinishReferer"
+                                    selectedKeys="{refererPreview>/refArr}"
                                     width="100%"
                                     items="{ path: '/RefererSearch',
                                                 filters: [

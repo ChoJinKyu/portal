@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="cm.currencyMgt.controller.MidObjectNotFound"
+	controllerName="cm.curMgt.controller.MidObjectNotFound"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
 

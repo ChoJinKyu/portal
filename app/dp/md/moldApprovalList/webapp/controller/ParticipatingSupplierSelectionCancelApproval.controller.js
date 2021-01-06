@@ -78,8 +78,7 @@ sap.ui.define([
             console.log(" this.approval_number "  ,  this.approval_number);
             console.log(" Cancellation "  ,  this.getView().getModel('Cancellation'));
             var schFilter = [];
-            var schFilter2 = [];
-   
+
             if (this.approval_number == "New") {
                  this._participatingEditFragment();
 
@@ -88,7 +87,7 @@ sap.ui.define([
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ParticipatingSupplier >>>>>>", oData);
+                    console.log("ParticipatingSupplier New >>>>>>", oData);
                 });
 
             } else {
@@ -98,7 +97,7 @@ sap.ui.define([
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ParticipatingSupplier >>>>>>", oData);
+                    console.log("ParticipatingSupplier Edit >>>>>>", oData);
                 });
   
             }  
@@ -345,11 +344,13 @@ sap.ui.define([
                         })
                     }
 
+                   var state = that.approval_number == "New"?"C":"U";
+
                     that.approvalDetails_data.push({
                         tenant_id: that.tenant_id
                         , approval_number: that.approval_number
                         , mold_id: item.mold_id
-                        , _row_state_: item._row_state_ == undefined ? "U" : item._row_state_
+                        , _row_state_: state 
                     });
                     that.moldMaster_data.push({
                         tenant_id: that.tenant_id
