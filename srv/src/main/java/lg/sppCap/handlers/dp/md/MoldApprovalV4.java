@@ -393,6 +393,10 @@ public class MoldApprovalV4 implements EventHandler {
                             statement.executeUpdate();
                         }
                         
+                    }else if(row.getApprovalTypeCode().equals("A")){ // 취소 품의 
+                         String sql4="DELETE FROM DP_MD_QUOTATION WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                            statement = conn.prepareStatement(sql4);
+                            statement.executeUpdate();
                     }
 
                     
