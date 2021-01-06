@@ -38,17 +38,12 @@ sap.ui.define([
                 sRfaNo = oFilterModelData.rfa_no, 
                 oDateValue = oFilterModelData.dateValue,
                 oSecondDateValue = oFilterModelData.secondDateValue;
-            /*
-            // RFA No가 있는 경우
+            
+            //RFA No가 있는 경우
             if( sRfaNo ) {
-                aFilters.push(new Filter("approval_number", FilterOperator.EQ, sRfaNo));
+                aFilters.push(new Filter("project_code", FilterOperator.Contains, sRfaNo));
             }
 
-            // RFA No가 있는 경우
-            if( oDateValue ) {
-                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, oDateValue, oSecondDateValue));
-            }
-            */
             this._getProjectMgtList(aFilters);
         }
 
@@ -153,7 +148,7 @@ sap.ui.define([
             let oModel = this.getModel();
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
-
+            debugger;
             oModel.read("/ProjectView", {
                 filters : filtersParam,
                 success : function(data){
@@ -242,7 +237,7 @@ sap.ui.define([
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
-					name: "dp.TargetPriceList.view.ExcludeMaterialCost",
+					name: "dp.tc.projectMgt.view.ExcludeMaterialCost",
 					controller: this
 				}).then(function (oDialog) {
 				    oView.addDependent(oDialog);

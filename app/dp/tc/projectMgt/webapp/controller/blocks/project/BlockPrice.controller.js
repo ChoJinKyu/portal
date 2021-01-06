@@ -40,7 +40,8 @@ sap.ui.define([
             //events
             var aEventsData = this._reCompositData(oEvents, "develope_event_code", "start_date");
             this.setModel(new JSONModel(aEventsData), "eventsModel");
-            this._factoryTableColumns("tblEvents", "Center");
+            this._factoryTableColumns("tblEvents", "Center", true);
+            this._factoryTableColumns("tblEvents_edit", "Center", false);
 
 
             //판가/물동/원가
@@ -57,12 +58,14 @@ sap.ui.define([
                 aPriceData.datas.push(this._addRowToPivotObj(oSgna, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "판관비"}));
 
                 this.setModel(new JSONModel(aPriceData), "priceModel");
-                this._factoryTableColumns("tblPrice", "End");
+                this._factoryTableColumns("tblPrice", "End", true);
+                this._factoryTableColumns("tblPrice_edit", "Center", false);
             }
             //환율
             var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : "구분", "data" : "currency_code"});
             this.setModel(new JSONModel(aExchange), "exchangeModel");
-            this._factoryTableColumns("tblExchange", "End");
+            this._factoryTableColumns("tblExchange", "End", true);
+            this._factoryTableColumns("tblExchange_edit", "Center", false);
             
         }
 
@@ -121,7 +124,7 @@ sap.ui.define([
          * {columns:[], data:[]} 구조의 모델정보를 바탕으로 table aggregation binding 한다.
          * @param {string} biding 하고자 하는 table name
          */
-        , _factoryTableColumns: function(sTableName, sHAlign) {
+        , _factoryTableColumns: function(sTableName, sHAlign, bReadMode) {
             var oTable = this.getView().byId(sTableName);
             var sModelName = oTable.getBindingInfo("items").model;
             var oModel  = oTable.getModel(sModelName);
@@ -141,10 +144,20 @@ sap.ui.define([
                 return new sap.m.ColumnListItem({
                     cells : aCols.map(function (column) {
                                 console.log(column);
-                                return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
+                                if(bReadMode) {
+                                    return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
+                                } else {
+                                    //return new sap.m.Input({value : "{"+ sModelName +">" + column.name + "}"})
+                                    return new sap.m.Input({value: {
+                                        path: sModelName + ">" + column.name
+                                    }, textAlign: 'End'});
+                                }
+                                
                             })
                 });
             });
+
+            oTable.bindProperty("visible", {path : "detailModel>/mode/" + (bReadMode ? "readMode" : "editMode")});
 
         }
 

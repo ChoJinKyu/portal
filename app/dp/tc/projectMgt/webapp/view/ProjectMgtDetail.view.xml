@@ -50,9 +50,9 @@
         <OverflowToolbar>
             <ToolbarSpacer />
             <HBox>
-                <Button type="Transparent" text="수정" press=".onEditPress"/>
-                <Button type="Transparent" text="취소" press=".onReadPress"/>
-                <Button type="Emphasized" text="저장"  press=".onSavePress"/>
+                <Button type="Transparent" text="수정" press=".onEditPress" class="sapUiSmallMarginEnd" enabled="{detailModel>/mode/readMode}"/>
+                <Button type="Transparent" text="취소" press=".onReadPress" class="sapUiSmallMarginEnd" enabled="{detailModel>/mode/editMode}"/>
+                <Button type="Emphasized" text="저장"  press=".onSavePress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
             </HBox>
         </OverflowToolbar>
     </footer>
