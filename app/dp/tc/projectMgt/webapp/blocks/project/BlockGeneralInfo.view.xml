@@ -1,0 +1,281 @@
+<mvc:View controllerName="dp.tc.projectMgt.controller.blocks.project.BlockGeneralInfo"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:layout="sap.ui.layout"
+  xmlns:tnt="sap.tnt"
+  class="sapUiSizeCompact"
+  displayBlock="true"
+  height="100%">
+  <VBox>
+    <form:SimpleForm 
+            editable="true" 
+
+            layout="ResponsiveGridLayout">
+        <form:content>
+            <!--form line 1-->
+            <Label text="Project Code">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="Project Name">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="제품군">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/product_group_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="Event">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_develope_event_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <!--form line 2-->
+            <Label text="대표 Model Code">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/model_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="대표 Model Name">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/model_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="Biz Type">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="견적 Project Code">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/quotation_project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <!--form line 3-->
+            <Label text="Project Status">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_status_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="Project 생성일">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{
+                            path: 'detailModel>/project_create_date',
+                            formatter: '.dateFormatter.toUTCDateString'
+                        }">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="자사 생산지">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/customer_local_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>            
+
+            <!--form line 4-->
+            <Label text="Project Leader">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_leader_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="개발구매">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/buyer_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="마케팅">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/marketing_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="기획">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/planning_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <!--form line 5-->
+            <Label text="최종 고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Text text="{=${detailModel>/last_customer_name} || ''}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="최종 고객사 모델명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/customer_model_desc}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="수율(재료비)">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{=${detailModel>/mcst_yield_rate} || 0}%">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="BOM 등록여부">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+        </form:content>
+    </form:SimpleForm>
+</VBox>
+
+<VBox>
+    <Table id="tblSimilModel"
+            growing="true"
+            growingThreshold="20"
+            class="sapFDynamicPageAlignContent"
+            mode="None"
+            width="auto"
+            items="{detailModel>/similar_model/results}"
+            >
+        <headerToolbar>
+            <OverflowToolbar>
+            <Label text="유사 모델"/>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="20em" >
+                <Text text="Model Code" />
+            </Column>
+            <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                <Text text="Model Name" />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{similModel>model_code}" />
+                    <Text text="{similModel>model_name}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</VBox>
+</mvc:View>

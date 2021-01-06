@@ -1,0 +1,88 @@
+<mvc:View controllerName="dp.tc.projectMgt.controller.blocks.project.BlockPrice" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout"
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
+    xmlns:t="sap.ui.table"
+    xmlns:tnt="sap.tnt"
+    xmlns:uxap="sap.uxap"
+    height="100%">
+<!--개발일정-->
+<VBox>
+   <Table id="tblEvents"
+            growing="true"
+            growingThreshold="20"
+            class="sapFDynamicPageAlignContent"
+            mode="None"
+            width="auto"
+            items="{eventsModel>/}"
+            >
+        <headerToolbar>
+            <OverflowToolbar>
+            <Label text="개발일정"/>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells></cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</VBox>
+
+<!--판가/물동/원가-->
+<VBox>
+   <Table id="tblPrice"
+            class="sapFDynamicPageAlignContent"
+            mode="None"
+            width="100%"
+            items="{priceModel>/}"
+            >
+        <headerToolbar>
+            <OverflowToolbar>
+            <Label text="판가/물동/원가"/>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</VBox>
+
+<!--환율-->
+<VBox>
+   <Table id="tblExchange"
+            growing="true"
+            growingThreshold="20"
+            class="sapFDynamicPageAlignContent"
+            mode="None"
+            width="auto"
+            items="{exchangeModel>/}"
+            >
+        <headerToolbar>
+            <OverflowToolbar>
+            <Label text="환율"/>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</VBox>
+
+</mvc:View>
