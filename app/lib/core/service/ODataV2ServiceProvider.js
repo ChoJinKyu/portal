@@ -45,15 +45,6 @@ sap.ui.define([
                     refreshAfterChange: false,
                     useBatch: true
                 }, sParams || {}));
-        },
-
-            
-        getCommonService: function(){
-            return this.getService("cm.util.CommonService");
-        },
-        
-        getOrgService: function(){
-            return this.getService("cm.util.OrgService");
         }
 
     }

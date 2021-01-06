@@ -17,8 +17,7 @@ sap.ui.define([
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
                 textField: { type: "string", group: "Misc", defaultValue: "code_name" },
                 additionalTextField: { type: "string", group: "Misc" },
-                useEmpty: { type: "boolean", group: "Misc", defaultValue: false },
-                emptyKey: { type: "string", group: "Misc", defaultValue: "" },
+                useEmpty: { type: "boolean", group: "Misc", defaultValue: true },
                 emptyText: { type: "string", group: "Misc", defaultValue: "" }
             },
             events: {
@@ -53,12 +52,7 @@ sap.ui.define([
                     success: function(oData){
                         var aRecords = deepClone(oData.results);
                         if(this.getProperty("useEmpty") == true) {
-                            if(aRecords && aRecords.splice){
-                                var oEmpty = {};
-                                oEmpty[this.getProperty("keyField")] = this.getProperty("emptyKey");
-                                oEmpty[this.getProperty("textField")] = this.getProperty("emptyText");
-                                aRecords.splice(0, 0, oEmpty);
-                            }
+                            this.setPlaceholder(this.getProperty("emptyText") || "All");
                         }
                         this.getModel().setData(aRecords, false);
                         this.fireEvent("complete");
@@ -78,30 +72,6 @@ sap.ui.define([
                 // oBindingInfo.filters = oBindingInfo.filters || [];
             }
             return oBindingInfo;
-        },
-
-        read: function(sPath, oParameters){
-            var handleSuccess = oParameters.success;
-            if(!this.oServiceModel)
-                this.oServiceModel = ODataV2ServiceProvider.getCommonService();
-            this.oServiceModel.read(sPath, jQuery.extend(oParameters, {
-                success: function(oData){
-                    var aRecords = deepClone(oData.results);
-                    if(this.getProperty("useEmpty") == true) {
-                        if(aRecords && aRecords.splice){
-                            var oEmpty = {};
-                            oEmpty[this.keyField] = this.getProperty("emptyKey");
-                            oEmpty[this.textField] = this.getProperty("emptyText");
-                            aRecords.splice(0, 0, oEmpty);
-                        }
-                    }
-                    this.getModel().setSizeLimit(aRecords.length || 100);
-                    this.getModel().setData(aRecords, false);
-                    if(handleSuccess) 
-                        handleSuccess.apply(this, arguments);
-                    this.fireEvent("complete");
-                }.bind(this)
-            }));
         }
         
     });
