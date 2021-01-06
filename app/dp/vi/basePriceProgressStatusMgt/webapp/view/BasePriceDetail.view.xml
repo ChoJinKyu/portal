@@ -29,7 +29,7 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap">
                 <!-- Requester 시작 -->
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <!-- <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/> -->
                     <ObjectStatus title="Approval Number" text="{detailModel>/approval_number}"/>
                     <!-- <ObjectStatus title="{I18N>/REQUESTER}" text="{detailModel>/update_user_id}"/> -->
@@ -40,7 +40,7 @@
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
-				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<!-- <Label text="{I18N>/STATUS} :"/> -->
 					<Label text="Status :"/>
                     <ObjectStatus class="sapMObjectStatusLarge" text="Draft" state="Error" />
@@ -48,7 +48,7 @@
                 <!-- Status 끝 -->
 
                 <!-- Process 시작 -->
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<!-- <Label text="{I18N>/PROCESS} : "/> -->
 					<Label text="Process : "/>
                     <HBox>

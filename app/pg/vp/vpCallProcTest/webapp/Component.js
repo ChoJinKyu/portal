@@ -1,5 +1,5 @@
  sap.ui.define([
-    "ext/lib/UIComponent"
+    "sap/ui/core/UIComponent"
 ], function (UIComponent) {
 	"use strict";
 

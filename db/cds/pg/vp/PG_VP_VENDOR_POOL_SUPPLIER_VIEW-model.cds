@@ -16,8 +16,8 @@ entity Vp_Vendor_Pool_Supplier_View {
     supplier_company_name: String(240) @title: '공급업체회사명';  
     inactive_status_code: String(30) @title: '공급업체상태코드';    
     supeval_control_flag: Boolean   @title: '공급업체평가통제여부'; 
-    supeval_control_start_date: String(8)   @title: '공급업체평가통제시작일자'; 
-    supeval_control_end_date: String(8)   @title: '공급업체평가통제종료일자'; 
+    supeval_control_start_date: Date   @title: '공급업체평가통제시작일자'; 
+    supeval_control_end_date: Date   @title: '공급업체평가통제종료일자'; 
     supplier_rm_control_flag: Boolean   @title: '공급업체위험관리제어여부'; 
     supplier_base_portion_rate: Decimal   @title: '공급업체기준분배비율'; 
     vendor_pool_mapping_use_flag: Boolean   @title: '협력사풀매핑사용여부';

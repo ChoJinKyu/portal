@@ -327,11 +327,12 @@ sap.ui.define([
         length = 0,
         that = this;
 
-    //   // Validation
+      // Validation
     //   if(!oModel.isChanged()) {
     //     MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
     //     return;
     //   }
+
       // Master
       if (!Validator.isValid(this.byId("pageSectionMainForm"))) return ;
       // Detail
@@ -347,12 +348,13 @@ sap.ui.define([
         return r;
       });
 
+      // 다국어를 등록하세요.
       if (length <= 0) {
-          MessageBox.alert("다국어를 등록하세요.");
+          MessageBox.alert(this.getModel("I18N").getText("/NCM02003", 3, this.getModel("I18N").getText("/MULTILINGUAL")));
           return;
       }
 
-      MessageBox.confirm("Are you sure ?", {
+      MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
         title: "Comfirmation",
         initialFocus: sap.m.MessageBox.Action.CANCEL,
         onClose: function (sButton) {
@@ -362,7 +364,7 @@ sap.ui.define([
               success: function (ok) {
                 view.setBusy(false);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                MessageToast.show("Success to save.");
+                MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
               }
             });
           };

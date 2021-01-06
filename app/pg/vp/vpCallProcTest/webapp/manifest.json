@@ -63,7 +63,7 @@
             "id": "app"
         },
         "dependencies": {
-            "minUI5Version": "1.60.1",
+            "minUI5Version": "1.66.0",
             "libs": {
                 "sap.ui.core": {},
                 "sap.m": {},
@@ -118,6 +118,9 @@
                     "uri": "css/style.css"
                 }
             ]
+        },
+        "resourceRoots": {
+            "ext.lib": "../../../../lib"
         },
         "routing": {
             "config": {

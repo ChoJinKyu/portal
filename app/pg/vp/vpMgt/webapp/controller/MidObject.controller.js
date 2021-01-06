@@ -41,7 +41,7 @@ sap.ui.define([
     var pTenantId  = "";
     var pOrg_code  = "";
     var pOperation_unit_code = "";
-    
+    var pTempType = "";
     var oTransactionManager;
     var that;
 	return BaseController.extend("vp.vpMgt.controller.MidObject", {
@@ -71,13 +71,13 @@ sap.ui.define([
 			this.setModel(oViewModel, "midObjectView");
             
             that = this;
-            // this.setModel(new ManagedModel(), "vpDetailView");
+            // this.setModel(new ManagedModel(), "VpDetailLngView");
             // this.setModel(new ManagedListModel(), "VpSupplierDtlView");
 			// this.setModel(new ManagedListModel(), "vpMaterialDtlView");
             // this.setModel(new ManagedListModel(), "vpManagerDtlView");
 
             // oTransactionManager = new TransactionManager();
-			// oTransactionManager.addDataModel(this.getModel("vpDetailView"));
+			// oTransactionManager.addDataModel(this.getModel("VpDetailLngView"));
             // oTransactionManager.addDataModel(this.getModel("VpSupplierDtlView"));
             // oTransactionManager.addDataModel(this.getModel("vpMaterialDtlView"));
             // oTransactionManager.addDataModel(this.getModel("vpManagerDtlView"));
@@ -180,13 +180,13 @@ sap.ui.define([
             // this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel("mapping"));
             //     this.getView().setBusy(true);
             //     this.treeListModel
-            //         .read("/VpTreeView", {
+            //         .read("/vpTreeLngView", {
             //             filters: predicates
             //         })
             //         // 성공시
             //         .then((function (jNodes) {
             //             this.getView().setModel(new JSONModel({
-            //                 "VpTreeView": {
+            //                 "vpTreeLngView": {
             //                     "nodes": jNodes
             //                 }
             //             }), "tree");
@@ -210,6 +210,7 @@ sap.ui.define([
             var p_org_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[2].mProperties.text            
             var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[3].mProperties.text
             var p_tenat_id = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[4].mProperties.text
+            var p_temp_type = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[5].mProperties.text
 
             // var rowData = oEvent.getParameter('rowBindingContext').getObject();
             var LayoutType = library.LayoutType;
@@ -218,6 +219,7 @@ sap.ui.define([
             pTenantId = p_tenat_id;
             pOrg_code  = p_org_code;
             pOperation_unit_code = p_operation_unit_code;
+            pTempType = p_temp_type;
 
             // alert( "pVendorPool   : " + pVendorPool + 
             //        "pTenantId     : " + pTenantId);
@@ -240,7 +242,9 @@ sap.ui.define([
 				tenantId: pTenantId,
                 vendorPool: pVendorPool,
                 orgCode: pOrg_code,
-                operationUnitCode: pOperation_unit_code
+                operationUnitCode: pOperation_unit_code,
+                temptype : pTempType,
+                target : "NEXT"
             });    
 
        
@@ -297,12 +301,14 @@ sap.ui.define([
 			this._sVendorPool = oArgs.vendorPool;
             this._sOrgCode = oArgs.orgCode;
             this._sOperationUnitCode = oArgs.operationUnitCode;
+            this._sTempType = oArgs.temptype;
             
 
-            alert("_sTenantId : " + this._sTenantId + 
-                  "_sVendorPool : " + this._sVendorPool + 
-                  "_sOrgCode : " + this._sOrgCode + 
-                  "_sOperationUnitCode : " + this._sOperationUnitCode );
+            // alert("_sTenantId : " + this._sTenantId + 
+            //       "_sVendorPool : " + this._sVendorPool + 
+            //       "_sOrgCode : " + this._sOrgCode + 
+            //       "_sOperationUnitCode : " + this._sOperationUnitCode +
+            //       "_sTempType : " + this._sTempType );
 
 
             var predicates = [];
@@ -333,7 +339,9 @@ sap.ui.define([
 				tenantId: this._sTenantId,
                 vendorPool: this._sVendorPool,
                 orgCode: this._sOrgCode,
-                operationUnitCode: this._sOperationUnitCode
+                operationUnitCode: this._sOperationUnitCode,
+                temptype : this._sTempType,
+                target : "NEXT"
             });                  
 			// if(oArgs.tenantId == "new" && oArgs.moldId == "code"){
 			// 	//It comes Add button pressed from the before page.
@@ -371,13 +379,13 @@ sap.ui.define([
             this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel("mapping"));
                 this.getView().setBusy(true);
                 this.treeListModel
-                    .read("/VpTreeView", {
+                    .read("/vpTreeLngView", {
                         filters: aFilter
                     })
                     // 성공시
                     .then((function (jNodes) { console.log("jNodes : " + jNodes);
                         this.getView().setModel(new JSONModel({
-                            "VpTreeView": {
+                            "vpTreeLngView": {
                                 "nodes": jNodes
                             }
                         }), "tree");

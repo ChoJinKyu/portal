@@ -39,6 +39,7 @@
                             </Label>
                             <ComboBox   
                                 id="search_tenant"
+                                placeholder="All"
                                 showSecondaryValues= "true"
                                 selectionChange=".onTenantChange"
                                 selectedKey="{contModel>/tenant_id}"
@@ -79,6 +80,7 @@
                             </ComboBox> -->
                             <ComboBox   
                                 id="search_chain"
+                                placeholder="All"
                                 showSecondaryValues= "true"/>
                             <layoutData>
                                 <layout:GridData

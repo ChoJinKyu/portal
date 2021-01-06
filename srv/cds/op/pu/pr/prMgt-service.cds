@@ -8,7 +8,7 @@ using {op.Pu_Pr_Template_Lng as prTLng} from '../../../../../db/cds/op/pu/pr/OP_
 using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
-@path : '/op.pu.PrMgtService'
+@path : '/op.pu.prMgtService'
 service PrMgtService {
     entity Pr_Mst as projection on op.Pu_Pr_Mst ;    
     entity Pr_Dtl as projection on op.Pu_Pr_Dtl;    

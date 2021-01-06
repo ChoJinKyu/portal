@@ -75,6 +75,7 @@ sap.ui.define([
                 }
                 if (!!this.byId("searchKeyword").getValue()) {
                     predicates.push(new Filter({
+                        path: 'keyword', 
                         filters: [
                             new Filter("menu_code", FilterOperator.Contains, this.byId("searchKeyword").getValue()),
                             new Filter("menu_name", FilterOperator.Contains, this.byId("searchKeyword").getValue())

@@ -20,7 +20,7 @@ sap.ui.define([
 
     var toggleButtonId = "";
 
-    return BaseController.extend("op.pu.PrMgt.controller.MainList", {
+    return BaseController.extend("op.pu.prMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
         validator: new Validator(),
@@ -146,7 +146,7 @@ sap.ui.define([
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
                     id: oView.getId(),
-                    name: "op.pu.PrMgt.view.TemplateSelection",
+                    name: "op.pu.prMgt.view.TemplateSelection",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);

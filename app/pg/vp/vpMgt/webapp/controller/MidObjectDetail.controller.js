@@ -22,7 +22,17 @@ sap.ui.define([
     var that;
 	return BaseController.extend("vp.vpMgt.controller.MidObjectDetail", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+
+        
+		formatter: (function(){
+			return {
+				toYesNo: function(oData){
+					return oData === true ? "YES" : "NO"
+				},
+			}
+        })(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -42,6 +52,7 @@ sap.ui.define([
                 });
             this.setModel(new ManagedModel(), "geninfo");
             this.setModel(new ManagedListModel(), "suplist");
+            this.setModel(new ext.lib.model.ManagedListModel(), "tmatlist");
 			this.setModel(new ManagedListModel(), "matlist");
             this.setModel(new ManagedListModel(), "manlist");
             this.setModel(new ManagedListModel(), "psuplist");                
@@ -50,13 +61,13 @@ sap.ui.define([
 			// this.setModel(oViewModel, "midObjectView");
             
             that = this;
-            // this.setModel(new ManagedModel(), "vpDetailView");
+            // this.setModel(new ManagedModel(), "VpDetailLngView");
             // this.setModel(new ManagedListModel(), "VpSupplierDtlView");
 			// this.setModel(new ManagedListModel(), "vpMaterialDtlView");
             // this.setModel(new ManagedListModel(), "vpManagerDtlView");
 
             // oTransactionManager = new TransactionManager();
-			// oTransactionManager.addDataModel(this.getModel("vpDetailView"));
+			// oTransactionManager.addDataModel(this.getModel("VpDetailLngView"));
             // oTransactionManager.addDataModel(this.getModel("VpSupplierDtlView"));
             // oTransactionManager.addDataModel(this.getModel("vpMaterialDtlView"));
             // oTransactionManager.addDataModel(this.getModel("vpManagerDtlView"));
@@ -256,35 +267,41 @@ sap.ui.define([
 			this._sVendorPool = oArgs.vendorPool;
             this._sOrgCode = oArgs.orgCode;
             this._sOperationUnitCode = oArgs.operationUnitCode;
+            this._sTempType = oArgs.temptype;
 
             var predicates = [];
             var predicates1 = [];
             var predicates2 = [];
+            var predicates3 = [];
             if (!!this._sTenantId) {
                     predicates.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
                     predicates1.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
                     predicates2.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
+                    predicates3.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
                 }
             if (!!this._sOrgCode) {
                     predicates.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
                     predicates1.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
                     predicates2.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
+                    predicates3.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
                 }
             if (!!this._sOperationUnitCode) {
-                    // predicates.push(new Filter("operation_unit_code", FilterOperator.EQ, this._sOperationUnitCode));
                     predicates1.push(new Filter("operation_unit_code", FilterOperator.EQ, this._sOperationUnitCode));
-                    predicates2.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
                 }         
             if (!!this._sVendorPool) {
                     predicates.push(new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool));
                     predicates1.push(new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool));
-                    predicates2.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
+                    predicates2.push(new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool));
+                    predicates3.push(new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool));
+                }  
+            if (!!this._sTempType) {
+                    predicates.push(new Filter("temp_type", FilterOperator.EQ, this._sTempType));
                 }  
 
             predicates.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
             this._generalInfo(predicates1);
             this._supplySearch(predicates);
-            this._metrialSearch(predicates);
+            this._metrialSearch(predicates3);
             this._managerSearch(predicates2);
         },
 
@@ -304,7 +321,7 @@ sap.ui.define([
             oFilter.push(new Filter("vendor_pool_code", FilterOperator.EQ, "VP201610280406"));
             oView.setBusy(true);
             // oModel.setTransactionModel(this.getModel("mapping"));
-			oModel.read("/VpDetailView", {
+			oModel.read("/VpDetailLngView", {
                 
 				filters: aFilter,
 				success: function(oData){
@@ -364,6 +381,7 @@ sap.ui.define([
 					oView.setBusy(false);
 				}
             });
+
         },
 
         _managerSearch: function(aFilter) {
