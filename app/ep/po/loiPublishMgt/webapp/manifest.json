@@ -111,8 +111,8 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "ep.po.loiPublishMgt.view",
-        "controlId": "fcl",
-				"transition": "slide",
+        "controlId": "app",
+        "controlAggregation": "pages",
         "bypassed": {
           "target": [
             "notFound"
@@ -122,17 +122,16 @@
       },
       "routes": [
           {
-              "pattern": ":layout:",
+              "pattern": "",
               "name": "mainPage",
               "target": [
                   "mainObject"
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiSelectionNumber}/{loiNumber}",
+              "pattern": "midObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiSelectionNumber}/{loiNumber}",
               "name": "midPage",
               "target": [
-                  "mainObject",
                   "midObject"
               ]
           }
@@ -140,11 +139,13 @@
       "targets": {
           "mainObject": {
               "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
+            "viewId": "mainPage",
+            "viewLevel": 1
           },
           "midObject": {
               "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
+          "viewId": "midPage",
+          "viewLevel": 2
           },
           "notFound": {
             "viewName": "NotFound",
