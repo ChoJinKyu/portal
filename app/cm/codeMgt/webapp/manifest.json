@@ -120,7 +120,7 @@
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
-                    "defaultCountMode": "Inline",
+                    "defaultCountMode": "allpages",
                     "refreshAfterChange": false,
                     "useBatch": false
                 }

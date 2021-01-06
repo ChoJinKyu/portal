@@ -19,8 +19,27 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "languages");
         },
         
-        onAfterRendering : function(){
+        onBeforeRendering : function(){
+            this._fnGetLanguage();
+        },
 
+        _fnGetLanguage : function(){
+            var oUtilModel = this.getModel("util");
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2100'));
+            aFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE'));
+
+            oUtilModel.read("/CodeDetails",{
+                filters : aFilters,
+                success : function(data){
+                    var aLang = data.results;
+                    var oViewModel = this.getModel("viewModel");
+                    oViewModel.setProperty("/languageList", aLang);
+                }.bind(this),
+                error : function(data){
+                    // oCodeMasterTable.setBusy(false);
+                }
+            });
         },
 
         _fnSetReadMode : function(){
@@ -102,6 +121,23 @@ sap.ui.define([
 
             var model = this.getModel('languages');
             model.setProperty("/CodeLanguages", []);
+
+            var aLanguages = oViewModel.getProperty("languageList");
+            aLanguages.forEach(function(item,i){
+                var oData = {
+                    code: "",
+                    code_name: "",
+                    group_code: "",
+                    language_cd: item.code,
+                    tenant_id: "",
+                    local_create_dtm: new Date(),
+                    local_update_dtm: new Date()
+                }
+                model.addRecord(oData, "/CodeLanguages", i);
+            })
+
+
+            /*
             // 기본 레코드
             var oData = {
                 code: "",
@@ -112,9 +148,7 @@ sap.ui.define([
                 local_create_dtm: new Date(),
                 local_update_dtm: new Date()
             }
-            model.addRecord(oData, "/CodeLanguages", 0);
-
-            /*
+            // model.addRecord(oData, "/CodeLanguages", 0);
             var aInitLangData = [
                 {
                     code: "",
