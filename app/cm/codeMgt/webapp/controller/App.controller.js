@@ -32,6 +32,7 @@ sap.ui.define([
                 this.getRouter().navTo("master", oNavParam);
             }
         },
+        
         /**
 		 * Convenience method for accessing the router.
 		 * @public
@@ -103,13 +104,6 @@ sap.ui.define([
 			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
 				oModel.setProperty("/layout", sLayout);
-            }
-
-            var sName = oEvent.getParameters().name;
-            console.log(sName)
-            if(sName === "master" || sName === "detail"){
-                var oFcl = this.byId("fcl");
-                //oFcl.removeAllBeginColumnPages();
             }
 		},
 

@@ -29,7 +29,6 @@ sap.ui.define([
                 oContModel.setProperty("/tenant_id", sTenantId);
 
                 this.onTenantChange();
-
             },
 
             onAfterRendering: function () {

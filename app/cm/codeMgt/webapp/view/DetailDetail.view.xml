@@ -282,18 +282,15 @@
                                                     text="{languages>language_cd}" />
                                                 <m:ComboBox
                                                     visible="{contModel>/detailDetail/editMode}"
+                                                    showSecondaryValues= "true"
                                                     width="100%" 
                                                     selectedKey="{languages>language_cd}"
-                                                    items="{
-                                                        path: 'util>/CodeDetails',
-                                                        filters: [
-                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                                        ]
-                                                    }">
+                                                    items="{viewModel>/languageList}">
                                                     <m:items>
-                                                        <core:Item key="" text="Choose a Language" />
-                                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                                        <core:ListItem 
+                                                            key="{util>code}" 
+                                                            text="{util>code_description}" 
+                                                            additionalText="{util>code}"/>
                                                     </m:items>
                                                 </m:ComboBox>
                                             </m:HBox>
