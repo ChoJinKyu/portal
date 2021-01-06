@@ -108,6 +108,9 @@ sap.ui.define([
                             oView.getModel("detailModel").setData(oMaster);
                             oCodeModel.setProperty("/detailsLength", oMaster.details.length);
                             //oView.getModel("detailModel").refresh();
+                        }else {
+                            oView.getModel("detailModel").setData(null);
+                            oCodeModel.setProperty("/detailsLength", 0);
                         }
                     },
                     error : function(data){

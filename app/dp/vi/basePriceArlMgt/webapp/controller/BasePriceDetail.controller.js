@@ -108,6 +108,9 @@ sap.ui.define([
                             oView.getModel("detailModel").setData(oMaster);
                             oCodeModel.setProperty("/detailsLength", oMaster.details.length);
                             //oView.getModel("detailModel").refresh();
+                        }else {
+                            oView.getModel("detailModel").setData(null);
+                            oCodeModel.setProperty("/detailsLength", 0);
                         }
                     },
                     error : function(data){
@@ -262,30 +265,47 @@ sap.ui.define([
         /**
          * 저장
          */
-        onDraft: function () {
+        onDraft: function (sActionParam) {
             var that = this;
             var oDetailModel = this.getModel("detailModel");
             var oModel = this.getModel();
             var oData = $.extend(true, {}, oDetailModel.getData());
             var aDetails = oData.details;
+            var sMessage = "저장되었습니다.";
 
             // detail 데이터가 있을 경우 checked property 삭제(OData에 없는 property 전송 시 에러)
             if( aDetails ) {
                 aDetails.forEach(function (oDetails) {
                     delete oDetails.checked;
                     delete oDetails.material_code_fk;
+                    delete oDetails.supplier_local_name;
                 });
             }
 
+            // 상신일 경우 approval_status_code를 20으로 변경
+            if( sActionParam === "approval" ) {
+                oData.approval_status_code = "20";
+                sMessage = "상신되었습니다.";
+            }else if( oData.approval_number ) {
+                sMessage = "수정되었습니다.";
+            }
+
+            // 메세지 관리
+            
+            // approval_status_code 값이 10이 아닌 20일 경우 approval number유무에 상관없이 상신
+            // arppoval number가 없는 경우 저장
             if( !oData.approval_number ) {
                 oModel.create("/Base_Price_Arl_Master", oData, {
                     //groupId: "saveBasePriceArl",
                     success: function(data){
                         // return 값이 있고 approval_number가 있는 경우에만 저장 완료
                         if( data && data.approval_number ) {
-                            MessageToast.show("저장되었습니다.");
+                            MessageToast.show(sMessage);
                             var oMaster = that._returnDataRearrange(data);
                             oDetailModel.setData(oMaster);
+                        }else {
+                            console.log('error', data);
+                            MessageBox.error("에러가 발생했습니다.");
                         }
                     },
                     error: function(data){
@@ -293,12 +313,18 @@ sap.ui.define([
                         MessageBox.error(data.message);
                     }
                 });
-            }else {
+            }
+            // arppoval number가 있는 경우 수정
+            else {
                 var sUpdatePath = oModel.createKey("/Base_Price_Arl_Master", this._getMasterKey(oData, "Master"));
                 oModel.update(sUpdatePath, oData, {
                     success: function(data){
                         // if( data && data.approval_number ) {
-                            MessageToast.show("수정되었습니다.");
+                            MessageToast.show(sMessage);
+
+                            if( sActionParam === "approval" ) {
+                                oDetailModel.setProperty("/approval_status_code", "20");
+                            }
                         //     var oMaster = that._returnDataRearrange(data);
                         //     oDetailModel.setData(oMaster);
                         // }
@@ -309,16 +335,6 @@ sap.ui.define([
                     }
                 });
             }
-
-            // oModel.submitChanges({
-            //     groupId: "saveBasePriceArl",
-            //     success: function(data){
-            //         console.log("submitChanges");
-            //     }.bind(this),
-            //     error: function(data){
-            //         console.log('Create error', data);
-            //     }
-            // })
         },
 
         /**
@@ -351,7 +367,15 @@ sap.ui.define([
          * 상신
          */
         onRequest : function () {
-
+            MessageBox.confirm("상신 하시겠습니까?", {
+                title : "Request",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        this.onDraft("approval");
+                    }
+                }.bind(this)
+            });
         },
 
         /**

@@ -15,6 +15,20 @@ sap.ui.define([
     return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceList", {
         dateFormatter: DateFormatter,
 
+        onStatusColor: function (sStautsCodeParam) {
+            var sReturnValue = 1;
+
+            if( sStautsCodeParam === "20" ) {
+                sReturnValue = 5;
+            }else if( sStautsCodeParam === "30" ) {
+                sReturnValue = 7;
+            }else if( sStautsCodeParam === "40" ) {
+                sReturnValue = 3;
+            }
+
+            return sReturnValue;
+        },
+
         onInit: function () {
             var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlRootModel");
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");

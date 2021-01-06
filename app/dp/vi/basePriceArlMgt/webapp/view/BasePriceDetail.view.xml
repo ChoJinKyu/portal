@@ -29,7 +29,7 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap">
                 <!-- Requester 시작 -->
-                <layout:VerticalLayout class="sapUiResponsiveMargin">
+                <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <!-- <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/> -->
                     <ObjectStatus title="Approval Number" text="{detailModel>/approval_number}"/>
                     <!-- <ObjectStatus title="{I18N>/REQUESTER}" text="{detailModel>/update_user_id}"/> -->
@@ -40,7 +40,7 @@
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
-				<layout:VerticalLayout class="sapUiResponsiveMargin">
+				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<!-- <Label text="{I18N>/STATUS} :"/> -->
 					<Label text="Status :"/>
                     <ObjectStatus class="sapMObjectStatusLarge" text="Draft" state="Error" />
@@ -48,15 +48,24 @@
                 <!-- Status 끝 -->
 
                 <!-- Process 시작 -->
-                <layout:VerticalLayout class="sapUiResponsiveMargin">
+                <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<!-- <Label text="{I18N>/PROCESS} : "/> -->
 					<Label text="Process : "/>
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem state="Error" stepWidth="5rem" icon="sap-icon://circle-task" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" />
+                                <co:MicroProcessFlowItem 
+                                    state="{= ${detailModel>/approval_status_code} === '10' ? Error : None}" 
+                                    stepWidth="5rem" 
+                                    icon="{= ${detailModel>/approval_status_code} === '10' ? 'sap-icon://circle-task' : ''}" />
+                                <co:MicroProcessFlowItem 
+                                    state="{= ${detailModel>/approval_status_code} === '20' ? Error : None}" 
+                                    stepWidth="5rem"
+                                    icon="{= ${detailModel>/approval_status_code} === '20' ? 'sap-icon://circle-task' : ''}" />
+                                <co:MicroProcessFlowItem 
+                                    state="{= ${detailModel>/approval_status_code} === '30' ? Error : None}" 
+                                    stepWidth="5rem"
+                                    icon="{= ${detailModel>/approval_status_code} === '30' ? 'sap-icon://circle-task' : ''}" />
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
@@ -87,6 +96,7 @@
                                 <Input
                                     width="20rem"
                                     placeholder=""
+                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                     value="{detailModel>/approval_title}">
                                 </Input>
                             </HBox>
@@ -115,10 +125,10 @@
                                             <ToolbarSpacer />
                                             <!-- <Button text="{I18N>/UPLOAD}" type="Transparent"/>
                                             <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" /> -->
-                                            <Button text="Upload" type="Transparent"/>
-                                            <Button text="Add" type="Transparent" press=".onAddBasePrice" />
+                                            <Button text="Upload" type="Transparent" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
+                                            <Button text="Add" type="Transparent" press=".onAddBasePrice" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
                                             <!-- <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" /> -->
-                                            <Button text="Delete" type="Transparent" press=".onDeleteDetailRow" />
+                                            <Button text="Delete" type="Transparent" press=".onDeleteDetailRow" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
                                             <!-- <Button icon="sap-icon://excel-attachment" />
                                             <Button icon="sap-icon://group-2" />
                                             <Button icon="sap-icon://action-settings" /> -->
@@ -145,6 +155,7 @@
                                             <t:template>
                                                 <Input
                                                     value="{detailModel>material_code}"
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     showValueHelp="true"
                                                     valueHelpRequest=".onOpenDialog" >
                                                     <customData>
@@ -172,6 +183,7 @@
                                             <Label text="Basis" textAlign="Center" width="100%" />
                                             <t:template>
                                                 <Select
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     items="{codeModel>/basis}"
                                                     selectedKey="{detailModel>basis}">
                                                     <items>
@@ -180,7 +192,7 @@
                                                 </Select>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="2" width="6rem" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
+                                        <t:Column headerSpan="2" width="7rem" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
                                             <t:multiLabels>
                                                 <!-- <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/CODE}" textAlign="Center" width="100%" /> -->
@@ -200,6 +212,7 @@
                                             <t:template>
                                                 <Input
                                                     value="{detailModel>supplier_local_name}"
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     showValueHelp="true"
                                                     valueHelpRequest=".onOpenDialog" >
                                                     <customData>
@@ -229,7 +242,10 @@
                                                 <Label text="New Base Price" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
-                                                <Input value="{detailModel>prices/0/new_base_price}" type="Number" />
+                                                <Input 
+                                                    value="{detailModel>prices/0/new_base_price}" 
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                                                    type="Number" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="6rem">
@@ -241,6 +257,7 @@
                                             </t:multiLabels>
                                             <t:template>
                                                 <ComboBox
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     items="{codeModel>/currency}"
                                                     selectedKey="{detailModel>prices/0/new_base_price_currency_code}">
                                                     <items>
@@ -270,7 +287,10 @@
                                                 <Label text="New Base Price" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
-                                                <Input value="{detailModel>prices/1/new_base_price}" type="Number" />
+                                                <Input 
+                                                    value="{detailModel>prices/1/new_base_price}" 
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                                                    type="Number" />
                                             </t:template>
                                             </t:Column>
                                         <t:Column width="6rem" >
@@ -282,6 +302,7 @@
                                             </t:multiLabels>
                                             <t:template>
                                                 <ComboBox
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     items="{codeModel>/currency}"
                                                     selectedKey="{detailModel>prices/1/new_base_price_currency_code}">
                                                     <items>
@@ -294,7 +315,7 @@
                                             <!-- <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" width="100%" /> -->
                                             <Label text="Base Price Type" textAlign="Center" width="100%" />
                                             <t:template>
-                                                <Text text="{detailModel>supplier_code}" />
+                                                <Text text="{detailModel>PART_NO}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column headerSpan="4" width="6rem">
@@ -305,7 +326,7 @@
                                                 <Label text="Pur Org" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
-                                                <Text text="{detailModel>div}" />
+                                                <Text text="{detailModel>PART_NO}" />
                                             </t:template>
                                             </t:Column>
                                         <t:Column width="12rem">
@@ -317,6 +338,7 @@
                                             <t:template>
                                                 <Input
                                                     value="{detailModel>PART_NO}"
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     visible="{= ${detailModel>basis} === '3' ? true : false }"
                                                     showValueHelp="true"
                                                     valueHelpRequest=".onOpenDialog" >
@@ -333,7 +355,7 @@
                                                 <Label text="Supplier Code" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
-                                                <Text text="{detailModel>supplier_code}" />
+                                                <Text text="{detailModel>PART_NO}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="12rem">
@@ -509,18 +531,27 @@
                     text="{I18N>/REQUEST}"
                     press=".onRequest" /> -->
                 <Button
-                    text="Change Developer" press=".onChangeDeveloper" />
+                    text="Change Developer" 
+                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                    press=".onChangeDeveloper" />
 				<Button
-                    text="Draft" press=".onDraft" />
+                    text="Draft" 
+                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                    press=".onDraft" />
                 <Button
-                    text="Preview" press=".onPreview" />
+                    text="Preview" 
+                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                    press=".onPreview" />
                 <Button
                     text="Cancel" press=".onBack" />
                 <Button
-                    text="Delete" press=".onDelete" />
+                    text="Delete" 
+                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                    press=".onDelete" />
                 <Button
                     type="Emphasized"
                     text="Request"
+                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                     press=".onRequest" />
 			</OverflowToolbar>
 		</uxap:footer>
