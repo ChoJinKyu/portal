@@ -198,10 +198,10 @@
             <uxap:ObjectPageSection titleUppercase="false" title="주요매출처">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<Table id="midTable2" 
+						<Table id="salTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false"								
-								items="{SupplierFin>/SupplierFin}"
+								items="{SupplierSal>/SupplierSal}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
                                 mode="SingleSelectLeft"
@@ -211,8 +211,8 @@
 									<!-- <Title text="Langauage" level="H2"/> -->
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton2" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTable2AddButtonPress" />
-									<Button id="midTableDeleteButton2" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTable2DeleteButtonPress" />
+									<Button id="midTable2AddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTable2AddButtonPress" />
+									<Button id="midTable2DeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTable2DeleteButtonPress" />
 									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
 									<ToolbarSeparator/>
 									<!-- <SearchField id="midTableSearchField" placeholder="UOM Name" width="10rem" search=".onMidTableFilterPress" /> -->

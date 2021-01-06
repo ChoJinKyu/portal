@@ -157,10 +157,17 @@ sap.ui.define([
 				sPath = oEvent.getSource().getBindingContext("list").getPath(),
 				oRecord = this.getModel("list").getProperty(sPath);
 
-			this.getRouter().navTo("midPage", {
+			// this.getRouter().navTo("midPage", {
+			// 	layout: LayoutType.OneColumn,
+			// 	tenantId: oRecord.tenant_id,
+			// 	uomCode: oRecord.uom_code
+            // });
+            
+            this.getRouter().navTo("suppliePage", {
 				layout: LayoutType.OneColumn,
 				tenantId: oRecord.tenant_id,
-				uomCode: oRecord.uom_code
+                ssn: oRecord.sourcing_supplier_nickname,
+                mode: "show"
 			});
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
@@ -244,7 +251,8 @@ sap.ui.define([
             this.getRouter().navTo("suppliePage", {
 				layout: LayoutType.OneColumn,
 				tenantId: tenantId,
-                ssn: ssn
+                ssn: ssn,
+                mode: "edit"
 			});
 
 			// MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -260,12 +268,14 @@ sap.ui.define([
             //                     // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
             //                     MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
             //                         that.byId("dialogAddSupplier").close();
-            //                         that.byId("pageSearchButton").firePress();
+            //                         // that.byId("pageSearchButton").firePress();
             //                         // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-            //                         // that.getRouter().navTo("addSupplierPage", {                                        
-            //                         //     tenantId: tenantId,
-            //                         //     ssn: ssn
-            //                         // });
+            //                         that.getRouter().navTo("suppliePage", {
+            //                             layout: LayoutType.OneColumn,
+            //                             tenantId: tenantId,
+            //                             ssn: ssn,
+            //                             mode: "edit"
+            //                         });
 			// 				}
 			// 			});
 			// 		};
