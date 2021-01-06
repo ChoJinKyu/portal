@@ -129,7 +129,9 @@ sap.ui.define([
                 // filter
                 var filters = parameters.filters;
                 // 검색조건 및 결과가 없는 경우 종료
-                if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
+                if (filters.filter(function(f) { return f.sPath === 'keyword' }).length <= 0
+                    ||
+                    !oData || !(oData.results) || oData.results.length <= 0) {
                     return that.convToJsonTree(oData);
                 }
                 // Hierachy 관련 node_id만을 필터링한다.
