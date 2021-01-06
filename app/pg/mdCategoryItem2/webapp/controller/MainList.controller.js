@@ -172,38 +172,6 @@ sap.ui.define([
 
         table.removeSelections(true);
         },
-        //카테고리 채번 V4호출 처리
-        callNewCategoryItemCode: function(oEvent){
-            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
-			$.ajax({
-				url: url,
-				type: "GET",
-				datatype: "json",
-				contentType: "application/json",
-				success: function(data){
-					alert("Reslt Value => ["+data.value[0].spmd_character_code+"] ["+data.value[0].spmd_character_serial_no+"] ");
-				},
-				error: function(req){
-					alert("Ajax Error => "+req.status);
-				}
-			});
-        },
-        //카테고리 채번 V4호출 처리
-        callNewCategoryCode: function(oEvent){
-            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
-			$.ajax({
-				url: url,
-				type: "GET",
-				datatype: "json",
-				contentType: "application/json",
-				success: function(data){
-					alert("Reslt Value => ["+data.value[0].spmd_category_code+"]");
-				},
-				error: function(req){
-					alert("Ajax Error => "+req.status);
-				}
-			});
-        },
         //VendorPool 다건 Item Mapping V4호출 처리
         onMainTableMappMultiProcButtonPress: function(oEvent){
             // 프로시져 호출 테스트
@@ -214,7 +182,7 @@ sap.ui.define([
             //input = headers;
             //var url = oModel.sServiceUrl + "MdVpMappingItemMultiProc";
             //var url = "srv-api/odata/v4/xx.SampleMgrV4Service/MdVpMappingItemMultiProc";
-            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemMultiProc";
+            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemMultiProc"
 							
 			// VendorPool Category Item Mapping array multi건 Procedure 호출
 			// Fiori Json Array 데이터 Ajax로 V4호출
@@ -257,7 +225,7 @@ sap.ui.define([
             //input = headers;
             //var url = oModel.sServiceUrl + "SaveSampleHeaderMultiProc";
             //var url = "srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc";
-            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingStatusMultiProc";
+            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingStatusMultiProc"
                     
             // VendorPool Mapping 상태(신규/저장/확정)처리 array multi건 Procedure 호출
             // Fiori Json Array 데이터 Ajax로 V4호출
