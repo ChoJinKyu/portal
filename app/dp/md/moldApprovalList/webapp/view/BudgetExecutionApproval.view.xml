@@ -46,7 +46,7 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-				    <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
+				    
 				</uxap:actions>
 
                 <uxap:navigationActions>
@@ -209,7 +209,10 @@
 						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
+                    <HBox>
+                        <Text text="[{mdCommon>/import_company_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?${mode>/viewFlag}:false}" /> 
+                        <Text text=" {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
+                    </HBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -245,7 +248,10 @@
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</ComboBox>
                      <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{mode>/viewFlag}"/> 
+                    <HBox>
+                          <Text text="[{mdCommon>/import_company_org_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?${mode>/viewFlag}:false}" />
+                          <Text text=" {mdCommon>/import_company_org_code_nm}" visible="{mode>/viewFlag}"/> 
+                    </HBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -304,13 +310,13 @@
 					</VBox>
 					<VBox class="sapUiSmallMargin">
 						<Label text="{I18N>/BUSINESS_DIVISION}"/>
-						<ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
+						<ObjectStatus text="[{plant>/org_code}] {plant>/org_name}" state="Error"/>
 					</VBox>
 				</HBox>
                 </form:content>
 		        </form:SimpleForm>
                 </uxap:ObjectPageSubSection>
-                <uxap:ObjectPageSubSection id="budgetExecutionTableFragment">
+                <uxap:ObjectPageSubSection id="pageItemSection">
                 
                 </uxap:ObjectPageSubSection>
                     
@@ -335,6 +341,7 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
+                <Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
                 <Button type="Transparent" text="Cancel"    press=".onPageCancelEditButtonPress" visible="{mode>/editFlag}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
                 <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"   visible="{=${appMaster>/approve_status_code}==='AR'?true:false}" />

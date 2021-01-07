@@ -123,18 +123,22 @@ service TaskMonitoringV4Service {
     };
 
     type UpsertOutType : {
-        // targetMaster         : array of taskMonitoringMaster;
-        // targetCompany        : array of taskMonitoringCompany;
-        // targetBizunit        : array of taskMonitoringBizunit;
-        // targetManager        : array of taskMonitoringManager;
-        // targetOperation      : array of taskMonitoringOperation;
-        // targetPurchasingType : array of taskMonitoringPurchasingType;
-        // targetScenario       : array of taskMonitoringScenario;
-        // targetTypeCode       : array of taskMonitoringTypeCode;
+        returncode    : String(2);
+        returnmessage : String(500);
+    };
+
+    type DeleteInputType : {
+        tenant_id            : String(5);
+        scenario_number      : Integer64;
+    };
+
+    type DeleteOutType : {
         returncode    : String(2);
         returnmessage : String(500);
     };
 
     action upsertTaskMonitoringMasterProc(InputData : UpsertInputType) returns array of UpsertOutType;
+
+    action deleteTaskMonitoringMasterProc(InputData : DeleteInputType) returns array of DeleteOutType;
 
 }

@@ -27,6 +27,11 @@ sap.ui.define([
 			onInit: function () {
 
                 console.log("onInit");
+
+                
+                // I18N 모델 SET
+                var oMultilingual = new Multilingual();
+                this.getView().setModel(oMultilingual.getModel(), "I18N");
                 
                 // var oView = this.getView();
                 // oMultilingual = new Multilingual();

@@ -12,7 +12,7 @@
   <VBox>
     <form:SimpleForm 
             editable="true" 
-
+            visible="{detailModel>/mode/readMode}"
             layout="ResponsiveGridLayout">
         <form:content>
             <!--form line 1-->
@@ -136,7 +136,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="">
+            <Text text="{detailModel>/production_company_code}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -237,11 +237,245 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="">
+            <Text text="{detailModel>/bom_type_text}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
             </Text>
+        </form:content>
+    </form:SimpleForm>
+    <form:SimpleForm 
+            editable="true" 
+            visible="{detailModel>/mode/editMode}"
+            layout="ResponsiveGridLayout">
+        <form:content>
+            <!--form line 1-->
+            <Label text="Project Code">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="Project Name">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="제품군">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/product_group_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="Event">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/project_develope_event_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <!--form line 2-->
+            <Label text="대표 Model Code">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/model_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="대표 Model Name">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/model_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="Biz Type">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="견적 Project Code">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/quotation_project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <!--form line 3-->
+            <Label text="Project Status">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/project_status_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="Project 생성일">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{
+                            path: 'detailModel>/project_create_date',
+                            formatter: '.dateFormatter.toUTCDateString'
+                        }">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="자사 생산지">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/customer_local_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>            
+
+            <!--form line 4-->
+            <Label text="Project Leader">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/project_leader_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="개발구매">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/buyer_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="마케팅">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/marketing_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="기획">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/planning_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <!--form line 5-->
+            <Label text="최종 고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Input value="{=${detailModel>/last_customer_name} || ''}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="최종 고객사 모델명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/customer_model_desc}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="수율(재료비)">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{=${detailModel>/mcst_yield_rate} || 0}%">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="BOM 등록여부">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
         </form:content>
     </form:SimpleForm>
 </VBox>

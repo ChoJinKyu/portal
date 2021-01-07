@@ -8,6 +8,7 @@ sap.ui.define([
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
+    "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
@@ -20,7 +21,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
-    Filter, FilterOperator, Fragment, MessageBox, MessageToast,
+    Sorter, Filter, FilterOperator, Fragment, MessageBox, MessageToast,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 
     "use strict";
@@ -64,11 +65,12 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
 
             this.setModel(new ManagedModel(), "master");
+            this.setModel(new ManagedModel(), "masterView");
             //this.setModel(new ManagedListModel(), "details");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
-            //oTransactionManager.addDataModel(this.getModel("details"));
+            oTransactionManager.addDataModel(this.getModel("masterView"));
 
             //this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
@@ -199,6 +201,7 @@ sap.ui.define([
             console.log("oMasterModel.getData()=", oMasterModel.getData());
             // this.validator.validate(this.byId("midObjectForm1Edit"))
             if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if (this.validator.validate(this.byId("midObjectForm2Edit")) !== true) return;
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -303,12 +306,25 @@ sap.ui.define([
             } else {
                 this.getModel("midObjectView").setProperty("/isAddedMode", true);
 
+                //저장용
                 var sObjectPath = "/Project(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
                 var oMasterModel = this.getModel("master");
                 oView.setBusy(true);
                 //console.log("this.getModel()=",this.getModel());
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
+                    success: function (oData) {
+                        console.log("oData=", oData);
+                        oView.setBusy(false);
+                    }
+                });
+
+                // //조회용
+                var sViewObjectPath = "/ProjectView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
+                var oMasterViewModel = this.getModel("masterView");
+                oView.setBusy(true);
+                oMasterViewModel.setTransactionModel(this.getModel());
+                oMasterViewModel.read(sViewObjectPath, {
                     success: function (oData) {
                         console.log("oData=", oData);
                         oView.setBusy(false);
@@ -336,7 +352,6 @@ sap.ui.define([
 
         _toEditMode: function () {
             console.log("#===Edit==", this.getModel("master").getData());
-            var FALSE = false;
             this._showFormFragment('MidObject_Edit');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
@@ -355,7 +370,44 @@ sap.ui.define([
         },
 
         _toShowMode: function () {
-            var TRUE = true;
+
+            // var oMasterModel = this.getModel("master");
+            // var tenantId = oMasterModel.getData().tenant_id;
+            // var companyCode = oMasterModel.getData().company_code;
+            // var epProjectNumber = oMasterModel.getData().ep_project_number;
+
+            // console.log("tenantId", tenantId);
+            // console.log("companyCode", companyCode);
+            // console.log("epProjectNumber", epProjectNumber);
+
+            // oView.setBusy(true);
+            // var oDetailsModel = this.getModel("details");
+            // oDetailsModel.setTransactionModel(this.getModel());
+            // oDetailsModel.read("/Project", {
+            // 	filters: [
+            //         new Filter("tenant_id", FilterOperator.EQ, tenantId),
+            //         new Filter("company_code", FilterOperator.EQ, companyCode)
+            //     ],
+            //     sorters: [
+            //         new Sorter("ep_project_number", true)
+            //     ],
+            // 	success: function(oData){
+            // 		oView.setBusy(false);
+            // 	}
+            // })
+
+            // //조회용
+            // var sViewObjectPath = "/ProjectView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
+            // var oMasterViewModel = this.getModel("masterView");
+            // oView.setBusy(true);
+            // oMasterViewModel.setTransactionModel(this.getModel());
+            // oMasterViewModel.read(sViewObjectPath, {
+            //     success: function (oData) {
+            //         console.log("oData=", oData);
+            //         oView.setBusy(false);
+            //     }
+            // });
+
             this._showFormFragment('MidObject_Show');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);

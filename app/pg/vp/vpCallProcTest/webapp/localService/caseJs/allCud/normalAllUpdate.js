@@ -20,9 +20,9 @@ vpMstList.push({
     ,company_code: "*"
     ,org_type_code: "BU"
     ,org_code: "BIZ00200"
-    ,vendor_pool_code: "VP202011230TEST01"
-    ,vendor_pool_local_name : "TEST LOCAL 01-1"
-    ,vendor_pool_english_name : "TEST LOCAL EN 01-1"
+    ,vendor_pool_code: "VP202011230TEST02"
+    ,vendor_pool_local_name : "TEST LOCAL 01-2"
+    ,vendor_pool_english_name : "TEST LOCAL EN 01-2"
     ,repr_department_code: "T111-1"                
     ,operation_unit_code : "RAW_MATERIAL-1"
     ,inp_type_code : "MBLMOB"
@@ -51,13 +51,14 @@ vpMstList.push({
 inputInfo.inputData.vpMst = vpMstList;            
 
 //supplier가 있는 경우 에러발생(있을 시 주석)
+/*
 vpSupplierList.push({
     tenant_id: "L2100"
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , supplier_code: 'DE01091600'
+    , vendor_pool_code: "VP202011230TEST02"
+    , supplier_code: 'CN12341400'
     ,supeval_target_flag: false
     ,supplier_op_plan_review_flag: false
     ,supeval_control_flag: false
@@ -79,8 +80,8 @@ vpSupplierList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , supplier_code: 'ES00702600'
+    , vendor_pool_code: "VP202011230TEST02"
+    , supplier_code: 'US02689500'
     ,supeval_target_flag: false
     ,supplier_op_plan_review_flag: false
     ,supeval_control_flag: false
@@ -98,6 +99,7 @@ vpSupplierList.push({
 });
 
 inputInfo.inputData.vpSupplier = vpSupplierList;  
+*/
           
 //추가
 vpItemList.push({
@@ -105,7 +107,7 @@ vpItemList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
+    , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0032'
     , crud_type_code : "C"
 });
@@ -116,7 +118,7 @@ vpItemList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
+    , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0014'
     , crud_type_code : "U"
 });
@@ -127,7 +129,7 @@ vpItemList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
+    , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0013'
     , crud_type_code : "D"
 });
@@ -140,7 +142,7 @@ vpManagerList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
+    , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: "5452"
     , crud_type_code : "U"
 });
@@ -151,7 +153,7 @@ vpManagerList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
+    , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: '5460'
     , crud_type_code : "D"
 });
@@ -162,7 +164,7 @@ vpManagerList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
+    , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: '5479'
     , crud_type_code : "D"
 });

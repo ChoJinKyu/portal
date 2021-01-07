@@ -6,7 +6,8 @@ entity Se_Operation_Unit_Mst {
   key company_code                     : String(10) not null @title: '회사코드' ;	
   key org_type_code                    : String(2)  not null @title: '구매운영조직유형' ;	
   key org_code                         : String(10) not null @title: '구매운영조직코드' ;	
-  key evaluation_operation_unit_code   : String(30) not null @title: '카테고리 코드' ;	
+  key evaluation_operation_unit_code   : String(30) not null @title: '평가운영단위코드' ;
+      evaluation_operation_unit_name   : String(50)          @title: '평가운영단위명' ;	
       distrb_score_eng_flag            : Boolean             @title: '배점셜계여부' ;	
       evaluation_request_mode_code     : String(30)          @title: '평가요청방식코드' ;	
       evaluation_request_approval_flag : Boolean             @title: '평가요청품의여부' ;	

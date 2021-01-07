@@ -40,9 +40,9 @@
                         <VBox>
                             <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" labelFor="searchRequestDate" required="true"></Label>
                             <DateRangeSelection id="searchRequestDate" width="100%" change="handleChange"/>
-                            <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchBStatus" required="false"></Label>
+                            <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchPr_create_status" required="false"></Label>
                             <MultiComboBox
-                              id="SearchBStatus"
+                              id="SearchPr_create_status"
                               showSecondaryValues="true"
                               width="100%"
                               items="{
@@ -61,9 +61,9 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/PR_TYPE_CODE}" labelFor="searchBsart" required="false"></Label>
+                            <Label text="{I18N>/PR_TYPE_CODE}" labelFor="searchPR_TYPE_CODE" required="false"></Label>
                             <MultiComboBox
-                              id="searchBsart"
+                              id="searchPR_TYPE_CODE"
                               showSecondaryValues="true"
                               width="100%"
                               items="{
@@ -77,16 +77,16 @@
                                 <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
-                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="search_DEPARTMENT_NAME" required="false"></Label>
-                            <Input id="search_DEPARTMENT_NAME" placeholder="Search"></Input>
+                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="searchDEPARTMENT_NAME" required="false"></Label>
+                            <Input id="searchDEPARTMENT_NAME" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/PR_TEMPLATE_NUMBER}" labelFor="searchTemplate"></Label>
+                            <Label text="{I18N>/PR_TEMPLATE_NUMBER}" labelFor="searchPR_TEMPLATE_NUMBER"></Label>
                             <MultiComboBox 
-                                id="searchTemplage" 
+                                id="searchPR_TEMPLATE_NUMBER" 
                                 showSecondaryValues="true"
                                 width="100%" 
                                 items="{
@@ -101,8 +101,8 @@
                                             additionalText="{pr_template_number}" />
                                     </items>
                                 </MultiComboBox>
-                            <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchBOprater" ></Label>
-                            <Input id="searchBOprater" placeholder="Search"></Input>
+                            <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchRequestor_name" ></Label>
+                            <Input id="searchRequestor_name" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -111,8 +111,8 @@
                         <VBox>
                             <Label text="{I18N>/PR_NUMBER}" labelFor="searchPrNumber" ></Label>
                              <Input id="searchPrNumber" placeholder="Search"></Input>
-                            <Label text="{I18N>/PR_DESC}" labelFor="searchBMaktx"></Label>
-                            <Input id="searchBMaktx" placeholder="Search"></Input>
+                            <Label text="{I18N>/PR_DESC}" labelFor="searchPr_desc"></Label>
+                            <Input id="searchPr_desc" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -154,40 +154,43 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column width="4em" >
+                        <Column id="mainColumnCHK" width="4em" >
                             <CheckBox selected="false" select=".onColumnChecBox"/>
                         </Column>
-                        <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_NUMBER"   minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnName1" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainColumnERP_PR_NUMBER"        minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="{I18N>/ERP_PR_NUMBER}" />
+                        </Column>        
+                        <Column id="mainColumnPR_DESC"        minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="{I18N>/PR_DESC}" />
                         </Column>                       
-                        <Column id="mainColumnSiteFlag2" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
-                        <Column id="mainColumnSiteFlag4" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/PR_TYPE_CODE_2}" />
                         </Column>
-                        <Column id="mainColumnSiteFlag5" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/PR_TYPE_CODE_3}" />
                         </Column>
-                        <Column id="mainColumnSiteFlag6" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/PR_TEMPLATE_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnCompanyFlag7" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
                         </Column>
-                        <Column id="mainColumnCompanyFlag17" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="{I18N>/REQUESTOR_NAME}" />
                         </Column>
-                         <Column id="mainColumnStartDate111" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                         <Column id="mainColumnPURCHASE_REQUISITION" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" />
                         </Column>
-                        <Column id="mainColumnStartDate11" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnPR_COUNT" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="{I18N>/PR_COUNT}" />
                         </Column>
-                        <Column id="mainColumnStartDate1211" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnPR_CREATE_STATUS_CODE" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="{I18N>/PR_CREATE_STATUS_CODE}" />
                         </Column>
                        
@@ -197,6 +200,7 @@
                             <cells>             
                                 <CheckBox fieldGroupIds="{= ${list>pr_create_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>pr_create_status_code}==='DR'? true:false }" select=".onCheck" />  
                                 <Text text="{list>pr_number}"/>
+                                <Text text="{list>erp_pr_number}"/>
                                 <Text text="{list>pr_desc}"/>
                                 <Text text="{list>pr_type_name}"/>
                                 <Text text="{list>pr_type_name_2}"/>

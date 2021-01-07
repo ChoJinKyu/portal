@@ -1,0 +1,37 @@
+/***********************************************************************
+*
+*   UOM 환산 Function 
+*   DP_MM_UOM_CONVERSION_PROC 를 호출하여 Return
+*    - 오류(O_RETURN_CODE='E': Function Return 수량은 0으로 Return 함
+*   Change History : 
+*   2021-01-06   최미희 
+************************************************************************/
+FUNCTION DP_MM_UOM_CONVERSION_FUNC  (IN I_TENANT_ID NVARCHAR(5),
+                                     IN I_FROM_UOM_CODE NVARCHAR(3),
+                                     IN I_TO_UOM_CODE NVARCHAR(3),
+                                     IN I_QUANTITY DECIMAL
+                                    )
+RETURNS O_RETURN_QUANTITY DECIMAL
+LANGUAGE SQLSCRIPT
+AS
+
+BEGIN
+
+    DECLARE V_RETURN_CODE NVARCHAR(1);
+    DECLARE V_RETURN_MSG_CODE NVARCHAR(30);
+    DECLARE V_RETURN_MSG NVARCHAR(1000);
+    DECLARE V_RETURN_QUANTITY DECIMAL;
+    
+    CALL DP_MM_UOM_CONVERSION_PROC(I_TENANT_ID => I_TENANT_ID,
+                                   I_FROM_UOM_CODE => I_FROM_UOM_CODE,
+                                   I_TO_UOM_CODE => I_TO_UOM_CODE,
+                                   I_QUANTITY => I_QUANTITY,
+                                   O_RETURN_CODE => V_RETURN_CODE,
+                                   O_RETURN_MSG_CODE => V_RETURN_MSG_CODE,
+                                   O_RETURN_MSG => V_RETURN_MSG,
+                                   O_RETURN_QUANTITY => V_RETURN_QUANTITY
+                                   );
+
+    O_RETURN_QUANTITY = V_RETURN_QUANTITY;
+   
+END

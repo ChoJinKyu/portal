@@ -29,7 +29,7 @@
                         <layout:GridData span="XL2 L2 M2 S12" />
                     </layoutData>
                 </Label>
-                <Text text="{detailModel>}">
+                <Text text="{detailModel>/project_creator_info}">
                     <layoutData>
                         <layout:GridData span="XL4 L4 M4 S12" />
                     </layoutData>

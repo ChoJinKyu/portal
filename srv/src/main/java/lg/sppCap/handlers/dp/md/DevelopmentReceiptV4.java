@@ -34,6 +34,13 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.request.ParameterInfo;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.core.CallableStatementCreator;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import com.sap.cds.ql.cqn.CqnUpdate;
 import com.sap.cds.ql.cqn.CqnInsert;
 import com.sap.cds.ql.cqn.CqnStatement;
@@ -114,9 +121,11 @@ public class DevelopmentReceiptV4 implements EventHandler {
                     Result resultSpec = developmentReceiptService.run(specUpdate);
                     
                     // Procedure Call
-                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-                    v_statement_proc.setObject(1, row.get("mold_id"));
-                    boolean v_isMore = v_statement_proc.execute();
+                    jdbc.update(v_sql_callProc, row.get("mold_id"));
+                    
+                    //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+                    //v_statement_proc.setObject(1, row.get("mold_id"));
+                    //boolean v_isMore = v_statement_proc.execute();
                 }
             }
 
@@ -140,7 +149,6 @@ public class DevelopmentReceiptV4 implements EventHandler {
         StringBuffer v_sql_createTableMst = new StringBuffer();
         v_sql_createTableMst.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MST (");
         v_sql_createTableMst.append("MOLD_ID NVARCHAR(100),");
-        v_sql_createTableMst.append("MOLD_PROGRESS_STATUS_CODE NVARCHAR(30),");
         v_sql_createTableMst.append("MOLD_PRODUCTION_TYPE_CODE NVARCHAR(30),");
         v_sql_createTableMst.append("MOLD_ITEM_TYPE_CODE NVARCHAR(30),");
         v_sql_createTableMst.append("MOLD_TYPE_CODE NVARCHAR(30),");
@@ -156,85 +164,72 @@ public class DevelopmentReceiptV4 implements EventHandler {
         v_sql_createTableMst.append("FAMILY_PART_NUMBER_5 NVARCHAR(240),");
         v_sql_createTableMst.append("SET_ID NVARCHAR(100))");
 
-        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_truncateTableMst = "TRUNCATE TABLE #LOCAL_TEMP_MST";
+        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST";
         
         String v_sql_createTableSpec = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_SPEC (MOLD_ID NVARCHAR(100), DIE_FORM NVARCHAR(240), MOLD_SIZE NVARCHAR(100))";
         String v_sql_insertTableSpec = "INSERT INTO #LOCAL_TEMP_SPEC VALUES (?, ?, ?)";
-        String v_sql_truncateTableSpec = "TRUNCATE TABLE #LOCAL_TEMP_SPEC";
+        String v_sql_dropTableSpec = "DROP TABLE #LOCAL_TEMP_SPEC";
         
         String v_sql_callProc = "CALL DP_MD_MST_SET_ID_UPDATE_PROC(I_MST_TABLE => #LOCAL_TEMP_MST, I_SPEC_TABLE => #LOCAL_TEMP_SPEC)";
 
-        try {
-            Connection conn = jdbc.getDataSource().getConnection();
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTableMst.toString());
+        jdbc.execute(v_sql_createTableSpec);
 
-            // Local Temp Table 생성
-            PreparedStatement v_statement_mst_table = conn.prepareStatement(v_sql_createTableMst.toString());
-            v_statement_mst_table.execute();
-
-            PreparedStatement v_statement_spec_table = conn.prepareStatement(v_sql_createTableSpec);
-            v_statement_spec_table.execute();
-
-            // Local Temp Table에 insert
-            PreparedStatement v_statement_mst_insert = conn.prepareStatement(v_sql_insertTableMst);
-            PreparedStatement v_statement_spec_insert = conn.prepareStatement(v_sql_insertTableSpec);
-            
-            for (SavedMolds row :  v_inMultiData) {
-                if((Boolean) row.get("chk")){
-                    // insert
-                    v_statement_mst_insert.setObject(1, row.get("mold_id"));
-                    v_statement_mst_insert.setObject(2, "DEV_RCV");
-                    v_statement_mst_insert.setObject(3, row.get("mold_production_type_code"));
-                    v_statement_mst_insert.setObject(4, row.get("mold_item_type_code"));
-                    v_statement_mst_insert.setObject(5, row.get("mold_type_code"));
-                    v_statement_mst_insert.setObject(6, row.get("mold_location_type_code"));
-                    v_statement_mst_insert.setObject(7, row.get("mold_cost_analysis_type_code"));
-                    v_statement_mst_insert.setObject(8, row.get("mold_purchasing_type_code"));
-                    v_statement_mst_insert.setObject(9, row.get("mold_developer_empno"));
-                    v_statement_mst_insert.setObject(10, row.get("remark"));
-                    v_statement_mst_insert.setObject(11, row.get("family_part_number_1"));
-                    v_statement_mst_insert.setObject(12, row.get("family_part_number_2"));
-                    v_statement_mst_insert.setObject(13, row.get("family_part_number_3"));
-                    v_statement_mst_insert.setObject(14, row.get("family_part_number_4"));
-                    v_statement_mst_insert.setObject(15, row.get("family_part_number_5"));
-                    v_statement_mst_insert.setObject(16, row.get("set_id"));
-                    v_statement_mst_insert.addBatch();
-                    
-                    v_statement_spec_insert.setObject(1, row.get("mold_id"));
-                    v_statement_spec_insert.setObject(2, row.get("die_form"));
-                    v_statement_spec_insert.setObject(3, row.get("mold_size"));
-                    v_statement_spec_insert.addBatch();
+        // Local Temp Table에 insert
+        List<Object[]> batchM = new ArrayList<Object[]>();
+        List<Object[]> batchS = new ArrayList<Object[]>();
+        if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
+            for(SavedMolds v_inRow : v_inMultiData){
+                if((Boolean) v_inRow.get("chk")){
+                    Object[] valuesM = new Object[] {
+                        v_inRow.get("mold_id"),
+                        v_inRow.get("mold_production_type_code"),
+                        v_inRow.get("mold_item_type_code"),
+                        v_inRow.get("mold_type_code"),
+                        v_inRow.get("mold_location_type_code"),
+                        v_inRow.get("mold_cost_analysis_type_code"),
+                        v_inRow.get("mold_purchasing_type_code"),
+                        v_inRow.get("mold_developer_empno"),
+                        v_inRow.get("remark"),
+                        v_inRow.get("family_part_number_1"),
+                        v_inRow.get("family_part_number_2"),
+                        v_inRow.get("family_part_number_3"),
+                        v_inRow.get("family_part_number_4"),
+                        v_inRow.get("family_part_number_5"),
+                        v_inRow.get("set_id")};
+                    batchM.add(valuesM);
+                    Object[] valuesS = new Object[] {
+                        v_inRow.get("mold_id"),
+                        v_inRow.get("die_form"),
+                        v_inRow.get("mold_size")};
+                    batchS.add(valuesS);
                 }
             }
-
-            v_statement_mst_insert.executeBatch();
-            v_statement_spec_insert.executeBatch();
-
-            // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-            boolean v_isMore = v_statement_proc.execute();
-            //int iCnt = v_statement_proc.executeUpdate();
-            //ResultSet v_rs = v_statement_proc.executeQuery();
-
-            // Procedure Out put 담기
-            //while (v_rs.next()){
-                //SavedMolds v_row = SavedMolds.create();
-                //v_row.setSetId(v_rs.getString("set_id"));
-                //v_result.add(v_row);
-            //}
-
-            // Local Temp Table trunc
-            PreparedStatement v_statement_trunc_mst_table = conn.prepareStatement(v_sql_truncateTableMst);
-            v_statement_trunc_mst_table.execute();
-
-            PreparedStatement v_statement_trunc_spec_table = conn.prepareStatement(v_sql_truncateTableSpec);
-            v_statement_trunc_spec_table.execute();
-
-            context.setResult(msg);
-            context.setCompleted();
-
-        } catch (SQLException e) { 
-			e.printStackTrace();
         }
+
+        int[] updateCountsM = jdbc.batchUpdate(v_sql_insertTableMst, batchM);
+        int[] updateCountsS = jdbc.batchUpdate(v_sql_insertTableSpec, batchS);
+
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+
+        // Procedure Call
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc);
+                return callableStatement;
+            }
+        }, paramList);
+
+
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableMst);
+        jdbc.execute(v_sql_dropTableSpec);
+
+        context.setResult(msg);
+        context.setCompleted();
+
     }
 }

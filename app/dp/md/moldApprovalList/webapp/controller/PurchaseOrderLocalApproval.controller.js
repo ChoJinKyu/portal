@@ -150,17 +150,18 @@ sap.ui.define([
             var oModel = this.getModel("purOrderItem");
 
             var mIdArr = [];
-            if (oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length > 0) {
-                oModel.oData.ApprovalDetails.forEach(function (item) {
+            if (oModel.oData.PurchaseOrderItems != undefined && oModel.oData.PurchaseOrderItems.length > 0) {
+                oModel.oData.PurchaseOrderItems.forEach(function (item) {
                     mIdArr.push(item.mold_id);
                 });
             }
 
             var oArgs = {
-                company_code: this.company_code,
-                org_code: this.plant_code,
-                mold_progress_status_code: 'DTL_CNF',
-                mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
+                approval_type_code          : "V",
+                company_code                : this.company_code,
+                org_code                    : this.plant_code,
+                mold_progress_status_code   : ['DTL_CNF'],
+                mold_id_arr                 : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
@@ -196,7 +197,7 @@ sap.ui.define([
                 "target_amount": data.target_amount,
                 "mold_production_type_code": data.mold_production_type_code,
                 "family_part_number_1": data.family_part_number_1
-            }, "/ApprovalDetails", 0);
+            }, "/PurchaseOrderItems", 0);
             //this.validator.clearValueState(this.byId("poItemTable"));
 
             var pModel = this.getModel('payment'),

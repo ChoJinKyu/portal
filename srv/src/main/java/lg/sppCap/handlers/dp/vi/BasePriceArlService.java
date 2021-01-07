@@ -19,12 +19,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-// import com.sap.cds.services.cds.CdsCreateEventContext;
+import com.sap.cds.services.cds.CdsCreateEventContext;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
+import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.request.ParameterInfo;
 import com.sap.cds.services.request.UserInfo;
@@ -51,24 +52,35 @@ public class BasePriceArlService implements EventHandler {
     @Autowired
     ParameterInfo parameterInfo;
 
-    // private Map<Object, Map<String, Object>> masters = new HashMap<>();
+    // @On(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlMaster_.CDS_NAME)
+    // public void onCreateBasePriceArlMaster(CdsCreateEventContext context, List<BasePriceArlMaster> basePriceArlMasters) {
+    //     System.out.println("#### onCreateBasePriceArlMaster Started....");
 
-    // @On(event = CdsService.EVENT_READ, entity = BasePriceArlMaster_.CDS_NAME)
-    //  public void onRead(CdsReadEventContext  context) {
-    //     UserInfo userInfo = context.getUserInfo();
+    //     // UserInfo userInfo = context.getUserInfo();
+    //     // log.info("## user ID : " + userInfo.getId());
+    //     // log.info("## user isAuth : " + Boolean.toString(userInfo.isAuthenticated()));
+
+    //     context.setResult(context.getCqn().entries());
+    //     context.setCompleted();
+    // }
+
+    // @After(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlMaster_.CDS_NAME)
+    // public void afterCreateBasePriceArlMaster(CdsCreateEventContext context) {
+    //     System.out.println("#### afterCreateBasePriceArlMaster Started....");
     //     log.info("## user ID : " + userInfo.getId());
     //     log.info("## user isAuth : " + Boolean.toString(userInfo.isAuthenticated()));
 
-    //     // context.getCqn().entries().forEach(e -> masters.put(e.get("ID"), e));
-    //     context.setResult(masters.values());
-    //  }
+    //     // context.setResult(context.getCqn().entries());
+    //     // context.setCompleted();
+    // }
 
     /**
      * BasePriceArlMaster의 Update Before Event Handler
      */
     @Before(event = { CdsService.EVENT_UPDATE }, entity = BasePriceArlMaster_.CDS_NAME)
     public void beforeUpdateBasePriceArlMaster(List<BasePriceArlMaster> basePriceArlMasters) {
-        log.info("#### beforeUpdateBasePriceArlMaster Started....");
+        // log.info("#### beforeUpdateBasePriceArlMaster Started....");
+        System.out.println("#### beforeUpdateBasePriceArlMaster Started....");
 
         CallableStatement cstmt;
         ResultSet rs;
@@ -121,29 +133,6 @@ public class BasePriceArlService implements EventHandler {
 
                 log.info("# item_sequence : " + item_sequence.toString());
                 basePriceArlDetail.setItemSequence(item_sequence);
-
-                /**
-                 * BasePriceArlPrice
-                */
-                // if (basePriceArlDetail.getPrices() != null) {
-                //     List<BasePriceArlPrice> basePriceArlPrices = basePriceArlDetail.getPrices();
-
-                //     for (BasePriceArlPrice basePriceArlPrice : basePriceArlPrices) {
-                //         System.out.println("# BasePriceArlPrice TenantId : " + basePriceArlPrice.getTenantId());
-                //         System.out.println("# BasePriceArlPrice ApprovalNumber : " + basePriceArlPrice.getApprovalNumber());
-                //         System.out.println("# BasePriceArlPrice ItemSequence : " + (basePriceArlPrice.getItemSequence() == null ? "" : basePriceArlPrice.getItemSequence().toString()));
-                //         System.out.println("# BasePriceArlPrice MarketCode : " + basePriceArlPrice.getMarketCode());
-                //         System.out.println("# BasePriceArlPrice NewBasePrice : " + (basePriceArlPrice.getNewBasePrice() == null ? "" : basePriceArlPrice.getNewBasePrice().toString()));
-                //         System.out.println("# BasePriceArlPrice NewBasePriceCurrencyCode : " + basePriceArlPrice.getNewBasePriceCurrencyCode());
-                //         System.out.println("# BasePriceArlPrice CurrentBasePrice : " + (basePriceArlPrice.getCurrentBasePrice() == null ? "" : basePriceArlPrice.getCurrentBasePrice().toString()));
-                //         System.out.println("# BasePriceArlPrice CurrentBasePriceCurrencyCode : " + basePriceArlPrice.getCurrentBasePriceCurrencyCode());
-                //         System.out.println("# BasePriceArlPrice FirstPurchasingNetPrice : " + (basePriceArlPrice.getFirstPurchasingNetPrice() == null ? "" : basePriceArlPrice.getFirstPurchasingNetPrice()));
-                //         System.out.println("# BasePriceArlPrice FirstPurNetpriceCurrCd : " + basePriceArlPrice.getFirstPurNetpriceCurrCd());
-                //         System.out.println("# BasePriceArlPrice FirstPurNetpriceStrDt : " + (basePriceArlPrice.getFirstPurNetpriceStrDt() == null ? "" : basePriceArlPrice.getFirstPurNetpriceStrDt().toString()));
-                //         System.out.println("# BasePriceArlPrice LocalCreateDtm : " + (basePriceArlPrice.getLocalCreateDtm() == null ? "" : basePriceArlPrice.getLocalCreateDtm().toString()));
-                //         System.out.println("# BasePriceArlPrice LocalUpdateDtm : " + (basePriceArlPrice.getLocalUpdateDtm() == null ? "" : basePriceArlPrice.getLocalUpdateDtm().toString()));
-                //     }
-                // }
             }
         }
     }
@@ -153,7 +142,8 @@ public class BasePriceArlService implements EventHandler {
      */
     @Before(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlMaster_.CDS_NAME)
     public void beforeCreateBasePriceArlMaster(List<BasePriceArlMaster> basePriceArlMasters) {
-        log.info("#### beforeCreateBasePriceArlMaster Started....");
+        // log.info("#### beforeCreateBasePriceArlMaster Started....");
+        System.out.println("#### beforeCreateBasePriceArlMaster Started....");
 
         CallableStatement cstmt = null;
         ResultSet rs = null;
@@ -255,193 +245,6 @@ public class BasePriceArlService implements EventHandler {
         }
     }
 
-    /**
-     * BasePriceArlMaster의 Before-Event Handler - Backup
-     */
-    // @Before(event = { CdsService.EVENT_CREATE, CdsService.EVENT_UPDATE }, entity = BasePriceArlMaster_.CDS_NAME)
-    // public void beforeBasePriceArlMaster(List<BasePriceArlMaster> basePriceArlMasters) {
-    //     System.out.println("#### beforeBasePriceArlMaster Started....");
-
-    //     CallableStatement cstmt;
-    //     ResultSet rs;
-    //     String sql = "";
-
-    //     /** 
-    //      * basePriceArlMaster
-    //     */
-    //     for (BasePriceArlMaster basePriceArlMaster : basePriceArlMasters) {
-    //         String tenant_id = basePriceArlMaster.getTenantId();
-
-    //         // Init Data Setting : approval_number
-    //         String approval_number = "";
-
-    //         if (basePriceArlMaster.getApprovalNumber() == null) {
-    //             // String sql = "SELECT DP_APPROVAL_NUMBER_FUNC('" + tenant_id + "') FROM DUMMY";
-    //             // approval_number = jdbc.queryForObject(sql, String.class);
-
-    //             try {
-    //                 Connection conn = jdbc.getDataSource().getConnection();
-
-    //                 sql = "SELECT DP_APPROVAL_NUMBER_FUNC(?) FROM DUMMY";
-    //                 cstmt = conn.prepareCall(sql);
-    //                 cstmt.setString(1, tenant_id);
-    //                 rs = cstmt.executeQuery();
-
-    //                 while (rs.next()) {
-    //                     approval_number = rs.getString(1);
-    //                 }
-    //             } catch (SQLException e) { 
-    //                 e.printStackTrace();
-    //             }
-    //         } else {
-    //             approval_number = basePriceArlMaster.getApprovalNumber();
-    //         }
-
-    //         log.info("# approval_number : " + approval_number);
-    //         basePriceArlMaster.setApprovalNumber(approval_number);
-
-    //         /** 
-    //          * BasePriceArlDetail
-    //         */
-    //         BigDecimal increament = new BigDecimal("1");
-    //         List<BasePriceArlDetail> basePriceArlDetails = basePriceArlMaster.getDetails();
-            
-    //         for (BasePriceArlDetail basePriceArlDetail : basePriceArlDetails) {
-
-    //             // Init Data Setting : item_sequence
-    //             BigDecimal item_sequence = new BigDecimal(1);
-
-    //             if (basePriceArlDetail.getItemSequence() == null) {
-    //                 // String sql = "SELECT DP_ITEM_SEQUENCE_FUNC('" + tenant_id + "', '" + approval_number + "', '" + increament + "') FROM DUMMY";
-    //                 // item_sequence = jdbc.queryForObject(sql, BigDecimal.class);
-    //                 // increament = increament.add(new BigDecimal("1"));
-
-    //                 try {
-    //                     Connection conn = jdbc.getDataSource().getConnection();
-
-    //                     sql = "SELECT DP_ITEM_SEQUENCE_FUNC(?, ?, ?) FROM DUMMY";
-    //                     cstmt = conn.prepareCall(sql);
-    //                     cstmt.setString(1, tenant_id);
-    //                     cstmt.setString(2, approval_number);
-    //                     cstmt.setBigDecimal(3, increament);
-    //                     rs = cstmt.executeQuery();
-
-    //                     while (rs.next()) {
-    //                         item_sequence = rs.getBigDecimal(1);
-    //                         increament = increament.add(new BigDecimal("1"));
-    //                     }
-    //                 } catch (SQLException e) { 
-    //                     e.printStackTrace();
-    //                 }
-    //             } else {
-    //                 item_sequence = basePriceArlDetail.getItemSequence();
-    //             }
-
-    //             log.info("# item_sequence : " + item_sequence.toString());
-    //             basePriceArlDetail.setItemSequence(item_sequence);
-
-    //             /**
-    //              * BasePriceArlPrice
-    //             */
-    //             if (basePriceArlDetail.getPrices() != null) {
-    //                 List<BasePriceArlPrice> basePriceArlPrices = basePriceArlDetail.getPrices();
-
-    //                 for (BasePriceArlPrice basePriceArlPrice : basePriceArlPrices) {
-    //                     System.out.println("# BasePriceArlPrice TenantId : " + basePriceArlPrice.getTenantId());
-    //                     System.out.println("# BasePriceArlPrice ApprovalNumber : " + basePriceArlPrice.getApprovalNumber());
-    //                     System.out.println("# BasePriceArlPrice ItemSequence : " + (basePriceArlPrice.getItemSequence() == null ? "" : basePriceArlPrice.getItemSequence().toString()));
-    //                     System.out.println("# BasePriceArlPrice MarketCode : " + basePriceArlPrice.getMarketCode());
-    //                     System.out.println("# BasePriceArlPrice NewBasePrice : " + (basePriceArlPrice.getNewBasePrice() == null ? "" : basePriceArlPrice.getNewBasePrice().toString()));
-    //                     System.out.println("# BasePriceArlPrice NewBasePriceCurrencyCode : " + basePriceArlPrice.getNewBasePriceCurrencyCode());
-    //                     System.out.println("# BasePriceArlPrice CurrentBasePrice : " + (basePriceArlPrice.getCurrentBasePrice() == null ? "" : basePriceArlPrice.getCurrentBasePrice().toString()));
-    //                     System.out.println("# BasePriceArlPrice CurrentBasePriceCurrencyCode : " + basePriceArlPrice.getCurrentBasePriceCurrencyCode());
-    //                     System.out.println("# BasePriceArlPrice FirstPurchasingNetPrice : " + (basePriceArlPrice.getFirstPurchasingNetPrice() == null ? "" : basePriceArlPrice.getFirstPurchasingNetPrice()));
-    //                     System.out.println("# BasePriceArlPrice FirstPurNetpriceCurrCd : " + basePriceArlPrice.getFirstPurNetpriceCurrCd());
-    //                     System.out.println("# BasePriceArlPrice FirstPurNetpriceStrDt : " + (basePriceArlPrice.getFirstPurNetpriceStrDt() == null ? "" : basePriceArlPrice.getFirstPurNetpriceStrDt().toString()));
-    //                     System.out.println("# BasePriceArlPrice LocalCreateDtm : " + (basePriceArlPrice.getLocalCreateDtm() == null ? "" : basePriceArlPrice.getLocalCreateDtm().toString()));
-    //                     System.out.println("# BasePriceArlPrice LocalUpdateDtm : " + (basePriceArlPrice.getLocalUpdateDtm() == null ? "" : basePriceArlPrice.getLocalUpdateDtm().toString()));
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    /**
-     * BasePriceArlMaster의 On-Event Handler
-     */
-    // @On(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlMaster_.CDS_NAME)
-    // public void onBasePriceArlMaster(List<BasePriceArlMaster> basePriceArlMasters) {
-    //     System.out.println("#### onBasePriceArlMaster Started....");
-
-    //     /** 
-    //      * basePriceArlMaster
-    //     */
-    //     for (BasePriceArlMaster basePriceArlMaster : basePriceArlMasters) {
-    //         String tenant_id = basePriceArlMaster.getTenantId();
-
-    //         // Init Data Setting : approval_number
-    //         String approval_number;
-
-    //         if (basePriceArlMaster.getApprovalNumber() == null) {
-    //             String sql = "SELECT DP_APPROVAL_NUMBER_FUNC('" + tenant_id + "') FROM DUMMY";
-    //             approval_number = jdbc.queryForObject(sql, String.class);
-    //         } else {
-    //             approval_number = basePriceArlMaster.getApprovalNumber();
-    //         }
-
-    //         System.out.println("# approval_number : " + approval_number);
-    //         basePriceArlMaster.setApprovalNumber(approval_number);
-
-    //         /** 
-    //          * BasePriceArlDetail
-    //         */
-    //         BigDecimal increament = new BigDecimal("1");
-    //         List<BasePriceArlDetail> basePriceArlDetails = basePriceArlMaster.getDetails();
-            
-    //         for (BasePriceArlDetail basePriceArlDetail : basePriceArlDetails) {
-
-    //             // Init Data Setting : item_sequence
-    //             BigDecimal item_sequence;
-
-    //             if (basePriceArlDetail.getItemSequence() == null) {
-    //                 String sql = "SELECT DP_ITEM_SEQUENCE_FUNC('" + tenant_id + "', '" + approval_number + "', '" + increament + "') FROM DUMMY";
-    //                 item_sequence = jdbc.queryForObject(sql, BigDecimal.class);
-    //                 increament = increament.add(new BigDecimal("1"));
-    //             } else {
-    //                 item_sequence = basePriceArlDetail.getItemSequence();
-    //             }
-
-    //             System.out.println("# getItemSequence : " + item_sequence.toString());
-    //             basePriceArlDetail.setItemSequence(item_sequence);
-
-    //             /**
-    //              * BasePriceArlPrice
-    //             */
-    //             if (basePriceArlDetail.getPrices() != null) {
-    //                 List<BasePriceArlPrice> basePriceArlPrices = basePriceArlDetail.getPrices();
-
-    //                 for (BasePriceArlPrice basePriceArlPrice : basePriceArlPrices) {
-    //                     System.out.println("# BasePriceArlPrice TenantId : " + basePriceArlPrice.getTenantId());
-    //                     System.out.println("# BasePriceArlPrice ApprovalNumber : " + basePriceArlPrice.getApprovalNumber());
-    //                     System.out.println("# BasePriceArlPrice ItemSequence : " + (basePriceArlPrice.getItemSequence() == null ? "" : basePriceArlPrice.getItemSequence().toString()));
-    //                     System.out.println("# BasePriceArlPrice MarketCode : " + basePriceArlPrice.getMarketCode());
-    //                     System.out.println("# BasePriceArlPrice NewBasePrice : " + (basePriceArlPrice.getNewBasePrice() == null ? "" : basePriceArlPrice.getNewBasePrice().toString()));
-    //                     System.out.println("# BasePriceArlPrice NewBasePriceCurrencyCode : " + basePriceArlPrice.getNewBasePriceCurrencyCode());
-    //                     System.out.println("# BasePriceArlPrice CurrentBasePrice : " + (basePriceArlPrice.getCurrentBasePrice() == null ? "" : basePriceArlPrice.getCurrentBasePrice().toString()));
-    //                     System.out.println("# BasePriceArlPrice CurrentBasePriceCurrencyCode : " + basePriceArlPrice.getCurrentBasePriceCurrencyCode());
-    //                     System.out.println("# BasePriceArlPrice FirstPurchasingNetPrice : " + (basePriceArlPrice.getFirstPurchasingNetPrice() == null ? "" : basePriceArlPrice.getFirstPurchasingNetPrice()));
-    //                     System.out.println("# BasePriceArlPrice FirstPurNetpriceCurrCd : " + basePriceArlPrice.getFirstPurNetpriceCurrCd());
-    //                     System.out.println("# BasePriceArlPrice FirstPurNetpriceStrDt : " + (basePriceArlPrice.getFirstPurNetpriceStrDt() == null ? "" : basePriceArlPrice.getFirstPurNetpriceStrDt().toString()));
-    //                     System.out.println("# BasePriceArlPrice LocalCreateDtm : " + (basePriceArlPrice.getLocalCreateDtm() == null ? "" : basePriceArlPrice.getLocalCreateDtm().toString()));
-    //                     System.out.println("# BasePriceArlPrice LocalUpdateDtm : " + (basePriceArlPrice.getLocalUpdateDtm() == null ? "" : basePriceArlPrice.getLocalUpdateDtm().toString()));
-    //                 }
-
-    //                 // basePriceArlDetail.setPrices(null);
-    //             }
-    //         }
-    //     }
-    // }
-
     // @Before(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlDetail_.CDS_NAME)
     // public void beforeBasePriceArlDetail(List<BasePriceArlDetail> basePriceArlDetails) {
     //     System.out.println("#### BasePriceArlDetail Started....");
@@ -461,11 +264,6 @@ public class BasePriceArlService implements EventHandler {
 
     //         System.out.println("# ItemSequence : " + Integer.toString(item_sequence));
     //     }
-    // }
-
-    // @On(event = CdsService.EVENT_READ, entity = "BasePriceArlService.Base_Price_Arl_Master")
-    // public void onRead(CdsReadEventContext context) {
-    //     context.setResult(Base_Price_Arl_Master.values());
     // }
 
 }

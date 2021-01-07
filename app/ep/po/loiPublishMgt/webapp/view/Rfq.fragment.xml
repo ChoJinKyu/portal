@@ -27,7 +27,7 @@
         <ToolbarSpacer/>
         <HBox alignItems="Center" justifyContent="Center" >
             <Button text="Cancel" class="sapUiSmallMargin" press=".onExitRfq"/>
-            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onRfqSave"/>
+            <Button text="Save" class="sapUiSmallMargin" type="Emphasized" press=".onRfqSave"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>
