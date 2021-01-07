@@ -1,15 +1,21 @@
 sap.ui.define([
 		"sap/ui/core/mvc/Controller",
-        "sap/ui/model/json/JSONModel"
+        "sap/ui/model/json/JSONModel",
+        "ext/lib/util/Multilingual"
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, JSON) {
+	function (Controller, JSON, Multilingual) {
 		"use strict";
 
 		return Controller.extend("sp.sc.scQBMgt.controller.CreatePage", {
 			onInit: function () {
+                
+                // I18N 모델 SET
+                var oMultilingual = new Multilingual();
+                this.getView().setModel(oMultilingual.getModel(), "I18N");
+
                 this.oRouter = this.getOwnerComponent().getRouter();
                 this.oRouter.getRoute("createPage").attachPatternMatched(this._onProductMatched, this);
                 

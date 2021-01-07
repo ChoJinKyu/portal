@@ -46,7 +46,7 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-				    <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
+				    
 				</uxap:actions>
 
                 <uxap:navigationActions>
@@ -341,6 +341,7 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
+                <Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
                 <Button type="Transparent" text="Cancel"    press=".onPageCancelEditButtonPress" visible="{mode>/editFlag}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
                 <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"   visible="{=${appMaster>/approve_status_code}==='AR'?true:false}" />

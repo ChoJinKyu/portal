@@ -1191,7 +1191,7 @@ sap.ui.define([
         _onExit: function () {
             var that = this;
             that._setInit();
-            that._fragmentDistory();           
+                       
 
         },
 
@@ -2213,9 +2213,9 @@ sap.ui.define([
                     });
                 }
 
-                setTimeout(oModel.refresh(true), 500);
-                setTimeout(that._fnSetReadMode(), 500);
-                setTimeout(that._onExit(), 500);
+                setTimeout(oModel.refresh(true), 1000);
+                setTimeout(that._fnSetReadMode(), 1000);
+                setTimeout(that._onExit(), 1000);
                
                 that._setBusy(false);   
         },
@@ -2609,7 +2609,7 @@ sap.ui.define([
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
+                        setTimeout(that._onExit(),500);
                         that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
@@ -2637,7 +2637,7 @@ sap.ui.define([
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
+                        setTimeout(that._onExit(),500);
                         that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
@@ -2670,7 +2670,7 @@ sap.ui.define([
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
+                        setTimeout(that._onExit(),500);
                         that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
@@ -2703,7 +2703,16 @@ sap.ui.define([
             var val = _oInput.getValue();
             val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val);
-        }
+        },
+
+        onExit: function() {
+            var that = this;
+            that._fragmentDistory();            
+            // if (this.dialogFrafment) {
+            //     this.dialogFrafment.destroy(true);
+            // }
+
+        }       
            
     });
 });

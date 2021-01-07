@@ -131,10 +131,10 @@ sap.ui.define([
             //접속자 법인 사업부로 바꿔줘야함
             this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
-            this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['I']);
+            // this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
+            // this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['I']);
 
             this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));

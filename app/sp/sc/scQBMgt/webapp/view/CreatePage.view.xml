@@ -10,7 +10,7 @@
 
 	<App id="app">
 			<pages>
-				<Page id="page" title="Negotiation Create" showNavButton="true" navButtonPress=".onNavBack" >
+				<Page id="page" title="{I18N>/NEGOTIATION_CREATE_TITLE}" showNavButton="true" navButtonPress=".onNavBack" >
 					<content>
                         <form:SimpleForm editable="true"  layout="ResponsiveGridLayout">
                             <form:content>
@@ -20,15 +20,15 @@
                                             width="10%" height="auto" id= "aaa"  >
                                             <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd "
                                                 alignContent="Center" alignItems="Center" justifyContent="Center" >
-                                                <Text text="가격" class="mText "/>
+                                                <Text text="{I18N>/PRICE}" class="mText "/>
                                             </VBox>
                                         </VBox>
                                         <VBox width="90%" height="100%" class="" >
                                             <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd leftM  mouseP whiteBG" displayInline="true"  id="vboxB1">
                                                 <VBox class=" sapUiSmallMarginBeginEnd">
                                                     <!-- <Text id="text1"  class="sText oMouseP sapMLabelNoText" /> -->
-                                                    <Text text="RFQ (견적 계획)" class="tText mouseP" />
-                                                    <Text text="제안 가격을 받아 평가 후 우선 협상 대상자를 선정하고 협상을 거쳐 낙찰자를 선정" class="dText mouseP"/>
+                                                    <Text text="{I18N>/NEGOTIATION_TYPE_01} ({I18N>/QUOTATION_PLAN})" class="tText mouseP" />
+                                                    <Text text="{I18N>/NEGOTIATION_DES_01}" class="dText mouseP"/>
                                                 </VBox>
                                                 <VBox class="">
                                                     <HBox class="sapUiSmallMarginBegin">
@@ -82,19 +82,19 @@
                                                     <HBox class="sapUiSmallMarginBegin">
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="구매요청/접수" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="45px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
-                                                            <Text text="RFQ (가격평가)" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/NEGOTIATION_TYPE_01} ({I18N>/VALUATION_PRICE})" class="oMouseP lhText"/>
                                                         </VBox>
                                                         <VBox width="62px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
-                                                            <Text text="협상" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/NEGOTIATION}" class="oMouseP lhText"/>
                                                         </VBox>
                                                         <VBox width="80px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
-                                                            <Text text="계약" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/CONTRACT}" class="oMouseP lhText"/>
                                                         </VBox>
                                                     </HBox>
                                                 </VBox>
@@ -114,16 +114,16 @@
                                                     </RadioButtonGroup>
                                                 </VBox>
                                                 <HBox justifyContent="End" >
-                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
-                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                    <Button text="{I18N>/CLOSE}" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="{I18N>/APPLY}" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" /> 
                                                 </HBox>
                                             </VBox >
                                             
                                             <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd mouseP whiteBG topM leftM" displayInline="true"  id="vboxB2"  >
                                                 <VBox class="sapUiSmallMarginBeginEnd">
                                                     <!-- <Text id="text2" class="sText oMouseP" /> -->
-                                                    <Text text="Competitive Bidding (입찰 계획)" class="tText mouseP" />
-                                                    <Text text="가격 입찰서를 제출 받아 예정가격 이하 최저 가격으로 입찰한 자를 낙찰자로 선정" class="dText mouseP"/>
+                                                    <Text text="{I18N>/NEGOTIATION_TYPE_02} ({I18N>/BIDDING_PLAN})" class="tText mouseP" />
+                                                    <Text text="{I18N>/NEGOTIATION_DES_02}" class="dText mouseP"/>
                                                 </VBox>
                                                 <VBox class="sapUiSmallMarginBegin">
                                                     <HBox>
@@ -165,15 +165,15 @@
                                                     <HBox>
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="구매요청/접수" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="65px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
-                                                            <Text text="Competitive Bidding" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/NEGOTIATION_TYPE_02}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="34.5px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
-                                                            <Text text="계약" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/CONTRACT}" class="oMouseP lhText"/>
                                                         </VBox>
                                                     </HBox>
                                                 </VBox>
@@ -193,8 +193,8 @@
                                                     </RadioButtonGroup>
                                                 </VBox>
                                                 <HBox justifyContent="End" >
-                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
-                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                    <Button text="{I18N>/CLOSE}" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="{I18N>/APPLY}" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
                                                 </HBox>
                                             </VBox >
 
@@ -208,15 +208,15 @@
                                             width="10%" height="auto"   >
                                             <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop darkgrayBG"
                                                 alignContent="Center" alignItems="Center" justifyContent="Center" >
-                                                <Text text="가격 + 비가격" class="mText" />
+                                                <Text text="{I18N>/PRICE} + {I18N>/NON_PRICE}" class="mText" />
                                             </VBox>
                                         </VBox>
                                         <VBox width="90%" height="100%" >
                                             <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop mouseP whiteBG leftM" displayInline="true" id="vboxB3" >
                                                 <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
                                                     <!-- <Text id="text3" class="sText oMouseP" /> -->
-                                                    <Text text="RFP (견적 계획)" class="tText mouseP" />
-                                                    <Text text="제안 가격에 품질 ,성능 ,납기 등을 종합적으로 심사하여 우선 협상 대상자를 선정하고 협상을 거쳐 낙찰자를 선정" class="dText mouseP"/>
+                                                    <Text text="{I18N>/NEGOTIATION_TYPE_03} ({I18N>/QUOTATION_PLAN})" class="tText mouseP" />
+                                                    <Text text="{I18N>/NEGOTIATION_DES_03}" class="dText mouseP"/>
                                                 </VBox>
                                                 <VBox class="sapUiSmallMarginBegin">
                                                     <HBox>
@@ -257,15 +257,15 @@
                                                     <HBox>
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="구매요청/접수" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText"/>
                                                         </VBox>
                                                         <VBox width="50px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
-                                                            <Text text="RFP Price+Non Price evaluation" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/NEGOTIATION_IC_DES_01}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="47.5px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
-                                                            <Text text="계약" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/CONTRACT}" class="oMouseP lhText" />
                                                         </VBox>
                                                     </HBox>
                                                 </VBox>
@@ -285,16 +285,16 @@
                                                     </RadioButtonGroup>
                                                 </VBox>
                                                 <HBox justifyContent="End" >
-                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
-                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                    <Button text="{I18N>/CLOSE}" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="{I18N>/APPLY}" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
                                                 </HBox>
                                             </VBox >
 
                                             <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd  mouseP whiteBG topM leftM" displayInline="true"  id="vboxB4">
                                                 <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
                                                     <!-- <Text id="text4"  class="sText oMouseP"/> -->
-                                                    <Text text="2-Step Bidding (입찰 계획)" class="tText mouseP" />
-                                                    <Text text="1단계에서 품질/성능/납기 등에 대한 규격 입찰서를 받아 입찰 적격자를 판단하고 적격자로 부터 가격 입찰서를 제출받아 최저 가격으로 입찰한 자를 낙찰자로 선정" class="dText mouseP"/>
+                                                    <Text text="{I18N>/NEGOTIATION_TYPE_04} ({I18N>/BIDDING_PLAN})" class="tText mouseP" />
+                                                    <Text text="{I18N>/NEGOTIATION_DES_04}" class="dText mouseP"/>
                                                     
                                                 </VBox>
                                                 <VBox class="sapUiSmallMarginBegin">
@@ -349,19 +349,19 @@
                                                     <HBox>
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="구매요청/접수" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText"/>
                                                         </VBox>
                                                         <VBox width="50px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
-                                                            <Text text="1-Step Non Price evaluation" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/NEGOTIATION_IC_DES_02}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="55px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
-                                                            <Text text="2-Step Price evaluation" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/NEGOTIATION_IC_DES_03}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="40px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="70px">
-                                                            <Text text="계약" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/CONTRACT}" class="oMouseP lhText"/>
                                                         </VBox>
                                                     </HBox>
                                                 </VBox>
@@ -381,8 +381,8 @@
                                                     </RadioButtonGroup>
                                                 </VBox>
                                                 <HBox justifyContent="End" >
-                                                    <Button text="Close" press="onClosePress" class="sapUiSmallMarginEnd" />
-                                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                                    <Button text="{I18N>/CLOSE}" press="onClosePress" class="sapUiSmallMarginEnd" />
+                                                    <Button text="{I18N>/APPLY}" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
                                                 </HBox>
                                             </VBox >
                                             
@@ -418,7 +418,7 @@
                                 <VBox>
                                     <HBox justifyContent="End" >
                                         <Button text="Cancel" press="onCancelPrss" class="sapUiSmallMarginEnd" />
-                                        <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
+                                        <Button text="{I18N>/APPLY}" type="Emphasized" class="sapUiLargeMarginEnd" press="onApplyePress" />
                                     </HBox>
                                 </VBox> -->
 
@@ -456,7 +456,7 @@
                                 </FlexBox>  
                                 <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
                                     <Button text="Cancel" press="onCancelPrss" />
-                                    <Button text="Apply" />
+                                    <Button text="{I18N>/APPLY}" />
                                 </FlexBox>          
                                   
                             </layout:VerticalLayout>  -->

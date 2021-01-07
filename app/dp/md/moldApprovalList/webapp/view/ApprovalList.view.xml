@@ -139,7 +139,7 @@
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
-                                            sorter: { path: 'code'}
+                                            sorter: { path: 'util>sort_no'}
                                         }"
                                         selectionFinish="handleSelectionFinishDiv">
                                 <core:Item key="{util>code}" text="{util>code_name}" />
