@@ -37,6 +37,8 @@ entity Pu_Pr_Mst {
         erp_interface_flag      : Boolean      @cds.on.insert: false    @title: 'ERP인터페이스여부' ;	
         erp_pr_type_code        : String(30)                @title: 'ERP구매요청유형코드' ;	
         erp_pr_number           : String(50)                @title: 'ERP구매요청번호' ;	
+        approval_contents       : LargeString               @title: '품의내용' ;	
+
     }	
 
 extend Pu_Pr_Mst with util.Managed;
