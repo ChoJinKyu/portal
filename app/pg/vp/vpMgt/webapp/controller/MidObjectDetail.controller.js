@@ -14,8 +14,28 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/Text",
 	"sap/m/Input",
-    "sap/m/ComboBox",    
-], function (BaseController, History, JSONModel,TreeListModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Text, Input, ComboBox) {
+    "sap/m/ComboBox",
+    "ext/lib/util/Validator",
+    "ext/lib/formatter/Formatter"        
+], function (
+    BaseController, 
+    History, 
+    JSONModel,
+    TreeListModel, 
+    TransactionManager, 
+    ManagedModel, 
+    ManagedListModel, 
+    DateFormatter, 
+    Filter, 
+    FilterOperator, 
+    Fragment, 
+    MessageBox, 
+    MessageToast, 
+    Text, 
+    Input, 
+    ComboBox,
+    Validator,
+    Formatter) {
     "use strict";
     
     var oTransactionManager;
@@ -23,17 +43,9 @@ sap.ui.define([
 	return BaseController.extend("pg.vp.vpMgt.controller.MidObjectDetail", {
 
         dateFormatter: DateFormatter,
-        
+        formatter: Formatter,
 
-        
-		formatter: (function(){
-			return {
-				toYesNo: function(oData){
-					return oData === true ? "YES" : "NO"
-				},
-			}
-        })(),
-
+        validator: new Validator(),
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -303,8 +315,59 @@ sap.ui.define([
             this._supplySearch(predicates);
             this._metrialSearch(predicates3);
             this._managerSearch(predicates2);
+
+            this.sppListTbl = this.byId("sppListTbl"); 
+
         },
 
+        //행추가
+        supplierAddRow: function () {
+            var oModel = this.getModel("suplist");
+            oModel.addRecord({}, 0);
+            this.validator.clearValueState(this.byId("sppListTbl"));
+        },
+        //행삭제
+        supplierDelRow: function (oEvent) {
+            var table = this.byId("sppListTbl"),
+                model = this.getModel("suplist");
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
+        },
+        //팝업에서 값 내려왔거나 서제스쳔선택되어서 change이벤트가 발생되었을떼에 실행되는 함수
+        supplierChg: function (oEvent) {
+            console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
+            console.log("oItemPath:" + oEvent.getSource().getParent().getRowBindingContext().sPath);
+            var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+            
+
+            var supplierCode = oEvent.oSource.getProperty("selectedKey");
+            var oView = this.getView();
+            oView.setBusy(true);
+            var oFilter = [];
+            oFilter.push(new Filter("supplier_code", FilterOperator.Contains, supplierCode));
+            oFilter.push(new Filter("language_cd", FilterOperator.Contains, "KO"));
+            oFilter.push(new Filter("bizunit_code", FilterOperator.Contains, this._sOrgCode));
+            var oModel = this.getModel("mapping");
+            var sModel = this.getModel("suplist");
+            oModel.read("/VpSupplierMstView", {
+                filters: oFilter,
+                success: function (oData) {
+                    console.log("oData:" + oData);
+                    if (oData.results.length === 1) {
+                        var results = oData.results[0];
+                        sModel.setProperty(sPath + "/supplier_code", results.supplier_code);
+                        sModel.setProperty(sPath + "/supplier_local_name", results.supplier_local_name);
+                        sModel.setProperty(sPath + "/supplier_english_name", results.supplier_english_name);
+                        sModel.setProperty(sPath + "/supplier_company_code", results.supplier_company_code);
+                        sModel.setProperty(sPath + "/supplier_company_name", results.supplier_company_name);
+                    } else {
+                        //
+                    }
+                    oView.setBusy(false);
+                }.bind(this)
+            });
+        },        
          _generalInfo: function(aFilter) {
             //alert(that.getView().byId("pop_operation_unit_name").getText());
             // var oView = this.getView("midDtlView");
