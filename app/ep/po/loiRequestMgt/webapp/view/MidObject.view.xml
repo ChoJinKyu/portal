@@ -75,7 +75,7 @@
                             </layout:VerticalLayout>
 
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="Process 2 : "/>
+                    <!-- <Label text="Process 2 : "/>
                         <HBox>
                             <sc:MicroProcessFlow>
                                 <sc:content>
@@ -91,7 +91,7 @@
                             <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
                             <Text text="LOI발행" width="6em" textAlign="Center" />
                             <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
-                        </HBox>
+                        </HBox> -->
                 </layout:VerticalLayout>  
 
 			</FlexBox>

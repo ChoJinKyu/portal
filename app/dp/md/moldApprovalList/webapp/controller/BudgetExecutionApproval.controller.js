@@ -188,7 +188,8 @@ sap.ui.define([
                 });
             }
 
-            var oArgs = {
+            var oArgs = { 
+                approval_type_code : "B",
                 company_code: this.company_code ,
                 org_code: this.plant_code,
                 mold_progress_status_code : ['DEV_RCV','SUP_APP'] ,

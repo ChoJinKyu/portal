@@ -2,33 +2,33 @@ sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
     "ext/lib/formatter/NumberFormatter",
-	"sap/ui/core/routing/History",
-	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/TransactionManager",
-	"ext/lib/model/ManagedModel",
+    "sap/ui/core/routing/History",
+    "sap/ui/model/json/JSONModel",
+    "ext/lib/model/TransactionManager",
+    "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/Sorter",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/util/ValidatorUtil",
     "ext/lib/formatter/Formatter",
     "ext/lib/util/Validator",
-	"sap/ui/model/Filter",
+    "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
+    "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-	"sap/m/ColumnListItem",
+    "sap/m/ColumnListItem",
     "sap/m/ObjectIdentifier",
-	"sap/m/Text",
-	"sap/m/Input",
-	"sap/m/ComboBox",
+    "sap/m/Text",
+    "sap/m/Input",
+    "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel",
     "sap/m/ObjectStatus"
-], function (BaseController, Multilingual, NumberFormatter, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, Sorter, DateFormatter,  ValidatorUtil, Formatter, Validator,
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-	ColumnListItem, ObjectIdentifier, RichTextEditor,Text, Input, ComboBox, Item, ObjectStatus) {
+], function (BaseController, Multilingual, NumberFormatter, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, Sorter, DateFormatter, ValidatorUtil, Formatter, Validator,
+    Filter, FilterOperator, Fragment, MessageBox, MessageToast,
+    ColumnListItem, ObjectIdentifier, RichTextEditor, Text, Input, ComboBox, Item, ObjectStatus) {
 
     "use strict";
 
@@ -65,7 +65,7 @@ sap.ui.define([
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            
+
             //this.setModel(oViewModel, "midObjectView");
             this.setModel(new JSONModel(), "midObjectView");
             this.setModel(new ManagedModel(), "master");
@@ -92,57 +92,57 @@ sap.ui.define([
 		 * Event handler for Enter Full Screen Button pressed
 		 * @public
 		 */
-		onPageEnterFullScreenButtonPress: function () {
+        onPageEnterFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-			this.getRouter().navTo("midPage", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
+            this.getRouter().navTo("midPage", {
+                layout: sNextLayout,
+                tenantId: this._sTenantId,
                 companyCode: this._sCompanyCode,
                 loiWriteNumber: this._sLoiWriteNumber
             });
             this._setScreen(sNextLayout);
             this._newCheck(this._sTenantId);
-            
-		},
+
+        },
 		/**
 		 * Event handler for Exit Full Screen Button pressed
 		 * @public
 		 */
-		onPageExitFullScreenButtonPress: function () {
+        onPageExitFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-			this.getRouter().navTo("midPage", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
+            this.getRouter().navTo("midPage", {
+                layout: sNextLayout,
+                tenantId: this._sTenantId,
                 companyCode: this._sCompanyCode,
                 loiWriteNumber: this._sLoiWriteNumber
             });
             this._setScreen(sNextLayout);
             this._newCheck(this._sTenantId);
         },
-        
+
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
 		 */
-		onPageNavBackButtonPress: function () {
+        onPageNavBackButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            this.getRouter().navTo("mainPage", {layout: sNextLayout});
-            
+            this.getRouter().navTo("mainPage", { layout: sNextLayout });
+
             //this._setScreen(sNextLayout);
             //this._setModelEditCancelMode();
         },
 
-        _setScreen: function (screen){
+        _setScreen: function (screen) {
             var oViewModel = this.getModel("midObjectView");
             oViewModel.setProperty("/screen", screen);
         },
 
-        _setModelEditCancelMode: function() {
+        _setModelEditCancelMode: function () {
             var oEditModel = this.getModel("editMode");
             oEditModel.setProperty("/editMode", "");
         },
 
-        _newCheck: function(sTenantId){
+        _newCheck: function (sTenantId) {
             var oViewModel = this.getModel("editMode");
             oViewModel.setProperty("/newcheck", sTenantId);
         },
@@ -159,7 +159,7 @@ sap.ui.define([
 		 * Event handler for delete page entity
 		 * @public
 		 */
-        onPageDeleteButtonPress: function(){
+        onPageDeleteButtonPress: function () {
             //var oArgs = oEvent.getParameter("arguments")
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
@@ -177,37 +177,37 @@ sap.ui.define([
             input.inputData = inputData;
 
             console.log("input====", JSON.stringify(input));
-       
-            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/DeleteLoiMulEntityProc";   
 
-			MessageBox.confirm("Are you sure to delete this control option and details?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
+            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/DeleteLoiMulEntityProc";
+
+            MessageBox.confirm("Are you sure to delete this control option and details?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
 
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data : JSON.stringify(input),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
-                            success: function(data){
+                            success: function (data) {
                                 console.log("#########Success#####", data.value);
                                 oView.setBusy(false);
                                 that.onPageNavBackButtonPress.call(that);
                                 MessageToast.show("Success to delete.");
                             },
-                            error: function(e){
+                            error: function (e) {
                                 console.log("error====", e);
                             }
-                        });                        
+                        });
 
-					}
-				}
-			});
+                    }
+                }
+            });
         },
-        
+
         /**
          * Event handler for saving page changes
          * @public
@@ -223,17 +223,14 @@ sap.ui.define([
             // '121020'	'결재진행중'
             // '121030'	'결재반려'
             // '121040'	'요청완료'
-
             var statusCode = "121010";
-            if(flag == "R") {
+            if (flag == "R") {
                 statusCode = "121040";
-            }else if(flag == "B") {
+            } else if (flag == "B") {
                 statusCode = "121020";
-            }else {
+            } else {
                 statusCode = "121010";
             }
-
-
 
             console.log(">>> detail", detail.getData());
 
@@ -247,91 +244,85 @@ sap.ui.define([
                 return;
             }
 
-            if (master.getData()["_state_"] != "U") {
-                if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-                    MessageBox.alert("변경사항이 없습니다.");
-                    return;
-                }
-            }
+             if (flag != "R" && flag != "B" && master.getData()["_state_"] != "U") {
+                 if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+                     MessageBox.alert("변경사항이 없습니다.");
+                     return;
+                 }
+             }
 
 
             var input = {
-                inputData : {
-                    savedHeaders : [],
-                    savedReqDetails : [] 
+                inputData: {
+                    savedHeaders: [],
+                    savedReqDetails: []
                 }
             };
 
+            var supInput = {};
+            var inputData = {};
+
             console.log(" _state_::: " + master.getData()["_state_"]);
-            console.log(" master --- >  getData::: " , this.getModel("master").getData());
-            
+            console.log(" master --- >  getData::: ", this.getModel("master").getData());
+
             var headers = [];
             var loiNumber_val = "";
 
-            if(master.getData()["_state_"] == "C"){
+            if (master.getData()["_state_"] == "C") {
                 loiNumber_val = "new";
-            }else{
-                loiNumber_val = master.getData()["loi_number"]; 
+            } else {
+                loiNumber_val = master.getData()["loi_number"];
             }
 
             //if (master.getData()["_state_"] == "C" || master.getData()["_state_"] == "U") {
-                headers.push({
-                    tenant_id: 'L2100',
-                    company_code: 'C100',
-                    loi_write_number: this._sLoiWriteNumber,
-                    loi_number: loiNumber_val,
-                    loi_request_title: master.getData()["loi_request_title"],
-                    loi_publish_purpose_desc: master.getData()["loi_publish_purpose_desc"],
-                    special_note: master.getData()["special_note"],
-                    requestor_empno: '5450',
-                    request_department_code: '58665481',
-                    //request_date: new Date()
-                    loi_request_status_code : statusCode
-                });
-
+            headers.push({
+                tenant_id: 'L2100',
+                company_code: 'C100',
+                loi_write_number: this._sLoiWriteNumber,
+                loi_number: loiNumber_val,
+                loi_request_title: master.getData()["loi_request_title"],
+                loi_publish_purpose_desc: master.getData()["loi_publish_purpose_desc"],
+                special_note: master.getData()["special_note"],
+                requestor_empno: '5450',
+                request_department_code: '58665481',
+                //request_date: new Date()
+                loi_request_status_code: statusCode
+            });
             //}
 
             console.log(" headers::: " , headers);
-            console.log("detail _state_::: " + detail.getChanges().length);
-
             input.inputData.savedHeaders = headers;
 
-            
             var details = [];
             var suppliers = [];
             var supplierCodeArray = [];
             var loiItemNum_val = '';
             var delNum = 0;
-            var detailLen = detail.getData()["LOIRequestDetailView"].length;
-
             var afterDelCnt = 0;
             var delfalg = "";
 
+            console.log(" 111::: ");
+
             if (detail.getChanges().length > 0) {
                 detail.getData()["LOIRequestDetailView"].map(r => {
-                    
+
                     console.log("detail _row_state_::: " + r["_row_state_"]);
-                    if(r["_row_state_"] == "C"){
+                    if (r["_row_state_"] == "C") {
                         loiItemNum_val = "new";
-                    }else{
-                        loiItemNum_val = r["loi_item_number"]; 
+                    } else {
+                        loiItemNum_val = r["loi_item_number"];
                     }
 
-                     if(r["_row_state_"] == "D"){
-                         delfalg = "D";
-                     }
-                    //  else{
-                    //      delfalg = "U";
-                    //  }
-
-                    
+                    if (r["_row_state_"] == "D") {
+                        delfalg = "D";
+                    }
 
                     details.push({
                         tenant_id: 'L2100',
                         company_code: 'C100',
                         loi_write_number: r["loi_write_number"],//this._sLoiWriteNumber,
                         loi_item_number: loiItemNum_val,
-                        item_sequence: String(r["item_sequence"] - (afterDelCnt*10)),
+                        item_sequence: String(r["item_sequence"] - (afterDelCnt * 10)),
                         ep_item_code: r["ep_item_code"],
                         item_desc: r["item_desc"],
                         unit: r["unit"],
@@ -341,69 +332,54 @@ sap.ui.define([
                         supplier_code: r["supplier_code"],
                         buyer_empno: r["buyer_empno"],
                         remark: r["remark"],
-                        row_state : delfalg
+                        row_state: delfalg
                     });
                     //return r;
 
-                    if(r["_row_state_"] == "D"){
-                         delNum = delNum + 1;
-                         afterDelCnt++;
-                        
-                     }
+                    if (r["_row_state_"] == "D") {
+                        delNum = delNum + 1;
+                        afterDelCnt++;
+                    }
 
-                     delfalg = "";
-                    
-                    
+                    delfalg = "";
 
-            //console.log("---------befor _row_state_-------" , r["_row_state_"]);
-  //              console.log("---------befor suppliers-------" , r["supplier_code"]);
+                    if (detail.getChanges().length > 0) {
+                        if (r["supplier_code"] !== '' && r["supplier_code"] != null && r["supplier_code"] !== undefined) {
+                            var supplierCode = r["supplier_code"];
+                            supplierCodeArray = supplierCode.split(",");
+                            //console.log("supplierCodeArray :: " , supplierCodeArray);
 
-            //     if (r["_row_state_"] !== undefined) {
-            //     if(r["_row_state_"] === "C" || r["_row_state_"] === "U"){
-            //         console.log("---------in _row_state_-------" , r["_row_state_"]);
-            //         if(r["supplier_code"] !== ''){
-            //             var supplierCode = r["supplier_code"];
-            //             supplierCodeArray = supplierCode.split(",");
-        
-            //             //List<String> salesTeamList = new ArrayList<>();
-            //             for (var i = 0; i < supplierCodeArray.length; i++) {
-
-            //                 suppliers.push({
-            //                     tenant_id: '1000',
-            //                     company_code: 'C100',
-            //                     loi_write_number: this._sLoiWriteNumber,
-            //                     loi_item_number: loiItemNum_val,
-            //                     supplier_code: supplierCodeArray[i]
-            //                 });
-            //             }
-
-            //         }
-            //     }
-            // }
-
-
+                            for (var i = 0; i < supplierCodeArray.length; i++) {
+                                suppliers.push({
+                                    tenant_id: 'L2100',
+                                    company_code: 'C100',
+                                    loi_write_number: r["loi_write_number"],
+                                    loi_item_number: loiItemNum_val,
+                                    supplier_code: supplierCodeArray[i]
+                                });
+                            }
+                            //console.log("suppliers :: " , suppliers);
+                        }
+                    }
                 })
 
-                console.log("---------details-------" , details);
-                // console.log("---------delNum-------" , delNum);
-                // console.log("---------detailLen-------" , detailLen);
-                // console.log("---------del-------" , String(+detailLen - delNum));
-                //console.log("---------suppliers-------" , suppliers);
+                console.log("details :: ", details);
 
                 input.inputData.savedReqDetails = details;
-                //input.inputData.savedSuppliers = suppliers;
-
+                supInput.inputData = suppliers;
             }
 
-            if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            console.log(" 222::: ");
 
-            //var url = "ep/po/webapp/srv-api/odata/v4/ep.SampleMgrV4Service/SaveLoiRequestMultiEntitylProc"
-            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";  
+            //if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+console.log(" 444::: ");
+            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";
 
+            console.log(" 333::: ");
             //MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
             MessageBox.confirm("Are you sure ?", {
-                title : this.getModel("I18N").getText("/SAVE"),
-                initialFocus : MessageBox.Action.CANCEL,
+                title: this.getModel("I18N").getText("/SAVE"),
+                initialFocus: MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
 
@@ -411,28 +387,25 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data : JSON.stringify(input),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
-                            success: function(data){
-                                console.log("---------data ssss-------" ,JSON.stringify(data));
+                            success: function (data) {
+                                console.log("---------data ssss-------", JSON.stringify(data));
 
-
-
-                                //that._setModelEditCancelMode();
-                                //that._setItemSequence(); //itemsequence 
+                                that._setItemSequence(supInput);
                                 if (detail.getChanges().length > 0) {
-                                     that.onReload(data);
+                                    that.onReload(data);
                                 }
 
                                 view.setBusy(false);
-								that._toShowMode();
+                                that._toShowMode();
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 //MessageToast.show(that.getModel("I18N").getText("/NCM0005"));   
-                                MessageToast.show("Success to save.");                           
+                                MessageToast.show("Success to save.");
                                 //that._toShowMode();
                             },
-                            error: function(e){
-                                
+                            error: function (e) {
+
                             }
                         });
                     };
@@ -441,37 +414,37 @@ sap.ui.define([
 
         },
 
-        onReload: function(data) {
+        onReload: function (data) {
 
             var oView = this.getView();
             this.getModel("midObjectView").setProperty("/isAddedMode", false);
-                this._bindView("/LOIRequestListView(tenant_id='" + data.savedReqDetails[0].tenant_id + "',company_code='" + data.savedReqDetails[0].company_code + "',loi_write_number='" + data.savedReqDetails[0].loi_write_number + "')");
-                oView.setBusy(true);
+            this._bindView("/LOIRequestListView(tenant_id='" + data.savedReqDetails[0].tenant_id + "',company_code='" + data.savedReqDetails[0].company_code + "',loi_write_number='" + data.savedReqDetails[0].loi_write_number + "')");
+            oView.setBusy(true);
 
-                var oDetailsModel = this.getModel('details');
-                    oDetailsModel.setTransactionModel(this.getModel());
-                    oDetailsModel.read("/LOIRequestDetailView", {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, data.savedReqDetails[0].tenant_id),
-                                new Filter("company_code", FilterOperator.EQ, data.savedReqDetails[0].company_code),
-                                new Filter("loi_write_number", FilterOperator.EQ, data.savedReqDetails[0].loi_write_number)
-                        ],
-                        sorters: [
-                            new Sorter("item_sequence", false)
-                        ],
+            var oDetailsModel = this.getModel('details');
+            oDetailsModel.setTransactionModel(this.getModel());
+            oDetailsModel.read("/LOIRequestDetailView", {
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, data.savedReqDetails[0].tenant_id),
+                    new Filter("company_code", FilterOperator.EQ, data.savedReqDetails[0].company_code),
+                    new Filter("loi_write_number", FilterOperator.EQ, data.savedReqDetails[0].loi_write_number)
+                ],
+                sorters: [
+                    new Sorter("item_sequence", false)
+                ],
 
-                        success: function(oData){
-                            console.log(" LOIRequestDetailView ::: " , oData);
-                            oView.setBusy(false);
-                        }
+                success: function (oData) {
+                    console.log(" LOIRequestDetailView ::: ", oData);
+                    oView.setBusy(false);
+                }
 
-                    });
+            });
 
-                this._toShowMode();
+            this._toShowMode();
         },
 
         onPageCancelEditButtonPress: function () {
-            
+
             console.log("this._sTenantId--------------->" + this._sTenantId);
             console.log("this._sCompanyCode--------------->" + this._sCompanyCode);
             console.log("this._sLoiWriteNumber--------------->" + this._sLoiWriteNumber);
@@ -481,23 +454,22 @@ sap.ui.define([
                 this.onPageNavBackButtonPress.call(this);
             } else {
                 this._toShowMode();
-                // ljh - 재조회
                 this.getModel("details")
-                .setTransactionModel(this.getModel())
-                .read("/LOIRequestDetailView", {
-                    filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                    new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                    new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber)
-                    ],
-                    sorters: [
-                        new Sorter("item_sequence", false)
-                    ],
-                    success: function (oData) {
+                    .setTransactionModel(this.getModel())
+                    .read("/LOIRequestDetailView", {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                            new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
+                            new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber)
+                        ],
+                        sorters: [
+                            new Sorter("item_sequence", false)
+                        ],
+                        success: function (oData) {
 
 
-                    }
-                });
+                        }
+                    });
             }
         },
 
@@ -507,7 +479,7 @@ sap.ui.define([
 
             var transition = function (f) {
                 return function (v) {
-                return f(v);
+                    return f(v);
                 };
             };
 
@@ -515,10 +487,10 @@ sap.ui.define([
                 master = view.getModel("master"),
                 detail = view.getModel("details"),
                 that = this;
-            
+
             var itemSeq = "";
-            detail.getData()["LOIRequestDetailView"].map(r => { 
-                itemSeq =  detail.getData()["LOIRequestDetailView"].length * 10
+            detail.getData()["LOIRequestDetailView"].map(r => {
+                itemSeq = detail.getData()["LOIRequestDetailView"].length * 10
             })
 
 
@@ -534,7 +506,7 @@ sap.ui.define([
                 "supplier_code": null,
                 "buyer_empno": null,
                 "remark": null
-              }, "/LOIRequestDetailView");
+            }, "/LOIRequestDetailView");
 
         },
 
@@ -575,22 +547,46 @@ sap.ui.define([
                 .removeSelections(true);
         },
 
-        
-        //코딩중
-        _setItemSequence: function() {
-            var view = this.getView(),
-                master = view.getModel("master"),
-                detail = view.getModel("details"),
-                oModel = this.getModel("v4Proc"),
-                that = this;
+
+        _setItemSequence: function (supInput) {
+            var oModel = this.getModel("v4Proc");
+            var oView = this.getView();
+            var v_this = this;
 
 
-            console.log(">>> detail", detail.getData());
-            console.log("len ----> " , detail.getData()["LOIRequestDetailView"].length);
+            console.log(">>> _setItemSequence", supInput);
+
+            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SupplierMulEntityProc";
+
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                //data: input,
+                data: JSON.stringify(supInput),
+                contentType: "application/json",
+                success: function (data) {
+
+                    //console.log(">>> _setItemSequence............. data", data);
+
+                    console.log("---------_setItemSequence-------", JSON.stringify(data));
+                    // var v_returnModel = oView.getModel("returnModel").getData();
+                    // v_returnModel.headerList = data.savedHeaders;
+                    // v_returnModel.detailList = data.savedDetails;
+                    // oView.getModel("returnModel").updateBindings(true);
+                    // v_this.onSearch();
+                    // v_this.onSearchDetail();
+
+                },
+                error: function (e) {
+
+                }
+            });
 
 
         },
-        
+
 
         /* =========================================================== */
         /* internal methods                                            */
@@ -602,12 +598,12 @@ sap.ui.define([
                 var sTenantId = oMasterModel.getProperty("/tenant_id");
                 var sCompanyCode = oMasterModel.getProperty("/company_code");
                 var sLoiWriteNumber = oMasterModel.getProperty("/loi_write_number");
-                
+
                 var oDetailsData = oDetailsModel.getData();
                 oDetailsData.forEach(function (oItem, nIndex) {
-                oDetailsModel.setProperty("/" + nIndex + "/tenant_id", sTenantId);
-                oDetailsModel.setProperty("/" + nIndex + "/company_code", sCompanyCode);
-                oDetailsModel.setProperty("/" + nIndex + "/loi_write_number", sLoiWriteNumber);
+                    oDetailsModel.setProperty("/" + nIndex + "/tenant_id", sTenantId);
+                    oDetailsModel.setProperty("/" + nIndex + "/company_code", sCompanyCode);
+                    oDetailsModel.setProperty("/" + nIndex + "/loi_write_number", sLoiWriteNumber);
                 });
                 oDetailsModel.setData(oDetailsData);
             }
@@ -655,8 +651,8 @@ sap.ui.define([
                     "local_update_dtm": new Date(),
                     "system_create_dtm": new Date(),
                     "system_update_dtm": new Date(),
-                    "create_user_id":"ADMIN",
-                    "update_user_id":"ADMIN"
+                    "create_user_id": "ADMIN",
+                    "update_user_id": "ADMIN"
 
                 }, "/LOIRequestListView", 0);
 
@@ -704,23 +700,23 @@ sap.ui.define([
                 oView.setBusy(true);
 
                 var oDetailsModel = this.getModel('details');
-                    oDetailsModel.setTransactionModel(this.getModel());
-                    oDetailsModel.read("/LOIRequestDetailView", {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                                new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                                new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber)
-                        ],
-                        sorters: [
-                            new Sorter("item_sequence", false)
-                        ],
+                oDetailsModel.setTransactionModel(this.getModel());
+                oDetailsModel.read("/LOIRequestDetailView", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                        new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
+                        new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber)
+                    ],
+                    sorters: [
+                        new Sorter("item_sequence", false)
+                    ],
 
-                        success: function(oData){
-                            console.log(" LOIRequestDetailView ::: " , oData);
-                            oView.setBusy(false);
-                        }
+                    success: function (oData) {
+                        console.log(" LOIRequestDetailView ::: ", oData);
+                        oView.setBusy(false);
+                    }
 
-                    });
+                });
 
                 this._toShowMode();
             }
@@ -822,7 +818,7 @@ sap.ui.define([
                         text: "{details>request_amount}"
                     }),
                     new Text({
-                         text: "{details>supplier_code}"
+                        text: "{details>supplier_code}"
                     }),
                     new Text({
                         text: "{details>buyer_empno}"
@@ -831,16 +827,16 @@ sap.ui.define([
                         text: "{details>remark}"//,
                     })
 
-                   // new Text({"visible" : "{= ${status} === 'critical' && ${amount} > 10000 }"})
-                  
-                    
+                    // new Text({"visible" : "{= ${status} === 'critical' && ${amount} > 10000 }"})
+
+
                 ],
                 type: sap.m.ListType.Inactive
             });
 
 
             this.oEditableTemplate = new ColumnListItem({
-				cells: [
+                cells: [
                     new Text({
                         text: "{details>_row_state_}"
                     }),
@@ -855,8 +851,8 @@ sap.ui.define([
                     //     editable: "{= ${details>_row_state_} === 'C' }",
                     //     required : true
                     // }),
-					// new Input({
-					// 	value: "{details>currency_code_name}"
+                    // new Input({
+                    // 	value: "{details>currency_code_name}"
                     // }),
                     // new Input({
                     //     value: {
@@ -870,7 +866,7 @@ sap.ui.define([
                     // }),
 
                     new Text({
-                          text: "{details>item_sequence}"
+                        text: "{details>item_sequence}"
                     }),
                     // new Input({
                     //     value: {
@@ -881,38 +877,38 @@ sap.ui.define([
                     //     },
                     //     required: true
                     // }),
-                    
+
                     new Input({
-						value: "{details>tenant_id}"
-                    }), 
+                        value: "{details>tenant_id}"
+                    }),
                     new Input({
-						value: "{details>ep_item_code}"
-                    }), 
+                        value: "{details>ep_item_code}"
+                    }),
                     new Input({
-						value: "{details>item_desc}"
-                    }), 
+                        value: "{details>item_desc}"
+                    }),
                     new Input({
-						value: "{details>unit}"
-                    }), 
+                        value: "{details>unit}"
+                    }),
                     new Input({
-						value: "{details>request_quantity}"
-                    }), 
+                        value: "{details>request_quantity}"
+                    }),
                     new Input({
-						value: "{details>currency_code}"
-                    }), 
+                        value: "{details>currency_code}"
+                    }),
                     new Input({
-						value: "{details>request_amount}"
-                    }), 
+                        value: "{details>request_amount}"
+                    }),
                     new Input({
-					 	value: "{details>supplier_code}"
-                    }), 
+                        value: "{details>supplier_code}"
+                    }),
                     new Input({
-						value: "{details>buyer_empno}"
-                    }), 
+                        value: "{details>buyer_empno}"
+                    }),
                     new Input({
-						value: "{details>remark}"
+                        value: "{details>remark}"
                     })
-				]
+                ]
             });
 
             //  this.oEditableTemplate = new ColumnListItem({
@@ -1021,8 +1017,8 @@ sap.ui.define([
             this.byId("midTable").bindItems({
                 path: "details>/LOIRequestDetailView",
                 template: oTemplate,
-				templateShareable: true,
-				key: ""
+                templateShareable: true,
+                key: ""
             }).setKeyboardMode(sKeyboardMode);
         },
 
@@ -1068,46 +1064,46 @@ sap.ui.define([
             }
         },
 
-        formattericon: function(sState){
-            switch(sState){
+        formattericon: function (sState) {
+            switch (sState) {
                 case "D":
                     return "sap-icon://decline";
-                break;
-                case "U": 
+                    break;
+                case "U":
                     return "sap-icon://accept";
-                break;
-                case "C": 
+                    break;
+                case "C":
                     return "sap-icon://add";
-                break;
+                    break;
             }
             return "";
         },
 
-        onAfterRendering : function () {
+        onAfterRendering: function () {
             var that = this,
                 sHtmlValue = "";
-                // sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
-				// '<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
-				// 'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';                
-			sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-				function (RTE, EditorType) {
-					var oRichTextEditor = new RTE("myRTE", {
-						editorType: EditorType.TinyMCE4,
-						width: "100%",
+            // sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
+            // '<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
+            // 'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';                
+            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                function (RTE, EditorType) {
+                    var oRichTextEditor = new RTE("myRTE", {
+                        editorType: EditorType.TinyMCE4,
+                        width: "100%",
                         height: "200px",
                         //editable: "{contModel>/editMode}",
                         editable: true,
-						customToolbar: true,
-						showGroupFont: true,
-						showGroupLink: true,
-						showGroupInsert: true,
-						value: sHtmlValue,
-						ready: function () {
-							this.addButtonGroup("styleselect").addButtonGroup("table");
-						}
+                        customToolbar: true,
+                        showGroupFont: true,
+                        showGroupLink: true,
+                        showGroupInsert: true,
+                        value: sHtmlValue,
+                        ready: function () {
+                            this.addButtonGroup("styleselect").addButtonGroup("table");
+                        }
                     });
-					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-            });
+                    that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+                });
 
             //this.onPageEnterFullScreenButtonPress();
         }
