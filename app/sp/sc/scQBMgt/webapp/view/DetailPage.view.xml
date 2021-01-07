@@ -166,181 +166,63 @@
                                 <Input  id="inputOutcome" enabled="false" value="BPA" />  
                             </form:SimpleForm>
                   
-                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
                                 <Label  text="Title" required="true"  class="sapMLabelNoText"/>
                                 <Input  id="inputTitle" width="100%"/>
                             </VBox>
 
-                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiTinyMarginTop" >
-                                <Label  text="Description"  class="sapMLabelNoText"/>
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin" >
+                                <Label  text="Description"  class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                 <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                             </VBox>
 
-   
-                            <FlexBox alignItems="Start" class="sapUiSmallMarginBegin sapUiTinyMarginTop">
-                                <layout:VerticalLayout width="100%">
-                                    <Label  text="Bid Style" 
-                                        class="sapMLabelNoText"/>
-                                    <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
-                                        <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
-                                        <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
+    
+                            <FlexBox alignItems="Center" width="100%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom" fitContainer="true">
 
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </RadioButtonGroup>
-
-                                    
-                                </layout:VerticalLayout>
-                                <layout:VerticalLayout width="100%">
-                                    <Label  text="Incoterms" 
-                                        class="sapMLabelNoText"/>
-                                    <ComboBox id="combobox_Incoterms" width="100%" class="sapUiMediumMarginBottom">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </ComboBox>
-                                </layout:VerticalLayout>
-
-                                <!-- <Button text="1" width="100%" type="Emphasized" class="sapUiSmallMarginEnd" >
-                                    <layoutData>
-                                        <FlexItemData growFactor="1" />
-                                    </layoutData>
-                                </Button> -->
-                                <!-- <Button text="2" width="100%" type="Reject" class="sapUiSmallMarginEnd">
-                                    <layoutData>
-                                        <FlexItemData growFactor="1" />
-                                    </layoutData>
-                                </Button>
-                                <Button text="3" width="100%" type="Accept" >
-                                    <layoutData>
-                                        <FlexItemData growFactor="1" />
-                                    </layoutData>
-                                </Button> -->
-                            </FlexBox>
-   
-                            <FlexBox alignItems="Center" width="100%" class="sapUiSmallMarginBegin sapUiTinyMarginTop"
-                                fitContainer="true">
-                                
-
-                                
-                            </FlexBox>
-
-                            <FlexBox alignItems="Center" width="100%" class="sapUiSmallMarginBegin sapUiTinyMarginTop">
-                                
-                            </FlexBox>
-
-      
-                            
-                            <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
-                                                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                                <form:content >
-                                    
-
-                                    <VBox width="50%" >
-                                        <Label  text="Period" 
-                                                required="true"
-                                                class="sapMLabelNoText"/> 
-
-                                        <HBox >
-                                            <CheckBox text="Immediately"/> 
-                                            <ToolbarSpacer width="1rem"/> 
-                                            <HBox id="hboxDateRanges">
-                                                <DateTimePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
-                                                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                                <DateTimePicker placeholder="End Date ..." id="searchToDatePicker"/>
-                                            </HBox>
-                                        </HBox>
-                                        <!-- <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData>  -->
-                                    </VBox>
-                                        
-                                    <HBox >
-                                        <!-- <VBox class="sapUiTinyMarginBeginEnd"> -->
-                                            <Label  text="Extension Period" labelFor="inputEP" class="sapMLabelNoText "/> 
-
-                                            <Input id="inputEP" value="" type="Number"/>
-                                            <Label  text="Hr" />   
-
-                                            <ToolbarSpacer width="1rem"/>
-
-                                            <Label  text="Extension Count" labelFor="inputEC" class="sapMLabelNoText "/> 
-
-                                            <Input id="inputEC" value="" type="Number"/>
-                                            <Label  text="Times" />   
-
-                                        <!-- <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S4" />
-                                        </layoutData>  -->
-                                    </HBox>
-
-                                   
-                                </form:content>
-                            </form:SimpleForm>
-
-                            <!-- <layout:Splitter class="sapUiSmallMarginBegin sapUiTinyMarginTop">
-                                <layout:layoutData>
-                                    <layout:SplitterLayoutData size="auto" resizable="false"/>
-                                </layout:layoutData>
-                                <layout:contentAreas>
-                                    <VBox>
-                                        <layoutData>
-                                            <layout:SplitterLayoutData size="auto" resizable="false"/>
-                                        </layoutData>
-                                        <HBox>
-                                            <Label width="" text="Bid Style" labelFor="rbg1" class="sapMLabelNoText">
-                                                <layoutData>
-                                                    <layout:GridData span="L1 M1 S1" />
-                                                </layoutData>
-                                            </Label>
-                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
+                                <VBox width="100%">
+                                    <HBox  width="100%" alignItems="Center">
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Bid Style" width="100px" class="sapMLabelNoText"/>
+                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" >
                                                 <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
                                                 <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
                                             </RadioButtonGroup>
                                         </HBox>
 
-                                        <HBox>
-                                            <Label  text="Period" labelFor="hboxDateRanges"
-                                                    required="true"
-                                                    class="sapMLabelNoText"/> 
-                                            <CheckBox text="Immediately"/>  
-                                            <HBox id="hboxDateRanges">
-                                                <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
-                                                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                                <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
-                                            </HBox>
-                                        </HBox>
-                                    </VBox>
-                                
-                                    <VBox>
-                                        <HBox>
-                                            <Label  text="Incoterms" />
-                                            <ComboBox width="100%" >
-                                                <layoutData>
-                                                    <layout:SplitterLayoutData size="100%" resizable="false"/>
-                                                </layoutData>
-                                            </ComboBox>
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Incoterms" width="130px" class="sapMLabelNoText"/>
+                                            <VBox alignContent="Center" alignItems="Stretch" width="100%" class="sapUiSmallMarginEnd">
+                                                <ComboBox id="combobox_Incoterms" width="100%" />
+                                            </VBox>
+                                        </HBox>                                        
+                                    </HBox>
+        
+                                    <HBox  width="100%" >
+
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Period" width="100px" required="true" class="sapMLabelNoText"/> 
+                                            <CheckBox text="Immediately"/> 
+                                            <ToolbarSpacer width="1rem"/> 
+                                            <DateTimePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
+                                            <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                            <DateTimePicker placeholder="End Date ..." id="searchToDatePicker"/>
                                         </HBox>
 
-                                        <HBox>
-                                            <Label  text="Extension Period" 
-                                                    class="sapMLabelNoText"/> 
-                                            <Input />   
-                                            <Text text="Hr" />
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Extension Period" width="130px" class="sapMLabelNoText "/> 
+                                            <Input id="inputEP" value="" type="Number"  class="sapUiTinyMarginEnd"/>
+                                            <Label  text="Hr"  class="sapUiSmallMarginBegin" />
 
-                                            <Label  text="Extension Count" 
-                                                    class="sapMLabelNoText"/> 
-                                            <Input />   
-                                            <Text text="times" />
+                                            <ToolbarSpacer width="3rem"/> 
+                                            <Label  text="Extension Count" width="130px"  class="sapMLabelNoText "/> 
+                                            <Input id="inputEC" value="" type="Number"  class="sapUiTinyMarginEnd"/>
+                                            <Label  text="Times"  class="sapUiSmallMarginBegin"/>   
+                                            
                                         </HBox>
-                                    </VBox>
-                                </layout:contentAreas>
+                                    </HBox>
+                                </VBox>
+                            </FlexBox>
 
-                            </layout:Splitter> -->
-
-                            
-             
                             <VBox class="sapUiSmallMarginBegin">
                                 <Label  text="Note To Supplier" class="sapMLabelNoText"/>
                                 <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
