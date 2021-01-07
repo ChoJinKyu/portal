@@ -3,8 +3,8 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
     "sap/m/MessageToast",
-    "ext/cm/util/control/codePopUp"
-], function (Controller, JSONModel, MessageBox, MessageToast, codePopUp) {
+    "ext/cm/util/control/CodePopUp"
+], function (Controller, JSONModel, MessageBox, MessageToast, CodePopUp) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -22,12 +22,11 @@ sap.ui.define([
                 }
             ]), "list");
 
-            this.cmCodePopUp = new codePopUp();
+            this.cmCodePopUp = new CodePopUp();
 
         },
 
         onCheckButtonPress: function(){
-            debugger;
             var sPickerCode = this.byId("searchCodePicker").getSelectedKey();
             var sPickerCodeText = this.byId("searchCodePicker").getValue();
             var sPickerTimezone = this.byId("searchTimezonePicker").getSelectedKey();
