@@ -99,7 +99,7 @@
                 <columns>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="{I18N>/MATERIAL_CODE}"/>                            
+                            <Label text="가격정보"/>                            
                         </header>
                     </Column>
                     <Column hAlign="Center" >
@@ -131,8 +131,8 @@
                 <items>
                     <ColumnListItem type="Active" id="materialColumnListItem" press="onMaterialTableItemPress">
                         <cells>
-                            <Text text="{materialTable>vendor}"/>
-                            <Text text="{materialTable>vendor_name}"/>
+                            <Text text=" "/>
+                            <Text text=" "/>
                             <Text text="{materialTable>material_code}"/>
                             <Text text="{materialTable>material_desc}"/>
                             <Text text="{materialTable>supplier_code}"/>
