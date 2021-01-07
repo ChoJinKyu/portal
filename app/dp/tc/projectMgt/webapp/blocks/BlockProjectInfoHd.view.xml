@@ -24,7 +24,7 @@
                 class="sapUiNoMarginBottom sapUiNoContentPadding">
                 <form:content>
 
-                <Label text="Requestor">
+                <Label text="생성자">
                     <layoutData>
                         <layout:GridData span="XL2 L2 M2 S12" />
                     </layoutData>
@@ -35,7 +35,7 @@
                     </layoutData>
                 </Text>
 
-                <Label text="Company">
+                <Label text="회사">
                     <layoutData>
                         <layout:GridData span="XL2 L2 M2 S12" />
                     </layoutData>
@@ -47,7 +47,7 @@
                 </Text>
                 
 
-                <Label text="Creation Date">
+                <Label text="생성일">
                     <layoutData>
                         <layout:GridData span="XL2 L2 M2 S12" />
                     </layoutData>
@@ -61,7 +61,7 @@
                     </layoutData>
                 </Text>
 
-                <Label text="Division">
+                <Label text="사업부">
                     <layoutData>
                         <layout:GridData span="XL2 L2 M2 S12" />
                     </layoutData>
@@ -81,7 +81,7 @@
             </form:SimpleForm>
 
             <VBox class="sapUiSmallMarginTop">
-                <Label text="Status">
+                <Label text="상태">
                     <layoutData>
                         <layout:GridData span="XL1 L1 M6 S12" />
                     </layoutData>
