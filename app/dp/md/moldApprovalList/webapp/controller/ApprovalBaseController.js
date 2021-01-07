@@ -107,6 +107,7 @@ sap.ui.define([
             this.getRouter().navTo("participatingSupplierSelectionCancelApproval", {
                 company_code: this.company_code
                 , plant_code: this.plant_code
+                , approval_type_code: "A"
                 , approval_number: "New"
             });
         },
