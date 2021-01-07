@@ -720,16 +720,12 @@ sap.ui.define([
             else{
                 if(id.indexOf("localBudget") > -1){
                     approvalTarget = "budgetExecutionApproval"
-                    appTypeCode = "B"
                 }else if(id.indexOf("supplierSelection") > -1){
                     approvalTarget = "participatingSupplierSelection"
-                    appTypeCode = "E"
                 }else if(id.indexOf("localOrder") > -1){
                     approvalTarget = "purchaseOrderLocalApproval"
-                    appTypeCode = "V"
                 }else if(id.indexOf("receipt") > -1){
                     approvalTarget ="moldRecepitApproval"
-                    appTypeCode = "I"
                 }else if(id.indexOf("export") > -1){
                     appTypeCode ="X"
                 }
@@ -767,7 +763,6 @@ sap.ui.define([
                     this.getRouter().navTo(approvalTarget, {
                         company_code: company_code
                         , plant_code: plant_code
-                        , approval_type_code : appTypeCode
                         , approval_number: "New"
                     });
                 }
