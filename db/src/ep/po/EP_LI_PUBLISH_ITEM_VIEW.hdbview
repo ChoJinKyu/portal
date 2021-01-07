@@ -26,15 +26,23 @@ select
     dtl.request_amount,
     coalesce(dtl.currency_code, '') as currency_code,
     dtl.loi_selection_number,
-    coalesce(sel.loi_selection_status_code, '') as loi_selection_status_code,
-    (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_SELECTION_STATUS', sel.loi_selection_status_code, 'KO') from dummy) as loi_selection_status_name,
-    -- ''  as loi_selection_status_name,
+    (case
+        when coalesce(sel.loi_selection_status_code, '') = '' and dtl.quotation_number is not null
+        then '122020'
+        else coalesce(sel.loi_selection_status_code, '')
+    end) as loi_selection_status_code,
+    (case
+        when coalesce(sel.loi_selection_status_code, '') = '' and dtl.quotation_number is not null
+        then 'RFQ완료'
+        else (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_SELECTION_STATUS', sel.loi_selection_status_code, 'KO') from dummy)
+    end) as loi_selection_status_name,    
     dtl.loi_publish_number,
     coalesce(pub.loi_publish_status_code, '') as loi_publish_status_code,
     (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_PUBLISH_STATUS', pub.loi_publish_status_code, 'KO') from dummy) as loi_publish_status_name,
     -- '' as loi_publish_status_name,
     '' as po_status_code,
     mst.request_date,
+    sel.supplier_selection_date,
     coalesce(dtl.supplier_opinion, '') as supplier_opinion,
     coalesce(dtl.remark, '') as remark,
     dtl.local_create_dtm,
