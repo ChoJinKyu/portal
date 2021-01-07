@@ -157,10 +157,11 @@ sap.ui.define([
             }
 
             var oArgs = {
-                company_code: this.company_code,
-                org_code: this.plant_code,
-                mold_progress_status_code: 'DTL_CNF',
-                mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
+                approval_type_code          : "V",
+                company_code                : this.company_code,
+                org_code                    : this.plant_code,
+                mold_progress_status_code   : ['DTL_CNF'],
+                mold_id_arr                 : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {

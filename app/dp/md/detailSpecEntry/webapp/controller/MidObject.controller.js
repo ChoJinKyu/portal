@@ -135,11 +135,12 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
+
 			var oView = this.getView(),
                 me = this;
                 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -152,7 +153,7 @@ sap.ui.define([
             }
 
             if(this.validator.validate( this.byId(dtlForm) ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
             
@@ -163,10 +164,10 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D');
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D'); //이건 이제 필요없을듯 21.01.07
+                        me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_ENT');
 
 						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
 							success: function(ok){
 								me._toShowMode();
 								oView.setBusy(false);

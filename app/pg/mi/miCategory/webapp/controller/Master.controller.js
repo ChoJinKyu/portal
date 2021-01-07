@@ -673,6 +673,14 @@ sap.ui.define([
                 }
                 this._setNav(" ", " ", "Yes", "0", " ", " ", " ");
             },
+            liveCategoryCode: function(e){
+
+                // 대문자만 사용
+                var inputCode = this.getView().byId("filterCategoryCode");
+
+                inputCode.setValue(inputCode.getValue().toUpperCase());
+                debugger;
+            },
             onMainTableCreate1ButtonPress: function() {
                 var oFCL = this.getView().getParent().getParent();
                 // @ts-ignore
