@@ -136,7 +136,6 @@ sap.ui.define([
                 , psModel = this.getModel("mdItemMaster"); 
                 var oSelected = oTable.getSelectedIndices(); 
                 
-                console.log("this.company_code :::::", this.company_code,"this.plant_code :::::", this.plant_code);
                 console.log(oSelected);
                 
             if (oSelected.length > 0) {
