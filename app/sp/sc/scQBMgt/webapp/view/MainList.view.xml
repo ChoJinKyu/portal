@@ -268,7 +268,7 @@
 						<Title text="Negotiation Workbench List (17)"/>
 						<ToolbarSpacer/>
                         <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true"  />
-                        <Button text="{I18N>/CREATE}" type="Transparent" press=".onMainTableCreate" enabled="true"  />
+                        <!-- <Button text="{I18N>/CREATE}" type="Transparent" press=".onMainTableCreate" enabled="true"  /> -->
                         <Button
                             icon="sap-icon://sort" type="Transparent"
                             tooltip="Sort"
