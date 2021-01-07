@@ -50,6 +50,7 @@ vpMstList.push({
 
 inputInfo.inputData.vpMst = vpMstList;            
 
+/*
 vpSupplierList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -120,8 +121,9 @@ vpSupplierList.push({
 });
 
 inputInfo.inputData.vpSupplier = vpSupplierList;  
+*/
           
-//추가
+//삭제
 vpItemList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -129,28 +131,6 @@ vpItemList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
     , material_code: 'TCMACR0032'
-    , crud_type_code : "C"
-});
-
-//추가(삭제데이터 추가)
-vpItemList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , material_code: 'TCMACR0013'
-    , crud_type_code : "C"
-});
-
-//수정
-vpItemList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , material_code: 'TCMACR0014'
     , crud_type_code : "D"
 });
 
@@ -161,13 +141,25 @@ vpItemList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
+    , material_code: 'TCMACR0013'
+    , crud_type_code : "D"
+});
+
+
+//삭제
+vpItemList.push({
+    tenant_id: "L2100"
+    , company_code: "*"
+    , org_type_code: "BU"
+    , org_code: "BIZ00200"
+    , vendor_pool_code: "VP202011230TEST01"
     , material_code: 'TCMACD0015'
-    , crud_type_code : "C"
+    , crud_type_code : "D"
 });
 
 inputInfo.inputData.vpItem = vpItemList;            
 
-//수정
+//삭제 
 vpManagerList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -175,10 +167,10 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
     , vendor_pool_person_empno: "5452"
-    , crud_type_code : "U"
+    , crud_type_code : "D"
 });
 
-//삭제 된 데이터 재 등록
+//삭제 
 vpManagerList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -186,10 +178,10 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
     , vendor_pool_person_empno: '5460'
-    , crud_type_code : "C"
+    , crud_type_code : "D"
 });
 
-//등록
+//삭제 
 vpManagerList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -197,17 +189,6 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST01"
     , vendor_pool_person_empno: '5480'
-    , crud_type_code : "C"
-});
-
-//삭제
-vpManagerList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , vendor_pool_person_empno: '5479'
     , crud_type_code : "D"
 });
 
