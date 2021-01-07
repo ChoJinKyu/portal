@@ -152,7 +152,10 @@ sap.ui.define([
          * @description 초기 생성시 파라미터를 받고 들어옴 
          * @param {*} args : company , plant
          */
-        _createViewBindData: function (args) {
+        _createViewBindData: function (args) { 
+
+            console.log("args>>>>> " , args);
+
             this.tenant_id = "L1100";
             this.approval_number = args.approval_number;
             //this.approval_type_code = args.approval_type_code;

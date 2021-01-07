@@ -164,7 +164,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
         v_sql_createTableMst.append("FAMILY_PART_NUMBER_5 NVARCHAR(240),");
         v_sql_createTableMst.append("SET_ID NVARCHAR(100))");
 
-        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST";
         
         String v_sql_createTableSpec = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_SPEC (MOLD_ID NVARCHAR(100), DIE_FORM NVARCHAR(240), MOLD_SIZE NVARCHAR(100))";

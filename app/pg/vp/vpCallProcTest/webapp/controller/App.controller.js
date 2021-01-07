@@ -22,7 +22,7 @@ sap.ui.define([
             });
             this.getView().setModel(this.returnModel, "returnModel");*/
             var i18nModel = new ResourceModel({
-            bundleName: "pg.vp.vpCallProcTest.i18n.i18n",
+            bundleName: "pg.vp.vpCallProcTest.i18n.i18n_en",
             supportedLocales: [""],
             fallbackLocale: ""
          });
@@ -44,11 +44,11 @@ sap.ui.define([
  * 테스트 데이터 변경 영역 시작            
  *******************************************************************************/
 var inputInfo = {},
-    vpMstList = [],
-    vpSupplierList = [],
-    vpItemList = [],
-    vpManagerList = [];
-
+                vpMstList = [],
+                vpSupplierList = [],
+                vpItemList = [],
+                vpManagerList = [];
+                
 inputInfo = {
     inputData: {
         vpMst: [],
@@ -61,15 +61,15 @@ inputInfo = {
 };                        
 
 vpMstList.push({
-    tenant_id: "L2100"
+     tenant_id: "L2100"
     ,company_code: "*"
     ,org_type_code: "BU"
     ,org_code: "BIZ00200"
     ,vendor_pool_code: "VP202011230TEST01"
-    ,vendor_pool_local_name : "TEST LOCAL 01-1"
-    ,vendor_pool_english_name : "TEST LOCAL EN 01-1"
-    ,repr_department_code: "T111-1"                
-    ,operation_unit_code : "RAW_MATERIAL-1"
+    ,vendor_pool_local_name : "TEST1 LOCAL 01"
+    ,vendor_pool_english_name : "TEST1 LOCAL EN 01"
+    ,repr_department_code: "T222"                
+    ,operation_unit_code : "RAW_MATERIAL"
     ,inp_type_code : "MBLMOB"
     ,mtlmob_base_code : "AMOUNT"
     ,regular_evaluation_flag : true
@@ -90,130 +90,10 @@ vpMstList.push({
     ,display_sequence : 0
     ,register_reason : "AAAAA"
     ,approval_number : "AAAAA"
-    ,crud_type_code : "U"
+    ,crud_type_code : "D"
 });
 
-inputInfo.inputData.vpMst = vpMstList;            
-
-//supplier가 있는 경우 에러발생(있을 시 주석)
-/*vpSupplierList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , supplier_code: 'DE01091600'
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
-    ,supeval_control_flag: false
-    ,supeval_control_start_date: "20210104"
-    ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
-    ,supplier_rm_control_flag: false
-    ,supplier_base_portion_rate: 0.0
-    ,vendor_pool_mapping_use_flag: true
-    ,register_reason: "AAA"
-    ,approval_number: "AAA"
-    ,crud_type_code : "C"
-});
-
-vpSupplierList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , supplier_code: 'ES00702600'
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
-    ,supeval_control_flag: false
-    ,supeval_control_start_date: "20210104"
-    ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
-    ,supplier_rm_control_flag: false
-    ,supplier_base_portion_rate: 0.0
-    ,vendor_pool_mapping_use_flag: true
-    ,register_reason: "AAA"
-    ,approval_number: "AAA"
-    ,crud_type_code : "C"
-});
-
-inputInfo.inputData.vpSupplier = vpSupplierList; 
-*/ 
-          
-//추가
-vpItemList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , material_code: 'TCMACR0032'
-    , crud_type_code : "C"
-});
-
-//수정
-vpItemList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , material_code: 'TCMACR0014'
-    , crud_type_code : "U"
-});
-
-//삭제
-vpItemList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , material_code: 'TCMACR0013'
-    , crud_type_code : "D"
-});
-
-inputInfo.inputData.vpItem = vpItemList;            
-
-//수정
-vpManagerList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , vendor_pool_person_empno: "5452"
-    , crud_type_code : "U"
-});
-
-//삭제
-vpManagerList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , vendor_pool_person_empno: '5460'
-    , crud_type_code : "D"
-});
-
-//등록
-vpManagerList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST01"
-    , vendor_pool_person_empno: '5479'
-    , crud_type_code : "C"
-});
-
-inputInfo.inputData.vpManager = vpManagerList; 
+inputInfo.inputData.vpMst = vpMstList;      
            
 
 /********************************************************************************
@@ -242,12 +122,15 @@ inputInfo.inputData.vpManager = vpManagerList;
 
                     //MessageToast.show(data.value[0].return_msg);
                     console.log(data.value[0].return_msg.substring(0, 8));
-                    sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
+                    //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
+                    sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
                     //MessageToast.show(sMsg);
-                    alert(data.value[0].return_msg);
+                    console.log(data.value[0].return_msg);
+                    alert(sMsg);
+                    MessageToast.show(sMsg);
                 },
                 error: function (e) {
-                    var eMessage = "Error 1st Proc!",
+                    var eMessage = "callProcError",
                         errorType,
                         eMessageDetail;
 
@@ -259,8 +142,8 @@ inputInfo.inputData.vpManager = vpManagerList;
                     
                     //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
                     if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
-                        eMessage = "Error 1st Proc!";
-                        eMessageDetail = "Error 1st Proc!";
+                        eMessage = "callProcError";
+                        eMessageDetail = "callProcError";
                     }else{
                         eMessage = e.responseJSON.error.message.substring(0, 8);
                         eMessageDetail = e.responseJSON.error.message.substring(9);
@@ -270,14 +153,15 @@ inputInfo.inputData.vpManager = vpManagerList;
                         //MessageToast.show(eMessageDetail);
                     }
 
+                    sMsg = oBundle.getText(eMessage);
                     if(errorType === 'E'){
-                        alert(eMessage);                    
+                        alert(sMsg);                    
                     }else{
                         alert(eMessageDetail);                    
                     }
                     
-                    sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
-                    //MessageToast.show(sMsg);                    
+                    
+                    MessageToast.show(sMsg);                    
                 }
             });
 

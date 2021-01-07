@@ -117,7 +117,7 @@ sap.ui.define([
         },
 
         setDivision: function (companyCode) {
-
+/*
             var filter = new Filter({
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
@@ -134,7 +134,22 @@ sap.ui.define([
                     key: "{purOrg>org_code}", text: "[{purOrg>org_code}] {purOrg>org_name}"
                 })
             };
+*/
+            var filter = new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                ],
+                and: true
+            });
 
+            var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
             this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
             this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
         },

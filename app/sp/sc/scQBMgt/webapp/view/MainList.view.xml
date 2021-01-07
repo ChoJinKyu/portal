@@ -265,7 +265,7 @@
 				ariaLabelledBy="title">
 				<t:extension>
 					<OverflowToolbar>
-						<Title text="Negotiation Workbench List"/>
+						<Title text="Negotiation Workbench List (17)"/>
 						<ToolbarSpacer/>
                         <Button text="Ariba" type="Transparent" enabled="true"  />
                         <Button id="mainTableButtonAllOpen" text="Create" type="Transparent" press=".onMainTableCreate" enabled="true"  />
