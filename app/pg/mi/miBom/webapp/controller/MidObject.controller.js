@@ -1191,7 +1191,7 @@ sap.ui.define([
         _onExit: function () {
             var that = this;
             that._setInit();
-            that._fragmentDistory();           
+                       
 
         },
 
@@ -2703,7 +2703,16 @@ sap.ui.define([
             var val = _oInput.getValue();
             val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val);
-        }
+        },
+
+        onExit: function() {
+            var that = this;
+            that._fragmentDistory();            
+            // if (this.dialogFrafment) {
+            //     this.dialogFrafment.destroy(true);
+            // }
+
+        }       
            
     });
 });

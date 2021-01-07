@@ -18,15 +18,17 @@
             <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <Label text="Vendor"/>
-                   <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
-                    <ComboBox
-                        items="{path: '/OrgCodeView', 
+                   <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 
+                                        items="{path: '/PG_VP_VENDOR_POOL_MST_VIEW', 
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                 ],
-                                templateShareable:true}"  
+                                templateShareable:true}" 
+                
+                -->
+                    <ComboBox enabled="false" 
                         placeholder="{I18N>/OPTION}">
-                        <core:Item key="{org_code}" text="{org_name}"/>
+                        <core:Item key="{vendor_pool_code}" text="{vendor_pool_local_name}"/>
                     </ComboBox>
                 </layout:VerticalLayout>  
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
@@ -76,10 +78,6 @@
                 <layout:VerticalLayout class="sapUiTinyMarginEnd">
                     <Label text="　"/>
                     <Button type="Transparent" text="{I18N>/SEARCH}" press=".onValueHelpMaterialDialogSearch"/>
-                </layout:VerticalLayout>  
-                <layout:VerticalLayout class="sapUiTinyMarginEnd">
-                    <Label text="　"/>
-                    <Button type="Emphasized"  text="{I18N>/APPLY}" press=".onValueHelpMaterialDialogApply"/>
                 </layout:VerticalLayout>  
             </FlexBox> 
             </Panel>  
@@ -144,8 +142,11 @@
             </ScrollContainer> 
 		</content>
 			<beginButton>
-				<Button type="Transparent" text="Close" press="onMaterialDialog_close" />
-			</beginButton>
+				<Button type="Transparent" text="{I18N>/CANCEL}" press="onMaterialDialog_close" />
+            </beginButton> 
+            <endButton>
+                <Button type="Emphasized"  text="{I18N>/APPLY}" press=".onValueHelpMaterialDialogApply"/>                
+            </endButton>
 	</Dialog>
 
 </core:FragmentDefinition>
