@@ -99,7 +99,7 @@
                    	<smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
-                            <OverflowToolbarButton text="Test"/>
+                            
                             <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
                             <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
                             <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/>
@@ -109,9 +109,10 @@
                                 rows="{/MIMaterialCodeBOMManagementView}"
                                 selectionMode="None"
                                 visibleRowCount="6"
+                                fixedColumnCount="7"
                                 >
                                 <ui:columns> 
-                                    <ui:Column width="10rem"  sortProperty="material_code" filterProperty="material_code">
+                                    <ui:Column width="10rem" sortProperty="material_code" filterProperty="material_code">
                                        <ui:customData>
                                             <core:CustomData key="p13nData" value='\{"columnKey": "material_code", "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
                                         </ui:customData>

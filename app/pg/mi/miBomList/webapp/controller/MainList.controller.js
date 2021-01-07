@@ -28,6 +28,35 @@ sap.ui.define([
 
 
 
+            // setTimeout(function () {
+            //     // console.log('Works!');
+            //         var aRows = oTable.getRows();
+            //         if (aRows && aRows.length > 0) {
+            //             var pRow;
+            //             aRows.map((aRow, i) => {
+            //                 if (i > 0) {
+            //                     var cCells = aRow.getCells();
+            //                     var pCells = pRow.getCells();
+
+            //                     // if theCols is empty we use aggregation for all cells in a row
+            //                     if (theCols.length < 1) byCols = cCells.map((x, i) => i);
+
+            //                     if (byCols.filter(x => pCells[x].getText() == cCells[x].getText()).length == byCols.length) {
+            //                         theCols.forEach(i => {
+            //                             if (pCells[i].getText() == cCells[i].getText()) {
+            //                                 $("#" + cCells[i].getId()).css("visibility", "hidden");
+            //                                 $("#" + pRow.getId() + "-col" + i).css("border-bottom-style", "hidden");
+            //                             }
+            //                         });
+            //                     }
+
+            //                 }
+            //                 pRow = aRow;
+            //             });
+            //         }
+            // }, 500);
+
+
             // group by the cols "byCols"
             var byCols = [0, 2];
 
@@ -62,9 +91,7 @@ sap.ui.define([
             //     }
             // };
             // Aggregate columns (by cols) for similar values
-
-
-
+            
 
 
 
@@ -74,6 +101,21 @@ sap.ui.define([
         },
 
 
+        addBindingListener: function (oBindingInfo, sEventName, fHandler) {
+
+            oBindingInfo.events = oBindingInfo.events || {};
+
+            if (!oBindingInfo.events[sEventName]) {
+                oBindingInfo.events[sEventName] = fHandler;
+            } else {
+                // Wrap the event handler of the other party to add our handler.
+                var fOriginalHandler = oBindingInfo.events[sEventName];
+                oBindingInfo.events[sEventName] = function () {
+                    fHandler.apply(this, arguments);
+                    fOriginalHandler.apply(this, arguments);
+                };
+            }
+        },
 
         // onAfterRendering: function () {
 
@@ -103,34 +145,10 @@ sap.ui.define([
          * Smart Table Filter Event onBeforeRebindTable
          * @param {sap.ui.base.Event} oEvent 
          */
-        addBindingListener: function (oBindingInfo, sEventName, fHandler) {
 
-            oBindingInfo.events = oBindingInfo.events || {};
-
-            if (!oBindingInfo.events[sEventName]) {
-                oBindingInfo.events[sEventName] = fHandler;
-            } else {
-                // Wrap the event handler of the other party to add our handler.
-                var fOriginalHandler = oBindingInfo.events[sEventName];
-                oBindingInfo.events[sEventName] = function () {
-                    fHandler.apply(this, arguments);
-                    fOriginalHandler.apply(this, arguments);
-                };
-            }
-        },
         onBeforeRebindTable: function (oEvent) {
-
-            // var mBindingParams = oEvent.getParameter("bindingParams");
-            // //Event handlers for the binding
-            // mBindingParams.events = {
-            //     "dataReceived": function (oEvent) {
-            //         var aReceivedData = oEvent.getParameter('data');
-            //     },
-            //     //More event handling can be done here
-            // };
-
-
             var mBindingParams = oEvent.getParameter("bindingParams");
+
             var oSmtFilter = this.getView().byId("smartFilterBar");
 
             var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();
