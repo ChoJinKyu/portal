@@ -38,7 +38,7 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <!-- <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -267,8 +267,8 @@
 					<OverflowToolbar>
 						<Title text="Negotiation Workbench List (17)"/>
 						<ToolbarSpacer/>
-                        <Button text="Ariba" type="Transparent" enabled="true"  />
-                        <Button id="mainTableButtonAllOpen" text="Create" type="Transparent" press=".onMainTableCreate" enabled="true"  />
+                        <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true"  />
+                        <Button text="{I18N>/CREATE}" type="Transparent" press=".onMainTableCreate" enabled="true"  />
                         <Button
                             icon="sap-icon://sort" type="Transparent"
                             tooltip="Sort"
