@@ -164,6 +164,5 @@ BEGIN
         END IF;
     END IF;
 
-    return select D_RETURN from DUMMY;
 
 END;
