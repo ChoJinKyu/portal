@@ -10,7 +10,7 @@
 
 	<App id="app">
 			<pages>
-				<Page id="page" title="Negotiation Create" showNavButton="true" navButtonPress=".onNavBack" >
+				<Page id="page" title="{I18N>/NEGOTIATION_CREATE_TITLE}" showNavButton="true" navButtonPress=".onNavBack" >
 					<content>
                         <form:SimpleForm editable="true"  layout="ResponsiveGridLayout">
                             <form:content>
@@ -82,7 +82,7 @@
                                                     <HBox class="sapUiSmallMarginBegin">
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="{I18N>/PURCHASE_REQUISITION}{I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="45px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
@@ -165,7 +165,7 @@
                                                     <HBox>
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="{I18N>/PURCHASE_REQUISITION}{I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText" />
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText" />
                                                         </VBox>
                                                         <VBox width="65px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
@@ -257,7 +257,7 @@
                                                     <HBox>
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="{I18N>/PURCHASE_REQUISITION}{I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText"/>
                                                         </VBox>
                                                         <VBox width="50px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
@@ -349,7 +349,7 @@
                                                     <HBox>
                                                         <VBox width="70px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100px">
-                                                            <Text text="{I18N>/PURCHASE_REQUISITION}{I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText"/>
+                                                            <Text text="{I18N>/PURCHASE_REQUISITION} / {I18N>/RECEIPT_APPLICATION}" class="oMouseP lhText"/>
                                                         </VBox>
                                                         <VBox width="50px"/>
                                                         <VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="110px">
