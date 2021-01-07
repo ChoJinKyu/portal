@@ -54,14 +54,14 @@
                                     suggestionItems="{
                                         path: '/LoiNumberGroupbyView',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: '1000'},
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'company_code', operator: 'EQ', value1: 'C100'}
                                         ],         
                                         sorter: { path: 'loi_number' }
                                     }"
-                                    showValueHelp="false" placeholder="">
+                                    showValueHelp="false" placeholder="" submit=".onPageSearchButtonPress">
                                     <core:Item key="{loi_number}" text="{loi_number}" />
-                                </MultiInput>
+                                </MultiInput>  
 
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
@@ -124,10 +124,10 @@
                                 <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
                                         <SegmentedButtonItem text="All" key="" width="4.1rem" />
-                                        <SegmentedButtonItem text="작성중" key="작성중" width="4.1rem" />
-                                        <SegmentedButtonItem text="결재진행중" key="결재진행중" width="6rem" />
-                                        <SegmentedButtonItem text="결재반려" key="결재반려" width="5.5rem" />
-                                        <SegmentedButtonItem text="요청완료" key="요청완료" width="5.5rem" />
+                                        <SegmentedButtonItem text="작성중" key="121010" width="4.1rem" />
+                                        <SegmentedButtonItem text="결재진행중" key="121020" width="6rem" />
+                                        <SegmentedButtonItem text="결재반려" key="121030" width="5.5rem" />
+                                        <SegmentedButtonItem text="요청완료" key="121040" width="5.5rem" />
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>

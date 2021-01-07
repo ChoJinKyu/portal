@@ -239,7 +239,6 @@ sap.ui.define([
                 sRequestor = this.getView().byId("searchRequestorS").getValue();
 
 
-
             var aSearchFilters = [];
 
             if (sLoiNumber.length > 0) {
@@ -280,7 +279,7 @@ sap.ui.define([
             }
 
             if (status) {
-                aSearchFilters.push(new Filter("loi_request_status_name", FilterOperator.EQ, status));
+                aSearchFilters.push(new Filter("loi_request_status_code", FilterOperator.EQ, status));
             }
 
 
