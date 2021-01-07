@@ -54,7 +54,7 @@ sap.ui.define([
      * @param : oTableName 호출한 페이지에 추가할 테이블 아이디 
      * @param : oArges (company_code, org_code) 
      */
-    var oThis, oTableName, oArges, oCallback;
+    var oThis, oTableName, oArges, oCallback, oApproval_type_code;
 
     /**
      * @description MoldSelection 
@@ -76,7 +76,6 @@ sap.ui.define([
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
-
             oThis.setModel(new ManagedModel(), "moldItemPop");
             oThis.setModel(new ManagedListModel(), "moldItemPopList");
             oThis.setModel(new ManagedListModel(), "moldSelectionCompanyPopList");
@@ -194,7 +193,7 @@ sap.ui.define([
 
             oView.setBusy(true);
             oModel.setTransactionModel(oServiceModel);
-            oModel.read("/MoldItemSelect", {
+            oModel.read("/MoldItemSelect_"+ oArges.approval_type_code , {
                 filters: aSearchFilters,
                 success: function (oData) {
                     console.log(" oData ", oData);
