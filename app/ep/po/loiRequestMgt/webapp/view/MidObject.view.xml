@@ -175,7 +175,7 @@
 								<Column id="midLevelValueColumn" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="품목코드" required="true" />
 								</Column>
-								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" >
+								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center"  width="200px">
 									<Text text="품명" />
 								</Column>
                                 <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
@@ -184,10 +184,10 @@
                                 <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
 									<Text text="수량" />
 								</Column>
-                                <Column id="midEndDateColumn2" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midEndDateColumn2" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Text text="통화" />
 								</Column>
-                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="금액" />
 								</Column>
                                 <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Center" >
