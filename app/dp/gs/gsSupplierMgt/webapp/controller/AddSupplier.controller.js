@@ -465,7 +465,7 @@ sap.ui.define([
                    
                 }
             });            
-            oDetailsModel3.read("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
+            oDetailsModel3.read("/SupplierGenView(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
                 success: function (oData) {
                     
                 }
@@ -484,9 +484,11 @@ sap.ui.define([
             oFcl.to(sThisViewId);
 
             //ScrollTop
-            var oObjectPageLayout = this.getView().byId("page");
+            this.byId("suppliePage").setSelectedSection("pageSectionMain");
+            var oObjectPageLayout = this.getView().byId("suppliePage");
             var oFirstSection = oObjectPageLayout.getSections()[0];
             oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+            
 		},
 
 		/**
@@ -510,7 +512,7 @@ sap.ui.define([
 		_toEditMode: function(){
 			var FALSE = false;
             this._showFormFragment('AddSupplier_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
 			// this.byId("pageDeleteButton").setEnabled(FALSE);
@@ -533,7 +535,7 @@ sap.ui.define([
 		_toShowMode: function(){
 			var TRUE = true;
 			this._showFormFragment('AddSupplier_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
 			// this.byId("pageDeleteButton").setEnabled(TRUE);
@@ -651,7 +653,7 @@ sap.ui.define([
                             }
                         },
                         required : true
-                    }),
+                    }),                    
                     new Input({
                         value: {
                             path: 'SupplierFin>fiscal_quarter',
