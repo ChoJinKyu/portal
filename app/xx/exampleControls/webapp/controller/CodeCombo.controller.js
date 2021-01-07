@@ -2,8 +2,9 @@ sap.ui.define([
 	"./Empty.controller",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
-	"sap/m/MessageToast"
-], function (Controller, JSONModel, MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "ext/cm/util/control/codePopUp"
+], function (Controller, JSONModel, MessageBox, MessageToast, codePopUp) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -20,6 +21,8 @@ sap.ui.define([
                     tenants: [""],
                 }
             ]), "list");
+
+            this.cmCodePopUp = new codePopUp();
 
         },
 
@@ -56,7 +59,23 @@ sap.ui.define([
 
         onTableTestButtonPress: function(){
             MessageBox.show(JSON.stringify(this.getModel("list").getData()));
-        }
+        },
+        
+        onPressCodePopUp: function() {
+            this.cmCodePopUp.attachEvent("ok", this.onCodePopUpPress.bind(this));
+            this.cmCodePopUp.setSerachFieldCode("D");
+            this.cmCodePopUp.open();
+        },
+
+        onCodePopUpPress: function(oEvent){
+            var oData = oEvent.getParameter("data");
+            this.byId("cmCodePopUpTenet_id").setText(oData.tenant_id);
+            this.byId("cmCodePopUpCode").setText(oData.code);
+            this.byId("cmCodePopUpCode_Description").setText(oData.code_description);
+            this.byId("cmCodePopUpCode_Name").setText(oData.code_name);
+            this.byId("cmCodePopUpGroup_Code").setText(oData.group_code);
+        },
+
 
 	});
 });
