@@ -7,10 +7,10 @@ service SupEvalSetupV4Service {
     
     /* Vendor Pool Level Chip Set */
     view VpLevelView as
-        select lvl.tenant_id,
-               lvl.org_code,
-               lvl.code vp_operation_unit_code,
-               cp.copy_no level_no,
+        select Key lvl.tenant_id,
+               Key lvl.org_code,
+               Key lvl.code vp_operation_unit_code,
+               Key cp.copy_no level_no,
                cp.copy_no || ' Level' level_name : String(10)
         from   maxLvl lvl,
                copyT cp
@@ -21,7 +21,7 @@ service SupEvalSetupV4Service {
 
     view VpLevelChipView (tenant_id: String, org_code: String, op_unit_code: String) as
         select distinct 
-               level_no,
+               Key level_no,
                level_name
         from   VpLevelView
         where  tenant_id = :tenant_id
