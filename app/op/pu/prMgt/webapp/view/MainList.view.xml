@@ -155,42 +155,42 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnCHK" width="4em" >
-                            <CheckBox selected="false" select=".onColumnChecBox"/>
+                            <CheckBox selected="false" minScreenWidth="Desktop" select=".onColumnChecBox"/>
                         </Column>
-                        <Column id="mainColumnPR_NUMBER"   minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_NUMBER"   importance="High"  popinDisplay="Inline"   demandPopin="true" hAlign="Center">
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnERP_PR_NUMBER"        minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainColumnERP_PR_NUMBER"   minScreenWidth="Desktop" hAlign="Center" >
                             <Text text="{I18N>/ERP_PR_NUMBER}" />
                         </Column>        
-                        <Column id="mainColumnPR_DESC"        minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainColumnPR_DESC"     importance="High"  popinDisplay="Inline"  demandPopin="true" hAlign="Center" >
                             <Text text="{I18N>/PR_DESC}" />
                         </Column>                       
-                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center">
                             <Text text="{I18N>/PR_TYPE_CODE_2}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center">
                             <Text text="{I18N>/PR_TYPE_CODE_3}" />
                         </Column>
-                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center">
                             <Text text="{I18N>/PR_TEMPLATE_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Desktop" hAlign="Center">
                             <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
                         </Column>
-                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center">
                             <Text text="{I18N>/REQUESTOR_NAME}" />
                         </Column>
-                         <Column id="mainColumnPURCHASE_REQUISITION" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                         <Column id="mainColumnPURCHASE_REQUISITION" minScreenWidth="Desktop" hAlign="Center" >
                             <Text text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" />
                         </Column>
-                        <Column id="mainColumnPR_COUNT" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnPR_COUNT" minScreenWidth="Desktop" hAlign="Center" >
                             <Text text="{I18N>/PR_COUNT}" />
                         </Column>
-                        <Column id="mainColumnPR_CREATE_STATUS_CODE" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnPR_CREATE_STATUS_CODE" importance="High" popinDisplay="Inline" demandPopin="true" hAlign="Center" >
                             <Text text="{I18N>/PR_CREATE_STATUS_CODE}" />
                         </Column>
                        

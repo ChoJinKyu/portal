@@ -47,7 +47,7 @@ sap.ui.define([
             oMultilingual.attachEvent("ready", function (oEvent) {
                 var oi18nModel = oEvent.getParameter("model");
                 this.addHistoryEntry({
-                    title: oi18nModel.getText("/prMgt"),   //제어옵션관리
+                    title: oi18nModel.getText("/prMgt"),   //구매..
                     icon: "sap-icon://table-view",
                     intent: "#Template-display"
                 }, true);
@@ -415,17 +415,18 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0),
+           
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
-                controlOptionCode: oRecord.control_option_code
+                pr_number: oRecord.pr_number
             });
 
-            if (oNextUIState.layout === "TwoColumnsMidExpanded") {
+            if (oNextUIState.layout === "TwoColumnsMidExpanded") {                
                 this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 

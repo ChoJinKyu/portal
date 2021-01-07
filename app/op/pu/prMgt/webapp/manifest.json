@@ -189,6 +189,14 @@
               ]
           },
           {
+              "pattern": "midCreate/{layout}/{tenantId}/{pr_number}",
+              "name": "midView",
+              "target": [
+                  "mainObject",
+                  "midViewObject"
+              ]
+          },
+          {
               "pattern": "midCreate/{layout}/{tenantId}/{pr_type_code}/{pr_type_code_2}/{pr_type_code_3}/{pr_template_number}",
               "name": "midCreate",
               "target": [
@@ -205,6 +213,10 @@
           },
           "midObject": {
               "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "midViewObject": {
+              "viewName": "MidCreateObject",
               "controlAggregation": "midColumnPages"
           },
           "midCreateObject": {
