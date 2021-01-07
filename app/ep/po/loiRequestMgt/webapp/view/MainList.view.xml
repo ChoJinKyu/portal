@@ -17,12 +17,12 @@
                 <f:heading>
                     <Title text="{i18n>appTitle}" />
                 </f:heading>
-                <!-- <f:snappedContent>
+                <f:snappedContent>
                 </f:snappedContent>
                 <f:expandedContent>
-                </f:expandedContent> -->
+                </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -31,110 +31,211 @@
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
-            <f:DynamicPageHeader pinnable="true">
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                    <form:content>
-                        <VBox>
-                            <Label text="LOI 번호" labelFor="searchLoiNumberS" ></Label>
-                            <!-- <MultiComboBox id="searchLoiNumberS" width="100%" selectedKey="" items="{
-                                path: 'multiLoi>/LoiNumberGroupbyView',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: '1000'}
-                                ],
-                                sorter: { path: 'loi_number'}
-                            }">
-                                <items>
-                                    <core:Item key="{multiLoi>loi_number}" text="{multiLoi>loi_number}" />
-                                </items>
-                            </MultiComboBox> -->
-
-                            <MultiInput width="100%"
-                                id="searchLoiNumberS"
-                                suggestionItems="{
-                                    path: '/LoiNumberGroupbyView',
+            <f:DynamicPageHeader>
+                <!-- <f:snappedContent> -->
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="LOI 번호" labelFor="searchLoiNumberS" ></Label>
+                                <!-- <MultiComboBox id="searchLoiNumberS" width="100%" selectedKey="" items="{
+                                    path: 'multiLoi>/LoiNumberGroupbyView',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: '1000'},
-                                        {path: 'company_code', operator: 'EQ', value1: 'C100'}
-                                    ],         
-                                    sorter: { path: 'loi_number' }
-                                }"
-                                showValueHelp="false" placeholder="">
-                                <core:Item key="{loi_number}" text="{loi_number}" />
-                            </MultiInput>
-
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-
-                        </VBox>
-                        <VBox>
-                            <Label text="요청일자" labelFor="searchRequestDate" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDate" width="100%" change="creationDateChange"/>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="요청부서" labelFor="searchRequestDepartment"></Label>
-                            <!-- <Input id="searchRequestDepartment" placeholder="Input data"></Input> -->
-                            <lib-m:CodePicker id="searchRequestDepartment"
-                                placeholder="Enter a department name"
-                                keyField="department_id"
-                                textField="department_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: '1000'}
                                     ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Department'
+                                    sorter: { path: 'loi_number'}
                                 }">
-                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
-                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
-                            </lib-m:CodePicker>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="요청자" labelFor="searchRequestor"></Label>
-                            <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
-                            <lib-m:CodePicker id="searchRequestor"
-                                placeholder="Enter a Employee name"
-                                keyField="employee_number"
-                                textField="user_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Employee'
-                                }">
-                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                            </lib-m:CodePicker>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="진행상태"></Label>
-                            <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
-                                <items>
-                                    <SegmentedButtonItem text="All" key="" width="4.1rem" />
-                                    <SegmentedButtonItem text="작성중" key="작성중" width="4.1rem" />
-                                    <SegmentedButtonItem text="결재진행중" key="결재진행중" width="6rem" />
-                                    <SegmentedButtonItem text="결재반려" key="결재반려" width="5.5rem" />
-                                    <SegmentedButtonItem text="요청완료" key="요청완료" width="5.5rem" />
-                                </items>
-                            </SegmentedButton>
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M12 S12" />
-                            </layoutData>
-                        </VBox>
-                    </form:content>
-                </form:SimpleForm>
+                                    <items>
+                                        <core:Item key="{multiLoi>loi_number}" text="{multiLoi>loi_number}" />
+                                    </items>
+                                </MultiComboBox> -->
+
+                                <MultiInput width="100%"
+                                    id="searchLoiNumberS"
+                                    suggestionItems="{
+                                        path: '/LoiNumberGroupbyView',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'C100'}
+                                        ],         
+                                        sorter: { path: 'loi_number' }
+                                    }"
+                                    showValueHelp="false" placeholder="" submit=".onPageSearchButtonPress">
+                                    <core:Item key="{loi_number}" text="{loi_number}" />
+                                </MultiInput>  
+
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+
+                            </VBox>
+                            <VBox>
+                                <Label text="요청일자" labelFor="searchRequestDateS" required="true"></Label>
+                                    <DateRangeSelection id="searchRequestDateS" width="100%" change="creationDateChange"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="요청부서" labelFor="searchRequestDepartmentS"></Label>
+                                <!-- <Input id="searchRequestDepartment" placeholder="Input data"></Input> -->
+                                <lib-m:CodePicker id="searchRequestDepartmentS"
+                                    placeholder="Enter a department name"
+                                    keyField="department_id"
+                                    textField="department_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Department'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                        keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                </lib-m:CodePicker>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="요청자" labelFor="searchRequestorS"></Label>
+                                <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
+                                <lib-m:CodePicker id="searchRequestorS"
+                                    placeholder="Enter a Employee name"
+                                    keyField="employee_number"
+                                    textField="user_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Employee'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                </lib-m:CodePicker>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="진행상태"></Label>
+                                <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="" width="4.1rem" />
+                                        <SegmentedButtonItem text="작성중" key="121010" width="4.1rem" />
+                                        <SegmentedButtonItem text="결재진행중" key="121020" width="6rem" />
+                                        <SegmentedButtonItem text="결재반려" key="121030" width="5.5rem" />
+                                        <SegmentedButtonItem text="요청완료" key="121040" width="5.5rem" />
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL6 L6 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                <!-- </f:snappedContent> -->
+                <!-- <f:expandedContent>
+                        <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        
+                        <form:content>
+                            <VBox>
+                                <Label text="LOI 번호" labelFor="searchLoiNumberE" ></Label>
+                                <MultiInput width="100%"
+                                    id="searchLoiNumberE"
+                                    suggestionItems="{
+                                        path: '/LoiNumberGroupbyView',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: '1000'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'C100'}
+                                        ],         
+                                        sorter: { path: 'loi_number' }
+                                    }"
+                                    showValueHelp="false" placeholder="">
+                                    <core:Item key="{loi_number}" text="{loi_number}" />
+                                </MultiInput>
+
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+
+                            </VBox>
+                            <VBox>
+                                <Label text="요청일자" labelFor="searchRequestDateE" required="true"></Label>
+                                    <DateRangeSelection id="searchRequestDateE" width="100%" change="creationDateChange"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="요청부서" labelFor="searchRequestDepartmentE"></Label>
+                                <lib-m:CodePicker id="searchRequestDepartmentE"
+                                    placeholder="Enter a department name"
+                                    keyField="department_id"
+                                    textField="department_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Department'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                        keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                </lib-m:CodePicker>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="요청자" labelFor="searchRequestorE"></Label>
+                                <lib-m:CodePicker id="searchRequestorE"
+                                    placeholder="Enter a Employee name"
+                                    keyField="employee_number"
+                                    textField="user_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Employee'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                </lib-m:CodePicker>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="진행상태"></Label>
+                                <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="" width="4.1rem" />
+                                        <SegmentedButtonItem text="작성중" key="작성중" width="4.1rem" />
+                                        <SegmentedButtonItem text="결재진행중" key="결재진행중" width="6rem" />
+                                        <SegmentedButtonItem text="결재반려" key="결재반려" width="5.5rem" />
+                                        <SegmentedButtonItem text="요청완료" key="요청완료" width="5.5rem" />
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL6 L6 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent> -->
+                <!-- <f:actions>
+                    <Button id="pageSearchButton" text="{path:'I18N>/SEARCH', formatter:'I18NFormatter'}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions> -->
+
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -205,8 +306,8 @@
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
                                 <ObjectIdentifier text="{list>loi_number}" />
-                                <ObjectIdentifier text="{list>requestor_name}" />
                                 <ObjectIdentifier text="{list>request_department_name}" />
+                                <ObjectIdentifier text="{list>requestor_name}" />
                                 <ObjectIdentifier text="{
                                         path: 'list>request_date',
                                         formatter: '.dateFormatter.toDateString'

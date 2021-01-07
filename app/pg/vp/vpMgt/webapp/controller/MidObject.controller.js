@@ -304,11 +304,11 @@ sap.ui.define([
             this._sTempType = oArgs.temptype;
             
 
-            // alert("_sTenantId : " + this._sTenantId + 
-            //       "_sVendorPool : " + this._sVendorPool + 
-            //       "_sOrgCode : " + this._sOrgCode + 
-            //       "_sOperationUnitCode : " + this._sOperationUnitCode +
-            //       "_sTempType : " + this._sTempType );
+            alert("_sTenantId : " + this._sTenantId + 
+                  "_sVendorPool : " + this._sVendorPool + 
+                  "_sOrgCode : " + this._sOrgCode + 
+                  "_sOperationUnitCode : " + this._sOperationUnitCode +
+                  "_sTempType : " + this._sTempType );
 
 
             var predicates = [];
@@ -323,7 +323,14 @@ sap.ui.define([
                     predicates.push(new Filter("operation_unit_code", FilterOperator.EQ, this._sOperationUnitCode));
                 }         
             if (!!this._sVendorPool) {
-                    predicates.push(new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool));
+
+                
+                    predicates.push(new Filter({
+                        path:'keyword',
+                        filters:[
+                            new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool),
+                        ]
+                        }));
                 }                        
 
                 // predicates.push(new Filter("language_cd", FilterOperator.EQ, "EN"));

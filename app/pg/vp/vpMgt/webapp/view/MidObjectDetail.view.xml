@@ -279,17 +279,42 @@
                                 <OverflowToolbar>
                                     <Title text="List ({= ${suplist>/VpSupplierDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".onDialogSupList"   enabled="{mode>/viewFlag}" />
-                                    <Button id="sppListDel"     type="Emphasized" text="Delete"     press=".onSppListDelButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".supplierAddRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListDel"     type="Emphasized" text="Delete"     press=".supplierDelRow"   enabled="{mode>/viewFlag}" />
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
                             <table:columns>
-                                <table:Column label="Supplier Code" width="8em" filterProperty="supplier_code">
+                                <table:Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                                     <table:template>
-                                        <Text text="{suplist>supplier_code}" wrapping="false" />
+                                        <ObjectStatus icon="{
+                                            path: 'suplist>_row_state_',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
                                     </table:template>
                                 </table:Column>
+                                <table:Column label="Supplier Code" width="11em" filterProperty="supplier_code">
+                                    <table:template>
+                                        <lib-m:CodePicker id="supplier_code"
+                                            placeholder="Enter a department name"
+                                            keyField="supplier_code"
+                                            textField="supplier_local_name"
+                                            suggestionItems="{
+                                                path: '/',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                    {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+
+                                                serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                                entityName: 'VpSupplierMstView'
+                                            }" value="{suplist>supplier_code}" change=".supplierChg">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
+                                                keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
+                                        </lib-m:CodePicker>
+                                    </table:template>
+                                </table:Column>
+                                
                                 <table:Column label="Supplier Name" width="8em" filterProperty="supplier_local_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_local_name}" wrapping="false" />
