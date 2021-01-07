@@ -78,8 +78,8 @@ BEGIN
             , :I_SPECIAL_NOTE
             -- , :I_ATTCH_GROUP_NUMBER 
             , '1234' 
-            , '5450'
-            , '58665481'
+            , '9586'
+            , '50008948'
             , CURRENT_TIMESTAMP
             , :I_REMARK 
             -- , :I_ORG_TYPE_CODE
