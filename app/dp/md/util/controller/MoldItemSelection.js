@@ -136,7 +136,7 @@ sap.ui.define([
 
                 var oInFilter = {
                     filters: nFilters,
-                    and: true
+                    and: false
                 };
                 aSearchFilters.push(new Filter(oInFilter));
 
