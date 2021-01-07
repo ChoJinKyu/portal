@@ -653,7 +653,7 @@ sap.ui.define([
             var that = this;
             that._valueHelpReqmQuantityUnit.then(function(oDialog) {
                 oDialog.close();
-                oDialog.destroy();
+                //oDialog.destroy();
             });             
 
 			//that._valueHelpReqmQuantityUnit.close(); 
@@ -1637,7 +1637,7 @@ sap.ui.define([
             that._valueHelpMaterialDialog.then(function(oDialog) {
                 oDialog.close();
                 //song Fragment destory (팝업창 소거하지 않을경우 페이지 이동하더래도 남아 있는 컨트롤 객체로 에러 방지)
-                oDialog.destroy();
+                //oDialog.destroy();
             });                    
            // that.getView().byId("materialDialog").close();
            // that._valueHelpMaterialDialog.close();
@@ -1650,7 +1650,7 @@ sap.ui.define([
             var that = this;
             that._valueHelpMaterialDetail.then(function(oDialog) {
                 oDialog.close();
-                oDialog.destroy();
+                //oDialog.destroy();
             }); 
             //that.byId("materialDetail").close();
         },
