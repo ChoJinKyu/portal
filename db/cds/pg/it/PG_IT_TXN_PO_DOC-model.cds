@@ -58,7 +58,7 @@ entity It_Txn_Po_Doc {
         base_unit_switch_numerator       : Decimal(5, 0)       @title : '기본단위전환분자';
         base_unit_switch_denominator     : Decimal(5, 0)       @title : '기본단위전환분모';
         po_net_price                     : Decimal             @title : 'PO단가';
-        price_unit                       : Decimal(5, 0)       @title : '가격단위';
+        po_price_unit                    : Decimal(5, 0)       @title : 'PO가격단위';
         po_amount                        : Decimal             @title : '구매오더금액';
         tax_code                         : String(10)          @title : '세금코드';
         valuation_type_code              : String(30)          @title : '평가유형코드';
