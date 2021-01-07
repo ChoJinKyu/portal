@@ -157,7 +157,7 @@ sap.ui.define([
                 return;
             }
             
-			MessageBox.confirm("Are you sure ?", {
+			MessageBox.confirm(this.getModel('I18N').getText('/NCM00001') || 'NCM00001', {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -171,7 +171,7 @@ sap.ui.define([
 							success: function(ok){
 								me._toShowMode();
 								oView.setBusy(false);
-								MessageToast.show("Success to save.");
+								MessageToast.show(me.getModel('I18N').getText('/NCM01001') || 'NCM01001');
 							}
 						});
 					};

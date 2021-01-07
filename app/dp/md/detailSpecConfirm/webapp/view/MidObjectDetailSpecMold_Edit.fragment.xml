@@ -11,7 +11,7 @@
          >
         <form:content>
             <VBox height="3.5rem">
-                <Label text="Inspection"/>
+                <Label text="Inspection" required="true"/>
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No" />
                 <layoutData>
                     <l:GridData
@@ -20,7 +20,7 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Assembly Approval"/> 
+                <Label text="Assembly Approval" required="true"/> 
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" />
                 <layoutData>
                     <l:GridData
@@ -29,8 +29,8 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Use Material"/> 
-                <Input value="{spec>/use_material_value}" />
+                <Label text="Use Material" required="true"/> 
+                <Input value="{spec>/use_material_value}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -38,8 +38,8 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Cavity Qty"/>
-                <Input value="{spec>/cavity_process_qty}" />
+                <Label text="Cavity Qty" required="true"/>
+                <Input value="{spec>/cavity_process_qty}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -65,8 +65,8 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Demand Life(Shot)"/>
-                <Input value="{spec>/request_life_shot_count}" />
+                <Label text="Demand Life(Shot)" required="true"/>
+                <Input value="{spec>/request_life_shot_count}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -74,8 +74,8 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Mold Weight(Kg)"/>
-                <Input value="{spec>/mold_weight}" />
+                <Label text="Mold Weight(Kg)" required="true"/>
+                <Input value="{spec>/mold_weight}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -83,8 +83,9 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Mold Type"/>
+                <Label text="Mold Type" required="true"/>
                 <Select   width="100%"
+                            required="true"
                             selectedKey="{master>/mold_type_code}"
                             items="{
                                         path : 'util>/Code',
@@ -105,8 +106,8 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Hot Runner Valve Qty(EA)"/>
-                <Input value="{spec>/mold_hot_runner_qty}" />
+                <Label text="Hot Runner Valve Qty(EA)" required="true"/>
+                <Input value="{spec>/mold_hot_runner_qty}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -114,8 +115,9 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Hot Runner Maker"/>
+                <Label text="Hot Runner Maker" required="true"/>
                 <Select   width="100%"
+                            required="true"
                             selectedKey="{spec>/hot_runner_maker_name}"
                             items="{
                                         path : 'util>/Code',
@@ -136,8 +138,9 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Mold Structure"/>
+                <Label text="Mold Structure" required="true"/>
                 <Select   width="100%"
+                            required="true"
                             selectedKey="{spec>/die_form}"
                             items="{
                                         path : 'util>/Code',
@@ -158,8 +161,9 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Size"/>
+                <Label text="Size" required="true"/>
                 <Select   width="100%"
+                            required="true"
                             selectedKey="{spec>/mold_size}"
                             items="{
                                         path : 'util>/Code',
@@ -180,8 +184,8 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Mold Size(W*L*H)"/>
-                <Input value="{spec>/mold_size_2}" />
+                <Label text="Mold Size(W*L*H)" required="true"/>
+                <Input value="{spec>/mold_size_2}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />

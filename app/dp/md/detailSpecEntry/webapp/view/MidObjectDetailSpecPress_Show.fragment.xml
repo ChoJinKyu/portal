@@ -7,133 +7,295 @@
 <VBox class="sapUiSmallMargin">
     <form:SimpleForm 
         editable="false"
-        layout="ColumnLayout"
-        columnsM="2"
-        columnsL="3"
-        columnsXL="3" >
+        layout="ResponsiveGridLayout" >
         <form:content>
 
-                <Label text="Mold Test"/>
+            <VBox height="3.5rem">
+                <Label text="Mold Test" />
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
-                <Label text="Order Qty"/>
-                <Text text="{spec>/order_qty}"/>
-                <Label text="Demand Life(Shot)"/>
-                <Text text="{spec>/request_life_shot_count}"></Text>
-                <Label text="Size"/>
-                <Select   width="100%"
-                            selectedKey="{spec>/mold_size}"
-                            items="{
-                                        path : 'util>/Code',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
-                                        ]
-                                    }"
-                            editable="false"
-                            class="readonlyField"
-                >
-                    <core:Item key="{util>code}" text="{util>code_name}" />
-                </Select>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
 
-             <!-- </VBox>            
-            <VBox > -->
-                <Label text="Assembly Approval"/> 
+            <VBox height="3.5rem">
+                <Label text="Assembly Approval" /> 
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
-                <Label text="Mold Structure"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Use Material" /> 
+                <Input value="{spec>/use_material_value}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Order Qty"/>
+                <Input value="{spec>/order_qty}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Mold Structure" />
                 <Select   width="100%"
+                        editable="false" class="readonlyField"
                             selectedKey="{spec>/die_form}"
                             items="{
                                         path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
-                            editable="false"
-                            class="readonlyField"
+                            
+                            
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Process Qty(EA)" />
+                <Input value="{spec>/cavity_process_qty}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Demand Life(Shot)" />
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
                 <Label text="Mold Weight(Kg)"/>
-                <Text text="{spec>/mold_weight}"></Text>
-                <Label text="Open Size(W*P)"/>
-                <Text text="{spec>/press_open_size}"></Text>
+                <Input value="{spec>/mold_weight}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
 
-
-            <!-- </VBox>            
-            <VBox > -->
-                <Label text="Use Material"/> 
-                <Text text="{spec>/use_material_value}"/>
-                <Label text="Process Qty(EA)"/>
-                <Text text="{spec>/cavity_process_qty}"/>
+            <VBox height="3.5rem">
                 <Label text="Material Thickness"/>
-                <Text text="{spec>/press_material_thickness}"></Text>
+                <Input value="{spec>/press_material_thickness}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Size" />
+                <Select   width="100%"
+                            editable="false" class="readonlyField"
+                            selectedKey="{spec>/mold_size}"
+                            items="{
+                                        path : 'util>/Code',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
+                                        ],
+                                        sorter: { path: 'sort_no'}
+                                    }"
+                            
+                            
+                >
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </Select>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Open Size(W*P)"/>
+                <Input value="{spec>/press_open_size}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
                 <Label text="Material Size(W*P)"/>
-                <Text text="{spec>/press_material_size}"></Text>
-             <!-- </VBox> -->
+                <Input value="{spec>/press_material_size}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
         </form:content>
     </form:SimpleForm>
-    <form:SimpleForm 
+
+
+        <form:SimpleForm 
         editable="false"
-        layout="ColumnLayout"
-        columnsM="2"
-        columnsL="3"
-        columnsXL="3" >
+        layout="ResponsiveGridLayout" >
         <form:content>
+
             <core:Title text="Spare Parts" />
-            <!-- <VBox> -->
+
+            <VBox height="3.5rem">
                 <Label text="P-Punch(EA)"/>
-                <Text text="{spec>/spare_part_p_punch_count}"/>
-                <Label text="Die Button(EA)"/>
-                <Text text="{spec>/spare_part_die_button_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_p_punch_count', type: 'sap.ui.model.type.Integer'}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
 
-            <!-- </VBox>            
-            <VBox > -->
+            <VBox height="3.5rem">
                 <Label text="B-Punch(EA)"/> 
-                <Text text="{spec>/spare_part_b_punch_count}"/>
-                <Label text="Ejector Pin(EA)"/>
-                <Text text="{spec>/spare_part_ejector_pin_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_b_punch_count', type: 'sap.ui.model.type.Integer'}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
 
-            <!-- </VBox>            
-            <VBox > -->
+            <VBox height="3.5rem">
                 <Label text="Spring(EA)"/> 
-                <Text text="{spec>/spare_part_spring_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_spring_count', type: 'sap.ui.model.type.Integer'}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+
+                <Label text="Die Button(EA)"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_die_button_count', type: 'sap.ui.model.type.Integer'}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Ejector Pin(EA)"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
                 <Label text="Etc. Press(EA)"/>
-                <Text text="{spec>/spare_part_etc_count}"/>
-            <!-- </VBox> -->
+                <Input type="Number" value="{path: 'spec>/spare_part_etc_count', type: 'sap.ui.model.type.Integer'}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+            
         </form:content>
     </form:SimpleForm>
 
     <form:SimpleForm 
         editable="false"
-        layout="ColumnLayout"
-        columnsM="2"
-        columnsL="3"
-        columnsXL="3" >
+        layout="ResponsiveGridLayout" >
         <form:content>
+
             <core:Title text="Press Meterial" />
-            <!-- <VBox> -->
+
+            <VBox height="3.5rem">
                 <Label text="Top Holder"/>
-                <Text text="{spec>/top_holder_material_name}"/>
-                <Label text="Stripper"/>
-                <Text text="{spec>/stripper_material_name}"/>
-                <Label text="Pad Valve"/>
-                <Text text="{spec>/pad_valve_material_name}"/>
-            <!-- </VBox>            
-            <VBox > -->
+                <Input value="{spec>/top_holder_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
                 <Label text="Bottom Holder"/> 
-                <Text text="{spec>/bottom_holder_material_name}"/>
-                <Label text="Punch Holder"/>
-                <Text text="{spec>/punch_holder_material_name}"/>
-                <Label text="Pad"/>
-                <Text text="{spec>/pad_material_name}"/>
-            <!-- </VBox>            
-            <VBox > -->
+                <Input value="{spec>/bottom_holder_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
                 <Label text="Die"/> 
-                <Text text="{spec>/die_material_name}"/>
+                <Input value="{spec>/die_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Stripper"/>
+                <Input value="{spec>/stripper_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Punch Holder"/>
+                <Input value="{spec>/punch_holder_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
                 <Label text="Punch"/>
-                <Text text="{spec>/punch_material_name}"/>
-            <!-- </VBox> -->
+                <Input value="{spec>/punch_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Pad Valve"/>
+                <Input value="{spec>/pad_valve_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
+            <VBox height="3.5rem">
+                <Label text="Pad"/>
+                <Input value="{spec>/pad_material_name}" editable="false" class="readonlyField"/>
+                <layoutData>
+                    <l:GridData
+                        span="XL4 L4 M4 S6" />
+                </layoutData>
+            </VBox>
+
         </form:content>
     </form:SimpleForm>
 	</VBox>
