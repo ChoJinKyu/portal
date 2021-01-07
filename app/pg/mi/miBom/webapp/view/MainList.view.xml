@@ -126,7 +126,11 @@
                     </smartTable:customToolbar>
                             <Table id="mainTable" 
                             mode="MultiSelect" 
-                            sticky="HeaderToolbar,ColumnHeaders"
+                            growingScrollToLoad="true"
+                            growing="true"
+                            sticky="ColumnHeaders,HeaderToolbar"
+                            growingThreshold="50"
+                            inset="false"   
                             >
                                  <columns>  
                                        <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
