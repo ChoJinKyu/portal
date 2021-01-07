@@ -97,19 +97,17 @@ sap.ui.define([
                     success: function (oData) {
                         for (var i = 0; i < oTable.getItems().length; i++) {
                             oTable.getAggregation('items')[i].getCells()[1].getItems()[2].setValue(oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue());
-                            //oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("No");
-                            if (oTable.getAggregation('items')[i].getCells()[4].getItems()[1].getValue() == "true") {
-                                //console.log(oTable.getAggregation('items')[i].getCells()[4].getItems()[2]._buttonPressed);
-                                oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setPressed(true);
+
+                            if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
                                 oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("Yes");
+                            }else{
+                                oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("No");
                             }
-
-                            if (oTable.getAggregation('items')[i].getCells()[5].getItems()[1].getValue() == "true") {
-                                //console.log(oTable.getAggregation('items')[i].getCells()[5].getItems()[2]._buttonPressed);
-                                oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setPressed(true);
+                            if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
                                 oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Active");
+                            }else{
+                                oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Inactive");
                             }
-
                             
                             oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
                             oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
@@ -120,7 +118,6 @@ sap.ui.define([
                             oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
                             oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
 
-                            //console.log(oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed());
                             oModel.oData.PdProdActivityTemplate[i]._row_state_ = "";
                         }
                         oView.setBusy(false);
@@ -242,97 +239,88 @@ sap.ui.define([
         
             onSave: function () {
                 var oModel = this.getModel("v4Proc");
+                var oModel2 = this.getView().getModel("list"); 
                 var oView = this.getView();
                 var v_this = this;
-                var ctx = this.byId("mainTable").getSelectedContextPaths();
                 var oTable = this.byId("mainTable");
-
-             
-                //상태
-
-                if (ctx.length > 0) {
-                    var inputData = {
-                        inputData : {
-                            pdProdActivityTemplateType :  []
-                        }
-                    };
-                    var now = new Date();
-                    var PdProdActivityTemplateType  = [];
-                    for (var i = 0; i < ctx.length; i++) {
-                        var curDataH = this.getView().getModel("list").getProperty(ctx[i]);
-                        var activeFlg = curDataH.active_flag;
-                        if(activeFlg=="true"){
+                var oData = oModel2.oData;                
+                var inputData = {
+                    inputData : {
+                        pdProdActivityTemplateType :  []
+                    }
+                };
+                var now = new Date();
+                var PdProdActivityTemplateType  = [];
+                for (var i = 0; i < oTable.getItems().length; i++) {
+                    if( oData.PdProdActivityTemplate[i]._row_state_ != null && oData.PdProdActivityTemplate[i]._row_state_ != "" ){
+                        var activeFlg = "false";
+                        if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
                             activeFlg = "true";
                         }else {
                             activeFlg = "false";
                         }
-                        var milestoneFlg = curDataH.milestone_flag;
-                        if(milestoneFlg=="true"){
+                        var milestoneFlg = "false";
+                        if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
                             milestoneFlg = "true";
                         }else {
                             milestoneFlg = "false";
                         }
-                        var pacOri = curDataH.product_activity_code_ori;
-                        if(curDataH._row_state_ == "C"){
-                            pacOri = curDataH.product_activity_code
+                        var pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[2].getValue();
+                        if(oData.PdProdActivityTemplate[i]._row_state_  == "C"){
+                            pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue();
                         }
-                        var seq = curDataH.sequence;
-                        if(seq == "C"){
+                        var seq = oData.PdProdActivityTemplate[i].sequence;
+                        if(oData.PdProdActivityTemplate[i]._row_state_ == "C"){
                             seq ="1";
                         }
                         PdProdActivityTemplateType.push( 
                            {
-                                tenant_id : curDataH.tenant_id,
-                                company_code : curDataH.company_code,
-                                org_type_code : curDataH.org_type_code,
-                                org_code : curDataH.org_code,
+                                tenant_id : oData.PdProdActivityTemplate[i].tenant_id,
+                                company_code : oData.PdProdActivityTemplate[i].company_code,
+                                org_type_code : oData.PdProdActivityTemplate[i].org_type_code,
+                                org_code : oData.PdProdActivityTemplate[i].org_code,
                                 product_activity_code : pacOri,
-                                develope_event_code : curDataH.develope_event_code,	
-                                sequence : curDataH.sequence,
-                                product_activity_name : curDataH.product_activity_name,	
-                                product_activity_english_name : curDataH.product_activity_english_name,
+                                develope_event_code : oData.PdProdActivityTemplate[i].develope_event_code,	
+                                sequence : oData.PdProdActivityTemplate[i].sequence,
+                                product_activity_name : oData.PdProdActivityTemplate[i].product_activity_name,	
+                                product_activity_english_name : oData.PdProdActivityTemplate[i].product_activity_english_name,
                                 milestone_flag : milestoneFlg,
                                 active_flag : activeFlg,
-                                update_user_id : curDataH.update_user_id,
+                                update_user_id : this.loginUserId,
                                 system_update_dtm : now, 
-                                crud_type_code : curDataH._row_state_,
-                                update_product_activity_code : curDataH.product_activity_code
+                                crud_type_code : oData.PdProdActivityTemplate[i]._row_state_,
+                                update_product_activity_code : oData.PdProdActivityTemplate[i].product_activity_code
                         });
-
+                        inputData.inputData.pdProdActivityTemplateType = PdProdActivityTemplateType;
+                        var url = "dp/pd/productActivity/webapp/srv-api/odata/v4/dp.ProductActivityV4Service/PdProductActivitySaveProc";
                     }
-
-
-                    inputData.inputData.pdProdActivityTemplateType = PdProdActivityTemplateType;
-                    //var url = oModel.sServiceUrl + "SaveProductActivity";
-                    var url = "dp/pd/productActivity/webapp/srv-api/odata/v4/dp.ProductActivityV4Service/PdProductActivitySaveProc";
-                    console.log(inputData);
-                    var v_this = this;
-                    $.ajax({
-                        url: url,
-                        type: "POST",
-                        //datatype: "json",
-                        //data: inputData,
-                        data: JSON.stringify(inputData),
-                        contentType: "application/json",
-                        success: function (data) {
-                            console.log(data);
-                            v_this.onSearch();
-                            //var v_returnModel = oView.getModel("returnModel").getData();
-                        },
-                        error: function (e) {
-                            console.log(e);
-                            v_this.onSearch();
-
-                        }
-                    });
                 }
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
-                    title: this.getModel("I18N").getText("/SAVE"),
+                console.log(inputData);
+                var v_this = this;
+                MessageBox.confirm("저장하시겠습까?", {
+                    title: "저장",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: (function (sButton) {
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            //datatype: "json",
+                            //data: inputData,
+                            data: JSON.stringify(inputData),
+                            contentType: "application/json",
+                            success: function (data) {
+                                console.log(data);
+                                v_this.onSearch();
+                                //var v_returnModel = oView.getModel("returnModel").getData();
+                            },
+                            error: function (e) {
+                                console.log(e);
+                                v_this.onSearch();
+
+                            }
+                        });
                     }).bind(this)
                 })
-                
             },
 
 
@@ -379,36 +367,19 @@ sap.ui.define([
 
 
             onMilestoneButtonPress: function (oEvent) {
-                var oTable = this.byId("mainTable");
-                var oModel = this.getView().getModel("list");
-                var oItem = oTable.getSelectedItem();
-                if (oItem != null && oItem != undefined) {
-                    var idx = oItem.getBindingContextPath().split("/")[2];
-                    console.log(oTable.getAggregation('items')[idx].getCells()[4].getItems()[2]);
-                    console.log(oTable.getAggregation('items')[idx].getCells()[4].getItems()[2].getPressed());
-                    oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setValue(oTable.getAggregation('items')[idx].getCells()[4].getItems()[2].getPressed());
-                    if( oTable.getAggregation('items')[idx].getCells()[4].getItems()[2].getPressed() == true){
-                        oTable.getAggregation('items')[idx].getCells()[4].getItems()[2].setText("Yes");
-                    }else{
-                        oTable.getAggregation('items')[idx].getCells()[4].getItems()[2].setText("No");
-                    }
+                if(oEvent.getSource().getPressed() ){
+                    oEvent.getSource().setText("No");
+                }else{
+                    oEvent.getSource().setText("Yes");
                 }
             },
 
 
             onActiveButtonPress: function (oEvent) {
-                var oTable = this.byId("mainTable");
-                var oModel = this.getView().getModel("list");
-                var oItem = oTable.getSelectedItem();
-                if (oItem != null && oItem != undefined) {
-                    var idx = oItem.getBindingContextPath().split("/")[2];
-                    console.log(oTable.getAggregation('items')[idx].getCells()[5].getItems()[2].getPressed());
-                    oTable.getAggregation('items')[idx].getCells()[5].getItems()[1].setValue(oTable.getAggregation('items')[idx].getCells()[5].getItems()[2].getPressed());
-                    if( oTable.getAggregation('items')[idx].getCells()[5].getItems()[2].getPressed() == true){
-                        oTable.getAggregation('items')[idx].getCells()[5].getItems()[2].setText("Active");
-                    }else{
-                        oTable.getAggregation('items')[idx].getCells()[5].getItems()[2].setText("Inactive");
-                    }
+                if(oEvent.getSource().getPressed() ){
+                    oEvent.getSource().setText("Inactive");
+                }else{
+                    oEvent.getSource().setText("Active");
                 }
             },
 
@@ -418,17 +389,8 @@ sap.ui.define([
                 var oTable = this.byId("mainTable");
                 var oModel = this.getView().getModel(mName);
                 var oItem = oTable.getSelectedItem();
-                
-                var idx = 0;
-                    console.log(oTable);
-                    console.log(oItem);
-                if (oItem != null && oItem != undefined) {
-                    idx = oItem.getBindingContextPath().split("/")[2];
-                    console.log(oItem.getBindingContextPath());
-                }
-                this.rowIndex = idx;
+                var idxs = [];
                 //oTable.removeSelections(true);
-
                 for (var i = 0; i < oTable._iVisibleItemsLength; i++) {
                     oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
@@ -440,34 +402,20 @@ sap.ui.define([
                     oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
                     oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
                 }
-
                 if (oItem != null && oItem != undefined) {
-                    for (var i = 0; i < oTable.getItems().length; i++) {
-                        oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                        oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
-                        oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
-                        oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
-                        oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
-                        oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
-                        //oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
-                        oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
-                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
+                    this.byId("buttonMainCancelRow").setEnabled(true);                    
+                    for(var k=0; k<oTable.getSelectedContextPaths().length; k++){
+                        idxs[k] = oTable.getSelectedContextPaths()[k].split("/")[2];
+                        oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[1].setVisible(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[1].setVisible(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[2].setEnabled(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[2].setEnabled(true);
                     }
-                    //this.byId("buttonMainAddRow").setEnabled(false);
-                    //this.byId("buttonMainEditRow").setEnabled(false);
-                    this.byId("buttonMainCancelRow").setEnabled(true);
-                    oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(true);
-                    oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(true);
-                    oTable.getAggregation('items')[idx].getCells()[3].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idx].getCells()[3].getItems()[1].setVisible(true);
-                    oTable.getAggregation('items')[idx].getCells()[4].getItems()[2].setEnabled(true);
-                    oTable.getAggregation('items')[idx].getCells()[5].getItems()[2].setEnabled(true);
                 }
-                
-               // oTable.setSelectedItem(oItem);
-
             }
 
 
