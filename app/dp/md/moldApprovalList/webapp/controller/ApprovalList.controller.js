@@ -242,25 +242,32 @@ sap.ui.define([
             console.log("oRecord >>>  ", oRecord);
             var that = this;
             var approvalTarget = "";
+            var approvalTypeCode = "";
             if(oRecord.approval_type_code == "B"){
                 approvalTarget = "budgetExecutionApproval"
+                approvalTypeCode ="B"
             }if(oRecord.approval_type_code == "V"){
                 approvalTarget = "purchaseOrderLocalApproval"
+                approvalTypeCode ="V"
             }if(oRecord.approval_type_code == "E"){
                 approvalTarget = "participatingSupplierSelection"
+                approvalTypeCode ="E"
             }if(oRecord.approval_type_code == "I"){
                 approvalTarget = "moldRecepitApproval"
+                approvalTypeCode ="I"
             }if(oRecord.approval_type_code == "A"){ 
                 var Cancellation = this.getView().getModel('Cancellation');
                 Cancellation.setProperty("/approvalNumber", null);
                 Cancellation.setProperty("/isCreate", false);
                 approvalTarget = "participatingSupplierSelectionCancelApproval"
+                approvalTypeCode ="A"
             }
 
             console.log(approvalTarget);
             that.getRouter().navTo(approvalTarget , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
+                , approval_type_code: oRecord.approval_type_code
                 , approval_number: oRecord.approval_number
             });
 
@@ -713,14 +720,18 @@ sap.ui.define([
             else{
                 if(id.indexOf("localBudget") > -1){
                     approvalTarget = "budgetExecutionApproval"
+                    appTypeCode = "B"
                 }else if(id.indexOf("supplierSelection") > -1){
                     approvalTarget = "participatingSupplierSelection"
+                    appTypeCode = "E"
                 }else if(id.indexOf("localOrder") > -1){
                     approvalTarget = "purchaseOrderLocalApproval"
+                    appTypeCode = "V"
                 }else if(id.indexOf("receipt") > -1){
                     approvalTarget ="moldRecepitApproval"
+                    appTypeCode = "I"
                 }else if(id.indexOf("export") > -1){
-                    appTypeCode ="X"
+                    appTypeCode ="X"  
                 }
             }
             
@@ -756,6 +767,7 @@ sap.ui.define([
                     this.getRouter().navTo(approvalTarget, {
                         company_code: company_code
                         , plant_code: plant_code
+                        , approval_type_code: appTypeCode
                         , approval_number: "New"
                     });
                 }
