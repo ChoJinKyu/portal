@@ -171,7 +171,7 @@ sap.ui.define([
             // }
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -184,7 +184,7 @@ sap.ui.define([
             }
 
             if(this.validator.validate( this.byId(dtlForm) ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -231,7 +231,7 @@ sap.ui.define([
                 me = this;
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -244,7 +244,7 @@ sap.ui.define([
             }
 
             if(this.validator.validate( this.byId(dtlForm) ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
                 

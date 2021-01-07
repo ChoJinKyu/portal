@@ -1,0 +1,11 @@
+.readonlyField{
+    border: 0 !important;
+    background: none !important;
+}
+.readonlyField>div{
+    border: 0;
+    background: none !important;
+}
+.readonlyField>div>input{
+    padding-left: 0 !important;
+}

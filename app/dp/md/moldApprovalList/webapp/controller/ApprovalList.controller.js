@@ -638,7 +638,7 @@ sap.ui.define([
             var source = oEvent.getSource();
             var selectedKey = source.getSelectedKey();
             console.log(source.getSelectedKey());
-            this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
+            //this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
         },
 
 
@@ -696,20 +696,33 @@ sap.ui.define([
             var id = toggleButtonId.split('--')[2];
             var page = ""
             var appTypeCode = "";
+            var company_code = this.byId("searchCompanyF").getSelectedKey();
+            var plant_code = this.byId("searchPlantF").getSelectedKey();
             console.log(id);
-
-            if(id.indexOf("localBudget") > -1){
-                approvalTarget = "budgetExecutionApproval"
-            }else if(id.indexOf("supplierSelection") > -1){
-                approvalTarget = "participatingSupplierSelection"
-            }else if(id.indexOf("localOrder") > -1){
-               approvalTarget = "purchaseOrderLocalApproval"
-            }else if(id.indexOf("receipt") > -1){
-                approvalTarget ="moldRecepitApproval"
-            }else if(id.indexOf("export") > -1){
-                appTypeCode ="X"
+            console.log(company_code);
+            console.log(plant_code);
+            if(this.validator.validate( this.byId('dialogCreateForm') ) !== true){
+                MessageBox.error("필수 입력 항목입니다.");
+                return;
+            } 
+            
+            if(id == undefined){       
+                MessageBox.error("품의서 유형을 선택해주세요");
+                return;
             }
-
+            else{
+                if(id.indexOf("localBudget") > -1){
+                    approvalTarget = "budgetExecutionApproval"
+                }else if(id.indexOf("supplierSelection") > -1){
+                    approvalTarget = "participatingSupplierSelection"
+                }else if(id.indexOf("localOrder") > -1){
+                    approvalTarget = "purchaseOrderLocalApproval"
+                }else if(id.indexOf("receipt") > -1){
+                    approvalTarget ="moldRecepitApproval"
+                }else if(id.indexOf("export") > -1){
+                    appTypeCode ="X"
+                }
+            }
             
 
             // else if(id.indexOf("importBudget") > -1){
@@ -730,8 +743,9 @@ sap.ui.define([
             //     appTypeCode ="E"
             // }
            
+            
 
-
+            
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
@@ -740,8 +754,8 @@ sap.ui.define([
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
                     this.getRouter().navTo(approvalTarget, {
-                        company_code: this.byId("searchCompanyF").getSelectedKey()
-                        , plant_code: this.byId("searchPlantF").getSelectedKey()
+                        company_code: company_code
+                        , plant_code: plant_code
                         , approval_number: "New"
                     });
                 }
