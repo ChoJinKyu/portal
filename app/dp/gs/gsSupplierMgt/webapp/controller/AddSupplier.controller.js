@@ -781,8 +781,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -791,8 +790,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -801,8 +799,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     })
 				]
             });
