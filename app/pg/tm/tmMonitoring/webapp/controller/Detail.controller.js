@@ -129,9 +129,9 @@ sap.ui.define([
                         this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
                         this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
                         this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
-                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description': this.PurposeFormattedText);
-                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText  === null ? 'No Description': this.ScenarioDescFormattedText);
-                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description': this.ReSourceSystemFormattedText);
+                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
+                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
+                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
                     }.bind(this),
                     error: function () {
                         this.byId("PurposeFormattedText").setHtmlText("No Description");
@@ -148,12 +148,19 @@ sap.ui.define([
             this.byId("reMonitoringPurpose").setValue(null);
             this.byId("reMonitoringScenario").setValue(null);
             this.byId("reSourceSystemDetail").setValue(null);
+
+            this.byId("reMonitoringPurpose").resetProperty("plugins");
+            this.byId("reMonitoringScenario").resetProperty("plugins");
+            this.byId("reSourceSystemDetail").resetProperty("plugins");
+
         },
 
         removeFormattedTextValue: function () {
-            this.byId("PurposeFormattedText").setHtmlText(null);
-            this.byId("ScenarioDescFormattedText").setHtmlText(null);
-            this.byId("ReSourceSystemFormattedText").setHtmlText(null);
+            this.byId("PurposeFormattedText").setHtmlText("");
+            this.byId("ScenarioDescFormattedText").setHtmlText("");
+            this.byId("ReSourceSystemFormattedText").setHtmlText("");
+
+
         },
 
 
@@ -977,7 +984,8 @@ sap.ui.define([
                                 that.getRouter().navTo("main", {}, true);
                             }
                             //법인, 사업본부 아이템 remove
-
+                            that.removeFormattedTextValue();
+                            that.removeRichTextEditorValue();
 
                         }
 
@@ -987,6 +995,7 @@ sap.ui.define([
             }
 
             this.getView().getModel().refresh(true);
+
 
 
         },
@@ -1639,9 +1648,6 @@ sap.ui.define([
             var btn = this.byId("managerTableBtn");
             btn.setIcon(hbox.getVisible() === false ? "sap-icon://expand-all" : "sap-icon://collapse-all");
         }
-
-
-
 
     });
 });
