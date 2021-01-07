@@ -79,6 +79,7 @@ BEGIN
 	*****************************************************/
 	DECLARE V_SUPPLIER_TEMP_CNT INT := 0;
 	DECLARE V_SUPPLIER_COUNT INT := 0;
+	DECLARE V_SUPPLIER_DELETE_CNT INT := 0;
 	
 	/*****************************************************
 	MASTER정보 삭제 시 MAPPING 건수 체크를 위한 변수
@@ -221,9 +222,6 @@ BEGIN
 		그러므로 조건에 TMP데이터가 존재하는 경우 해당 프로세스에서는
 		진행이 불가능하다.
 		*******************************************************/
-		SELECT COUNT(*)
-		INTO   V_SUPPLIER_COUNT 
-	    FROM   :I_SUP;
 	    
 	    SELECT COUNT(*)
 		INTO   V_SUPPLIER_TEMP_CNT 
@@ -233,6 +231,10 @@ BEGIN
 	    AND    A.ORG_TYPE_CODE        = loop_mst.ORG_TYPE_CODE
 	    AND    A.ORG_CODE             = loop_mst.ORG_CODE
 	    AND    A.VENDOR_POOL_CODE     = loop_mst.VENDOR_POOL_CODE;
+	    
+	    SELECT COUNT(*)
+		INTO   V_SUPPLIER_COUNT 
+		FROM   :I_SUP;
 		
 		/*****************************************************************************
 		프로시저 호출 시 PG_VP_VENDOR_POOL_SUPPLIER_TMP에 데이터가 존재하는 경우
@@ -316,6 +318,19 @@ BEGIN
 				    /********************************************************
 					[Supplier 로직] 시작(Master 정보의 Update 시에만 가능함)
 					*******************************************************/
+					SELECT	COUNT(*)
+					INTO	V_SUPPLIER_DELETE_CNT
+					FROM	:I_SUP
+					WHERE	CRUD_TYPE_CODE = 'D';
+					
+					/*************************************************************************************
+					SUPPLIER 매핑정보는 현프로세스에서 전체 삭제가 불가능하다.
+					하여 입력정보가 있는데 모두 삭제인 경우 ERROR 처리한다.
+					(해당 기능은 다른프로세스를 통해 처리 예정)
+					*************************************************************************************/
+					IF V_SUPPLIER_DELETE_CNT > 0 AND V_SUPPLIER_DELETE_CNT = V_SUPPLIER_COUNT THEN
+						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00025'||'-'||'Supplier All Delete Error.';
+					END IF;
 					
 					/********************************************************
 					VENDOR POOL MASTER 수정 시 SUPPLIER를 수정하는 경우
