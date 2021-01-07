@@ -150,8 +150,8 @@ sap.ui.define([
             var oModel = this.getModel("purOrderItem");
 
             var mIdArr = [];
-            if (oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length > 0) {
-                oModel.oData.ApprovalDetails.forEach(function (item) {
+            if (oModel.oData.PurchaseOrderItems != undefined && oModel.oData.PurchaseOrderItems.length > 0) {
+                oModel.oData.PurchaseOrderItems.forEach(function (item) {
                     mIdArr.push(item.mold_id);
                 });
             }
@@ -197,7 +197,7 @@ sap.ui.define([
                 "target_amount": data.target_amount,
                 "mold_production_type_code": data.mold_production_type_code,
                 "family_part_number_1": data.family_part_number_1
-            }, "/ApprovalDetails", 0);
+            }, "/PurchaseOrderItems", 0);
             //this.validator.clearValueState(this.byId("poItemTable"));
 
             var pModel = this.getModel('payment'),
