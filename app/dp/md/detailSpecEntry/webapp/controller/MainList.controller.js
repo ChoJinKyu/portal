@@ -418,8 +418,16 @@ sap.ui.define([
                             and: false
                         });
             
-            this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
-            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            var bindInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchDivisionS").bindItems(bindInfo);
+            this.getView().byId("searchDivisionE").bindItems(bindInfo);
         },
 
         handleSelectionFinishDiv: function(oEvent){

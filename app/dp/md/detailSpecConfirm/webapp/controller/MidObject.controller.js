@@ -171,7 +171,7 @@ sap.ui.define([
             // }
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -184,25 +184,26 @@ sap.ui.define([
             }
 
             if(this.validator.validate( this.byId(dtlForm) ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
-            MessageBox.confirm( this.getModel('I18N').getText('/NCM0004'), {
+            MessageBox.confirm( this.getModel('I18N').getText('/NCM00001') || 'NCM00001', {
                 title : "Draft",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D');
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D'); //21.01.07 안쓸듯
+                        me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_ENT');
 
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
 							success: function(ok){
 								me._toShowMode();
 								oView.setBusy(false);
-                                MessageToast.show("Success to save.");
+                                MessageToast.show( me.getModel('I18N').getText('/NCM01001') || 'NCM01001' );
 							}
 						});
 					};
@@ -231,7 +232,7 @@ sap.ui.define([
                 me = this;
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -244,22 +245,21 @@ sap.ui.define([
             }
 
             if(this.validator.validate( this.byId(dtlForm) ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
                 
-            MessageBox.confirm("Are you sure ?", {
+            MessageBox.confirm(this.getModel('I18N').getText('/NDP10001') || 'NDP10001', {
                 title : "Comfirmation",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        me.getModel('spec').setProperty('/mold_spec_status_code', 'C');
-                        // me.getModel('spec').setProperty('/spare_part_eyebolt_count', 3);
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'C'); //21.01.07 안쓸듯
+                        me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_CNF');
 
 						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
 							success: function(ok){
 
                                 oView.setBusy(false);
@@ -277,7 +277,7 @@ sap.ui.define([
                                 }
 
                                 me._toShowMode();
-                                MessageToast.show("Success to save.");
+                                MessageToast.show(me.getModel('I18N').getText('/NDP10002') || 'NDP10002');
 
 							}
 						});
