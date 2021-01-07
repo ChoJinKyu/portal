@@ -30,8 +30,8 @@ using {sp.Sm_Supplier_Mst as SupplierMst} from '../../../../db/cds/sp/sm/SP_SM_S
 
 namespace pg;
 
-@path : '/pg.marketIntelligenceSacService'
-service marketIntelligenceSacService {
+@path : '/pg.marketIntelligenceSacDService'
+service marketIntelligenceSacDService {
 
     // Entity List
     // View List

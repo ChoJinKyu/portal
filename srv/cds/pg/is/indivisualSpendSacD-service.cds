@@ -10,28 +10,21 @@ using {cm.Org_Division as OrgDivision} from '../../../../db/cds/cm/CM_ORG_DIVISI
 using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/CM_CODE_MST-model';              // CodeMst(공통마스터코드)
 using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/CM_CODE_DTL-model';              // CodeDtl(공통코드상세)
 using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/CM_CODE_LNG-model';              // CodeLng(공통코드언어)
-using {cm.Currency as Currency} from '../../../../db/cds/cm/CM_CURRENCY-model';             // Currency(통화)
-using {cm.Currency_Lng as CurrencyLng} from '../../../../db/cds/cm/CM_CURRENCY_LNG-model';  // Currency Lng(통화언어)
 
 //DP MM
 using {dp.Mm_Material_Mst as MaterialMst} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';          // Material Mst(자재일반)
-using {dp.Mm_Unit_Of_Measure as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';  // Unit Of Measure(측정단위)
 
 //PG VP
 using {pg.Vp_Vendor_Pool_Mst as VendorPoolMst} from '../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';                // Vendor Pool Mst(Vendor Pool Mst)
 using {pg.Vp_Vendor_Pool_Item_Dtl as VendorPoolItemDtl} from '../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';  // Vendor Pool Item Dtl(Vendor Pool 품목연결상세)
-
-//PG MI
-using {pg.MI_Material_Code as MaterialCode} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE-model';  // Material Code(시황자재)
-using {pg.MI_Material_Code_Lng as MaterialCodeLng} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_LNG-model';  // Material Code Lng(시황자재언어코드)
 
 // SP SM
 using {sp.Sm_Supplier_Mst as SupplierMst} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';     // Supplier Mst(공급업체 Mst)
 
 namespace pg;
 
-@path : '/pg.marketIntelligenceSacService'
-service marketIntelligenceSacService {
+@path : '/pg.individualSpendSacDService'
+service individualSpendSacDService {
 
     // Entity List
     // View List
@@ -107,39 +100,6 @@ service marketIntelligenceSacService {
                ,use_flag                          as  USE_FLAG
         from OrgDivision;
 
-    // Currency View: 통화
-    view CmCurrencyView @(title : '통화 View') as
-        select
-            key cc.tenant_id||'_'||cc.currency_code  as  ID : String
-               ,cl.currency_code_desc                as  Description
-               ,cc.currency_code                     as  CURRENCY_CODE
-               ,cc.tenant_id                         as  TENANT_ID
-               ,cc.effective_start_date              as  EFFECTIVE_START_DATE
-               ,cc.effective_end_date                as  EFFECTIVE_END_DATE
-               ,cc.use_flag                          as  USE_FLAG
-               ,cc.scale                             as  SCALE
-               ,cc.extension_scale                   as  EXTENSION_SCALE
-        from  Currency  cc
-              inner join CurrencyLng  cl
-                  on  cc.tenant_id      =  cl.tenant_id
-                  and cc.currency_code  =  cl.currency_code
-                  and cl.language_code  =  'KO';
-
-    // 시황자재코드 View: 시황자재코드
-    view PgMaterialCodeView @(title : '시황자재코드 View') as
-        select
-            key mc.tenant_id||'_'||mc.mi_material_code  as  ID : String
-               ,ml.mi_material_name                     as  Description
-               ,mc.mi_material_code                     as  MI_MATERIAL_CODE
-               ,mc.tenant_id                            as  TENANT_ID
-               ,mc.category_code                        as  CATEGORY_CODE
-               ,mc.use_flag                             as  USE_FLAG
-        from  MaterialCode  mc
-              inner join MaterialCodeLng  ml
-                  on  mc.tenant_id         =  ml.tenant_id
-                  and mc.mi_material_code  =  ml.mi_material_code
-                  and ml.language_code  =  'KO';
-
     // CodeMst View: 공통마스터코드
     view CmCodeMstView @(title : '공통마스터코드 View') as
         select
@@ -169,28 +129,6 @@ service marketIntelligenceSacService {
                   and cd.code         =  cl.code
                   and cl.language_cd  =  'KO';
 
-    // MiExchangeCode View: 거래소코드
-    view MiExchangeCodeView @(title : '거래소코드 View') as
-        select
-            key tenant_id||'_'||code  as  ID : String
-               ,code_name             as  Description
-               ,code                  as  CODE
-               ,tenant_id             as  TENANT_ID
-               ,language_cd           as  LANGUAGE_CODE
-        from  CmCodeDtlView
-        where group_code  =  'PG_MI_EXCHANGE_CODE';
-
-    // MiTermsdelvCode View: 인도조건코드
-    view MiTermsdelvCodeView @(title : '인도조건코드 View') as
-        select
-            key tenant_id||'_'||code  as  ID : String
-               ,code_name             as  Description
-               ,code                  as  CODE
-               ,tenant_id             as  TENANT_ID
-               ,language_cd           as  LANGUAGE_CODE
-        from  CmCodeDtlView
-        where group_code  =  'PG_MI_TERMSDELV_CODE';
-
     // Material Mst View: 자재
     view DpMaterialMstView @(title : '자재 View') as
         select
@@ -211,36 +149,6 @@ service marketIntelligenceSacService {
                ,maker_part_profile_code        as  MAKER_PART_PROFILE_CODE
                ,maker_material_code            as  MAKER_MATERIAL_CODE
         from  MaterialMst;
-
-    // Unit Of Measure View: 측정단위
-    view DpUOMView @(title : 'UOM View') as
-        select
-            key tenant_id||'_'||uom_code      as  ID : String
-               ,technical_uom_name            as  Description
-               ,uom_code                      as  UOM_CODE
-               ,tenant_id                     as  TENANT_ID
-               ,commercial_uom_code           as  COMMERCIAL_UOM_CODE
-               ,technical_uom_code            as  TECHNICAL_UOM_CODE
-               ,commercial_uom_name           as  COMMERCIAL_UOM_NAME
-               ,technical_uom_name            as  TECHNICAL_UOM_NAME
-               ,base_unit_flag                as  BASE_UNIT_FLAG
-               ,uom_class_code                as  UOM_CLASS_CODE
-               ,uom_desc                      as  UOM_DESCRIPTION
-               ,decimal_places                as  DECIMAL_PLACES
-               ,floating_decpoint_index       as  FLOATING_DECPOINT_INDEX
-               ,conversion_numerator          as  CONVERSION_NUMERATOR
-               ,conversion_denominator        as  CONVERSION_DENOMINATOR
-               ,conversion_index              as  CONVERSION_INDEX
-               ,conversion_rate               as  CONVERSION_RATE
-               ,conversion_addition_constant  as  CONVERSION_ADDITION_CONSTANT
-               ,decplaces_rounding            as  DECPLACES_ROUNDING
-               ,family_unit_flag              as  FAMILY_UNIT_FLAG
-               ,uom_iso_code                  as  UOM_ISO_CODE
-               ,uom_iso_primary_code_flag     as  UOM_ISO_PRIMARY_CODE_FLAG
-               ,commercial_unit_flag          as  COMMERCIAL_UNIT_FLAG
-               ,value_base_commitment_flag    as  VALUE_BASE_COMMITMENT_FLAG
-               ,disable_date                  as  DISABLE_DATE
-        from  UnitOfMeasure;
 
     // Vendor Pool Mst View: Vendor Pool Mst
     view VpVendorPoolMstView @(title : 'Vendor Pool Mst View') as
