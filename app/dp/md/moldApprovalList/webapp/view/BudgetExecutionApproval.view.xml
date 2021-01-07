@@ -209,7 +209,10 @@
 						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
+                    <HBox>
+                        <Text text="[{mdCommon>/import_company_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?${mode>/viewFlag}:false}" /> 
+                        <Text text=" {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
+                    </HBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -245,7 +248,10 @@
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</ComboBox>
                      <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{mode>/viewFlag}"/> 
+                    <HBox>
+                          <Text text="[{mdCommon>/import_company_org_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?${mode>/viewFlag}:false}" />
+                          <Text text=" {mdCommon>/import_company_org_code_nm}" visible="{mode>/viewFlag}"/> 
+                    </HBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>

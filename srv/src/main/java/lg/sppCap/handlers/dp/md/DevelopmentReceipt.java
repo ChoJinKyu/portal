@@ -71,7 +71,6 @@ public class DevelopmentReceipt implements EventHandler {
 
         String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
         
-        try {
             for (Map<String, Object> row : entries) {
                 MoldMstView v_result = MoldMstView.create();
                 v_result.setMoldId((String) row.get("mold_id"));
@@ -126,10 +125,7 @@ public class DevelopmentReceipt implements EventHandler {
                     Result resultSpec = developmentReceiptService.run(specUpdate);
 
                     // Procedure Call
-                    Connection conn = jdbc.getDataSource().getConnection();
-                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-                    v_statement_proc.setObject(1, row.get("mold_id"));
-                    boolean v_isMore = v_statement_proc.execute();
+                    jdbc.update(v_sql_callProc, row.get("mold_id"));
                 }
 
                 v_results.add(v_result);
@@ -138,9 +134,6 @@ public class DevelopmentReceipt implements EventHandler {
             context.setResult(v_results);
             context.setCompleted();
 
-		} catch (SQLException e) { 
-			e.printStackTrace();
-        }
     }
     
     @On(event = CdsService.EVENT_DELETE, entity=MoldMstView_.CDS_NAME)
