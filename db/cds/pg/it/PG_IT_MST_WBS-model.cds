@@ -25,8 +25,8 @@ entity It_Mst_Wbs {
     key company_code  : String(10) not null @title : '회사코드';
     key org_type_code : String(30) not null @title : '조직유형코드';
     key org_code      : String(10) not null @title : '조직코드';
-    key project_code  : String(12) not null @title : '프로젝트코드';
-        project_name  : String(60)          @title : '프로젝트명';
+    key project_code  : String(15) not null @title : '프로젝트코드';
+        project_name  : String(100)         @title : '프로젝트명';
 }
 
 extend It_Mst_Wbs with util.Managed;
