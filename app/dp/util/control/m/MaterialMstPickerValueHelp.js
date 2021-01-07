@@ -149,28 +149,18 @@ sap.ui.define([
                         hAlign: "Center",
                         header: new Text({text: "단위"})
                     }),
-                    // new Column({
-                    //     width: "10%",
-                    //     hAlign: "Center",
-                    //     header: new Text({text: "UIT"})
-                    // }),
                     new Column({
                         width: "10%",
                         hAlign: "Center",
                         header: new Text({text: "구매가능"})
                     })
-                    // new Column({
-                    //     width: "10%",
-                    //     hAlign: "Center",
-                    //     header: new Text({text: "HS코드"})
-                    // })
                 ],
                 items: {
                     path: "/",
                     template: new ColumnListItem({
                         type: "Active",
                         cells: [
-                            // new sap.m.CheckBox({selected: "{enabled}"}),
+                            // new sap.m.CheckBox({selected: false}),
                             new sap.m.Button({
                                 icon:"sap-icon://unfavorite",
                                 type:"Transparent"
@@ -180,9 +170,7 @@ sap.ui.define([
                             new Text({text: "{material_desc}"}),
                             new Text({text: "{material_spec}"}),
                             new Text({text: "{base_uom_code}"}),
-                            // new Text({text: "{user_item_type_code}"}),
                             new Text({text: "{purchasing_enable_flag}"})
-                            // new Text({text: "{hs_code}"})
                         ],
                         press: this.onItemPress.bind(this)
                     })
