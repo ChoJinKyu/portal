@@ -30,7 +30,7 @@
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
                                         sorter: { path: 'company_code'}
-                                    }">
+                                    }" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -49,7 +49,7 @@
                                             {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                         ]
                                     }"
-                                    selectionFinish="handleSelectionFinishDiv">
+                                    selectionFinish="handleSelectionFinishDiv" >
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
