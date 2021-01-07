@@ -78,6 +78,7 @@ sap.ui.define([
             oCallback = callback;
             oThis.setModel(new ManagedModel(), "moldItemPop");
             oThis.setModel(new ManagedListModel(), "moldItemPopList");
+            oThis.setModel(new ManagedListModel(), "moldItemPopList_temp");
             oThis.setModel(new ManagedListModel(), "moldSelectionCompanyPopList");
             oThis.setModel(new ManagedListModel(), "moldSelectionPlantPopList");
 
@@ -127,20 +128,18 @@ sap.ui.define([
             }
 
             // 추가 검색 조건 
-            if (oArges.mold_progress_status_code != undefined) {
+            if (oArges.mold_progress_status_code != undefined && oArges.mold_progress_status_code.length > 0) {
 
                 var nFilters = [];
                 oArges.mold_progress_status_code.forEach(function (mold_progress_status_code) {
                     nFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, String(mold_progress_status_code)));
                 });
-
+                
                 var oInFilter = {
                     filters: nFilters,
-                    and: false
+                    and : false
                 };
                 aSearchFilters.push(new Filter(oInFilter));
-
-              //  aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, oArges.mold_progress_status_code));
             }
             // 추가 검색 조건 
             if (oArges.mold_purchasing_type_code != undefined) {
@@ -186,16 +185,18 @@ sap.ui.define([
             console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
             var oView = oThis.getView(),
                 oModel = oThis.getModel("moldItemPopList"),
+                oModel_temp = oThis.getModel("moldItemPopList_temp"),
                 companyModel = oThis.getModel("moldSelectionCompanyPopList"),
                 plantModel = oThis.getModel("moldSelectionPlantPopList")
 
                 ;
-
+            //  setData: function (oData, sPath, bMerge) 
             oView.setBusy(true);
-            oModel.setTransactionModel(oServiceModel);
-            oModel.read("/MoldItemSelect_"+ oArges.approval_type_code , {
+            oModel_temp.setTransactionModel(oServiceModel);
+            oModel_temp.read("/MoldItemSelect_"+ oArges.approval_type_code , {
                 filters: aSearchFilters,
-                success: function (oData) {
+                success: function (oData) { 
+                    oModel.setData(oData,"/MoldItemSelect",oData);
                     console.log(" oData ", oData);
                     oView.setBusy(false);
                 }
