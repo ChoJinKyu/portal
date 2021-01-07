@@ -52,19 +52,30 @@
                         </VBox>
                         <VBox>
                             <Label text="프로젝트명:" labelFor="searchKeyword"></Label>
-                            <Input id="searchKeyword" placeholder="Search"></Input>
+                            <Input id="searchKeyword" placeholder="Search" submit="onPageSearchButtonPress"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="구매유형:" labelFor="searchUsageSegmentButton"></Label>
-                            <SegmentedButton id="searchUsageSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
+                            <!-- <SegmentedButton id="searchUsageSegmentButton" items="{
+                                                path: 'common>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'EP_PURCHASING_TYPE'}
+                                                ],
+                                                sorter: { path: 'code'}
+                                            }" class="sapUiSmallMarginBottom" width="100%"> -->
+                            <SegmentedButton id="searchUsageSegmentButton" class="sapUiSmallMarginBottom" width="100%">                                            
                                 <items>
                                     <SegmentedButtonItem text="All" key="all" width="4.1rem" />
                                     <SegmentedButtonItem text="설비" key="E" width="5rem" />
                                     <SegmentedButtonItem text="공사" key="C" width="5rem" />
                                 </items>
+                                <!-- <items>
+                                    <SegmentedButtonItem width="6em" key="{common>code}" text="{common>code_name}" />
+                                </items>                                                         -->
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M12 S12" />
