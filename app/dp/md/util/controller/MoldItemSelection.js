@@ -72,6 +72,7 @@ sap.ui.define([
 		 */
         openMoldItemSelectionPop: function (pThis, oEvent, pArges, callback) {
             console.log("args >>>> ", pArges);
+            console.log("args >>>> ", pThis.approval_type_code);
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
@@ -128,7 +129,19 @@ sap.ui.define([
 
             // 추가 검색 조건 
             if (oArges.mold_progress_status_code != undefined) {
-                aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, oArges.mold_progress_status_code));
+
+                var nFilters = [];
+                oArges.mold_progress_status_code.forEach(function (mold_progress_status_code) {
+                    nFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, String(mold_progress_status_code)));
+                });
+
+                var oInFilter = {
+                    filters: nFilters,
+                    and: true
+                };
+                aSearchFilters.push(new Filter(oInFilter));
+
+              //  aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, oArges.mold_progress_status_code));
             }
             // 추가 검색 조건 
             if (oArges.mold_purchasing_type_code != undefined) {
