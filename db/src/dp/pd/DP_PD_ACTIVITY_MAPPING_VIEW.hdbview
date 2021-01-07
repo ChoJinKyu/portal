@@ -1,0 +1,27 @@
+VIEW DP_PD_ACTIVITY_MAPPING_NAME_VIEW AS
+SELECT pam.tenant_id,
+       pam.company_code,
+       pam.org_type_code,
+       pam.org_code,
+       pam.activity_code,
+       pam.product_activity_code,
+       pam.activity_dependency_code,
+       pam.active_flag,
+       pam.update_user_id,
+       pam.local_update_dtm,
+       pat.activity_name,
+       pat1.product_activity_name
+  FROM DP_PD_ACTIVITY_MAPPING pam
+    LEFT JOIN DP_PD_PART_ACTIVITY_TEMPLATE pat
+    ON pam.tenant_id = pat.tenant_id
+    AND pam.company_code = pat.company_code
+    AND pam.org_type_code = pat.org_type_code
+    AND pam.org_code = pat.org_code
+    AND pam.activity_code = pat.activity_code
+    LEFT JOIN DP_PD_PRODUCT_ACTIVITY_TEMPLATE pat1
+    ON pam.tenant_id = pat1.tenant_id
+    AND pam.company_code = pat1.company_code
+    AND pam.org_type_code = pat1.org_type_code
+    AND pam.org_code = pat1.org_code
+    AND pam.product_activity_code = pat1.product_activity_code
+;

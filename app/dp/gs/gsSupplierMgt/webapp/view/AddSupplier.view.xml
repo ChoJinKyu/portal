@@ -199,10 +199,10 @@
 								<Column minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Center" importance="High">
+								<Column minScreenWidth="Tablet" hAlign="Center" importance="High" width="8em">
 									<Text text="회계연도" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="8em">
 									<Text text="분기" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >

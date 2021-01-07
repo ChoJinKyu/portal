@@ -136,7 +136,7 @@
                             </VBox>
                         </HBox>
 					</uxap:ObjectPageSubSection>
-                    <uxap:ObjectPageSubSection id="participatingSupplierSelectionTableFragment">
+                    <uxap:ObjectPageSubSection id="pageItemSection">
                         
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>

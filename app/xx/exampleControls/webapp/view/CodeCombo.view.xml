@@ -261,6 +261,13 @@
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
                         </VBox>
+
+                        <VBox>
+                            
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
                         <!-- <VBox>
                             <Label text="MultiCoboBox (Employee): "></Label>
                             <MultiComboBox id="searchMultiComboEmployee" width="100%"
@@ -367,7 +374,23 @@
                         </ColumnListItem>
                     </items>
                 </Table>
-
+                
+                                
+                <OverflowToolbar class="sapUiMediumMarginTop">
+                    <Label text="Cm Code PopUp"></Label>
+                    <Button text="CodePopUp" press=".onPressCodePopUp"/>
+                    <ToolbarSpacer width="40px"/><Text id="cmCodePopUp" test="123321"/>
+                    <Label text="cmCodePopUpTenet_id : "></Label>
+                    <Label id="cmCodePopUpTenet_id"></Label>
+                    <Label text="cmCodePopUpCode : "></Label>
+                    <Label id="cmCodePopUpCode" ></Label>
+                    <Label text="cmCodePopUpCode_Description : "></Label>
+                    <Label id="cmCodePopUpCode_Description"></Label>
+                    <Label text="cmCodePopUpCode_Name : "></Label>
+                    <Label id="cmCodePopUpCode_Name"></Label>
+                    <Label text="cmCodePopUpGroup_Code : "></Label>
+                    <Label id="cmCodePopUpGroup_Code"></Label>
+		        </OverflowToolbar>
             </VBox>
         </content>
     </Page>

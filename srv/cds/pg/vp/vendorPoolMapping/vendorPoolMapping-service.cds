@@ -169,7 +169,8 @@ service VpMappingService {
                 mst.vendor_pool_use_flag,
                 mst.vendor_pool_desc,
                 mst.vendor_pool_history_desc,
-                mst.info_change_status
+                mst.info_change_status,
+                mst.maker_material_code_mngt_flag
         from   vpDetailView.Vp_Vendor_Pool_Detail_View mst
         where  mst.language_cd = 'EN'
         ;  

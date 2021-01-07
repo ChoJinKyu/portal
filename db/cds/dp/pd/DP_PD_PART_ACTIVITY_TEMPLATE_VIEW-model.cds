@@ -27,5 +27,5 @@ entity Pd_Part_Activity_Template_View {
     activity_english_name : String(240)   @title: '활동영문명' ; 
     active_flag : Boolean   @title: '활성여부' ;    
     update_user_id : String(255) @title: '최종수정자';
-    syste_update_dtm : DateTime @title: '최종수정일시';
+    local_update_dtm : DateTime @title: '최종수정일시';
 }

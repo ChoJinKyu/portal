@@ -91,7 +91,9 @@ BEGIN
 	*****************************************************/
 	DECLARE V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER INT := 0;
 	DECLARE V_ITEM_EXIST_CNT_FOR_DELETE_MASTER INT := 0;
+	DECLARE V_ITEM_EXIST_CNT_FOR_DELETE_ITEM INT := 0;
 	DECLARE V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER INT := 0;
+	DECLARE V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER INT := 0;
 	
 	/*****************************************************
 	각 MAPPING 정보 LOOPING 변수
@@ -621,12 +623,24 @@ BEGIN
 					    SELECT  COUNT(*)
 						INTO    V_ITEM_EXIST_CNT
 						FROM    PG_VP_VENDOR_POOL_ITEM_DTL A
-						WHERE   A.TENANT_ID           = loop_itm.TENANT_ID
-					    AND     A.COMPANY_CODE        = loop_itm.COMPANY_CODE
-					    AND     A.ORG_TYPE_CODE       = loop_itm.ORG_TYPE_CODE
-					    AND     A.ORG_CODE            = loop_itm.ORG_CODE
-					    AND     A.VENDOR_POOL_CODE    = loop_itm.VENDOR_POOL_CODE
-					    AND     A.MATERIAL_CODE       = loop_itm.MATERIAL_CODE
+						WHERE   A.TENANT_ID         				 = loop_itm.TENANT_ID
+					    AND     A.COMPANY_CODE      				 = loop_itm.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE     				 = loop_itm.ORG_TYPE_CODE
+					    AND     A.ORG_CODE          				 = loop_itm.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE  				 = loop_itm.VENDOR_POOL_CODE
+					    AND     A.MATERIAL_CODE     				 = loop_itm.MATERIAL_CODE
+					    ;
+					    
+					    SELECT  COUNT(*)
+						INTO    V_ITEM_EXIST_CNT_FOR_DELETE_ITEM
+						FROM    PG_VP_VENDOR_POOL_ITEM_DTL A
+						WHERE   A.TENANT_ID         				 = loop_itm.TENANT_ID
+					    AND     A.COMPANY_CODE      				 = loop_itm.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE     				 = loop_itm.ORG_TYPE_CODE
+					    AND     A.ORG_CODE          				 = loop_itm.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE  				 = loop_itm.VENDOR_POOL_CODE
+					    AND     A.MATERIAL_CODE     				 = loop_itm.MATERIAL_CODE
+					    AND     A.VENDOR_POOL_MAPPING_USE_FLAG       = TRUE
 					    ;
 					    
 					    IF TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'U' THEN
@@ -686,7 +700,7 @@ BEGIN
 						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||']';
 						    END IF;
 					    ELSE
-							IF V_ITEM_EXIST_CNT != 1 THEN
+							IF V_ITEM_EXIST_CNT_FOR_DELETE_ITEM != 1 THEN
 							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
 							ELSE
 						    
@@ -792,6 +806,18 @@ BEGIN
 					    AND     A.VENDOR_POOL_PERSON_EMPNO      = loop_man.VENDOR_POOL_PERSON_EMPNO
 					    ;
 					    
+					    SELECT  COUNT(*)
+						INTO    V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER
+						FROM    PG_VP_VENDOR_POOL_MANAGER_DTL A
+						WHERE   A.TENANT_ID         			= loop_man.TENANT_ID
+					    AND     A.COMPANY_CODE      			= loop_man.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE     			= loop_man.ORG_TYPE_CODE
+					    AND     A.ORG_CODE          			= loop_man.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE  			= loop_man.VENDOR_POOL_CODE
+					    AND     A.VENDOR_POOL_PERSON_EMPNO      = loop_man.VENDOR_POOL_PERSON_EMPNO
+					    AND     A.VENDOR_POOL_MAPPING_USE_FLAG  = TRUE
+					    ;
+					    
 					    IF TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'U' THEN
 					        
 							IF V_MANAGER_EXIST_CNT > 1 THEN
@@ -852,7 +878,7 @@ BEGIN
 						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||']';
 						    END IF;
 					    ELSE
-							IF V_MANAGER_EXIST_CNT != 1 THEN
+							IF V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER != 1 THEN
 							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
 							ELSE
 						    
