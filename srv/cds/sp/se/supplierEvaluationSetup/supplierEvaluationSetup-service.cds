@@ -1,11 +1,12 @@
 using { cm.Pur_Org_Type_Mapping as orgTypeMapping } from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using { cm.Pur_Operation_Org as operationOrg } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
+
 namespace sp; 
 @path : '/sp.supEvalSetupService'
 service SupEvalSetupService {
     
-    /* 평가조직코드(조회조건) */
+    /* Evaluation ORG. (Condition) */
     view SupEvalOrgView as
         select org.tenant_id,
                org.company_code,
@@ -18,4 +19,7 @@ service SupEvalSetupService {
         and    org.company_code = ma.company_code
         and    ma.process_type_code = 'SP08'
         ;
+
+    
+
 }
