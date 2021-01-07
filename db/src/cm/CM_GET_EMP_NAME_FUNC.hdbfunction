@@ -13,6 +13,6 @@ BEGIN
            INTO   D_RETURN
            FROM   CM_HR_EMPLOYEE EMP
            WHERE  TENANT_ID = :P_TENANT_ID
-           AND    EMPLOYEE_NUMBER = :P_EMPLOYEE_NUMBER
+           AND    EMPLOYEE_NUMBER = :P_EMPLOYEE_NUMBER;
            
 END
