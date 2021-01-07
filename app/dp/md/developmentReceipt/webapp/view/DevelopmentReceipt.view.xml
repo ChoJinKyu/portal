@@ -431,7 +431,7 @@
                             <Text text="{list>set_id}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldFamilyFlagColumn" width="5.5em" hAlign="Center">
+                    <table:Column id="moldFamilyFlagColumn" width="6em" hAlign="Center">
                         <Label text="Family Y/N" wrapping="true"/>
                         <table:template>
                             <ComboBox id="family_flag" selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }" change="familyFlagChange"
