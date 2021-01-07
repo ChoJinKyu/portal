@@ -58,12 +58,13 @@ sap.ui.define([
 
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-
             /** Date */
             var today = new Date();
 
-            this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            //this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            //this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             
         },
 
@@ -146,6 +147,9 @@ sap.ui.define([
                 // refresh the list binding.
                 this.onRefresh();
             } else {
+                //this.validator.validate( this.byId('pageSearchFormE'));
+                //if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+                
                 var aSearchFilters = this._getSearchStates();
                 this._applySearch(aSearchFilters);
             }
@@ -220,16 +224,21 @@ sap.ui.define([
 
         _getSearchStates: function () {
             //var sKeyword, 
-            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
 
             var loiNumberTokens = this.getView().byId("searchLoiNumberS").getTokens();
             var sLoiNumber = loiNumberTokens.map(function (oToken) {
                 return oToken.getKey();
             });
             
-            var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
-                requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue(),
-                status = this.getView().byId("searchStatusS").getSelectedKey();
+            var requestFromDate = this.getView().byId("searchRequestDateS").getDateValue(),
+                requestToDate = this.getView().byId("searchRequestDateS").getSecondDateValue(),
+                status = this.getView().byId("searchStatus").getSelectedKey();
+
+            var sRequestDepartment = this.getView().byId("searchRequestDepartmentS").getValue(),
+                sRequestor = this.getView().byId("searchRequestorS").getValue();
+
+
 
             var aSearchFilters = [];
 
@@ -256,6 +265,20 @@ sap.ui.define([
                 //aSearchFilters.push(new Filter("request_date", FilterOperator.BT, requestFromDate, requestToDate));
             }
 
+            // if (sRequestDepartment && sRequestDepartment.length > 0) {
+            //     aSearchFilters.push(new Filter("request_department_code", FilterOperator.EQ, sLoiNumber));
+            // }
+            // if (sRequestor && sRequestor.length > 0) {
+            //     aSearchFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sLoiNumber));
+            // }
+
+            if(sRequestDepartment && sRequestDepartment.length > 0){
+                aSearchFilters.push(new Filter("tolower(request_department_code)", FilterOperator.Contains, "'"+sRequestDepartment.toLowerCase()+"'"));
+            }
+            if(sRequestor && sRequestor.length > 0){
+                aSearchFilters.push(new Filter("tolower(requestor_empno)", FilterOperator.Contains, "'"+sRequestor.toLowerCase()+"'"));
+            }
+
             if (status) {
                 aSearchFilters.push(new Filter("loi_request_status_name", FilterOperator.EQ, status));
             }
@@ -268,9 +291,9 @@ sap.ui.define([
 
 
         onStatusSelectionChange: function (oEvent) {
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-                seSurffix = sSurffix === "E" ? "S" : "E",
-                oSearchStatus = this.getView().byId("searchStatus" + seSurffix);
+            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+            //    seSurffix = sSurffix === "E" ? "S" : "E",
+            var oSearchStatus = this.getView().byId("searchStatus");
 
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
         },
