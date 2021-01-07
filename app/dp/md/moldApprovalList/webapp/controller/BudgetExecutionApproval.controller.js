@@ -113,13 +113,13 @@ sap.ui.define([
                         md.setProperty("/account_code_nm", "");
                         md.setProperty("/provisional_budget_amount", "");
                     }
-
                    
                 });
+
                 this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }
             
-        },
+        }, 
 
         _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
@@ -140,15 +140,11 @@ sap.ui.define([
          * @param {*} company_code 
          */
         onBCompanyChange : function (oEvent){
-            // console.log("oEvent >>> " , oEvent); var md = this.getModel('mdCommon');
-            // console.log("1 >>> " ,this.getView().byId('importCompany').getSelectedKey());
-            // console.log("2 >>> " ,this.getView().byId('importCompany').mProperties.selectedKey);
-            // console.log("3 >>> " ,this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code);
-
             var company_code = this.getModel("mdCommon").getData().import_company_code;
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
+
         _bindComboPlant : function (company_code) { 
             
             var aFilter = [
@@ -157,16 +153,16 @@ sap.ui.define([
                         , new Filter("company_code", FilterOperator.EQ, company_code)
                 ];
 
-              var oView = this.getView(),
-                    oModel = this.getModel("importPlant");
-                oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel("purOrg"));
-                oModel.read("/Pur_Operation_Org", {
-                    filters: aFilter,
-                    success: function (oData) { 
-                        oView.setBusy(false);
-                    }
-                });
+            var oView = this.getView(),
+                oModel = this.getModel("importPlant");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("purOrg"));
+            oModel.read("/Pur_Operation_Org", {
+                filters: aFilter,
+                success: function (oData) { 
+                    oView.setBusy(false);
+                }
+            });
         } ,
 
        /**
@@ -239,6 +235,7 @@ sap.ui.define([
                 "local_update_dtm": new Date()
             }, "/ItemBudgetExecution");
         },
+        
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */

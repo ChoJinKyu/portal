@@ -316,7 +316,7 @@
                 </form:content>
 		        </form:SimpleForm>
                 </uxap:ObjectPageSubSection>
-                <uxap:ObjectPageSubSection id="budgetExecutionTableFragment">
+                <uxap:ObjectPageSubSection id="pageItemSection">
                 
                 </uxap:ObjectPageSubSection>
                     
