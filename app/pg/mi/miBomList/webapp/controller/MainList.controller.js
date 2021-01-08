@@ -91,7 +91,7 @@ sap.ui.define([
             //     }
             // };
             // Aggregate columns (by cols) for similar values
-            
+
 
 
 
@@ -146,8 +146,34 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
 
+
         onBeforeRebindTable: function (oEvent) {
             var mBindingParams = oEvent.getParameter("bindingParams");
+            var oTable = this.getView().byId("mainTable");
+            mBindingParams.events = {
+                "dataReceived": function (oEvent) {
+                    var aReceivedData = oEvent.getParameter('data');
+
+                    var aRows = oTable.getRows()[8];
+                    var pRow = {};
+                    // for (var i = 0; i < aReceivedData.results.length; i++) {
+                    //     for (var a = 0; a < 7; a++) {
+
+                    //         var pCell = pRow[i].getCells()[a],
+                    //             cCell = aRows[i+1].getCells()[a];
+                    //         if (aReceivedData.results[i].material_code === aReceivedData.results[a].material_code) {
+                    //             $("#" + cCell.getId()).css("visibility", "hidden");
+                    //             $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
+                    //         }
+
+
+                    //     }
+
+                    // }
+
+                },
+                //More event handling can be done here
+            };
 
             var oSmtFilter = this.getView().byId("smartFilterBar");
 
@@ -177,6 +203,12 @@ sap.ui.define([
             // Disable Worker as Mockserver is used in Demokit sample
             mExcelSettings.worker = false;
         },
+        onGroup: function () {
+			 var oSmartTable = this._getSmartTable();
+            if (oSmartTable) {
+                oSmartTable.openPersonalisationDialog("Group");
+            }
+		},
 
         onSort: function () {
             var oSmartTable = this._getSmartTable();

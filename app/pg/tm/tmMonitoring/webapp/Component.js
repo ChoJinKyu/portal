@@ -1,8 +1,9 @@
 sap.ui.define([
-	"sap/ui/core/UIComponent",
+	"ext/lib/UIComponent",
 	"sap/ui/Device",
-	"pg/tm/tmMonitoring/model/models"
-], function (UIComponent, Device, models) {
+	"ext/lib/model/models",
+	"ext/lib/controller/ErrorHandler"
+], function (UIComponent, Device, models,ErrorHandler) {
 	"use strict";
 
 	return UIComponent.extend("pg.tm.tmMonitoring.Component", {

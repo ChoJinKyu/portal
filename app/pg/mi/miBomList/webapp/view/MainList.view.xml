@@ -101,6 +101,7 @@
                             <ToolbarSpacer/>
                             
                             <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
+                            <OverflowToolbarButton icon="sap-icon://group-2" tooltip="Group" text="Group" press="onGroup"/>
                             <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
                             <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/>
                         </OverflowToolbar>
@@ -108,7 +109,7 @@
                             <ui:Table id="mainTable"
                                 rows="{/MIMaterialCodeBOMManagementView}"
                                 selectionMode="None"
-                                visibleRowCount="6"
+                                visibleRowCount="7"
                                 fixedColumnCount="7"
                                 >
                                 <ui:columns> 
