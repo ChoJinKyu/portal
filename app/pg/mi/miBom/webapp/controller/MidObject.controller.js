@@ -121,8 +121,8 @@ sap.ui.define([
         _imsiData : {
             vendor : "KR01818401",
             vendor_name: "한국유나이티드제약(주)",
-            material_code : "1000005",
-            material_desc : "OLEIC ACID",
+            material_code : "1000164",
+            material_desc : "ANTIMONY TRIOXIDE (SB2O3) WHITE 99.5%",
             supplier_code : "KR01818401",
             supplier_local_name : "한국유나이티드제약(주)",
             supplier_english_name : "korea"
@@ -506,7 +506,7 @@ sap.ui.define([
                             materialTable.oData[i].vendor = that._imsiData.vendor;
                             materialTable.oData[i].vendor_name = that._imsiData.vendor_name;
                             materialTable.oData[i].supplier_code = that._imsiData.supplier_code;
-                            materialTable.oData[i].supplier_local_name = that._imsiData.supplier_code;
+                            materialTable.oData[i].supplier_local_name = that._imsiData.supplier_local_name;
                         }
                         that.getOwnerComponent().setModel(materialTable, "materialTable");                                         
                     }
