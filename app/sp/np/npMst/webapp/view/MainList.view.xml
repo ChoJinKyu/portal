@@ -23,20 +23,21 @@
                             <form:content>
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_operation_org_s" required="true"></Label>
-                                    <ComboBox id="search_operation_org_s" width="10rem" selectedKey="BIZ00200" 
-                                        items="{
-                                                path: 'vendorPool>/VpOperationOrg',
+                                    <MultiComboBox id="search_operation_org_s" width="100%" selectedKey=""
+                                            items="{
+                                                path: 'org>/Org_Company',
                                                 filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ],
-                                                sorter: { path: 'operation_org_code'}
-                                            }">
+                                                sorter: { path: 'company_code'}
+                                            }"
+                                            selectionFinish="handleSelectionFinishComp">
                                         <items>
-                                            <core:Item key="{vendorPool>operation_org_code}" text="{vendorPool>operation_org_name}" />
+                                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                         </items>
-                                    </ComboBox>
+                                    </MultiComboBox>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12"/>                                        
+                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
                                     </layoutData>
                                 </VBox>
                                 <VBox>
@@ -84,19 +85,22 @@
                             <form:content>
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_operation_org_e" required="true"></Label>
-                                    <ComboBox id="search_operation_org_e" width="10rem" selectedKey="BIZ00200" 
-                                        items="{
-                                                path: 'vendorPool>/VpOperationOrg',
+                                    <MultiComboBox id="search_operation_org_e" width="100%" selectedKey=""
+                                            items="{
+                                                path: 'org>/Org_Company',
                                                 filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ],
-                                                sorter: { path: 'operation_org_code'}
-                                            }">
+                                                sorter: { path: 'company_code'}
+                                            }"
+                                            selectionFinish="handleSelectionFinishComp">
                                         <items>
-                                            <core:Item key="{vendorPool>operation_org_code}" text="{vendorPool>operation_org_name}" />
+                                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                         </items>
-                                    </ComboBox>
-                                    <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
+                                    </MultiComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
+                                    </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Material" labelFor="search_material_e" required="true"></Label>
@@ -288,6 +292,7 @@
                             </table:Column>
                             <table:Column label="Effective End Date" width="8rem" filterProperty="effective_end_date" hAlign="Center">
                                 <table:template>
+                                    <Text text="{list>}" wrapping="false" />
                                     <Text text="{path: 'list>effective_end_date', formatter: '.cvtStringToDate'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
