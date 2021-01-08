@@ -72,7 +72,8 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Production Type"/>
 							<table:template>
-								<ComboBox id="mold_production_type_code"
+								<ComboBox id="mold_production_type_code" 
+                                        class="readonlyField"
                                         editable="{mode>/editFlag}"
                                         selectedKey="{mdItemMaster>mold_production_type_code}" 
                                         items="{ path : 'util>/Code',
@@ -90,6 +91,7 @@
 							<table:template>
 								<ComboBox  editable="{mode>/editFlag}" 
                                         selectedKey="{mdItemMaster>mold_item_type_code}" 
+                                        class="readonlyField"
                                         items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -109,7 +111,7 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-								<Input id="provisional_budget_amount" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input id="provisional_budget_amount" class="readonlyField" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
@@ -117,6 +119,7 @@
 							<table:template>
 								<ComboBox id="asset_type_code"
                                         editable="{mode>/editFlag}" 
+                                        class="readonlyField"
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
