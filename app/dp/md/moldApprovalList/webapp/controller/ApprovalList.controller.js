@@ -290,7 +290,7 @@ sap.ui.define([
             if (params.selectedItems.length > 0) {
 
                 params.selectedItems.forEach(function (item, idx, arr) {
-
+                    console.log(item.getKey());
                     plantFilters.push(new Filter({
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
@@ -311,15 +311,16 @@ sap.ui.define([
             });
 
             var bindInfo = {
-                path: '/Divisions',
-                filters: filter,
-                template: new Item({
-                key: "{org_code}", text: "[{org_code}] {org_name}"
-                })
-            };
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
 
             this.getView().byId("searchPlantS").bindItems(bindInfo);
             this.getView().byId("searchPlantE").bindItems(bindInfo);
+
             // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
             // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
         },
@@ -343,6 +344,7 @@ sap.ui.define([
                 console.log(item.getKey());
                 selectedKeys.push(item.getKey());
             });
+            console.log(selectedKeys);
 
             this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
@@ -633,7 +635,6 @@ sap.ui.define([
             plantFilter.push(new Filter({
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                    new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
                 ],
                 and: true

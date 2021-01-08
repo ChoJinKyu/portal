@@ -25,7 +25,7 @@
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyS" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
-                                        path: 'org>/Company',
+                                       path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
@@ -42,15 +42,14 @@
                             <VBox>
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantS" required="true"></Label>
                                 <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
-                                    path: '/Divisions',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
-                                    ],
-                                    sorter: { path: 'org_code'}
+                                        path: 'purOrg>/Pur_Operation_Org',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                        ]
                                     }"
-                                    selectionFinish="handleSelectionFinishDiv" >
+                                    selectionFinish="handleSelectionFinishDiv">
                                     <items>
-                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
