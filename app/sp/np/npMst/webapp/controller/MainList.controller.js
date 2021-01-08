@@ -135,7 +135,15 @@ sap.ui.define([
                         oView.setBusy(false);
                     }
                 });
+            },
+            
+            cvtStringToDate: function(str) {
+                if (!!str) {
+                    var yyyy = str.substring(0, 4);
+                    var mm = str.substring(4, 6);
+                    var dd = str.substring(6, 8);
+                    return yyyy + "." + mm + "." + dd;
+                }
             }
-
         });
     });

@@ -42,6 +42,23 @@
                                 <VBox>
                                     <Label text="Material" labelFor="search_material_s" required="true"></Label>
                                     <Input id="search_material_s" placeholder="Input data"></Input>
+                                    <!-- <lib-mat:MaterialMstPicker id="search_material_s"
+                                            placeholder="Enter a material name"
+                                            keyField="material_code"
+                                            textField="material_desc"
+                                           suggestionItems="{
+                                                                path: '/',
+                                                                filters : [
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                    {path : 'language_cd', operator : 'EQ', value1 : 'KO'},
+                                                                    {path : 'org_code', operator : 'EQ', value1 : 'BIZ00200'}
+                                                                ],
+                                                                serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                                                entityName: 'vpMaterialDtlView'
+                                                            }" value="{matlist>material_code}">
+                                            <lib-mat:MaterialMstPickerValueHelp contentWidth="500px" title="Choose a Material"
+                                                keyFieldHeaderText="Material ID" textFieldHeaderText="material" />
+                                        </lib-mat:MaterialMstPicker> -->
                                     <layoutData>
                                         <layout:GridData span="XL1 L1 M1 S12"/>                                        
                                     </layoutData>                                     
@@ -135,17 +152,15 @@
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Effective End Date" labelFor="search_effective_end_date"></Label>
-                                <DatePicker id="searchEffectiveDateE" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-ddThh:mm:ss" editable="true" navigate="onclickDate" value="9999-12-31"/>
-                                <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
-                            </VBox>
-                            <VBox>
                                 <Label text="Effective Start Date" labelFor="search_effective_start_date"></Label>
                                 <DateRangeSelection id="searchEffectiveDateS" width="100%" change="handleChange"/>
                                 <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
-                            <HBox>
-                            </HBox>
+                            <VBox>
+                                <Label text="Effective End Date" labelFor="search_effective_end_date"></Label>
+                                <DatePicker id="searchEffectiveDateE" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-ddThh:mm:ss" editable="true" navigate="onclickDate" value="9999-12-31"/>
+                                <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
+                            </VBox>
                         </form:content>
                     </form:SimpleForm>
                 </f:DynamicPageHeader>
@@ -176,19 +191,19 @@
                                     <Text text="{list>org_code}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Oeration Org Code Name" width="8rem" filterProperty="org_name" hAlign="Center">
+                            <table:Column label="Operation Org Name" width="8rem" filterProperty="org_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>org_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Doc Type" width="8rem" filterProperty="net_price_document_type_code" hAlign="Center">
+                            <table:Column label="Doc Type" width="8rem" filterProperty="net_price_document_type_name" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>net_price_document_type_code}" wrapping="false" />
+                                    <Text text="{list>net_price_document_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Source" width="8rem" filterProperty="net_price_source_code" hAlign="Center">
+                            <table:Column label="Source" width="8rem" filterProperty="net_price_source_name" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>net_price_source_code}" wrapping="false" />
+                                    <Text text="{list>net_price_source_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Supplier Code" width="8rem" filterProperty="supplier_code" hAlign="Center">
@@ -211,19 +226,19 @@
                                     <Text text="{list>material_desc}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Market" width="8rem" filterProperty="market_code" hAlign="Center">
+                            <table:Column label="Market" width="8rem" filterProperty="market_name" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>market_code}" wrapping="false" />
+                                    <Text text="{list>market_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Uom" width="5rem" filterProperty="x1" hAlign="Center">
+                            <table:Column label="UOM" width="5rem" filterProperty="uom_code" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>x1}" wrapping="false" />
+                                    <Text text="{list>uom_code}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Qty" width="5rem" filterProperty="x2" hAlign="Center">
+                            <table:Column label="Qty" width="5rem" filterProperty="purchasing_quantity" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>x2}" wrapping="false" />
+                                    <Text text="{list>purchasing_quantity}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Currency" width="5rem" filterProperty="currency_code" hAlign="Center">
@@ -236,9 +251,9 @@
                                     <Text text="{list>net_price}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Price Unit" width="5rem" filterProperty="po_unit" hAlign="Center">
+                            <table:Column label="Price Unit" width="5rem" filterProperty="material_price_unit" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>po_unit}" wrapping="false" />
+                                    <Text text="{list>material_price_unit}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Conversion Price" width="5rem" filterProperty="conversion_net_price" hAlign="Center">
@@ -268,17 +283,17 @@
                             </table:Column>
                             <table:Column label="Effective Start Date" width="8rem" filterProperty="effective_start_date" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>effective_start_date}" wrapping="false" />
+                                    <Text text="{path: 'list>effective_start_date', formatter: '.cvtStringToDate'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Effective End Date" width="8rem" filterProperty="effective_end_date" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>effective_end_date}" wrapping="false" />
+                                    <Text text="{path: 'list>effective_end_date', formatter: '.cvtStringToDate'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Payment Terms" width="8rem" filterProperty="payterms_code" hAlign="Center">
+                            <table:Column label="Payment Terms" width="8rem" filterProperty="payterms_name" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>payterms_code}" wrapping="false" />
+                                    <Text text="{list>payterms_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Incoterms" width="8rem" filterProperty="incoterms" hAlign="Center">
