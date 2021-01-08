@@ -82,8 +82,11 @@ sap.ui.define([
                     return;
                 }
                
-                this._oFragments[sPropertyName].destroy();
-                this._oFragments[sPropertyName] = null;
+                if(sPropertyName !== "GeneralInfo"){
+                    this._oFragments[sPropertyName].destroy();
+                    this._oFragments[sPropertyName] = null;
+                    console.log(sPropertyName);
+                }
             }
 
             //this.byId("pageApprovalLineSection").destroy();
@@ -269,6 +272,9 @@ sap.ui.define([
             generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
+        },
+
+        _showFormItemFragment: function (fragmentFileName) {
 
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
@@ -283,9 +289,7 @@ sap.ui.define([
             approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
             }.bind(this));
-        },
 
-        _showFormItemFragment: function (fragmentFileName) {
             var oPageItemSection = this.byId("pageItemSection");
             oPageItemSection.removeAllBlocks();
 

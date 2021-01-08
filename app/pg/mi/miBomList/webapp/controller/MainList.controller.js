@@ -149,13 +149,13 @@ sap.ui.define([
 
         onBeforeRebindTable: function (oEvent) {
             var mBindingParams = oEvent.getParameter("bindingParams");
-            var oTable = this.getView().byId("mainTable");
-            mBindingParams.events = {
-                "dataReceived": function (oEvent) {
-                    var aReceivedData = oEvent.getParameter('data');
+            // var oTable = this.getView().byId("mainTable");
+            // mBindingParams.events = {
+            //     "dataReceived": function (oEvent) {
+            //         var aReceivedData = oEvent.getParameter('data');
 
-                    var aRows = oTable.getRows()[8];
-                    var pRow = {};
+            //         var aRows = oTable.getRows()[8];
+            //         var pRow = {};
                     // for (var i = 0; i < aReceivedData.results.length; i++) {
                     //     for (var a = 0; a < 7; a++) {
 
@@ -171,9 +171,9 @@ sap.ui.define([
 
                     // }
 
-                },
-                //More event handling can be done here
-            };
+            //     },
+            //     //More event handling can be done here
+            // };
 
             var oSmtFilter = this.getView().byId("smartFilterBar");
 
@@ -203,13 +203,6 @@ sap.ui.define([
             // Disable Worker as Mockserver is used in Demokit sample
             mExcelSettings.worker = false;
         },
-        onGroup: function () {
-			 var oSmartTable = this._getSmartTable();
-            if (oSmartTable) {
-                oSmartTable.openPersonalisationDialog("Group");
-            }
-		},
-
         onSort: function () {
             var oSmartTable = this._getSmartTable();
             if (oSmartTable) {
