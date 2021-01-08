@@ -56,7 +56,7 @@ modules:
     - artifacts:
       - portal-content.zip
       name: portal
-      target-path: resources//
+      target-path: resources/
 - name: portal
   type: html5
   path: app
