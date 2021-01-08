@@ -57,7 +57,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Sample Qty"/>
-                <Input value="{spec>/mold_sample_qty}" />
+                <Input type="Number" value="{path: 'spec>/mold_sample_qty', type: 'sap.ui.model.type.Integer'}" />
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -66,7 +66,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Demand Life(Shot)" required="true"/>
-                <Input value="{spec>/request_life_shot_count}" required="true"/>
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -90,7 +90,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
                                         ]
                                     }"
@@ -107,7 +107,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Hot Runner Valve Qty(EA)" required="true"/>
-                <Input value="{spec>/mold_hot_runner_qty}" required="true"/>
+                <Input type="Number" value="{path: 'spec>/mold_hot_runner_qty', type: 'sap.ui.model.type.Integer'}" required="true" />
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -122,7 +122,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
                                         ]
                                     }"
@@ -145,7 +145,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
                                         ]
                                     }"
@@ -168,7 +168,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
                                         ]
                                     }"
@@ -206,7 +206,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_RUNNER'}
                                         ]
                                     }"
@@ -228,7 +228,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_GATE'}
                                         ]
                                     }"
@@ -250,7 +250,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_UNDER_CUT'}
                                         ]
                                     }"
@@ -272,7 +272,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RETURN_TYPE'}
                                         ]
                                     }"
@@ -294,7 +294,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
                                         ]
                                     }"
@@ -316,7 +316,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_OUT_PROCESS'}
                                         ]
                                     }"
@@ -338,7 +338,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RUNNER_OUT'}
                                         ]
                                     }"
@@ -448,7 +448,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CAVITY'}
                                         ]
                                     }"
@@ -471,7 +471,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
                                         ]
                                     }"
@@ -494,7 +494,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SCORE'}
                                         ]
                                     }"
@@ -517,7 +517,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_TAPER_PIN'}
                                         ]
                                     }"
@@ -540,7 +540,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
                                         ]
                                     }"
@@ -563,7 +563,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
                                         ]
                                     }"
