@@ -32,6 +32,16 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": []}'
 
+# 수정 : master
+curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202101070001\'\) \
+-H "Content-Type: application/json" \
+-d '{
+    "approval_title": "개발VI 품의서 수정 테스트",
+    "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 수정 테스트", 
+    "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
+    "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2021-01-04T10:18:46Z"
+}'
+
 # 등록 : master-detail
 curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master \
 -H "Content-Type: application/json" \
@@ -75,17 +85,6 @@ curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_A
         } 
     ]
 }'
-
-# 수정 : master
-curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202101040001\'\) \
--H "Content-Type: application/json" \
--d '{
-    "approval_title": "개발VI 품의서 수정 테스트",
-    "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 수정 테스트", 
-    "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
-    "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2021-01-04T10:18:46Z"
-}'
-
 
 # 삭제
 curl -X DELETE http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202012180003\'\)
