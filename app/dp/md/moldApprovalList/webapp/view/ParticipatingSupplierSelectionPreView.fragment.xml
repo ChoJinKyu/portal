@@ -44,7 +44,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
