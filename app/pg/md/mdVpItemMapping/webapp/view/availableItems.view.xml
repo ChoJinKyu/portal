@@ -12,12 +12,15 @@
 	<Table
 		id="table"
 		mode="SingleSelectMaster"
+        showRowCount="true" 
 		growing="true"
 		growingThreshold="15"
+        sticky="HeaderToolbar,ColumnHeaders" 
 		beforeOpenContextMenu="onBeforeOpenContextMenu"
 		items="{
 			path: '/value'
-		}">
+		}"
+        width="auto">
 		<contextMenu>
 			<Menu>
 				<MenuItem text="Move to Selected Items" press="moveToSelectedItemsTable" />

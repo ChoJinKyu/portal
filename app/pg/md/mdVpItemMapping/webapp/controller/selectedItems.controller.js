@@ -84,24 +84,27 @@ sap.ui.define([
             if(selectedItems.length > 0 ){
                 var param = {};
                 var items = [];
-                // var param = {
-                //     items : []
-                // };
                 for(var i = 0 ; i < selectedItems.length; i++){
                     var selectedItemstPath = selectedItems[i].getBindingContextPath();
                     var curData = this.getView().getModel().getProperty(selectedItemstPath);
 
-                    items.push(curData);
-                    // items.push({
-                    //     header_id: Number(curDataH.header_id),
-                    //     cd: curDataH.cd,
-                    //     name: curDataH.name
-                    // });
+                    // items.push(curData);
+                    
+                    items.push({
+                        tenant_id: curData.tenant_id,
+                        company_code: curData.company_code,
+                        org_type_code: curData.org_type_code,
+                        org_code: curData.org_code,
+                        spmd_category_code: curData.spmd_category_code,
+                        spmd_character_code: curData.spmd_character_code,
+                        spmd_character_serial_no: Number(curData.spmd_character_serial_no),
+                        vendor_pool_code: "VP201610260087"  // TODO:Mapping 페이지에 선택 되어있는 VendorPool Lavel3 코드값 으로 셋팅바람.
+                    });
 
                 }
 
                 param.items = items;
-                var url = "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.md.MdCategoryV4Service/MdVpMappingItemMultiProc"
+                var url = "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemMultiProc";
 
                 $.ajax({
                     url: url,
@@ -109,13 +112,13 @@ sap.ui.define([
                     data : JSON.stringify(param),
                     contentType: "application/json",
                     success: function(data){
-                        debugger;
 					    alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
                         // var v_returnModel = oView.getModel("returnModel").getData();
                         // v_returnModel.headerList = data.savedHeaders;
                         // v_returnModel.detailList = data.savedDetails;
                         // oView.getModel("returnModel").updateBindings(true);
                         // that.onSearch();
+                        // oSelectedItemsTable.
                         
                     },
                     error: function(req){
