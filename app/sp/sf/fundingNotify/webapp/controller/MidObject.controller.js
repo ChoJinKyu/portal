@@ -220,22 +220,18 @@ sap.ui.define([
             // console.log(master.getData()["funding_notify_contents"]);
             
             // Validation
-            // if (!master.getData()["chain_code"]) {
-            //     MessageBox.alert("Chain을 입력하세요");
-            //     return;
-            // }
-            // if (!master.getData()["tenant_id"]) {
-            //     MessageBox.alert("테넌트를 입력하세요");
-            //     return;
-            // }
-            // if (!master.getData()["control_option_code"]) {
-            //     MessageBox.alert("제어옵션코드를 입력하세요");
-            //     return;
-            // }
-            // if (!master.getData()["control_option_name"]) {
-            //     MessageBox.alert("제어옵션명을 입력하세요");
-            //     return;
-            // }
+            if (!master.getData()["funding_notify_title"]) {
+                MessageBox.alert("제목을 입력하세요");
+                return;
+            }
+            if (!master.getData()["funding_notify_start_date"]) {
+                MessageBox.alert("신청기간을 입력하세요.");
+                return;
+            }
+            if (!master.getData()["funding_notify_end_date"]) {
+                MessageBox.alert("신청기간을 입력하세요.");
+                return;
+            }
 
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),

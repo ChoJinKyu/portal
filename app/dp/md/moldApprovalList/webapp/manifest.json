@@ -300,35 +300,35 @@
                     ]
                 },
                 {
-                    "pattern": "budgetExecutionApproval/{company_code}/{plant_code}/{approval_number}",
+                    "pattern": "budgetExecutionApproval/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
                     "name": "budgetExecutionApproval",
                     "target": [
                         "budgetExecutionApproval"
                     ]
                 },
                 {
-                    "pattern": "moldRecepitApproval/{company_code}/{plant_code}/{approval_number}",
+                    "pattern": "moldRecepitApproval/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
                     "name": "moldRecepitApproval",
                     "target": [
                         "moldRecepitApproval"
                     ]
                 },
                 {
-                    "pattern": "participatingSupplierSelection/{company_code}/{plant_code}/{approval_number}",
+                    "pattern": "participatingSupplierSelection/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
                     "name": "participatingSupplierSelection",
                     "target": [
                         "participatingSupplierSelection"
                     ]
                 },
                 {
-                    "pattern": "purchaseOrderLocalApproval/{company_code}/{plant_code}/{approval_number}",
+                    "pattern": "purchaseOrderLocalApproval/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
                     "name": "purchaseOrderLocalApproval",
                     "target": [
                         "purchaseOrderLocalApproval"
                     ]
                 },
                 {
-                    "pattern": "participatingSupplierSelectionCancelApproval/{company_code}/{plant_code}/{approval_number}",
+                    "pattern": "participatingSupplierSelectionCancelApproval/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
                     "name": "participatingSupplierSelectionCancelApproval",
                     "target": [
                         "participatingSupplierSelectionCancelApproval"

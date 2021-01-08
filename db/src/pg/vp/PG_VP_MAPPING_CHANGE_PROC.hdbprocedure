@@ -43,6 +43,7 @@ SQL SECURITY INVOKER
                    삭제를 진행한다.(USE_FLAG: FALSE)
                그 외 정보는 TEMP정보로 SUPPLIER_DTL에 엎어침.
           MAPPING SUPPLIER는 TEMP테이블에 데이터가 존재하지 않는 경우에만 등록가능하다.
+          * 기존 SUPPLIER 정보를 아무것도 건들지 않은 경우 (ALL READ인 경우) SUPPLIER TEMP 테이블에 아무것도 작업하지 않는다.
 *******************************************************************************************************************************************************/
 AS
 BEGIN
@@ -79,13 +80,20 @@ BEGIN
 	*****************************************************/
 	DECLARE V_SUPPLIER_TEMP_CNT INT := 0;
 	DECLARE V_SUPPLIER_COUNT INT := 0;
+	DECLARE V_SUPPLIER_DELETE_CNT INT := 0;
+	DECLARE V_SUPPLIER_READ_CNT INT := 0;
+	DECLARE V_SUPPLIER_UPDATE_CNT INT := 0;
+	
+	DECLARE V_SUPPLIER_JOB_GUBUN NVARCHAR(10) := 'TMP';
 	
 	/*****************************************************
 	MASTER정보 삭제 시 MAPPING 건수 체크를 위한 변수
 	*****************************************************/
 	DECLARE V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER INT := 0;
 	DECLARE V_ITEM_EXIST_CNT_FOR_DELETE_MASTER INT := 0;
+	DECLARE V_ITEM_EXIST_CNT_FOR_DELETE_ITEM INT := 0;
 	DECLARE V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER INT := 0;
+	DECLARE V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER INT := 0;
 	
 	/*****************************************************
 	각 MAPPING 정보 LOOPING 변수
@@ -221,9 +229,6 @@ BEGIN
 		그러므로 조건에 TMP데이터가 존재하는 경우 해당 프로세스에서는
 		진행이 불가능하다.
 		*******************************************************/
-		SELECT COUNT(*)
-		INTO   V_SUPPLIER_COUNT 
-	    FROM   :I_SUP;
 	    
 	    SELECT COUNT(*)
 		INTO   V_SUPPLIER_TEMP_CNT 
@@ -233,6 +238,16 @@ BEGIN
 	    AND    A.ORG_TYPE_CODE        = loop_mst.ORG_TYPE_CODE
 	    AND    A.ORG_CODE             = loop_mst.ORG_CODE
 	    AND    A.VENDOR_POOL_CODE     = loop_mst.VENDOR_POOL_CODE;
+	    
+	    SELECT COUNT(*)
+	          ,SUM(CASE CRUD_TYPE_CODE WHEN 'R' THEN 1 ELSE 0 END) 
+			  ,SUM(CASE CRUD_TYPE_CODE WHEN 'U' THEN 1 ELSE 0 END) 
+			  ,SUM(CASE CRUD_TYPE_CODE WHEN 'D' THEN 1 ELSE 0 END) 
+		INTO   V_SUPPLIER_COUNT 
+		      ,V_SUPPLIER_READ_CNT
+			  ,V_SUPPLIER_UPDATE_CNT
+			  ,V_SUPPLIER_DELETE_CNT
+		FROM   :I_SUP;
 		
 		/*****************************************************************************
 		프로시저 호출 시 PG_VP_VENDOR_POOL_SUPPLIER_TMP에 데이터가 존재하는 경우
@@ -287,14 +302,14 @@ BEGIN
 	                            ,EQUIPMENT_GRADE_CODE 				= TRIM( ' ' FROM loop_mst.EQUIPMENT_GRADE_CODE )
 	                            ,EQUIPMENT_TYPE_CODE 				= TRIM( ' ' FROM loop_mst.EQUIPMENT_TYPE_CODE )
 	                            ,VENDOR_POOL_DESC 					= TRIM( ' ' FROM loop_mst.VENDOR_POOL_DESC )
-	                            ,VENDOR_POOL_HISTORY_DESC 			= TRIM( ' ' FROM loop_mst.VENDOR_POOL_HISTORY_DESC )
-	                            ,PARENT_VENDOR_POOL_CODE 			= TRIM( ' ' FROM loop_mst.PARENT_VENDOR_POOL_CODE )
-	                            ,LEAF_FLAG 				 			= IFNULL( loop_mst.LEAF_FLAG, FALSE)
+	                            --,VENDOR_POOL_HISTORY_DESC 			= TRIM( ' ' FROM loop_mst.VENDOR_POOL_HISTORY_DESC )
+	                            --,PARENT_VENDOR_POOL_CODE 			= TRIM( ' ' FROM loop_mst.PARENT_VENDOR_POOL_CODE )
+	                            --,LEAF_FLAG 				 			= IFNULL( loop_mst.LEAF_FLAG, FALSE)
 	                            ,MAKER_MATERIAL_CODE_MNGT_FLAG 		= IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, FALSE)
-	                            ,LEVEL_NUMBER 			 			= loop_mst.LEVEL_NUMBER 
-	                            ,DISPLAY_SEQUENCE 		 			= loop_mst.DISPLAY_SEQUENCE 
-	                            ,REGISTER_REASON 		 			= TRIM( ' ' FROM loop_mst.REGISTER_REASON )
-	                            ,APPROVAL_NUMBER        			= TRIM( ' ' FROM loop_mst.APPROVAL_NUMBER )			   
+	                            --,LEVEL_NUMBER 			 			= loop_mst.LEVEL_NUMBER 
+	                            --,DISPLAY_SEQUENCE 		 			= loop_mst.DISPLAY_SEQUENCE 
+	                            --,REGISTER_REASON 		 			= TRIM( ' ' FROM loop_mst.REGISTER_REASON )
+	                            --,APPROVAL_NUMBER        			= TRIM( ' ' FROM loop_mst.APPROVAL_NUMBER )			   
 	                            ,LOCAL_UPDATE_DTM       			= NOW()
 	                            ,UPDATE_USER_ID         			= I_USER_ID
 	                            ,SYSTEM_UPDATE_DTM      			= NOW()
@@ -312,15 +327,32 @@ BEGIN
 	                        --raise_application_error(-20001, 'PG_VP_VENDOR_POOL_MST UPDATE ERROR '|| loop_mst.VENDOR_POOL_CODE||' ['||::ROWCOUNT||']');
 	                    END IF;
                     END;
-				    
-				    /********************************************************
-					[Supplier 로직] 시작(Master 정보의 Update 시에만 가능함)
-					*******************************************************/
+					
+					/*************************************************************************************
+					SUPPLIER 매핑정보는 현프로세스에서 전체 삭제가 불가능하다.
+					하여 입력정보가 있는데 모두 삭제인 경우 ERROR 처리한다.
+					(해당 기능은 다른프로세스를 통해 처리 예정)
+					*************************************************************************************/
+					IF V_SUPPLIER_DELETE_CNT > 0 AND V_SUPPLIER_DELETE_CNT = V_SUPPLIER_COUNT THEN
+						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00025'||'-'||'Supplier All Delete Error.';
+					END IF;
+					
+					IF V_SUPPLIER_READ_CNT > 0 AND V_SUPPLIER_READ_CNT = V_SUPPLIER_COUNT THEN
+						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00026'||'-'||'Supplier All Read Error.';
+					END IF;
+					
+					IF V_SUPPLIER_UPDATE_CNT > 0 AND V_SUPPLIER_UPDATE_CNT = V_SUPPLIER_COUNT THEN
+						V_SUPPLIER_JOB_GUBUN  := 'DTL'; --DTL인 경우 DTL 테이블에 UPDATE
+					ELSE
+						V_SUPPLIER_JOB_GUBUN  := 'TMP'; --TMP인 경우 TEMP 테이블에 INSERT
+					END IF;
 					
 					/********************************************************
 					VENDOR POOL MASTER 수정 시 SUPPLIER를 수정하는 경우
 					INSERT 혹은 DELETE 라인이 있으면 
 					[PG_VP_VENDOR_POOL_SUPPLIER_TMP]로 INSERT한다.
+					INSERT 혹은 DELETE 라인이 한개도 없으면 
+					[PG_VP_VENDOR_POOL_SUPPLIER_DTL]로 한다.
 					*********************************************************/
 				    FOR loop_sup AS l_sup_cursor DO
 					    V_TEST_MSG := loop_sup.SUPPLIER_CODE;
@@ -433,51 +465,77 @@ BEGIN
 							IF V_SUPPLIER_EXIST_CNT > 1 THEN
 								SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 							ELSE
-								INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_TMP
-							    (
-								    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
-										,ORG_CODE                           ,VENDOR_POOL_CODE                    ,SUPPLIER_CODE
-										,CHANGER_EMPNO                      ,BEFORE_SUPPLIER_CODE                ,SUPEVAL_TARGET_FLAG
-										,SUPPLIER_OP_PLAN_REVIEW_FLAG       ,SUPEVAL_CONTROL_FLAG			     ,SUPEVAL_CONTROL_START_DATE         
-										,SUPEVAL_CONTROL_END_DATE           ,SUPEVAL_RESTRICT_START_DATE		 ,SUPEVAL_RESTRICT_END_DATE          
-										,INP_CODE                           ,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         
-										,APPROVAL_NUMBER                    ,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
-										,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
-										,SYSTEM_UPDATE_DTM
-							    ) VALUES (
-							    		 loop_sup.TENANT_ID
-							    		,loop_sup.COMPANY_CODE
-							    		,loop_sup.ORG_TYPE_CODE
-							    		,loop_sup.ORG_CODE
-							    		,loop_sup.VENDOR_POOL_CODE
-							    		,loop_sup.SUPPLIER_CODE
-							    		,I_USER_NO
-            							,NULL
-							    		,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
-										,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
-										,IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)
-										,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
-										,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
-										,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_START_DATE )
-										,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
-										,TRIM( ' ' FROM loop_sup.INP_CODE )
-										,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
-										,loop_sup.SUPPLIER_BASE_PORTION_RATE
-										,loop_sup.APPROVAL_NUMBER
-										,NOW()
-										,I_USER_ID
-										,NOW()
-										,NOW()
-										,I_USER_ID
-										,NOW()
-							    )
-							    ;
+								IF V_SUPPLIER_JOB_GUBUN = 'TMP' THEN
+								    INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_TMP
+								    (
+									    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
+											,ORG_CODE                           ,VENDOR_POOL_CODE                    ,SUPPLIER_CODE
+											,CHANGER_EMPNO                      ,BEFORE_SUPPLIER_CODE                ,SUPEVAL_TARGET_FLAG
+											,SUPPLIER_OP_PLAN_REVIEW_FLAG       ,SUPEVAL_CONTROL_FLAG			     ,SUPEVAL_CONTROL_START_DATE         
+											,SUPEVAL_CONTROL_END_DATE           ,SUPEVAL_RESTRICT_START_DATE		 ,SUPEVAL_RESTRICT_END_DATE          
+											,INP_CODE                           ,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         
+											,APPROVAL_NUMBER                    ,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
+											,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
+											,SYSTEM_UPDATE_DTM
+								    ) VALUES (
+								    		 loop_sup.TENANT_ID
+								    		,loop_sup.COMPANY_CODE
+								    		,loop_sup.ORG_TYPE_CODE
+								    		,loop_sup.ORG_CODE
+								    		,loop_sup.VENDOR_POOL_CODE
+								    		,loop_sup.SUPPLIER_CODE
+								    		,I_USER_NO
+	            							,NULL
+								    		,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
+											,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
+											,IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)
+											,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
+											,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
+											,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_START_DATE )
+											,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
+											,TRIM( ' ' FROM loop_sup.INP_CODE )
+											,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
+											,loop_sup.SUPPLIER_BASE_PORTION_RATE
+											,loop_sup.APPROVAL_NUMBER
+											,NOW()
+											,I_USER_ID
+											,NOW()
+											,NOW()
+											,I_USER_ID
+											,NOW()
+								    )
+								    ;
+								    
+								    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 							    
-							    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
-						    
-							    IF V_CUD_COUNT != 1 THEN
-							        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Supplier Update(Insert) Error.['||V_SUPPLIER_LOOP_INDEX||']';
-							    END IF;
+								    IF V_CUD_COUNT != 1 THEN
+								        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Supplier TMP Insert Error.['||V_SUPPLIER_LOOP_INDEX||']';
+								    END IF;
+								ELSE
+								    UPDATE PG_VP_VENDOR_POOL_SUPPLIER_DTL
+								    SET     SUPEVAL_CONTROL_FLAG			    = IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)     
+								    	   ,SUPEVAL_CONTROL_START_DATE          = TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
+										   ,SUPEVAL_CONTROL_END_DATE            = TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
+										   ,SUPPLIER_RM_CONTROL_FLAG            = IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE) 
+										   ,SUPPLIER_BASE_PORTION_RATE			= loop_sup.SUPPLIER_BASE_PORTION_RATE
+										   ,LOCAL_UPDATE_DTM       				= NOW()
+										   ,UPDATE_USER_ID         				= I_USER_ID
+										   ,SYSTEM_UPDATE_DTM      				= NOW()
+									WHERE   TENANT_ID           = loop_sup.TENANT_ID
+									AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
+									AND     ORG_TYPE_CODE       = loop_sup.ORG_TYPE_CODE
+									AND     ORG_CODE            = loop_sup.ORG_CODE
+									AND     VENDOR_POOL_CODE    = loop_sup.VENDOR_POOL_CODE
+									AND     SUPPLIER_CODE       = loop_sup.SUPPLIER_CODE
+								    ;
+								    
+								    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+							    
+								    IF V_CUD_COUNT != 1 THEN
+								        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Supplier DTL Update Error.['||V_SUPPLIER_LOOP_INDEX||']';
+								    END IF;
+								END IF;
+								
 							END IF;
 						--삭제 로우가 존재하는 경우 VALIDATION만 체크한다.	
 					    ELSE
@@ -565,12 +623,24 @@ BEGIN
 					    SELECT  COUNT(*)
 						INTO    V_ITEM_EXIST_CNT
 						FROM    PG_VP_VENDOR_POOL_ITEM_DTL A
-						WHERE   A.TENANT_ID           = loop_itm.TENANT_ID
-					    AND     A.COMPANY_CODE        = loop_itm.COMPANY_CODE
-					    AND     A.ORG_TYPE_CODE       = loop_itm.ORG_TYPE_CODE
-					    AND     A.ORG_CODE            = loop_itm.ORG_CODE
-					    AND     A.VENDOR_POOL_CODE    = loop_itm.VENDOR_POOL_CODE
-					    AND     A.MATERIAL_CODE       = loop_itm.MATERIAL_CODE
+						WHERE   A.TENANT_ID         				 = loop_itm.TENANT_ID
+					    AND     A.COMPANY_CODE      				 = loop_itm.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE     				 = loop_itm.ORG_TYPE_CODE
+					    AND     A.ORG_CODE          				 = loop_itm.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE  				 = loop_itm.VENDOR_POOL_CODE
+					    AND     A.MATERIAL_CODE     				 = loop_itm.MATERIAL_CODE
+					    ;
+					    
+					    SELECT  COUNT(*)
+						INTO    V_ITEM_EXIST_CNT_FOR_DELETE_ITEM
+						FROM    PG_VP_VENDOR_POOL_ITEM_DTL A
+						WHERE   A.TENANT_ID         				 = loop_itm.TENANT_ID
+					    AND     A.COMPANY_CODE      				 = loop_itm.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE     				 = loop_itm.ORG_TYPE_CODE
+					    AND     A.ORG_CODE          				 = loop_itm.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE  				 = loop_itm.VENDOR_POOL_CODE
+					    AND     A.MATERIAL_CODE     				 = loop_itm.MATERIAL_CODE
+					    AND     A.VENDOR_POOL_MAPPING_USE_FLAG       = TRUE
 					    ;
 					    
 					    IF TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'U' THEN
@@ -630,8 +700,8 @@ BEGIN
 						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||']';
 						    END IF;
 					    ELSE
-							IF V_ITEM_EXIST_CNT != 1 THEN
-							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+							IF V_ITEM_EXIST_CNT_FOR_DELETE_ITEM != 1 THEN
+							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']'||loop_itm.MATERIAL_CODE||','||loop_itm.CRUD_TYPE_CODE;
 							ELSE
 						    
 								UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL MST
@@ -736,6 +806,18 @@ BEGIN
 					    AND     A.VENDOR_POOL_PERSON_EMPNO      = loop_man.VENDOR_POOL_PERSON_EMPNO
 					    ;
 					    
+					    SELECT  COUNT(*)
+						INTO    V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER
+						FROM    PG_VP_VENDOR_POOL_MANAGER_DTL A
+						WHERE   A.TENANT_ID         			= loop_man.TENANT_ID
+					    AND     A.COMPANY_CODE      			= loop_man.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE     			= loop_man.ORG_TYPE_CODE
+					    AND     A.ORG_CODE          			= loop_man.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE  			= loop_man.VENDOR_POOL_CODE
+					    AND     A.VENDOR_POOL_PERSON_EMPNO      = loop_man.VENDOR_POOL_PERSON_EMPNO
+					    AND     A.VENDOR_POOL_MAPPING_USE_FLAG  = TRUE
+					    ;
+					    
 					    IF TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'U' THEN
 					        
 							IF V_MANAGER_EXIST_CNT > 1 THEN
@@ -796,7 +878,7 @@ BEGIN
 						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||']';
 						    END IF;
 					    ELSE
-							IF V_MANAGER_EXIST_CNT != 1 THEN
+							IF V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER != 1 THEN
 							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
 							ELSE
 						    
@@ -859,9 +941,8 @@ BEGIN
 						,INDUSTRY_CLASS_CODE                 ,SD_EXCEPTION_FLAG                     ,VENDOR_POOL_APPLY_EXCEPTION_FLAG
 						,DOMESTIC_NET_PRICE_DIFF_RATE        ,DOM_OVERSEA_NETPRICE_DIFF_RATE        ,EQUIPMENT_GRADE_CODE 			
 						,EQUIPMENT_TYPE_CODE                 ,VENDOR_POOL_USE_FLAG                  ,VENDOR_POOL_DESC 				
-						,VENDOR_POOL_HISTORY_DESC            ,PARENT_VENDOR_POOL_CODE               ,LEAF_FLAG 				 		
-						,MAKER_MATERIAL_CODE_MNGT_FLAG       ,LEVEL_NUMBER                          ,DISPLAY_SEQUENCE 		 		
-						,REGISTER_REASON                     ,APPROVAL_NUMBER                       ,LOCAL_CREATE_DTM       		
+						,PARENT_VENDOR_POOL_CODE             ,LEAF_FLAG 				 		    ,MAKER_MATERIAL_CODE_MNGT_FLAG       
+						,LEVEL_NUMBER                        ,DISPLAY_SEQUENCE 		 		        ,LOCAL_CREATE_DTM       		
 						,CREATE_USER_ID                      ,SYSTEM_CREATE_DTM                     ,LOCAL_UPDATE_DTM       		
 						,UPDATE_USER_ID                      ,SYSTEM_UPDATE_DTM
 		    	    ) VALUES (
@@ -884,16 +965,13 @@ BEGIN
 						,loop_mst.DOM_OVERSEA_NETPRICE_DIFF_RATE
 						,TRIM( ' ' FROM loop_mst.EQUIPMENT_GRADE_CODE )
 						,TRIM( ' ' FROM loop_mst.EQUIPMENT_TYPE_CODE )
-						,IFNULL( loop_mst.VENDOR_POOL_USE_FLAG, TRUE)
+						,TRUE
 						,TRIM( ' ' FROM loop_mst.VENDOR_POOL_DESC )
-						,TRIM( ' ' FROM loop_mst.VENDOR_POOL_HISTORY_DESC )
 						,TRIM( ' ' FROM loop_mst.PARENT_VENDOR_POOL_CODE )
 						,IFNULL( loop_mst.LEAF_FLAG, FALSE)
 						,IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, FALSE)
 						,loop_mst.LEVEL_NUMBER 
 						,loop_mst.DISPLAY_SEQUENCE 
-						,TRIM( ' ' FROM loop_mst.REGISTER_REASON )
-						,TRIM( ' ' FROM loop_mst.APPROVAL_NUMBER )			   
 						,NOW()
 						,I_USER_ID
 						,NOW()

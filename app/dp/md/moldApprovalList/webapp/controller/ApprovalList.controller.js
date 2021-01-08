@@ -131,10 +131,10 @@ sap.ui.define([
             //접속자 법인 사업부로 바꿔줘야함
             this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
-            this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['I']);
+            // this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
+            // this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['I']);
 
             this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -242,25 +242,32 @@ sap.ui.define([
             console.log("oRecord >>>  ", oRecord);
             var that = this;
             var approvalTarget = "";
+            var approvalTypeCode = "";
             if(oRecord.approval_type_code == "B"){
                 approvalTarget = "budgetExecutionApproval"
+                approvalTypeCode ="B"
             }if(oRecord.approval_type_code == "V"){
                 approvalTarget = "purchaseOrderLocalApproval"
+                approvalTypeCode ="V"
             }if(oRecord.approval_type_code == "E"){
                 approvalTarget = "participatingSupplierSelection"
+                approvalTypeCode ="E"
             }if(oRecord.approval_type_code == "I"){
                 approvalTarget = "moldRecepitApproval"
+                approvalTypeCode ="I"
             }if(oRecord.approval_type_code == "A"){ 
                 var Cancellation = this.getView().getModel('Cancellation');
                 Cancellation.setProperty("/approvalNumber", null);
                 Cancellation.setProperty("/isCreate", false);
                 approvalTarget = "participatingSupplierSelectionCancelApproval"
+                approvalTypeCode ="A"
             }
 
             console.log(approvalTarget);
             that.getRouter().navTo(approvalTarget , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
+                , approval_type_code: oRecord.approval_type_code
                 , approval_number: oRecord.approval_number
             });
 
@@ -638,7 +645,7 @@ sap.ui.define([
             var source = oEvent.getSource();
             var selectedKey = source.getSelectedKey();
             console.log(source.getSelectedKey());
-            this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
+            //this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
         },
 
 
@@ -696,20 +703,33 @@ sap.ui.define([
             var id = toggleButtonId.split('--')[2];
             var page = ""
             var appTypeCode = "";
+            var company_code = this.byId("searchCompanyF").getSelectedKey();
+            var plant_code = this.byId("searchPlantF").getSelectedKey();
             console.log(id);
-
-            if(id.indexOf("localBudget") > -1){
-                approvalTarget = "budgetExecutionApproval"
-            }else if(id.indexOf("supplierSelection") > -1){
-                approvalTarget = "participatingSupplierSelection"
-            }else if(id.indexOf("localOrder") > -1){
-               approvalTarget = "purchaseOrderLocalApproval"
-            }else if(id.indexOf("receipt") > -1){
-                approvalTarget ="moldRecepitApproval"
-            }else if(id.indexOf("export") > -1){
-                appTypeCode ="X"
+            console.log(company_code);
+            console.log(plant_code);
+            if(this.validator.validate( this.byId('dialogCreateForm') ) !== true){
+                MessageBox.error("필수 입력 항목입니다.");
+                return;
+            } 
+            
+            if(id == undefined){       
+                MessageBox.error("품의서 유형을 선택해주세요");
+                return;
             }
-
+            else{
+                if(id.indexOf("localBudget") > -1){
+                    approvalTarget = "budgetExecutionApproval"
+                }else if(id.indexOf("supplierSelection") > -1){
+                    approvalTarget = "participatingSupplierSelection"
+                }else if(id.indexOf("localOrder") > -1){
+                    approvalTarget = "purchaseOrderLocalApproval"
+                }else if(id.indexOf("receipt") > -1){
+                    approvalTarget ="moldRecepitApproval"
+                }else if(id.indexOf("export") > -1){
+                    appTypeCode ="X"  
+                }
+            }
             
 
             // else if(id.indexOf("importBudget") > -1){
@@ -730,8 +750,9 @@ sap.ui.define([
             //     appTypeCode ="E"
             // }
            
+            
 
-
+            
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
@@ -740,8 +761,9 @@ sap.ui.define([
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
                     this.getRouter().navTo(approvalTarget, {
-                        company_code: this.byId("searchCompanyF").getSelectedKey()
-                        , plant_code: this.byId("searchPlantF").getSelectedKey()
+                        company_code: company_code
+                        , plant_code: plant_code
+                        , approval_type_code: appTypeCode
                         , approval_number: "New"
                     });
                 }

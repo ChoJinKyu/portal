@@ -22,10 +22,48 @@ BEGIN
 		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 	END;
 
+/* 임시 Table에 전체 Data 추가 - 동작함 */
+
+        INSERT INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE_TEMP
+               ( TENANT_ID
+                ,COMPANY_CODE
+                ,ORG_TYPE_CODE
+                ,ORG_CODE
+                ,PRODUCT_ACTIVITY_CODE
+                ,DEVELOPE_EVENT_CODE
+                ,SEQUENCE
+                ,PRODUCT_ACTIVITY_NAME
+                ,PRODUCT_ACTIVITY_ENGLISH_NAME
+                ,MILESTONE_FLAG
+                ,ACTIVE_FLAG
+                ,UPDATE_USER_ID
+                ,SYSTEM_UPDATE_DTM
+                ,CRUD_TYPE_CODE
+                ,UPDATE_PRODUCT_ACTIVITy_CODE
+               )
+        SELECT  :I_TABLE.TENANT_ID
+                ,:I_TABLE.COMPANY_CODE
+                ,:I_TABLE.ORG_TYPE_CODE
+                ,:I_TABLE.ORG_CODE
+                ,:I_TABLE.PRODUCT_ACTIVITY_CODE
+                ,:I_TABLE.DEVELOPE_EVENT_CODE
+                ,:I_TABLE.SEQUENCE
+                ,:I_TABLE.PRODUCT_ACTIVITY_NAME
+                ,:I_TABLE.PRODUCT_ACTIVITY_ENGLISH_NAME
+                ,:I_TABLE.MILESTONE_FLAG
+                ,:I_TABLE.ACTIVE_FLAG
+                ,:I_TABLE.UPDATE_USER_ID
+                ,NOW()
+                ,:I_TABLE.CRUD_TYPE_CODE
+                ,:I_TABLE.UPDATE_PRODUCT_ACTIVITy_CODE
+          FROM :I_TABLE
+    ;
+
     SELECT COUNT(*)
 	INTO   V_COUNT
     FROM   :I_TABLE;
 
+/*  삭제1: 일괄 Delete문에 동작하지 않아, 임시로 CURSOR로 Data삭제처리 - 동작안함 */
 	IF  V_COUNT  > 0 THEN
     	FOR loop_cur AS l_cursor DO
             IF loop_cur.CRUD_TYPE_CODE = 'D' THEN
@@ -40,14 +78,37 @@ BEGIN
         END FOR;
 	END IF;
 
-/*  일괄 Delete문에 동작하지 않아, 임시로 CURSOR로 Data삭제처리함 확인 필요
+/*  삭제2  - 동작안함 */
     DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
      WHERE (PAT.TENANT_ID,PAT.COMPANY_CODE,PAT.ORG_TYPE_CODE,PAT.ORG_CODE,PAT.PRODUCT_ACTIVITY_CODE ) IN
-        ( SELECT TENANT_ID, COMPANY_CODE, ORG_TYPE_CODE, ORG_CODE, PRODUCT_ACTIVITY_CODE
-           FROM :I_TABLE
-          WHERE CRUD_TYPE_CODE = 'D' )
+        ( SELECT A.TENANT_ID, A.COMPANY_CODE, A.ORG_TYPE_CODE, A.ORG_CODE, A.PRODUCT_ACTIVITY_CODE
+           FROM :I_TABLE A
+          WHERE A.CRUD_TYPE_CODE = 'D'
+        )
     ;
-*/
+
+/*  삭제3  - 동작안함 */
+    MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
+        USING :I_TABLE 
+        ON ( PAT.TENANT_ID = :I_TABLE.TENANT_ID
+             AND PAT.COMPANY_CODE = :I_TABLE.COMPANY_CODE
+             AND PAT.ORG_TYPE_CODE = :I_TABLE.ORG_TYPE_CODE
+             AND PAT.ORG_CODE = :I_TABLE.ORG_CODE
+             AND PAT.PRODUCT_ACTIVITY_CODE = :I_TABLE.PRODUCT_ACTIVITY_CODE
+             AND :I_TABLE.CRUD_TYPE_CODE = 'D' )
+
+    WHEN MATCHED THEN
+        DELETE;
+
+/* 하드코딩 삭제  - 동작함 */
+DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
+                WHERE   PAT.TENANT_ID                = 'L1100'
+                AND     PAT.COMPANY_CODE             = '*'
+                AND     PAT.ORG_TYPE_CODE            = 'BU'
+                AND     PAT.ORG_CODE                 = 'L110010000'
+                AND     PAT.PRODUCT_ACTIVITY_CODE    = 'test11';
+
+/* Update, Insert  - 동작함 */
     MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
         USING :I_TABLE 
         ON ( PAT.TENANT_ID = :I_TABLE.TENANT_ID

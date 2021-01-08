@@ -12,7 +12,7 @@ sap.ui.define([
       oData = oData || {};
       if (oData.__metadata && oData.__metadata.uri) {
         var sEntity = oData.__metadata.type.substring(oData.__metadata.type.lastIndexOf(".") +1);
-        oData.__entity = oData.__metadata.uri.substring(oData.__metadata.uri.indexOf(sEntity)-1);
+        oData.__entity = oData.__metadata.uri.substring(oData.__metadata.uri.indexOf("/"+sEntity));
       } else if (!!sPath) {
         oData.__entity = sPath;
         oData[STATE_COL] = "C";

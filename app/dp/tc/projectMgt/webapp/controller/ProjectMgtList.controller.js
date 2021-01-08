@@ -21,8 +21,21 @@ sap.ui.define([
             let oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             //this.setModel(new JSONModel(), "listModel");
-            this.setModel(new JSONModel(), "filterModel");
+            var oFilterModel = {
+                company_code : {operator: 'EQ', value: ''},
+                project_code : {operator: 'CONTAINS', value: ''},
+                model_code: {operator: 'EQ', value: ''},
+                product_group_code : {operator: 'EQ', value: ''},
+                project_status_code : {operator: 'EQ', value: ''},
+                massprod_start_date : {operator: 'BT', start: null, end: null},
+                project_grade_code : {operator: 'EQ', value: ''},
+                project_develope_event_code : {operator: 'EQ', value: ''},
+                buyer_name : {operator: 'CONTAINS', value: ''}
+            };
+            
+            this.setModel(new JSONModel(oFilterModel), "filterModel");
             this.setModel(new JSONModel(), "updateModel");
+            debugger;
 
             this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
         }
@@ -32,23 +45,26 @@ sap.ui.define([
          */
         , onSearch: function () {
             
-            let oFilterModel = this.getModel("filterModel"),
-                oFilterModelData = oFilterModel.getData(),
-                aFilters = [], 
-                sRfaNo = oFilterModelData.rfa_no, 
-                oDateValue = oFilterModelData.dateValue,
-                oSecondDateValue = oFilterModelData.secondDateValue;
-            /*
-            // RFA No가 있는 경우
-            if( sRfaNo ) {
-                aFilters.push(new Filter("approval_number", FilterOperator.EQ, sRfaNo));
-            }
+            var oFilterModel = this.getModel("filterModel"),
+                oFilterData = oFilterModel.getData(),
+                aFilters = [];
+            debugger;
+            Object.keys(oFilterData).forEach(function(sKey) {
+                var oTemp = oFilterData[sKey];
+                if(oTemp.value || oTemp.start) {
+                    if(oTemp.operator === "EQ" || oTemp.operator === "CONTAINS") {
+                        aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.value));
+                    } else if(oTemp.operator === "BT") {
+                        aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.start, oTemp.end));
+                    }
 
-            // RFA No가 있는 경우
-            if( oDateValue ) {
-                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, oDateValue, oSecondDateValue));
-            }
-            */
+                }
+            });
+            //RFA No가 있는 경우
+            //if( sRfaNo ) {
+            //   aFilters.push(new Filter("project_code", FilterOperator.Contains, sRfaNo));
+            //}
+
             this._getProjectMgtList(aFilters);
         }
 
@@ -120,7 +136,7 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , _goDetailView: function (oEvent) {
-            MessageToast.show("Go to Detail View", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
             var oNavParam = {
 
@@ -153,7 +169,7 @@ sap.ui.define([
             let oModel = this.getModel();
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
-
+            debugger;
             oModel.read("/ProjectView", {
                 filters : filtersParam,
                 success : function(data){
@@ -206,17 +222,17 @@ sap.ui.define([
         }
 
         , onGoalCreatePress: function() {
-            MessageToast.show("목표 재료비 생성", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
         }
 
         , onProgressMgtPress: function() {
-            MessageToast.show("진척 관리", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
         }
 
         , onAddModelPress: function() {
-            MessageToast.show("모델 추가", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
         }
 
@@ -242,7 +258,7 @@ sap.ui.define([
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
-					name: "dp.TargetPriceList.view.ExcludeMaterialCost",
+					name: "dp.tc.projectMgt.view.ExcludeMaterialCost",
 					controller: this
 				}).then(function (oDialog) {
 				    oView.addDependent(oDialog);

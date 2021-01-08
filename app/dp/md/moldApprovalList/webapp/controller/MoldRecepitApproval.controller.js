@@ -131,10 +131,11 @@ sap.ui.define([
             }
             // MOLD_PROGRESS_STATUS_CODE = 'RCV_CNF' 
             // MOLD_PURCHASING_TYPE_CODE = 'L'  
-            var oArgs = {
+            var oArgs = { 
+                approval_type_code : "I",
                 company_code: this.company_code ,
                 org_code: this.plant_code,
-                mold_progress_status_code : 'RCV_CNF' , 
+                mold_progress_status_code : ['RCV_CNF'] , 
                 mold_purchasing_type_code : 'L' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }

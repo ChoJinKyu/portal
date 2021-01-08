@@ -3,38 +3,29 @@
 	xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
-	<form:SimpleForm 
-        id="midObjectForm1Edit" 
-        editable="true" 
-        layout="ResponsiveGridLayout"
-        labelSpanL="12"
-        labelSpanM="12"
-        emptySpanL="0"
-        emptySpanM="0"
-        columnsM="2"
-        columnsL="3"
-        columnsXL="3" 
-        >
-		
-		<!-- <core:Title text="" /> -->
-		<Label text="프로젝트명"/>
+
+    <VBox>
+
+    <form:SimpleForm id="midObjectForm1Edit" editable="true"> 
+    <VBox alignContent="Center" alignItems="Stretch"> 
+		<Label text="* 프로젝트명" required="true" design="Bold" class="sapMLabelNoText"/>
 		<Input value="{
 			path: 'master>/project_name',
 			type: 'sap.ui.model.type.String',
 			constraints: {
 				maxLength: 50
 			}
-		}" required="true" editable="{midObjectView>/isAddedMode}"/>
-		<!-- <Label text="프로젝트 번호"/>
-		<Input value="{
-			path: 'master>/project_number',
-			type: 'sap.ui.model.type.String',
-			constraints: {
-				maxLength: 50
-			}
-		}" required="true" editable="{midObjectView>/isAddedMode}"/>         -->
-		<Label text="사업본부"/>
-		<ComboBox id="bizunitCode" width="100%" selectedKey="{master>/bizunit_code}" required="true" items="{
+		}" required="true" editable="true" width="100%"/>
+    </VBox>
+    </form:SimpleForm>
+
+    <form:SimpleForm id="midObjectForm2Edit" editable="true" layout="ColumnLayout"
+                    columnsM="2"
+                    columnsL="2"
+                    columnsXL="2">
+
+	    <Label text="* 사업본부" design="Bold" class="sapMLabelNoText" />
+		<ComboBox id="bizunitCode" selectedKey="{master>/bizunit_code}" required="true" items="{
 				path: 'org>/Org_Unit',
 				filters: [
 					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -44,8 +35,8 @@
 				<core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
 			</items>
 		</ComboBox>
-		<Label text="사업부"/>
-		<ComboBox id="bizdivisionCode" width="100%" selectedKey="{master>/bizdivision_code}" required="true" items="{
+		<Label text="* 사업부" design="Bold" class="sapMLabelNoText"/>
+		<ComboBox id="bizdivisionCode" selectedKey="{master>/bizdivision_code}" required="true" items="{
 				path: 'org>/Org_Division',
 				filters: [
 					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -55,8 +46,8 @@
 				<core:Item key="{org>bizdivision_code}" text="{org>bizdivision_code}: {org>bizdivision_name}" />
 			</items>
 		</ComboBox>
-		<Label text="플랜트"/>
-		<ComboBox id="plantCode" width="100%" selectedKey="{master>/plant_code}" required="true" items="{
+		<Label text="* 플랜트" design="Bold" class="sapMLabelNoText"/>
+		<ComboBox id="plantCode" selectedKey="{master>/plant_code}" required="true" items="{
 				path: 'org>/Org_Plant',
 				filters: [
 					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -67,54 +58,34 @@
 				<core:Item key="{org>plant_code}" text="{org>plant_code}: {org>plant_name}" />
 			</items>
 		</ComboBox>
-		<Label text="구매유형"/>
-		<ComboBox id="epPurchasingTypeCode" width="100%" selectedKey="{master>/ep_purchasing_type_code}" required="true">
+		<Label text="* 구매유형" design="Bold" required="true" selectedKey="E" class="sapMLabelNoText"/>
+        <SegmentedButton id="epPurchasingTypeCode" items="{
+                        path: 'common>/Code',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                            {path: 'group_code', operator: 'EQ', value1: 'EP_PURCHASING_TYPE'}
+                        ],
+                        sorter: { path: 'code'}
+                    }" class="sapUiSmallMarginBottom" required="true">
+            <items>
+                <SegmentedButtonItem width="6em" key="{common>code}" text="{common>code_name}" />
+            </items>                                                        
+        </SegmentedButton>    
+		<!-- <ComboBox id="epPurchasingTypeCode" selectedKey="{master>/ep_purchasing_type_code}" required="true">
 			<items>
 				<core:Item key="E" text="설비" />
                 <core:Item key="C" text="공사" />
 			</items>
-		</ComboBox>                
+		</ComboBox>                                     -->
+    </form:SimpleForm>
 
-		<Label text="비고"/>
-		<TextArea id="remark" value="{master>/remark}" rows="8" />
+    <form:SimpleForm id="midObjectForm3Edit" editable="true"> 
+    <VBox alignContent="Center" alignItems="Stretch"> 
+		<Label text="* 비고" design="Bold" class="sapMLabelNoText"/>
+		<TextArea id="remark" value="{master>/remark}" rows="8" width="100%" />
+    </VBox>
+    </form:SimpleForm>
 
-		<!-- <core:Title text="Effect" />
-		<Label text="From"/>
-		<DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{master>/start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
-		<Label text="To"/>
-		<DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{master>/end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
-		
-		<core:Title text="Boundry" />
-		<Label text="Site"/>
-		<Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="Company"/>
-		<Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="Role"/>
-		<Switch state="{master>/role_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="Organization"/>
-		<Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="User"/>
-		<Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch> -->
+    </VBox>
 
-	</form:SimpleForm>
 </core:FragmentDefinition>

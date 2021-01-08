@@ -71,7 +71,7 @@ public class TaskMonitoringV4 implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
-    // Execute Task Monitoring Master Data Procedure
+    // Execute Upsert Task Monitoring Master Data Procedure
     //@Transactional(rollbackFor = SQLException.class)
     @On(event = UpsertTaskMonitoringMasterProcContext.CDS_NAME)
     public void onUpsertTaskMonitoringMasterProc(UpsertTaskMonitoringMasterProcContext context) {
@@ -213,52 +213,52 @@ public class TaskMonitoringV4 implements EventHandler {
         String v_sql_dropTableMTypeCode =       "drop table #local_temp_typecode";
 /*********************************************************************************************************************/
 		// insert table: master
-        StringBuffer v_sql_inserTable_master= new StringBuffer();
-		v_sql_inserTable_master.append("insert into #local_temp_master values ");
-		v_sql_inserTable_master.append("(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_master.append(")");
+        StringBuffer v_sql_insertTable_master= new StringBuffer();
+		v_sql_insertTable_master.append("insert into #local_temp_master values ");
+		v_sql_insertTable_master.append("(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_master.append(")");
 
 		// insert table: company
-        StringBuffer v_sql_inserTable_company= new StringBuffer();
-		v_sql_inserTable_company.append("insert into #local_temp_company values ");
-		v_sql_inserTable_company.append("(?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_company.append(")");
+        StringBuffer v_sql_insertTable_company= new StringBuffer();
+		v_sql_insertTable_company.append("insert into #local_temp_company values ");
+		v_sql_insertTable_company.append("(?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_company.append(")");
 
 		// insert table: bizunit
-        StringBuffer v_sql_inserTable_bizunit= new StringBuffer();
-		v_sql_inserTable_bizunit.append("insert into #local_temp_bizunit values ");
-		v_sql_inserTable_bizunit.append("(?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_bizunit.append(")");
+        StringBuffer v_sql_insertTable_bizunit= new StringBuffer();
+		v_sql_insertTable_bizunit.append("insert into #local_temp_bizunit values ");
+		v_sql_insertTable_bizunit.append("(?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_bizunit.append(")");
 
 		// insert table: manager
-        StringBuffer v_sql_inserTable_manager= new StringBuffer();
-		v_sql_inserTable_manager.append("insert into #local_temp_manager values ");
-		v_sql_inserTable_manager.append("(?,?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_manager.append(")");
+        StringBuffer v_sql_insertTable_manager= new StringBuffer();
+		v_sql_insertTable_manager.append("insert into #local_temp_manager values ");
+		v_sql_insertTable_manager.append("(?,?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_manager.append(")");
 
 		// insert table: operation
-        StringBuffer v_sql_inserTable_operation= new StringBuffer();
-		v_sql_inserTable_operation.append("insert into #local_temp_operation values ");
-		v_sql_inserTable_operation.append("(?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_operation.append(")");
+        StringBuffer v_sql_insertTable_operation= new StringBuffer();
+		v_sql_insertTable_operation.append("insert into #local_temp_operation values ");
+		v_sql_insertTable_operation.append("(?,?,?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_operation.append(")");
 		
 		// insert table: purchasingtype
-        StringBuffer v_sql_inserTable_purchasingtype= new StringBuffer();
-		v_sql_inserTable_purchasingtype.append("insert into #local_temp_purchasingtype values ");
-		v_sql_inserTable_purchasingtype.append("(?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_purchasingtype.append(")");
+        StringBuffer v_sql_insertTable_purchasingtype= new StringBuffer();
+		v_sql_insertTable_purchasingtype.append("insert into #local_temp_purchasingtype values ");
+		v_sql_insertTable_purchasingtype.append("(?,?,?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_purchasingtype.append(")");
 
 		// insert table: scenario
-        StringBuffer v_sql_inserTable_scenario= new StringBuffer();
-		v_sql_inserTable_scenario.append("insert into #local_temp_scenario values ");
-		v_sql_inserTable_scenario.append("(?,?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_scenario.append(")");
+        StringBuffer v_sql_insertTable_scenario= new StringBuffer();
+		v_sql_insertTable_scenario.append("insert into #local_temp_scenario values ");
+		v_sql_insertTable_scenario.append("(?,?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_scenario.append(")");
 
 		// insert table: typecode
-        StringBuffer v_sql_inserTable_typecode= new StringBuffer();
-		v_sql_inserTable_typecode.append("insert into #local_temp_typecode values ");
-		v_sql_inserTable_typecode.append("(?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_inserTable_typecode.append(")");
+        StringBuffer v_sql_insertTable_typecode= new StringBuffer();
+		v_sql_insertTable_typecode.append("insert into #local_temp_typecode values ");
+		v_sql_insertTable_typecode.append("(?,?,?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_typecode.append(")");
 /*********************************************************************************************************************/
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -298,7 +298,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_master.execute();
 
             // insert local temp table: master
-            PreparedStatement v_stat_insert_master = conn.prepareStatement(v_sql_inserTable_master.toString());
+            PreparedStatement v_stat_insert_master = conn.prepareStatement(v_sql_insertTable_master.toString());
 
             if(!v_inMaster.isEmpty() && v_inMaster.size() > 0){
                 for(TaskMonitoringMaster v_inRow : v_inMaster){
@@ -327,7 +327,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_company.execute();
 
             // insert local temp table: company
-            PreparedStatement v_stat_insert_company = conn.prepareStatement(v_sql_inserTable_company.toString());
+            PreparedStatement v_stat_insert_company = conn.prepareStatement(v_sql_insertTable_company.toString());
 
             if(!v_inCompany.isEmpty() && v_inCompany.size() > 0){
                 for(TaskMonitoringCompany v_inRow : v_inCompany){
@@ -352,7 +352,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_bizunit.execute();
 
             // insert local temp table: bizunit
-            PreparedStatement v_stat_insert_bizunit = conn.prepareStatement(v_sql_inserTable_bizunit.toString());
+            PreparedStatement v_stat_insert_bizunit = conn.prepareStatement(v_sql_insertTable_bizunit.toString());
 
             if(!v_inBizunit.isEmpty() && v_inBizunit.size() > 0){
                 for(TaskMonitoringBizunit v_inRow : v_inBizunit){
@@ -377,7 +377,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_manager.execute();
 
             // insert local temp table: manager
-            PreparedStatement v_stat_insert_manager = conn.prepareStatement(v_sql_inserTable_manager.toString());
+            PreparedStatement v_stat_insert_manager = conn.prepareStatement(v_sql_insertTable_manager.toString());
 
             if(!v_inManager.isEmpty() && v_inManager.size() > 0){
                 for(TaskMonitoringManager v_inRow : v_inManager){
@@ -403,7 +403,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_operation.execute();
 
             // insert local temp table: operation
-            PreparedStatement v_stat_insert_operation = conn.prepareStatement(v_sql_inserTable_operation.toString());
+            PreparedStatement v_stat_insert_operation = conn.prepareStatement(v_sql_insertTable_operation.toString());
 
             if(!v_inOperation.isEmpty() && v_inOperation.size() > 0){
                 for(TaskMonitoringOperation v_inRow : v_inOperation){
@@ -430,7 +430,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_purchasingtype.execute();
 
             // insert local temp table: purchasingtype
-            PreparedStatement v_stat_insert_purchasingtype = conn.prepareStatement(v_sql_inserTable_purchasingtype.toString());
+            PreparedStatement v_stat_insert_purchasingtype = conn.prepareStatement(v_sql_insertTable_purchasingtype.toString());
 
             if(!v_inPurchasingType.isEmpty() && v_inPurchasingType.size() > 0){
                 for(TaskMonitoringPurchasingType v_inRow : v_inPurchasingType){
@@ -457,7 +457,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_scenario.execute();
 
             // insert local temp table: scenario
-            PreparedStatement v_stat_insert_scenario = conn.prepareStatement(v_sql_inserTable_scenario.toString());
+            PreparedStatement v_stat_insert_scenario = conn.prepareStatement(v_sql_insertTable_scenario.toString());
 
             if(!v_inScenario.isEmpty() && v_inScenario.size() > 0){
                 for(TaskMonitoringScenario v_inRow : v_inScenario){
@@ -483,7 +483,7 @@ public class TaskMonitoringV4 implements EventHandler {
             v_stat_table_scenario.execute();
 
             // insert local temp table: typecode
-            PreparedStatement v_stat_insert_typecode = conn.prepareStatement(v_sql_inserTable_typecode.toString());
+            PreparedStatement v_stat_insert_typecode = conn.prepareStatement(v_sql_insertTable_typecode.toString());
 
             if(!v_inTypeCode.isEmpty() && v_inTypeCode.size() > 0){
                 for(TaskMonitoringTypeCode v_inRow : v_inTypeCode){
@@ -523,5 +523,78 @@ public class TaskMonitoringV4 implements EventHandler {
         }
 		
     }
+    // Execute Delete Task Monitoring Master Data Procedure
+    @On(event = DeleteTaskMonitoringMasterProcContext.CDS_NAME)
+    public void onDeleteTaskMonitoringMasterProc(DeleteTaskMonitoringMasterProcContext context) {
+		
+        // local temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "set transaction autocommit ddl off;";
+/*********************************************************************************************************************/
+		// create temp table: local_temp
+        StringBuffer v_sql_createTable = new StringBuffer();
+		v_sql_createTable.append("create local temporary column table #local_temp ( ");
+		v_sql_createTable.append("tenant_id : nvarchar(5), ");
+		v_sql_createTable.append("scenario_number : bigint, ");
+		v_sql_createTable.append(")");
+/*********************************************************************************************************************/
+		String v_sql_dropTable = "drop table #local_temp";
+/*********************************************************************************************************************/
+		// insert table
+        StringBuffer v_sql_inserTable= new StringBuffer();
+		v_sql_inserTable.append("insert into #local_temp values ");
+		v_sql_inserTable.append("(?,?)");
+		v_sql_inserTable.append(")");
+/*********************************************************************************************************************/
+		// call procedure
+        StringBuffer v_sql_callProc = new StringBuffer();
+		v_sql_callProc.append("call pg_tm_del_master_proc(");
+		// append: in table => local temp table
+		v_sql_callProc.append("i_tenant_id => #local_temp.tenant_id, ");
+		v_sql_callProc.append("i_scenario_number => #local_temp.scenario_number, ");
+		// append: out table => local temp table
+		v_sql_callProc.append("o_table_message => ?, ");
+		// append: end
+		v_sql_callProc.append(")");
+/*********************************************************************************************************************/
+		Collection<DeleteOutType> v_result = new ArrayList<>();
+/*********************************************************************************************************************/
+		ResultSet v_rs = null;
+		try {
 
+            Connection conn = jdbc.getDataSource().getConnection();
+
+            // create local temp table: master
+            PreparedStatement v_stat_table = conn.prepareStatement(v_sql_createTable.toString());
+            v_stat_table.execute();
+
+            // insert local temp table: master
+            PreparedStatement v_sql_insert = conn.prepareStatement(v_sql_inserTable.toString());
+			
+			DeleteInputType v_inputdetails = context.getInputData();
+
+            if(!v_inputdetails.isEmpty() && v_inputdetails.size() > 0){
+                v_sql_insert.setObject(1,	v_inputdetails.getTenantId());
+                v_sql_insert.setObject(2,	v_inputdetails.getScenarioNumber());
+                v_sql_insert.addBatch();
+                v_sql_insert.executeBatch();
+            }
+			
+            // Procedure Call
+            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+            v_rs = v_statement_proc.executeQuery();
+
+            // Procedure Out put 담기
+            while (v_rs.next()){
+                DeleteOutType v_row = DeleteOutType.create();
+                v_row.setReturncode(v_rs.getString("returncode")); 
+                v_row.setReturnmessage(v_rs.getString("returnmessage")); 
+                v_result.add(v_row);
+            }
+            context.setResult(v_result);
+            context.setCompleted();
+
+		} catch (SQLException e) { 
+			e.printStackTrace();
+        }
+	}
 }

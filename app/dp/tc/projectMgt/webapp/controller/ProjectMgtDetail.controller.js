@@ -48,8 +48,8 @@ sap.ui.define([
 
                     if( data && data.results && 0<data.results.length ) {
                         oView.getModel("detailModel").setData(data.results[0]);
-                        oView.getModel("detailModel").setProperty("/readMode", true);
-                        oView.getModel("detailModel").setProperty("/editMode", false);
+                        oView.getModel("detailModel").setProperty("/mode", {readMode : true});
+                        oView.getModel("detailModel").setProperty("/mode/editMode", false);
 
                     }
                 }.bind(this),
@@ -78,14 +78,18 @@ sap.ui.define([
 
         , onEditPress: function(oEvent) {
             debugger;
-                this.getModel("detailModel").setProperty("/readMode", false);
-                this.getModel("detailModel").setProperty("/editMode", true);
+                this.getModel("detailModel").setProperty("/mode/readMode", false);
+                this.getModel("detailModel").setProperty("/mode/editMode", true);
         }
 
         , onReadPress: function(oEvent) {
             debugger;
-                this.getModel("detailModel").setProperty("/readMode", true);
-                this.getModel("detailModel").setProperty("/editMode", false);
+                this.getModel("detailModel").setProperty("/mode/readMode", true);
+                this.getModel("detailModel").setProperty("/mode/editMode", false);
+        }
+
+        , onBackPress: function(oEvent) {
+            this.getRouter().navTo("ProjectMgtList", {});
         }
     });
   }

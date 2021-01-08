@@ -1,0 +1,144 @@
+<mvc:View controllerName="pg.md.mdCategory.controller.mdCategory"
+    class="sapUiSizeCompact"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+	xmlns:dnd="sap.ui.core.dnd"
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <f:DynamicPage id="page" 
+    toggleHeaderOnTitleClick="false" 
+    headerExpanded="true" 
+    fitContent="true">
+      <!--DynamicPage Title -->
+      <f:title>
+        <f:DynamicPageTitle>
+          <f:heading>
+            <Title text="{i18n>appTitle}" />
+          </f:heading>
+          <!-- 조회 -->
+          <f:actions>
+            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
+          </f:actions>
+          <!-- 즐겨찾기 -->
+          <f:navigationActions>
+            <Button icon="sap-icon://unfavorite" type="Transparent" />
+          </f:navigationActions>
+        </f:DynamicPageTitle>
+      </f:title>
+      <!--DynamicPage Header -->
+      <f:header>
+      </f:header>
+      <f:content>
+        <VBox>
+        <Table id="mainTable"
+                sticky="HeaderToolbar,ColumnHeaders" 
+                inset="false" 
+                growing="true"
+                growingThreshold="15"
+                mode="SingleSelectLeft" 
+                selectionChange=".onSeletionChange"
+                noDataText="{I18N>/NCM0001}"
+                items="{
+                    path: 'list>/MdCategory'
+
+                }"
+				class="sapFDynamicPageAlignContent"
+                columnResize="onColumnResize"
+		        beforeOpenContextMenu="onBeforeOpenContextMenu"
+                width="auto">
+            <headerToolbar>
+            <OverflowToolbar class="sapFDynamicPageAlignContent">
+              <Title text="SPMD Category List" level="H2"/>
+              <ToolbarSpacer/>
+              <Button text="{I18N>/NEW}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <!-- <Button text="{I18N>/UPDATE}" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/> -->
+              <!-- <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/> -->
+              <Button text="{I18N>/ROW_DELETE}" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
+              <Button text="{I18N>/SAVE}" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
+              <ToolbarSeparator/>
+              <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                <layoutData>
+                  <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                </layoutData>
+              </Button>
+            </OverflowToolbar>
+            </headerToolbar>
+
+            <columns>
+                <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="80px" >
+                    <Text text="범주코드" />
+                </Column>
+                <Column id="mainColumnSort" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="80px" >
+                    <Text text="범주정렬순서" />
+                </Column>
+                <Column id="mainColumnCodeName" minScreenWidth="Tablet" hAlign="Center" >
+                    <Text text="범주명" />
+                </Column>
+                <Column id="mainColumnFontCode" minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                    <Text text="RGB글꼴색상코드" />
+                </Column>
+                <Column id="mainColumnCellCode" minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                    <Text text="RGB셀색상코드" />
+                </Column>
+                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                    <Text text="생성자" />
+                </Column>
+                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                    <Text text="수정자" />
+                </Column>
+                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                    <Text text="생성 시간" />
+                </Column>
+                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                    <Text text="수정 시간" />
+                </Column>
+            </columns>
+
+            <items>
+                <ColumnListItem type="Navigation" press="onListItemPress">
+                    <cells>
+                        <HBox alignItems="Center">
+                            <Text text="{list>spmd_category_code}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>spmd_category_sort_sequence}" visible="true"></Text>
+                            <Input value="{list>spmd_category_sort_sequence}" visible="false" required="true"></Input>
+                        </HBox>
+                        <HBox>
+                            <Text text="{list>spmd_category_code_name}" visible="true"></Text>
+                            <Input value="{list>spmd_category_code_name}" visible="false" required="true"></Input>
+                        </HBox>
+                        <HBox alalignItemsign="Center">
+                            <Text text="{list>rgb_font_color_code}" visible="true"></Text>
+                            <Input value="{list>rgb_font_color_code}" visible="false"></Input>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>rgb_cell_clolor_code}" visible="true"></Text>
+                            <Input value="{list>rgb_cell_clolor_code}" visible="false"></Input>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>create_user_id}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>update_user_id}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{path : 'list>local_create_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
+                        </HBox>
+                    </cells>
+                </ColumnListItem>
+            </items>
+            
+        </Table>
+        </VBox>
+      </f:content>
+    </f:DynamicPage>
+</mvc:View>

@@ -1,0 +1,123 @@
+<mvc:View
+    controllerName="pg.md.mdCategory.controller.mdCategoryDetail"
+	xmlns:uxap="sap.uxap"
+	xmlns:layout="sap.ui.layout" 
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:core="sap.ui.core"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc"
+    height="100%">
+
+    <uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="false"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="false"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="false">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="Category Detail" wrapping="true" />
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					<Title text="Category Detail" wrapping="true" />
+				</uxap:snappedHeading>
+				<uxap:snappedTitleOnMobile>
+					<Title text="{I18N>/MASTER_INFO}" />
+				</uxap:snappedTitleOnMobile>
+				<uxap:actions>
+					<Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" />
+					<!-- <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" /> -->
+				</uxap:actions>
+                <uxap:navigationActions>
+					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" visible="false">
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER_INFO}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1" >
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/LANGUAGE}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<Table id="midTable" 
+								sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+								items="{details>/MdCategoryLng}"
+								class="sapFDynamicPageAlignContent" 
+								updateFinished=".onMidTableUpdateFinished"
+								mode="SingleSelectLeft" 
+								width="auto">
+							<headerToolbar>
+								<OverflowToolbar>
+									<Title text="Level and Values" level="H2"/>
+									<ToolbarSpacer/>
+									<!-- Add the Personalization button -->
+									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" enabled="false"/>
+									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" enabled="false"/>
+									<ToolbarSeparator/>
+									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
+									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+									<Text text="S" />
+								</Column>
+								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center" importance="High">
+									<Text text="{I18N>/LANGUAGE}" />
+								</Column>
+								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="범주코드명" />
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
+									<cells>
+										<Text text="{details>_row_state_}"/>
+										<Input value="{details>language_code}"/>
+										<Input value="{details>spmd_category_code_name}"/>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+		</uxap:sections>
+
+		<uxap:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+				<Button type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+				<Button type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>

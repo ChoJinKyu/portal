@@ -139,7 +139,7 @@ sap.ui.define([
                 console.log(oSelected);
                 
             if (oSelected.length > 0) {
-                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.org_code, function(data){
+                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.plant_code, function(data){
                     if(data.length > 0) {
                         supplierData=[];
                         for(var i=0; i<data.length; i++){
@@ -164,6 +164,18 @@ sap.ui.define([
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?null:supplierData[9].key);
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?null:supplierData[10].key);
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?null:supplierData[11].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_1 = (supplierData[0] == undefined ?null:supplierData[0].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_2 = (supplierData[1] == undefined ?null:supplierData[1].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_3 = (supplierData[2] == undefined ?null:supplierData[2].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_4 = (supplierData[3] == undefined ?null:supplierData[3].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_5 = (supplierData[4] == undefined ?null:supplierData[4].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_6 = (supplierData[5] == undefined ?null:supplierData[5].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_7 = (supplierData[6] == undefined ?null:supplierData[6].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_8 = (supplierData[7] == undefined ?null:supplierData[7].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_9 = (supplierData[8] == undefined ?null:supplierData[8].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_10 = (supplierData[9] == undefined ?null:supplierData[9].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_11 = (supplierData[10] == undefined ?null:supplierData[10].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_12 = (supplierData[11] == undefined ?null:supplierData[11].text);
                             psModel.getData().ParticipatingSupplier[idx].sequence_1 = (supplierData[0] == undefined ?null:"1");
                             psModel.getData().ParticipatingSupplier[idx].sequence_2 = (supplierData[1] == undefined ?null:"2");
                             psModel.getData().ParticipatingSupplier[idx].sequence_3 = (supplierData[2] == undefined ?null:"3");
@@ -208,9 +220,10 @@ sap.ui.define([
             console.log(" this.getModel " , this.getModel('appMaster'));
 
             var oArgs = {
-               company_code: this.company_code ,
+                approval_type_code: "E",
+                company_code: this.company_code ,
                 org_code: this.plant_code,
-                //mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : ['DEV_RCV', 'BUD_APP'] ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
@@ -265,6 +278,7 @@ sap.ui.define([
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
             }, "/ParticipatingSupplier", 0);
+
         },
 
     

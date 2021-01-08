@@ -19,8 +19,7 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-							<block:BlockGeneralInfo id="blGeneralInfo" visible="{detailModel>/readMode}"/>
-                            <block:BlockGeneralInfo_edit id="blGeneralInfo_edit" visible="{detailModel>/editMode}"/>
+							<block:BlockGeneralInfo id="blGeneralInfo" />
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
