@@ -28,7 +28,7 @@ sap.ui.define([
 
     var oTransactionManager;
 
-    return BaseController.extend("ep.po.loiPublishMgt.controller.MidObject", {
+    return BaseController.extend("ep.po.loiPublishMgt.controller.SupplySelection", {
 
         dateFormatter: DateFormatter,
 
@@ -63,7 +63,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("details"));
 
-            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("publishPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             // this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
@@ -150,7 +150,7 @@ sap.ui.define([
                 "tenant_id": oMasterModel.getData().tenant_id,
                 "company_code": oMasterModel.getData().company_code,
                 "loi_selection_number": oMasterModel.getData().loi_selection_number,
-                "user_id": '5450',
+                "user_id": '9586',
                 "details": detailData
             }
 
@@ -197,7 +197,6 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 that = this;
 
-
             // '122010'	'RFQ진행중'
             // '122020'	'RFQ완료'
             // '122030'	'작성중'
@@ -205,12 +204,16 @@ sap.ui.define([
             // '122050'	'결재반려'
             // '122060'	'업체선정완료' 
             var statusCode = "122030";
+            var statusName = "작성중";
             if (flag == "R") {
                 statusCode = "122040";
+                statusName = "결재진행중";
             } else if (flag == "B") {
                 statusCode = "122060";
+                statusName = "업체선정완료";
             } else {
                 statusCode = "122030";
+                statusName = "작성중";
             }
 
             var input = {};
@@ -236,12 +239,12 @@ sap.ui.define([
                 "approval_number": oMasterModel.getData().approval_number,
                 // "buyer_empno": oMasterModel.getData().buyer_empno,
                 // "purchasing_department_code": oMasterModel.getData().purchasing_department_code,
-                "buyer_empno": '5450',
-                "purchasing_department_code": '58665481',
+                "buyer_empno": '9586',
+                "purchasing_department_code": '50008948',
                 "remark": oMasterModel.getData().remark,
                 "org_type_code": oMasterModel.getData().org_type_code,
                 "org_code": oMasterModel.getData().org_code,
-                "user_id": '5450',
+                "user_id": '9586',
                 "details": detailData
             }
 
@@ -273,10 +276,20 @@ sap.ui.define([
 
                                 console.log("#########Success#####", data.value);
                                 oView.setBusy(false);
-                                //that._toShowMode();
+                                that._toShowMode();
                                 //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-                                that._toShowMode();
+                                // if (flag == "D") {
+                                //     that._toEditMode();
+                                // } else {
+                                //     that._toShowMode();
+                                // }
+
+                                console.log("loi_selection_status_code===", that.getModel("master").getData().loi_selection_status_code);
+                                that.getModel("master").getData().loi_selection_status_code = statusCode;
+                                that.getModel("master").getData().loi_selection_status_name = statusName;
+                                console.log("loi_selection_status_code===", that.getModel("master").getData().loi_selection_status_name);
+                                oView.getModel("master").updateBindings(true);
                                 // if(data.value.rsltCnt > 0) {
                                 //     MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 // }else {
@@ -328,7 +341,7 @@ sap.ui.define([
             this._sLoiNumber = oArgs.loiNumber;
             this.getModel("midObjectViewModel").setProperty("/viewLoiNumber", oArgs.loiNumber);
 
-            
+
             console.log("##getOwnerComponent==", this.getOwnerComponent().getRootControl().byId("fcl"));
 
             console.log("##oArgs.tenantId==", oArgs.tenantId);
@@ -378,13 +391,15 @@ sap.ui.define([
                 //It comes Add button pressed from the before page.
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
 
+                console.log("###신규저장");
+
                 var date = new Date();
                 var year = date.getFullYear();
                 var month = ("0" + (1 + date.getMonth())).slice(-2);
                 var day = ("0" + date.getDate()).slice(-2);
                 var toDate = year + "-" + month + "-" + day;
 
-                this.getView().byId("createDate").setText(toDate); 
+                this.getView().byId("createDate").setText(toDate);
 
                 var oMasterModel = this.getModel("master");
                 oMasterModel.setData({
@@ -396,12 +411,12 @@ sap.ui.define([
                     "special_note": "",
                     "attch_group_number": "",
                     "approval_number": "",
-                    "buyer_empno": "5450",
-                    "purchasing_department_code": "58665481",
+                    "buyer_empno": "9586",
+                    "purchasing_department_code": "50008948",
                     "remark": "",
                     "org_type_code": "",
                     "org_code": "",
-                    "user_id": "5450"
+                    "user_id": "9586"
                 }, "/LoiVendorSelection");
 
                 //console.log("oMasterModel.getData()====", oMasterModel.getData());
@@ -458,8 +473,10 @@ sap.ui.define([
 
                 this._toEditMode();
             } else {
+                console.log("###수정");
+                var that = this;
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
-
+                var loi_status = "";
                 //뷰생성해서 변경예정
                 var sObjectPath = "/LOISupplySelectionView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',loi_selection_number='" + this._sLoiSelectionNumber + "')";
                 var oMasterModel = this.getModel("master");
@@ -467,11 +484,17 @@ sap.ui.define([
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
                     success: function (oData) {
-                        //console.log("oData====", oData);
+                        console.log("oData====", oData.loi_selection_status_code);
                         oView.setBusy(false);
+                        loi_status = oData.loi_selection_status_code;
+                        // if (loi_status == "122030") {
+                        //     that._toEditMode();
+                        // } else {
+                        //     that._toShowMode();
+                        // }
                     }
                 });
-
+                //console.log("loi_status====", loi_status);
                 // var oDetailsModel = this.getModel("details");
                 // oDetailsModel.setTransactionModel(this.getModel());
                 // oDetailsModel.read("/LOIPublishItemView", {
@@ -487,6 +510,7 @@ sap.ui.define([
                 // });
                 this._toShowMode();
             }
+
             //oTransactionManager.setServiceModel(this.getModel());
         },
 
@@ -527,13 +551,20 @@ sap.ui.define([
         },
 
         _toShowMode: function () {
+            var oMasterModel = this.getModel("master");
+            var statusCode = oMasterModel.getData().loi_selection_status_code;
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             // this._showFormFragment('MidObject_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(true);
-            this.byId("pageDeleteButton").setVisible(true);
-            this.byId("pageEditButton").setEnabled(true);
+            // if (statusCode === "122040" || statusCode === "122060") {
+            //     this.byId("pageEditButton").setVisible(false);
+            //     this.byId("pageDeleteButton").setVisible(false);
+            // } else {
+                this.byId("pageEditButton").setVisible(true);
+                this.byId("pageDeleteButton").setVisible(true)
+            //}
             this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);
             this.byId("pageSaveButton").setEnabled(false);
