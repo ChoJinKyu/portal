@@ -311,7 +311,7 @@
                                     }"
                                 >
                                     <items>
-                                        <core:Item key="{org>bizdivision_code}" text="{org>bizdivision_name}" />
+                                        <core:Item key="{org>bizdivision_code}" text="{org>bizdivision_code}: {org>bizdivision_name}" />
                                     </items>
                                 </ComboBox>
                                 <layoutData>
