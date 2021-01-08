@@ -12,26 +12,30 @@
     displayBlock="true">
 	
 	<Dialog id="materialDetail" title="{I18N>/MI_MATERIAL_CHOOICE}">
-		<content>
-        <HBox width="100%">
-            <VBox>
+		<subHeader>
+			<Toolbar>
+            <HBox visible="{=!${oUi>/changeItem}}">
                 <Label text="{I18N>/MI_MATERIAL} / {I18N>/MI_MATERIAL_NAME}  :" class="sapUiSmallMarginTop sapUiSmallMarginBegin"/>
                 <SearchField id="searchField_material_code" 
                              width="100%"
-                             visible="{=!${oUi>/changeItem}}"                             
                              search=".onMaterialSearch" 
                              selectOnFocus="false"
                              placeholder="{I18N>/INPUT}" 
-                             class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
-                <Label text="{I18N>/CATEGORY_CODE} / {I18N>/CATEGORY_NAME} :" class="sapUiSmallMarginTop sapUiSmallMarginBegin"/>
+                             class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiLargeMarginEnd" />
+                <Label text="{I18N>/CATEGORY_CODE} / {I18N>/CATEGORY_NAME} :" class="sapUiSmallMarginTop sapUiLargeMarginBegin"/>
                 <SearchField id="searchField_category_name" 
                              width="100%" 
-                             visible="{=!${oUi>/changeItem}}"  
                              search=".onMaterialSearch"  
                              selectOnFocus="false"                             
                              placeholder="{I18N>/INPUT}"
                              class="sapUiTinyMarginTop sapUiTinyMarginBegin  sapUiSmallMarginBottom" />            
-            </VBox>
+            </HBox>
+			</Toolbar>
+        </subHeader>
+
+		<content>
+        <HBox width="100%">
+
                 <ScrollContainer
                     class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop" 
                     width="600px"                
@@ -47,11 +51,10 @@ song scrolltoload growingScrollToLoad growing sticky growingThreshold inset
                         items="{mIMatListView>/}"
                         selectionChange=".onSelectedLeftTableItem"
                         itemPress=".onSelectedLeftTableItem"                        
-                        noDataText="{I18N>/NCM0001}" 
-                        class="sapUiSmallMarginBegin"
+                        noDataText="{I18N>/NCM0001}"
                         growingScrollToLoad="true"
                         growing="true"
-                        width="90%"
+                        width="100%"
                         sticky="ColumnHeaders,HeaderToolbar"
                         growingThreshold="100"
                         inset="false"                           

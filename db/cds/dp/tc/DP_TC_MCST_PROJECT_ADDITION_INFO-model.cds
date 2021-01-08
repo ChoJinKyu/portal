@@ -45,7 +45,7 @@ entity Tc_Mcst_Project_Addition_Info {
                                    and mcst_mtlmob_ref.project_code   = project_code
                                    and mcst_mtlmob_ref.model_code     = model_code
                                    and mcst_mtlmob_ref.version_number = version_number
-                                   and addition_type_code             = 'MTLLMOB'; //물동
+                                   and addition_type_code             = 'MTLMOB'; //물동
 
         mcst_sales_price_ref : Association[0.. * ] to Mcst_Project.Tc_Mcst_Project
                                    on  mcst_sales_price_ref.tenant_id      = tenant_id

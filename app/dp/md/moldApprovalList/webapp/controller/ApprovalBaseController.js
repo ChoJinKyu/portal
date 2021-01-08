@@ -191,7 +191,7 @@ sap.ui.define([
 
             console.log("args>>>>> " , args);
 
-            this.tenant_id = "L1100";
+            this.tenant_id = "L2600";
             this.approval_number = args.approval_number;
             this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
@@ -318,10 +318,14 @@ sap.ui.define([
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
 
             }.bind(this));
+            
+            var that = this;
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
                 if (approvalNumber === "New") {
-                    this._toEditMode();
+                    setTimeout(function () {
+                        that._toEditMode();
+                    }, 5000);
                 }
             }.bind(this));
 

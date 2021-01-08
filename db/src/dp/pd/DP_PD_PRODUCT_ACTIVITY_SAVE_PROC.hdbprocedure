@@ -87,7 +87,7 @@ BEGIN
         )
     ;
 
-/*  삭제3  - 동작안함 */
+/*  삭제3  - 동작안함
     MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
         USING :I_TABLE 
         ON ( PAT.TENANT_ID = :I_TABLE.TENANT_ID
@@ -99,6 +99,7 @@ BEGIN
 
     WHEN MATCHED THEN
         DELETE;
+*/
 
 /* 하드코딩 삭제  - 동작함 */
 DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
@@ -108,7 +109,7 @@ DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
                 AND     PAT.ORG_CODE                 = 'L110010000'
                 AND     PAT.PRODUCT_ACTIVITY_CODE    = 'test11';
 
-/* Update, Insert  - 동작함 */
+/* Update, Insert  - 동작함
     MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
         USING :I_TABLE 
         ON ( PAT.TENANT_ID = :I_TABLE.TENANT_ID
@@ -169,6 +170,7 @@ DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
                 ,NOW()
                )
     ;
+*/
 
     EXEC (:var_commit);
     O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;

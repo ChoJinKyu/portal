@@ -14,18 +14,12 @@
 			<form:content>
                 <HBox>
                     <VBox class="sapUiSmallMargin">
-                        <Label text="{I18N>/AFFILIATE}" />
-                        <ObjectStatus
-                            text="[{company>/company_code}] {company>/company_name}" 
-                            state="Error"
-                            />
+                        <Label text="{I18N>/COMPANY}"/>
+                        <ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
                     </VBox>
                     <VBox class="sapUiSmallMargin">
-                        <Label text="{I18N>/BUSINESS_DIVISION}" />
-                        <ObjectStatus
-                            text="[{plant>/org_code}] {plant>/org_name}" 
-                            state="Error"
-                            />
+                        <Label text="{I18N>/PLANT}"/>
+                        <ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
                     </VBox>
                 </HBox>
             </form:content>
@@ -83,16 +77,15 @@
                             <Label text="Type"/>
                             </VBox>
                             <table:template>
-                                <ComboBox   id="mold_item_type_code"
-                                            selectedKey="{purOrderItem>mold_item_type_code}"
-                                            items="{
-                                                        path : 'util>/Code',
-                                                        filters : [
-                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                        ]
-                                                    }"
-                                editable="false" class="readonlyField" >
+                                <ComboBox   selectedKey="{purOrderItem>mold_item_type_code}"
+                                    items="{
+                                                path : 'util>/Code',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                ]
+                                            }"
+                                    editable="false" class="readonlyField" >
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
                             </table:template>
@@ -163,16 +156,15 @@
                             <Label text="Type"/>
                             </VBox>
                             <table:template>
-                                <ComboBox   id="mold_production_type_code"
-                                            selectedKey="{purOrderItem>mold_production_type_code}"
-                                            items="{
-                                                        path : 'util>/Code',
-                                                        filters : [
-                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                                        ]
-                                                    }"
-                                editable="false" class="readonlyField" >
+                                <ComboBox   selectedKey="{purOrderItem>mold_production_type_code}"
+                                    items="{
+                                                path : 'util>/Code',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                                ]
+                                            }"
+                                    editable="false" class="readonlyField" >
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
                             </table:template>

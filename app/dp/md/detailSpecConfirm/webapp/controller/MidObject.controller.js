@@ -116,7 +116,7 @@ sap.ui.define([
             //importOrg filter
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, importCompanyCode)
                                 ],
                                 and: true
@@ -460,7 +460,7 @@ sap.ui.define([
 
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, params.selectedItem.getKey() )
                                 ],
                                 and: true
