@@ -953,7 +953,7 @@ sap.ui.define([
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
 
             var aSearchFilters = [];
-
+            
             if (sCategory.length > 0) {
                 var _tempFilters = [];
 
@@ -1043,7 +1043,7 @@ sap.ui.define([
             if (sStatus) {
                 aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
-
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
             return aSearchFilters;
         },
 
