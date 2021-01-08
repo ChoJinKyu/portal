@@ -291,11 +291,11 @@
 				</VBox>
 				<HBox>
 					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/AFFILIATE}"/>
+						<Label text="{I18N>/COMPANY}"/>
 						<ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
 					</VBox>
 					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/BUSINESS_DIVISION}"/>
+						<Label text="{I18N>/PLANT}"/>
 						<ObjectStatus text="[{plant>/plant_code}] {plant>/plant_name}" state="Error"/>
 					</VBox>
 				</HBox>
