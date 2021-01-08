@@ -17,12 +17,13 @@ sap.ui.define([
     "sap/m/Input",
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
-    "ext/lib/formatter/Formatter"
+    "ext/lib/formatter/Formatter",
+	"./ProductActivityMgtPersoService"
 ],
     function (BaseController, Multilingual, Validator, DateFormatter, History
         , JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator
         , MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
-        , Input, Item, ExcelUtil, Formatter
+        , Input, Item, ExcelUtil, Formatter, ProductActivityMgtPersoService
     ) {
         "use strict";
 
@@ -58,6 +59,8 @@ sap.ui.define([
                         intent: "#Template-display"
                     }, true);
                 }.bind(this));
+                
+                //this._doInitTablePerso();
             },
 
             /**
@@ -123,6 +126,7 @@ sap.ui.define([
                         oView.setBusy(false);
                         
                         oTable.removeSelections(true);
+                        
                     },
                     error: function (data) {
                         oView.setBusy(false);
@@ -130,6 +134,18 @@ sap.ui.define([
                 });
 
 
+            },
+
+            
+            onMainTableUpdateFinished: function (oEvent) {
+                // update the mainList's object counter after the table update
+                var sTitle,
+                    oTable = oEvent.getSource(),
+                    iTotalItems = oEvent.getParameter("total");
+                sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("appTitle");
+                console.log(sTitle+" ["+iTotalItems+"]");
+                this.byId("mainTableTitle").setText(sTitle+"["+iTotalItems+"]");
+            
             },
 
 
@@ -159,14 +175,43 @@ sap.ui.define([
 
             onCancel: function () {
                 var oTable = this.byId("mainTable");
-                var rowIndex = this.rowIndex;
-                oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
-                this.onSearch();
+                var oModel = this.getView().getModel("list");
+                var oData = oModel.oData;
+                var cntMod = 0;
+                for (var i = 0; i < oTable.getItems().length; i++) {
+                    if(oData.PdProdActivityTemplate[i]._row_state_  == "C"
+                       || oData.PdProdActivityTemplate[i]._row_state_  == "U"
+                       || oData.PdProdActivityTemplate[i]._row_state_  == "D"){
+                        cntMod++;
+                    }
+                }
+                if( cntMod > 0){
+                    MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
+                        title: this.getModel("I18N").getText("/EDIT_CANCEL"),
+                        initialFocus: sap.m.MessageBox.Action.CANCEL,
+                        onClose: (function (sButton) {
+                            if (sButton === MessageBox.Action.OK) {
+                                var rowIndex = this.rowIndex;
+                                oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
+                                oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
+                                oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
+                                oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
+                                oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
+                                oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
+                                this.onSearch();
+                            }
+                        }).bind(this)
+                    })
+                }else{
+                    var rowIndex = this.rowIndex;
+                    oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
+                    this.onSearch();
+                }
             },
 
             onSelectRow: function () {
@@ -204,13 +249,13 @@ sap.ui.define([
                     "company_code": this.company_code,
                     "org_type_code": this.org_type_code,
                     "org_code": this.org_code,
-                    "product_activity_code": "",
+                    "product_activity_code": null,
                     "develope_event_code": null,
                     "sequence": "1",
-                    "product_activity_name": "",
-                    "product_activity_english_name": "",
+                    "product_activity_name": null,
+                    "product_activity_english_name": null,
                     "milestone_flag": null,
-                    "active_flag": true,
+                    "active_flag": null,
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date(),
                     "create_user_id": this.loginUserId,
@@ -232,6 +277,7 @@ sap.ui.define([
                 oTable.getAggregation('items')[0].getCells()[4].getItems()[2].setEnabled(true);
                 oTable.getAggregation('items')[0].getCells()[5].getItems()[2].setEnabled(true);
                 oTable.setSelectedItem(oTable.getAggregation('items')[0]);
+                this.validator.clearValueState(this.byId("mainTable"));
 
             },
 
@@ -249,6 +295,8 @@ sap.ui.define([
                         pdProdActivityTemplateType :  []
                     }
                 };
+                
+                if(this.validator.validate(this.byId("mainTable")) !== true) return;
                 var now = new Date();
                 var PdProdActivityTemplateType  = [];
                 for (var i = 0; i < oTable.getItems().length; i++) {
@@ -295,10 +343,10 @@ sap.ui.define([
                         var url = "dp/pd/productActivity/webapp/srv-api/odata/v4/dp.ProductActivityV4Service/PdProductActivitySaveProc";
                     }
                 }
-                console.log(inputData);
+                //console.log(inputData);
                 var v_this = this;
-                MessageBox.confirm("저장하시겠습까?", {
-                    title: "저장",
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                    title: this.getModel("I18N").getText("/SAVE"),
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: (function (sButton) {
                         $.ajax({
@@ -309,12 +357,12 @@ sap.ui.define([
                             data: JSON.stringify(inputData),
                             contentType: "application/json",
                             success: function (data) {
-                                console.log(data);
+                                //console.log(data);
                                 v_this.onSearch();
                                 //var v_returnModel = oView.getModel("returnModel").getData();
                             },
                             error: function (e) {
-                                console.log(e);
+                                //console.log(e);
                                 v_this.onSearch();
 
                             }
@@ -416,8 +464,28 @@ sap.ui.define([
                         oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[2].setEnabled(true);
                     }
                 }
-            }
+            },
+            
+            
+            onPersoButtonPressed: function(oEvent){
+                this._oTPC.openDialog();
+            },
 
+            onPersoRefresh : function() {
+                ProductActivityMgtPersoService.resetPersData();
+                this._oTPC.refresh();
+            },
+
+            _doInitTablePerso: function(){
+                // init and activate controller
+                this._oTPC = new TablePersoController({
+                    table: this.byId("mainTable"),
+                    componentName: "templateListViewAndObjectEdit",
+                    persoService: ProductActivityMgtPersoService,
+                    hasGrouping: true
+                }).activate();
+            }
+    
 
         });
     }
