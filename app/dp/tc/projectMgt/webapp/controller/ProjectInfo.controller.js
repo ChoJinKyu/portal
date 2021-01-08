@@ -9,7 +9,7 @@ sap.ui.define([
   function (BaseController, JSONModel, ManagedListModel, DateFormatter, Filter, FilterOperator) {
     "use strict";
 
-    return BaseController.extend("dp.tc.projectMgt.controller.TargetPriceDetail", {
+    return BaseController.extend("dp.tc.projectMgt.controller.ProjectInfo", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
@@ -19,12 +19,16 @@ sap.ui.define([
             // this.setModel(new JSONModel(), "exchangeModel");
             
             this.oRouter = this.getOwnerComponent().getRouter();
-            this.oRouter.getRoute("ProjectMgtDetail").attachPatternMatched(this._getProjectDetail, this);
+            this.oRouter.getRoute("ProjectInfo").attachPatternMatched(this._getProjectDetail, this);
 
         }
 
         , onAfterRendering: function () {
-           
+            let sId = this.byId("oplProjectInfo").getHeaderContent()[0].getParent().sId;
+            jQuery("#"+sId).removeClass("sapUxAPObjectPageHeaderContent");
+        }
+
+        , onBeforeRendering: function() {
         }
         
         , _getProjectDetail: function (oEvent) {
@@ -61,6 +65,7 @@ sap.ui.define([
         }
 
         , onTabSelect: function(oEvent) {
+            return;
             if(oEvent.getParameter("selectedKey") ==="1") {
             //  this.getView().byId("dynaPage").title.visible = oEvnet.getSource().getExpanded ? false : true;
                 var oDtHeader = this.byId(this.getView().byId("blProjectInfoDt").getAssociation("selectedView")).byId("opDetailTitle");
