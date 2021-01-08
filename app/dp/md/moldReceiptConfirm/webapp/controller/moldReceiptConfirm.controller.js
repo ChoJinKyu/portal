@@ -122,7 +122,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -728,14 +728,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
             }
 
             var filter = new Filter({

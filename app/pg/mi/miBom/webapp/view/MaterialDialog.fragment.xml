@@ -56,7 +56,7 @@
                             ],                             
                             templateShareable:true}"                     
                     placeholder="{I18N>/OPTION}">
-                    <core:Item key="{supplier_code}" text="{supplier_local_name}"/>
+                    <core:Item key="{supplier_code}" text="{supplier_code}"/>
                 </ComboBox>           
 
                 <Label  text="{I18N>/MATERIAL} :"
