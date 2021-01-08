@@ -147,7 +147,7 @@ sap.ui.define([
             
             var aFilter = [
                          new Filter("tenant_id", FilterOperator.EQ, 'L2600')
-                        , new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                        , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                         , new Filter("company_code", FilterOperator.EQ, company_code)
                 ];
 

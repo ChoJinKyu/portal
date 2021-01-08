@@ -213,7 +213,7 @@ sap.ui.define([
 
             oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id
                 + "',company_code='" + this.company_code
-                + "',org_type_code='" + "AU"
+                + "',org_type_code='" + "PL"
                 + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
@@ -234,7 +234,7 @@ sap.ui.define([
             this._onRoutedThisPage(this.approval_number);
 
             if (this.approval_number === "New") {
-                this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
+                this.getModel("appMaster").setProperty("/requestor_empno", '6975'); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
             }
 
