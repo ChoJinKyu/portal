@@ -5,7 +5,7 @@
     xmlns:core="sap.ui.core"
     height="100%">
 
-    <Page id="page" title="Code Combo" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" title="Dynamic Column Table likes Pivot" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <content>
             <VBox>
 
