@@ -49,9 +49,7 @@
             "libs": {
                 "sap.ui.core": {},
                 "sap.m": {},
-                "sap.f": {},
-				"sap.ui.layout": {}
-
+                "sap.f": {}
             }
         },
         "contentDensities": {
@@ -71,10 +69,6 @@
                     "odataVersion": "2.0"
                 },
                 "dataSource": "mainService"
-            },
-            "up": {
-                "type": "sap.ui.model.json.JSONModel",
-                "dataSource": "up"
             }
         },
         "resources": {
@@ -96,7 +90,6 @@
                 "controlAggregation": "pages",
                 "async": true
             },
-            
             "routes": [
                 {
                     "name": "main",

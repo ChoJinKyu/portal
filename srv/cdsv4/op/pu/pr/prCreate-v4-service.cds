@@ -113,6 +113,6 @@ service PrCreateV4Service {
         return_msg  : String(5000);
     }
 
-    action SavePrCreateProc (inputData : array of prCreateSaveType) returns returnType;
+    action SavePrCreateProc (inputData : array of prCreateSaveType) returns array of returnType;
 
 }

@@ -47,7 +47,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -444,6 +444,7 @@
                             selectionChange="handleSelectionChangeReferer"
                             selectionFinish="handleSelectionFinishReferer"
                             width="100%"
+                            selectedKeys="{refererMultiCB>/refer}"
                             items="{ path: '/RefererSearch',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}

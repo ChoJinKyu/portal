@@ -267,7 +267,7 @@ sap.ui.define([
             that.getRouter().navTo(approvalTarget , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
-                , approval_type_code: oRecord.approval_type_code
+                , approval_type_code: approvalTypeCode
                 , approval_number: oRecord.approval_number
             });
 
@@ -306,7 +306,7 @@ sap.ui.define([
                     new Filter("org_type_code", FilterOperator.EQ, 'AU')
                 );
             }
-
+ 
             var filter = new Filter({
                 filters: plantFilters,
                 and: false
@@ -720,12 +720,16 @@ sap.ui.define([
             else{
                 if(id.indexOf("localBudget") > -1){
                     approvalTarget = "budgetExecutionApproval"
+                    appTypeCode = "B"
                 }else if(id.indexOf("supplierSelection") > -1){
                     approvalTarget = "participatingSupplierSelection"
+                    appTypeCode = "E"
                 }else if(id.indexOf("localOrder") > -1){
                     approvalTarget = "purchaseOrderLocalApproval"
+                    appTypeCode = "V"
                 }else if(id.indexOf("receipt") > -1){
                     approvalTarget ="moldRecepitApproval"
+                    appTypeCode = "I"
                 }else if(id.indexOf("export") > -1){
                     appTypeCode ="X"  
                 }

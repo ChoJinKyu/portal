@@ -7,6 +7,11 @@
     <Dialog id="dialogRmk" class="sapUiSmallMargin" title="" contentWidth="35%" >
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm id="RmkForm" editable="false" >
+                <form:toolbar>
+                    <Toolbar>
+                        <Title id="Title1" text="비고"/>
+                    </Toolbar>
+                </form:toolbar>             
                 <Label text="비고"/>
                 <TextArea id="saveRemark" value="{
                     type: 'sap.ui.model.type.String',
