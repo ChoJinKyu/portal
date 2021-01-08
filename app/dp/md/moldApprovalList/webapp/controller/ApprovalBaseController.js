@@ -56,7 +56,7 @@ sap.ui.define([
             this.quotation_data = [];  // supplier 전용 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this._showFormFragment();
+           // this._showFormFragment();
         },
 
         onAfterRendering: function () {
@@ -82,11 +82,11 @@ sap.ui.define([
                     return;
                 }
                
-                if(sPropertyName !== "GeneralInfo"){
+              //  if(sPropertyName !== "GeneralInfo"){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
-                }
+              //  }
             }
 
             //this.byId("pageApprovalLineSection").destroy();
@@ -229,6 +229,7 @@ sap.ui.define([
                     this._showFormItemFragment(oData.parent_code);
                 }.bind(this)
             });
+           
 
             this._onRoutedThisPage(this.approval_number);
 
@@ -275,7 +276,7 @@ sap.ui.define([
         },
 
         _showFormItemFragment: function (fragmentFileName) {
-
+            this._showFormFragment();
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
 
