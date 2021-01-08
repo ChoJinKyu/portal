@@ -143,7 +143,7 @@ sap.ui.define([
             }
 
         },
-
+        //remove
         removeRichTextEditorValue: function () {
             this.byId("reMonitoringPurpose").setValue(null);
             this.byId("reMonitoringScenario").setValue(null);

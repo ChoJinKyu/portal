@@ -96,6 +96,7 @@
                 "controlAggregation": "pages",
                 "async": true
             },
+            
             "routes": [
                 {
                     "name": "main",
