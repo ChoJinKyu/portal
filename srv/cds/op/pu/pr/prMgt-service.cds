@@ -25,6 +25,7 @@ service PrMgtService {
                 pr_type_code_2 ,         //: String(30)    not null    @title: '구매요청품목그룹코드 ' ;	
                 pr_type_code_3  ,        //: String(30)    not null    @title: '구매요청품목코드 ' ;	
                 pr_template_number ,     //: String(10)    not null    @title: '구매요청템플릿번호' ;	
+                pr_create_system_code    // : String(30)    not null    @title: '구매요청생성시스템코드' ;	
                 requestor_empno,         //: String(30)                @title: '요청자사번' ;	
                 requestor_name ,        //: String(50)                @title: '요청자명' ;	
                 requestor_department_code,   //: String(50)              @title: '요청자부서코드' ;	
@@ -51,7 +52,7 @@ service PrMgtService {
                     and mst.pr_type_code = cdLng.code ) as pr_type_name  : String(30),   // 구매요청 유형
 
             ( select code_name From cdLng 
-                where   mst.tenant_id = cdLng.tenant_id 
+                    where   mst.tenant_id = cdLng.tenant_id 
                     and cdLng.group_code = 'OP_PR_TYPE_CODE_2' 
                     and cdLng.language_cd = 'KO' 
                     and mst.pr_type_code_2 = cdLng.code ) as pr_type_name_2  : String(30),   // 품목그룹
@@ -69,9 +70,15 @@ service PrMgtService {
 
              ( select code_name From cdLng 
                 where   mst.tenant_id = cdLng.tenant_id 
-                    and cdLng.group_code = 'CM_APPROVE_STATUS'
+                    and cdLng.group_code = 'OP_PR_CREATE_STATUS_CODE'
                     and cdLng.language_cd = 'KO' 
-                    and mst.pr_create_status_code = cdLng.code ) as pr_create_status_name : String(30)   // 구매요청생성상태코드    'DR'
+                    and mst.pr_create_status_code = cdLng.code ) as pr_create_status_name : String(30),   // 구매요청생성상태코드    'DR'
+            ( select code_name From cdLng 
+                where   mst.tenant_id = cdLng.tenant_id 
+                    and cdLng.group_code = 'OP_PR_CREATE_SYSTEM_CODE'
+                    and cdLng.language_cd = 'KO' 
+                    and mst.pr_create_system_code = cdLng.code ) as pr_create_system_name : String(30)   // 구매요청생성시스템    ''
+
 
         from prMstView mst ;
 

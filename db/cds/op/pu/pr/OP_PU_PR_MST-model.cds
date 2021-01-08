@@ -19,9 +19,9 @@ entity Pu_Pr_Mst {
                and tplm.pr_template_number = pr_template_number ;
 
 
-        pr_type_code            : String(30)    not null    @title: '구매요청유형코드' ;	
-        pr_type_code_2          : String(30)    not null    @title: '구매요청품목그룹코드 ' ;	
-        pr_type_code_3          : String(30)    not null    @title: '구매요청품목코드 ' ;	
+        pr_type_code            : String(30)                @title: '구매요청유형코드' ;	
+        pr_type_code_2          : String(30)                @title: '구매요청품목그룹코드 ' ;	
+        pr_type_code_3          : String(30)                @title: '구매요청품목코드 ' ;	
         pr_template_number      : String(10)    not null    @title: '구매요청템플릿번호' ;	
         pr_create_system_code   : String(30)    not null    @title: '구매요청생성시스템코드' ;	
         requestor_empno         : String(30)                @title: '요청자사번' ;	

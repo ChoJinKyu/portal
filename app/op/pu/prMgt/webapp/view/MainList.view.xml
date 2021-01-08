@@ -38,7 +38,7 @@
                                         columnsL="2" columnsM="2" >
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" labelFor="searchRequestDate" required="true"></Label>
+                            <Label text="{I18N>/PR_REQUEST_DATE}" labelFor="searchRequestDate" required="true"></Label>
                             <DateRangeSelection id="searchRequestDate" width="100%" change="handleChange"/>
                             <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchPr_create_status" required="false"></Label>
                             <MultiComboBox
@@ -49,7 +49,7 @@
                                 path: 'util>/Code',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'CM_APPROVE_STATUS'}
+                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
                                 ]
                               }">
                               <items>
@@ -186,7 +186,7 @@
                             <Text text="{I18N>/REQUESTOR_NAME}" />
                         </Column>
                          <Column id="mainColumnPURCHASE_REQUISITION" minScreenWidth="Desktop" hAlign="Center"  width="auto">
-                            <Text text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" />
+                            <Text text="{I18N>/PR_REQUEST_DATE}" />
                         </Column>
                         <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="auto">
                             <Text text="{I18N>/PR_COUNT}" />

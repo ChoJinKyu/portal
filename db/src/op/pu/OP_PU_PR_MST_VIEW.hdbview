@@ -7,6 +7,7 @@ SELECT
     pr_type_code_2 ,        
     pr_type_code_3  ,       
     pr_template_number ,    
+    pr_create_system_code,
     requestor_empno,        
     requestor_name ,        
     requestor_department_code,   
