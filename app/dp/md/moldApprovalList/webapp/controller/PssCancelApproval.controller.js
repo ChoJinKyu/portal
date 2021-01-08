@@ -31,7 +31,7 @@ sap.ui.define([
     var oRichTextEditor;
     var supplierData =[];
 
-    return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.ParticipatingSupplierSelectionCancelApproval", {
+    return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PssCancelApproval", {
 
         dateFormatter: DateFormatter,
 
@@ -60,8 +60,8 @@ sap.ui.define([
                 delay: 0
             });
 
-            this.setModel(oViewModel, "participatingSupplierSelectionCancelApprovalView");//change
-            this.getRouter().getRoute("participatingSupplierSelectionCancelApproval").attachPatternMatched(this._onObjectMatched, this);//change
+            this.setModel(oViewModel, "pssCancelApprovalView");//change
+            this.getRouter().getRoute("pssCancelApproval").attachPatternMatched(this._onObjectMatched, this);//change
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
             
         },

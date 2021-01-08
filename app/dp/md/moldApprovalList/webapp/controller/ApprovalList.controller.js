@@ -259,7 +259,7 @@ sap.ui.define([
                 var Cancellation = this.getView().getModel('Cancellation');
                 Cancellation.setProperty("/approvalNumber", null);
                 Cancellation.setProperty("/isCreate", false);
-                approvalTarget = "participatingSupplierSelectionCancelApproval"
+                approvalTarget = "pssCancelApproval"
                 approvalTypeCode ="A"
             }
 
