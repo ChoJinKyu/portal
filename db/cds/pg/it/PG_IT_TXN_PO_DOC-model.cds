@@ -35,7 +35,7 @@ entity It_Txn_Po_Doc {
         purchasing_org_code              : String(10)          @title : '구매조직코드';
         purchasing_group_code            : String(3)           @title : '구매그룹코드';
         po_currency_code                 : String(3)           @title : 'PO통화코드';
-        po_exrate                        : Decimal(9, 5)       @title : 'PO환율';
+        po_exrate                        : Decimal(20, 10)     @title : 'PO환율';
         po_doc_date                      : Date                @title : 'PO증빙일자';
         effective_start_date             : Date                @title : '유효시작일자';
         effective_end_date               : Date                @title : '유효종료일자';
@@ -78,7 +78,7 @@ entity It_Txn_Po_Doc {
         gl_account_code                  : String(30)          @title : 'GL계정코드';
         cctr_code                        : String(10)          @title : '비용부서코드';
         prctr_code                       : String(15)          @title : '손익센터코드';
-        project_code                     : String(8)           @title : '프로젝트코드';
+        project_code                     : String(15)          @title : '프로젝트코드';
         delivery_schedule_item_number    : String(10)          @title : '납품일정품목번호';
         delivery_request_date            : Date                @title : '납품요청일자';
         special_note                     : LargeString         @title : '특기사항';

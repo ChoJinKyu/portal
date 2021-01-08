@@ -29,9 +29,9 @@
                 </f:heading>
                 <f:snappedContent></f:snappedContent>
                 <f:expandedContent></f:expandedContent>
-                <f:navigationActions>
+                <!-- <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent"/>
-                </f:navigationActions>
+                </f:navigationActions> -->
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
@@ -126,7 +126,11 @@
                     </smartTable:customToolbar>
                             <Table id="mainTable" 
                             mode="MultiSelect" 
-                            sticky="HeaderToolbar,ColumnHeaders"
+                            growingScrollToLoad="true"
+                            growing="true"
+                            sticky="ColumnHeaders,HeaderToolbar"
+                            growingThreshold="50"
+                            inset="false"   
                             >
                                  <columns>  
                                        <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">

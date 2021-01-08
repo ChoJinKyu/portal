@@ -77,7 +77,7 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainFundingNumberColumn" minScreenWidth="Tablet" width="6em" hAlign="Center">
+                        <Column id="mainFundingNumberColumn" minScreenWidth="Tablet" width="8em" hAlign="Center">
                             <Text text="{I18N>/NOTIFICATION_NUMBER}" />
                         </Column>
                         <Column id="mainFundingTitleComlumn" minScreenWidth="Tablet" width="30em" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">

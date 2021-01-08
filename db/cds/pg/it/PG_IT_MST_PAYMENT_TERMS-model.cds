@@ -26,7 +26,7 @@ entity It_Mst_Payment_Terms {
     key org_type_code      : String(30) not null @title : '조직유형코드';
     key org_code           : String(10) not null @title : '조직코드';
     key payment_terms_code : String(6) not null  @title : '지불조건코드';
-        payment_terms_desc : String(75)          @title : '지불조건내역';
+        payment_terms_desc : String(100)         @title : '지불조건내역';
 }
 
 extend It_Mst_Payment_Terms with util.Managed;

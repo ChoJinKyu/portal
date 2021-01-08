@@ -89,7 +89,6 @@ sap.ui.define([
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { });
-                this._mdraViewFragment(); // New 가 아닐때는 초기 로드 안해줌 
             }  
         },
 
@@ -108,8 +107,12 @@ sap.ui.define([
             },
 
 
-        _toEditModeEachApproval : function(){ this._mdraEditFragment() },
-        _toShowModeEachApproval : function(){ this._mdraViewFragment() }  ,
+        _toEditModeEachApproval : function(){ 
+
+         },
+        _toShowModeEachApproval : function(){ 
+
+         } ,
       
        /**
          * @description moldItemSelect 공통팝업   
@@ -131,10 +134,11 @@ sap.ui.define([
             }
             // MOLD_PROGRESS_STATUS_CODE = 'RCV_CNF' 
             // MOLD_PURCHASING_TYPE_CODE = 'L'  
-            var oArgs = {
+            var oArgs = { 
+                approval_type_code : "I",
                 company_code: this.company_code ,
                 org_code: this.plant_code,
-                mold_progress_status_code : 'RCV_CNF' , 
+                mold_progress_status_code : ['RCV_CNF'] , 
                 mold_purchasing_type_code : 'L' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
@@ -213,22 +217,6 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         } ,
-        _mdraEditFragment : function(){
-            console.log(" _mdraEditFragment ");
-            var oPageSection = this.byId("moldRecepitTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("MoldRecepitTableEdit", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
-        _mdraViewFragment : function(){
-             console.log(" _mdraViewFragment ");
-             var oPageSection = this.byId("moldRecepitTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("MoldRecepitTableView", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
         /**
          * @description 미리보기 버튼눌렀을 경우 
          */

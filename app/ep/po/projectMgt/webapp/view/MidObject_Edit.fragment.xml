@@ -58,13 +58,25 @@
 				<core:Item key="{org>plant_code}" text="{org>plant_code}: {org>plant_name}" />
 			</items>
 		</ComboBox>
-		<Label text="* 구매유형" design="Bold" class="sapMLabelNoText"/>
-		<ComboBox id="epPurchasingTypeCode" selectedKey="{master>/ep_purchasing_type_code}" required="true">
+		<Label text="* 구매유형" design="Bold" required="true" selectedKey="E" class="sapMLabelNoText"/>
+        <SegmentedButton id="epPurchasingTypeCode" items="{
+                        path: 'common>/Code',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                            {path: 'group_code', operator: 'EQ', value1: 'EP_PURCHASING_TYPE'}
+                        ],
+                        sorter: { path: 'code'}
+                    }" class="sapUiSmallMarginBottom" required="true">
+            <items>
+                <SegmentedButtonItem width="6em" key="{common>code}" text="{common>code_name}" />
+            </items>                                                        
+        </SegmentedButton>    
+		<!-- <ComboBox id="epPurchasingTypeCode" selectedKey="{master>/ep_purchasing_type_code}" required="true">
 			<items>
 				<core:Item key="E" text="설비" />
                 <core:Item key="C" text="공사" />
 			</items>
-		</ComboBox>                                    
+		</ComboBox>                                     -->
     </form:SimpleForm>
 
     <form:SimpleForm id="midObjectForm3Edit" editable="true"> 

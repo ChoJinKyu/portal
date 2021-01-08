@@ -29,6 +29,9 @@ sap.ui.define([
 
     var oTransactionManager;
     //var oRichTextEditor;
+    var generalInfoFragment, 
+        attachmentsFragment,
+        approvalLineFragment;
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
@@ -70,9 +73,13 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            this._toShowMode();
+            //this._toShowMode();
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
+            //this.byId("pageApprovalLineSection").destroy();
+            this.generalInfoFragment.destroy();
+            this.attachmentsFragment.destroy();
+            this.approvalLineFragment.destroy();
             //  this.approvalList.onPageReload();
             /*
             var sPreviousHash = History.getInstance().getPreviousHash();
@@ -100,6 +107,7 @@ sap.ui.define([
             this.getRouter().navTo("participatingSupplierSelectionCancelApproval", {
                 company_code: this.company_code
                 , plant_code: this.plant_code
+                , approval_type_code: "A"
                 , approval_number: "New"
             });
         },
@@ -152,7 +160,10 @@ sap.ui.define([
          * @description 초기 생성시 파라미터를 받고 들어옴 
          * @param {*} args : company , plant
          */
-        _createViewBindData: function (args) {
+        _createViewBindData: function (args) { 
+
+            console.log("args>>>>> " , args);
+
             this.tenant_id = "L1100";
             this.approval_number = args.approval_number;
             //this.approval_type_code = args.approval_type_code;
@@ -222,21 +233,21 @@ sap.ui.define([
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection");
             oPageGeneralInfoSection.removeAllBlocks();
 
-            this._loadFragment("GeneralInfo", function (oFragment) {
+            generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
 
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
 
-            this._loadFragment("Attachments", function (oFragment) {
+            attachmentsFragment = this._loadFragment("Attachments", function (oFragment) {
                 oPageAttachmentsSection.addBlock(oFragment);
             }.bind(this))
 
             var oPageApprovalLineSection = this.byId("pageApprovalLineSection");
             oPageApprovalLineSection.removeAllBlocks();
 
-            this._loadFragment("ApprovalLine", function (oFragment) {
+            approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
             }.bind(this));
 

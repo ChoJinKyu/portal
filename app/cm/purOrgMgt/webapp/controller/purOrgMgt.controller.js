@@ -1,6 +1,7 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Item",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     'sap/ui/core/Fragment',
@@ -11,24 +12,77 @@ sap.ui.define([
 	/**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-    function (Controller, JSONModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
+    function (Controller, JSONModel, Item, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
         "use strict";
 
         return Controller.extend("cm.purOrgMgt.controller.purOrgMgt", {
             onInit: function () {
-            //   var that = this;
-            //   this.getOwnerComponent().getModel("org")
-            //     .attachRequestCompleted(function(event){
-            //         var params = event.getParameters();
-            //         if (!params.url.includes("$count")) {
-            //             var entity = params.url.split("/")[0];
-            //             if (entity.includes("Org_Company")) {
-            //                 console.log(">>>> this", that);
-            //             }
-            //         }
-            //     });
+                //   var that = this;
+                //   this.getOwnerComponent().getModel("org")
+                //     .attachRequestCompleted(function(event){
+                //         var params = event.getParameters();
+                //         if (!params.url.includes("$count")) {
+                //             var entity = params.url.split("/")[0];
+                //             if (entity.includes("Org_Company")) {
+                //                 console.log(">>>> this", that);
+                //             }
+                //         }
+                //     });
                 // this.getView().setModel(new JSONModel({
-                // }), "search");
+                //     tenant:{
+                //         key: 'L2100',
+                //         items: {
+                //             path: 'org>/Org_Tenant',
+                //             filters: [
+                //             ]
+                //         }
+                //     },
+                //     company: {
+                //         key: '*',
+                //         items: {
+                //             path: 'org>/Org_Company',
+                //             filters: [
+                //                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                //             ]
+                //         }
+                //     }
+                // }).attachPropertyChange((function(event) {
+                // }).bind(this)), "mSearch");
+                //this.getView().getModel("org").data
+            },
+            // Data
+            onSelectionChange: function() {
+                var [event, field] = arguments;
+                var combo, key = event.getSource().getSelectedKey();
+                this["onSelectionChange"][field] = key;
+                // 테넌트
+                if (field == "tenant_id") {
+                    // 회사코드
+                    combo = this.byId("searchCompanyCode");
+                    combo.setSelectedKey(); 
+                    combo.bindItems({
+                        path: 'org>/Org_Company',
+                        filters: [
+                            new Filter('tenant_id', FilterOperator.EQ, key)
+                        ],
+                        template: new Item({
+                            key: "{org>company_code}", text: "{org>company_code} : {org>company_name}"
+                        })
+                    });
+                    // 조직유형
+                    combo = this.byId("searchOrgTypeCombo");
+                    combo.setSelectedKey(); 
+                    combo.bindItems({
+                        path: 'util>/Code',
+                        filters: [
+                            new Filter('tenant_id', FilterOperator.EQ, key),
+                            new Filter('group_code', FilterOperator.EQ, 'CM_ORG_TYPE_CODE'),
+                        ],
+                        template: new Item({
+                            key: "{util>code}", text: "{util>code} : {util>code_description}"
+                        })
+                    });
+                }
             },
             onSelect: function (event) {
                 // event 객체를 통해 레코드(ROW)를 가져온다.
@@ -100,7 +154,6 @@ sap.ui.define([
                 }).bind(this));
             },
             onMstUpdateFinished: function (oEvent) {
-                console.log("########## onMstUpdateFinished - Start");
             }
         });
     }

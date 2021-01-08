@@ -36,6 +36,13 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
+            },
+            "orgMgrService": {
+                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -104,6 +111,16 @@
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": false,
                     "useBatch": false
+                }
+            },
+            "org": {
+                "dataSource": "orgMgrService",
+                "preload": true,
+                "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": true,
+                "useBatch": true
                 }
             },
             "listModel": {

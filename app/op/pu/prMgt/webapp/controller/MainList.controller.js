@@ -47,7 +47,7 @@ sap.ui.define([
             oMultilingual.attachEvent("ready", function (oEvent) {
                 var oi18nModel = oEvent.getParameter("model");
                 this.addHistoryEntry({
-                    title: oi18nModel.getText("/prMgt"),   //제어옵션관리
+                    title: oi18nModel.getText("/prMgt"),   //구매..
                     icon: "sap-icon://table-view",
                     intent: "#Template-display"
                 }, true);
@@ -415,17 +415,18 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0),
+           
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
-                controlOptionCode: oRecord.control_option_code
+                pr_number: oRecord.pr_number
             });
 
-            if (oNextUIState.layout === "TwoColumnsMidExpanded") {
+            if (oNextUIState.layout === "TwoColumnsMidExpanded") {                
                 this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 
@@ -469,44 +470,140 @@ sap.ui.define([
 
         _getSearchStates: function () {
 
-            var sBsart = this.getView().byId("searchBsart").getSelectedKeys();
-            // var sChain = this.getView().byId("searchChain").getSelectedKey(),
-            // 	sKeyword = this.getView().byId("searchKeyword").getValue(),
-            // 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
-            var aSearchFilters = [];
-            for (var j = 0; j < sBsart.length; j++) {
-                aSearchFilters.push(new Filter("control_option_name", FilterOperator.Contains, sBsart[j]));
+            var aSearchFilters = [];     
+
+            var sDateFrom = this.getView().byId("searchRequestDate").getDateValue();
+            var sDateTo = this.getView().byId("searchRequestDate").getSecondDateValue();
+            var sPR_TYPE_CODE = this.getView().byId("searchPR_TYPE_CODE").getSelectedKeys();
+            var sPR_TEMPLATE_NUMBER = this.getView().byId("searchPR_TEMPLATE_NUMBER").getSelectedKeys();
+            var sPrNumber = this.getView().byId("searchPrNumber").getSelectedKey();
+            var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
+            var sDEPARTMENT_NAME = this.getView().byId("searchDEPARTMENT_NAME").getValue();
+            var sRequestor_name = this.getView().byId("searchRequestor_name").getValue();
+            var sPr_desc = this.getView().byId("searchPr_desc").getValue();
+            var _tempFilters = [];
+
+            if (sDateFrom || sDateTo) {
+                _tempFilters = [];    
+                _tempFilters.push(
+                    new Filter({
+                        path: "request_date",
+                        operator: FilterOperator.BT,
+                        value1: this.getFormatDate(sDateFrom),
+                        value2: this.getFormatDate(sDateTo)
+                    })
+                );               
+                 //_tempFilters.push(new Filter("request_date", FilterOperator.BT, "2020-01-01", "2021-01-31"));
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+            
+            if (sPR_TYPE_CODE.length > 0) {
+                _tempFilters = [];
+
+                sPR_TYPE_CODE.forEach(function (item, idx, arr) {
+                    _tempFilters.push(new Filter("pr_type_code", FilterOperator.EQ, item));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
             }
 
-            // if (sBsart && sBsart.length > 0) {
-            // 	aSearchFilters.push(new Filter("BSART", FilterOperator.Contains, sBsart));
-            // }
-            // if (sKeyword && sKeyword.length > 0) {
-            // 	aSearchFilters.push(new Filter({
-            // 		filters: [
-            // 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-            // 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-            // 		],
-            // 		and: false
-            // 	}));
-            // }
-            // if(sUsage != "all"){
-            // 	switch (sUsage) {
-            // 		case "site":
-            // 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 		case "company":
-            // 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 		case "org":
-            // 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 		case "user":
-            // 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 	}
-            // }
+            if (sPR_TEMPLATE_NUMBER.length > 0) {
+                _tempFilters = [];
+
+                sPR_TEMPLATE_NUMBER.forEach(function (item, idx, arr) {
+                    _tempFilters.push(new Filter("pr_template_number", FilterOperator.EQ, item));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if (sPrNumber) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("pr_number", FilterOperator.EQ, sPrNumber));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+           
+            if (sPr_create_status.length > 0) {
+                _tempFilters = [];
+
+                sPr_create_status.forEach(function (item, idx, arr) {
+                    _tempFilters.push(new Filter("pr_create_status_code", FilterOperator.EQ, item));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+
+            if (sDEPARTMENT_NAME) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("requestor_department_name", FilterOperator.EQ, sDEPARTMENT_NAME));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if (sRequestor_name) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("requestor_name", FilterOperator.EQ, sRequestor_name));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if (sPr_desc) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("pr_desc", FilterOperator.Contains, sPr_desc));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            
+            
             return aSearchFilters;
+        },
+        getFormatDate: function (date) {
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         },
 
         _doInitTablePerso: function () {

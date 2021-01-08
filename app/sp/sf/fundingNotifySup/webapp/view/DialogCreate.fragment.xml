@@ -1,0 +1,262 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    
+    <Dialog id="investmentPlanDetails" class="sapUiSmallMargin" title="투자계획상세내용" contentWidth="100%" >
+        <content>  
+            <VBox class="sapUiSmallMargin">
+                <form:SimpleForm
+                    maxContainerCols="2"
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    adjustLabelSpan="false"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="2"
+                    columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="거래사업부 :"/>
+                            <Input editable="false"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="협력회사명 :"/>
+                            <Input editable="false"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="투자 유형 :" required="true"/>
+                            <Input editable="true"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12"/>
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="과제명 :" required="true"/>
+                            <Input editable="true"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" linebreak="true" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="투자기간 :" required="true"/>
+                            <DatePicker editable="true"
+                                value="{
+                                    path:'',
+                                    type:'sap.ui.model.odata.type.Date',
+                                    formatOptions: {
+                                        UTC: true, format: 'yM'
+                                    }
+                                }"/>
+                            <layoutData>
+                               <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="신청금액(원) :" required="true"/>
+                            <Input editable="{midObjectView>/editMode}"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="투자 배경 및 목적 :" required="true"/>
+                            <Input editable="{midObjectView>/editMode}"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L6 M6 S12" linebreak="true" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="적용모델 :" required="true"/>
+                            <Input editable="{midObjectView>/editMode}"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="년간 예상물동 :" required="true"/>
+                            <Input editable="{midObjectView>/editMode}"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="투자내역 :" required="true"/>
+                            <Input editable="{midObjectView>/editMode}"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL9 L9 M9 S12" linebreak="true" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="집행시기 :" required="true"/>
+                            <DatePicker editable="true"
+                                displayFormat='MM-y'
+                                value="{
+                                    path:'',
+                                    formatOptions: {
+                                        UTC: true, displayFormat: 'yyyy-MM'
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        
+                        <VBox>
+                            <Label text="투자효과 :" required="true"/>
+                            <Input editable="{midObjectView>/editMode}"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL9 L9 M9 S12" linebreak="true" />
+                            </layoutData>
+                        </VBox>
+                        
+                        <VBox>
+                            <Label text="투자장소 :" required="true"/>
+                            <Input editable="{midObjectView>/editMode}"
+                                value="{
+                                    path: '',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </VBox>
+            <VBox>
+                <Table id="investmentDtl"
+                    sticky="HeaderToolbar,ColumnHeaders"
+                    inset="false"
+                    mode="MultiSelect"
+                    class="sapFDynamicPageAlignContent"
+                    items="{localModel>/items}"
+                    width="auto">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <ToolbarSpacer/>
+                            <Button id="dtlAddRow" text="추가" type="Transparent" press=".onInvestmentDtlAddButtonPress" />
+                            <Button id="dtlDeleteRow" text="삭제" type="Transparent" press=".onInvestmentDtlDeleteButtonPress" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column>
+                            <Text text="품목" />
+                        </Column>
+                        <Column>
+                            <Text text="구입단가(원)" required="true" />
+                        </Column>
+                        <Column>
+                            <Text text="구입대수"  />
+                        </Column>
+                        <Column>
+                            <Text text="구입금액(원)" />
+                        </Column>
+                        <Column>
+                            <Text text="집행시기" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectIdentifier text="{localModel>itemCode1}"/>
+                                <ObjectIdentifier text="{localModel>itemCode2}"/>
+                                <ObjectIdentifier text="{localModel>itemCode3}"/>
+                                <ObjectIdentifier text="{localModel>itemCode4}"/>
+                                <ObjectIdentifier text="{localModel>itemCode5}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+        
+        <ToolbarSpacer/>
+        <HBox justifyContent="End" >
+            <Button text="취소" type="Transparent" press=".onCreatePopupClose"/>
+            <Button text="저장" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".onCreatePopupSave"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

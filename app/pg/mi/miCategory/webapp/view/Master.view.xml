@@ -57,7 +57,7 @@
                                     <smartFilterBar:ControlConfiguration key="path_code" index="1" label="{I18N>/CATEGORY_CODE}"
                                         groupId="_BASIC" visibleInAdvancedArea="true" >
                                         <smartFilterBar:customControl>
-                                            <Input id="filterCategoryCode" placeholder="Category Code" />
+                                            <Input id="filterCategoryCode" placeholder="Category Code" liveChange="liveCategoryCode"/>
                                         </smartFilterBar:customControl>
                                         
                                     </smartFilterBar:ControlConfiguration>

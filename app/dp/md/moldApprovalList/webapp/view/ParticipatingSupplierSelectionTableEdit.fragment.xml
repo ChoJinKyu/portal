@@ -74,6 +74,7 @@
                             <Label text="Type"/>
                         </VBox>
                         <table:template>
+                            <!-- <Text text="{mdItemMaster>mold_item_type_code}"/> -->
                             <ComboBox visible="{mode>/editFlag}"
                                     editable="false"
                                     selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/Code',

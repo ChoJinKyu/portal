@@ -188,8 +188,10 @@
 				<VBox height="6em">
 					<Label text="Import Company"/>
                     <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" />
-
+                    <HBox>
+                        <Text text="[{mdCommon>/import_company_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?true:false}" /> 
+                        <Text text=" {mdCommon>/import_company_code_nm}" />
+                    </HBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -207,7 +209,10 @@
 				<VBox height="6em">
 					<Label text="Import Plant"/>
                      <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" /> 
+                    <HBox>
+                          <Text text="[{mdCommon>/import_company_org_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?true:false}" />
+                          <Text text=" {mdCommon>/import_company_org_code_nm}" /> 
+                    </HBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>

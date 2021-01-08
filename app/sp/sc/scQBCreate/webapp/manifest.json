@@ -1,0 +1,142 @@
+{
+	"_version": "1.12.0",
+	"sap.app": {
+		"id": "sp.sc.scQBCreate",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"resources": "resources.json",
+		"ach": "ach",
+		"sourceTemplate": {
+			"id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
+			"version": "1.40.12"
+		},
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+	},
+	
+	"sap.cloud": {
+		"public": true,
+		"service": "sppCap_ui_dev"
+	},
+	
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+
+	"sap.ui5": {
+		"flexEnabled": false,
+		"rootView": {
+			"viewName": "sp.sc.scQBCreate.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "App"
+		},
+		"dependencies": {
+			"minUI5Version": "1.60.1",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.m": {},
+				"sap.ui.layout": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "sp.sc.scQBCreate.i18n.i18n"
+				}
+			},
+            "": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "odataVersion": "2.0"
+                },
+                "dataSource": "mainService"
+            }
+		},
+		"resources": {
+			"css": [{
+				"uri": "css/style.css"
+			}]
+		},
+        "resourceRoots": {
+            "ext.lib": "../../../../lib"
+        },
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"async": true,
+				"viewPath": "sp.sc.scQBCreate.view",
+				"controlAggregation": "pages",
+				"controlId": "app",
+				"clearControlAggregation": false
+			},
+			"routes": [{
+                    "name": "mainPage",
+                    "pattern": "mainObject",
+                    "target": ["mainObject"]
+                },{
+                    "name": "createPage",
+                    "pattern": "createObject",
+                    "target": ["createObject"]
+                },{
+                    "name": "detailPage",
+                    "pattern": "detailObject/{type},{outcome}",
+                    "target": ["detailObject"]
+                },{
+                    "name": "detailPage2",
+                    "pattern": "detailObject2/{type},{outcome}",
+                    "target": ["detailObject2"]
+                }
+            
+            ],
+			"targets": {
+				"mainObject": {
+					"viewType": "XML",
+					"viewName": "MainList"
+                },
+                "createObject": {
+					"viewType": "XML",
+					"viewName": "CreatePage"
+				},
+                "detailObject": {
+					"viewType": "XML",
+					"viewName": "DetailPage"
+				},
+                "detailObject2": {
+					"viewType": "XML",
+					"viewName": "DetailPage2"
+				}
+			}
+		}
+	}
+}
