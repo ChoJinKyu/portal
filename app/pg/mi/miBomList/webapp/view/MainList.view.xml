@@ -109,7 +109,7 @@
                             <ui:Table id="mainTable"
                                 rows="{/MIMaterialCodeBOMManagementView}"
                                 selectionMode="None"
-                                visibleRowCount="7"
+                                visibleRowCount="18"
                                 fixedColumnCount="7"
                                 >
                                 <ui:columns> 
@@ -124,7 +124,7 @@
                                         </ui:template>
                                     </ui:Column> 
 
-                                    <ui:Column width="20rem"  sortProperty="material_desc" filterProperty="material_desc">
+                                    <ui:Column width="17rem"  sortProperty="material_desc" filterProperty="material_desc">
                                       <ui:customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
@@ -135,7 +135,7 @@
                                         </ui:template>
                                     </ui:Column>
 
-                                    <ui:Column width="12rem" sortProperty="supplier_code" filterProperty="supplier_code">
+                                    <ui:Column width="7rem" sortProperty="supplier_code" filterProperty="supplier_code">
                                       <ui:customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
@@ -167,7 +167,7 @@
                                         </ui:template>
                                     </ui:Column>
 
-                                    <ui:Column width="10rem" sortProperty="processing_cost" filterProperty="processing_cost">
+                                    <ui:Column width="4rem" sortProperty="processing_cost" filterProperty="processing_cost">
                                      <ui:customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "processing_cost", "leadingProperty": "processing_cost", "sortProperty": "processing_cost", "filterProperty": "processing_cost", "columnIndex": 6}'/>
@@ -255,7 +255,7 @@
                                         </ui:template>
                                     </ui:Column>
 
-                                     <ui:Column width="8rem"  sortProperty="mi_base_reqm_quantity" filterProperty="mi_base_reqm_quantity">
+                                     <ui:Column width="5rem"  sortProperty="mi_base_reqm_quantity" filterProperty="mi_base_reqm_quantity">
                                         <ui:customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "mi_base_reqm_quantity", "leadingProperty": "mi_base_reqm_quantity", "sortProperty": "mi_base_reqm_quantity", "filterProperty": "mi_base_reqm_quantity", "columnIndex": 14}'/>
