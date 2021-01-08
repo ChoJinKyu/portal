@@ -294,7 +294,6 @@ sap.ui.define([
                     plantFilters.push(new Filter({
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
@@ -302,8 +301,7 @@ sap.ui.define([
                 });
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 );
             }
  
@@ -312,8 +310,18 @@ sap.ui.define([
                 and: false
             });
 
-            this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
-            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
+            var bindInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
+
+            this.getView().byId("searchPlantS").bindItems(bindInfo);
+            this.getView().byId("searchPlantE").bindItems(bindInfo);
+            // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
+            // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
         },
 
 
@@ -953,7 +961,7 @@ sap.ui.define([
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
 
             var aSearchFilters = [];
-
+            
             if (sCategory.length > 0) {
                 var _tempFilters = [];
 
@@ -1043,7 +1051,7 @@ sap.ui.define([
             if (sStatus) {
                 aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
-
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
             return aSearchFilters;
         },
 

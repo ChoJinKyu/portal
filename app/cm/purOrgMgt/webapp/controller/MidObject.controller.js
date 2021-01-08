@@ -63,6 +63,7 @@ sap.ui.define([
                 else if (entity.includes("Org_Company")) {
                     setTimeout((function(){
                         this.byId("searchCompanyCode")
+                            .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
                             .setSelectedItemId(this.byId("searchCompanyCode").getFirstItem().getId());
                     }).bind(this), 0);
@@ -79,7 +80,6 @@ sap.ui.define([
                 else if (entity.includes("Org_Plant")) {
                     setTimeout((function(){
                         this.byId("plantCodeCombo")
-                            .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
                             .setSelectedItemId(this.byId("plantCodeCombo").getFirstItem().getId());
                     }).bind(this), 0);
