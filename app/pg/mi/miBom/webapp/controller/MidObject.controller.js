@@ -17,7 +17,7 @@ sap.ui.define([
 		formatter: (function(){
 			return {
 				toYesNo: function(oData){
-					return oData === true ? "YES" : "NO"
+					return oData === true ? "YES" : "NO";
 				},
 			}
         })(),
@@ -30,6 +30,7 @@ sap.ui.define([
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 
         },
+
         dataPath : "resources",
         _m : {  //수정대상 등록된 필터값들은 삭제한다. 
             page : "page",
@@ -112,10 +113,11 @@ sap.ui.define([
             controlMode : {
                 Dev : "Dev",
                 Qa : "QA",
-                Prd : "PRD",
+                Prd : "PRD"
 
             }            
         },
+
         _imsiData : {
             vendor : "KR01818401",
             vendor_name: "한국유나이티드제약(주)",
@@ -125,6 +127,7 @@ sap.ui.define([
             supplier_local_name : "한국유나이티드제약(주)",
             supplier_english_name : "korea"
         },
+
         _sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
             user : {
                 id : "Admin",
@@ -215,6 +218,8 @@ sap.ui.define([
             sap.ui.getCore().attachValidationSuccess(function (oEvent) {
                 oEvent.getParameter("element").setValueState(ValueState.None);
             });
+
+            //this.byId("label").attachBrowserEvent("click", showValueHelp);
 
             //header title hide
             $(".sapMBarPH sapMBarContainer").hide(); 
@@ -325,7 +330,7 @@ sap.ui.define([
          */        
         _isNull: function (p_val) {
             if (!p_val || p_val == "" || p_val == null) {
-                return true
+                return true;
             } else {
                 return false;
             }
@@ -556,7 +561,8 @@ sap.ui.define([
             var obj = oEvent.getSource().oParent.oParent.getBindingContextPath(),
                 that = this,
                 midList = that.getModel("midList");
-                that._selectedIndex = parseInt(obj.substring(1));
+
+            that._selectedIndex = parseInt(obj.substring(1));
 
             var oView = that.getView();   
 
@@ -1000,15 +1006,20 @@ sap.ui.define([
                 oArgs = oEvent.getParameter("arguments"),
                 oModel = this.getOwnerComponent().getModel();
 
-                that._m.mi_bom_id = this._fnGuid();
+                //처음 생성부터 this.getView().getId() 하면 더 간단함.
+                 that._m.fragementId.materialDialog = this.getView().getId();
+                 that._m.fragementId.materialDetail  = this.getView().getId();      
+                 that._m.fragementId.reqmQuantityUnit = this.getView().getId();  
+
                 that._m.filter.tenant_id = oArgs.tenant_id;
                 that._m.filter.material_code = oArgs.material_code;
                 that._m.filter.supplier_code = oArgs.supplier_code;
-                that._m.filter.mi_bom_id = oArgs.mi_bom_id
+                that._m.filter.mi_bom_id = oArgs.mi_bom_id;
     
             if (that._m.filter.material_code == "new") {
                 console.log("=============== new item ===============");
                 var oModel = that.getModel("midList");   
+
                 if(oModel){
                     oModel.setData(null);     
                     oModel.updateBindings(true);
@@ -1208,6 +1219,7 @@ sap.ui.define([
             // }
 
         },
+
         _handleCreateSuccess: function (oData) {
             console.log("_handleCreateSuccess");
             var that = this;
@@ -1301,7 +1313,6 @@ sap.ui.define([
             that._setSelectedRightTableItem();
         },
           
-
         _setSelectedRightTableItem : function (){
             console.log("_setSelectedRightTableItem");
             var that = this;
@@ -1460,7 +1471,7 @@ sap.ui.define([
                    //}         
                 },
                 error: function(data){
-                    console.log('error',data)
+                    console.log('error',data);
                 },
             });
          
@@ -1809,7 +1820,7 @@ sap.ui.define([
                 title: title,
                 actions: [MessageBox.Action.OK],
                 styleClass: "sapUiSizeCompact",
-                onClose: closeEvent,
+                onClose: closeEvent
             });
         },
 
@@ -1867,6 +1878,18 @@ sap.ui.define([
             that.validator.clearValueState(that.byId("midTable"));
         },
         
+        _guidFragmentId : function(){
+
+            function guid() {
+                function s4() {
+                    return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+                }
+                return s4() + s4();
+            };
+
+            return guid();
+              
+        },
 
         /**
          * 필수값 체크
@@ -2038,8 +2061,11 @@ sap.ui.define([
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();
                   
                     if(bCopyFlag){
-                        
                         midList.oData[i].mi_bom_id =  copyBomId;
+                    }
+
+                    if(bCreateFlag){
+                        midList.oData[i].mi_bom_id =  that._fnGuid();
                     }
 
                     if(_headerCount==0){
@@ -2344,13 +2370,13 @@ sap.ui.define([
                 material_code : oData.material_code,
                 supplier_code : oData.supplier_code,
                 mi_bom_id : oData.mi_bom_id
-            }
+            };
 
             var updateHeaderParameters = {
                 "pcst_currency_unit": oData.pcst_currency_unit,
                 "local_update_dtm": new Date(),
                 "update_user_id": that._sso.user.id
-            }            
+            };            
 
             try{
                 var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
@@ -2384,7 +2410,7 @@ sap.ui.define([
                 "termsdelv": oData.termsdelv,
                 "use_flag" : oData.use_flag,
                 "local_update_dtm" : new Date()
-            }
+            };
 
             try{
                 var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
@@ -2426,7 +2452,7 @@ sap.ui.define([
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
                 mi_material_code : oData.mi_material_code 
-            }
+            };
 
             try{
                 var sDeletePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
@@ -2621,7 +2647,7 @@ sap.ui.define([
         
         _handleUpdateError: function (oError) {
             var that = this;
-            var mTitle = that.getModel("I18N").getText("/UPDATE") + " " + thithats.getModel("I18N").getText("/FAILURE");
+            var mTitle = that.getModel("I18N").getText("/UPDATE") + " " + that.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
                 mTitle,
                 that.getModel("I18N").getText("/EPG00002"),
@@ -2632,9 +2658,9 @@ sap.ui.define([
 
         _handleCopySuccess: function (oData) {
             var that = this;
-            MessageBox.show("복사 성공 하였습니다.", {
+            MessageBox.show(that.getModel("I18N").getText("/COPY_SUCCESS"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: "복사 성공",
+                title: that.getModel("I18N").getText("/NPG00026"),
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -2650,9 +2676,8 @@ sap.ui.define([
         _handleCopyError: function (oError) {
             var that = this;
             this._showMessageBox(
-                "복사 실패",
-                "복사 실패 하였습니다.",
-                that._m.messageType.Error,
+                that.getModel("I18N").getText("/COPY") + " " + that.getModel("I18N").getText("/FAILURE"),
+                that.getModel("I18N").getText("/COPY_FAILURE"),
                 function(){return;}
             );
         },
