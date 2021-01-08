@@ -134,9 +134,9 @@
                         </VBox>
                     </HBox>
                 </uxap:ObjectPageSubSection>
-                    <uxap:ObjectPageSubSection id="moldRecepitTableFragment">
+                <uxap:ObjectPageSubSection id="pageItemSection">
                         <!-- 바뀌는 영역 -->
-                    </uxap:ObjectPageSubSection>
+                </uxap:ObjectPageSubSection>
                     
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

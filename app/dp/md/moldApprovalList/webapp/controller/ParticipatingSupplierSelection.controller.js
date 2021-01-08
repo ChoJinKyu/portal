@@ -139,7 +139,7 @@ sap.ui.define([
                 console.log(oSelected);
                 
             if (oSelected.length > 0) {
-                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.org_code, function(data){
+                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.plant_code, function(data){
                     if(data.length > 0) {
                         supplierData=[];
                         for(var i=0; i<data.length; i++){

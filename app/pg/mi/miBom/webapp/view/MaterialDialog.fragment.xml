@@ -81,16 +81,18 @@
                 </layout:VerticalLayout>  
             </FlexBox> 
             </Panel>  
-            <ScrollContainer
-            width="100%"
-		    vertical="true"
-		    focusable="true"
-            > 
+            
             <Table  id="materialTable"
                     items="{materialTable>/}"                    
                     mode="SingleSelectLeft"
                     updateFinished="onDtlUpdateFinished" 
                     class="sapUiSmallMarginTop"
+                    noDataText="{I18N>/NCM0001}"
+                    growingScrollToLoad="true"
+                    growing="true"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    growingThreshold="50"
+                    inset="false"
             >
             <layoutData>
             </layoutData>
@@ -139,7 +141,6 @@
                     </ColumnListItem>
                 </items>
             </Table>
-            </ScrollContainer> 
 		</content>
 			<beginButton>
 				<Button type="Transparent" text="{I18N>/CANCEL}" press="onMaterialDialog_close" />

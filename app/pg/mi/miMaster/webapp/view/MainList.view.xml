@@ -134,7 +134,7 @@
                     editable="true"                    
                     persistencyKey="SmartTableAnalytical_Explored"
                     enableAutoBinding="true"                     
-                    class="sapUiResponsiveContentPadding"
+                    class="sapUiResponsiveContentPadding"                    
                     demandPopin="true"
                     initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code,system_update_dtm"
                     >
@@ -163,7 +163,12 @@
                     </smartTable:customToolbar>
                             <Table id="mainTable" 
                                    mode="MultiSelect"
-                                   sticky="HeaderToolbar,ColumnHeaders">
+                                   growingScrollToLoad="true"
+                                   growing="true"
+                                   sticky="ColumnHeaders,HeaderToolbar"
+                                   growingThreshold="50"
+                                   inset="false"   
+                                   >
                                  <columns>  
                                        <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
                                         <customData>

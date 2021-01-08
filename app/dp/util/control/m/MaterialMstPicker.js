@@ -44,6 +44,7 @@ sap.ui.define([
         },
         
         extractBindingInfo(oValue, oScope){ //SearchMaterialMstView, SearchMaterialOrgView
+
             var oBindingInfo = Parent.prototype.extractBindingInfo.apply(this, arguments);
             if(oBindingInfo && (oBindingInfo.serviceName || oBindingInfo.serviceUrl) && oBindingInfo.entityName){
                 var sKey = "{"+ this.getProperty("keyField") +"}",
@@ -69,7 +70,6 @@ sap.ui.define([
                         key: sKey,
                         text: sText
                     });
-                // oBindingInfo.filters = oBindingInfo.filters || [];
             }
             return oBindingInfo;
         },

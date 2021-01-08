@@ -41,10 +41,13 @@
                                             <form:fields>
                                                 <VBox>
                                                     <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                                                    <!-- items="{mSearch>/tenant/items}" -->
                                                     <ComboBox
                                                         id="searchTenantCombo"
+                                                        required="true"
+                                                        selectionChange=".onSelectionChange($event, 'tenant_id')"
                                                         width="100%"
-                                                        items="{
+                                                        items="{ 
                                                             path: 'org>/Org_Tenant',
                                                             filters: [
                                                             ]
@@ -128,7 +131,7 @@
                     >
                         <headerToolbar>
                             <OverflowToolbar>
-                                <Title text="구매 관리 ({= ${list>/}.length || 0})" level="H2"/>
+                                <Title text="구매 관리 ({= ${list>/Pur_Operation_Org}.length || 0})" level="H2"/>
                                 <ToolbarSpacer/>
                                 <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onAdd" />
                                 <ToolbarSeparator/>

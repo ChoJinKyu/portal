@@ -13,10 +13,7 @@ sap.ui.define([
 ], function (BaseController, Multilingual, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator, Fragment) {
     "use strict";
     return BaseController.extend("pg.mi.miBom.controller.MidObject", {
-
-
         validator: new Validator(),
-
 		formatter: (function(){
 			return {
 				toYesNo: function(oData){
@@ -471,8 +468,8 @@ sap.ui.define([
                 oCcomboBox_supplierView= that._findFragmentControlId(that._m.fragementId.materialDialog, "comboBox_supplierView"),
                 comboBox_materialView=oComboBox_materIalView.getSelectedKey(),
                 comboBox_supplierView=oCcomboBox_supplierView.getSelectedKey(),
-                input_material_desc=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_material_desc").getValue(),
-                input_supplier_local_name=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
+                input_material_desc=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_material_desc").getValue().toUpperCase(),
+                input_supplier_local_name=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_supplier_local_name").getValue().toUpperCase();
                 //input_hidden_supplier_english_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
         
              var sFilters = [
@@ -601,7 +598,7 @@ sap.ui.define([
                 that = this,
                 oModel = that.getOwnerComponent().getModel(),
                 oUnitOfMeasureView = that.getModel("unitOfMeasureView"),                
-                searchField_uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue(),
+                searchField_uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue().toUpperCase(),
                 reqmTable= that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable");             
                 
             var andFilter = [
@@ -656,6 +653,7 @@ sap.ui.define([
             var that = this;
             that._valueHelpReqmQuantityUnit.then(function(oDialog) {
                 oDialog.close();
+                //oDialog.destroy();
             });             
 
 			//that._valueHelpReqmQuantityUnit.close(); 
@@ -930,7 +928,8 @@ sap.ui.define([
         _initialControlValue : function(){
             console.log("_initialControlValue");
             var that = this;
-
+            //that._fragmentDistory();
+            
             that.getView().byId("input_base_quantity").setValue("1");
             that.getView().byId("input_processing_cost").setValue("");
             that.getView().byId("input_hidden_material_code").setValue("");
@@ -1245,8 +1244,8 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
-                searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code").getValue(),
-                searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name").getValue(),
+                searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code").getValue().toUpperCase(),
+                searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name").getValue().toUpperCase(),
                 oTable = that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");
                 
            
@@ -1637,6 +1636,8 @@ sap.ui.define([
             var that = this;
             that._valueHelpMaterialDialog.then(function(oDialog) {
                 oDialog.close();
+                //song Fragment destory (팝업창 소거하지 않을경우 페이지 이동하더래도 남아 있는 컨트롤 객체로 에러 방지)
+                //oDialog.destroy();
             });                    
            // that.getView().byId("materialDialog").close();
            // that._valueHelpMaterialDialog.close();
@@ -1649,6 +1650,7 @@ sap.ui.define([
             var that = this;
             that._valueHelpMaterialDetail.then(function(oDialog) {
                 oDialog.close();
+                //oDialog.destroy();
             }); 
             //that.byId("materialDetail").close();
         },

@@ -87,6 +87,10 @@ sap.ui.define([
                 this.getModel("detailModel").setProperty("/mode/readMode", true);
                 this.getModel("detailModel").setProperty("/mode/editMode", false);
         }
+
+        , onBackPress: function(oEvent) {
+            this.getRouter().navTo("ProjectMgtList", {});
+        }
     });
   }
 );
