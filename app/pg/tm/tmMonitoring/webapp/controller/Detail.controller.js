@@ -1389,7 +1389,7 @@ sap.ui.define([
                 templateShareable: true
             });
 
-            this.oEditableTemplate = new ColumnListItem("signalListItem", {
+            this.oEditableTemplate = new ColumnListItem({
                 cells: [
                     new sap.m.Text({
                         text: ""
