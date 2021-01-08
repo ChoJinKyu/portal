@@ -120,16 +120,18 @@
 								<Text text="{mdRecepit>project_code}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="15em" hAlign="Center">
 							<Label text="Acquisition Department"/>
 					        <table:template>
-                                <Input  
+                                <Input 
+                                   id="acq_department_code" 
+                                    editable="{mode>/editFlag}" 
+                                    class="readonlyField"
                                     showValueHelp="true" 
                                     valueHelpOnly="true"
                                     value="{mdRecepit>acq_department_code_nm}"
-                                    valueHelpRequest=".onValueHelpRequestedDept(${mdRecepit>mold_id})" > 
-                                    
-                                </Input>
+                                    valueHelpRequest=".onValueHelpRequestedDept(${mdRecepit>mold_id})" /> 
+                               
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">

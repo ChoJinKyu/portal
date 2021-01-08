@@ -265,41 +265,45 @@ sap.ui.define([
 
         _toEditModeEachApproval : function(){ 
             console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
+
+            this.byId("acquisition_department").removeStyleClass("readonlyField");
+            this.byId("accounting_department").removeStyleClass("readonlyField");
+            this.byId("importCompany").removeStyleClass("readonlyField");
+            this.byId("projectCode").removeStyleClass("readonlyField");
+            this.byId("importPlant").removeStyleClass("readonlyField");
+            this.byId("account").removeStyleClass("readonlyField");
+
             var oRows = this.byId("budgetExecutionTable").getRows();
-            oRows.forEach(function(oCell, idx){
-                if(idx > 6 && idx !== 12){
-                  //  oCell.addStyleClass("readonlyField");
-                    oCell.removeStyleClass("readonlyField");
-                }
+
+            oRows.forEach(function(oCell, idx){ 
+                oCell.mAggregations.cells.forEach(function(item, jdx){
+                    if(jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8){
+                         item.removeStyleClass("readonlyField");
+                    }
+                });
             });
         } ,
         _toShowModeEachApproval : function(){ 
             console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
-            var oRows = this.byId('budgetExecutionTable').getRows();
+
+            this.byId("acquisition_department").addStyleClass("readonlyField");
+            this.byId("accounting_department").addStyleClass("readonlyField");
+            this.byId("importCompany").addStyleClass("readonlyField");
+            this.byId("projectCode").addStyleClass("readonlyField");
+            this.byId("importPlant").addStyleClass("readonlyField");
+            this.byId("account").addStyleClass("readonlyField");
+
+            var oRows = this.byId('budgetExecutionTable').getRows(); 
+            
             oRows.forEach(function(oCell, idx){
-                if(idx > 6 && idx !== 12){
-                    oCell.addStyleClass("readonlyField");
-                   // oCell.removeStyleClass("readonlyField");
-                }
+                oCell.mAggregations.cells.forEach(function(item, jdx){
+                    if(jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8){
+                         item.addStyleClass("readonlyField");
+                    }
+                });
             });
          } ,
-         /*
-        _budgetEditFragment : function(){
-            console.log("_budgetEditFragment");
-            var oPageSection = this.byId("pageApprovalLineSection");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionTableEdit", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
-        _budgetViewFragment : function(){
-             console.log("_budgetViewFragment");
-             var oPageSection = this.byId("pageApprovalLineSection");
-          //  oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionApprovalItem", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },*/ 
+
         /**
          * @description 미리보기 버튼눌렀을 경우 
          */

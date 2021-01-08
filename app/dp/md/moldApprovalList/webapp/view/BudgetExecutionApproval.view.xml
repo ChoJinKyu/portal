@@ -50,7 +50,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -166,9 +166,7 @@
 				<VBox  height="6em">
 					<Label text="Acquisition Department" required="true"/>
                     <!-- edit Mode -->
-					<Input value="" showValueHelp="true" visible="{mode>/editFlag}" />
-                    <!-- view Mode -->
-                    <Text text="" visible="{mode>/viewFlag}"/>
+					<Input id="acquisition_department"  value="" class="readonlyField" editable="{mode>/editFlag}" showValueHelp="true" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -176,15 +174,14 @@
 				<VBox  height="6em">
 					<Label text="Account Department" required="true"/>
                     <!-- edit Mode -->
-					<ComboBox visible="{mode>/editFlag}"
-                              width="100%" 
-                              id="acquisitionDepartment" 
+					<ComboBox id="accounting_department"
+                              editable="{mode>/editFlag}" 
+                              class="readonlyField"
+                              width="100%"  
                               selectedKey="{mdCommon>/accounting_department_code}" 
                               items="{}">
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/accounting_department_code}" visible="{mode>/viewFlag}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -193,7 +190,8 @@
 				<VBox  height="6em">
 					<Label text="Import Company"/>
                     <!-- edit Mode -->
-					<ComboBox visible="{mode>/editFlag}"
+					<ComboBox  editable="{mode>/editFlag}" 
+                              class="readonlyField"
                               width="100%" 
                               id="importCompany" 
                               selectionChange=".onBCompanyChange"
@@ -208,11 +206,7 @@
                               }">
 						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
 					</ComboBox>
-                    <!-- view Mode -->
-                    <HBox>
-                        <Text text="[{mdCommon>/import_company_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?${mode>/viewFlag}:false}" /> 
-                        <Text text=" {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
-                    </HBox>
+                   
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -221,15 +215,14 @@
 					<!-- projectcode  {I18N>/PROJECT_CODE}-->
 					<Label text="Project Code" required="true"/> 
                     <!-- edit Mode -->
-					<ComboBox visible="{mode>/editFlag}" 
+					<ComboBox editable="{mode>/editFlag}" 
+                              class="readonlyField"
                               width="100%" 
                               id="projectCode" 
                               selectedKey="{mdCommon>/project_code}" 
                               items="{}">
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/project_code}" visible="{mode>/viewFlag}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -238,7 +231,8 @@
 				<VBox  height="6em">
 					<Label text="Import Plant"/>
 					<ComboBox width="100%" 
-                              visible="{mode>/editFlag}" 
+                              editable="{mode>/editFlag}" 
+                              class="readonlyField"
                               id="importPlant" 
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
@@ -247,18 +241,14 @@
                               }">
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</ComboBox>
-                     <!-- view Mode -->
-                    <HBox>
-                          <Text text="[{mdCommon>/import_company_org_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?${mode>/viewFlag}:false}" />
-                          <Text text=" {mdCommon>/import_company_org_code_nm}" visible="{mode>/viewFlag}"/> 
-                    </HBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox  height="6em">
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
-					<ComboBox visible="{mode>/editFlag}"  
+					<ComboBox editable="{mode>/editFlag}" 
+                              class="readonlyField"  
                               width="100%" 
                               id="account" 
                               required="true"
@@ -271,8 +261,6 @@
                                     }">
 						<core:Item key="{util>code}" text="{util>code_name}"/>
 					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/account_code_nm}" visible="{mode>/viewFlag}"/> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>

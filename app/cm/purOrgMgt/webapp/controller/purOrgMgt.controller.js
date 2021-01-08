@@ -17,38 +17,51 @@ sap.ui.define([
 
         return Controller.extend("cm.purOrgMgt.controller.purOrgMgt", {
             onInit: function () {
-                //   var that = this;
-                //   this.getOwnerComponent().getModel("org")
-                //     .attachRequestCompleted(function(event){
-                //         var params = event.getParameters();
-                //         if (!params.url.includes("$count")) {
-                //             var entity = params.url.split("/")[0];
-                //             if (entity.includes("Org_Company")) {
-                //                 console.log(">>>> this", that);
-                //             }
-                //         }
-                //     });
-                // this.getView().setModel(new JSONModel({
-                //     tenant:{
-                //         key: 'L2100',
-                //         items: {
-                //             path: 'org>/Org_Tenant',
-                //             filters: [
-                //             ]
-                //         }
-                //     },
-                //     company: {
-                //         key: '*',
-                //         items: {
-                //             path: 'org>/Org_Company',
-                //             filters: [
-                //                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                //             ]
-                //         }
-                //     }
-                // }).attachPropertyChange((function(event) {
-                // }).bind(this)), "mSearch");
-                //this.getView().getModel("org").data
+                // 테넌트
+                this.getOwnerComponent().getModel("org")
+                .attachRequestCompleted((function(event){
+                    var params = event.getParameters();
+                    if (!params.url.includes("$count")) {
+                        var entity = params.url.split("/")[0];
+                        if (entity.includes("Org_Tenant")) {
+                            setTimeout((function(){
+                                this.byId("searchTenantCombo")
+                                    .insertItem(new Item({ key: "", text: "전체" }), 0)
+                                    .setSelectedItemId(this.byId("searchTenantCombo").getFirstItem().getId());
+                            }).bind(this), 0);
+                        }
+                    }
+                }).bind(this));
+                // 회사
+                this.getOwnerComponent().getModel("org")
+                .attachRequestCompleted((function(event){
+                    var params = event.getParameters();
+                    if (!params.url.includes("$count")) {
+                        var entity = params.url.split("/")[0];
+                        if (entity.includes("Org_Company")) {
+                            setTimeout((function(){
+                                this.byId("searchCompanyCode")
+                                    .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
+                                    .setSelectedItemId(this.byId("searchCompanyCode").getFirstItem().getId());
+                            }).bind(this), 0);
+                        }
+                    }
+                }).bind(this));
+                // 조직유형
+                this.getOwnerComponent().getModel("util")
+                .attachRequestCompleted((function(event){
+                    var params = event.getParameters();
+                    if (!params.url.includes("$count")) {
+                        var entity = params.url.split("/")[0];
+                        if (entity.includes("Code")) {
+                            setTimeout((function(){
+                                this.byId("searchOrgTypeCombo")
+                                    .insertItem(new Item({ key: "", text: "전체" }), 0)
+                                    .setSelectedItemId(this.byId("searchOrgTypeCombo").getFirstItem().getId());
+                            }).bind(this), 0);
+                        }
+                    }
+                }).bind(this));
             },
             // Data
             onSelectionChange: function() {
@@ -112,27 +125,21 @@ sap.ui.define([
                 });
             },
             onSearch: function () {
-                // Filter
-                var predicates = [];
-                if (!!this.byId("searchTenantCombo").getSelectedKey()) {
-                    predicates.push(new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey()));
-                }
-                if (!!this.byId("searchCompanyCode").getSelectedKey()) {
-                    predicates.push(new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCode").getSelectedKey()));
-                }
-                if (!!this.byId("searchOrgTypeCombo").getSelectedKey()) {
-                    predicates.push(new Filter("org_type_code", FilterOperator.EQ, this.byId("searchOrgTypeCombo").getSelectedKey()));
-                }
-                if (!!this.byId("searchUseFlag").getSelectedKey()) {
-                    predicates.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseFlag").getSelectedKey()));
-                }
                 // Call Service
                 (function(){
                     var oDeferred = new $.Deferred();
                     this.getView()
                         .setBusy(true)
                         .getModel().read("/Pur_Operation_Org", $.extend({
-                        filters: predicates
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey() || ""),
+                            new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCode").getSelectedKey() || ""),
+                            new Filter("org_type_code", FilterOperator.EQ, this.byId("searchOrgTypeCombo").getSelectedKey() || ""),
+                            new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseFlag").getSelectedKey() || ""),
+                        ].filter(
+                            f => f.oValue1 || (typeof f.oValue1 == "boolean") || (typeof f.oValue2 == "number") || 
+                                 f.oValue2 || (typeof f.oValue2 == "boolean") || (typeof f.oValue2 == "number")
+                        ),
                     }, {
                         success: oDeferred.resolve,
                         error: oDeferred.reject

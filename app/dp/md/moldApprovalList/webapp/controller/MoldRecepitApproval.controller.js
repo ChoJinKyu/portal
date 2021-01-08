@@ -88,7 +88,9 @@ sap.ui.define([
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { });
+                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
+                    console.log("data>>>> ", oData);
+                 });
             }  
         },
 
@@ -109,9 +111,29 @@ sap.ui.define([
 
         _toEditModeEachApproval : function(){ 
             console.log(" Mold RecepitApproval  _toEditModeEachApproval ");
+            
+            var oRows = this.byId("moldRecepitTable").getRows();
+            oRows.forEach(function(oCell, idx){
+               oCell.mAggregations.cells.forEach(function(item, jdx){ 
+                   console.log("item>>> " , item , ">>> jdx " , jdx);
+                    if(jdx == 12){
+                         item.removeStyleClass("readonlyField");
+                    }
+                });
+            });
+
          },
         _toShowModeEachApproval : function(){ 
             console.log(" Mold RecepitApproval  _toShowModeEachApproval ");
+            var oRows = this.byId("moldRecepitTable").getRows();
+            oRows.forEach(function(oCell, idx){
+               oCell.mAggregations.cells.forEach(function(item, jdx){ 
+                   console.log("item>>> " , item , ">>> jdx " , jdx);
+                    if(jdx == 12){
+                         item.addStyleClass("readonlyField");
+                    }
+                });
+            });
          } ,
       
        /**

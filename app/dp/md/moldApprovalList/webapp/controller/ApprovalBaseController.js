@@ -115,6 +115,19 @@ sap.ui.define([
 
         // 입찰대상 협력사 취소품의 이동 
         onPageCancellationButtonPress: function () {
+
+            /**
+             * 이동시 기존거 리셋 
+             */
+            for (var sPropertyName in this._oFragments) {
+                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
+                    return;
+                }
+               
+                this._oFragments[sPropertyName].destroy();
+                this._oFragments[sPropertyName] = null;
+            }
+
             var Cancellation = this.getView().getModel('Cancellation');
             Cancellation.setProperty("/approvalNumber", this.approval_number);
             Cancellation.setProperty("/isCreate", true);
