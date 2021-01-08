@@ -29,6 +29,10 @@ sap.ui.define([
 
     var oTransactionManager;
     //var oRichTextEditor;
+    var generalInfoFragment, 
+        attachmentsFragment,
+        approvalLineFragment,
+        itemFragment;
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
@@ -73,6 +77,20 @@ sap.ui.define([
             this._toShowMode();
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
+            for (var sPropertyName in this._oFragments) {
+                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
+                    return;
+                }
+               
+                this._oFragments[sPropertyName].destroy();
+                this._oFragments[sPropertyName] = null;
+            }
+
+            //this.byId("pageApprovalLineSection").destroy();
+            /*this.generalInfoFragment.destroy();
+            this.attachmentsFragment.destroy();
+            this.approvalLineFragment.destroy();
+            this.itemFragment.destroy();*/
             //  this.approvalList.onPageReload();
             /*
             var sPreviousHash = History.getInstance().getPreviousHash();
@@ -100,6 +118,7 @@ sap.ui.define([
             this.getRouter().navTo("participatingSupplierSelectionCancelApproval", {
                 company_code: this.company_code
                 , plant_code: this.plant_code
+                , approval_type_code: "A"
                 , approval_number: "New"
             });
         },
@@ -152,10 +171,13 @@ sap.ui.define([
          * @description 초기 생성시 파라미터를 받고 들어옴 
          * @param {*} args : company , plant
          */
-        _createViewBindData: function (args) {
+        _createViewBindData: function (args) { 
+
+            console.log("args>>>>> " , args);
+
             this.tenant_id = "L1100";
             this.approval_number = args.approval_number;
-            //this.approval_type_code = args.approval_type_code;
+            this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
@@ -181,6 +203,15 @@ sap.ui.define([
                 success: function (oData) {
                     console.log("orgName ", oData);
                 }
+            });
+
+            var appModel = this.getModel("appType");
+            appModel.setTransactionModel(this.getModel("util"));
+            appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
+                filters: [],
+                success: function (oData) {
+                    this._showFormItemFragment(oData.parent_code);
+                }.bind(this)
             });
 
             this._onRoutedThisPage(this.approval_number);
@@ -222,22 +253,31 @@ sap.ui.define([
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection");
             oPageGeneralInfoSection.removeAllBlocks();
 
-            this._loadFragment("GeneralInfo", function (oFragment) {
+            generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
 
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
 
-            this._loadFragment("Attachments", function (oFragment) {
+            attachmentsFragment = this._loadFragment("Attachments", function (oFragment) {
                 oPageAttachmentsSection.addBlock(oFragment);
             }.bind(this))
 
             var oPageApprovalLineSection = this.byId("pageApprovalLineSection");
             oPageApprovalLineSection.removeAllBlocks();
 
-            this._loadFragment("ApprovalLine", function (oFragment) {
+            approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
+            }.bind(this));
+        },
+
+        _showFormItemFragment: function (fragmentFileName) {
+            var oPageItemSection = this.byId("pageItemSection");
+            oPageItemSection.removeAllBlocks();
+
+            itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
+                oPageItemSection.addBlock(oFragment);
             }.bind(this));
 
         },

@@ -1372,6 +1372,17 @@ sap.ui.define([
             //삭제전 BOM에서 사용되거나 가격관리 테이블에서 사용되는 시황자재 인지 확인한다. 
             /* tenant_id, mi_material_code 의 존재 유무로 확인(김종현 2020-12-23) */
      
+            
+            if(oMIMaterialCodeText==undefined){
+                MessageToast.show(this.getModel("I18N").getText("/NCM01007"));  
+                return;                 
+            } 
+
+            if(oMIMaterialCodeText.oData==null){
+                MessageToast.show(this.getModel("I18N").getText("/NCM01007"));  
+                return;                 
+            }
+
             for(var i=0;i<oMIMaterialCodeText.oData.length;i++){
                 var oMIMaterialCodeTextKey = {
                     tenant_id : oMIMaterialCodeText.oData[i].tenant_id,
@@ -1461,7 +1472,7 @@ sap.ui.define([
             
 
             if(oBomCount>0 || oPriceCount>0){
-                MessageToast.show(this.getModel("I18N").getText("/NPG00004"));
+                MessageToast.show(this.getModel("I18N").getText("/NPG00017"));
             }else{
 
                 var oDeleteMIMaterialCodeKey = {
@@ -1478,12 +1489,15 @@ sap.ui.define([
                         groupId: this._m.groupID
                     }
                 );   
-
-                that._setUseBatch(); 
-
+                setTimeout(that._setUseBatch(), 1000);
+                //that._setUseBatch(); 
                 this._fnSetReadMode();   
+                
                 var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                that._onExit();
+
+                setTimeout(that._onExit(), 1000);
+                //that._onExit();
+
                 that.getRouter().navTo("mainPage", { layout: sNextLayout });
              
             }
@@ -1502,6 +1516,8 @@ sap.ui.define([
                 success: that._handleDeleteSuccess.bind(this),
                 error: that._handleDeleteError.bind(this)
             });
+
+
             oModel.refresh(true);
         },
 

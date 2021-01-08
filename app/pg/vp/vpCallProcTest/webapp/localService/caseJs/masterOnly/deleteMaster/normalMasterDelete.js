@@ -20,7 +20,7 @@ vpMstList.push({
     ,company_code: "*"
     ,org_type_code: "BU"
     ,org_code: "BIZ00200"
-    ,vendor_pool_code: "VP202011230TEST01"
+    ,vendor_pool_code: "VP202011230TEST02"
     ,vendor_pool_local_name : "TEST1 LOCAL 01"
     ,vendor_pool_english_name : "TEST1 LOCAL EN 01"
     ,repr_department_code: "T222"                

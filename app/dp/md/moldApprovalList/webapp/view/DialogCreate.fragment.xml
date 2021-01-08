@@ -8,6 +8,7 @@
         <content>  
             <VBox class="sapUiSmallMargin">
                 <form:SimpleForm
+                    id="dialogCreateForm"
                     editable="false"
                     layout="ResponsiveGridLayout"
                     labelSpanXL="4"
@@ -26,14 +27,14 @@
                     <form:content>
                         <!-- 팝업 콤보박스 영역 -->
                         <VBox>
-                            <Label text = "Company" design="Bold"/> 
+                            <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" design="Bold" required="true"/> 
                             <ComboBox id="searchCompanyF" width="70%" selectedKey="" change="dialogChangeComp" items="{
                                 path: 'org>/Company',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                 ],
                                 sorter: { path: 'company_code'}
-                            }">
+                            }" required="true">
                                 <items>
                                     <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                 </items>
@@ -43,7 +44,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Plant" design="Bold"/> 
+                            <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" design="Bold" required="true"/> 
                             <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
@@ -51,7 +52,7 @@
                                     {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                     {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                 ]
-                            }">
+                            }" required="true">
                                 <items>
                                     <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                 </items>
@@ -64,7 +65,7 @@
                         <!-- Approval Category 버튼 영역 -->
                         <core:Title text="Approval Category" />
                         <VBox>
-                            <Label text = "1. Local"/> 
+                            <Label text = "1. {path:'I18N>/LOCAL', formatter:'I18NFormatter'}"/> 
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData> 
@@ -94,7 +95,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "2. Export"/> 
+                            <Label text = "2. {path:'I18N>/EXPORT', formatter:'I18NFormatter'}"/> 
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData> 
@@ -111,7 +112,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "3. Import"/> 
+                            <Label text = "3. {path:'I18N>/IMPORT', formatter:'I18NFormatter'}"/> 
                             <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData> 
@@ -152,7 +153,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "5. Etc"/> 
+                            <Label text = "5. {path:'I18N>/ETC', formatter:'I18NFormatter'}"/> 
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData> 

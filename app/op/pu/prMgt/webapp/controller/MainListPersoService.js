@@ -1,60 +1,95 @@
 sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
+        var i = 1;
 
         var _columns = [
             {
-                id: "prMgt-mainList-mainColumnCode",
-                order: 0,
-                text: "Code",
-                visible: true
-            },
-            {
-                id: "prMgt-mainList-mainColumnName",
+                id: "prMgt-mainList-mainColumnCHK",
                 order: 1,
-                text: "Name",
+                text: "CHK",
                 visible: false
             },
             {
-                id: "prMgt-mainList-mainColumnStartDate",
-                order: 2,
-                text: "Start Date",
+                id: "prMgt-mainList-mainColumnPR_NUMBER",
+                order: 0,
+                text: "PR_NUMBER",
                 visible: false
             },
             {
-                id: "prMgt-mainList-mainColumnEndDate",
+                id: "prMgt-mainList-mainColumnERP_PR_NUMBER",
+                order: 0,
+                text: "ERP_PR_NUMBER",
+                visible: false
+            },
+            {
+                id: "prMgt-mainList-mainColumnPR_DESC",
+                order: 1,
+                text: "PR_DESC",
+                visible: false
+            },
+            {
+                id: "prMgt-mainList-mainColumnPR_TYPE_CODE",
                 order: 3,
-                text: "End Date",
+                text: "PR_TYPE_CODE",
                 visible: true
             },
             {
-                id: "prMgt-mainList-mainColumnSiteFlag",
+                id: "prMgt-mainList-mainColumnPR_TYPE_CODE_2",
                 order: 4,
-                text: "Site",
+                text: "PR_TYPE_CODE_2",
                 visible: true
             },
             {
-                id: "prMgt-mainList-mainColumnCompanyFlag",
+                id: "prMgt-mainList-mainColumnPR_TYPE_CODE_3",
                 order: 5,
-                text: "Company",
+                text: "PR_TYPE_CODE_3",
                 visible: true
             },
             {
-                id: "prMgt-mainList-mainColumnRoleFlag",
-                order: 5,
-                text: "Role",
-                visible: true
-            },
-            {
-                id: "prMgt-mainList-mainColumnOrganizationFlag",
+                id: "prMgt-mainList-mainColumnPR_TEMPLATE_NUMBER",
                 order: 6,
-                text: "Organization",
+                text: "PR_TEMPLATE_NUMBER",
                 visible: true
             },
             {
-                id: "prMgt-mainList-mainColumnUserFlag",
+                id: "prMgt-mainList-mainColumnREQUESTOR_DEPARTMENT_NAME",
                 order: 7,
-                text: "User",
+                text: "REQUESTOR_DEPARTMENT_NAME",
+                visible: true
+            },
+            {
+                id: "prMgt-mainList-mainColumnREQUESTOR_NAME",
+                order: 8,
+                text: "REQUESTOR_NAME",
+                visible: true
+            }
+            ,
+            {
+                id: "prMgt-mainList-mainColumnREQUESTOR_NAME",
+                order: 9,
+                text: "REQUESTOR_NAME",
+                visible: true
+            }
+            ,
+            {
+                id: "prMgt-mainList-mainColumnPURCHASE_REQUISITION",
+                order: 10,
+                text: "PURCHASE_REQUISITION",
+                visible: true
+            }
+            ,
+            {
+                id: "prMgt-mainList-mainColumnPR_COUNT",
+                order: 11,
+                text: "PR_COUNT",
+                visible: true
+            }
+             ,
+            {
+                id: "prMgt-mainList-mainColumnPR_CREATE_STATUS_CODE",
+                order: 12,
+                text: "PR_CREATE_STATUS_CODE",
                 visible: true
             }
         ];
@@ -111,8 +146,8 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnCode") != -1 ||
-                    sId.indexOf("mainColumnName") != -1) {
+                if (sId.indexOf("mainColumnPR_NUMBER") != -1 ||
+                    sId.indexOf("mainColumnERP_PR_NUMBER") != -1) {
                     return "Columns of Key";
                 }
                 return "Others";

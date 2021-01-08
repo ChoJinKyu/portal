@@ -265,48 +265,49 @@
                         <Table id="idProductsTable"
                             sticky="HeaderToolbar,ColumnHeaders"
                             inset="false"
+                            mode="MultiSelect"
                             class="sapFDynamicPageAlignContent"
                             width="auto">
-                        <headerToolbar>
-                            <OverflowToolbar>
-                                <ToolbarSpacer/>
-                                <Button id="addRow" text="추가" type="Transparent" press=".onMainTableAddButtonPress" />
-                                <Button id="deleteRow" text="삭제" type="Transparent" press=".onMainTableDeleteButtonPress" />
-                            </OverflowToolbar>
-                        </headerToolbar>
-                        <columns>
-                            <Column>
-                                <Text text="과제명" />
-                            </Column>
-                            <Column>
-                                <Text text="투자 내역" />
-                            </Column>
-                            <Column>
-                                <Text text="집행시기" />
-                            </Column>
-                            <Column>
-                                <Text text="신청금액(원)" />
-                            </Column>
-                            <Column>
-                                <Text text="적용모델" />
-                            </Column>
-                            <Column>
-                                <Text text="투자장소" />
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <ObjectIdentifier text="test"/>
-                                    <ObjectIdentifier text="test"/>
-                                    <ObjectIdentifier text="test"/>
-                                    <ObjectIdentifier text="test"/>
-                                    <ObjectIdentifier text="test"/>
-                                    <ObjectIdentifier text="test"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <ToolbarSpacer/>
+                                    <Button id="addRow" text="추가" type="Transparent" press=".onInvestmentPlanAddButtonPress" />
+                                    <Button id="deleteRow" text="삭제" type="Transparent" press=".onInvestmentPlanDeleteButtonPress" />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column>
+                                    <Text text="과제명" />
+                                </Column>
+                                <Column>
+                                    <Text text="투자 내역" />
+                                </Column>
+                                <Column>
+                                    <Text text="집행시기" />
+                                </Column>
+                                <Column>
+                                    <Text text="신청금액(원)" />
+                                </Column>
+                                <Column>
+                                    <Text text="적용모델" />
+                                </Column>
+                                <Column>
+                                    <Text text="투자장소" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <ObjectIdentifier text=""/>
+                                        <ObjectIdentifier text=""/>
+                                        <ObjectIdentifier text=""/>
+                                        <ObjectIdentifier text=""/>
+                                        <ObjectIdentifier text=""/>
+                                        <ObjectIdentifier text=""/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -379,12 +380,12 @@
 		<!-- 하단 버튼 처리 툴바 -->
 		<uxap:footer>
 			<OverflowToolbar>
-        <Button
-            icon="sap-icon://alert"
-            type="Emphasized"
-            text="{= ${message>/}.length }"
-            visible="{= ${message>/}.length > 0 }"
-            press=".onMessagePopoverPress" />
+                <!-- <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
                 <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
                 <Button id="pageSaveButton" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />

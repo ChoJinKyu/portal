@@ -5,7 +5,7 @@
     xmlns:core="sap.ui.core"
     height="100%">
 
-    <Page id="page" title="Code Combo" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" title="Dynamic Column Table likes Pivot" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <content>
             <VBox>
 
@@ -22,6 +22,11 @@
                     </table:extension>
                 </table:Table>
 
+                <MessageStrip
+                class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom"
+                type="Information"
+                text="&#10;@See&#160;'odata/v4/xx.ExampleV4Service/GetPivotData'&#10;&#10;srv/cds/xx/example-v4-service.cds&#10;lg.sppCap.handlers.xx.ExampleV4Service.java&#10;&#10;" />
+            
             </VBox>
         </content>
     </Page>

@@ -25,7 +25,12 @@
             <Table  id="reqmTable"
                     mode="SingleSelectLeft"
                     items="{unitOfMeasureView>/}"
-                    noDataText="No Data"
+                    noDataText="{I18N>/NCM0001}"
+                    growingScrollToLoad="true"
+                    growing="true"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    growingThreshold="50"
+                    inset="false"                    
                     class="sapUiSmallMargin sapUiSmallMarginTop"
             >
                 <columns>

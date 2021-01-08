@@ -12,8 +12,8 @@
     ],
     "actions": [],
     "java.configuration.updateBuildConfiguration": "automatic",
-    "CDS graphical modeler.Default CDS Editor": false,
+    "CDS graphical modeler.Default CDS Editor": true,
     "CDS graphical modeler.Automatic Key Generation": "on",
-    "CDS graphical modeler.Automatic Sorting": true,
+    "CDS graphical modeler.Automatic Sorting": false,
     "cds.checkDevKitInstalled": false
 }

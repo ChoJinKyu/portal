@@ -113,13 +113,11 @@ sap.ui.define([
                         md.setProperty("/account_code_nm", "");
                         md.setProperty("/provisional_budget_amount", "");
                     }
-
                    
                 });
-                this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }
             
-        },
+        }, 
 
         _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
@@ -140,15 +138,11 @@ sap.ui.define([
          * @param {*} company_code 
          */
         onBCompanyChange : function (oEvent){
-            // console.log("oEvent >>> " , oEvent); var md = this.getModel('mdCommon');
-            // console.log("1 >>> " ,this.getView().byId('importCompany').getSelectedKey());
-            // console.log("2 >>> " ,this.getView().byId('importCompany').mProperties.selectedKey);
-            // console.log("3 >>> " ,this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code);
-
             var company_code = this.getModel("mdCommon").getData().import_company_code;
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
+
         _bindComboPlant : function (company_code) { 
             
             var aFilter = [
@@ -157,16 +151,16 @@ sap.ui.define([
                         , new Filter("company_code", FilterOperator.EQ, company_code)
                 ];
 
-              var oView = this.getView(),
-                    oModel = this.getModel("importPlant");
-                oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel("purOrg"));
-                oModel.read("/Pur_Operation_Org", {
-                    filters: aFilter,
-                    success: function (oData) { 
-                        oView.setBusy(false);
-                    }
-                });
+            var oView = this.getView(),
+                oModel = this.getModel("importPlant");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("purOrg"));
+            oModel.read("/Pur_Operation_Org", {
+                filters: aFilter,
+                success: function (oData) { 
+                    oView.setBusy(false);
+                }
+            });
         } ,
 
        /**
@@ -188,10 +182,11 @@ sap.ui.define([
                 });
             }
 
-            var oArgs = {
+            var oArgs = { 
+                approval_type_code : "B",
                 company_code: this.company_code ,
                 org_code: this.plant_code,
-                mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : ['DEV_RCV','SUP_APP'] ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
@@ -238,6 +233,7 @@ sap.ui.define([
                 "local_update_dtm": new Date()
             }, "/ItemBudgetExecution");
         },
+        
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
@@ -267,12 +263,16 @@ sap.ui.define([
             console.log();
         },
 
-        _toEditModeEachApproval : function(){ this._budgetEditFragment() } ,
-        _toShowModeEachApproval : function(){ this._budgetViewFragment() } ,
+        _toEditModeEachApproval : function(){
 
+          } ,
+        _toShowModeEachApproval : function(){ 
+
+         } ,
+         /*
         _budgetEditFragment : function(){
             console.log("_budgetEditFragment");
-            var oPageSection = this.byId("budgetExecutionTableFragment");
+            var oPageSection = this.byId("pageApprovalLineSection");
             oPageSection.removeAllBlocks();
             this._loadFragment("BudgetExecutionTableEdit", function (oFragment) {
                 oPageSection.addBlock(oFragment);
@@ -280,12 +280,12 @@ sap.ui.define([
         },
         _budgetViewFragment : function(){
              console.log("_budgetViewFragment");
-             var oPageSection = this.byId("budgetExecutionTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionTableView", function (oFragment) {
+             var oPageSection = this.byId("pageApprovalLineSection");
+          //  oPageSection.removeAllBlocks();
+            this._loadFragment("BudgetExecutionApprovalItem", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
-        },
+        },*/ 
         /**
          * @description 미리보기 버튼눌렀을 경우 
          */

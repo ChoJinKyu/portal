@@ -42,7 +42,7 @@ public class FundingNotifyService implements EventHandler {
         
         String funding_notify_number = "";
         // String f_sql = "SELECT 'F' || TO_NCHAR(NOW(), 'YYYY') || '_' || LPAD(funding_notify_number.NEXTVAL, 3, '0') FROM DUMMY";
-        String f_sql = "SELECT 'F' || YEAR(CURRENT_DATE) || '-' || LPAD(IFNULL(MAX(SUBSTR(FUNDING_NOTIFY_NUMBER, 7, 3)), 0)+1,3,'0') AS FUNDING_NOTIFY_NUMBER FROM SP_SF_FUNDING_NOTIFY WHERE TENANT_ID = 'L2100' AND SUBSTR(FUNDING_NOTIFY_NUMBER, 2, 4) = YEAR(CURRENT_DATE)";
+        String f_sql = "SELECT 'N' || YEAR(CURRENT_DATE) || '-' || LPAD(IFNULL(MAX(SUBSTR(FUNDING_NOTIFY_NUMBER, 7, 3)), 0)+1,3,'0') AS FUNDING_NOTIFY_NUMBER FROM SP_SF_FUNDING_NOTIFY WHERE TENANT_ID = 'L2100' AND SUBSTR(FUNDING_NOTIFY_NUMBER, 2, 4) = YEAR(CURRENT_DATE)";
         ResultSet f_rs = null;    
 
         try {

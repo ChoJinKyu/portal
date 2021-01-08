@@ -3,7 +3,7 @@ sap.ui.define([
     "use strict";
 
     var map = {
-            "dp.MaterialMasterMgtService": "srv-api/odata/v2/dp.MaterialMasterMgtService/"
+            "dp.MmService": "srv-api/odata/v2/dp.util.MmService/"
         };
     
     return {

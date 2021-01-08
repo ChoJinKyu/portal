@@ -29,7 +29,7 @@ service BasePriceArlService {
                 (select code_name from codeLng l where l.tenant_id  = d.tenant_id
                         and l.group_code = d.group_code
                         and l.code = d.code
-                        and l.language_cd = 'EN') as code_name: String(240),
+                        and l.language_cd = 'KO') as code_name: String(240),
                 code_description,
                 sort_no
         }

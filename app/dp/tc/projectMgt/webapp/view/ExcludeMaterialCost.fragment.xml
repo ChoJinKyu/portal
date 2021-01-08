@@ -24,7 +24,7 @@
                 emptySpanS="0"     
                 singleContainerFullSize="false" >                    
                     <form:content >
-                            <Label text = "Project">
+                            <Label text = "프로젝트코드">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
@@ -44,7 +44,7 @@
                                     <layout:GridData span="XL3 L3 M3 S3" />
                                 </layoutData>
                             </Text>
-                            <Label text = "제외 사유" width="100%">
+                            <Label text = "제외사유" width="100%">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" lineBreak="true"/>
                                 </layoutData> 
@@ -60,8 +60,8 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="End" justifyContent="End" >
-            <Button text="Save" class="sapUiSmallMarginEnd" press=".onExcludeCalSavePress"/>
-            <Button text="cancel" class="sapUiSmallMarginEnd" type="Emphasized" press=".onExcludeCalExit"/>
+            <Button text="닫기" class="sapUiSmallMarginEnd" press=".onExcludeCalExit"/>
+            <Button text="저장" class="sapUiSmallMarginEnd" type="Emphasized" press=".onExcludeCalSavePress"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

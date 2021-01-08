@@ -25,8 +25,8 @@ entity It_Mst_Pur_Group {
     key company_code               : String(10) not null @title : '회사코드';
     key org_type_code              : String(30) not null @title : '조직유형코드';
     key org_code                   : String(10) not null @title : '조직코드';
-    key purchasing_group_code      : String(5) not null  @title : '구매그룹코드';
-        purchasing_group_code_name : String(27)          @title : '구매그룹코드명';
+    key purchasing_group_code      : String(3) not null  @title : '구매그룹코드';
+        purchasing_group_code_name : String(30)          @title : '구매그룹코드명';
 }
 
 extend It_Mst_Pur_Group with util.Managed;

@@ -158,13 +158,11 @@
 					<uxap:ObjectPageSubSection>
                         <!-- onAfterRendering ="onAfterRendering" updateFinished=".onMidTableUpdateFinished" -->
 						<Table id="midTable" 
-                                updateFinished="updateFinished"
-                                updateStarted="updateStarted"
 								sticky="HeaderToolbar,ColumnHeaders" 
+                                noDataText="{I18N>/NCM01004}"
 								inset="false" 
 								items="{ path: '/MICategoryText' }"
-								class="sapFDynamicPageAlignContent" 
-								
+								class="sapFDynamicPageAlignContent " 
 								mode="{= ${util>/flag} === 'S' ?  'None' : 'MultiSelect'}"
 								width="auto">
 							<headerToolbar>

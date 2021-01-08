@@ -1,0 +1,156 @@
+<mvc:View
+    controllerName="dp.pd.activityMappingMgt.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core"     
+    xmlns:lib-m="ext.lib.control.m"
+    height="100%">
+
+    <f:DynamicPage id="page" headerExpanded="{mainListView>/headerExpanded}" toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>appTitle}" />
+                </f:heading>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm
+                    id="pageSearchForm"
+                    maxContainerCols="2"
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    adjustLabelSpan="false"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="2"
+                    columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="사업본부: " labelFor="searchOrgCombo" required="true"></Label>
+                            <ComboBox
+                                id="searchOrgCombo"
+                                width="100%"
+                                selectedKey="L110010000"
+                                items="{
+                                    path: 'org>/Unit',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{org>bizunit_code}" text="{org>bizunit_code} : {org>bizunit_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Product Activity: " labelFor="searchProductActivity"></Label>
+                            <Input id="searchProductActivity" placeholder="Product Activity"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Activity: " labelFor="searchActivity"></Label>
+                            <Input id="searchActivity" placeholder="Activity"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <FlexBox alignItems="End" justifyContent="End">
+                            <Button id="btn_search" text="Search" type="Emphasized" press=".onPageSearchButtonPress"/>
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <Table
+                id="mainTable"
+                items="{list>/ActivityMapping}"
+                sticky="HeaderToolbar,ColumnHeaders" 
+                inset="false"
+                class="sapFDynamicPageAlignContent" 
+                width="auto">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="Activity Mappting List ({=(${list>/ActivityMapping})?${list>/ActivityMapping}.length:0}) " level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button id="mainTableAddButton" text="Add Mapping" type="Transparent" press=".onMainTableAddButtonPress" />
+                        <Button id="mainTableDelButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                        <Button id="mainTableCancButton" text="Cancel" type="Transparent" press=".onMainTableCancButtonPress" />
+                        <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        <ToolbarSeparator/>
+                        <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="NeverOverflow" />
+                            </layoutData>
+                        </Button>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="mainColumnBizUnit" minScreenWidth="Tablet" hAlign="Center">
+                        <Text text="사업본부" />
+                    </Column>
+                    <Column id="mainColumnPAC" minScreenWidth="Tablet" hAlign="Center" >
+                        <Text text="Product Activity Code" />
+                    </Column>
+                    <Column id="mainColumnPACN" minScreenWidth="Tablet" hAlign="Center" >
+                        <Text text="Product Activity Code명" />
+                    </Column>
+                    <Column id="mainColumnDependency" minScreenWidth="Tablet" hAlign="Center" >
+                        <Text text="종속유형" />
+                    </Column>
+                    <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Center" >
+                        <Text text="Activity Code" />
+                    </Column>
+                    <Column id="mainColumnACN" minScreenWidth="Tablet" hAlign="Center" >
+                        <Text text="Activity Code명" />
+                    </Column>
+                    <Column id="mainColumnUDT" minScreenWidth="Tablet" hAlign="Center" >
+                        <Text text="수정일자" />
+                    </Column>
+                    <Column id="mainColumnUDU" minScreenWidth="Tablet" hAlign="Center" >
+                        <Text text="수정자" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem press=".onMainTableItemPress">
+                        <cells>
+                            <Text text="{list>org_code}"/>
+                            <Text text="{list>product_activity_code}"/>
+                            <Text text="{list>product_activity_name}"/>
+                            <Text text="{list>activity_dependency_code}"/>
+                            <Text text="{list>activity_code}"/>
+                            <Text text="{list>activity_name}"/>
+                            <Text text="{
+									path: 'list>system_update_dtm',
+									formatter: '.dateFormatter.toUTCDateTimeString'
+								}"/>
+                            <Text text="{list>update_user_id}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </f:content>
+
+    </f:DynamicPage>
+</mvc:View>
