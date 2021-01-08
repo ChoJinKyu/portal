@@ -12,7 +12,17 @@
   
   5. namespace : dp
   6. service  : DP_MM_UOM_CONVERSION_FUNC
-  7. entity description : 단위환산 Function cds
+  7. entity description : 
+      2) 단위환산 Procedure cds
+        - Input : I_TENANT_ID NVARCHAR(5),
+                  I_FROM_UOM_CODE NVARCHAR(3),
+                  I_TO_UOM_CODE NVARCHAR(3),
+                  I_QUANTITY DECIMAL,
+        - Output : O_RETURN_CODE NVARCHAR(1),
+                   O_RETURN_MSG_CODE NVARCHAR(30),
+                   O_RETURN_MSG NVARCHAR(100),
+                   O_RETURN_QUANTITY DECIMAL
+      1) 단위환산 Function cds
        - Input : I_TENANT_ID NVARCHAR(5)
                  I_FROM_UOM_CODE NVARCHAR(3)
                  I_TO_UOM_CODE NVARCHAR(3)
@@ -30,6 +40,25 @@ namespace dp;
 @path : '/dp.UomMgtV4Service'
 service UomMgtV4Service {
 
+    // UOM 환산 Procedure
+    type UomConversionIn : {
+        i_tenant_id : String;
+        i_from_uom_code : String;
+        i_to_uom_code : String;
+        i_quantity : Decimal;
+    }
+
+    type UomConvResult : {
+        o_return_code : String;
+        o_return_msg_code : String;
+        o_return_msg : String;
+        o_return_quantity : Decimal;  
+    }
+
+    action UomConversionProc (inputdata : UomConversionIn ) returns UomConvResult;
+
+
+    // UOM 환산 Function
     entity MmUomConversionFunc(I_TENANT_ID : String, I_FROM_UOM_CODE : String, I_TO_UOM_CODE : String, I_QUANTITY : Decimal) as
     select from UomF.Mm_Uom_Conversion_Func(I_TENANT_ID: :I_TENANT_ID, 
                                             I_FROM_UOM_CODE: :I_FROM_UOM_CODE,
