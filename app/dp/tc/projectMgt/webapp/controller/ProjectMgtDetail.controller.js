@@ -60,10 +60,6 @@ sap.ui.define([
             });
         }
 
-        , onBack: function () {
-            this.getRouter().navTo("ProjectMgtList");
-        }
-
         , onTabSelect: function(oEvent) {
             if(oEvent.getParameter("selectedKey") ==="1") {
             //  this.getView().byId("dynaPage").title.visible = oEvnet.getSource().getExpanded ? false : true;
@@ -76,16 +72,33 @@ sap.ui.define([
             }
         }
 
-        , onEditPress: function(oEvent) {
+        /**
+         * 저장을 위한 Model Data 재 구성
+         */
+        , _reFactorySaveModel: function() {
+            var oDetailModel = this.getModel("detailModel");
+            var oData = oDetailModel.getData();
+            console.log(":: data ::", oData);
             debugger;
-                this.getModel("detailModel").setProperty("/mode/readMode", false);
-                this.getModel("detailModel").setProperty("/mode/editMode", true);
+
+        }
+
+        /**
+         * 저장
+         */
+        , onSavePress: function (oEvent) {
+            debugger;
+            this._reFactorySaveModel();
+        }
+
+        , onEditPress: function(oEvent) {
+            this.getModel("detailModel").setProperty("/mode/readMode", false);
+            this.getModel("detailModel").setProperty("/mode/editMode", true);
         }
 
         , onReadPress: function(oEvent) {
-            debugger;
-                this.getModel("detailModel").setProperty("/mode/readMode", true);
-                this.getModel("detailModel").setProperty("/mode/editMode", false);
+            this.getModel("detailModel").setProperty("/mode/readMode", true);
+            this.getModel("detailModel").setProperty("/mode/editMode", false);
         }
 
         , onBackPress: function(oEvent) {
