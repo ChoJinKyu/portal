@@ -80,8 +80,6 @@ sap.ui.define([
             var schFilter = [];
 
             if (this.approval_number == "New") {
-                 this._participatingEditFragment();
-
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.getView().getModel('Cancellation').getProperty("/approvalNumber"))
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
@@ -91,7 +89,6 @@ sap.ui.define([
                 });
 
             } else {
-                this._participatingViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
@@ -142,9 +139,9 @@ sap.ui.define([
             this._viewMode();
         },
 
-        _toEditModeEachApproval : function(){ this._participatingEditFragment() } ,
-        _toShowModeEachApproval : function(){ this._participatingViewFragment() } ,
-
+        _toEditModeEachApproval : function(){  } ,
+        _toShowModeEachApproval : function(){  } ,
+        /*
         _participatingEditFragment : function(){
             console.log("_participatingEditFragment");
             var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
@@ -160,7 +157,7 @@ sap.ui.define([
             this._loadFragment("ParticipatingSupplierSelectionTableView", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
-        },
+        }, */ 
 
         onPagePreviewButtonPress : function(){ // 협력사 선정품의랑 같은거 사용 
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 

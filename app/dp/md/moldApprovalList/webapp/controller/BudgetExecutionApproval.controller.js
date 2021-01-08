@@ -115,8 +115,6 @@ sap.ui.define([
                     }
                    
                 });
-
-                this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }
             
         }, 
@@ -265,12 +263,16 @@ sap.ui.define([
             console.log();
         },
 
-        _toEditModeEachApproval : function(){ this._budgetEditFragment() } ,
-        _toShowModeEachApproval : function(){ this._budgetViewFragment() } ,
+        _toEditModeEachApproval : function(){
 
+          } ,
+        _toShowModeEachApproval : function(){ 
+
+         } ,
+         /*
         _budgetEditFragment : function(){
             console.log("_budgetEditFragment");
-            var oPageSection = this.byId("budgetExecutionTableFragment");
+            var oPageSection = this.byId("pageApprovalLineSection");
             oPageSection.removeAllBlocks();
             this._loadFragment("BudgetExecutionTableEdit", function (oFragment) {
                 oPageSection.addBlock(oFragment);
@@ -278,12 +280,12 @@ sap.ui.define([
         },
         _budgetViewFragment : function(){
              console.log("_budgetViewFragment");
-             var oPageSection = this.byId("budgetExecutionTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionTableView", function (oFragment) {
+             var oPageSection = this.byId("pageApprovalLineSection");
+          //  oPageSection.removeAllBlocks();
+            this._loadFragment("BudgetExecutionApprovalItem", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
-        },
+        },*/ 
         /**
          * @description 미리보기 버튼눌렀을 경우 
          */
