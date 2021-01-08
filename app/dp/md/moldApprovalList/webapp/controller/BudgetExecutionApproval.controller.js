@@ -263,11 +263,25 @@ sap.ui.define([
             console.log();
         },
 
-        _toEditModeEachApproval : function(){
-
-          } ,
+        _toEditModeEachApproval : function(){ 
+            console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
+            var oRows = this.byId("budgetExecutionTable").getRows();
+            oRows.forEach(function(oCell, idx){
+                if(idx > 6 && idx !== 12){
+                  //  oCell.addStyleClass("readonlyField");
+                    oCell.removeStyleClass("readonlyField");
+                }
+            });
+        } ,
         _toShowModeEachApproval : function(){ 
-
+            console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
+            var oRows = this.byId('budgetExecutionTable').getRows();
+            oRows.forEach(function(oCell, idx){
+                if(idx > 6 && idx !== 12){
+                    oCell.addStyleClass("readonlyField");
+                   // oCell.removeStyleClass("readonlyField");
+                }
+            });
          } ,
          /*
         _budgetEditFragment : function(){
@@ -292,9 +306,16 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            if(this.getModel("approver").getData().Approvers != undefined){  // approver 는 맨 마지막 줄이 있어서 걔는 안보여주기 위해 새로 담음 
+            if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+                for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }

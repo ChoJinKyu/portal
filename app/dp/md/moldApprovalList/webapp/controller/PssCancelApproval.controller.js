@@ -135,12 +135,15 @@ sap.ui.define([
         } ,
 
         onPageCancelButtonPress: function () {
-            this._participatingViewFragment();
             this._viewMode();
         },
 
-        _toEditModeEachApproval : function(){  } ,
-        _toShowModeEachApproval : function(){  } ,
+        _toEditModeEachApproval : function(){ 
+             console.log(" PssCancelApproval  _toEditModeEachApproval ");
+         } ,
+        _toShowModeEachApproval : function(){ 
+             console.log(" PssCancelApproval  _toShowModeEachApproval "); 
+         } ,
         /*
         _participatingEditFragment : function(){
             console.log("_participatingEditFragment");
@@ -164,7 +167,14 @@ sap.ui.define([
 
             if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+                for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
