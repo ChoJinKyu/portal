@@ -2033,23 +2033,21 @@ sap.ui.define([
                 updateItem = 0, 
                 createItem = 0,
                 copyBomId = "" ,
+                createBomId = "",
                 deleteItem = 0;
                 //that._setBusy(true);
 
-
-
-            if(bCopyFlag){
-                copyBomId = that._fnGuid();
+            if(bCreateFlag==true || bCopyFlag ==true){
+                createBomId = that._fnGuid();
             }
+
 
             var _headerCount = 0;
             for(var i=0;i<midList.oData.length;i++){
-
                 
                 if((typeof midList.oData[i].use_flag)=='string'){
                     midList.oData[i].use_flag = midList.oData[i].use_flag ==="true" ?  true: false;
                 }
-                
 
                 //Crate , Copy
                 if(bCreateFlag==true || bCopyFlag ==true){
@@ -2059,15 +2057,8 @@ sap.ui.define([
                     midList.oData[i].base_quantity = that.byId("input_base_quantity").getValue(),
                     midList.oData[i].processing_cost = that.byId("input_processing_cost").getValue(),
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();
-                  
-                    if(bCopyFlag){
-                        midList.oData[i].mi_bom_id =  copyBomId;
-                    }
-
-                    if(bCreateFlag){
-                        midList.oData[i].mi_bom_id =  that._fnGuid();
-                    }
-
+                    midList.oData[i].mi_bom_id =  createBomId;
+ 
                     if(_headerCount==0){
                         if(that._fnCreateEntryHeader(oModel, midList.oData[i])){
                             createHeader++;
