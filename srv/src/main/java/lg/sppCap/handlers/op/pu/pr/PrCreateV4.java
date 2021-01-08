@@ -16,6 +16,9 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,11 +50,15 @@ import com.sap.cds.Result;
 import com.sap.cds.ql.cqn.CqnInsert;
 import com.sap.cds.ql.Insert;
 
+import lg.sppCap.util.StringUtil;
+
 import cds.gen.op.prcreatev4service.*;
 
 @Component
 @ServiceName(PrCreateV4Service_.CDS_NAME)
 public class PrCreateV4 implements EventHandler {
+
+    private static final Logger log = LogManager.getLogger();
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -89,33 +96,92 @@ public class PrCreateV4 implements EventHandler {
         System.out.println("#################### onSavePrCreateProc START ");
 
         Collection<PrCreateSaveType> v_inMultiData = context.getInputData();
-        Collection<ReturnType> v_results = new ArrayList<>();
+        Collection<OutType> v_result = new ArrayList<>();
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
-        String v_sql_createTableD = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (DETAIL_ID BIGINT, HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
-        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_D";        
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?)";
-        String v_sql_callProc = "CALL XX_SAMPLE_H_D_SAVE_PROC(HEADER_ID => ?, CD => ?, NAME => ?, I_D_TABLE => #LOCAL_TEMP_D, O_H_TABLE => ?, O_D_TABLE => ?)";
+        //String v_sql_createTableD = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (DETAIL_ID BIGINT, HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+        //String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_D";        
+        //String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?)";
+        //String v_sql_callProc = "CALL OP_PU_PR_CREATE_SAVE_PROC(HEADER_ID => ?, CD => ?, NAME => ?, I_D_TABLE => #LOCAL_TEMP_D, O_H_TABLE => ?, O_D_TABLE => ?)";
+        
+        StringBuffer v_sql_createTableM = new StringBuffer();
+        v_sql_createTableM.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_M (");        
+        v_sql_createTableM.append("TENANT_ID NVARCHAR(5),");
+        v_sql_createTableM.append("COMPANY_CODE NVARCHAR(10),");
+        v_sql_createTableM.append("PR_NUMBER NVARCHAR(50),");
+        v_sql_createTableM.append("PR_TYPE_CODE NVARCHAR(30),");
+        v_sql_createTableM.append("PR_TYPE_CODE_2 NVARCHAR(30),");
+        v_sql_createTableM.append("PR_TYPE_CODE_3 NVARCHAR(40),");
+        v_sql_createTableM.append("PR_TEMPLATE_NUMBER NVARCHAR(10),");
+        v_sql_createTableM.append("PR_CREATE_SYSTEM_CODE NVARCHAR(30),");
+        v_sql_createTableM.append("UPDATE_USER_ID NVARCHAR(255)");
+        v_sql_createTableM.append(")");   
+        
+        String v_sql_truncateTableM = "TRUNCATE TABLE #LOCAL_TEMP_M";   
+        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_callProc = "CALL OP_PU_PR_CREATE_SAVE_PROC(I_M_TABLE => #LOCAL_TEMP_M, O_RTN_MSG => ?)";
 
+        ResultSet v_rs = null;
+        
         try {
             Connection conn = jdbc.getDataSource().getConnection();
 
-
-            for(PrCreateSaveType v_indata : v_inMultiData) {
-                Collection<SavedDetail> v_inDetails = v_indata.getDetails();
-
-                System.out.println("#################### v_indata.tenant_id : " + v_indata.get("tenant_id"));
-                System.out.println("#################### v_indata.company_code : " + v_indata.get("company_code"));
-                System.out.println("#################### v_indata.pr_number : " + v_indata.get("pr_number"));
-            }
+            // Master Local Temp Table 생성
+			PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTableM.toString());
+            v_statement_table.execute();
             
-            ReturnType v_returnType = ReturnType.create();
-            v_returnType.setReturnCode("0000");
-            v_returnType.setReturnMsg("SUCCESS");                
-            v_results.add(v_returnType);
+            // Master Local Temp Table에 insert
+			PreparedStatement v_statement_insertM = conn.prepareStatement(v_sql_insertTableM);
 
-            context.setResult(v_results);
-            context.setCompleted();
+            // Data insert
+            if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
+                for(PrCreateSaveType v_indata : v_inMultiData) {                   
+                    v_statement_insertM.setString(1, (String)v_indata.get("tenant_id"));
+                    v_statement_insertM.setString(2, (String)v_indata.get("company_code"));
+                    v_statement_insertM.setString(3, (String)v_indata.get("pr_number"));
+                    v_statement_insertM.setString(4, (String)v_indata.get("pr_type_code"));
+                    v_statement_insertM.setString(5, (String)v_indata.get("pr_type_code_2"));
+                    v_statement_insertM.setString(6, (String)v_indata.get("pr_type_code_3"));
+                    v_statement_insertM.setString(7, (String)v_indata.get("pr_template_number"));
+                    v_statement_insertM.setString(8, (String)v_indata.get("pr_create_system_code"));
+                    v_statement_insertM.setString(9, "A60264");
+                    v_statement_insertM.execute();
+
+                    // Procedure Call
+                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+                    v_rs = v_statement_proc.executeQuery();
+
+                    // Master Local Temp Table trunc
+                    PreparedStatement v_statement_trunc_tableM = conn.prepareStatement(v_sql_truncateTableM);
+                    v_statement_trunc_tableM.execute();
+
+                    // Procedure Out put
+                    while (v_rs.next()){
+                        OutType v_out = OutType.create();
+                        //System.out.println("return_code:::"+v_rs.getString("return_code"));
+                        //System.out.println("return_msg:::"+v_rs.getString("return_msg"));
+                        v_out.setReturnCode(v_rs.getString("return_code"));
+                        v_out.setReturnMsg(v_rs.getString("return_msg"));                
+                        v_result.add(v_out);
+                    }
+                }
+
+                context.setResult(v_result);
+                context.setCompleted();
+            }
+
+            // for(PrCreateSaveType v_indata : v_inMultiData) {
+            //     Collection<SavedDetail> v_inDetails = v_indata.getDetails();
+                                
+            //     v_statement_insert.setLong(7, v_inRow.getSpmdCharacterSerialNo());
+
+            //     v_indata.getTenantId()
+
+            //     System.out.println("#################### v_indata.tenant_id : " + v_indata.get("tenant_id"));
+            //     System.out.println("#################### v_indata.company_code : " + v_indata.get("company_code"));
+            //     System.out.println("#################### v_indata.pr_number : " + v_indata.get("pr_number"));
+            // }
+            
 
             /*
             // Detail Local Temp Table 생성
@@ -187,16 +253,19 @@ public class PrCreateV4 implements EventHandler {
             */
 
 
-		} catch (SQLException e) { 
-            e.printStackTrace();
-            
-            ReturnType v_returnType = ReturnType.create();
-            v_returnType.setReturnCode("1001");
-            v_returnType.setReturnMsg("FAIL");                
-            v_results.add(v_returnType);
-
-            context.setResult(v_results);
+		} catch (SQLException sqle) { 
+            sqle.printStackTrace();
+			log.error("##### ErrCode : "+sqle.getErrorCode());
+		    log.error("##### ErrMesg : "+sqle.getMessage());
+                        
+            OutType v_out = OutType.create();
+            v_out.setReturnCode(sqle.getErrorCode()+"");
+            v_out.setReturnMsg(sqle.getMessage());                
+            v_result.add(v_out);
+            context.setResult(v_result);
             context.setCompleted();
+        } finally {            
+            
         }
     }
 

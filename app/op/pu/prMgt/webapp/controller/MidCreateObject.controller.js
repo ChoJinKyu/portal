@@ -149,14 +149,14 @@ sap.ui.define([
                         
             var oNewMasterData = {
                 tenant_id: "L2100",
-                company_code: "",
+                company_code: "LGCKR",
                 pr_number: "NEW",
                 pr_type_code: oArgs.pr_type_code,
                 pr_type_code_2: oArgs.pr_type_code_2,
                 pr_type_code_3: oArgs.pr_type_code_3,
                 pr_template_number: oArgs.pr_template_number,
-                pr_create_system_code: "",
-                requestor_empno: "",
+                pr_create_system_code: "TEST",
+                requestor_empno: "A6026499",
                 requestor_name: "김구매",
                 requestor_department_code: "10010",
                 requestor_department_name: "생산1팀",
