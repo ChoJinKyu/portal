@@ -88,7 +88,9 @@ sap.ui.define([
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { });
+                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
+                    console.log("data>>>> ", oData);
+                 });
             }  
         },
 
@@ -109,9 +111,31 @@ sap.ui.define([
 
         _toEditModeEachApproval : function(){ 
             console.log(" Mold RecepitApproval  _toEditModeEachApproval ");
+            // 인풋이라 작동이 안됨 ㅠ
+            // var oRows = this.byId("moldRecepitTable").getRows();
+            // oRows.forEach(function(oCell, idx){
+            //      console.log("oCell >> ", oCell);
+            //     console.log("idx >> ", idx);
+            //     if(idx > 6 && idx !== 18){
+            //       //  oCell.addStyleClass("readonlyField");
+            //         oCell.removeStyleClass("readonlyField");
+            //     }
+            // });
+
          },
         _toShowModeEachApproval : function(){ 
             console.log(" Mold RecepitApproval  _toShowModeEachApproval ");
+
+            // var oRows = this.byId("moldRecepitTable").getRows();
+            // oRows.forEach(function(oCell, idx){ 
+            //     console.log("oCell >> ", oCell);
+            //     console.log("idx >> ", idx);
+            //     if(idx > 6 && idx !== 18){
+            //         oCell.addStyleClass("readonlyField");
+            //       //  oCell.removeStyleClass("readonlyField");
+            //     }
+            // });
+
          } ,
       
        /**
