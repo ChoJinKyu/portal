@@ -56,7 +56,7 @@ service ProjectMgtV4Service {
     };
 
     type TcProcOutType : {
-        return_code : String(2);
+        return_code : String(20);
         return_msg  : String(5000);
     };
 
@@ -68,5 +68,5 @@ service ProjectMgtV4Service {
         user_id           : String(255);
     }
 
-    action TcUpdateProjectProc(inputData : InputDataType) returns array of TcProcOutType;
+    action TcUpdateProjectProc(inputData : InputDataType) returns TcProcOutType;
 }
