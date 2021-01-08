@@ -96,10 +96,11 @@
                 "controlAggregation": "pages",
                 "async": true
             },
+            
             "routes": [
                 {
                     "name": "main",
-                    "pattern": ":layout:",
+                    "pattern": "",
                     "target": [
                         "main"
                     ]
@@ -116,7 +117,8 @@
                 "main": {
                     "viewName": "Main",
                     "viewType": "XML",
-                    "viewLevel": 1
+                    "viewLevel": 1,
+                    "viewId": "main"
                 },
                 "detail": {
                     "viewName": "Detail",

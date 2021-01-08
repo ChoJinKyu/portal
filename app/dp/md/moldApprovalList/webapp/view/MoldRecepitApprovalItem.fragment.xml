@@ -120,16 +120,21 @@
 								<Text text="{mdRecepit>project_code}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="15em" hAlign="Center">
 							<Label text="Acquisition Department"/>
 					        <table:template>
+                            <VBox>
                                 <Input  
+                                    visible="{mode>/editFlag}" 
                                     showValueHelp="true" 
                                     valueHelpOnly="true"
                                     value="{mdRecepit>acq_department_code_nm}"
-                                    valueHelpRequest=".onValueHelpRequestedDept(${mdRecepit>mold_id})" > 
-                                    
-                                </Input>
+                                    valueHelpRequest=".onValueHelpRequestedDept(${mdRecepit>mold_id})" /> 
+                                <Text  
+                                    visible="{mode>/viewFlag}" 
+                                    text="{mdRecepit>acq_department_code_nm}"
+                                    /> 
+                            </VBox>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
