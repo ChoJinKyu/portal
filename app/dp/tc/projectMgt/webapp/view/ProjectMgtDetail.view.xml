@@ -44,7 +44,7 @@
         </content>
 	</IconTabBar>
     
-    <layout:VerticalLayout width="50%">
+    <layout:VerticalLayout>
         <block:BlockProjectInfoDt id="blProjectInfoDt"/>
     </layout:VerticalLayout>
     <footer>

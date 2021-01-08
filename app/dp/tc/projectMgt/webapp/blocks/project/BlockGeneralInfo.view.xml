@@ -285,6 +285,7 @@
             <ComboBox
                 width="100%"
                 selectedKey="{detailModel>/product_group_code}"
+                change=".onChangeComboBox"
                 items="{
                     path: 'util>/Code',
                     filters: [
