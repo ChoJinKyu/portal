@@ -6,6 +6,7 @@ PROCEDURE DP_TC_CREATE_MCST_PROJECT_PROC (IN I_TENANT_ID NVARCHAR(5)
                                          ,OUT O_VERSION_NUMBER NVARCHAR(30)
                                          ,OUT O_RETURN_CODE NVARCHAR(10)
                                          ,OUT O_RETURN_MSG NVARCHAR(3000)
+)                                        
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
