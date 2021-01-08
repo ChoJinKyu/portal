@@ -213,12 +213,9 @@ sap.ui.define([
         },
 
         checkChange: function(){
-            debugger
             var omMaster = this.getModel('master');
             var omSchedule = this.getModel('schedule');
             var omSpec = this.getModel('spec');
-
-            console.log('omSpec.isChanged()',omSpec.isChanged());
 
             if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
                 return true;
