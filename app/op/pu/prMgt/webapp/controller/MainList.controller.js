@@ -110,6 +110,56 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
+        onPrDeletePress: function () {
+            var oTable = this.byId("mainTable"),
+                oModel = this.getModel("list"),
+                oView = this.getView(),
+                data ={},
+                //oSelected  = oTable.getSelectedItems(),
+                oSelected = [],
+                delPrData = [],
+                chkArr =[],
+                chkRow ="",
+                j=0,
+                checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs"),
+                aItems = oTable.getItems(),
+                aIndices = [];
+
+            var that = this;
+            console.log("checkBoxs ::::", checkBoxs);
+
+            //checkBoxs[0].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()
+            for (var i = 0; i < checkBoxs.length; i++) {
+                if (checkBoxs[i].getSelected() === true )
+                {
+                    aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
+                }
+            }
+            
+
+            console.log("delPrList >>>>", aIndices);
+
+            if (aIndices.length > 0) {
+                MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                       if (sButton === MessageBox.Action.OK) {
+                          oModel.removeRecord(aIndices);
+                        } else if (sButton === MessageBox.Action.CANCEL) { 
+
+                        };    
+                    }
+                });
+
+            } else {
+                MessageBox.error("선택된 행이 없습니다.");
+            }
+
+        },
+
+
+
         /**
          * @public
          * @see 리스트 체크박스 제어기능
@@ -415,7 +465,7 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-           
+          
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
@@ -426,8 +476,9 @@ sap.ui.define([
                 pr_number: oRecord.pr_number
             });
 
-            if (oNextUIState.layout === "TwoColumnsMidExpanded") {                
-                this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
+            if (oNextUIState.layout === "TwoColumnsMidExpanded") {   
+                this.getModel("mainListViewModel").setProperty("/headerExpanded", false);             
+                //this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 
             var oItem = oEvent.getSource();
