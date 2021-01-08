@@ -1,0 +1,451 @@
+{
+    "@context": "$metadata#xx.ExampleV4Service.PivotData",
+    "@metadataEtag": "W/\"e4c9efc039ceace53549b912155b2cda0e5f4d0abe3c20eff3675606dfa1d198\"",
+    "columns": [
+        {
+            "label": "Seq.",
+            "columnId": "seq",
+            "type": "number"
+        },
+        {
+            "label": "Name",
+            "columnId": "name",
+            "type": "string"
+        },
+        {
+            "label": "Dynamic C-1",
+            "columnId": "C001-1",
+            "type": "number"
+        },
+        {
+            "label": "Dynamic C0",
+            "columnId": "C0010",
+            "type": "boolean"
+        },
+        {
+            "label": "Dynamic C1",
+            "columnId": "C0011",
+            "type": "string"
+        },
+        {
+            "label": "Dynamic C2",
+            "columnId": "C0012",
+            "type": "number"
+        },
+        {
+            "label": "Dynamic C3",
+            "columnId": "C0013",
+            "type": "boolean"
+        },
+        {
+            "label": "Dynamic C4",
+            "columnId": "C0014",
+            "type": "string"
+        },
+        {
+            "label": "Dynamic C5",
+            "columnId": "C0015",
+            "type": "number"
+        },
+        {
+            "label": "Dynamic C6",
+            "columnId": "C0016",
+            "type": "boolean"
+        },
+        {
+            "label": "Dynamic C7",
+            "columnId": "C0017",
+            "type": "string"
+        },
+        {
+            "label": "Dynamic C8",
+            "columnId": "C0018",
+            "type": "number"
+        },
+        {
+            "label": "Dynamic C9",
+            "columnId": "C0019",
+            "type": "boolean"
+        }
+    ],
+    "records": [
+        {
+            "columnIds": [
+                "seq",
+                "name",
+                "C001-1",
+                "C0010",
+                "C0011",
+                "C0012",
+                "C0013",
+                "C0014",
+                "C0015",
+                "C0016",
+                "C0017",
+                "C0018",
+                "C0019"
+            ],
+            "stringValues": [
+                "",
+                "Eva 1",
+                "string value-1",
+                "string value0",
+                "string value1",
+                "string value2",
+                "string value3",
+                "string value4",
+                "string value5",
+                "string value6",
+                "string value7",
+                "string value8",
+                "string value9"
+            ],
+            "numberValues": [
+                1,
+                0,
+                -2048,
+                0,
+                4096,
+                10240,
+                18432,
+                28672,
+                40960,
+                55296,
+                71680,
+                90112,
+                110592
+            ],
+            "booleanValues": [
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+            ],
+            "DateValues": []
+        },
+        {
+            "columnIds": [
+                "seq",
+                "name",
+                "C001-1",
+                "C0010",
+                "C0011",
+                "C0012",
+                "C0013",
+                "C0014",
+                "C0015",
+                "C0016",
+                "C0017",
+                "C0018",
+                "C0019"
+            ],
+            "stringValues": [
+                "",
+                "Eva 1",
+                "string value-1",
+                "string value0",
+                "string value1",
+                "string value2",
+                "string value3",
+                "string value4",
+                "string value5",
+                "string value6",
+                "string value7",
+                "string value8",
+                "string value9"
+            ],
+            "numberValues": [
+                1,
+                0,
+                -2048,
+                0,
+                4096,
+                10240,
+                18432,
+                28672,
+                40960,
+                55296,
+                71680,
+                90112,
+                110592
+            ],
+            "booleanValues": [
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+            ],
+            "DateValues": []
+        },
+        {
+            "columnIds": [
+                "seq",
+                "name",
+                "C001-1",
+                "C0010",
+                "C0011",
+                "C0012",
+                "C0013",
+                "C0014",
+                "C0015",
+                "C0016",
+                "C0017",
+                "C0018",
+                "C0019"
+            ],
+            "stringValues": [
+                "",
+                "Eva 1",
+                "string value-1",
+                "string value0",
+                "string value1",
+                "string value2",
+                "string value3",
+                "string value4",
+                "string value5",
+                "string value6",
+                "string value7",
+                "string value8",
+                "string value9"
+            ],
+            "numberValues": [
+                1,
+                0,
+                -2048,
+                0,
+                4096,
+                10240,
+                18432,
+                28672,
+                40960,
+                55296,
+                71680,
+                90112,
+                110592
+            ],
+            "booleanValues": [
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+            ],
+            "DateValues": []
+        },
+        {
+            "columnIds": [
+                "seq",
+                "name",
+                "C001-1",
+                "C0010",
+                "C0011",
+                "C0012",
+                "C0013",
+                "C0014",
+                "C0015",
+                "C0016",
+                "C0017",
+                "C0018",
+                "C0019"
+            ],
+            "stringValues": [
+                "",
+                "Eva 1",
+                "string value-1",
+                "string value0",
+                "string value1",
+                "string value2",
+                "string value3",
+                "string value4",
+                "string value5",
+                "string value6",
+                "string value7",
+                "string value8",
+                "string value9"
+            ],
+            "numberValues": [
+                1,
+                0,
+                -2048,
+                0,
+                4096,
+                10240,
+                18432,
+                28672,
+                40960,
+                55296,
+                71680,
+                90112,
+                110592
+            ],
+            "booleanValues": [
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+            ],
+            "DateValues": []
+        },
+        {
+            "columnIds": [
+                "seq",
+                "name",
+                "C001-1",
+                "C0010",
+                "C0011",
+                "C0012",
+                "C0013",
+                "C0014",
+                "C0015",
+                "C0016",
+                "C0017",
+                "C0018",
+                "C0019"
+            ],
+            "stringValues": [
+                "",
+                "Eva 1",
+                "string value-1",
+                "string value0",
+                "string value1",
+                "string value2",
+                "string value3",
+                "string value4",
+                "string value5",
+                "string value6",
+                "string value7",
+                "string value8",
+                "string value9"
+            ],
+            "numberValues": [
+                1,
+                0,
+                -2048,
+                0,
+                4096,
+                10240,
+                18432,
+                28672,
+                40960,
+                55296,
+                71680,
+                90112,
+                110592
+            ],
+            "booleanValues": [
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+            ],
+            "DateValues": []
+        },
+        {
+            "columnIds": [
+                "seq",
+                "name",
+                "C001-1",
+                "C0010",
+                "C0011",
+                "C0012",
+                "C0013",
+                "C0014",
+                "C0015",
+                "C0016",
+                "C0017",
+                "C0018",
+                "C0019"
+            ],
+            "stringValues": [
+                "",
+                "Eva 1",
+                "string value-1",
+                "string value0",
+                "string value1",
+                "string value2",
+                "string value3",
+                "string value4",
+                "string value5",
+                "string value6",
+                "string value7",
+                "string value8",
+                "string value9"
+            ],
+            "numberValues": [
+                1,
+                0,
+                -2048,
+                0,
+                4096,
+                10240,
+                18432,
+                28672,
+                40960,
+                55296,
+                71680,
+                90112,
+                110592
+            ],
+            "booleanValues": [
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+            ],
+            "DateValues": []
+        }
+    ]
+}
