@@ -701,7 +701,7 @@ BEGIN
 						    END IF;
 					    ELSE
 							IF V_ITEM_EXIST_CNT_FOR_DELETE_ITEM != 1 THEN
-							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']'||loop_itm.MATERIAL_CODE||','||loop_itm.CRUD_TYPE_CODE;
 							ELSE
 						    
 								UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL MST

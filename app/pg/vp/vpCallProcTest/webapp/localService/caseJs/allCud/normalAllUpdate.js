@@ -166,7 +166,7 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: '5479'
-    , crud_type_code : "D"
+    , crud_type_code : "C"
 });
 
 inputInfo.inputData.vpManager = vpManagerList;
