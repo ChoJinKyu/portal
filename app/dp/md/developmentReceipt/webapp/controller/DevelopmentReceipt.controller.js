@@ -120,7 +120,7 @@ sap.ui.define([
 /*
             var filter = new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                     new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
@@ -137,7 +137,7 @@ sap.ui.define([
 */
             var filter = new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
                 and: true
@@ -1076,7 +1076,7 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                             new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
@@ -1085,7 +1085,7 @@ sap.ui.define([
                 });
             } else {
                 divisionFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                     new Filter("org_type_code", FilterOperator.EQ, 'AU')
                 );
             }
@@ -1134,20 +1134,19 @@ sap.ui.define([
 
             this.setValuHelpDialog(oEvent);
 
-
-
             var aCols = this.oColModel.getData().cols;
-
 
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, "L2600");
 
                 oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
                 oTable.setModel(this.oColModel, "columns");
 
                 if (oTable.bindRows) {
                     oTable.bindAggregation("rows", this.vhdPath);
+                    //oTable.getBinding
                 }
 
                 if (oTable.bindItems) {

@@ -191,7 +191,7 @@ sap.ui.define([
 
             console.log("args>>>>> " , args);
 
-            this.tenant_id = "L1100";
+            this.tenant_id = "L2600";
             this.approval_number = args.approval_number;
             this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;

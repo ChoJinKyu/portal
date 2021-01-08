@@ -147,7 +147,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -293,7 +293,7 @@ sap.ui.define([
 
                     plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                             new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
@@ -302,7 +302,7 @@ sap.ui.define([
                 });
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                     new Filter("org_type_code", FilterOperator.EQ, 'AU')
                 );
             }
@@ -349,7 +349,7 @@ sap.ui.define([
 
             //var path = '';
 
-            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L1100')];
+            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L2600')];
             //     this._bindView("/Requestors", "requestors", schFilter, function(oData){
                     
             //     });
@@ -624,7 +624,7 @@ sap.ui.define([
 
             plantFilter.push(new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                     new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
                 ],

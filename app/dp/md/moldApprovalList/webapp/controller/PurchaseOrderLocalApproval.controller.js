@@ -80,7 +80,7 @@ sap.ui.define([
                 
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
                 
                 var oModel = this.getModel('payment'),

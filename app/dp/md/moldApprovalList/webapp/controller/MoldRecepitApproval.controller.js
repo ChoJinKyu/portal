@@ -86,7 +86,7 @@ sap.ui.define([
      
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
                     console.log("data>>>> ", oData);
@@ -189,7 +189,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */  
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": "L1100",
+                "tenant_id": "L2600",
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,

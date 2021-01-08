@@ -102,7 +102,7 @@
                                         class="readonlyField"
                                         selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                         ]
                                     }">
@@ -143,7 +143,7 @@
                                     items="{ 
                                         path : 'psOrgCode>/OrgCodeLanguages',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_LOCAL_CURRENCY'}
                                         ]
                                     }">
@@ -176,7 +176,7 @@
                                     items="{ 
                                         path : 'org>/Company',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'}
                                         ]
                                     }">
                                     <core:Item key="{org>company_code}" text="{org>company_name}"/> 

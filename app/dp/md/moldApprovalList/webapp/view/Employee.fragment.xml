@@ -46,7 +46,7 @@
                             width="auto"
                             items="{ path : '/RefererSearch',
                                     filters : [
-                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'}
                                     ]
                                   }"
                             >

@@ -85,7 +85,7 @@ sap.ui.define([
             } else {
                 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
@@ -240,7 +240,7 @@ sap.ui.define([
             ;
             var schFilter2 = [];
             schFilter2 = [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                     new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
                     new Filter("language_cd", FilterOperator.EQ, 'KO' ),
                     new Filter("org_code", FilterOperator.EQ, data.company_code)
@@ -253,7 +253,7 @@ sap.ui.define([
             var approval_number = mstModel.approval_number;
             oModel.addRecord({
                 "approval_number": approval_number,
-                "tenant_id": "L1100",
+                "tenant_id": "L2600",
                 "mold_id": String(data.mold_id),
                 "model": data.model,
                 "mold_number": data.mold_number,
