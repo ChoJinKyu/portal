@@ -72,7 +72,7 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Production Type"/>
 							<table:template>
-								<ComboBox id="mold_production_type_code" 
+								<ComboBox 
                                         class="readonlyField"
                                         editable="{mode>/editFlag}"
                                         selectedKey="{mdItemMaster>mold_production_type_code}" 
@@ -111,13 +111,13 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-								<Input id="provisional_budget_amount" class="readonlyField" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input  class="readonlyField" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Asset Type"/>
 							<table:template>
-								<ComboBox id="asset_type_code"
+								<ComboBox 
                                         editable="{mode>/editFlag}" 
                                         class="readonlyField"
                                         selectedKey="{mdItemMaster>asset_type_code}" 
