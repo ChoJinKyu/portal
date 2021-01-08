@@ -122,20 +122,26 @@ sap.ui.define([
                 chkRow ="",
                 j=0,
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs"),
-                aItems = oTable.getItems(),
+                aItems = oTable.getSelectedItems(),
                 aIndices = [];
 
             var that = this;
             console.log("checkBoxs ::::", checkBoxs);
 
             //checkBoxs[0].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()
-            for (var i = 0; i < checkBoxs.length; i++) {
-                if (checkBoxs[i].getSelected() === true )
+            // for (var i = 0; i < checkBoxs.length; i++) {
+            //     if (checkBoxs[i].getSelected() === true )
+            //     {
+            //         aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
+            //     }
+            // }
+            aItems.forEach(function(oItem){
+                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "DR" )
                 {
-                    aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
+                //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+                 aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
                 }
-            }
-            
+            });
 
             console.log("delPrList >>>>", aIndices);
 
@@ -145,7 +151,12 @@ sap.ui.define([
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
                        if (sButton === MessageBox.Action.OK) {
-                          oModel.removeRecord(aIndices);
+                        aIndices = aIndices.sort(function(a, b){return b-a;});
+                        aIndices.forEach(function(nIndex){                            
+                            oModel.removeRecord(nIndex);
+                            //oModel.markRemoved(nIndex);
+                        });
+
                         } else if (sButton === MessageBox.Action.CANCEL) { 
 
                         };    
@@ -153,7 +164,7 @@ sap.ui.define([
                 });
 
             } else {
-                MessageBox.error("선택된 행이 없습니다.");
+                MessageBox.error("선택된 임시저장 요청이 없습니다.");
             }
 
         },
