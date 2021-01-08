@@ -31,7 +31,8 @@ sap.ui.define([
     //var oRichTextEditor;
     var generalInfoFragment, 
         attachmentsFragment,
-        approvalLineFragment;
+        approvalLineFragment,
+        itemFragment;
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
@@ -73,13 +74,23 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            //this._toShowMode();
+            this._toShowMode();
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
+            for (var sPropertyName in this._oFragments) {
+                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
+                    return;
+                }
+               
+                this._oFragments[sPropertyName].destroy();
+                this._oFragments[sPropertyName] = null;
+            }
+
             //this.byId("pageApprovalLineSection").destroy();
-            this.generalInfoFragment.destroy();
+            /*this.generalInfoFragment.destroy();
             this.attachmentsFragment.destroy();
             this.approvalLineFragment.destroy();
+            this.itemFragment.destroy();*/
             //  this.approvalList.onPageReload();
             /*
             var sPreviousHash = History.getInstance().getPreviousHash();
@@ -165,7 +176,7 @@ sap.ui.define([
 
             this.tenant_id = "L1100";
             this.approval_number = args.approval_number;
-            //this.approval_type_code = args.approval_type_code;
+            this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
@@ -191,6 +202,15 @@ sap.ui.define([
                 success: function (oData) {
                     console.log("orgName ", oData);
                 }
+            });
+
+            var appModel = this.getModel("appType");
+            appModel.setTransactionModel(this.getModel("util"));
+            appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
+                filters: [],
+                success: function (oData) {
+                    this._showFormItemFragment(oData.parent_code);
+                }.bind(this)
             });
 
             this._onRoutedThisPage(this.approval_number);
@@ -248,6 +268,15 @@ sap.ui.define([
 
             approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
+            }.bind(this));
+        },
+
+        _showFormItemFragment: function (fragmentFileName) {
+            var oPageItemSection = this.byId("pageItemSection");
+            oPageItemSection.removeAllBlocks();
+
+            itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
+                oPageItemSection.addBlock(oFragment);
             }.bind(this));
 
         },
