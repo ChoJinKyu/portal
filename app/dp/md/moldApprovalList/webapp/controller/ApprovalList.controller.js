@@ -306,7 +306,7 @@ sap.ui.define([
                     new Filter("org_type_code", FilterOperator.EQ, 'AU')
                 );
             }
-
+ 
             var filter = new Filter({
                 filters: plantFilters,
                 and: false
