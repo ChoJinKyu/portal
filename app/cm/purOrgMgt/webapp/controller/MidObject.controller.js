@@ -194,7 +194,7 @@ sap.ui.define([
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, this["onSelectionChange"]["tenant_id"] || ""),
                     new Filter('company_code', FilterOperator.EQ, this["onSelectionChange"]["company_code"] || "")
-                ].filter(f => f.oValue1 || f.oValue2),
+                ].filter(f => (f.oValue1 && f.oValue1 != "*") || (f.oValue2 && f.oValue2 != "*")),
                 template: new Item({
                     key: "{org>plant_code}", text: "{org>plant_code} : {org>plant_name}"
                 })
