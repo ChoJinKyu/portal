@@ -47,7 +47,7 @@
                               />                      -->
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMaterialCodeBOMManagementHeaderView" 
+                    entitySet="MIMaterialCodeBOMManagementView" 
                     useToolbar="false"
                     considerSelectionVariants="false" 
                     enableBasicSearch="false" >
@@ -78,15 +78,16 @@
 
         <!-- DynamicPage Content -->
         <f:content>
+          <ScrollContainer width="100%" horizontal="true" vertical="true" focusable="true">
                 <smartTable:SmartTable
                     smartVariant="pageVariantId"
                     id="smartTable_MainTable"
                     entitySet="MIMaterialCodeBOMManagementView"
                     smartFilterId="smartFilterBar"
-                    tableType="Table"
+                    tableType="ResponsiveTable"
                     useExportToExcel="true"
                     initiallyVisibleFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
-                    beforeRebindTable=".onBeforeRebindTable"
+                    beforeRebindTable="onBeforeRebindTable"
                     beforeExport="onBeforeExport"
                     useVariantManagement="false"
                     useTablePersonalisation="true"
@@ -96,221 +97,221 @@
                     class="sapUiResponsiveContentPadding"
                     enableAutoBinding="true"
                     showFullScreenButton="false">
+                    
                    	<smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
-                            
                             <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
                             <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
                             <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/>
                         </OverflowToolbar>
 		            </smartTable:customToolbar>
-                            <ui:Table id="mainTable"
-                                rows="{/MIMaterialCodeBOMManagementView}"
-                                selectionMode="None"
-                                visibleRowCount="18"
-                                fixedColumnCount="7"
-                                >
-                                <ui:columns> 
-                                    <ui:Column width="10rem" sortProperty="material_code" filterProperty="material_code">
-                                       <ui:customData>
-                                            <core:CustomData key="p13nData" value='\{"columnKey": "material_code", "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
-                                        </ui:customData>
-                                      
-                                        <Label text="{I18N>/MATERIAL_CODE}" />
-                                        <ui:template>
-                                            <Text text="{material_code}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column> 
-
-                                    <ui:Column width="17rem"  sortProperty="material_desc" filterProperty="material_desc">
-                                      <ui:customData>
+                            <Table id="mainTable" 
+                                growing="true"
+                                growingThreshold="100"
+                                growingScrollToLoad="true"
+                                width="100rem"
+                                sticky="HeaderToolbar,ColumnHeaders"
+                                inset="false">
+                                 <columns>  
+                                       <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" hAlign="Center" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
+                                        <customData>
                                         <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
-                                    </ui:customData>
-                                        <Label text="{I18N>/MATERIAL}" />
-                                        <ui:template>
-                                            <Text text="{material_desc}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
-
-                                    <ui:Column width="7rem" sortProperty="supplier_code" filterProperty="supplier_code">
-                                      <ui:customData>
+                                        value='\{"columnKey": "material_code",  "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
+                                        </customData>
+                                            <Text text="{I18N>/MI_MATERIAL_CODE}"></Text>
+                                        </Column>
+                                        
+                                        <Column width="15rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High" >
+                                          <customData>
                                         <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
-                                       </ui:customData>
-                                        <Label text="{I18N>/SUPPLIER}" />
-                                        <ui:template>
-                                            <Text text="{supplier_code}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
+                                        </customData>
+                                             <Text text="{I18N>/MI_MATERIAL_NAME}"></Text>
+                                        </Column>
 
-                                    <ui:Column width="12rem" sortProperty="supplier_local_name" filterProperty="supplier_local_name">
-                                        <ui:customData>
+                                        <Column width="7rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+                                          <customData>
                                         <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
-                                        </ui:customData>
-                                        <Label text="{I18N>/SUPPLIER_LOCAL_NAME}" />
-                                        <ui:template>
-                                            <Text text="{supplier_local_name}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
-                                    <ui:Column width="5rem" sortProperty="base_quantity" filterProperty="base_quantity">
-                                        <ui:customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
-                                        </ui:customData>
-                                        <Label text="기준수량" />
-                                        <ui:template>
-                                            <Text text="{base_quantity}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
+                                        </customData>
+                                             <Text text="{I18N>/SUPPLIER_CODE}"></Text>
+                                        </Column>
 
-                                    <ui:Column width="4rem" sortProperty="processing_cost" filterProperty="processing_cost">
-                                     <ui:customData>
+                                        <Column width="15rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+                                          <customData>
                                         <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "processing_cost", "leadingProperty": "processing_cost", "sortProperty": "processing_cost", "filterProperty": "processing_cost", "columnIndex": 6}'/>
-                                    </ui:customData >
-                                        <Label text="{I18N>/PROCESSING_COST}" />
-                                        <ui:template>
-                                            <Text text="{processing_cost}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
+                                        </customData>
+                                             <Text text="{I18N>/SUPPLIER_LOCAL_NAME}"></Text>
+                                        </Column>
 
-                                    <ui:Column width="7rem" sortProperty="pcst_currency_unit" filterProperty="pcst_currency_unit">
-                                        <ui:customData>
+                                        <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+                                          <customData>
                                         <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 7}'/>
-                                        </ui:customData>
-                                        <Label text="가공비통화" />
-                                        <ui:template>
-                                            <Text text="{pcst_currency_unit}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
+                                        </customData>
+                                             <Text text="{I18N>/BASE_QUANTITY}"></Text>
+                                        </Column>
 
-                                    <ui:Column width="8rem" sortProperty="mi_material_code" filterProperty="mi_material_code">
-                                        <ui:customData>
+                                        <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "processing_cost", "leadingProperty": "processing_cost", "sortProperty": "processing_cost", "filterProperty": "processing_cost", "columnIndex": 6}'/>
+                                        </customData>
+                                             <Text text="{I18N>/PROCESSING_COST}"></Text>
+                                        </Column>
+
+                                        <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 7}'/>
+                                        </customData>
+                                             <Text text="{I18N>/PCST_CURRENCY_UNIT}"></Text>
+                                        </Column> 
+                        
+                                    <Column width="7rem" >
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 8}'/>
-                                        </ui:customData>
-                                        <Label text="시황자재코드" />
-                                        <ui:template>
-                                            <Text text="{mi_material_code}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="시황자재코드"/>
+                                    </Column>
  
-                                     <ui:Column width="10rem" sortProperty="mi_material_name" filterProperty="mi_material_name">
-                                        <ui:customData>
+                                     <Column width="10rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 9}'/>
-                                        </ui:customData>
-                                        <Label text="시황자재명" />
-                                        <ui:template>
-                                            <Text text="{mi_material_name}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="시황자재명"/>
+                                    </Column>
 
-                                     <ui:Column width="10rem" sortProperty="category_name" filterProperty="category_name">
-                                        <ui:customData>
+                                     <Column width="10rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 10}'/>
-                                        </ui:customData>
-                                        <Label text="시황자재 Category" />
-                                        <ui:template>
-                                            <Text text="{category_name}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="시황자재 Category"/>
+                                    </Column>
 
-                                     <ui:Column width="7rem" sortProperty="reqm_quantity_unit" filterProperty="reqm_quantity_unit">
-                                        <ui:customData>
+                                     <Column width="7rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "reqm_quantity_unit", "leadingProperty": "reqm_quantity_unit", "sortProperty": "reqm_quantity_unit", "filterProperty": "reqm_quantity_unit", "columnIndex": 11}'/>
-                                        </ui:customData>
-                                        <Label text="소요량 단위"/>
-                                        <ui:template>
-                                            <Text text="{reqm_quantity_unit}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="소요량 단위"/>
+                                    </Column>
 
-                                     <ui:Column width="5rem" sortProperty="reqm_quantity" filterProperty="reqm_quantity">
-                                        <ui:customData>
+                                     <Column width="5rem" >
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "reqm_quantity", "leadingProperty": "reqm_quantity", "sortProperty": "reqm_quantity", "filterProperty": "reqm_quantity", "columnIndex": 12}'/>
-                                        </ui:customData>
-                                        <Label text="소요량" />
-                                        <ui:template>
-                                            <Text text="{reqm_quantity}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="소요량"/>
+                                    </Column>
 
-                                     <ui:Column width="5rem" sortProperty="currency_unit" filterProperty="currency_unit">
-                                        <ui:customData>
+                                     <Column width="5rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "currency_unit", "leadingProperty": "currency_unit", "sortProperty": "currency_unit", "filterProperty": "currency_unit", "columnIndex": 13}'/>
-                                        </ui:customData>
-                                        <Label text="화폐단위" />
-                                        <ui:template>
-                                            <Text text="{currency_unit}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="화폐단위"/>
+                                    </Column>
 
-                                     <ui:Column width="5rem"  sortProperty="mi_base_reqm_quantity" filterProperty="mi_base_reqm_quantity">
-                                        <ui:customData>
+                                     <Column width="8rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "mi_base_reqm_quantity", "leadingProperty": "mi_base_reqm_quantity", "sortProperty": "mi_base_reqm_quantity", "filterProperty": "mi_base_reqm_quantity", "columnIndex": 14}'/>
-                                        </ui:customData>
-                                        <Label text="시황기준 소요량" />
-                                        <ui:template>
-                                            <Text text="{mi_base_reqm_quantity}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="시황기준 소요량"/>
+                                    </Column>
 
-                                     <ui:Column width="5rem" sortProperty="quantity_unit" filterProperty="quantity_unit">
-                                        <ui:customData>
+                                     <Column width="5rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "quantity_unit", "leadingProperty": "quantity_unit", "sortProperty": "quantity_unit", "filterProperty": "quantity_unit", "columnIndex": 15}'/>
-                                        </ui:customData>
-                                        <Label text="수량단위" />
-                                        <ui:template>
-                                            <Text text="{quantity_unit}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="수량단위"/>
+                                    </Column>
 
-                                     <ui:Column width="5rem" sortProperty="exchange" filterProperty="exchange">
-                                        <ui:customData>
+                                     <Column width="5rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "exchange", "leadingProperty": "exchange", "sortProperty": "exchange", "filterProperty": "exchange", "columnIndex": 16}'/>
-                                        </ui:customData>
-                                        <Label text="거래소" />
-                                        <ui:template>
-                                            <Text text="{exchange}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                        </customData>
+                                            <Text text="거래소"/>
+                                    </Column>
 
-                                     <ui:Column width="5rem" sortProperty="termsdelv" filterProperty="termsdelv">
-                                        <ui:customData>
+                                     <Column width="5rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "termsdelv", "leadingProperty": "termsdelv", "sortProperty": "termsdelv", "filterProperty": "termsdelv", "columnIndex": 17}'/>
-                                        </ui:customData>
+                                        </customData>
                                         <Label text="인도조건" />
-                                        <ui:template>
-                                            <Text text="{termsdelv}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column>
+                                            <Text text="인도조건"/>
+                                    </Column>
  
-                                     <ui:Column width="5rem" sortProperty="use_flag" filterProperty="use_flag">
-                                        <ui:customData>
+                                     <Column width="5rem">
+                                        <customData>
                                         <core:CustomData key="p13nData"
                                             value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 18}'/>
-                                        </ui:customData>
-                                        <Label text="사용여부" />
-                                        <ui:template>
-                                            <Text text="{use_flag}" wrapping="false" />
-                                        </ui:template>
-                                    </ui:Column> 
-									 </ui:columns> 
-                                </ui:Table>
+                                        </customData>
+                                            <Text text="사용여부"/>
+                                    </Column> 
+									</columns> 
+                                    <items>
+                                        <ColumnListItem>
+                                            <Text text="{material_code}">
+                                                <customData>
+                                                    <core:CustomData key="mergeKey" value="{material_code}" />
+                                                </customData>
+                                            </Text> 
+                                             <Text text="{material_desc}">
+                                                <customData>
+                                                    <core:CustomData key="mergeKey" value="{material_code}" />
+                                                </customData>
+                                            </Text> 
+                                             <Text text="{supplier_code}">
+                                                <customData>
+                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}" />
+                                                </customData>
+                                            </Text>
+                                            <Text text="{supplier_local_name}">
+                                                <customData>
+                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}" />
+                                                </customData>
+                                            </Text>
+                                            <Text text="{base_quantity}">
+                                                <customData>
+                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}" />
+                                                </customData>
+                                            </Text>
+                                            <Text text="{processing_cost}">
+                                                <customData>
+                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{processing_cost}" />
+                                                </customData>
+                                            </Text>
+                                            <Text text="{pcst_currency_unit}">
+                                                <customData>
+                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{processing_cost}{pcst_currency_unit}" />
+                                                </customData>
+                                            </Text>
+                                            <Text text="{mi_material_code}"/>
+                                            <Text text="{mi_material_name}"/>
+                                            <Text text="{category_name}"/>
+                                            <Text text="{reqm_quantity_unit}"/>
+                                            <Text text="{reqm_quantity}"/>
+                                            <Text text="{currency_unit}"/>
+                                            <Text text="{mi_base_reqm_quantity}"/>
+                                            <Text text="{quantity_unit}"/>
+                                            <Text text="{exchange}"/>
+                                            <Text text="{termsdelv}"/>
+                                            <Text text="{=${use_flag} === true ? 'Yes' : 'No'}"/>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
                 </smartTable:SmartTable>
+            </ScrollContainer>
         </f:content>
         <!-- DynamicPage Footer -->
         

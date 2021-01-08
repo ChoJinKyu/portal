@@ -24,156 +24,85 @@ sap.ui.define([
             var oi18nSearch = this.getModel("I18N").getText("/SEARCH");
             this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
 
+        },
+        onFirstVisibleRowChanged: function () {
             var oTable = this.getView().byId("mainTable");
+            setTimeout(function () {
+                // group by the cols "byCols"
+                var byCols = [0, 2];
+                // the cols "theCols" (if none selected, we will use all)
+                var theCols = [0, 1, 2, 3, 4, 5, 6];
+                // console.log('Works!');
+                var aRows = oTable.getRows();
+                if (aRows && aRows.length > 0) {
+                    var pRow;
+                    aRows.map((aRow, i) => {
+                        if (i > 0) {
+                            var cCells = aRow.getCells();
+                            var pCells = pRow.getCells();
 
+                            // if theCols is empty we use aggregation for all cells in a row
+                            if (theCols.length < 1) byCols = cCells.map((x, i) => i);
 
+                            if (byCols.filter(x => pCells[x].getText() == cCells[x].getText()).length == byCols.length) {
+                                theCols.forEach(i => {
+                                    if (pCells[i].getText() == cCells[i].getText()) {
+                                        $("#" + cCells[i].getId()).css("visibility", "hidden");
+                                        $("#" + pRow.getId() + "-col" + i).css("border-bottom-style", "hidden");
+                                    }
+                                });
+                            }
 
-            // setTimeout(function () {
-            //     // console.log('Works!');
-            //         var aRows = oTable.getRows();
-            //         if (aRows && aRows.length > 0) {
-            //             var pRow;
-            //             aRows.map((aRow, i) => {
-            //                 if (i > 0) {
-            //                     var cCells = aRow.getCells();
-            //                     var pCells = pRow.getCells();
-
-            //                     // if theCols is empty we use aggregation for all cells in a row
-            //                     if (theCols.length < 1) byCols = cCells.map((x, i) => i);
-
-            //                     if (byCols.filter(x => pCells[x].getText() == cCells[x].getText()).length == byCols.length) {
-            //                         theCols.forEach(i => {
-            //                             if (pCells[i].getText() == cCells[i].getText()) {
-            //                                 $("#" + cCells[i].getId()).css("visibility", "hidden");
-            //                                 $("#" + pRow.getId() + "-col" + i).css("border-bottom-style", "hidden");
-            //                             }
-            //                         });
-            //                     }
-
-            //                 }
-            //                 pRow = aRow;
-            //             });
-            //         }
-            // }, 500);
-
-
-            // group by the cols "byCols"
-            var byCols = [0, 2];
-
-            // the cols "theCols" (if none selected, we will use all)
-            var theCols = [0, 1, 2, 3, 4, 5, 6];
-
-            // oTable.onAfterRendering = function () {
-            //     sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
-            //     var aRows = oTable.getRows();
-            //     if (aRows && aRows.length > 0) {
-            //         var pRow;
-            //         aRows.map((aRow, i) => {
-            //             if (i > 0) {
-            //                 var cCells = aRow.getCells();
-            //                 var pCells = pRow.getCells();
-
-            //                 // if theCols is empty we use aggregation for all cells in a row
-            //                 if (theCols.length < 1) byCols = cCells.map((x, i) => i);
-
-            //                 if (byCols.filter(x => pCells[x].getText() == cCells[x].getText()).length == byCols.length) {
-            //                     theCols.forEach(i => {
-            //                         if (pCells[i].getText() == cCells[i].getText()) {
-            //                             $("#" + cCells[i].getId()).css("visibility", "hidden");
-            //                             $("#" + pRow.getId() + "-col" + i).css("border-bottom-style", "hidden");
-            //                         }
-            //                     });
-            //                 }
-
-            //             }
-            //             pRow = aRow;
-            //         });
-            //     }
-            // };
-            // Aggregate columns (by cols) for similar values
-
-
-
-
-
-
+                        }
+                        pRow = aRow;
+                    });
+                }
+            }, 50);
 
         },
-
-
-        addBindingListener: function (oBindingInfo, sEventName, fHandler) {
-
-            oBindingInfo.events = oBindingInfo.events || {};
-
-            if (!oBindingInfo.events[sEventName]) {
-                oBindingInfo.events[sEventName] = fHandler;
-            } else {
-                // Wrap the event handler of the other party to add our handler.
-                var fOriginalHandler = oBindingInfo.events[sEventName];
-                oBindingInfo.events[sEventName] = function () {
-                    fHandler.apply(this, arguments);
-                    fOriginalHandler.apply(this, arguments);
-                };
-            }
-        },
-
-        // onAfterRendering: function () {
-
-        //     alert(1);
-        //     var oTable = this.getView().byId("mainTable");
-        //     var aRows = oTable.getRows();
-        //     var cCell = aRows[0].getCells()[0];
-
-        // var aRows = oTable.getRows();
-        // if (aRows && aRows.length > 0) {
-        //     var pRow = {};
-        //     for (var i = 0; i < aRows.length; i++) {
-        //         if (i > 0) {
-        //             var pCell = pRow.getCells()[0],
-        //                 cCell = aRows[i].getCells()[0];
-        //             if (cCell.getText() === pCell.getText()) {
-        //                 $("#" + cCell.getId()).css("visibility", "hidden");
-        //                 $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
-        //             }
-        //         }
-        //         pRow = aRows[i];
-        //     }
-        // }
-        // },
-
-        /**
-         * Smart Table Filter Event onBeforeRebindTable
-         * @param {sap.ui.base.Event} oEvent 
-         */
 
 
         onBeforeRebindTable: function (oEvent) {
             var mBindingParams = oEvent.getParameter("bindingParams");
-            // var oTable = this.getView().byId("mainTable");
+            var oTable = this.getView().byId("mainTable");
             // mBindingParams.events = {
             //     "dataReceived": function (oEvent) {
             //         var aReceivedData = oEvent.getParameter('data');
+            //         // group by the cols "byCols"
+            //         var byCols = [0, 2];
+            //         // the cols "theCols" (if none selected, we will use all)
+            //         var theCols = [0, 1, 2, 3, 4, 5, 6];
+            //         setTimeout(function () {
+            //             // console.log('Works!');
+            //             var aRows = oTable.getRows();
+            //             if (aRows && aRows.length > 0) {
+            //                 var pRow;
+            //                 aRows.map((aRow, i) => {
+            //                     if (i > 0) {
+            //                         var cCells = aRow.getCells();
+            //                         var pCells = pRow.getCells();
 
-            //         var aRows = oTable.getRows()[8];
-            //         var pRow = {};
-                    // for (var i = 0; i < aReceivedData.results.length; i++) {
-                    //     for (var a = 0; a < 7; a++) {
+            //                         // if theCols is empty we use aggregation for all cells in a row
+            //                         if (theCols.length < 1) byCols = cCells.map((x, i) => i);
 
-                    //         var pCell = pRow[i].getCells()[a],
-                    //             cCell = aRows[i+1].getCells()[a];
-                    //         if (aReceivedData.results[i].material_code === aReceivedData.results[a].material_code) {
-                    //             $("#" + cCell.getId()).css("visibility", "hidden");
-                    //             $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
-                    //         }
+            //                         if (byCols.filter(x => pCells[x].getText() == cCells[x].getText()).length == byCols.length) {
+            //                             theCols.forEach(i => {
+            //                                 if (pCells[i].getText() == cCells[i].getText()) {
+            //                                     $("#" + cCells[i].getId()).css("visibility", "hidden");
+            //                                     $("#" + pRow.getId() + "-col" + i).css("border-bottom-style", "hidden");
+            //                                 }
+            //                             });
+            //                         }
 
-
-                    //     }
-
-                    // }
-
+            //                     }
+            //                     pRow = aRow;
+            //                 });
+            //             }
+            //         }, 50);
             //     },
             //     //More event handling can be done here
             // };
+
 
             var oSmtFilter = this.getView().byId("smartFilterBar");
 
@@ -181,7 +110,6 @@ sap.ui.define([
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();
 
             var aSearchFilters = [];
-
 
             if (oMaterial_desc.length > 0) {
                 var oMaterial_descFilter = new Filter("material_desc", FilterOperator.Contains, oMaterial_desc);
@@ -192,8 +120,17 @@ sap.ui.define([
                 var oSupplier_local_nameFilter = new Filter("supplier_local_name", FilterOperator.Contains, oSupplier_local_name);
                 aSearchFilters.push(oSupplier_local_nameFilter);
             }
+            //  var vGroup = function (oContext) {
+            //     var supplier_code = oContext.getProperty("material_code");
+            //     var supplier_code = oContext.getProperty("supplier_code");
+                
+            // };
+            var material_code = new sap.ui.model.Sorter("material_code", false);
+           
+            mBindingParams.sorter.push(material_code);
 
             mBindingParams.filters.push(new Filter(aSearchFilters, true));
+
 
         },
 
