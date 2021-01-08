@@ -118,7 +118,13 @@ public class MdCategoryServiceV4 implements EventHandler {
 
 			// Procedure Call
 			CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-			int iCnt = v_statement_proc.executeUpdate();
+            int iCnt = v_statement_proc.executeUpdate();
+                        
+            // Temp Table Drop처리
+            Statement stmt = conn.createStatement();
+            String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP_PG_MD_VP_MAPPING_ITEM";
+            stmt.executeUpdate(v_sql_dropTable);
+            stmt.close();
 
             rsltInfoMap.put("procCnt", iCnt);
 
@@ -207,6 +213,12 @@ public class MdCategoryServiceV4 implements EventHandler {
 			// Procedure Call
 			CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
             int iCnt = v_statement_proc.executeUpdate();
+                        
+            // Temp Table Drop처리
+            Statement stmt = conn.createStatement();
+            String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP_PG_MD_VP_MAPPING_STATUS";
+            stmt.executeUpdate(v_sql_dropTable);
+            stmt.close();
             
             rsltInfoMap.put("procCnt", iCnt);
 
