@@ -42,16 +42,15 @@
                             <VBox>
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantS" required="true"></Label>
                                 <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
-                                        path: 'purOrg>/Pur_Operation_Org',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
-                                        ]
+                                    path: '/Divisions',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                    ],
+                                    sorter: { path: 'org_code'}
                                     }"
                                     selectionFinish="handleSelectionFinishDiv" >
                                     <items>
-                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
@@ -110,9 +109,7 @@
                                 <MultiComboBox id="searchPlantE" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
                                     selectionFinish="handleSelectionFinishDiv">
