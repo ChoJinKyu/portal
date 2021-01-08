@@ -1,6 +1,6 @@
 sap.ui.define([
     "sap/ui/core/Control",
-    "sap/m/Dialog",
+    "ext/lib/control/m/ValueHelpDialog",
     "sap/m/Button",
     "sap/m/Text",
     "sap/m/Table",
@@ -9,10 +9,10 @@ sap.ui.define([
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
-], function (Parent, Dialog, Button, Text, Table, Column, ColumnListItem, Filter, FilterOperator, Sorter) {
+], function (Parent, ValueHelpDialog, Button, Text, Table, Column, ColumnListItem, Filter, FilterOperator, Sorter) {
     "use strict";
 
-    var CodePickerValueHelp = Parent.extend("ext.lib.control.m.CodePickerValueHelp", {
+    var CodeValueHelp = Parent.extend("ext.lib.control.m.CodeValueHelp", {
 
         metadata: {
             properties: {
@@ -32,8 +32,7 @@ sap.ui.define([
 
         init: function () {
             Parent.prototype.init.call(this);
-            this.oDialog = new Dialog();
-            this.oDialog.addStyleClass("sapUiSizeCompact");
+            this.oDialog = new ValueHelpDialog();
             this._firstTime = 0;
             this.oDialog.attachEvent("beforeOpen", this._onBeforeOpen.bind(this));
         },
@@ -115,5 +114,5 @@ sap.ui.define([
 
     });
 
-    return CodePickerValueHelp;
+    return CodeValueHelp;
 }, /* bExport= */ true);
