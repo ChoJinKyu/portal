@@ -243,7 +243,6 @@ sap.ui.define([
 					alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
 				},
 				error: function(req){
-					alert("Ajax Error => "+req.status);
 				}
 			});
 

@@ -196,7 +196,7 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
-
+                        
                         if(that._sSpmd_category_code !== "new"){
                             oTransactionManager.submit({						
                                 success: function(ok){
