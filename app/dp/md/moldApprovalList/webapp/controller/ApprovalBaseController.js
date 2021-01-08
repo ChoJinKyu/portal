@@ -318,10 +318,14 @@ sap.ui.define([
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
 
             }.bind(this));
+            
+            var that = this;
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
                 if (approvalNumber === "New") {
-                    this._toEditMode();
+                    setTimeout(function () {
+                        that._toEditMode();
+                    }, 5000);
                 }
             }.bind(this));
 
