@@ -39,12 +39,13 @@ service PrCreateV4Service {
         company_code : String;
         pr_number : String;
         pr_item_number: Integer64;
+        org_type_code: String;
+        org_code: String;
         buyer_empno: String;
         currency_code: String;
         estimated_price: String;
         material_code: String;
         material_group_code: String;
-        org_code: String;
         pr_desc: String;
         pr_quantity: String;
         pr_unit: String;
@@ -105,6 +106,7 @@ service PrCreateV4Service {
         requestor_department_name: String;
         requestor_empno: String;
         requestor_name: String;
+        pr_desc: String;
         details:  array of SavedDetail;
     }
 

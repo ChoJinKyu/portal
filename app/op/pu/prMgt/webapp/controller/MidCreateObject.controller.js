@@ -174,6 +174,7 @@ sap.ui.define([
                 pr_type_name: "",
                 pr_type_name_2: "",
                 pr_type_name_3: "",
+                pr_desc: "",
                 details: []
             };
 
@@ -197,10 +198,11 @@ sap.ui.define([
 
             var itemNumber = aDetails.length + 1;
 
-            aDetails.push({tenant_id:"", 
-                        company_code: "LGEKR", 
-                        pr_number: "1",
+            aDetails.push({tenant_id:"L2100", 
+                        company_code: "LGCKR", 
+                        pr_number: "",
                         pr_item_number: itemNumber,
+                        org_type_code: "XX", 
                         org_code: "", 
                         material_code: "", 
                         material_group_code: "", 
@@ -423,6 +425,16 @@ sap.ui.define([
             var oDetailModel = this.getModel("detailModel");
             var oData = $.extend(true, {}, oDetailModel.getData());
 
+            //대표품목명
+            var prDesc = "";
+            if(oData.details.length === 0){
+                prDesc = oData.details[0].pr_desc;
+            }else{
+                prDesc = oData.details[0].pr_desc + ' 외 ' + (oData.details.length-1) + "건";
+            }
+            oData.pr_desc = prDesc;
+
+            //Send data
             var sendData = {}, masterDatas=[];
             masterDatas.push(oData);
             sendData.inputData = masterDatas;

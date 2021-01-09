@@ -105,21 +105,53 @@ public class PrCreateV4 implements EventHandler {
         //String v_sql_callProc = "CALL OP_PU_PR_CREATE_SAVE_PROC(HEADER_ID => ?, CD => ?, NAME => ?, I_D_TABLE => #LOCAL_TEMP_D, O_H_TABLE => ?, O_D_TABLE => ?)";
         
         StringBuffer v_sql_createTableM = new StringBuffer();
-        v_sql_createTableM.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_M (");        
-        v_sql_createTableM.append("TENANT_ID NVARCHAR(5),");
-        v_sql_createTableM.append("COMPANY_CODE NVARCHAR(10),");
-        v_sql_createTableM.append("PR_NUMBER NVARCHAR(50),");
-        v_sql_createTableM.append("PR_TYPE_CODE NVARCHAR(30),");
-        v_sql_createTableM.append("PR_TYPE_CODE_2 NVARCHAR(30),");
-        v_sql_createTableM.append("PR_TYPE_CODE_3 NVARCHAR(40),");
-        v_sql_createTableM.append("PR_TEMPLATE_NUMBER NVARCHAR(10),");
-        v_sql_createTableM.append("PR_CREATE_SYSTEM_CODE NVARCHAR(30),");
-        v_sql_createTableM.append("UPDATE_USER_ID NVARCHAR(255)");
-        v_sql_createTableM.append(")");   
+        v_sql_createTableM.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_M (")    
+        .append("TENANT_ID NVARCHAR(5),")
+        .append("COMPANY_CODE NVARCHAR(10),")
+        .append("PR_NUMBER NVARCHAR(50),")
+        .append("PR_TYPE_CODE NVARCHAR(30),")
+        .append("PR_TYPE_CODE_2 NVARCHAR(30),")
+        .append("PR_TYPE_CODE_3 NVARCHAR(40),")
+        .append("PR_TEMPLATE_NUMBER NVARCHAR(10),")
+        .append("PR_CREATE_SYSTEM_CODE NVARCHAR(30),")
+        .append("PR_DESC NVARCHAR(100),")
+        .append("UPDATE_USER_ID NVARCHAR(255)")
+        .append(")");   
         
+        StringBuffer v_sql_createTableD = new StringBuffer();
+        v_sql_createTableD.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (")    
+        .append("TENANT_ID NVARCHAR(5),")
+        .append("COMPANY_CODE NVARCHAR(10),")
+        .append("PR_NUMBER NVARCHAR(50),")
+        .append("PR_ITEM_NUMBER NVARCHAR(10),")
+        .append("ORG_TYPE_CODE NVARCHAR(2), ")
+		.append("ORG_CODE NVARCHAR(10), ")
+		.append("MATERIAL_CODE NVARCHAR(40), ")
+		.append("MATERIAL_GROUP_CODE NVARCHAR(10),")
+		.append("PR_DESC NVARCHAR(100),")
+		.append("PR_QUANTITY NVARCHAR(34),")
+		.append("PR_UNIT NVARCHAR(3),")
+        .append("UPDATE_USER_ID NVARCHAR(255)")
+        .append(")"); 
+
+
         String v_sql_truncateTableM = "TRUNCATE TABLE #LOCAL_TEMP_M";   
-        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";        
-        String v_sql_callProc = "CALL OP_PU_PR_CREATE_SAVE_PROC(I_M_TABLE => #LOCAL_TEMP_M, O_RTN_MSG => ?)";
+        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_D";  
+
+        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        
+
+        StringBuffer v_sql_callProc = new StringBuffer();
+        v_sql_callProc.append("CALL OP_PU_PR_CREATE_SAVE_PROC ( ")
+        .append("I_TENANT_ID => ?, ")
+        .append("I_COMPANY_CODE => ?, ")
+        .append("I_PR_NUMBER => ?, ")
+        .append("I_M_TABLE => #LOCAL_TEMP_M, ")
+        .append("I_D_TABLE => #LOCAL_TEMP_D, ")
+        .append("O_RTN_MSG => ? ")
+        .append(")"); 
+
 
         ResultSet v_rs = null;
         
@@ -127,15 +159,20 @@ public class PrCreateV4 implements EventHandler {
             Connection conn = jdbc.getDataSource().getConnection();
 
             // Master Local Temp Table 생성
-			PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTableM.toString());
-            v_statement_table.execute();
-            
+			PreparedStatement v_statement_tableM = conn.prepareStatement(v_sql_createTableM.toString());
+            v_statement_tableM.execute();
+
+            // Detail Local Temp Table 생성
+			PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTableD.toString());
+            v_statement_tableD.execute();
+                        
             // Master Local Temp Table에 insert
 			PreparedStatement v_statement_insertM = conn.prepareStatement(v_sql_insertTableM);
 
             // Data insert
             if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
-                for(PrCreateSaveType v_indata : v_inMultiData) {                   
+                for(PrCreateSaveType v_indata : v_inMultiData) {
+                    // Master Local Temp Table에 insert            
                     v_statement_insertM.setString(1, (String)v_indata.get("tenant_id"));
                     v_statement_insertM.setString(2, (String)v_indata.get("company_code"));
                     v_statement_insertM.setString(3, (String)v_indata.get("pr_number"));
@@ -144,16 +181,54 @@ public class PrCreateV4 implements EventHandler {
                     v_statement_insertM.setString(6, (String)v_indata.get("pr_type_code_3"));
                     v_statement_insertM.setString(7, (String)v_indata.get("pr_template_number"));
                     v_statement_insertM.setString(8, (String)v_indata.get("pr_create_system_code"));
-                    v_statement_insertM.setString(9, "A60264");
+                    v_statement_insertM.setString(9, v_indata.getPrDesc());
+                    v_statement_insertM.setString(10, "A60264");
                     v_statement_insertM.execute();
 
+                    // Detail Local Temp Table에 insert
+                    PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
+
+                    Collection<SavedDetail> v_inDetails = v_indata.getDetails();
+                    if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+                        for(SavedDetail v_inRow : v_inDetails){
+
+                            //log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
+
+                            v_statement_insertD.setObject(1, v_inRow.getTenantId());
+                            v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
+                            v_statement_insertD.setObject(3, v_inRow.getPrNumber());
+                            v_statement_insertD.setObject(4, v_inRow.getPrItemNumber());
+                            v_statement_insertD.setObject(5, v_inRow.getOrgTypeCode());
+                            v_statement_insertD.setObject(6, v_inRow.getOrgCode());
+                            v_statement_insertD.setObject(7, v_inRow.getMaterialCode());
+                            v_statement_insertD.setObject(8, v_inRow.getMaterialGroupCode());
+                            v_statement_insertD.setObject(9, v_inRow.getPrDesc());
+                            v_statement_insertD.setObject(10, v_inRow.getPrQuantity());
+                            v_statement_insertD.setObject(11, v_inRow.getPrUnit());
+                            v_statement_insertD.setObject(12, "A60264");
+                            v_statement_insertD.addBatch();
+                        }
+                        v_statement_insertD.executeBatch();
+                    }
+                    
+                    log.info("###"+v_indata.getTenantId()+"###"+v_indata.getCompanyCode()+"###"+v_indata.getPrNumber());
+
+
                     // Procedure Call
-                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+                    v_statement_proc.setObject(1, v_indata.getTenantId());
+                    v_statement_proc.setObject(2, v_indata.getCompanyCode());
+                    v_statement_proc.setObject(3, v_indata.getPrNumber());
                     v_rs = v_statement_proc.executeQuery();
 
                     // Master Local Temp Table trunc
                     PreparedStatement v_statement_trunc_tableM = conn.prepareStatement(v_sql_truncateTableM);
                     v_statement_trunc_tableM.execute();
+
+                    // Detail Local Temp Table trunc
+                    PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
+                    v_statement_trunc_tableD.execute();
+
 
                     // Procedure Out put
                     while (v_rs.next()){
