@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import org.slf4j.Logger;
@@ -44,16 +45,25 @@ public class Multilingual {
         return CACHE.put(messageCode, messageByLang);
     }
 
-
     /**
      * Getting a cached message content form the i18n message pool.
      * @param tenantId
      * @param messageCode
      * @param languageCode
+     * @param replacements
      * @return message_content
      */
-    public String getMessageContent(String tenantId, String messageCode, String languageCode) throws Exception {
-        return this.getMessage(tenantId, messageCode, languageCode).getMessageContents();
+    public String getMessageContent(String tenantId, String messageCode, String languageCode, Object... replacements) {
+        if(replacements != null && replacements.length > 0){
+            int i = 0;
+            String messageContent = this.getMessage(tenantId, messageCode, languageCode).getMessageContents();
+            for (Object repacementString : replacements) {
+                messageContent = messageContent.replaceAll("\\{"+(i++)+"\\}", repacementString.toString());
+            }
+            return messageContent;
+        }else{
+            return this.getMessage(tenantId, messageCode, languageCode).getMessageContents();
+        }
     }
 
     /**
@@ -63,7 +73,7 @@ public class Multilingual {
      * @param languageCode
      * @return message 
      */
-    public Message getMessage(String tenantId, String messageCode, String languageCode) throws Exception{
+    public Message getMessage(String tenantId, String messageCode, String languageCode){
         MessageByLang messageByLang = getCachedMessageByLang(messageCode);
         if(messageByLang == null || messageByLang.getMessage(languageCode) == null){
 
@@ -76,11 +86,11 @@ public class Multilingual {
                 );
             Message message = db.run(selectMessage)
                 .first(Message.class)
-                .orElseThrow(() -> new Exception(String.format("Message Not Exists. %s, %s, %s", tenantId, languageCode, messageCode)));
+                .orElseThrow(() -> new ServiceException(String.format("Message Not Exists. %s, %s, %s", tenantId, languageCode, messageCode)));
             
             this.addMessage(messageCode, languageCode, message);
-            if(log.isInfoEnabled())
-                log.info("Pooled a message {}_{}: {}", languageCode, messageCode, message.getMessageContents());
+            if(log.isDebugEnabled())
+                log.debug("Pooled a message {}_{}: {}", languageCode, messageCode, message.getMessageContents());
 
             messageByLang = getCachedMessageByLang(messageCode);
             return messageByLang.getMessage(languageCode);
