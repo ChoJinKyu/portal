@@ -75,25 +75,25 @@
                             <cells>
                                 <Text text="{approver>approver_empno}" />
                                 <Text text="{approver>approve_sequence}" />
-                                <ComboBox id="approverType" width="100%"
+                                <ComboBox width="100%"
                                     selectedKey="{approver>approver_type_code}" 
                                     items="{ path : 'util>/CodeDetails',
                                                 filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
                                                 ]
                                             }"
                                     enabled="{= ${approver>editMode}?${mode>/editFlag}:false }">  
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </ComboBox>
-                                <SearchField id="approverSearch" search=".onApproverSearch" width="100%"
+                                <SearchField search=".onApproverSearch" width="100%"
                                     value="{approver>approver_name}" placeholder="Search employee" 
                                     enabled="{= ${approver>editMode}?${mode>/editFlag}:false }"/>
                                 <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
-                                <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}!==''?${mode>/editFlag}:false }"></Button>
-                                <Button id="btnSortDown" icon="{approver>arrowDown}" press=".onApproverSortDown(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowDown}===''?false:${mode>/editFlag} }"></Button>
-                                <Button id="btnDelete" icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="삭제" visible="{= ${approver>trashShow}?${mode>/editFlag}:false }"></Button>
+                                <Button icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}!==''?${mode>/editFlag}:false }"></Button>
+                                <Button icon="{approver>arrowDown}" press=".onApproverSortDown(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowDown}===''?false:${mode>/editFlag} }"></Button>
+                                <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="삭제" visible="{= ${approver>trashShow}?${mode>/editFlag}:false }"></Button>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -137,7 +137,7 @@
                             selectedKeys="{refererMultiCB>/refer}"
                             items="{ path: '/RefererSearch',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
                             editable="{mode>/editFlag}">

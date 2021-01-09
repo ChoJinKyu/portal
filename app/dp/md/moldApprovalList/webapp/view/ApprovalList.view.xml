@@ -25,9 +25,9 @@
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyS" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
-                                        path: 'org>/Company',
+                                       path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'company_code'}
                                     }" required="true">
@@ -44,12 +44,10 @@
                                 <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
-                                    selectionFinish="handleSelectionFinishDiv" >
+                                    selectionFinish="handleSelectionFinishDiv">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -70,7 +68,7 @@
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" selectedKey="" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
@@ -93,7 +91,7 @@
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'company_code'}
                                     }">
@@ -110,9 +108,7 @@
                                 <MultiComboBox id="searchPlantE" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
                                     selectionFinish="handleSelectionFinishDiv">
@@ -136,7 +132,7 @@
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" selectedKey="" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'util>sort_no'}
@@ -173,7 +169,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -191,7 +187,7 @@
                                     suggestionItems="{
                                         path: '/PartNumbers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'mold_number' }
                             }">
@@ -216,7 +212,7 @@
                                     suggestionItems="{
                                         path: '/Requestors',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'user_id' }
                             }">

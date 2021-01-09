@@ -130,11 +130,18 @@
           },
           {
               "pattern": "midObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiSelectionNumber}/{loiNumber}",
-              "name": "midPage",
+              "name": "selectionPage",
               "target": [
-                  "midObject"
+                  "selectionObject"
               ]
-          }
+          },
+          {
+              "pattern": "midObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiPublishNumber}/{loiNumber}",
+              "name": "publishPage",
+              "target": [
+                  "publishObject"
+              ]
+          }          
       ],
       "targets": {
           "mainObject": {
@@ -142,11 +149,16 @@
             "viewId": "mainPage",
             "viewLevel": 1
           },
-          "midObject": {
-              "viewName": "MidObject",
-          "viewId": "midPage",
+          "selectionObject": {
+              "viewName": "SupplySelection",
+          "viewId": "selectionPage",
           "viewLevel": 2
           },
+          "publishObject": {
+              "viewName": "Publish",
+          "viewId": "publishPage",
+          "viewLevel": 2
+          },          
           "notFound": {
             "viewName": "NotFound",
             "viewPath": "ext.lib.view",

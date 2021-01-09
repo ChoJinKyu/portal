@@ -378,12 +378,16 @@ sap.ui.define([
                     aItems = oTable.getSelectedItems(),
                     aIndices = [];
 
-                oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(false);
+                for (var i = 0; i < oTable._iVisibleItemsLength-1; i++) {
+                    oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
+                    oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
+                }
 
                 aItems.forEach(function (oItem) {
                     aIndices.push(oModel.getProperty("/PdProdActivityTemplate").indexOf(oItem.getBindingContext("list").getObject()));
@@ -439,7 +443,7 @@ sap.ui.define([
                 var oItem = oTable.getSelectedItem();
                 var idxs = [];
                 //oTable.removeSelections(true);
-                for (var i = 0; i < oTable._iVisibleItemsLength; i++) {
+                for (var i = 0; i < oTable._iVisibleItemsLength-1; i++) {
                     oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);

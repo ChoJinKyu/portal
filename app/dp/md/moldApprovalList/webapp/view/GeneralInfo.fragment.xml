@@ -6,7 +6,7 @@
     xmlns:uxap="sap.uxap"
     xmlns:rte="sap.ui.richtexteditor">
 
-    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" id="generalInfoLayout"> 
+    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" id="generalInfoLayout" width="80%"> 
         <HBox alignItems="Center">
             <Label
                 text="Subject"

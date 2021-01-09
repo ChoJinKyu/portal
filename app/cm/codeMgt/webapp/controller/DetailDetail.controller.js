@@ -20,25 +20,33 @@ sap.ui.define([
         },
         
         onBeforeRendering : function(){
-            this._fnGetLanguage();
+            // this._fnGetLanguage();
         },
 
         _fnGetLanguage : function(){
             var oUtilModel = this.getModel("util");
+            var oViewModel = this.getModel("viewModel");
+            var aLanguages = oViewModel.getProperty("/languageList");
+
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2100'));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE'));
 
-            oUtilModel.read("/CodeDetails",{
-                filters : aFilters,
-                success : function(data){
-                    var aLang = data.results;
-                    var oViewModel = this.getModel("viewModel");
-                    oViewModel.setProperty("/languageList", aLang);
-                }.bind(this),
-                error : function(data){
-                    // oCodeMasterTable.setBusy(false);
-                }
+            return new Promise(function(reselve, reject){
+                if(aLanguages && aLanguages.length > 0){
+                    reselve(aLanguages);
+                };
+                oUtilModel.read("/CodeDetails",{
+                    filters : aFilters,
+                    success : function(data){
+                        var aLang = data.results;
+                        oViewModel.setProperty("/languageList", aLang);
+                        reselve(aLang);
+                    },
+                    error : function(data){
+                        // oCodeMasterTable.setBusy(false);
+                    }
+                });
             });
         },
 
@@ -108,7 +116,7 @@ sap.ui.define([
                 parent_code: "",
                 parent_group_code: "",
                 remark: "",
-                sort_no: "",
+                sort_no: 0,
                 start_date: new Date(),
                 end_date: new Date(2099,11,31),
                 local_create_dtm: new Date(),
@@ -122,18 +130,19 @@ sap.ui.define([
             var model = this.getModel('languages');
             model.setProperty("/CodeLanguages", []);
 
-            var aLanguages = oViewModel.getProperty("languageList");
-            aLanguages.forEach(function(item,i){
-                var oData = {
-                    code: "",
-                    code_name: "",
-                    group_code: "",
-                    language_cd: item.code,
-                    tenant_id: "",
-                    local_create_dtm: new Date(),
-                    local_update_dtm: new Date()
-                }
-                model.addRecord(oData, "/CodeLanguages", i);
+            this._fnGetLanguage().then(function(languageList){
+                languageList.forEach(function(item,i){
+                    var oData = {
+                        code: "",
+                        code_name: "",
+                        group_code: "",
+                        language_cd: item.code,
+                        tenant_id: "",
+                        local_create_dtm: new Date(),
+                        local_update_dtm: new Date()
+                    }
+                    model.addRecord(oData, "/CodeLanguages", i);
+                });
             })
 
 
@@ -212,13 +221,16 @@ sap.ui.define([
                 bCreateMode = false;
             };
 
-            if(bCreateMode){
-                this._fnSetCreateMode();
-                this._fnSetCreateData();
-            }else{
-                this._fnSetReadMode();
-                this._fnReadLanguages(sTenantId, sGroupCode, sCode);
-            }
+            var that = this;
+            this._fnGetLanguage().then(function(){
+                if(bCreateMode){
+                    that._fnSetCreateMode();
+                    that._fnSetCreateData();
+                }else{
+                    that._fnSetReadMode();
+                    that._fnReadLanguages(sTenantId, sGroupCode, sCode);
+                }
+            });
 
             //ScrollTop
             var oObjectPageLayout = this.getView().byId("objectPageLayout");
@@ -480,5 +492,21 @@ sap.ui.define([
                 }
             });
         },
+
+        languageText : function(langCode){
+            console.log(langCode)
+            var sLangText = "";
+            this._fnGetLanguage().then(function(languageList){
+                languageList.forEach(function(item){
+                    if(item.code === langCode){
+                        sLangText = item.code_description;
+                        // return false;
+                    }
+                });
+            })
+            console.log('sLangText',sLangText)
+            return sLangText;
+            // return langCode;
+        }
 	});
 });

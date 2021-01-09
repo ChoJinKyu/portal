@@ -78,7 +78,7 @@ service PrCreateV4Service {
         ]
     }
     *********************************/
-    type prCreateSaveType {
+    type PrCreateSaveType {
         tenant_id : String;
         company_code : String;
         pr_number: String;
@@ -108,11 +108,11 @@ service PrCreateV4Service {
         details:  array of SavedDetail;
     }
 
-    type returnType {
+    type OutType {
         return_code : String(10);
         return_msg  : String(5000);
     }
 
-    action SavePrCreateProc (inputData : array of prCreateSaveType) returns returnType;
+    action SavePrCreateProc (inputData : array of PrCreateSaveType) returns array of OutType;
 
 }

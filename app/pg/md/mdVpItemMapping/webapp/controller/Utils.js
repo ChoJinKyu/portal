@@ -20,13 +20,18 @@ sap.ui.define([
 			}
 		},
 
-		getAvailableProductsTable: function(oController) {
-			return oController.getOwnerComponent().getRootControl().byId("availableItems").byId("table");
+		getAvailableItemsTable: function(oController) {
+            
+            var aTableId = oController.getModel("tblModel").getProperty("/table1")
+			return oController.getOwnerComponent().byId(aTableId);//"container-mdVpItemMapping---mdVpItemMapping--availableItems--table"
+			// return oController.getOwnerComponent().getRootControl().byId("availableItems").byId("table");
 		},
 
-		getSelectedProductsTable: function(oController) {
-            return oController.getOwnerComponent().byId("selectedItems").byId("table");
-			//return oController.getOwnerComponent().getRootControl().byId("mdCategoryItem").byId("mainTable");
+		getSelectedItemsTable: function(oController) {
+            
+            var sTableId = oController.getModel("tblModel").getProperty("/table2")
+			return oController.getOwnerComponent().byId(sTableId);
+			// return oController.getOwnerComponent().getRootControl().byId("selectedItems").byId("table");
 		},
 
 		getSelectedItemContext: function(oTable, fnCallback) {

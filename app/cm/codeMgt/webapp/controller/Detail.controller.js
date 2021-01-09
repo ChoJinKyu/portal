@@ -78,10 +78,6 @@ sap.ui.define([
             oContModel.setProperty("/detail/createMode", bCreate);
             oContModel.setProperty("/detail/editMode", bEdit);
 
-            console.log('bRead',bRead)
-            console.log('bCreate',bCreate)
-            console.log('bEdit',bEdit)
-            console.log('oContModel',oContModel.getData())
         },
 
         onEditPress : function(){

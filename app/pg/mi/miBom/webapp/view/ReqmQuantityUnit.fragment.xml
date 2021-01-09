@@ -12,16 +12,17 @@
     displayBlock="true">
 	
 	<Dialog id="reqmQuantityUnit" title="{I18N>/NPG00005}">
-		<content>
-        
-        <VBox class="sapUiSmallMarginBegin" width="500px">
-            <SearchField id="searchField_uom_name" 
-                            width="90%"
-                            search=".onUomNameSearch" 
-                            selectOnFocus="false"
-                            placeholder="Search Name or Code"
-                            class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
-            
+		<subHeader>
+			<Toolbar>
+                <SearchField id="searchField_uom_name" 
+                    search=".onUomNameSearch" 
+                    selectOnFocus="false"
+                    placeholder="{I18N>/INPUT}"/> 
+			</Toolbar>
+        </subHeader>
+                
+		<content>        
+        <VBox width="450px">
             <Table  id="reqmTable"
                     mode="SingleSelectLeft"
                     items="{unitOfMeasureView>/}"
@@ -30,9 +31,7 @@
                     growing="true"
                     sticky="ColumnHeaders,HeaderToolbar"
                     growingThreshold="50"
-                    inset="false"                    
-                    class="sapUiSmallMargin sapUiSmallMarginTop"
-            >
+                    inset="false">
                 <columns>
                     <Column hAlign="Center" ><header><Label text="{I18N>/CODE}"/></header></Column>
                     <Column hAlign="Center" ><header><Label text="{I18N>/NAME}"/></header></Column>                                                                                                                    

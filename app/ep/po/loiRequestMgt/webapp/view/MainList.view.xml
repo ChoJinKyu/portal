@@ -315,7 +315,7 @@
                                 <ObjectIdentifier text="{list>loi_request_title}" />
                                 <ObjectIdentifier text="{list>loi_request_status_name}" />
                                 <!-- <ObjectIdentifier text="{list>investment_review_flag}" /> -->
-                                <ObjectIdentifier text="{list>buyer_empno}" />
+                                <ObjectIdentifier text="{list>buyer_name}" />
                                 <ObjectIdentifier text="{list>publish_date}" />
                                 <ObjectIdentifier text="{list>supplier_code}" />
                                 

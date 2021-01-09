@@ -1,14 +1,14 @@
-PROCEDURE DP_TC_PROJECT_MGT_PROC (IN I_PROJECT DP_TC_PROJECT_TYPE
-                                 ,IN I_SIMILAR_MODEL DP_TC_PROJECT_SIMILAR_MODEL_TYPE
-                                 ,IN I_ADD_INFO DP_TC_PROJECT_ADDITION_INFO_TYPE
-                                 ,IN I_BASE_EXRATE DP_TC_PROJECT_BASE_EXRATE_TYPE
-                                 ,IN I_USER_ID NVARCHAR(255)
-                                 ,OUT O_MSG DP_TC_PROC_OUT_TYPE)
+PROCEDURE DP_TC_UPDATE_PROJECT_PROC (IN I_PROJECT DP_TC_PROJECT_TYPE
+                                    ,IN I_SIMILAR_MODEL DP_TC_PROJECT_SIMILAR_MODEL_TYPE
+                                    ,IN I_ADD_INFO DP_TC_PROJECT_ADDITION_INFO_TYPE
+                                    ,IN I_BASE_EXRATE DP_TC_PROJECT_BASE_EXRATE_TYPE
+                                    ,IN I_USER_ID NVARCHAR(255)
+                                    ,OUT O_MSG DP_TC_PROC_OUT_TYPE)
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_PROJECT_MGT_PROC
+Procedure Name : DP_TC_UPDATE_PROJECT_PROC
 Creator        : Jeong Jeong Ho
 Description    : 최신 프로젝트 정보 수정
 History        : 2021-01-05 initial creation

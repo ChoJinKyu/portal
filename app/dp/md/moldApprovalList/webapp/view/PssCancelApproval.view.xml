@@ -49,7 +49,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -124,14 +124,14 @@
                     <uxap:ObjectPageSubSection>
                         <HBox>
                             <VBox class="sapUiSmallMargin">
-                                <Label text="{I18N>/AFFILIATE}" />
+                                <Label text="{I18N>/COMPANY}" />
                                 <ObjectStatus
                                     text="[{company>/company_code}] {company>/company_name}" 
                                     state="Error"
                                     />
                             </VBox>
                             <VBox class="sapUiSmallMargin">
-                                <Label text="{I18N>/BUSINESS_DIVISION}" />
+                                <Label text="{I18N>/PLANT}" />
                                 <ObjectStatus text="[{plant>/org_code}] {plant>/org_name}" state="Error"/>
                             </VBox>
                         </HBox>

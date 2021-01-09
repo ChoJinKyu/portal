@@ -470,11 +470,17 @@ BEGIN
 								    (
 									    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
 											,ORG_CODE                           ,VENDOR_POOL_CODE                    ,SUPPLIER_CODE
-											,CHANGER_EMPNO                      ,BEFORE_SUPPLIER_CODE                ,SUPEVAL_TARGET_FLAG
-											,SUPPLIER_OP_PLAN_REVIEW_FLAG       ,SUPEVAL_CONTROL_FLAG			     ,SUPEVAL_CONTROL_START_DATE         
-											,SUPEVAL_CONTROL_END_DATE           ,SUPEVAL_RESTRICT_START_DATE		 ,SUPEVAL_RESTRICT_END_DATE          
-											,INP_CODE                           ,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         
-											,APPROVAL_NUMBER                    ,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
+											,CHANGER_EMPNO                      ,BEFORE_SUPPLIER_CODE                
+											--,SUPEVAL_TARGET_FLAG
+											--,SUPPLIER_OP_PLAN_REVIEW_FLAG       
+											,SUPEVAL_CONTROL_FLAG			     ,SUPEVAL_CONTROL_START_DATE         
+											,SUPEVAL_CONTROL_END_DATE           
+											--,SUPEVAL_RESTRICT_START_DATE		 
+											--,SUPEVAL_RESTRICT_END_DATE          
+											--,INP_CODE                          
+											,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         
+											--,APPROVAL_NUMBER --승인된 DTL의 APPR번호 재 요청할 때도 값을 넘겨야하는지
+											,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
 											,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
 											,SYSTEM_UPDATE_DTM
 								    ) VALUES (
@@ -486,17 +492,17 @@ BEGIN
 								    		,loop_sup.SUPPLIER_CODE
 								    		,I_USER_NO
 	            							,NULL
-								    		,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
-											,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
+								    		--,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
+											--,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
 											,IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)
 											,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
 											,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
-											,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_START_DATE )
-											,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
-											,TRIM( ' ' FROM loop_sup.INP_CODE )
+											--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_START_DATE )
+											--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
+											--,TRIM( ' ' FROM loop_sup.INP_CODE )
 											,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
 											,loop_sup.SUPPLIER_BASE_PORTION_RATE
-											,loop_sup.APPROVAL_NUMBER
+											--,loop_sup.APPROVAL_NUMBER
 											,NOW()
 											,I_USER_ID
 											,NOW()
@@ -653,7 +659,7 @@ BEGIN
 							IF V_ITEM_EXIST_CNT = 1 THEN
 							    UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL
 								SET     REGISTER_REASON						= TRIM( ' ' FROM loop_itm.REGISTER_REASON )
-									   ,APPROVAL_NUMBER						= loop_itm.APPROVAL_NUMBER        
+									   ,APPROVAL_NUMBER						= TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
 									   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
 									   ,LOCAL_UPDATE_DTM       				= NOW()
 									   ,UPDATE_USER_ID         				= I_USER_ID
@@ -683,7 +689,7 @@ BEGIN
 							    		,loop_itm.MATERIAL_CODE
 							    		,TRUE
 										,TRIM( ' ' FROM loop_itm.REGISTER_REASON )
-										,loop_itm.APPROVAL_NUMBER
+										,TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
 										,NOW()
 										,I_USER_ID
 										,NOW()
@@ -828,8 +834,8 @@ BEGIN
 							IF V_MANAGER_EXIST_CNT = 1 THEN
 							    UPDATE  PG_VP_VENDOR_POOL_MANAGER_DTL
 								SET     VENDOR_POOL_PERSON_ROLE_TEXT		= TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_ROLE_TEXT )
-									   ,REGISTER_REASON						= TRIM( ' ' FROM loop_man.REGISTER_REASON )
-									   ,APPROVAL_NUMBER						= loop_man.APPROVAL_NUMBER                       
+									   --,REGISTER_REASON						= TRIM( ' ' FROM loop_man.REGISTER_REASON )
+									   --,APPROVAL_NUMBER						= TRIM( ' ' FROM loop_man.APPROVAL_NUMBER )
 									   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
 									   ,LOCAL_UPDATE_DTM       				= NOW()
 									   ,UPDATE_USER_ID         				= I_USER_ID
@@ -847,8 +853,10 @@ BEGIN
 							    (
 								    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
 										,ORG_CODE                           ,VENDOR_POOL_CODE                    ,VENDOR_POOL_PERSON_EMPNO
-										,VENDOR_POOL_PERSON_ROLE_TEXT       ,VENDOR_POOL_MAPPING_USE_FLAG        ,REGISTER_REASON				
-										,APPROVAL_NUMBER                    ,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
+										,VENDOR_POOL_PERSON_ROLE_TEXT       ,VENDOR_POOL_MAPPING_USE_FLAG        
+										--,REGISTER_REASON				
+										--,APPROVAL_NUMBER                    
+										,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
 										,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
 										,SYSTEM_UPDATE_DTM
 							    ) VALUES (
@@ -860,8 +868,8 @@ BEGIN
 							    		,loop_man.VENDOR_POOL_PERSON_EMPNO
 							    		,TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_ROLE_TEXT )
 										,TRUE
-										,TRIM( ' ' FROM loop_man.REGISTER_REASON )
-										,loop_man.APPROVAL_NUMBER
+										--,TRIM( ' ' FROM loop_man.REGISTER_REASON )
+										--,TRIM( ' ' FROM loop_man.APPROVAL_NUMBER )
 										,NOW()
 										,I_USER_ID
 										,NOW()

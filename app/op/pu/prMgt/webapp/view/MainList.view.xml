@@ -38,18 +38,18 @@
                                         columnsL="2" columnsM="2" >
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" labelFor="searchRequestDate" required="true"></Label>
+                            <Label text="{I18N>/PR_REQUEST_DATE}" labelFor="searchRequestDate" required="true"></Label>
                             <DateRangeSelection id="searchRequestDate" width="100%" change="handleChange"/>
                             <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchPr_create_status" required="false"></Label>
                             <MultiComboBox
                               id="SearchPr_create_status"
-                              showSecondaryValues="true"
+                              showSecondaryValues="false"
                               width="100%"
                               items="{
                                 path: 'util>/Code',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'CM_APPROVE_STATUS'}
+                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
                                 ]
                               }">
                               <items>
@@ -64,7 +64,7 @@
                             <Label text="{I18N>/PR_TYPE_CODE}" labelFor="searchPR_TYPE_CODE" required="false"></Label>
                             <MultiComboBox
                               id="searchPR_TYPE_CODE"
-                              showSecondaryValues="true"
+                              showSecondaryValues="false"
                               width="100%"
                               items="{
                                 path: 'util>/Code',
@@ -87,7 +87,7 @@
                             <Label text="{I18N>/PR_TEMPLATE_NUMBER}" labelFor="searchPR_TEMPLATE_NUMBER"></Label>
                             <MultiComboBox 
                                 id="searchPR_TEMPLATE_NUMBER" 
-                                showSecondaryValues="true"
+                                showSecondaryValues="false"
                                 width="100%" 
                                 items="{
                                         path: '/Pr_TLng',
@@ -128,6 +128,7 @@
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         growing="true"
+                        mode="MultiSelect"
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
@@ -139,7 +140,7 @@
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_MstView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddDialogPress" />
-                            <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" />
+                            <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPrDeletePress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press=".onExportPress" >
                                 <layoutData>
@@ -154,43 +155,43 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnCHK" width="4em" >
-                            <CheckBox selected="false" minScreenWidth="Desktop" select=".onColumnChecBox"/>
-                        </Column>
-                        <Column id="mainColumnPR_NUMBER"   importance="High"  popinDisplay="Inline"   demandPopin="true" hAlign="Center">
+                        <!-- <Column id="mainColumnCHK" width="2.5em" minScreenWidth="Desktop" >
+                            <CheckBox selected="false" select=".onColumnChecBox"/>
+                        </Column> -->
+                        <Column id="mainColumnPR_NUMBER"   hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnERP_PR_NUMBER"   minScreenWidth="Desktop" hAlign="Center" >
+                        <Column id="mainColumnERP_PR_NUMBER"   minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/ERP_PR_NUMBER}" />
                         </Column>        
-                        <Column id="mainColumnPR_DESC"     importance="High"  popinDisplay="Inline"  demandPopin="true" hAlign="Center" >
+                        <Column id="mainColumnPR_DESC"  demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
                             <Text text="{I18N>/PR_DESC}" />
                         </Column>                       
-                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_TYPE_CODE_2}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center">
+                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_TYPE_CODE_3}" />
                         </Column>
-                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center">
+                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_TEMPLATE_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Desktop" hAlign="Center">
+                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
                         </Column>
-                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center">
+                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/REQUESTOR_NAME}" />
                         </Column>
-                         <Column id="mainColumnPURCHASE_REQUISITION" minScreenWidth="Desktop" hAlign="Center" >
-                            <Text text="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE} {I18N>/DATE}" />
+                         <Column id="mainColumnPURCHASE_REQUISITION" minScreenWidth="Desktop" hAlign="Center"  width="auto">
+                            <Text text="{I18N>/PR_REQUEST_DATE}" />
                         </Column>
-                        <Column id="mainColumnPR_COUNT" minScreenWidth="Desktop" hAlign="Center" >
+                        <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="auto">
                             <Text text="{I18N>/PR_COUNT}" />
                         </Column>
-                        <Column id="mainColumnPR_CREATE_STATUS_CODE" importance="High" popinDisplay="Inline" demandPopin="true" hAlign="Center" >
+                        <Column id="mainColumnPR_CREATE_STATUS_CODE"  hAlign="Center"  width="auto">
                             <Text text="{I18N>/PR_CREATE_STATUS_CODE}" />
                         </Column>
                        
@@ -198,21 +199,21 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>             
-                                <CheckBox fieldGroupIds="{= ${list>pr_create_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>pr_create_status_code}==='DR'? true:false }" select=".onCheck" />  
+                                <!-- <CheckBox fieldGroupIds="{= ${list>pr_create_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>pr_create_status_code}==='DR'? true:false }" select=".onCheck" />   -->
                                 <Text text="{list>pr_number}"/>
                                 <Text text="{list>erp_pr_number}"/>
                                 <Text text="{list>pr_desc}"/>
                                 <Text text="{list>pr_type_name}"/>
                                 <Text text="{list>pr_type_name_2}"/>
                                 <Text text="{list>pr_type_name_3}"/>
-                                <Text text="{list>pr_template_name}"/>
-                                <Text text="{list>requestor_name}"/>
+                                <Text text="{list>pr_template_name}"/>                                
                                 <Text text="{list>requestor_department_name}"/> 
+                                <Text text="{list>requestor_name}"/>
                                 <Text text="{
                                         path: 'list>request_date',
                                         formatter: '.dateFormatter.toDateString'
                                     }"/>                                                                  
-                                <Text text="{list>pr_dtl_cnt} / {list>pr_progress_status_cnt}"/>
+                                <Text text="{list>pr_progress_status_cnt_txt}"/>
                                 <Text text="{list>pr_create_status_name}"/>
                             </cells>
                         </ColumnListItem>

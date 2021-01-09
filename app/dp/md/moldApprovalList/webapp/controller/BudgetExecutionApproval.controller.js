@@ -81,7 +81,7 @@ sap.ui.define([
             } else {
 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
                 // this.getView().setModel(new ManagedModel(), "mdCommon");
                 var md = this.getModel('mdCommon');
@@ -146,8 +146,8 @@ sap.ui.define([
         _bindComboPlant : function (company_code) { 
             
             var aFilter = [
-                         new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                        , new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                         new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                        , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                         , new Filter("company_code", FilterOperator.EQ, company_code)
                 ];
 
@@ -214,7 +214,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": "L1100",
+                "tenant_id": "L2600",
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,
@@ -263,38 +263,63 @@ sap.ui.define([
             console.log();
         },
 
-        _toEditModeEachApproval : function(){
+        _toEditModeEachApproval : function(){ 
+            console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
 
-          } ,
+            this.byId("acquisition_department").removeStyleClass("readonlyField");
+            this.byId("accounting_department").removeStyleClass("readonlyField");
+            this.byId("importCompany").removeStyleClass("readonlyField");
+            this.byId("projectCode").removeStyleClass("readonlyField");
+            this.byId("importPlant").removeStyleClass("readonlyField");
+            this.byId("account").removeStyleClass("readonlyField");
+
+            var oRows = this.byId("budgetExecutionTable").getRows();
+
+            oRows.forEach(function(oCell, idx){ 
+                oCell.mAggregations.cells.forEach(function(item, jdx){
+                    if(jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8){
+                         item.removeStyleClass("readonlyField");
+                    }
+                });
+            });
+        } ,
         _toShowModeEachApproval : function(){ 
+            console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
 
+            this.byId("acquisition_department").addStyleClass("readonlyField");
+            this.byId("accounting_department").addStyleClass("readonlyField");
+            this.byId("importCompany").addStyleClass("readonlyField");
+            this.byId("projectCode").addStyleClass("readonlyField");
+            this.byId("importPlant").addStyleClass("readonlyField");
+            this.byId("account").addStyleClass("readonlyField");
+
+            var oRows = this.byId('budgetExecutionTable').getRows(); 
+            
+            oRows.forEach(function(oCell, idx){
+                oCell.mAggregations.cells.forEach(function(item, jdx){
+                    if(jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8){
+                         item.addStyleClass("readonlyField");
+                    }
+                });
+            });
          } ,
-         /*
-        _budgetEditFragment : function(){
-            console.log("_budgetEditFragment");
-            var oPageSection = this.byId("pageApprovalLineSection");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionTableEdit", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
-        _budgetViewFragment : function(){
-             console.log("_budgetViewFragment");
-             var oPageSection = this.byId("pageApprovalLineSection");
-          //  oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionApprovalItem", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },*/ 
+
         /**
          * @description 미리보기 버튼눌렀을 경우 
          */
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            if(this.getModel("approver").getData().Approvers != undefined){  // approver 는 맨 마지막 줄이 있어서 걔는 안보여주기 위해 새로 담음 
+            if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+                for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }

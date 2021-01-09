@@ -130,21 +130,23 @@ service LoiMgtV4Service {
     };
 
     type SavedReqDetails : {
-        tenant_id           : String;
-        company_code        : String;
-        loi_write_number    : String;
-        loi_item_number     : String;
-        item_sequence       : String;
-        ep_item_code        : String;
-        item_desc           : String;
-        unit                : String;
-        request_quantity    : String;
-        currency_code       : String;
-        request_amount      : String;
-        supplier_code       : String;
-        buyer_empno         : String;
-        remark              : String;
-        row_state           : String;
+        tenant_id                   : String;
+        company_code                : String;
+        loi_write_number            : String;
+        loi_item_number             : String;
+        item_sequence               : String;
+        plant_code                  : String;
+        ep_item_code                : String;
+        item_desc                   : String;
+        unit                        : String;
+        request_quantity            : String;
+        currency_code               : String;
+        request_amount              : String;
+        supplier_code               : String;
+        buyer_empno                 : String;
+        purchasing_department_code  : String;
+        remark                      : String;
+        row_state                   : String;
     };
 
 

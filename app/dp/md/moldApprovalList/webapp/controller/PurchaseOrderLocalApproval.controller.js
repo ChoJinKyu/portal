@@ -80,7 +80,7 @@ sap.ui.define([
                 
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
                 
                 var oModel = this.getModel('payment'),
@@ -128,19 +128,19 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval: function(){
-            this.byId("advanced").removeStyleClass("readonlyField");
-            this.byId("part").removeStyleClass("readonlyField");
-            this.byId("residual").removeStyleClass("readonlyField");
+            this.getView().byId("advanced").removeStyleClass("readonlyField");
+            this.getView().byId("part").removeStyleClass("readonlyField");
+            this.getView().byId("residual").removeStyleClass("readonlyField");
 
-            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
+            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
 		},
 
 		_toShowModeEachApproval: function(){
-            this.byId("advanced").addStyleClass("readonlyField");
-            this.byId("part").addStyleClass("readonlyField");
-            this.byId("residual").addStyleClass("readonlyField");
+            this.getView().byId("advanced").addStyleClass("readonlyField");
+            this.getView().byId("part").addStyleClass("readonlyField");
+            this.getView().byId("residual").addStyleClass("readonlyField");
             
-            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
+            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
 		},
 
         /**
@@ -319,9 +319,18 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            var ap = this.getModel("approver").getData().Approvers;
-            for(var i = 0 ; i < ap.length -1 ; i++){
-                this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+            if(this.getModel("approver").getData().Approvers != undefined){ 
+                var ap = this.getModel("approver").getData().Approvers;
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+                for(var i = 0 ; i < len ; i++){
+                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                }
             }
             
             if (!this._oDialogPrev) {

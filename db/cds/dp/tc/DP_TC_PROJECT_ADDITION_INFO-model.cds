@@ -43,7 +43,7 @@ entity Tc_Project_Addition_Info {
                                   on  mtlmob_ref.tenant_id    = tenant_id
                                   and mtlmob_ref.project_code = project_code
                                   and mtlmob_ref.model_code   = model_code
-                                  and addition_type_code      = 'MTLLMOB'; //물동
+                                  and addition_type_code      = 'MTLMOB'; //물동
 
         sales_price_ref     : Association[0.. * ] to Project.Tc_Project
                                   on  sales_price_ref.tenant_id    = tenant_id

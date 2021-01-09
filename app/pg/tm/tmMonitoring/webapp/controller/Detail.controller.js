@@ -50,13 +50,11 @@ sap.ui.define([
             // @ts-ignore
             this.cycleText = new sap.m.Text({
                 text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
-                templateShareable: true
             });
 
             //담당자
             this.managerText = new sap.m.Text({
                 text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
-                templateShareable: true
             });
 
             //주기 multicombobox
@@ -70,8 +68,7 @@ sap.ui.define([
                     template: new sap.ui.core.Item({
                         key: "{code}",
                         text: "{code_name}"
-                    }),
-                    templateShareable: true
+                    })
                 }
             });
 
@@ -143,15 +140,12 @@ sap.ui.define([
             }
 
         },
-
+        //remove
         removeRichTextEditorValue: function () {
             this.byId("reMonitoringPurpose").setValue(null);
             this.byId("reMonitoringScenario").setValue(null);
             this.byId("reSourceSystemDetail").setValue(null);
-
-            this.byId("reMonitoringPurpose").resetProperty("plugins");
-            this.byId("reMonitoringScenario").resetProperty("plugins");
-            this.byId("reSourceSystemDetail").resetProperty("plugins");
+           
 
         },
 
@@ -1191,8 +1185,7 @@ sap.ui.define([
                                 items: [segmentItemYes, segmentItemNo],
                                 selectedKey: "No"
                             })
-                        ],
-                        templateShareable: true
+                        ]
 
                     });
 
@@ -1385,11 +1378,10 @@ sap.ui.define([
                     })
                 ],
                 // @ts-ignore
-                type: sap.m.ListType.Inactive,
-                templateShareable: true
+                type: sap.m.ListType.Inactive
             });
 
-            this.oEditableTemplate = new ColumnListItem("signalListItem", {
+            this.oEditableTemplate = new ColumnListItem({
                 cells: [
                     new sap.m.Text({
                         text: ""
@@ -1496,7 +1488,7 @@ sap.ui.define([
                         // required: true
                     }),
                 ]
-                , templateShareable: true
+                
             });
 
 
@@ -1533,8 +1525,7 @@ sap.ui.define([
                     })
                 ],
                 // @ts-ignore
-                type: sap.m.ListType.Inactive,
-                templateShareable: true
+                type: sap.m.ListType.Inactive
             });
 
             //담당자 테이블 (Edit)
@@ -1577,8 +1568,7 @@ sap.ui.define([
                             }
                         }
                     })
-                ],
-                templateShareable: true
+                ]
             });
         },
 

@@ -147,7 +147,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -267,7 +267,7 @@ sap.ui.define([
             that.getRouter().navTo(approvalTarget , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
-                , approval_type_code: oRecord.approval_type_code
+                , approval_type_code: approvalTypeCode
                 , approval_number: oRecord.approval_number
             });
 
@@ -290,11 +290,10 @@ sap.ui.define([
             if (params.selectedItems.length > 0) {
 
                 params.selectedItems.forEach(function (item, idx, arr) {
-
+                    console.log(item.getKey());
                     plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
@@ -302,18 +301,28 @@ sap.ui.define([
                 });
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 );
             }
-
+ 
             var filter = new Filter({
                 filters: plantFilters,
                 and: false
             });
 
-            this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
-            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
+            var bindInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchPlantS").bindItems(bindInfo);
+            this.getView().byId("searchPlantE").bindItems(bindInfo);
+
+            // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
+            // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
         },
 
 
@@ -335,6 +344,7 @@ sap.ui.define([
                 console.log(item.getKey());
                 selectedKeys.push(item.getKey());
             });
+            console.log(selectedKeys);
 
             this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
@@ -349,7 +359,7 @@ sap.ui.define([
 
             //var path = '';
 
-            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L1100')];
+            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L2600')];
             //     this._bindView("/Requestors", "requestors", schFilter, function(oData){
                     
             //     });
@@ -624,8 +634,7 @@ sap.ui.define([
 
             plantFilter.push(new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-                    new Filter("org_type_code", FilterOperator.EQ, 'AU'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                     new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
                 ],
                 and: true
@@ -720,12 +729,16 @@ sap.ui.define([
             else{
                 if(id.indexOf("localBudget") > -1){
                     approvalTarget = "budgetExecutionApproval"
+                    appTypeCode = "B"
                 }else if(id.indexOf("supplierSelection") > -1){
                     approvalTarget = "participatingSupplierSelection"
+                    appTypeCode = "E"
                 }else if(id.indexOf("localOrder") > -1){
                     approvalTarget = "purchaseOrderLocalApproval"
+                    appTypeCode = "V"
                 }else if(id.indexOf("receipt") > -1){
                     approvalTarget ="moldRecepitApproval"
+                    appTypeCode = "I"
                 }else if(id.indexOf("export") > -1){
                     appTypeCode ="X"  
                 }
@@ -949,7 +962,7 @@ sap.ui.define([
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
 
             var aSearchFilters = [];
-
+            
             if (sCategory.length > 0) {
                 var _tempFilters = [];
 
@@ -1039,7 +1052,7 @@ sap.ui.define([
             if (sStatus) {
                 aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
-
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
             return aSearchFilters;
         },
 
