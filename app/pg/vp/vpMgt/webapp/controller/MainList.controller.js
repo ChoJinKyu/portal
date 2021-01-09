@@ -166,22 +166,27 @@ sap.ui.define([
          onDialogTreeCreate: function (){
             var oView = this.getView();
 
-			if (!this.pDialog) {
-				this.pDialog = Fragment.load({
-					id: oView.getId() +"tree",
+			if (!this.treeDialog) {
+				this.treeDialog = Fragment.load({
+					id: oView.getId() ,
 					name: "pg.vp.vpMgt.view.DialogCreateTree",
 					controller: this
-				}).then(function (oDialog) {
+				}).then(function (tDialog) {
 					// connect dialog to the root view of this component (models, lifecycle)
-					oView.addDependent(oDialog);
-					return oDialog;
+					oView.addDependent(tDialog);
+					return tDialog;
 				});
 			} 
-			this.pDialog.then(function(oDialog) {
-                oDialog.open();
+			this.treeDialog.then(function(tDialog) {
+                tDialog.open();
                 // this.onAfterDialog();
 			}.bind(this));
         },
+        createTreePopupClose: function (oEvent){
+            console.log(oEvent);
+            this.byId("ceateVpCategorytree").close();
+        }, 
+
 
          onDialogCreate: function (){
             var oView = this.getView();
