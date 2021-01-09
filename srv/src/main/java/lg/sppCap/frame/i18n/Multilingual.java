@@ -81,22 +81,20 @@ public class Multilingual {
                 .columns("message_contents", "message_type_code")
                 .where(b -> 
                     b.tenant_id().eq(tenantId)
-                    .and(b.language_code().eq(languageCode))
+                    .and(b.language_code().eq(languageCode.toUpperCase()))
                     .and(b.message_code().eq(messageCode))
                 );
             Message message = db.run(selectMessage)
                 .first(Message.class)
-                .orElseThrow(() -> new ServiceException(String.format("Message Not Exists. %s, %s, %s", tenantId, languageCode, messageCode)));
+                .orElseThrow(() -> new ServiceException(String.format("Message Not Exists. %s, %s, %s", tenantId, languageCode.toUpperCase(), messageCode)));
             
-            this.addMessage(messageCode, languageCode, message);
+            this.addMessage(messageCode, languageCode.toUpperCase(), message);
             if(log.isDebugEnabled())
-                log.debug("Pooled a message {}_{}: {}", languageCode, messageCode, message.getMessageContents());
+                log.debug("Pooled a message {}_{}: {}", languageCode.toUpperCase(), messageCode, message.getMessageContents());
 
             messageByLang = getCachedMessageByLang(messageCode);
-            return messageByLang.getMessage(languageCode);
-        }else {
-            return messageByLang.getMessage(languageCode);
         }
+        return messageByLang.getMessage(languageCode.toUpperCase());
     }
     
 
