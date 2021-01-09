@@ -25,7 +25,14 @@
         "settings": {
             "odataVersion": "2.0"
         }
-        },
+      },
+      "vpMappingProc": {
+        "uri": "srv-api/odata/v4/pg.VpMappingV4Service/",
+        "type": "OData",
+        "settings": {
+            "odataVersion": "4.0"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -102,6 +109,15 @@
           "useBatch": true
         }
       },
+      "vpMappingProc": {
+        "dataSource": "vpMappingProc",
+        "preload": false,
+        "settings": {
+            "operationMode": "Server",
+            "synchronizationMode": "None",
+            "autoExpandSelect": true
+        }
+      },      
       "": {
         "dataSource": "mainService",
         "preload": true,

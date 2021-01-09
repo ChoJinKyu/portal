@@ -163,6 +163,26 @@ sap.ui.define([
          * @see 사용처 DialogCreate Fragment Open 이벤트
          */
 
+         onDialogTreeCreate: function (){
+            var oView = this.getView();
+
+			if (!this.pDialog) {
+				this.pDialog = Fragment.load({
+					id: oView.getId() +"tree",
+					name: "pg.vp.vpMgt.view.DialogCreateTree",
+					controller: this
+				}).then(function (oDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(oDialog);
+					return oDialog;
+				});
+			} 
+			this.pDialog.then(function(oDialog) {
+                oDialog.open();
+                // this.onAfterDialog();
+			}.bind(this));
+        },
+
          onDialogCreate: function (){
             var oView = this.getView();
 
