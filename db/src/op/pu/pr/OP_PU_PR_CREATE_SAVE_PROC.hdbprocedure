@@ -12,6 +12,12 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
 							PR_TEMPLATE_NUMBER NVARCHAR(10), 
 							PR_CREATE_SYSTEM_CODE NVARCHAR(30),
                             PR_DESC NVARCHAR(100),
+                            REQUESTOR_EMPNO NVARCHAR(30),
+                            REQUESTOR_NAME NVARCHAR(50),
+                            REQUESTOR_DEPARTMENT_CODE NVARCHAR(50),
+                            REQUESTOR_DEPARTMENT_NAME NVARCHAR(240),
+                            PR_HEADER_TEXT NVARCHAR(200),
+                            APPROVAL_CONTENTS NCLOB,
 							UPDATE_USER_ID NVARCHAR(255)
         ),
         IN I_D_TABLE TABLE( TENANT_ID NVARCHAR(5), 
@@ -25,6 +31,15 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
 							PR_DESC NVARCHAR(100),
 							PR_QUANTITY NVARCHAR(34),
 							PR_UNIT NVARCHAR(3),
+                            REQUESTOR_EMPNO NVARCHAR(30),
+                            REQUESTOR_NAME NVARCHAR(50),
+                            BUYER_EMPNO NVARCHAR(30),
+                            PURCHASING_GROUP_CODE NVARCHAR(3),
+                            ESTIMATED_PRICE DECIMAL(34),
+                            CURRENCY_CODE NVARCHAR(3),
+                            PRICE_UNIT NVARCHAR(3),
+                            PR_PROGRESS_STATUS_CODE NVARCHAR(30),
+                            REMARK NVARCHAR(3000),
 							UPDATE_USER_ID NVARCHAR(255)
         ),
         OUT O_RTN_MSG TABLE( RETURN_CODE NVARCHAR(4),
@@ -41,18 +56,27 @@ BEGIN
 
     /* 상세자료 cursor */
     DECLARE CURSOR curDtlList FOR
-        SELECT 	  DTL.TENANT_ID  
-				, DTL.COMPANY_CODE
-				, DTL.PR_NUMBER 
-				, DTL.PR_ITEM_NUMBER 
-				, DTL.ORG_TYPE_CODE 
-				, DTL.ORG_CODE 
-				, DTL.MATERIAL_CODE
-				, DTL.MATERIAL_GROUP_CODE
-				, DTL.PR_DESC
-				, DTL.PR_QUANTITY
-				, DTL.PR_UNIT
-				, DTL.UPDATE_USER_ID 
+        SELECT 	TENANT_ID  ,
+				COMPANY_CODE,
+				PR_NUMBER ,
+				PR_ITEM_NUMBER ,
+				ORG_TYPE_CODE ,
+				ORG_CODE ,
+				MATERIAL_CODE,
+				MATERIAL_GROUP_CODE,
+				PR_DESC,
+				PR_QUANTITY,
+				PR_UNIT,
+                REQUESTOR_EMPNO ,
+                REQUESTOR_NAME ,
+                BUYER_EMPNO ,
+                PURCHASING_GROUP_CODE,
+                ESTIMATED_PRICE ,
+                CURRENCY_CODE ,
+                PRICE_UNIT ,
+                PR_PROGRESS_STATUS_CODE ,
+                REMARK ,
+				UPDATE_USER_ID 
         FROM :I_D_TABLE DTL
         ;
 
@@ -86,6 +110,12 @@ BEGIN
 					M.PR_TEMPLATE_NUMBER,
 					M.PR_CREATE_SYSTEM_CODE,
                     M.PR_DESC,
+                    M.REQUESTOR_EMPNO ,
+                    M.REQUESTOR_NAME ,
+                    M.REQUESTOR_DEPARTMENT_CODE ,
+                    M.REQUESTOR_DEPARTMENT_NAME ,
+                    M.PR_HEADER_TEXT ,
+                    M.APPROVAL_CONTENTS,
 					M.UPDATE_USER_ID
 			FROM	:I_M_TABLE M
 			;
@@ -120,6 +150,14 @@ BEGIN
             REQUEST_DATE,
             PR_CREATE_STATUS_CODE,
             PR_DESC,
+            REQUESTOR_EMPNO ,
+            REQUESTOR_NAME ,
+            REQUESTOR_DEPARTMENT_CODE ,
+            REQUESTOR_DEPARTMENT_NAME ,
+            PR_HEADER_TEXT ,
+            APPROVAL_FLAG,
+            ERP_INTERFACE_FLAG,
+            APPROVAL_CONTENTS,
 			LOCAL_CREATE_DTM,
 			LOCAL_UPDATE_DTM,
 			CREATE_USER_ID,
@@ -140,6 +178,14 @@ BEGIN
             CURRENT_TIMESTAMP,
             '10',
             S_MST.PR_DESC,
+            S_MST.REQUESTOR_EMPNO ,
+            S_MST.REQUESTOR_NAME ,
+            S_MST.REQUESTOR_DEPARTMENT_CODE ,
+            S_MST.REQUESTOR_DEPARTMENT_NAME ,
+            S_MST.PR_HEADER_TEXT ,
+            FALSE,
+            FALSE,
+            S_MST.APPROVAL_CONTENTS,
 			CURRENT_TIMESTAMP,
 			CURRENT_TIMESTAMP,
 			S_MST.UPDATE_USER_ID,
@@ -163,45 +209,67 @@ BEGIN
     /* Cursor 실행 */
 	FOR curDtl AS curDtlList DO
 		INSERT INTO OP_PU_PR_DTL (
-			  TENANT_ID  
-			, COMPANY_CODE
-			, PR_NUMBER 
-			, PR_ITEM_NUMBER 
-			, ORG_TYPE_CODE 
-			, ORG_CODE 
-			, MATERIAL_CODE
-			, MATERIAL_GROUP_CODE
-			, PR_DESC
-			, PR_QUANTITY
-			, PR_UNIT
-            , DELETE_FLAG
-            , CLOSING_FLAG
-            , LOCAL_CREATE_DTM
-            , LOCAL_UPDATE_DTM
-            , CREATE_USER_ID
-            , UPDATE_USER_ID
-            , SYSTEM_CREATE_DTM
-            , SYSTEM_UPDATE_DTM
+			TENANT_ID  ,
+			COMPANY_CODE,
+			PR_NUMBER ,
+			PR_ITEM_NUMBER ,
+			ORG_TYPE_CODE ,
+			ORG_CODE ,
+			MATERIAL_CODE,
+			MATERIAL_GROUP_CODE,
+			PR_DESC,
+			PR_QUANTITY,
+			PR_UNIT,
+            REQUESTOR_EMPNO ,
+            REQUESTOR_NAME ,
+            REQUEST_DATE,
+            DELIVERY_REQUEST_DATE,
+            BUYER_EMPNO ,
+            PURCHASING_GROUP_CODE,
+            ESTIMATED_PRICE ,
+            CURRENCY_CODE ,
+            PRICE_UNIT ,
+            PR_PROGRESS_STATUS_CODE ,
+            REMARK ,
+            DELETE_FLAG,
+            CLOSING_FLAG,
+            LOCAL_CREATE_DTM,
+            LOCAL_UPDATE_DTM,
+            CREATE_USER_ID,
+            UPDATE_USER_ID,
+            SYSTEM_CREATE_DTM,
+            SYSTEM_UPDATE_DTM
 		) VALUES (
-			  curDtl.TENANT_ID  
-			, curDtl.COMPANY_CODE
-			, :V_PR_NUMBER 
-			, curDtl.PR_ITEM_NUMBER
-			, curDtl.ORG_TYPE_CODE 
-			, curDtl.ORG_CODE 
-			, curDtl.MATERIAL_CODE
-			, curDtl.MATERIAL_GROUP_CODE
-			, curDtl.PR_DESC
-			, curDtl.PR_QUANTITY
-			, curDtl.PR_UNIT
-            , FALSE
-            , FALSE         
-            , CURRENT_TIMESTAMP
-            , CURRENT_TIMESTAMP
-            , curDtl.UPDATE_USER_ID
-            , curDtl.UPDATE_USER_ID
-            , CURRENT_TIMESTAMP
-            , CURRENT_TIMESTAMP
+			curDtl.TENANT_ID , 
+			curDtl.COMPANY_CODE,
+			:V_PR_NUMBER ,
+			curDtl.PR_ITEM_NUMBER,
+			curDtl.ORG_TYPE_CODE ,
+			curDtl.ORG_CODE ,
+			curDtl.MATERIAL_CODE,
+			curDtl.MATERIAL_GROUP_CODE,
+			curDtl.PR_DESC,
+			curDtl.PR_QUANTITY,
+			curDtl.PR_UNIT,
+            curDtl.REQUESTOR_EMPNO,
+            curDtl.REQUESTOR_NAME,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP,
+            curDtl.BUYER_EMPNO,
+            curDtl.PURCHASING_GROUP_CODE,
+            curDtl.ESTIMATED_PRICE ,
+            curDtl.CURRENCY_CODE ,
+            curDtl.PRICE_UNIT ,
+            curDtl.PR_PROGRESS_STATUS_CODE ,
+            curDtl.REMARK ,
+            FALSE ,
+            FALSE ,       
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP,
+            curDtl.UPDATE_USER_ID,
+            curDtl.UPDATE_USER_ID,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
 		);	
 	END FOR;
         
