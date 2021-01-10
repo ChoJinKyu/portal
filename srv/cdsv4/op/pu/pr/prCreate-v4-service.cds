@@ -49,8 +49,12 @@ service PrCreateV4Service {
         pr_desc: String;
         pr_quantity: String;
         pr_unit: String;
-        remark: String;
+        requestor_empno: String;
+        requestor_name: String;
         purchasing_group_code: String;
+        price_unit: String;
+        pr_progress_status_code: String;
+        remark: String;
     };  
 
     // (단일 Header에 multi Detail) 가 multi
@@ -85,6 +89,7 @@ service PrCreateV4Service {
         pr_number: String;
         approval_flag: Boolean;
         approval_number: String;
+        approval_contents: String;
         erp_interface_flag: Boolean;
         erp_pr_number: String;
         erp_pr_type_code: String;

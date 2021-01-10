@@ -27,7 +27,7 @@ entity It_Mst_Bonded_Area {
     key org_code         : String(10) not null @title : '조직코드';
     key type_code        : String(3) not null  @title : '구분코드';
     key bonded_area_code : String(15) not null @title : '보세구역코드';
-        bonded_area_name : String(75)          @title : '보세구역명';
+        bonded_area_name : String(100)         @title : '보세구역명';
 }
 
 extend It_Mst_Bonded_Area with util.Managed;

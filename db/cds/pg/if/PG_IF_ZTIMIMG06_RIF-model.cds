@@ -22,9 +22,6 @@ using util from '../../cm/util/util-model';
 
 entity If_Ztimimg06_Rif {
     key tenant_id     : String(5) not null  @title : '테넌트ID';
-    key company_code  : String(10) not null @title : '회사코드';
-    key org_type_code : String(30) not null @title : '조직유형코드';
-    key org_code      : String(10) not null @title : '조직코드';
     key waers         : String(8) not null  @title : '통화코드';
     key zfapldt       : Date not null       @title : '환율시작일자';
         zfexpdt       : Date                @title : '환율종료일자';

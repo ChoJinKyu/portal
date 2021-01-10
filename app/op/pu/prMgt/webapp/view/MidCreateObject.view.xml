@@ -35,20 +35,25 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="구매요청 번호 :"/>
                     <ObjectStatus
-                        title="구매요청 번호"
                         text="{detailModel>/pr_number}"/>
+                    <Label text="구매요청 생성일자 :"/>
                     <ObjectStatus
-                        title="구매요청 생성일자"
-                        text="{detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                        text="{ path: 'detailModel>/local_update_dtm',
+                                type: 'sap.ui.model.type.Date',
+                                formatOptions: {
+                                pattern: 'yyyy-MM-dd'
+                                }
+                            }"/>
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="구매요청 템플릿 :"/>
                     <ObjectStatus
-                        title="구매요청 템플릿"
                         text="{detailModel>/pr_template_name}"/>
+                    <Label text="구매요청 생성자 :"/>
                     <ObjectStatus
-                        title="구매요청 생성자"
                         text="{detailModel>/requestor_name}"/>
 				</layout:VerticalLayout>
 
@@ -224,7 +229,7 @@
                                 <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
                                     <Label text="규격"/>    
                                     <table:template>
-                                        <Input value=""/>
+                                        <Input value="{detailModel>price_unit}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">

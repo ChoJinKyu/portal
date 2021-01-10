@@ -93,10 +93,11 @@ public class PrCreateV4 implements EventHandler {
     @On(event = SavePrCreateProcContext.CDS_NAME)
     public void onSavePrCreateProc(SavePrCreateProcContext context) {
 
-        System.out.println("#################### onSavePrCreateProc START ");
+        log.info("##### onSavePrCreateProc START ");
 
         Collection<PrCreateSaveType> v_inMultiData = context.getInputData();
         Collection<OutType> v_result = new ArrayList<>();
+        int iRow = 0;
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         //String v_sql_createTableD = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (DETAIL_ID BIGINT, HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
@@ -115,6 +116,12 @@ public class PrCreateV4 implements EventHandler {
         .append("PR_TEMPLATE_NUMBER NVARCHAR(10),")
         .append("PR_CREATE_SYSTEM_CODE NVARCHAR(30),")
         .append("PR_DESC NVARCHAR(100),")
+        .append("REQUESTOR_EMPNO NVARCHAR(30),")
+        .append("REQUESTOR_NAME NVARCHAR(50),")
+        .append("REQUESTOR_DEPARTMENT_CODE NVARCHAR(50),")
+        .append("REQUESTOR_DEPARTMENT_NAME NVARCHAR(240),")
+        .append("PR_HEADER_TEXT NVARCHAR(200),")
+        .append("APPROVAL_CONTENTS NCLOB,")
         .append("UPDATE_USER_ID NVARCHAR(255)")
         .append(")");   
         
@@ -131,17 +138,24 @@ public class PrCreateV4 implements EventHandler {
 		.append("PR_DESC NVARCHAR(100),")
 		.append("PR_QUANTITY NVARCHAR(34),")
 		.append("PR_UNIT NVARCHAR(3),")
+        .append("REQUESTOR_EMPNO NVARCHAR(30),")
+        .append("REQUESTOR_NAME NVARCHAR(50),")
+        .append("BUYER_EMPNO NVARCHAR(30),")
+        .append("PURCHASING_GROUP_CODE NVARCHAR(3),")
+        .append("ESTIMATED_PRICE DECIMAL(34),")
+        .append("CURRENCY_CODE NVARCHAR(3),")
+        .append("PRICE_UNIT NVARCHAR(3),")
+        .append("PR_PROGRESS_STATUS_CODE NVARCHAR(30),")
+        .append("REMARK NVARCHAR(3000),")
         .append("UPDATE_USER_ID NVARCHAR(255)")
         .append(")"); 
-
 
         String v_sql_truncateTableM = "TRUNCATE TABLE #LOCAL_TEMP_M";   
         String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_D";  
 
-        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         
-
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_CREATE_SAVE_PROC ( ")
         .append("I_TENANT_ID => ?, ")
@@ -172,17 +186,24 @@ public class PrCreateV4 implements EventHandler {
             // Data insert
             if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
                 for(PrCreateSaveType v_indata : v_inMultiData) {
-                    // Master Local Temp Table에 insert            
-                    v_statement_insertM.setString(1, (String)v_indata.get("tenant_id"));
-                    v_statement_insertM.setString(2, (String)v_indata.get("company_code"));
-                    v_statement_insertM.setString(3, (String)v_indata.get("pr_number"));
-                    v_statement_insertM.setString(4, (String)v_indata.get("pr_type_code"));
-                    v_statement_insertM.setString(5, (String)v_indata.get("pr_type_code_2"));
-                    v_statement_insertM.setString(6, (String)v_indata.get("pr_type_code_3"));
-                    v_statement_insertM.setString(7, (String)v_indata.get("pr_template_number"));
-                    v_statement_insertM.setString(8, (String)v_indata.get("pr_create_system_code"));
-                    v_statement_insertM.setString(9, v_indata.getPrDesc());
-                    v_statement_insertM.setString(10, "A60264");
+                    // Master Local Temp Table에 insert  
+                    iRow = 1;
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("tenant_id"));
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("company_code"));
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("pr_number"));
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("pr_type_code"));
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("pr_type_code_2"));
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("pr_type_code_3"));
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("pr_template_number"));
+                    v_statement_insertM.setString(iRow++, (String)v_indata.get("pr_create_system_code"));
+                    v_statement_insertM.setString(iRow++, v_indata.getPrDesc());
+                    v_statement_insertM.setString(iRow++, v_indata.getRequestorEmpno());
+                    v_statement_insertM.setString(iRow++, v_indata.getRequestorName());
+                    v_statement_insertM.setString(iRow++, v_indata.getRequestorDepartmentCode());
+                    v_statement_insertM.setString(iRow++, v_indata.getRequestorDepartmentName());
+                    v_statement_insertM.setString(iRow++, v_indata.getPrHeaderText());
+                    v_statement_insertM.setString(iRow++, v_indata.getApprovalContents());
+                    v_statement_insertM.setString(iRow++, "A60264");
                     v_statement_insertM.execute();
 
                     // Detail Local Temp Table에 insert
@@ -193,19 +214,28 @@ public class PrCreateV4 implements EventHandler {
                         for(SavedDetail v_inRow : v_inDetails){
 
                             //log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
-
-                            v_statement_insertD.setObject(1, v_inRow.getTenantId());
-                            v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
-                            v_statement_insertD.setObject(3, v_inRow.getPrNumber());
-                            v_statement_insertD.setObject(4, v_inRow.getPrItemNumber());
-                            v_statement_insertD.setObject(5, v_inRow.getOrgTypeCode());
-                            v_statement_insertD.setObject(6, v_inRow.getOrgCode());
-                            v_statement_insertD.setObject(7, v_inRow.getMaterialCode());
-                            v_statement_insertD.setObject(8, v_inRow.getMaterialGroupCode());
-                            v_statement_insertD.setObject(9, v_inRow.getPrDesc());
-                            v_statement_insertD.setObject(10, v_inRow.getPrQuantity());
-                            v_statement_insertD.setObject(11, v_inRow.getPrUnit());
-                            v_statement_insertD.setObject(12, "A60264");
+                            iRow = 1;
+                            v_statement_insertD.setObject(iRow++, v_inRow.getTenantId());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getCompanyCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPrNumber());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPrItemNumber());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getOrgTypeCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getOrgCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getMaterialCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getMaterialGroupCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPrDesc());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPrQuantity());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPrUnit());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getRequestorEmpno());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getRequestorName());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getBuyerEmpno());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPurchasingGroupCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getEstimatedPrice());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getCurrencyCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPriceUnit());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getPrProgressStatusCode());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getRemark());
+                            v_statement_insertD.setObject(iRow++, "A60264");
                             v_statement_insertD.addBatch();
                         }
                         v_statement_insertD.executeBatch();

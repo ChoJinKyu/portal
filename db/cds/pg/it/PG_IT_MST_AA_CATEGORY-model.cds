@@ -25,7 +25,7 @@ entity It_Mst_Aa_Category {
     key company_code                 : String(10) not null @title : '회사코드';
     key org_type_code                : String(30) not null @title : '조직유형코드';
     key org_code                     : String(10) not null @title : '조직코드';
-    key account_assign_category_code : String(2) not null  @title : '계정지정범주코드';
+    key account_assign_category_code : String(30) not null @title : '계정지정범주코드';
         account_assign_category_name : String(30)          @title : '계정지정범주명';
 }
 
