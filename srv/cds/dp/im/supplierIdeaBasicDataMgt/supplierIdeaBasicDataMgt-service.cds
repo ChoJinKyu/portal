@@ -24,7 +24,8 @@ using { cm as Code } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 // 사업본부
 using { cm as BizUnit } from '../../../../../db/cds/cm/CM_ORG_UNIT-model';
 // Employee
-using {cm as Employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+//using {cm as Employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using { cm.util.HrService as Hr } from '../../../cm/util/hr-service';
 
 namespace dp;
 @path : '/dp.SupplierIdeaBasicDataMgtService'
@@ -39,7 +40,8 @@ service SupplierIdeaBasicDataMgtService {
             key sir.company_code,
             key sir.idea_role_code,
             key sir.role_person_empno,
-            emp.user_local_name as role_person_empname: String(240),
+            emp.user_local_name,
+            emp.department_local_name,
             cd1.code_name as idea_role_name: String(240),
             sir.bizunit_code,
             biz.bizunit_name,
@@ -48,7 +50,7 @@ service SupplierIdeaBasicDataMgtService {
             sir.effective_start_date,
             sir.effective_end_date
     from Role.Im_Supplier_Idea_Role_Assign sir 
-    left join Employee.Hr_Employee emp 
+    left join Hr.Employee emp
     on emp.tenant_id = sir.tenant_id
     and emp.employee_number = sir.role_person_empno
     left join BizUnit.Org_Unit biz   
@@ -61,7 +63,7 @@ service SupplierIdeaBasicDataMgtService {
     and cd1.language_cd = 'KO'
     left join Code.Code_View cd2 
     on cd2.tenant_id = sir.tenant_id
-    and cd2.group_code = 'DP_IM_IDEA_ROLE'
+    and cd2.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
     and cd2.code = sir.idea_product_group_code
     and cd2.language_cd = 'KO'
     ;

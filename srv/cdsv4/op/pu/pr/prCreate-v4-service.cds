@@ -39,17 +39,22 @@ service PrCreateV4Service {
         company_code : String;
         pr_number : String;
         pr_item_number: Integer64;
+        org_type_code: String;
+        org_code: String;
         buyer_empno: String;
         currency_code: String;
         estimated_price: String;
         material_code: String;
         material_group_code: String;
-        org_code: String;
         pr_desc: String;
         pr_quantity: String;
         pr_unit: String;
-        remark: String;
+        requestor_empno: String;
+        requestor_name: String;
         purchasing_group_code: String;
+        price_unit: String;
+        pr_progress_status_code: String;
+        remark: String;
     };  
 
     // (단일 Header에 multi Detail) 가 multi
@@ -78,12 +83,13 @@ service PrCreateV4Service {
         ]
     }
     *********************************/
-    type prCreateSaveType {
+    type PrCreateSaveType {
         tenant_id : String;
         company_code : String;
         pr_number: String;
         approval_flag: Boolean;
         approval_number: String;
+        approval_contents: String;
         erp_interface_flag: Boolean;
         erp_pr_number: String;
         erp_pr_type_code: String;
@@ -105,14 +111,15 @@ service PrCreateV4Service {
         requestor_department_name: String;
         requestor_empno: String;
         requestor_name: String;
+        pr_desc: String;
         details:  array of SavedDetail;
     }
 
-    type returnType {
+    type OutType {
         return_code : String(10);
         return_msg  : String(5000);
     }
 
-    action SavePrCreateProc (inputData : array of prCreateSaveType) returns returnType;
+    action SavePrCreateProc (inputData : array of PrCreateSaveType) returns array of OutType;
 
 }

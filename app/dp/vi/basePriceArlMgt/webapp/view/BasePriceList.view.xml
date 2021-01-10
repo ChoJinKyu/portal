@@ -17,12 +17,11 @@
       <f:title>
         <f:DynamicPageTitle>
           <f:heading>
-            <Title text="{i18n>appTitle}" />
+            <Title text="{I18N>/BASE_PRICE_APPROVAL_LIST}" />
           </f:heading>
           <f:actions>
-            <!-- <Button text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/> -->
-            <Button text="Search" type="Emphasized" press=".onSearch"/>
-            <!-- <Button text="Search2" type="Emphasized" press=".onSearch2"/> -->
+            <Button text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
+            <!-- <Button text="Search" type="Emphasized" press=".onSearch"/> -->
           </f:actions>
         </f:DynamicPageTitle>
       </f:title>
@@ -34,9 +33,10 @@
             layout="ResponsiveGridLayout"
             adjustLabelSpan="false">
                 <form:content>
+                    <!-- Type 시작 -->
                     <VBox>
-                        <!-- <Label text="{I18N>/TYPE}"></Label> -->
-                        <Label text="Type"></Label>
+                        <Label text="{I18N>/TYPE} "></Label>
+                        <!-- <Label text="Type"></Label> -->
                         <ComboBox
                             width="100%"
                             selectedKey="{filterModel>/type}"
@@ -53,17 +53,34 @@
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                     </VBox>
+                    <!-- Type 끝 -->
+                    
+                    <!-- Approval Number 시작 -->
                     <VBox>
-                        <!-- <Label text="{I18N>/APPROVAL_NUMBER}"></Label> -->
-                        <Label text="Approval Number" textAlign="Center" />
+                        <Label text="{I18N>/APPROVAL_NUMBER} " />
+                        <!-- <Label text="Approval Number" /> -->
                         <Input value="{filterModel>/approvalNumber}" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
-                        </VBox>
-                        <VBox>
-                        <!-- <Label text="{I18N>/REQUEST_DATE}"></Label> -->
-                        <Label text="Request Date"></Label>
+                    </VBox>
+                    <!-- Approval Number 끝 -->
+
+                    <!-- Approval Title 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/APPROVAL_TITLE} " />
+                        <!-- <Label text="Approval Title" /> -->
+                        <Input value="{filterModel>/approvalTitle}" />
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- Approval Title 끝 -->
+
+                    <!-- Request Date 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/REQUEST_DATE} "></Label>
+                        <!-- <Label text="Request Date"></Label> -->
                         <DateRangeSelection
                             dateValue="{filterModel>/dateValue}"
                             secondDateValue="{filterModel>/secondDateValue}" />
@@ -71,25 +88,39 @@
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                     </VBox>
-                    <VBox>
-                        <!-- <Label text="{I18N>/REQUEST_BY}"></Label> -->
-                        <Label text="Request By"></Label>
-                        <SearchField value="{filterModel>/requestBy}" />
-                        <layoutData>
-                            <layout:GridData span="XL2 L4 M6 S12" />
-                        </layoutData>
-                        </VBox>
-                        <VBox>
-                        <!-- <Label text="{I18N>/AGREED_BY}"></Label> -->
-                        <Label text="Agreed By"></Label>
-                        <SearchField value="{filterModel>/agreedBy}" />
+                    <!-- Request Date 끝 -->
+
+                    <!-- Request By 시작 -->
+                    <VBox height="56px">
+                        <Label text="{I18N>/REQUEST_BY} "></Label>
+                        <!-- <Label text="Request By"></Label> -->
+                        <!-- <SearchField value="{filterModel>/requestBy}" /> -->
+                        <lib-m:CodePicker id="searchEmployeePicker"
+                            placeholder="Enter a Employee name"
+                            value="{filterModel>/requestBy}"
+                            keyField="employee_number"
+                            textField="user_local_name"
+                            suggestionItems="{
+                                path: '/',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ],
+                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                entityName: 'Employee'
+                            }">
+                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                        </lib-m:CodePicker>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                     </VBox>
-                    <VBox height="56px">
-                        <!-- <Label text="{I18N>/STATUS}"></Label> -->
-                        <Label text="Status"></Label>
+                    <!-- Request By 끝 -->
+
+                    <!-- Status 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/STATUS} "></Label>
+                        <!-- <Label text="Status"></Label> -->
                         <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                             <items>
                                 <SegmentedButtonItem text="All" key="" />
@@ -97,12 +128,18 @@
                                 <SegmentedButtonItem text="Requested" key="20" width="5.2rem" />
                                 <SegmentedButtonItem text="Approved" key="30" width="4.8rem" />
                                 <SegmentedButtonItem text="Rejected" key="40" width="4.5rem" />
+                                <!-- <SegmentedButtonItem text="{I18N>/ALL}" key="" />
+                                <SegmentedButtonItem text="{I18N>/DRAFT}" key="10" width="4.2rem" />
+                                <SegmentedButtonItem text="{I18N>/REQUESTED}" key="20" width="5.2rem" />
+                                <SegmentedButtonItem text="{I18N>/APPROVED}" key="30" width="4.8rem" />
+                                <SegmentedButtonItem text="{I18N>/REJECTED}" key="40" width="4.5rem" /> -->
                             </items>
                         </SegmentedButton>
                         <layoutData>
                             <layout:GridData span="XL4 L4 M6 S12" />
                         </layoutData>
                     </VBox>
+                    <!-- Status 끝 -->
                     <!-- <VBox>
                         <Label text="임시 tenant"></Label>
                         <ComboBox
@@ -130,10 +167,17 @@
             visibleRowCountMode="Auto">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <!-- <Title text="{I18N>/BASE_PRICE_LIST} ({= ${listModel>/results}.length})" level="H2"/> -->
-                    <Title text="Base Price List ({= ${listModel>/results}.length})" level="H2"/>
+                    <Title text="{I18N>/BASE_PRICE_LIST} ({= ${listModel>/results}.length || 0})" level="H2"/>
+                    <!-- <Title text="Base Price List ({= ${listModel>/results}.length || 0})" level="H2"/> -->
                     <ToolbarSpacer />
-                    <Button text="Create" press=".onGoDetail" />
+                    <Button text="{I18N>/CREATE}" press=".onGoDetail" />
+                    <ToolbarSeparator/>
+                    <Button icon="sap-icon://excel-attachment" press=".onExcelExport" >
+                        <layoutData>
+                            <OverflowToolbarLayoutData priority="NeverOverflow" />
+                        </layoutData>
+                    </Button>
+                    <!-- <Button text="Create" press=".onGoDetail" /> -->
                     <!-- <Button icon="sap-icon://excel-attachment" />
                     <Button icon="sap-icon://group-2" />
                     <Button icon="sap-icon://action-settings" /> -->
@@ -141,26 +185,27 @@
             </t:extension>
             <t:columns>
                 <t:Column hAlign="Center" width="10rem">
-                    <!-- <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" /> -->
-                    <Label text="Approval Number" textAlign="Center" />
+                    <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
+                    <!-- <Label text="Approval Number" textAlign="Center" /> -->
                     <t:template>
                         <Link text="{listModel>approval_number}" press=".onGoDetail" />
                         <!-- <Text text="{listModel>approval_number}" /> -->
                     </t:template>
                 </t:Column>
                 <t:Column>
-                    <Label text="Title" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/APPROVAL_TITLE}" textAlign="Center" width="100%" />
+                    <!-- <Label text="Approval Title" textAlign="Center" width="100%" /> -->
                     <t:template>
                         <Text text="{listModel>approval_title}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
-                    <!-- <Label text="{I18N>/STATUS}"  textAlign="Center" width="100%" /> -->
-                    <Label text="Status" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/STATUS}"  textAlign="Center" width="100%" />
+                    <!-- <Label text="Status" textAlign="Center" width="100%" /> -->
                     <t:template>
                         <!-- <Text text="{listModel>approval_status_code_fk/code_description}" /> -->
                         <tnt:InfoLabel 
-                            text="{listModel>approval_status_code_fk/code_description}" 
+                            text="{listModel>approval_status_code_fk/code_name}" 
                             colorScheme="{
                                 path: 'listModel>approval_status_code',
                                 formatter: '.onStatusColor'
@@ -168,8 +213,8 @@
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="7rem">
-                    <!-- <Label text="{I18N>/REQUEST_DATE}" /> -->
-                    <Label text="Request Date" />
+                    <Label text="{I18N>/REQUEST_DATE}" />
+                    <!-- <Label text="Request Date" /> -->
                     <t:template>
                         <Text text="{
                                 path: 'listModel>local_create_dtm',
@@ -177,10 +222,10 @@
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
-                    <!-- <Label text="{I18N>/REQUESTED_BY}" /> -->
-                    <Label text="Requested By" />
+                    <Label text="{I18N>/REQUESTED_BY}" />
+                    <!-- <Label text="Requested By" /> -->
                     <t:template>
-                        <Text text="{listModel>approval_requestor_empno_fk/create_user_id}" />
+                        <Text text="{listModel>approval_requestor_empno_fk/user_local_name}" />
                     </t:template>
                 </t:Column>
             </t:columns>

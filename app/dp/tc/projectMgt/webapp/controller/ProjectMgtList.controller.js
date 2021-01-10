@@ -130,7 +130,7 @@ sap.ui.define([
                 project_code : oObj.project_code,
                 model_code : oObj.model_code
             };
-            this.getRouter().navTo("ProjectMgtDetail", oNavParam);
+            this.getRouter().navTo("ProjectInfo", oNavParam);
         }
         /**
          * 상세 페이지로 이동
@@ -209,7 +209,7 @@ sap.ui.define([
 
         , onLinkPress: function(oEvent) {
             //MessageToast.show("Go to Detail!", {at: "Center Center"});
-            this.getOwnerComponent().getRouter().navTo("ProjectMgtDetail");
+            this.getOwnerComponent().getRouter().navTo("ProjectInfo");
             return;
 
         }

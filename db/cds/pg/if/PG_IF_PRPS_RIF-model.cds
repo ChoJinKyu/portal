@@ -21,9 +21,9 @@ using util from '../../cm/util/util-model';
 
 
 entity If_Prps_Rif {
-    key tenant_id : String(5) not null  @title : '테넌트ID';
-    key pspnr     : String(12) not null @title : '프로젝트코드';
-        post1     : String(60)          @title : '프로젝트명';
+    key tenant_id : String(5) not null @title : '테넌트ID';
+    key pspnr     : String(8) not null @title : '프로젝트코드';
+        post1     : String(60)         @title : '프로젝트명';
 }
 
 extend If_Prps_Rif with util.Managed;

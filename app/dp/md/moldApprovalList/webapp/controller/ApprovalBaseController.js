@@ -31,7 +31,8 @@ sap.ui.define([
     //var oRichTextEditor;
     var generalInfoFragment, 
         attachmentsFragment,
-        approvalLineFragment;
+        approvalLineFragment,
+        itemFragment;
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
@@ -55,7 +56,7 @@ sap.ui.define([
             this.quotation_data = [];  // supplier 전용 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this._showFormFragment();
+           // this._showFormFragment();
         },
 
         onAfterRendering: function () {
@@ -73,13 +74,26 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            //this._toShowMode();
+            this._toShowMode();
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
+            for (var sPropertyName in this._oFragments) {
+                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
+                    return;
+                }
+               
+              //  if(sPropertyName !== "GeneralInfo"){
+                    this._oFragments[sPropertyName].destroy();
+                    this._oFragments[sPropertyName] = null;
+                    console.log(sPropertyName);
+              //  }
+            }
+
             //this.byId("pageApprovalLineSection").destroy();
-            this.generalInfoFragment.destroy();
+            /*this.generalInfoFragment.destroy();
             this.attachmentsFragment.destroy();
             this.approvalLineFragment.destroy();
+            this.itemFragment.destroy();*/
             //  this.approvalList.onPageReload();
             /*
             var sPreviousHash = History.getInstance().getPreviousHash();
@@ -101,6 +115,19 @@ sap.ui.define([
 
         // 입찰대상 협력사 취소품의 이동 
         onPageCancellationButtonPress: function () {
+
+            /**
+             * 이동시 기존거 리셋 
+             */
+            for (var sPropertyName in this._oFragments) {
+                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
+                    return;
+                }
+               
+                this._oFragments[sPropertyName].destroy();
+                this._oFragments[sPropertyName] = null;
+            }
+
             var Cancellation = this.getView().getModel('Cancellation');
             Cancellation.setProperty("/approvalNumber", this.approval_number);
             Cancellation.setProperty("/isCreate", true);
@@ -164,9 +191,9 @@ sap.ui.define([
 
             console.log("args>>>>> " , args);
 
-            this.tenant_id = "L1100";
+            this.tenant_id = "L2600";
             this.approval_number = args.approval_number;
-            //this.approval_type_code = args.approval_type_code;
+            this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
@@ -186,7 +213,7 @@ sap.ui.define([
 
             oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id
                 + "',company_code='" + this.company_code
-                + "',org_type_code='" + "AU"
+                + "',org_type_code='" + "PL"
                 + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
@@ -194,10 +221,20 @@ sap.ui.define([
                 }
             });
 
+            var appModel = this.getModel("appType");
+            appModel.setTransactionModel(this.getModel("util"));
+            appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
+                filters: [],
+                success: function (oData) {
+                    this._showFormItemFragment(oData.parent_code);
+                }.bind(this)
+            });
+           
+
             this._onRoutedThisPage(this.approval_number);
 
             if (this.approval_number === "New") {
-                this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
+                this.getModel("appMaster").setProperty("/requestor_empno", '6975'); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
             }
 
@@ -236,7 +273,10 @@ sap.ui.define([
             generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
+        },
 
+        _showFormItemFragment: function (fragmentFileName) {
+            this._showFormFragment();
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
 
@@ -249,6 +289,13 @@ sap.ui.define([
 
             approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
+            }.bind(this));
+
+            var oPageItemSection = this.byId("pageItemSection");
+            oPageItemSection.removeAllBlocks();
+
+            itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
+                oPageItemSection.addBlock(oFragment);
             }.bind(this));
 
         },
@@ -271,10 +318,14 @@ sap.ui.define([
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
 
             }.bind(this));
+            
+            var that = this;
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
                 if (approvalNumber === "New") {
-                    this._toEditMode();
+                    setTimeout(function () {
+                        that._toEditMode();
+                    }, 5000);
                 }
             }.bind(this));
 

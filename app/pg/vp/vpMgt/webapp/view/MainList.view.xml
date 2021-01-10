@@ -51,7 +51,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation UINT" labelFor="search_Operation_UNIT_S" required="true"></Label>
+                                    <Label text="Operation Uint" labelFor="search_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_S" width="10rem"
                                             items="{
                                                         path : 'util>/CodeDetails',
@@ -93,7 +93,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation UINT" labelFor="search_Operation_UNIT_E" required="true"></Label>
+                                    <Label text="Operation Uint" labelFor="search_Operation_UNIT_E" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_E" width="10rem"
                                             items="{
                                                         path : 'util>/CodeDetails',
@@ -172,7 +172,7 @@
                             <VBox>
                                 <Label text="Vendor Pool" labelFor="search_Vp_Code"></Label>
                                 <HBox>
-                                    <ComboBox id="search_Vp_lvc" selectedKey=""  width="8em">
+                                    <ComboBox id="search_Vp_lvc" selectedKey="" change=".onDialogTreeCreate"  width="8em">
                                         <core:Item key="0" text="1Level"/>
                                         <core:Item key="1" text="2Level"/>                                                            
                                         <core:Item key="2" text="3Level"/>
@@ -194,8 +194,8 @@
                                 <Label text="Supplier Type" labelFor="search_Sup_Type"></Label>
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
-                                        <core:Item key="A" text="평가"/>
-                                        <core:Item key="B" text="잠재"/>                                                            
+                                        <core:Item key="A" text="Potential"/>
+                                        <core:Item key="B" text="Informal"/>                                                            
                                     </ComboBox>  
                                 <layoutData>
                                     <layout:GridData
@@ -279,6 +279,12 @@
                             <table:Column label="Equipment Type" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_type_name}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="Maker P/N Flag" width="8rem" hAlign="Center">
+                                <table:template>
+                                    <Text text="{= !!${list>maker_material_code_mngt_flag} ? 'Y' : 'N'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 

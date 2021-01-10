@@ -57,14 +57,14 @@ vpSupplierList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , supplier_code: 'DE01091600'
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
+    //,supeval_target_flag: false     //??협의대상(화면의 어떤항목인지 모름)
+    //,supplier_op_plan_review_flag: false  //??협의대상(화면의 어떤항목인지 모름)
     ,supeval_control_flag: false
     ,supeval_control_start_date: "20210104"
     ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
+    //,supeval_restrict_start_date: "20210104"  //??협의대상(화면의 어떤항목인지 모름)
+    //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+    //,inp_code: "AAA"   //??협의대상(화면의 어떤항목인지 모름)
     ,supplier_rm_control_flag: false
     ,supplier_base_portion_rate: 0.0
     ,vendor_pool_mapping_use_flag: true
@@ -80,14 +80,14 @@ vpSupplierList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , supplier_code: "CN12341400"
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
+    //,supeval_target_flag: false     //??협의대상(화면의 어떤항목인지 모름)
+    //,supplier_op_plan_review_flag: false  //??협의대상(화면의 어떤항목인지 모름)
     ,supeval_control_flag: false
     ,supeval_control_start_date: "20210104"
     ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
+    //,supeval_restrict_start_date: "20210104"  //??협의대상(화면의 어떤항목인지 모름)
+    //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+    //,inp_code: "AAA"   //??협의대상(화면의 어떤항목인지 모름)
     ,supplier_rm_control_flag: false
     ,supplier_base_portion_rate: 0.0
     ,vendor_pool_mapping_use_flag: true
@@ -103,14 +103,14 @@ vpSupplierList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , supplier_code: 'US02689500'
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
+    //,supeval_target_flag: false     //??협의대상(화면의 어떤항목인지 모름)
+    //,supplier_op_plan_review_flag: false  //??협의대상(화면의 어떤항목인지 모름)
     ,supeval_control_flag: false
     ,supeval_control_start_date: "20210104"
     ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
+    //,supeval_restrict_start_date: "20210104"  //??협의대상(화면의 어떤항목인지 모름)
+    //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+    //,inp_code: "AAA"   //??협의대상(화면의 어떤항목인지 모름)
     ,supplier_rm_control_flag: false
     ,supplier_base_portion_rate: 0.0
     ,vendor_pool_mapping_use_flag: true
@@ -129,6 +129,8 @@ vpItemList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0032'
+    , register_reason: '등록'
+    , approval_number: 'A2021010801'
     , crud_type_code : "C"
 });
 
@@ -140,6 +142,8 @@ vpItemList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0013'
+    , register_reason: '등록'
+    , approval_number: 'A2021010801'
     , crud_type_code : "C"
 });
 
@@ -151,6 +155,8 @@ vpItemList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0014'
+    , register_reason: '등록'
+    , approval_number: 'A2021010801'
     , crud_type_code : "D"
 });
 
@@ -162,6 +168,8 @@ vpItemList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACD0015'
+    , register_reason: '등록'
+    , approval_number: 'A2021010801'
     , crud_type_code : "C"
 });
 
@@ -175,6 +183,9 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: "5452"
+    , vendor_pool_person_role_text: '구매담당자'
+    //, approval_number: ''  //안보냄    
+    //, register_reason: ''  //안보냄    
     , crud_type_code : "U"
 });
 
@@ -186,6 +197,9 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: '5460'
+    , vendor_pool_person_role_text: '구매담당자'
+    //, approval_number: ''  //안보냄    
+    //, register_reason: ''  //안보냄    
     , crud_type_code : "C"
 });
 
@@ -197,6 +211,9 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: '5480'
+    , vendor_pool_person_role_text: '구매담당자'
+    //, approval_number: ''  //안보냄    
+    //, register_reason: ''  //안보냄    
     , crud_type_code : "C"
 });
 
@@ -208,6 +225,9 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: '5479'
+    , vendor_pool_person_role_text: '구매담당자'
+    //, approval_number: ''  //안보냄    
+    //, register_reason: ''  //안보냄    
     , crud_type_code : "D"
 });
 

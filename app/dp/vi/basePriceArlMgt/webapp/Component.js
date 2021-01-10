@@ -86,7 +86,7 @@ sap.ui.define([
         "tenant_id": "L4500",
         "tenant_name": "판토스"
       }
-    ]}), "basePriceArlRootModel");
+    ]}), "basePriceArlMgtRootModel");
         this.setModel(new Multilingual().getModel(), "I18N");
     },
   });

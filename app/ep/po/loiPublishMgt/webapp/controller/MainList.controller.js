@@ -10,6 +10,7 @@ sap.ui.define([
     "sap/ui/table/TablePersoController",
     "./MainListPersoService",
     "sap/ui/core/Fragment",
+    "ext/lib/formatter/NumberFormatter",
     "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -24,7 +25,7 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/VBox"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
-    TablePersoController, MainListPersoService, Fragment, Sorter,
+    TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
     Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox) {
     "use strict";
 
@@ -33,6 +34,8 @@ sap.ui.define([
     return BaseController.extend("ep.po.loiPublishMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+
+        numberFormatter: NumberFormatter,
 
         validator: new Validator(),
 
@@ -86,10 +89,8 @@ sap.ui.define([
 
             // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchBuyer").setValue("(5450) **희");
-            this.getView().byId("searchPurchasingDepartment").setValue("(58665481) 미래기술.신규과제탐색그룹");
-            //5450, **희
-            //58665481 미래기술.신규과제탐색그룹
+            this.getView().byId("searchBuyer").setValue("(9586) **민");
+            this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
         },
 
         onRenderedFirst: function () {
@@ -475,6 +476,7 @@ sap.ui.define([
                         견적번호가 있으면 링크불가
                     */
                     if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number != 0) {
+                        MessageToast.show("이미 견적이 완료된건이 있습니다.");
                         canSelect = false;
                         return false;
                     }
@@ -492,6 +494,7 @@ sap.ui.define([
                     var loiNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_number;
                     // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
                     if (index > 0 && !loiNumberArr.includes(loiNumber)) {
+                        MessageToast.show("LOI번호가 동일하지 않습니다.");
                         canSelect = false;
                         return false;
                     }
@@ -499,7 +502,11 @@ sap.ui.define([
 
 
                 });
+            }else {
+                canSelect = false;
+                MessageToast.show("한개이상 선택해주세요.");
             }
+
             console.log("canSelect=", canSelect);
             if (canSelect) {
 
@@ -573,7 +580,7 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("selectionPage", {
                 //layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
                 companyCode: oRecord.company_code,
@@ -634,6 +641,7 @@ sap.ui.define([
 
                     //업체선정번호가 있으면 링크불가
                     if (sLoiSelectionNumber) {
+                        MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 업체선정진행상태 항목을 클릭해 주세요.");
                         canSelect = false;
                         return false;
                     }
@@ -647,6 +655,7 @@ sap.ui.define([
                         견적번호가 없으면 링크불가
                     */
                     if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
+                        MessageToast.show("견적번호가 없습니다.");
                         canSelect = false;
                         return false;
                     }
@@ -655,6 +664,7 @@ sap.ui.define([
                     var quotationNumber = oModel.getData().LOIPublishItemView[chkIdx].quotation_number;
                     // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
                     if (index > 0 && !quotationNumberrArr.includes(quotationNumber)) {
+                        MessageToast.show("견적번호가 동일하지 않습니다.");
                         canSelect = false;
                         return false;
                     }
@@ -683,6 +693,9 @@ sap.ui.define([
                     // }
 
                 });
+            }else {
+                canSelect = false;
+                MessageToast.show("한개이상 선택해주세요.");
             }
 
             //업체선정번호가 없으면 신규저장모드
@@ -696,7 +709,7 @@ sap.ui.define([
             if (canSelect) {
                 console.log("sTenantId=", sTenantId);
                 var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-                this.getRouter().navTo("midPage", {
+                this.getRouter().navTo("selectionPage", {
                     //layout: oNextUIState.layout,
                     tenantId: sTenantId,
                     companyCode: sCompanyCode,
@@ -712,6 +725,156 @@ sap.ui.define([
             }
 
         },
+
+        onTablePublishPress: function (oEvent) {
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
+
+            this.getRouter().navTo("publishPage", {
+                //layout: oNextUIState.layout,
+                tenantId: oRecord.tenant_id,
+                companyCode: oRecord.company_code,
+                loiWriteNumber: oRecord.loi_write_number,
+                loiItemNumber: oRecord.loi_item_number,
+                loiSelectionNumber: oRecord.loi_selection_number,
+                loiNumber: oRecord.loi_number
+            }, true);
+        },
+
+		/**
+		 * Event handler when pressed the item of table
+		 * @param {sap.ui.base.Event} oEvent
+		 * @public
+		 */
+        onPublishButtonPress: function () {
+
+            var oTable = this.byId("mainTable"),
+                oModel = this.getView().getModel("list"),
+                oSelected = oTable.getSelectedIndices();
+            console.log("oSelected=", oSelected);
+            console.log("oModel=", oModel.getData());
+
+            var sTenantId = "",
+                sCompanyCode = "",
+                sLoiWriteNumber = "",
+                sLoiItemNumber = "",
+                sLoiSelectionNumber = "",
+                sLoiNumber = "";
+            // '122010'	'RFQ진행중'
+            // '122020'	'RFQ완료'
+            // '122030'	'작성중'
+            // '122040'	'결재진행중'
+            // '122050'	'결재반려'
+            // '122060'	'업체선정완료'         
+
+            //RFQ 번호,상태에 따라 이동가능 여부 체크  
+            var canSelect = true;
+            var quotationNumberrArr = [];
+
+            if (oSelected.length > 0) {
+                oSelected.forEach(function (chkIdx, index) {
+                    console.log("aaaaaaaaaa=", oModel.getData().LOIPublishItemView[chkIdx].loi_number);
+                    console.log("oSelected.length=", oSelected.length);
+                    console.log("chkIdx=", chkIdx);
+                    //oModel.getData().LOIPublishItemView[idx].loi_number
+                    sTenantId += oModel.getData().LOIPublishItemView[chkIdx].tenant_id + (oSelected.length == index + 1 ? "" : ",");
+                    sCompanyCode += oModel.getData().LOIPublishItemView[chkIdx].company_code + (oSelected.length == index + 1 ? "" : ",");
+                    sLoiWriteNumber += oModel.getData().LOIPublishItemView[chkIdx].loi_write_number + (oSelected.length == index + 1 ? "" : ",");
+                    sLoiItemNumber += oModel.getData().LOIPublishItemView[chkIdx].loi_item_number + (oSelected.length == index + 1 ? "" : ",");
+                    sLoiPublishNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_publish_number;
+                    sLoiNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_number;
+
+                    console.log("sLoiWriteNumber=", sLoiWriteNumber);
+                    console.log("sLoiItemNumber=", sLoiItemNumber);
+                    console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
+                    console.log("sLoiNumber=", sLoiNumber);
+
+                    //업체선정번호가 있으면 링크불가
+                    if (sLoiSelectionNumber) {
+                        MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 업체선정진행상태 항목을 클릭해 주세요.");
+                        canSelect = false;
+                        return false;
+                    }
+
+                    /*
+                        향후 견적테이블이 생성되면 1번로직 주석 2번 로직 주석해제
+                    */
+
+                    /*
+                        1번 로직
+                        견적번호가 없으면 링크불가
+                    */
+                    if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
+                        MessageToast.show("견적번호가 없습니다.");
+                        canSelect = false;
+                        return false;
+                    }
+
+                    //견적번호 동일한지 체크
+                    var quotationNumber = oModel.getData().LOIPublishItemView[chkIdx].quotation_number;
+                    // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
+                    if (index > 0 && !quotationNumberrArr.includes(quotationNumber)) {
+                        MessageToast.show("견적번호가 동일하지 않습니다.");
+                        canSelect = false;
+                        return false;
+                    }
+                    quotationNumberrArr.push(oModel.getData().LOIPublishItemView[chkIdx].quotation_number);
+
+                    //업체선정번호 동일한지 체크로직 추가여부 확인
+
+                    /*
+                        2번 로직
+                        RFQ 상태가 모두 완료이면 신규 등록화면 이동 - 견적테이블 조회
+                    */
+
+                    //업체선정상태코드에 따라 loiSelectionNumber 설정(신규/수정/조회)
+                    // var loiSelectionStatusCode = oModel.getData().LOIPublishItemView[chkIdx].loi_selection_status_code;
+                    // //업체선정상태가 진행중/결재반려 이면 수정화면 이동
+                    // if(loiSelectionStatusCode === "122030" || loiSelectionStatusCode === "122050") {
+                    //     linkType = "U";
+                    // }
+                    // //업체선정상태가 결재진행중/업체선정완료 이면 조회화면 이동
+                    // else if(loiSelectionStatusCode === "122040" || loiSelectionStatusCode === "122060") {
+                    //     linkType = "V";
+                    // }
+                    // else {
+                    //     linkType = "C";
+                    //     sLoiSelectionNumber = "new";
+                    // }
+
+                });
+            }else {
+                canSelect = false;
+                MessageToast.show("한개이상 선택해주세요.");
+            }
+
+            //업체선정번호가 없으면 신규저장모드
+            if (!sLoiSelectionNumber) {
+                sLoiSelectionNumber = "new";
+            }
+
+            console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
+            console.log("canSelect=", canSelect);
+
+            if (canSelect) {
+                console.log("sTenantId=", sTenantId);
+                var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+                this.getRouter().navTo("publishPage", {
+                    //layout: oNextUIState.layout,
+                    tenantId: sTenantId,
+                    companyCode: sCompanyCode,
+                    loiWriteNumber: sLoiWriteNumber,
+                    loiItemNumber: sLoiItemNumber,
+                    loiSelectionNumber: sLoiSelectionNumber,
+                    loiNumber: sLoiNumber
+                }, true);
+
+                // if (oNextUIState.layout === "TwoColumnsMidExpanded") {
+                //     this.getView().getModel("mainListViewModel").setProperty("/headerExpanded", false);
+                // }
+            }
+
+        },        
 
         /* =========================================================== */
         /* internal methods                                            */

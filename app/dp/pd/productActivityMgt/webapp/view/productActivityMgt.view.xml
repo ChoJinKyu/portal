@@ -145,7 +145,7 @@
                                 </HBox>
                                 <HBox>
                                     <Text text="{list>product_activity_english_name}" visible="true"></Text>
-                                    <Input value="{list>product_activity_english_name}" visible="false" required="true"></Input>
+                                    <Input value="{list>product_activity_english_name}" visible="false"></Input>
                                 </HBox>
                                 <HBox>
                                     <Text text="{list>milestone_flag}" visible="false"></Text>

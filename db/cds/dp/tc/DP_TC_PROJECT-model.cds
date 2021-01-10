@@ -89,7 +89,7 @@ entity Tc_Project {
                                       on  mtlmob.tenant_id          = tenant_id
                                       and mtlmob.project_code       = project_code
                                       and mtlmob.model_code         = model_code
-                                      and mtlmob.addition_type_code = 'MTLLMOB'; //물동
+                                      and mtlmob.addition_type_code = 'MTLMOB'; //물동
 
         sales_price             : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
                                       on  sales_price.tenant_id          = tenant_id

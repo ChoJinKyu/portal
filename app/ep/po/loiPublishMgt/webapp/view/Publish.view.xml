@@ -1,4 +1,4 @@
-<mvc:View controllerName="ep.po.loiPublishMgt.controller.MidObject" 
+<mvc:View controllerName="ep.po.loiPublishMgt.controller.SupplySelection" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -57,7 +57,7 @@
                     <ObjectStatus
                         id="createUser"         
                         title="작성자"
-                        text="**희"/>
+                        text="**민"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -65,14 +65,14 @@
                         id="createDate"
                         title="작성일자"
                         text="{
-                                path: 'master>/system_create_dtm',
+                                path: 'master>/supplier_selection_date',
                                 formatter: '.dateFormatter.toUTCDateString'
                             }" />
 
                     <ObjectStatus
                         id="createDepartment"
                         title="작성부서"
-                        text="미래기술.신규과제탐색그룹"/>
+                        text="첨단소재.구매2.공사구매팀(청주P)"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -122,7 +122,7 @@
                                 constraints: {
                                     maxLength: 50
                                 }
-                            }" class="sapMLabelNoText" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
+                            }" class="sapMLabelNoText" required="true" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
                             <Label  text="* 품의명" 
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
@@ -165,13 +165,13 @@
                                      <Column minScreenWidth="Tablet" hAlign="Center"  >
                                         <Text text="참여업체" />
                                     </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
                                         <Text text="환산견적금액" />
                                     </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
                                         <Text text="요청납기일자" />
                                     </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
                                         <Text text="회신납기일자" />
                                     </Column>
                                      <Column minScreenWidth="Tablet" hAlign="Center"  >
@@ -197,7 +197,7 @@
                                             <Text text="2021-02-01"/>
                                             <Text text="2021-02-01"/>
                                             <Text text=""/>
-                                            <Text text="RFQ123400"/>
+                                            <Text text="123400"/>
                                          </cells>
                                     </ColumnListItem>
                                     <ColumnListItem type="Inactive" >
@@ -215,7 +215,7 @@
                                             <Text text="2021-03-01"/>
                                             <Text text="2021-02-25"/>
                                             <Text text=""/>
-                                            <Text text="RFQ123400"/>
+                                            <Text text="123400"/>
                                          </cells>
                                     </ColumnListItem>
                                 </items>
@@ -299,7 +299,7 @@
 				<ToolbarSpacer />
                 <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
                 <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
-				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress('S')" />
+				<Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('D')" />
                 <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
                 <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
 				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>

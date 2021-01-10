@@ -13,7 +13,8 @@
             contentWidth="90%"
             contentHeight="50%">
 		<content>
-            <table:Table   
+            <Text text="준비중입니다." />
+            <!-- <table:Table   
                 id="familyMaterialCodeTable"
                 selectionMode="Single"
                 rows="{dialogModel>/familyMaterialCode}"
@@ -23,7 +24,11 @@
                     <OverflowToolbar>
                         <Title text="Material Code" level="H2" />
                         <ToolbarSpacer />
-                        <SearchField search="" width="15rem"/>
+                        <SearchField search="" width="15rem">
+                            <customData>
+                                <core:CustomData key="dialog" value="familyMaterialCode" />
+                            </customData>
+                        </SearchField>
                     </OverflowToolbar>
                 </table:extension>
                 <table:columns>
@@ -45,7 +50,7 @@
                             <Text text="{detailModel>material_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column headerSpan="2" hAlign="Center" width="6rem" visible="{= ${basePriceArlRootModel>/tenantId} === 'L2100' ? true : false}">
+                    <table:Column headerSpan="2" hAlign="Center" width="6rem" visible="{= ${basePriceArlMgtRootModel>/tenantId} === 'L2100' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" />
                             <Label text="{I18N>/CODE}" textAlign="Center" />
@@ -54,7 +59,7 @@
                             <Text text="{detailModel>supplier_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="10rem" hAlign="Center" visible="{= ${basePriceArlRootModel>/tenantId} === 'L2100' ? true : false}">
+                    <table:Column width="10rem" hAlign="Center" visible="{= ${basePriceArlMgtRootModel>/tenantId} === 'L2100' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" />
                             <Label text="{I18N>/Name}" textAlign="Center" />
@@ -248,7 +253,7 @@
                         </table:template>
                     </table:Column>
                 </table:columns>
-            </table:Table>
+            </table:Table> -->
 		</content>
 			<beginButton>
 				<Button text="Close" press=".onClose">
@@ -257,7 +262,7 @@
                     </customData>
                 </Button>
 			</beginButton>
-            <endButton>
+            <!-- <endButton>
                 <Button  text="Apply" 
                     type="Emphasized"
                     press=".onFamilyMaterialDetailApply" >
@@ -265,6 +270,6 @@
                         <core:CustomData key="fragmentName" value="_oFamilyMaterialDialog"  />
                     </customData>
                 </Button>
-            </endButton>
+            </endButton> -->
 	</Dialog>
 </core:FragmentDefinition>

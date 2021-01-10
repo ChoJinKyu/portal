@@ -46,17 +46,21 @@
                             width="auto"
                             items="{ path : '/RefererSearch',
                                     filters : [
-                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'}
                                     ]
                                   }"
                             >
                         <columns>
            
                             <Column id="employ_employee_number" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
-                                <Text text="employee_number" />
+                                <Text text="{I18N>/EMPLOYEE_NUMBER}" />
                             </Column>
                             <Column id="employ_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Name" />
+                                <HBox>
+                                    <Text text="{I18N>/EMPLOYEE_LOCAL_NAME}" />
+                                    <Text text="/" />
+                                    <Text text="{I18N>/DEPARTMENT_LOCAL_NAME}" />
+                                </HBox>
                             </Column>
            								
                         </columns>

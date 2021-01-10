@@ -10,7 +10,7 @@
     height="100%"
         >
     
-    <Dialog id="ceateVpCategory" class="sapUiSmallMargin" title="" contentWidth="30%" >
+    <Dialog id="ceateVpCategorytree" class="sapUiSmallMargin" title="" contentWidth="30%" >
         <content>  
             <VBox class="sapUiSmallMargin">
                 <form:SimpleForm
@@ -33,7 +33,7 @@
                         <!-- 팝업 영역 -->
                         <VBox>
                             <Label text="Operation ORG" labelFor="search_Operation_ORG" required="true"></Label>
-                            <ComboBox id="tpop_Operation_ORG" width="100%" selectedKey="BIZ00200" items="{
+                            <ComboBox id="treepop_Operation_ORG" width="100%" selectedKey="BIZ00200" items="{
                                 path: '/VpOperationOrg',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -50,7 +50,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Operation Unit" labelFor="pop_operation_unit_code" required="true"></Label>                        
-                            <ComboBox id="tpop_operation_unit_code" selectedKey="000"  >
+                            <ComboBox id="treepop_operation_unit_code" selectedKey="000"  >
                                 <core:Item key="RAW_MATERIAL" text="RAW_MATERIAL"/>
                             </ComboBox> 
                             <layoutData>
@@ -59,14 +59,14 @@
                         </VBox>
                         <VBox>
                             <Label text = "Vendor Pool" design="Bold" /> 
-                                <Input id="tpop_vendor_pool_local_name" placeholder="Input data"></Input> 
+                                <Input id="treepop_vendor_pool_local_name" placeholder="Input data"></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
                             <table:TreeTable
-                                id="treeTable"
+                                id="diatreeTable"
                                 selectionMode="MultiToggle"
                                 cellClick=".onCellClick"
                                 rowSelectionChange=".onCheck"                    
@@ -105,7 +105,7 @@
         </content>
         <ToolbarSpacer/>
         <HBox justifyContent="End" >
-            <Button text="Cancel" type="Transparent" press=".createPopupClose"/>
+            <Button text="Cancel" type="Transparent" press=".createTreePopupClose"/>
             <Button text="Save" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleSave"/>
         </HBox>
     </Dialog>
