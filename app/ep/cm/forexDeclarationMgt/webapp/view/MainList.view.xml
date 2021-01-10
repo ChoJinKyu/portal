@@ -17,7 +17,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="LOI 발행현황" />
+                    <Title text="외화신고대상관리" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -199,7 +199,7 @@
                     <Text text="{list>po_number}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainPoName" width="5rem">
+                <t:Column id="mainPoName" width="10rem">
                 <Label text="PO명" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_name}"/>
@@ -235,7 +235,7 @@
                     <Text text="{list>supplier_name}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainPoDate" width="5rem">
+                <t:Column id="mainPoDate" width="6rem">
                 <Label text="PO일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -244,7 +244,7 @@
                             }"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="mainReceiptScheduledDate" width="5rem">
+                <t:Column id="mainReceiptScheduledDate" width="6rem">
                 <Label text="입고예정일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -253,7 +253,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainReceiptDate" width="5rem">
+                <t:Column id="mainReceiptDate" width="6rem">
                 <Label text="입고일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{

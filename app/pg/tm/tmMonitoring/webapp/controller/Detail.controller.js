@@ -50,13 +50,11 @@ sap.ui.define([
             // @ts-ignore
             this.cycleText = new sap.m.Text({
                 text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
-                templateShareable: true
             });
 
             //담당자
             this.managerText = new sap.m.Text({
                 text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
-                templateShareable: true
             });
 
             //주기 multicombobox
@@ -70,8 +68,7 @@ sap.ui.define([
                     template: new sap.ui.core.Item({
                         key: "{code}",
                         text: "{code_name}"
-                    }),
-                    templateShareable: true
+                    })
                 }
             });
 
@@ -129,9 +126,9 @@ sap.ui.define([
                         this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
                         this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
                         this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
-                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description': this.PurposeFormattedText);
-                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText  === null ? 'No Description': this.ScenarioDescFormattedText);
-                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description': this.ReSourceSystemFormattedText);
+                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
+                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
+                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
                     }.bind(this),
                     error: function () {
                         this.byId("PurposeFormattedText").setHtmlText("No Description");
@@ -143,17 +140,21 @@ sap.ui.define([
             }
 
         },
-
+        //remove
         removeRichTextEditorValue: function () {
             this.byId("reMonitoringPurpose").setValue(null);
             this.byId("reMonitoringScenario").setValue(null);
             this.byId("reSourceSystemDetail").setValue(null);
+           
+
         },
 
         removeFormattedTextValue: function () {
-            this.byId("PurposeFormattedText").setHtmlText(null);
-            this.byId("ScenarioDescFormattedText").setHtmlText(null);
-            this.byId("ReSourceSystemFormattedText").setHtmlText(null);
+            this.byId("PurposeFormattedText").setHtmlText("");
+            this.byId("ScenarioDescFormattedText").setHtmlText("");
+            this.byId("ReSourceSystemFormattedText").setHtmlText("");
+
+
         },
 
 
@@ -977,7 +978,8 @@ sap.ui.define([
                                 that.getRouter().navTo("main", {}, true);
                             }
                             //법인, 사업본부 아이템 remove
-
+                            that.removeFormattedTextValue();
+                            that.removeRichTextEditorValue();
 
                         }
 
@@ -987,6 +989,7 @@ sap.ui.define([
             }
 
             this.getView().getModel().refresh(true);
+
 
 
         },
@@ -1182,8 +1185,7 @@ sap.ui.define([
                                 items: [segmentItemYes, segmentItemNo],
                                 selectedKey: "No"
                             })
-                        ],
-                        templateShareable: true
+                        ]
 
                     });
 
@@ -1376,11 +1378,10 @@ sap.ui.define([
                     })
                 ],
                 // @ts-ignore
-                type: sap.m.ListType.Inactive,
-                templateShareable: true
+                type: sap.m.ListType.Inactive
             });
 
-            this.oEditableTemplate = new ColumnListItem("signalListItem", {
+            this.oEditableTemplate = new ColumnListItem({
                 cells: [
                     new sap.m.Text({
                         text: ""
@@ -1487,7 +1488,7 @@ sap.ui.define([
                         // required: true
                     }),
                 ]
-                , templateShareable: true
+                
             });
 
 
@@ -1524,8 +1525,7 @@ sap.ui.define([
                     })
                 ],
                 // @ts-ignore
-                type: sap.m.ListType.Inactive,
-                templateShareable: true
+                type: sap.m.ListType.Inactive
             });
 
             //담당자 테이블 (Edit)
@@ -1568,8 +1568,7 @@ sap.ui.define([
                             }
                         }
                     })
-                ],
-                templateShareable: true
+                ]
             });
         },
 
@@ -1639,9 +1638,6 @@ sap.ui.define([
             var btn = this.byId("managerTableBtn");
             btn.setIcon(hbox.getVisible() === false ? "sap-icon://expand-all" : "sap-icon://collapse-all");
         }
-
-
-
 
     });
 });

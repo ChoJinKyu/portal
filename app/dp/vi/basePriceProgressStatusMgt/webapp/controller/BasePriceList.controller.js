@@ -149,62 +149,65 @@ sap.ui.define([
         /**
          * Dialog.fragment open
          */
-		onOpenDialog: function (oEvent) {
+		onOpenDialog: function (sQueryParam) {
             var oView = this.getView();
-
-            if( !oEvent.getParameter("clearButtonPressed") ) {
-                if ( !this._oMaterialDialog ) {
-                    this._oMaterialDialog = Fragment.load({
-                        id: oView.getId(),
-                        name: "dp.vi.basePriceProgressStatusMgt.view.MaterialDialog",
-                        controller: this
-                    }).then(function (oDialog) {
-                        oView.addDependent(oDialog);
-                        return oDialog;
-                    });
-                }
-
-                this._oMaterialDialog.then(function(oDialog) {
-                    oDialog.open();
-
-                    this.onGetDialogData();
-                }.bind(this));
+            
+            if ( !this._oMaterialDialog ) {
+                this._oMaterialDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.vi.basePriceProgressStatusMgt.view.MaterialDialog",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
             }
+            
+            var oTable = this.byId("materialCodeTable");
+            // 테이블 SearchField 검색값 초기화
+            if( oTable ) {
+                oTable.getHeaderToolbar().getContent()[2].setValue(sQueryParam);
+            }
+
+            this._oMaterialDialog.then(function(oDialog) {
+                oDialog.open();
+            }.bind(this));
         },
 
         /**
          * Dialog data 조회
          */
         onGetDialogData: function (oEvent) {
-            var oModel = this.getModel();
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            var oTable = this.byId("materialCodeTable");
-            // 테이블 SearchField 검색값 초기화
-            oTable.getHeaderToolbar().getContent()[2].setValue("");
+            if( !oEvent.getParameter("clearButtonPressed") ) {
+                var oModel = this.getModel();
+                var oSearchField = oEvent.getSource();
+                var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+                var sQuery = "";
 
-            // SearchField에서 검색으로 데이터 조회하는 경우 Filter 추가
-            if( oEvent ) {
-                var sQuery = oEvent.getSource().getValue();
-                aFilters.push(new Filter("material_code", FilterOperator.Contains, sQuery));
-            }
-
-            oTable.setBusy(true);
-
-            oModel.read("/Material_Mst", {
-                filters : aFilters,
-                success: function(data) {
-                    oTable.setBusy(false);
-                    
-                    if( data ) {
-                        this.getModel("dialogModel").setProperty("/materialCode", data.results);
-                    }
-                }.bind(this),
-                error: function(data){
-                    oTable.setBusy(false);
-                    console.log('error', data);
-                    MessageBox.error(data.message);
+                // SearchField에서 검색으로 데이터 조회하는 경우 Filter 추가
+                if( oEvent ) {
+                    sQuery = oEvent.getParameter("query");
+                    aFilters.push(new Filter("material_code", FilterOperator.Contains, sQuery));
                 }
-            });
+
+                oModel.read("/Material_Mst", {
+                    filters : aFilters,
+                    success: function(data) {
+                        if( data ) {
+                            if( 1 === data.results.length ) {
+                                oSearchField.setValue(data.results[0].material_code);
+                            }else {
+                                this.onOpenDialog(sQuery);
+                                this.getModel("dialogModel").setProperty("/materialCode", data.results);
+                            }
+                        }
+                    }.bind(this),
+                    error: function(data){
+                        console.log('error', data);
+                        MessageBox.error(data.message);
+                    }
+                });
+            }
         },
 
         /**
@@ -215,6 +218,7 @@ sap.ui.define([
             var oParameters = oEvent.getParameters();
 
             oDialogModel.setProperty(oParameters.listItems[0].getBindingContext("dialogModel").getPath()+"/checked", oParameters.selected);
+            this.onDailogRowDataApply(oEvent);
         },
 
         /**

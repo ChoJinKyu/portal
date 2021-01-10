@@ -8,14 +8,10 @@ sql security invoker
 
 as
 begin
-
-	declare var_commit		nvarchar(100) = 'commit';
-	declare var_rollback	nvarchar(100) = 'rollback';
-
 -- rollback message
 	declare exit handler for sqlexception
 		begin
-			exec (:var_rollback);
+			rollback;
 			o_table_message = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnmessage from dummy;
         end;
 -- delete table: master        
@@ -59,7 +55,7 @@ begin
     and scenario_number = :i_scenario_number
     ;
 -- commit message	
-	exec (:var_commit);
+	commit;
 	o_table_message =  select 'OK' as returncode, 'Success Saved!' as returnmessage from dummy;
 
 end

@@ -40,10 +40,10 @@ entity Gs_Sourcing_Pool_Evaluation {
     evaluation_date : Date   @title: '평가일자' ;	
     evaluation_person_empno : String(30)   @title: '평가담당자사번' ;	
     price_score : Integer   @title: '가격점수' ;	
-    technical_score : Integer   @title: '재무점수' ;	
-    financial_score : Integer   @title: '기술점수' ;	
-    quality_score : Integer   @title: '품질점수' ;	
-    evaluation_score : Integer   @title: '평가점수' ;	
+    technical_score : Decimal(5,2)   @title: '재무점수' ;	
+    financial_score : Decimal(5,2)   @title: '기술점수' ;	
+    quality_score : Decimal(5,2)   @title: '품질점수' ;	
+    evaluation_score : Decimal(5,2)   @title: '평가점수' ;	
     sourcing_evaluation_result_code : String(30)   @title: '소싱평가결과코드' ;	
     attch_group_number : String(100)   @title: '첨부파일그룹번호' ;	
 }

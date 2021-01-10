@@ -16,6 +16,8 @@ db/node_modules/
 node_modules/
 app/uxFreeStyleDemo/
 app/node_modules/
+app/dist/*
+app/webapp/*
 *.zip
 .hdiignore
 undeploy.json

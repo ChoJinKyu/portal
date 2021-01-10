@@ -225,9 +225,9 @@ sap.ui.define([
             // '121040'	'요청완료'
             var statusCode = "121010";
             if (flag == "R") {
-                statusCode = "121040";
-            } else if (flag == "B") {
                 statusCode = "121020";
+            } else if (flag == "B") {
+                statusCode = "121040";
             } else {
                 statusCode = "121010";
             }
@@ -283,8 +283,8 @@ sap.ui.define([
                 loi_request_title: master.getData()["loi_request_title"],
                 loi_publish_purpose_desc: master.getData()["loi_publish_purpose_desc"],
                 special_note: master.getData()["special_note"],
-                requestor_empno: '5450',
-                request_department_code: '58665481',
+                requestor_empno: '10655',
+                request_department_code: '58366944',
                 //request_date: new Date()
                 loi_request_status_code: statusCode
             });
@@ -297,6 +297,7 @@ sap.ui.define([
             var suppliers = [];
             var supplierCodeArray = [];
             var loiItemNum_val = '';
+            var loiWriteNum_val = '';
             var delNum = 0;
             var afterDelCnt = 0;
             var delfalg = "";
@@ -309,20 +310,25 @@ sap.ui.define([
                     console.log("detail _row_state_::: " + r["_row_state_"]);
                     if (r["_row_state_"] == "C") {
                         loiItemNum_val = "new";
+                        loiWriteNum_val = "new";
                     } else {
                         loiItemNum_val = r["loi_item_number"];
+                        loiWriteNum_val = r["loi_write_number"];
                     }
 
                     if (r["_row_state_"] == "D") {
                         delfalg = "D";
                     }
 
+                    console.log("1111 loiWriteNum_val :: ", loiWriteNum_val);
+
                     details.push({
                         tenant_id: 'L2100',
                         company_code: 'C100',
-                        loi_write_number: r["loi_write_number"],//this._sLoiWriteNumber,
+                        loi_write_number: loiWriteNum_val,//this._sLoiWriteNumber,
                         loi_item_number: loiItemNum_val,
                         item_sequence: String(r["item_sequence"] - (afterDelCnt * 10)),
+                        plant_code: r["plant_code"],
                         ep_item_code: r["ep_item_code"],
                         item_desc: r["item_desc"],
                         unit: r["unit"],
@@ -330,7 +336,8 @@ sap.ui.define([
                         currency_code: r["currency_code"],
                         request_amount: r["request_amount"],
                         supplier_code: r["supplier_code"],
-                        buyer_empno: r["buyer_empno"],
+                        buyer_empno: "9586",  //r["buyer_empno"],
+                        purchasing_department_code : "50008948",
                         remark: r["remark"],
                         row_state: delfalg
                     });
@@ -343,22 +350,24 @@ sap.ui.define([
 
                     delfalg = "";
 
+                    console.log("2222 loiWriteNum_val :: ", loiWriteNum_val);
+
                     if (detail.getChanges().length > 0) {
                         if (r["supplier_code"] !== '' && r["supplier_code"] != null && r["supplier_code"] !== undefined) {
                             var supplierCode = r["supplier_code"];
                             supplierCodeArray = supplierCode.split(",");
-                            //console.log("supplierCodeArray :: " , supplierCodeArray);
+                            console.log("supplierCodeArray :: " , supplierCodeArray);
 
                             for (var i = 0; i < supplierCodeArray.length; i++) {
                                 suppliers.push({
                                     tenant_id: 'L2100',
                                     company_code: 'C100',
-                                    loi_write_number: r["loi_write_number"],
+                                    loi_write_number: loiWriteNum_val,
                                     loi_item_number: loiItemNum_val,
                                     supplier_code: supplierCodeArray[i]
                                 });
                             }
-                            //console.log("suppliers :: " , suppliers);
+                            console.log("suppliers :: " , suppliers);
                         }
                     }
                 })
@@ -392,14 +401,14 @@ console.log(" 444::: ");
                             success: function (data) {
                                 console.log("---------data ssss-------", JSON.stringify(data));
 
-                                that._setItemSequence(supInput);
+                                that._setItemSequence(supInput,data);
                                 if (detail.getChanges().length > 0) {
                                     that.onReload(data);
                                 }
 
                                 view.setBusy(false);
                                 that._toShowMode();
-                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 //MessageToast.show(that.getModel("I18N").getText("/NCM0005"));   
                                 MessageToast.show("Success to save.");
                                 //that._toShowMode();
@@ -497,6 +506,7 @@ console.log(" 444::: ");
             oDetailsModel.addRecord({
                 "item_sequence": String(+itemSeq + 10),
                 "tenant_id": this._sTenantId || "",
+                "plant_code": null,
                 "ep_item_code": null,
                 "item_desc": null,
                 "unit": null,
@@ -505,6 +515,7 @@ console.log(" 444::: ");
                 "request_amount": null,
                 "supplier_code": null,
                 "buyer_empno": null,
+                "purchasing_department_code": null,
                 "remark": null
             }, "/LOIRequestDetailView");
 
@@ -548,13 +559,69 @@ console.log(" 444::: ");
         },
 
 
-        _setItemSequence: function (supInput) {
+        _setItemSequence: function (supInput_,data) {
             var oModel = this.getModel("v4Proc");
             var oView = this.getView();
             var v_this = this;
 
+            var view = this.getView(),
+                master = view.getModel("master"),
+                detail = view.getModel("details"),
+                oModel = this.getModel("v4Proc"),
+                that = this;
 
-            console.log(">>> _setItemSequence", supInput);
+            var supInput = {};
+            var inputData = {};
+            
+            var details = [];
+            var suppliers = [];
+            var supplierCodeArray = [];
+            var loiItemNum_val = '';
+            var loiWriteNum_val = '';
+            var delNum = 0;
+            var afterDelCnt = 0;
+            var delfalg = "";
+
+            console.log("---------before ssss-------", JSON.stringify(data));
+            console.log("---------before ssss-------",data.savedReqDetails.length );
+            console.log("---------before ssss-------",data.savedReqDetails.length );
+            console.log(">>> before supInput", supInput_.inputData);
+            console.log(">>> before supInput", supInput_.inputData.length);
+            // console.log(">>> before supInput", supInput_.inputData[0].loi_write_number);
+            // console.log(">>> loi_write_number", data.savedReqDetails[0].loi_write_number);
+            // console.log(">>> loi_item_number", data.savedReqDetails[0].loi_item_number);
+
+
+                    if (detail.getChanges().length > 0 && supInput_.inputData.length > 0) {
+                        // if (r["supplier_code"] !== '' && r["supplier_code"] != null && r["supplier_code"] !== undefined) {
+                        //     var supplierCode = r["supplier_code"];
+                        //     supplierCodeArray = supplierCode.split(",");
+                        //     console.log("supplierCodeArray :: " , supplierCodeArray);
+
+                        // var supplierCode_val = "";
+                        // var supplierCodeArray_val = [];
+                        // for(var k = 0; i < data.savedReqDetails.length; k++) {
+                        //     supplierCode_val = data.savedReqDetails[i].supplier_code;
+                        //     supplierCodeArray_val = supplierCode_val.split(",");
+                        //     if(supplierCodeArray_val )
+
+                            for (var i = 0; i < supInput_.inputData.length; i++) {
+                                suppliers.push({
+                                    tenant_id: 'L2100',
+                                    company_code: 'C100',
+                                    loi_write_number: data.savedReqDetails[0].loi_write_number,
+                                    loi_item_number: supInput_.inputData[i].loi_item_number,
+                                    supplier_code: supInput_.inputData[i].supplier_code
+                                });
+                            }
+                            console.log("suppliers :: " , suppliers);
+                        //}
+                    }
+
+                    supInput.inputData = suppliers;
+
+
+            console.log(">>> after supInput", supInput);
 
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SupplierMulEntityProc";
 

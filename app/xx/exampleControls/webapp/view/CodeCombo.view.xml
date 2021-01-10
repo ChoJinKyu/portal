@@ -7,7 +7,13 @@
     xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
-    <Page id="page" title="Code Combo" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" 
+        title="Code Combo" 
+        titleLevel="H2" 
+        class="sapUiContentPadding" 
+        showNavButton="true" 
+        navButtonPress=".onNavigationBackPress"
+		floatingFooter="true">
         <content>
             <VBox>
 
@@ -392,6 +398,28 @@
                     <Label id="cmCodePopUpGroup_Code"></Label>
 		        </OverflowToolbar>
             </VBox>
+            
+            <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" class="searchBox"
+            adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+            <form:content>
+                <VBox>
+                    <Label text="Multi Input (for MultiCodeValueHelp): " labelFor="searchMultiCodeFromValueHelp"></Label>
+                    <MultiInput id="searchMultiCodeFromValueHelp"
+                        placeholder="Choose codes from the ValueHelp"
+                        showValueHelp="true" valueHelpRequest=".onTestPress">
+                    </MultiInput>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M5 S10" />
+                    </layoutData>
+                </VBox>
+            </form:content>
+            </form:SimpleForm>
         </content>
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button type="Transparent" text="Test" press=".onTestPress"/>
+			</OverflowToolbar>
+		</footer>
     </Page>
 </mvc:View>

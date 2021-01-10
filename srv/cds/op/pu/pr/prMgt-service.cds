@@ -1,6 +1,7 @@
 namespace op;
 
 using {op.Pu_Pr_Mst as prMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST-model';
+using {op.Pu_Pr_Mst_View as prMstView} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST_VIEW-model';
 using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
 using {op.Pu_Pr_Template_Mst as prTMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MST-model';
 using {op.Pu_Pr_Template_Map as prTMap} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
@@ -24,6 +25,7 @@ service PrMgtService {
                 pr_type_code_2 ,         //: String(30)    not null    @title: '구매요청품목그룹코드 ' ;	
                 pr_type_code_3  ,        //: String(30)    not null    @title: '구매요청품목코드 ' ;	
                 pr_template_number ,     //: String(10)    not null    @title: '구매요청템플릿번호' ;	
+                pr_create_system_code    // : String(30)    not null    @title: '구매요청생성시스템코드' ;	
                 requestor_empno,         //: String(30)                @title: '요청자사번' ;	
                 requestor_name ,        //: String(50)                @title: '요청자명' ;	
                 requestor_department_code,   //: String(50)              @title: '요청자부서코드' ;	
@@ -32,49 +34,53 @@ service PrMgtService {
                 pr_create_status_code,  //: String(30)                @title: '구매요청생성상태코드' ;	
                 pr_desc,                 //: String(100)               @title: '구매요청내역' ;		
                 pr_header_text    ,      //: String(200)               @title: '구매요청헤더텍스트' ;
+                approval_flag    ,	
+                approval_number      ,
+                erp_interface_flag   ,
+                erp_pr_type_code      ,
+                erp_pr_number        ,
+                approval_contents     ,
+                pr_dtl_cnt,
+                pr_progress_status_cnt,
+                CONCAT( pr_progress_status_cnt , CONCAT( ' / ' , pr_dtl_cnt ) )  as pr_progress_status_cnt_txt : String(30)   ,
+                
                 
             ( select code_name From cdLng 
                 where   mst.tenant_id = cdLng.tenant_id 
                     and cdLng.group_code = 'OP_PR_TYPE_CODE' 
                     and cdLng.language_cd = 'KO' 
-                    and mst.pr_type_code = cdLng.code ) as pr_type_name  : String,   // 구매요청 유형
+                    and mst.pr_type_code = cdLng.code ) as pr_type_name  : String(30),   // 구매요청 유형
 
             ( select code_name From cdLng 
-                where   mst.tenant_id = cdLng.tenant_id 
+                    where   mst.tenant_id = cdLng.tenant_id 
                     and cdLng.group_code = 'OP_PR_TYPE_CODE_2' 
                     and cdLng.language_cd = 'KO' 
-                    and mst.pr_type_code_2 = cdLng.code ) as pr_type_name_2  : String,   // 품목그룹
+                    and mst.pr_type_code_2 = cdLng.code ) as pr_type_name_2  : String(30),   // 품목그룹
 
             ( select code_name From cdLng 
                 where   mst.tenant_id = cdLng.tenant_id 
                     and cdLng.group_code = 'OP_PR_TYPE_CODE_3' 
                     and cdLng.language_cd = 'KO' 
-                    and mst.pr_type_code_3 = cdLng.code ) as pr_type_name_3 : String,    // 카테고리
+                    and mst.pr_type_code_3 = cdLng.code ) as pr_type_name_3 : String(30),    // 카테고리
 
             ( select pr_template_name From prTLng 
                 where mst.tenant_id = prTLng.tenant_id 
                     and prTLng.language_code = 'KO' 
-                    and mst.pr_template_number = prTLng.pr_template_number ) as pr_template_name : String,   //구매요청 템플릿
+                    and mst.pr_template_number = prTLng.pr_template_number ) as pr_template_name : String(30),   //구매요청 템플릿
 
              ( select code_name From cdLng 
                 where   mst.tenant_id = cdLng.tenant_id 
-                    and cdLng.group_code = 'CM_APPROVE_STATUS'
+                    and cdLng.group_code = 'OP_PR_CREATE_STATUS_CODE'
                     and cdLng.language_cd = 'KO' 
-                    and mst.pr_create_status_code = cdLng.code ) as pr_create_status_name : String,    // 구매요청생성상태코드    'DR'
+                    and mst.pr_create_status_code = cdLng.code ) as pr_create_status_name : String(30),   // 구매요청생성상태코드    'DR'
+            ( select code_name From cdLng 
+                where   mst.tenant_id = cdLng.tenant_id 
+                    and cdLng.group_code = 'OP_PR_CREATE_SYSTEM_CODE'
+                    and cdLng.language_cd = 'KO' 
+                    and mst.pr_create_system_code = cdLng.code ) as pr_create_system_name : String(30)   // 구매요청생성시스템    ''
 
 
-            ( select count(*) as cnt From prDtl
-                where   tenant_id = mst.tenant_id 
-                    and company_code = mst.company_code 
-                    and pr_number = mst.pr_number 
-                    and pr_progress_status_code = 'A') as pr_progress_status_cnt : Integer,    // 구매요청 진행 건수   /  임시. A -> 진행중. 
-
-            ( select count(*) as cnt From prDtl
-                where   tenant_id = mst.tenant_id 
-                    and company_code = mst.company_code 
-                    and pr_number = mst.pr_number ) as pr_dtl_cnt : Integer    // 전체 건수   /  임시. A -> 진행중. 
-
-        from Pr_Mst mst ;
+        from prMstView mst ;
 
 
     entity Pr_TMst as projection on op.Pu_Pr_Template_Mst;  

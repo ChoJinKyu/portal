@@ -158,7 +158,10 @@
                                             type="Number"
                                             id="sort_no"
                                             visible="{contModel>/detailDetail/editMode}"
-                                            value="{viewModel>/detailDetail/sort_no}">
+                                            value="{
+                                                path:'viewModel>/detailDetail/sort_no',
+                                                type: 'sap.ui.model.type.Integer'
+                                            }">
                                         </m:Input>
                                         <m:layoutData>
                                             <layout:GridData
@@ -288,9 +291,9 @@
                                                     items="{viewModel>/languageList}">
                                                     <m:items>
                                                         <core:ListItem 
-                                                            key="{util>code}" 
-                                                            text="{util>code_description}" 
-                                                            additionalText="{util>code}"/>
+                                                            key="{viewModel>code}" 
+                                                            text="{viewModel>code_description}" 
+                                                            additionalText="{viewModel>code}"/>
                                                     </m:items>
                                                 </m:ComboBox>
                                             </m:HBox>

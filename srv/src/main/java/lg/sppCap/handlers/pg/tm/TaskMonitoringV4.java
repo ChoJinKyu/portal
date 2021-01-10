@@ -525,7 +525,7 @@ public class TaskMonitoringV4 implements EventHandler {
     }
     // Execute Delete Task Monitoring Master Data Procedure
     @On(event = DeleteTaskMonitoringMasterProcContext.CDS_NAME)
-    public void onDeleteTaskMonitoringMasterProcContext(DeleteTaskMonitoringMasterProcContext context) {
+    public void onDeleteTaskMonitoringMasterProc(DeleteTaskMonitoringMasterProcContext context) {
 		
         // local temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "set transaction autocommit ddl off;";

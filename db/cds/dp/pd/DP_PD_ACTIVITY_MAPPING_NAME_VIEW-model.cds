@@ -14,4 +14,5 @@ entity Pd_Activity_Mapping_Name_View {
     local_update_dtm : DateTime @title: '최종수정일시';
     activity_name : String(240)   @title: '활동명' ;   
     product_activity_name: String(240)   @title: '제품활동명' ;   
+    activity_dependency_name : String(240) @title: 'Activity 선후행명' ;
 }

@@ -545,7 +545,8 @@ public class LoiMgtV4 implements EventHandler {
 									.append("LOI_WRITE_NUMBER NVARCHAR(50), ")
                                     .append("LOI_ITEM_NUMBER NVARCHAR(50), ")
                                     .append("ITEM_SEQUENCE DECIMAL, ")
-									.append("EP_ITEM_CODE NVARCHAR(50), ")
+                                    .append("PLANT_CODE NVARCHAR(10), ")
+                                    .append("EP_ITEM_CODE NVARCHAR(50), ")
 									.append("ITEM_DESC NVARCHAR(200), ")
                                     .append("UNIT NVARCHAR(3), ")
                                     .append("REQUEST_QUANTITY DECIMAL, ")
@@ -553,6 +554,7 @@ public class LoiMgtV4 implements EventHandler {
                                     .append("REQUEST_AMOUNT DECIMAL, ")
                                     .append("SUPPLIER_CODE NVARCHAR(100), ") 
                                     .append("BUYER_EMPNO NVARCHAR(30), ")
+                                    .append("PURCHASING_DEPARTMENT_CODE NVARCHAR(50), ")
                                     .append("REMARK NVARCHAR(3000), ")
                                     .append("ROW_STATE NVARCHAR(5) ")
                                 .append(")");   
@@ -562,7 +564,7 @@ public class LoiMgtV4 implements EventHandler {
         String v_sql_dropableD = "DROP TABLE #LOCAL_TEMP_D";
 
         String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String v_sql_callProc = "CALL EP_PO_LOI_REQUEST_HD_SAVE_PROC(I_H_TABLE => #LOCAL_TEMP_H, I_D_TABLE => #LOCAL_TEMP_D, O_D_TABLE => ?)";
 
@@ -614,6 +616,7 @@ public class LoiMgtV4 implements EventHandler {
                     v_inRow.get("loi_write_number"),
                     v_inRow.get("loi_item_number"),
                     v_inRow.get("item_sequence"),
+                    v_inRow.get("plant_code"),
                     v_inRow.get("ep_item_code"),
                     v_inRow.get("item_desc"),
                     v_inRow.get("unit"),
@@ -622,6 +625,7 @@ public class LoiMgtV4 implements EventHandler {
                     v_inRow.get("request_amount"),
                     v_inRow.get("supplier_code"),
                     v_inRow.get("buyer_empno"),
+                    v_inRow.get("purchasing_department_code"),                    
                     v_inRow.get("remark"),
                     v_inRow.get("row_state")
                 };
@@ -642,6 +646,7 @@ public class LoiMgtV4 implements EventHandler {
                 v_row.setLoiWriteNumber(v_rs.getString("loi_write_number"));
                 v_row.setLoiItemNumber(v_rs.getString("loi_item_number"));
                 v_row.setItemSequence(v_rs.getString("item_sequence"));
+                v_row.setPlantCode(v_rs.getString("plant_code"));
                 v_row.setEpItemCode(v_rs.getString("ep_item_code"));
                 v_row.setItemDesc(v_rs.getString("item_desc"));
                 v_row.setUnit(v_rs.getString("unit"));
@@ -650,6 +655,7 @@ public class LoiMgtV4 implements EventHandler {
                 v_row.setRequestAmount(v_rs.getString("request_amount"));
                 v_row.setSupplierCode(v_rs.getString("supplier_code"));
                 v_row.setBuyerEmpno(v_rs.getString("buyer_empno"));
+                v_row.setPurchasingDepartmentCode(v_rs.getString("purchasing_department_code"));
                 v_row.setRemark(v_rs.getString("remark"));
                 v_row.setRowState(v_rs.getString("row_state"));
                 v_resultD.add(v_row);

@@ -36,7 +36,7 @@
                         <fb:control>
                             <m:Input
                                     name="tenant_id"
-                                    selectedKey="L1100"
+                                    selectedKey="L2600"
                                     showSuggestion="false"
                                     showValueHelp="false"
                                     suggestionItems="{

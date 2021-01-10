@@ -1,10 +1,22 @@
 sap.ui.define([
 	"./Empty.controller",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "ext/cm/util/control/codePopUp"
-], function (Controller, JSONModel, MessageBox, MessageToast, codePopUp) {
+	"sap/m/MessageToast",
+	"ext/lib/control/m/ValueHelpDialog",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/ui/layout/GridData",
+    "sap/m/VBox",
+    "sap/m/Label",
+    "sap/m/Text",
+    "sap/m/Input",
+    "sap/m/Table",
+    "sap/m/Column",
+    "sap/m/ColumnListItem",
+    "ext/cm/util/control/CodePopUp"
+], function (Controller, JSONModel, MessageBox, MessageToast, ValueHelpDialog, Filter, FilterOperator,
+    GridData, VBox, Label, Text, Input, Table, Column, ColumnListItem, CodePopUp) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -22,12 +34,11 @@ sap.ui.define([
                 }
             ]), "list");
 
-            this.cmCodePopUp = new codePopUp();
+            this.cmCodePopUp = new CodePopUp();
 
         },
 
         onCheckButtonPress: function(){
-            debugger;
             var sPickerCode = this.byId("searchCodePicker").getSelectedKey();
             var sPickerCodeText = this.byId("searchCodePicker").getValue();
             var sPickerTimezone = this.byId("searchTimezonePicker").getSelectedKey();
@@ -61,6 +72,7 @@ sap.ui.define([
             MessageBox.show(JSON.stringify(this.getModel("list").getData()));
         },
         
+        
         onPressCodePopUp: function() {
             this.cmCodePopUp.attachEvent("ok", this.onCodePopUpPress.bind(this));
             this.cmCodePopUp.setSerachFieldCode("D");
@@ -74,6 +86,121 @@ sap.ui.define([
             this.byId("cmCodePopUpCode_Description").setText(oData.code_description);
             this.byId("cmCodePopUpCode_Name").setText(oData.code_name);
             this.byId("cmCodePopUpGroup_Code").setText(oData.group_code);
+        },
+
+        onTestPress1: function(){
+            if(!this.oSearchMultiCodeFromValueHelpDialog){
+                var oTemplate = new Table({
+                    columns: [
+                        new Column({
+                            width: "75%",
+                            header: new Text({text: "Text"})
+                        }),
+                        new Column({
+                            width: "25%",
+                            hAlign: "Center",
+                            header: new Text({text: "Code"})
+                        })
+                    ],
+                    items: {
+                        path: "/",
+                        template: new ColumnListItem({
+                            type: "Active",
+                            cells: [
+                                new Text({text: "{code_name}"}),
+                                new Text({text: "{code}"})
+                            ],
+                            // press: this.onItemPress.bind(this)
+                        })
+                    }
+                });
+
+                this.oSearchMultiCodeFromValueHelpDialog = new ValueHelpDialog({
+                    bodyContent: {
+                        path: '/',
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.Contains, "L2100"),
+                            new Filter("group_code", FilterOperator.Contains, "CM_CHAIN_CD")
+                        ],
+                        serviceName: 'cm.util.CommonService',
+                        entityName: 'Code',
+                        template: oTemplate
+                    }
+                }).open();
+                this.oSearchMultiCodeFromValueHelpDialog.attachEvent("apply", function(oEvent){
+    
+                }.bind(this));
+                this.oSearchMultiCodeFromValueHelpDialog.attachEvent("cancel", function(oEvent){
+    
+                }.bind(this));
+            }
+            this.oSearchMultiCodeFromValueHelpDialog.open();
+        },
+
+        _onTableFilterSearch: function(){
+            debugger;
+        },
+        
+
+        onTestPress: function(){
+            if(!this.oSearchMultiCodeFromValueHelpDialog){
+                var oDialogSearchKeyword1 = new Input({ id: "dialogSearchKeyword1", placeholder: "Keyword"}),
+                    oDialogSearchKeyword2 = new Input({ id: "dialogSearchKeyword2", placeholder: "Keyword"});
+                this.oSearchMultiCodeFromValueHelpDialog = new ValueHelpDialog({
+                    filters: [
+                        new VBox({
+                            items: [
+                                new Label({ text: "Keyword"}),
+                                oDialogSearchKeyword1
+                            ],
+                            layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                        }),
+                        new VBox({
+                            items: [
+                                new Label({ text: "Keyword"}),
+                                oDialogSearchKeyword2
+                            ],
+                            layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                        })
+                    ],
+                    columns: [
+                        new Column({
+                            width: "75%",
+                            header: new Text({text: "Text"})
+                        }),
+                        new Column({
+                            width: "25%",
+                            hAlign: "Center",
+                            header: new Text({text: "Code"})
+                        })
+                    ],
+                    cells: [
+                        new Text({text: "{code_name}"}),
+                        new Text({text: "{code}"})
+                    ]
+                }).open();
+                this.oSearchMultiCodeFromValueHelpDialog.attachEvent("searchPress", function(oEvent){
+                    var oValueHelp = oEvent.getSource();
+                    oValueHelp.load({
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.Contains, "L2100"),
+                            new Filter("group_code", FilterOperator.Contains, "CM_CHAIN_CD")
+                        ],
+                        serviceName: 'cm.util.CommonService',
+                        entityName: 'Code',
+                    })
+
+                }.bind(this));
+
+                this.oSearchMultiCodeFromValueHelpDialog.attachEvent("apply", function(oEvent){
+    
+                }.bind(this));
+
+                this.oSearchMultiCodeFromValueHelpDialog.attachEvent("cancel", function(oEvent){
+    
+                }.bind(this));
+            }
+            this.oSearchMultiCodeFromValueHelpDialog.open();
         },
 
 

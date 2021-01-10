@@ -34,12 +34,12 @@
                             adjustLabelSpan="false">
                         <form:content>
 
-                            <Label text="Company">
+                            <Label text="회사">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <ComboBox width="100%" selectedKey="" items="{
+                            <ComboBox width="100%" selectedKey="{filterModel>/company_code/value}" items="{
                                 path: 'org>/Org_Company',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -54,44 +54,44 @@
                                 </layoutData>
                             </ComboBox>
 
-                            <Label text="Dvision">
+                            <Label text="사업부">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
                             <ComboBox
                                 width="100%"
-                                selectedKey="{filterModel>/divistion}"
+                                selectedKey="{filterModel>/divistion/value}"
                                 items="{
                                     path: 'filterModel>/divistion_list',
                                     filters: [
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                                    <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
                                 </items>
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
                             </ComboBox>
 
-                            <Label text="Project Code">
+                            <Label text="프로젝트코드">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <Input value="{filterModel>/rfa_no}" >
+                            <Input value="{filterModel>/project_code/value}" >
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
                             </Input>
 
-                            <Label text="대표 Model Code">
+                            <Label text="대표모델코드">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <SearchField value="{filterModel>/request_by}" >
+                            <SearchField value="{filterModel>/model_code/value}" >
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
@@ -114,12 +114,12 @@
                             adjustLabelSpan="false">
                         <form:content>
                             <!--Search line 2-->
-                            <Label text="Company">
+                            <Label text="회사">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <ComboBox width="100%" selectedKey="" items="{
+                            <ComboBox width="100%" selectedKey="{filterModel>/company_code}" items="{
                                 path: 'org>/Org_Company',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -133,45 +133,36 @@
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
                             </ComboBox>
-
-                            <Label text="Dvision">
+                            
+                            <Label text="사업부">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <ComboBox
-                                width="100%"
-                                selectedKey="{filterModel>/divistion}"
-                                items="{
-                                    path: 'filterModel>/divistion_list',
-                                    filters: [
-                                    ]
-                                }">
-                                <items>
-                                    <core:Item key="{filterModel>code}" text="{filterModel>text}" />
-                                </items>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L2 M2 S2" />
-                                </layoutData>
-                            </ComboBox>
 
-                            <Label text="Project Code">
+                            <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" >
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S2" />
+                                    </layoutData>
+                            </MultiComboBox>
+
+                            <Label text="프로젝트코드">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <Input value="{filterModel>/rfa_no}" >
+                            <Input value="{filterModel>/project_code/value}" >
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
                             </Input>
 
-                            <Label text="대표 Model Code">
+                            <Label text="대표모델코드">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <SearchField value="{filterModel>/request_by}" >
+                            <SearchField value="{filterModel>/model_code/value}" >
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
@@ -210,97 +201,101 @@
                         </Label>
                         <ComboBox
                             width="100%"
-                            selectedKey="{filterModel>/divistion}"
+                            selectedKey="{filterModel>/product_group_code/value}"
                             items="{
-                            path: 'filterModel>/divistion_list',
-                            filters: [
-                            ]
+                                path: 'util>/Code',
+                                filters: [
+                                    {path: 'group_code', operator: 'EQ', value1: 'DC_TC_PRODUCT_GROUP_CODE'}
+                                ]
                             }">
                             <items>
-                            <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                            <core:Item key="{util>code}" text="{util>code_name}" />
                             </items>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="Status">
+                        <Label text="상태">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
                         <ComboBox
                             width="100%"
-                            selectedKey="{filterModel>/status}"
+                            selectedKey="{filterModel>/project_status_code/value}"
                             items="{
-                            path: 'filterModel>/status_list',
-                            filters: [
-                            ]
+                                path: 'util>/Code',
+                                filters: [
+                                    {path: 'group_code', operator: 'EQ', value1: 'DP_TC_MCST_STATUS_CODE'}
+                                ]
                             }">
                             <items>
-                            <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </items>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="MP Date">
+                        <Label text="양산일자">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
                         <DateRangeSelection 
-                            dateValue="{filterModel>/dateValue}" 
-                            secondDateValue="{filterModel>/secondDateValue}" >
+                            dateValue="{filterModel>/massprod_start_date/start}" 
+                            secondDateValue="{filterModel>/massprod_start_date/end}" >
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </DateRangeSelection>
-                        <Label text="Grade">
+                        <Label text="등급">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
                         <ComboBox
                             width="100%"
-                            selectedKey="{filterModel>/grade}"
+                            selectedKey="{filterModel>/project_grade_code/value}"
                             items="{
-                            path: 'filterModel>/grade_list',
-                            filters: [
-                            ]
+                                path: 'util>/Code',
+                                filters: [
+                                    {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_GRADE_CODE'}
+                                ]
                             }">
                             <items>
-                            <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </items>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="Event">
+                        <Label text="이벤트">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
                         <ComboBox
                             width="100%"
-                            selectedKey="{filterModel>/grade}"
+                            selectedKey="{filterModel>/project_develope_event_code/value}"
                             items="{
-                            path: 'filterModel>/grade_list',
-                            filters: [
-                            ]
+                                path: 'util>/Code',
+                                filters: [
+                                    {path: 'group_code', operator: 'EQ', value1: 'DP_TC_DEVELOP_EVENT_CODE'}
+                                ]
                             }">
                             <items>
-                            <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                            <core:Item key="{util>code}" text="{util>code_name}" />
                             </items>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="개발구매 PM">
+                        <Label text="재료비총괄">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
-                        <SearchField value="{filterModel>/request_by}" >
+                        <SearchField value="{filterModel>/buyer_name/value}" >
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
@@ -327,7 +322,7 @@
                         <ToolbarSpacer />
                         <Button text="견적 재료비 생성" type="Emphasized" press=".onEstimateCreatePress" />
                         <Button text="목표 재료비 생성" type="Emphasized" press=".onGoalCreatePress" />
-                        <Button text="진척 관리" type="Emphasized" press=".onProgressMgtPress" />
+                        <Button text="예상 재료비" type="Emphasized" press=".onProgressMgtPress" />
                         <ToolbarSeparator/>
                         <Button text="모델 추가" type="Transparent" press=".onAddModelPress" />
                         <Button text="산출 제외" type="Transparent" press=".onExcludeCalPress" />
@@ -338,14 +333,14 @@
                 <t:columns>
                     <t:Column hAlign="Left" width="10rem">
                         <!-- <Label text="{I18n>/DIV}" textAlign="Center" /> -->
-                        <Label text="Company" textAlign="Center" width="100%"/>
+                        <Label text="회사" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{listModel>company_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10rem">
                         <!-- <Label text="{I18n>/DIV}" textAlign="Center" /> -->
-                        <Label text="Division" />
+                        <Label text="사업부" />
                         <t:template>
                             <Text text="{listModel>bizdivision_code}" />
                         </t:template>
@@ -373,7 +368,7 @@
                     </t:Column>
                     <t:Column hAlign="Center"  width="12rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="Project" />
+                        <Label text="프로젝트코드" />
                         <t:template>
                             <!--<Text text="{listModel>project_code}" />-->
                             <Text text="{listModel>project_code}" />
@@ -381,7 +376,7 @@
                     </t:Column>
                     <t:Column hAlign="Left"  width="15rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="Project Name" textAlign="Center" width="100%" />
+                        <Label text="프로젝트명" textAlign="Center" width="100%" />
                         <t:template>
                             <!--<Text text="{listModel>project_name}" />-->
                             <Text text="{listModel>project_name}" />
@@ -389,21 +384,14 @@
                     </t:Column>
                     <t:Column hAlign="Left"  width="15rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="Model" textAlign="Center" width="100%" />
+                        <Label text="대표모델코드" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>model_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center"  width="6rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="용도" />
-                        <t:template>
-                            <Text text="{listModel>source_type_text}" />
-                        </t:template>
-                    </t:Column>
                     <t:Column hAlign="Center"  width="7rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="MP Date" />
+                        <Label text="양산일자" />
                         <t:template>
                             <Text text="{
                                 path: 'listModel>massprod_start_date',
@@ -413,35 +401,35 @@
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="BOM" />
+                        <Label text="자재명세서" />
                         <t:template>
                             <Text text="{listModel>bom_type_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="Status" />
+                        <Label text="상태" />
                         <t:template>
                             <Text text="{listModel>project_status_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="Event" />
+                        <Label text="이벤트" />
                         <t:template>
                             <Text text="{listModel>project_develope_event_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center"  width="6rem">
+                    <t:Column hAlign="Center"  width="7rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="PL" />
+                        <Label text="프로젝트리더" />
                         <t:template>
                             <Text text="{listModel>project_leader_name}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="개발구매PM" />
+                        <Label text="재료비총괄" />
                         <t:template>
                             <Text text="{listModel>buyer_name}" />
                         </t:template>
@@ -451,8 +439,8 @@
                         <t:multiLabels>
                             <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
                             <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비 관리 현황" />
-                            <Label text="최종등록일" />
+                            <Label text="재료비관리상태" />
+                            <Label text="최종등록일자" />
                         </t:multiLabels>
                         <t:template>
                             <Text text="{
@@ -465,7 +453,7 @@
                         <t:multiLabels>
                             <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
                             <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비 관리 현황" />
+                            <Label text="재료비관리상태" />
                             <Label text="산출제외" />
                         </t:multiLabels>
                         <t:template>
@@ -478,11 +466,11 @@
                             />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left" width="10rem">
+                    <t:Column hAlign="Left" width="8rem">
                         <t:multiLabels>
                             <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
                             <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비 관리 현황" textAlign="Center" width="100%" />
+                            <Label text="재료비관리상태" textAlign="Center" width="100%" />
                             <Label text="견적" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
@@ -498,11 +486,11 @@
                             />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left" width="10rem">
+                    <t:Column hAlign="Left" width="8rem">
                         <t:multiLabels>
                             <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
                             <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비 관리 현황" textAlign="Center" width="100%" />
+                            <Label text="재료비관리상태" textAlign="Center" width="100%" />
                             <Label text="목표" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
@@ -518,11 +506,11 @@
                             />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left" width="10rem">
+                    <t:Column hAlign="Left" width="8rem">
                         <t:multiLabels>
                             <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
                             <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비 관리 현황" textAlign="Center" width="100%" />
+                            <Label text="재료비관리상태" textAlign="Center" width="100%" />
                             <Label text="예상" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
