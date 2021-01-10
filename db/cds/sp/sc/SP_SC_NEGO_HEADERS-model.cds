@@ -2,6 +2,7 @@ namespace sp;
 
 using util from '../../cm/util/util-model';
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
+using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 
@@ -9,6 +10,8 @@ entity Sc_Nego_Headers {
     key tenant_id                       : String(5) not null  @title : '테넌트ID';
         // key tenant_id                       : Association to orgTenant.Org_Tenant @title : '테넌트ID';
     key nego_header_id                  : Integer64 not null  @title : '협상헤더ID';
+    
+        Items    : Composition of many negoItemPrices.Sc_Nego_Item_Prices on Items.up_ = $self;
         operation_unit_code             : String(30) not null @title : '운영단위코드';
         reference_nego_header_id        : Integer64           @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64           @title : '기존협상헤더ID';

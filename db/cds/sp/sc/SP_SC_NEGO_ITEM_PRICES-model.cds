@@ -1,12 +1,15 @@
 namespace sp;
 
 using util from '../../cm/util/util-model';
+using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
+
 // using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 
 entity Sc_Nego_Item_Prices {
     key tenant_id                    : String(5) not null  @title : '테넌트ID';
     key nego_header_id               : Integer64 not null  @title : '협상헤더ID';
     key nego_item_number             : String(10) not null @title : '협상품목번호';
+        up_                          : Association to negoHeaders.Sc_Nego_Headers;
         operation_org_a_id           : String(30) not null @title : '운영조직AID';
         operation_unit_code          : String(30) not null @title : '운영단위코드';
         award_progress_status_code   : String(25)          @title : '낙찰진행상태코드';

@@ -27,8 +27,9 @@ view Sc_Language as
     from cm.Currency_Lng;
 
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
+using {managed} from '@sap/cds/common';
 
-entity Sc_Nego_Headers_Test01 : util.Managed {
+entity Sc_Nego_Headers_Test01 : managed {
         // key tenant_id                       : String(5) not null  @title : '테넌트ID';
     key tenant_id                : Association to orgTenant.Org_Tenant @title : '테넌트ID';
     key nego_header_id           : Integer64 not null                  @title : '협상헤더ID';
