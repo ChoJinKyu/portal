@@ -115,8 +115,9 @@ begin
 -- master table
 	o_table_master =
 		select
-				master.tenant_id,
-				ifnull(master.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                master.tenant_id,
+                master.scenario_number,
+				-- ifnull(master.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				master.monitoring_type_code,
 				master.activate_flag,
 				master.monitoring_purpose,
@@ -184,8 +185,9 @@ begin
 -- scenario table
 	o_table_scenario =
 		select
-				scenario.tenant_id,
-				ifnull(scenario.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                scenario.tenant_id,
+                scenario.scenario_number,
+				-- ifnull(scenario.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				scenario.language_code,
 				scenario.scenario_name,
 				scenario.local_create_dtm,
@@ -241,8 +243,9 @@ begin
 -- company code	table
 	o_table_company =
 		select
-				company.tenant_id,
-				ifnull(company.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                company.tenant_id,
+                company.scenario_number,
+				-- ifnull(company.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				company.company_code,
 				company.local_create_dtm,
 				company.local_update_dtm,
@@ -294,8 +297,9 @@ begin
 -- bizunit code	table
 	o_table_bizunit =
 		select
-				bizunit.tenant_id,
-				ifnull(bizunit.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                bizunit.tenant_id,
+                bizunit.scenario_number,
+				-- ifnull(bizunit.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				bizunit.bizunit_code,
 				bizunit.local_create_dtm,
 				bizunit.local_update_dtm,
@@ -347,8 +351,9 @@ begin
 -- manager table
 	o_table_manager =
 		select
-				manager.tenant_id,
-				ifnull(manager.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                manager.tenant_id,
+                manager.scenario_number,
+				-- ifnull(manager.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				manager.monitoring_manager_empno,
 				manager.monitoring_super_authority_flag,
 				manager.local_create_dtm,
@@ -404,8 +409,9 @@ begin
 -- operation mode table
 	o_table_operation =
 		select
-				operation.tenant_id,
-				ifnull(operation.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                operation.tenant_id,
+                operation.scenario_number,
+				-- ifnull(operation.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				operation.monitoring_operation_mode_code,
 				operation.language_code,
 				operation.monitoring_operation_mode_name,
@@ -465,8 +471,9 @@ begin
 -- purchasing type table
 	o_table_purchasing_type =
 		select
-				purchasing.tenant_id,
-				ifnull(purchasing.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                purchasing.tenant_id,
+                purchasing.scenario_number,
+				-- ifnull(purchasing.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				purchasing.monitoring_purchasing_type_code,
 				purchasing.language_code,
 				purchasing.monitoring_purchasing_type_name,
@@ -526,8 +533,9 @@ begin
 -- type table
 	o_table_type =
 		select
-				type.tenant_id,
-				ifnull(type.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+                type.tenant_id,
+                type.scenario_number,
+				-- ifnull(type.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
 				type.monitoring_type_code,
 				type.language_code,
 				type.monitoring_type_name,
