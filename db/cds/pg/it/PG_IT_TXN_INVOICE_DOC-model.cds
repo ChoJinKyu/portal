@@ -45,13 +45,13 @@ entity It_Txn_Invoice_Doc {
         gl_account_code                : String(30)          @title : 'GL계정코드';
         accounting_document_number     : String(50)          @title : '회계전표번호';
         accounting_document_year       : String(4)           @title : '회계전표연도';
-        accounting_document_item       : String(10)          @title : '회계전표품목';
         clearing_date                  : Date                @title : '반제일자';
         document_amount                : Decimal             @title : '전표금액';
         accounting_maturity_calc_date  : Date                @title : '회계만기계산일자';
         accounting_payterms_code       : String(30)          @title : '회계지불조건코드';
         accounting_pay_idays           : Decimal(5, 0)       @title : '회계지급기산일수';
         accounting_pay_method          : String(4)           @title : '회계지급방법';
+        prctr_code                     : String(15)          @title : '손익센터코드';
 }
 
 extend It_Txn_Invoice_Doc with util.Managed;
