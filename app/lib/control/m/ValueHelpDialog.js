@@ -15,6 +15,7 @@ sap.ui.define([
 ], function (Parent, Renderer, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem) {
     "use strict";
 
+    //TODO : Localization (Buttons - apply, cancel, search, table no-data, multiInput title)
     var ValueHelpDialog = Parent.extend("ext.lib.control.m.ValueHelpDialog", {
 
         renderer: Renderer,
@@ -95,6 +96,7 @@ sap.ui.define([
                 content: this.getAggregation("filters")
             });
             oForm.addStyleClass("searchBox");
+            oLayout.addItem(oForm);
 
             var oSearchButton = new FlexBox({
                 alignItems: "End",
@@ -110,7 +112,7 @@ sap.ui.define([
             })
             oSearchButton.addStyleClass("searchBoxButtonArea");
             oForm.addContent(oSearchButton);
-            
+
             var oTable = new Table({
                 noDataText: "{I18N>/NCM01004}",
                 mode: isMultiSelection ? "MultiSelect" : "None",
@@ -125,8 +127,6 @@ sap.ui.define([
                 },
                 selectionChange: this._onTableItemSelect.bind(this)
             });
-
-            oLayout.addItem(oForm);
             oLayout.addItem(oTable);
             this.oTable = oTable;
 
@@ -155,6 +155,7 @@ sap.ui.define([
                     })]
                 });
                 oSelectionForm.addStyleClass("searchBox");
+
                 oLayout.addItem(oSelectionForm);
                 this.oMultiInput = oMultiInput;
             }
@@ -180,18 +181,20 @@ sap.ui.define([
             this.getModel().setSizeLimit(aRecords.length || 100);
             this.getModel().setData(aRecords, false);
             
-            var oItems = this.oTable.getItems(),
-                oModel = this.getModel(),
-                aTokens = this.oMultiInput.getTokens();
-            if(aTokens.length > 0){
-                aTokens.forEach(function(oToken){
-                    oItems.forEach(function(oItem){
-                        var oData = oModel.getProperty(oItem.getBindingContextPath());
-                        if(oData[this.getProperty("keyField")] == oToken.getKey()){
-                            this.oTable.setSelectedItem(oItem, true);
-                        }
+            if(this.oMultiInput){
+                var oItems = this.oTable.getItems(),
+                    oModel = this.getModel(),
+                    aTokens = this.oMultiInput.getTokens();
+                if(aTokens.length > 0){
+                    aTokens.forEach(function(oToken){
+                        oItems.forEach(function(oItem){
+                            var oData = oModel.getProperty(oItem.getBindingContextPath());
+                            if(oData[this.getProperty("keyField")] == oToken.getKey()){
+                                this.oTable.setSelectedItem(oItem, true);
+                            }
+                        }.bind(this));
                     }.bind(this));
-                }.bind(this));
+                }
             }
         },
 
@@ -205,9 +208,11 @@ sap.ui.define([
         },
 
         setTokens: function(aTokens){
-            this.oMultiInput.setTokens(jQuery.map(aTokens, function(oToken){
-                return oToken.clone();
-            }));
+            if(this.oMultiInput){
+                this.oMultiInput.setTokens(jQuery.map(aTokens, function(oToken){
+                    return oToken.clone();
+                }));
+            }
         },
 
         _onSearchPress: function(oEvent){

@@ -13,7 +13,7 @@ sap.ui.define([
 ], function (Parent, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-    var CodeDialog = Parent.extend("ext.lib.control.m.CodeDialog", {
+    var CodeValueHelp = Parent.extend("ext.lib.control.m.CodeValueHelp", {
 
         metadata: {
             properties: {
@@ -108,6 +108,8 @@ sap.ui.define([
                 var oParam = jQuery.extend(true, {}, oValue);
 
                 delete oValue.filters;
+                delete oValue.sorters;
+                delete oValue.parameters;
                 delete oValue.serviceName;
                 delete oValue.serviceUri;
                 delete oValue.entityName;
@@ -149,5 +151,5 @@ sap.ui.define([
 
     });
 
-    return CodeDialog;
+    return CodeValueHelp;
 }, /* bExport= */ true);

@@ -3,12 +3,13 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast",
-	"ext/lib/control/m/CodeDialog",
+	"ext/lib/control/m/CodeValueHelp",
     "cm/util/control/CodePopUp",
+    "cm/util/control/EmployeeDialog",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
-], function (Controller, JSONModel, MessageBox, MessageToast, CodeDialog, CodePopUp, 
+], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, CodePopUp, EmployeeDialog,
         Filter, FilterOperator, Sorter) {
 	"use strict";
 
@@ -82,7 +83,7 @@ sap.ui.define([
 
         onCodeDialogPress: function(){
             if(!this.oSearchCodeDialog){
-                this.oSearchCodeDialog = new CodeDialog({
+                this.oSearchCodeDialog = new CodeValueHelp({
                     title: "Choose a Country",
                     multiSelection: false,
                     contentWidth: "25em",
@@ -105,7 +106,7 @@ sap.ui.define([
 
         onCodeMultiDialogPress: function(){
             if(!this.oSearchMultiCodeDialog){
-                this.oSearchMultiCodeDialog = new CodeDialog({
+                this.oSearchMultiCodeDialog = new CodeValueHelp({
                     title: "Choose Chains",
                     multiSelection: true,
                     contentWidth: "30em",
@@ -131,6 +132,26 @@ sap.ui.define([
             this.oSearchMultiCodeDialog.setTokens(aTokens);
         },
 
+        onEmployeeMultiDialogPress: function(){
+            if(!this.oSearchMultiEmployeeDialog){
+                this.oSearchMultiEmployeeDialog = new EmployeeDialog({
+                    title: "Choose Employee",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oSearchMultiEmployeeDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiEmployeeFromDialog").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oSearchMultiEmployeeDialog.open();
+
+            var aTokens = this.byId("searchMultiEmployeeFromDialog").getTokens();
+            this.oSearchMultiEmployeeDialog.setTokens(aTokens);
+        },
 
 	});
 });
