@@ -403,10 +403,20 @@
             adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
             <form:content>
                 <VBox>
-                    <Label text="Multi Input (for MultiCodeValueHelp): " labelFor="searchMultiCodeFromValueHelp"></Label>
+                    <Label text="Code 선택(팝업): " labelFor="searchCodeFromValueHelp"></Label>
+                    <Input id="searchCodeFromValueHelp"
+                        placeholder="Choose a code from the ValueHelp"
+                        showValueHelp="true" valueHelpRequest=".onCodeDialogPress">
+                    </Input>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M5 S10" />
+                    </layoutData>
+                </VBox>
+                <VBox>
+                    <Label text="Code 다중 선택(팝업): " labelFor="searchMultiCodeFromValueHelp"></Label>
                     <MultiInput id="searchMultiCodeFromValueHelp"
                         placeholder="Choose codes from the ValueHelp"
-                        showValueHelp="true" valueHelpRequest=".onTestPress">
+                        showValueHelp="true" valueHelpRequest=".onCodeMultiDialogPress">
                     </MultiInput>
                     <layoutData>
                         <layout:GridData span="XL2 L3 M5 S10" />
@@ -418,7 +428,7 @@
 		<footer>
 			<OverflowToolbar>
 				<ToolbarSpacer/>
-				<Button type="Transparent" text="Test" press=".onTestPress"/>
+				<Button type="Transparent" text="Open Code Dialog" press=".onCodeDialogPress"/>
 			</OverflowToolbar>
 		</footer>
     </Page>
