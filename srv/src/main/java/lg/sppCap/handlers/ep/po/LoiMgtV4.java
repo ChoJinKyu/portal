@@ -45,10 +45,12 @@ import cds.gen.ep.loimgtv4service.SavedHeaders;
 import cds.gen.ep.loimgtv4service.SavedReqDetails;
 import cds.gen.ep.loimgtv4service.SaveReturnType;
 import cds.gen.ep.loimgtv4service.SaveLoiRequestMultiEntitylProcContext;
-import cds.gen.ep.loimgtv4service.DeleteDetails;
+//import cds.gen.ep.loimgtv4service.DeleteDetails;
 import cds.gen.ep.loimgtv4service.ReqMulDelType;
-import cds.gen.ep.loimgtv4service.ReqDelType;
+//import cds.gen.ep.loimgtv4service.ReqDelType;
 import cds.gen.ep.loimgtv4service.DeleteLoiMulEntityProcContext;
+import cds.gen.ep.loimgtv4service.SavedSuppliers;
+import cds.gen.ep.loimgtv4service.SupplierMulEntityProcContext;
 
 
 @Component
@@ -543,7 +545,8 @@ public class LoiMgtV4 implements EventHandler {
 									.append("LOI_WRITE_NUMBER NVARCHAR(50), ")
                                     .append("LOI_ITEM_NUMBER NVARCHAR(50), ")
                                     .append("ITEM_SEQUENCE DECIMAL, ")
-									.append("EP_ITEM_CODE NVARCHAR(50), ")
+                                    .append("PLANT_CODE NVARCHAR(10), ")
+                                    .append("EP_ITEM_CODE NVARCHAR(50), ")
 									.append("ITEM_DESC NVARCHAR(200), ")
                                     .append("UNIT NVARCHAR(3), ")
                                     .append("REQUEST_QUANTITY DECIMAL, ")
@@ -551,22 +554,23 @@ public class LoiMgtV4 implements EventHandler {
                                     .append("REQUEST_AMOUNT DECIMAL, ")
                                     .append("SUPPLIER_CODE NVARCHAR(100), ") 
                                     .append("BUYER_EMPNO NVARCHAR(30), ")
+                                    .append("PURCHASING_DEPARTMENT_CODE NVARCHAR(50), ")
                                     .append("REMARK NVARCHAR(3000), ")
                                     .append("ROW_STATE NVARCHAR(5) ")
-                                .append(")");      
+                                .append(")");   
+
 
         String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_H";
         String v_sql_dropableD = "DROP TABLE #LOCAL_TEMP_D";
 
         String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String v_sql_callProc = "CALL EP_PO_LOI_REQUEST_HD_SAVE_PROC(I_H_TABLE => #LOCAL_TEMP_H, I_D_TABLE => #LOCAL_TEMP_D, O_D_TABLE => ?)";
-        String v_sql_callProcD = "CALL EP_PO_LOI_REQUEST_DTL_SAVE_PROC(I_D_TABLE => #LOCAL_TEMP_D, O_D_TABLE => ?,O_RTN_MSG => ?)";
 
         Collection<SavedHeaders> v_inHeaders = context.getInputData().getSavedHeaders();
         Collection<SavedReqDetails> v_inDetails = context.getInputData().getSavedReqDetails();
-
+ 
         SaveReturnType v_result = SaveReturnType.create();
         Collection<SavedHeaders> v_resultH = new ArrayList<>();
         Collection<SavedReqDetails> v_resultD = new ArrayList<>();
@@ -612,6 +616,7 @@ public class LoiMgtV4 implements EventHandler {
                     v_inRow.get("loi_write_number"),
                     v_inRow.get("loi_item_number"),
                     v_inRow.get("item_sequence"),
+                    v_inRow.get("plant_code"),
                     v_inRow.get("ep_item_code"),
                     v_inRow.get("item_desc"),
                     v_inRow.get("unit"),
@@ -620,6 +625,7 @@ public class LoiMgtV4 implements EventHandler {
                     v_inRow.get("request_amount"),
                     v_inRow.get("supplier_code"),
                     v_inRow.get("buyer_empno"),
+                    v_inRow.get("purchasing_department_code"),                    
                     v_inRow.get("remark"),
                     v_inRow.get("row_state")
                 };
@@ -628,22 +634,6 @@ public class LoiMgtV4 implements EventHandler {
         } 
 
         int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
-
-        // // Procedure Call
-        // SqlReturnResultSet oHTable = new SqlReturnResultSet("O_H_TABLE", new RowMapper<SavedHeaders>(){
-        // //     @Override
-        //     public SavedHeaders mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-        //         SavedHeaders v_row = SavedHeaders.create();
-        //         v_row.setTenantId(v_rs.getString("tenant_id"));
-        //         v_row.setCompanyCode(v_rs.getString("company_code"));
-        //         v_row.setLoiWriteNumber(v_rs.getString("loi_write_number"));
-        //         v_row.setLoiNumber(v_rs.getString("loi_number"));
-        //          v_row.setLoiRequestTitle(v_rs.getString("loi_request_title"));
-        //          v_row.setLoiPublishPurposeDesc(v_rs.getString("loi_publish_purpose_desc"));
-        //         v_resultH.add(v_row);
-        //         return v_row;
-        //     }
-        // });
 
         boolean delFlag = false;
 
@@ -656,6 +646,7 @@ public class LoiMgtV4 implements EventHandler {
                 v_row.setLoiWriteNumber(v_rs.getString("loi_write_number"));
                 v_row.setLoiItemNumber(v_rs.getString("loi_item_number"));
                 v_row.setItemSequence(v_rs.getString("item_sequence"));
+                v_row.setPlantCode(v_rs.getString("plant_code"));
                 v_row.setEpItemCode(v_rs.getString("ep_item_code"));
                 v_row.setItemDesc(v_rs.getString("item_desc"));
                 v_row.setUnit(v_rs.getString("unit"));
@@ -664,13 +655,9 @@ public class LoiMgtV4 implements EventHandler {
                 v_row.setRequestAmount(v_rs.getString("request_amount"));
                 v_row.setSupplierCode(v_rs.getString("supplier_code"));
                 v_row.setBuyerEmpno(v_rs.getString("buyer_empno"));
+                v_row.setPurchasingDepartmentCode(v_rs.getString("purchasing_department_code"));
                 v_row.setRemark(v_rs.getString("remark"));
                 v_row.setRowState(v_rs.getString("row_state"));
-//og.info("row_state-----> " + v_rs.getString("row_state"));
-                // if(v_rs.getString("row_state") == 'D'){
-
-                // }
-
                 v_resultD.add(v_row);
                 return v_row;
             }
@@ -678,19 +665,12 @@ public class LoiMgtV4 implements EventHandler {
 
         
         List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-        //paramList.add(oHTable);
         paramList.add(oDTable);
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
             @Override
             public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                 String callProc = "";
-                
-                //  if(!v_inHeaders.isEmpty() && v_inHeaders.size() > 0){
-                //      callProc = v_sql_callProc;
-                //  }else{
-                //      callProc = v_sql_callProcD;
-                //  }
 
                 callProc = v_sql_callProc;
                 
@@ -698,7 +678,6 @@ public class LoiMgtV4 implements EventHandler {
                 return callableStatement;
             }
         }, paramList);
-
 
         // Local Temp Table DROP
         jdbc.execute(v_sql_dropableH);
@@ -764,5 +743,84 @@ public class LoiMgtV4 implements EventHandler {
 			context.setCompleted();
 		}
     }  
+
+
+    @On(event = SupplierMulEntityProcContext.CDS_NAME)    
+    public void onSupplierMulEntityProc(SupplierMulEntityProcContext context) {
+
+		log.info("### EP_PO_SUPPLIER_SAVE_PROC 프로시저 호출시작 ###");
+
+		// local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+		StringBuffer v_sql_createTable = new StringBuffer();
+		v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE ( ")
+									.append("TENANT_ID NVARCHAR(5), ")
+									.append("COMPANY_CODE NVARCHAR(10), ")
+									.append("LOI_WRITE_NUMBER NVARCHAR(50), ")
+									.append("LOI_ITEM_NUMBER NVARCHAR(50), ")
+									.append("SUPPLIER_CODE NVARCHAR(15) ")
+								.append(")");
+
+		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE VALUES (?, ?, ?, ?, ?)";
+		String v_sql_callProc = "CALL EP_PO_SUPPLIER_SAVE_PROC( I_TABLE => #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE, O_RTN_MSG => ? )";
+
+		String v_result = "";
+		Collection<SavedSuppliers> v_inRows = context.getInputData();
+        StringBuffer strRsltBuf = new StringBuffer();
+
+		try {
+
+			Connection conn = jdbc.getDataSource().getConnection();
+
+			// Local Temp Table 생성
+			PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable.toString());
+			v_statement_table.execute();
+
+			// Local Temp Table에 insert
+			PreparedStatement v_statement_insert = conn.prepareStatement(v_sql_insertTable);
+
+			if(!v_inRows.isEmpty() && v_inRows.size() > 0){
+				for(SavedSuppliers v_inRow : v_inRows){
+
+					log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber()+"###"+v_inRow.getSupplierCode());
+
+                    v_statement_insert.setString(1, v_inRow.getTenantId());
+	 				v_statement_insert.setString(2, v_inRow.getCompanyCode());
+	 				v_statement_insert.setString(3, v_inRow.getLoiWriteNumber());
+	 				v_statement_insert.setString(4, v_inRow.getLoiItemNumber());
+                    v_statement_insert.setString(5, v_inRow.getSupplierCode());
+                     
+
+					//v_statement_insert.executeUpdate();
+					v_statement_insert.addBatch();
+				}
+				// Temp Table에 Multi건 등록
+				v_statement_insert.executeBatch();
+			}
+
+			// Procedure Call
+			CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+			//ResultSet v_rs = v_statement_proc.executeQuery();
+			int iCnt = v_statement_proc.executeUpdate();
+			String rsltMesg = "SUCCESS";
+
+			strRsltBuf.append("{")
+					.append("\"rsltCd\":\"000\"")
+					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
+					.append(", \"rsltCnt\":"+iCnt+"")
+					.append("}");
+
+			context.setResult(strRsltBuf.toString());
+
+		} catch (SQLException sqlE) {
+			sqlE.printStackTrace();
+			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
+		} finally {
+			context.setCompleted();
+		}
+
+    }
 
 }

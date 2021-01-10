@@ -151,7 +151,8 @@
 			<uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="Header" visible="true" subSectionLayout="titleOnTop" >
 				<uxap:subSections >
 					<uxap:ObjectPageSubSection>
-                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content">
+                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content"
+                            class="sapUiDemoFlexBoxSizeAdjustments">
                             <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
                                             columnsM="2"
                                             columnsL="2"
@@ -165,142 +166,63 @@
                                 <Input  id="inputOutcome" enabled="false" value="BPA" />  
                             </form:SimpleForm>
                   
-                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
                                 <Label  text="Title" required="true"  class="sapMLabelNoText"/>
                                 <Input  id="inputTitle" width="100%"/>
                             </VBox>
 
-                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiTinyMarginTop" >
-                                <Label  text="Description"  class="sapMLabelNoText"/>
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin" >
+                                <Label  text="Description"  class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                 <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                             </VBox>
 
-                            <form:SimpleForm id="formHeader3" editable="true"  layout="ColumnLayout"
-                                            columnsM="1"
-                                            columnsL="1"
-                                            columnsXL="3" >
-                                <Label  text="Bid Style" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
-                                    <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
-                                    <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
-                                </RadioButtonGroup>
-                                <Label  text="Incoterms" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                <ComboBox />
-                            </form:SimpleForm>
-                            
-                            <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
-                                                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                                <form:content >
-                                    
+    
+                            <FlexBox alignItems="Center" width="100%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom" fitContainer="true">
 
-                                    <VBox width="50%" >
-                                        <Label  text="Period" 
-                                                required="true"
-                                                class="sapMLabelNoText"/> 
-
-                                        <HBox >
-                                            <CheckBox text="Immediately"/> 
-                                            <ToolbarSpacer width="1rem"/> 
-                                            <HBox id="hboxDateRanges">
-                                                <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
-                                                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                                <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
-                                            </HBox>
-                                        </HBox>
-                                        <!-- <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData>  -->
-                                    </VBox>
-                                        
-                                    <HBox >
-                                        <!-- <VBox class="sapUiTinyMarginBeginEnd"> -->
-                                            <Label  text="Extension Period" labelFor="inputEP" class="sapMLabelNoText "/> 
-
-                                            <Input id="inputEP" value="" type="Number"/>
-                                            <Label  text="Hr" />   
-
-                                            <ToolbarSpacer width="1rem"/>
-
-                                            <Label  text="Extension Count" labelFor="inputEC" class="sapMLabelNoText "/> 
-
-                                            <Input id="inputEC" value="" type="Number"/>
-                                            <Label  text="Times" />   
-
-                                        <!-- <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S4" />
-                                        </layoutData>  -->
-                                    </HBox>
-
-                                   
-                                </form:content>
-                            </form:SimpleForm>
-
-                            <!-- <layout:Splitter class="sapUiSmallMarginBegin sapUiTinyMarginTop">
-                                <layout:layoutData>
-                                    <layout:SplitterLayoutData size="auto" resizable="false"/>
-                                </layout:layoutData>
-                                <layout:contentAreas>
-                                    <VBox>
-                                        <layoutData>
-                                            <layout:SplitterLayoutData size="auto" resizable="false"/>
-                                        </layoutData>
-                                        <HBox>
-                                            <Label width="" text="Bid Style" labelFor="rbg1" class="sapMLabelNoText">
-                                                <layoutData>
-                                                    <layout:GridData span="L1 M1 S1" />
-                                                </layoutData>
-                                            </Label>
-                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
+                                <VBox width="100%">
+                                    <HBox  width="100%" alignItems="Center">
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Bid Style" width="100px" class="sapMLabelNoText"/>
+                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" >
                                                 <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
                                                 <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
                                             </RadioButtonGroup>
                                         </HBox>
 
-                                        <HBox>
-                                            <Label  text="Period" labelFor="hboxDateRanges"
-                                                    required="true"
-                                                    class="sapMLabelNoText"/> 
-                                            <CheckBox text="Immediately"/>  
-                                            <HBox id="hboxDateRanges">
-                                                <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
-                                                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                                <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
-                                            </HBox>
-                                        </HBox>
-                                    </VBox>
-                                
-                                    <VBox>
-                                        <HBox>
-                                            <Label  text="Incoterms" />
-                                            <ComboBox width="100%" >
-                                                <layoutData>
-                                                    <layout:SplitterLayoutData size="100%" resizable="false"/>
-                                                </layoutData>
-                                            </ComboBox>
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Incoterms" width="130px" class="sapMLabelNoText"/>
+                                            <VBox alignContent="Center" alignItems="Stretch" width="100%" class="sapUiSmallMarginEnd">
+                                                <ComboBox id="combobox_Incoterms" width="100%" />
+                                            </VBox>
+                                        </HBox>                                        
+                                    </HBox>
+        
+                                    <HBox  width="100%" >
+
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Period" width="100px" required="true" class="sapMLabelNoText"/> 
+                                            <CheckBox text="Immediately"/> 
+                                            <ToolbarSpacer width="1rem"/> 
+                                            <DateTimePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
+                                            <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                            <DateTimePicker placeholder="End Date ..." id="searchToDatePicker"/>
                                         </HBox>
 
-                                        <HBox>
-                                            <Label  text="Extension Period" 
-                                                    class="sapMLabelNoText"/> 
-                                            <Input />   
-                                            <Text text="Hr" />
+                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                            <Label  text="Extension Period" width="130px" class="sapMLabelNoText "/> 
+                                            <Input id="inputEP" value="" type="Number"  class="sapUiTinyMarginEnd"/>
+                                            <Label  text="Hr"  class="sapUiSmallMarginBegin" />
 
-                                            <Label  text="Extension Count" 
-                                                    class="sapMLabelNoText"/> 
-                                            <Input />   
-                                            <Text text="times" />
+                                            <ToolbarSpacer width="3rem"/> 
+                                            <Label  text="Extension Count" width="130px"  class="sapMLabelNoText "/> 
+                                            <Input id="inputEC" value="" type="Number"  class="sapUiTinyMarginEnd"/>
+                                            <Label  text="Times"  class="sapUiSmallMarginBegin"/>   
+                                            
                                         </HBox>
-                                    </VBox>
-                                </layout:contentAreas>
+                                    </HBox>
+                                </VBox>
+                            </FlexBox>
 
-                            </layout:Splitter> -->
-
-                            
-             
                             <VBox class="sapUiSmallMarginBegin">
                                 <Label  text="Note To Supplier" class="sapMLabelNoText"/>
                                 <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
@@ -408,7 +330,8 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-
+            <!-- Control End -->
+            <!-- Line Start -->
 			<uxap:ObjectPageSection titleUppercase="false" title="Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -669,229 +592,205 @@
                                         </t:template>
                                     </t:Column>
                                 </t:columns>
-                            </t:Table>
-
-                             
-                             
-                             
-                             
-                             
-                             
-                            
+                            </t:Table>                   
                         </Panel>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-
+            <!-- Line End -->
+            <!-- Suppliers Start -->
             <uxap:ObjectPageSection titleUppercase="false" title="Suppliers">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-                        <Panel id="panel_SuppliersContent" expandable="true" expanded="true" headerText="Suppliers Content">
-                             <form:SimpleForm editable="true"  layout="ColumnLayout"
-                                        columnsM="2"
-                                        columnsL="3"
-                                        columnsXL="4">
-                                <Label  text="Requisition No" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                <Input  class="sapMLabelNoText"/>
-                                <Label  text="Part No" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                <Input  class="sapMLabelNoText" value="68705-1874B" enabled="false"/>
-                                <Label  text="Description" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                <Input  class="sapMLabelNoText" value="Bare PCB ** LM195WF1-SPA1-TB1,4L,0.6,43.6*94.8,4,N" enabled="false"/>
-                                <Label  text="Vendor Pool" 
-                                        design="Bold" 
-                                        class="sapMLabelNoText"/>
-                                <Input  class="sapMLabelNoText" value="PCB_MLB" enabled="false"/>
-                            </form:SimpleForm>
-                        </Panel>
+                        <FlexBox wrap="Wrap">
+                            <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+
+                                <!-- <Panel id="panel_SuppliersContent" expandable="true" expanded="true" headerText="Suppliers Content"> -->
+                                    <form:SimpleForm editable="true"  layout="ColumnLayout"
+                                                columnsM="2"
+                                                columnsL="3"
+                                                columnsXL="4">
+                                        <Label  text="Requisition No" 
+                                                design="Bold" 
+                                                class="sapMLabelNoText"/>
+                                        <Input  class="sapMLabelNoText"/>
+                                        <Label  text="Part No" 
+                                                design="Bold" 
+                                                class="sapMLabelNoText"/>
+                                        <Input  class="sapMLabelNoText" value="68705-1874B" enabled="false"/>
+                                        <Label  text="Description" 
+                                                design="Bold" 
+                                                class="sapMLabelNoText"/>
+                                        <Input  class="sapMLabelNoText" value="Bare PCB ** LM195WF1-SPA1-TB1,4L,0.6,43.6*94.8,4,N" enabled="false"/>
+                                        <Label  text="Vendor Pool" 
+                                                design="Bold" 
+                                                class="sapMLabelNoText"/>
+                                        <Input  class="sapMLabelNoText" value="PCB_MLB" enabled="false"/>
+                                    </form:SimpleForm>
+                                <!-- </Panel> -->
+
+                                <Panel id="panel_Evaluation" expandable="true" expanded="false" headerText="Evaluation Supplier">
+                                    <Table 
+                                        sticky="HeaderToolbar,ColumnHeaders" 
+                                        inset="false" 
+                                        class="sapFDynamicPageAlignContent" 
+                                        mode="None"
+                                        width="auto">
+                                        <columns>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Seq" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Code" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Name" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Type" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Only Maker Flag" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Contact" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Except Flag" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Reason" />
+                                            </Column>
+                                        </columns>
+                                        <items>
+                                            <!-- <ColumnListItem type="Inactive" >
+                                                <cells>
+                                                    <Text text="1"/>
+                                                    <Text text="CN000260"/>
+                                                    <Text text="LGDKR_TRIPOD(WUXI) ELECTRONIC CO. LTD_CN000260"/>
+                                                    <Text text="RAW MATERIAL"/>
+                                                    <Text text="Y"/>
+                                                    <ObjectStatus  icon="sap-icon://person-placeholder"/>
+                                                    <CheckBox />
+                                                    <Text text=""/>
+                                                </cells>
+                                            </ColumnListItem>
+                                            <ColumnListItem type="Inactive" >
+                                                <cells>
+                                                    <Text text="2"/>
+                                                    <Text text="CN000351"/>
+                                                    <Text text="LGDKR_TRIPOD(WUXI) ELECTRONIC CO. LTD_CN000351"/>
+                                                    <Text text="RAW MATERIAL"/>
+                                                    <Text text="N"/>
+                                                    <ObjectStatus  icon="sap-icon://person-placeholder"/>
+                                                    <CheckBox />
+                                                    <Text text=""/>
+                                                </cells>
+                                            </ColumnListItem> -->
+                                        </items>
+                                    </Table>
+                                </Panel>
+                                <Panel id="panel_Potential" expandable="true" expanded="false" headerText="Potential Supplier">
+                                    <Table 
+                                        sticky="HeaderToolbar,ColumnHeaders" 
+                                        inset="false" 
+                                        class="sapFDynamicPageAlignContent" 
+                                        mode="None"
+                                        width="auto">
+                                        <columns>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Seq" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Code" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Name" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Contact" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Include Flag" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Reason" />
+                                            </Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem type="Inactive" >
+                                                <cells>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </Panel>
+                                <Panel id="panel_Specific" expandable="true" expanded="true" headerText="Specific Supplier">
+                                    <Table 
+                                        sticky="HeaderToolbar,ColumnHeaders" 
+                                        inset="false" 
+                                        class="sapFDynamicPageAlignContent"     
+                                        mode="None"
+                                        width="auto">
+                                        <headerToolbar>
+                                            <OverflowToolbar>
+                                                <ToolbarSpacer/>
+                                                <Button  text="Supplier Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                            </OverflowToolbar>
+                                        </headerToolbar>
+                                        <columns>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Seq" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Code" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Name" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Evaluate Type" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Supplier Type" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Only Maker Flag" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Contact" />
+                                            </Column>
+                                            <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                <Text text="Delete" />
+                                            </Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem type="Inactive" >
+                                                <cells>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                    <Text text=""/>
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </Panel>
+                            </layout:VerticalLayout>
+                        </FlexBox >
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-
-
-            <uxap:ObjectPageSection titleUppercase="false" title="Evaluation Supplier">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                        <Panel id="panel_Evaluation" expandable="true" expanded="true" headerText="Evaluation Supplier Content">
-                            <Table 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								class="sapFDynamicPageAlignContent" 
-								mode="None"
-								width="auto">
-                                <columns>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Seq" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Code" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Name" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Only Maker Flag" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Contact" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Except Flag" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Reason" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text="1"/>
-                                            <Text text="CN000260"/>
-                                            <Text text="LGDKR_TRIPOD(WUXI) ELECTRONIC CO. LTD_CN000260"/>
-                                            <Text text="RAW MATERIAL"/>
-                                            <Text text="Y"/>
-                                            <ObjectStatus  icon="sap-icon://person-placeholder"/>
-                                            <CheckBox />
-                                            <Text text=""/>
-                                        </cells>
-                                    </ColumnListItem>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text="2"/>
-                                            <Text text="CN000351"/>
-                                            <Text text="LGDKR_TRIPOD(WUXI) ELECTRONIC CO. LTD_CN000351"/>
-                                            <Text text="RAW MATERIAL"/>
-                                            <Text text="N"/>
-                                            <ObjectStatus  icon="sap-icon://person-placeholder"/>
-                                            <CheckBox />
-                                            <Text text=""/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-						    </Table>
-                        </Panel>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-
-            <uxap:ObjectPageSection titleUppercase="false" title="Potential Supplier">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                        <Panel id="panel_Potential" expandable="true" expanded="true" headerText="Potential Supplier Content">
-                            <Table 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								class="sapFDynamicPageAlignContent" 
-								mode="None"
-								width="auto">
-                                <columns>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Seq" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Code" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Name" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Contact" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Include Flag" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Reason" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-						    </Table>
-                        </Panel>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-
-            <uxap:ObjectPageSection titleUppercase="false" title="Specific Supplier">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                        <Panel id="panel_Specific" expandable="true" expanded="true" headerText="Specific Supplier Content">
-                            <Table 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								class="sapFDynamicPageAlignContent" 
-								mode="None"
-								width="auto">
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                        <ToolbarSpacer/>
-                                        <Button  text="Supplier Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Seq" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Code" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Name" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Evaluate Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Supplier Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Only Maker Flag" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Contact" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                        <Text text="Delete" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                            <Text text=""/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-						    </Table>
-                        </Panel>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-            
         
 		</uxap:sections>
 		<uxap:footer>

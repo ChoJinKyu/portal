@@ -7,7 +7,8 @@ sap.ui.define([
 	"ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
     "sap/f/LayoutType",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -16,13 +17,14 @@ sap.ui.define([
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
-	"sap/m/Input",
+    "sap/m/Input",
+    "sap/m/DatePicker",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus"
-], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, LayoutType, DateFormatter, 
+], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, LayoutType, DateFormatter, NumberFormatter,
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
+	ColumnListItem, ObjectIdentifier, Text, Input, DatePicker, ComboBox, Item, ObjectStatus) {
 		
 	"use strict";
 
@@ -31,6 +33,8 @@ sap.ui.define([
 	return BaseController.extend("dp.gs.gsSupplierMgt.controller.AddSupplier", {
 
         dateFormatter: DateFormatter,
+
+        numberFormatter: NumberFormatter,
         
         validator: new Validator(),
 
@@ -465,7 +469,7 @@ sap.ui.define([
                    
                 }
             });            
-            oDetailsModel3.read("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
+            oDetailsModel3.read("/SupplierGenView(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
                 success: function (oData) {
                     
                 }
@@ -484,9 +488,11 @@ sap.ui.define([
             oFcl.to(sThisViewId);
 
             //ScrollTop
-            var oObjectPageLayout = this.getView().byId("page");
+            this.byId("suppliePage").setSelectedSection("pageSectionMain");
+            var oObjectPageLayout = this.getView().byId("suppliePage");
             var oFirstSection = oObjectPageLayout.getSections()[0];
             oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+            
 		},
 
 		/**
@@ -510,7 +516,7 @@ sap.ui.define([
 		_toEditMode: function(){
 			var FALSE = false;
             this._showFormFragment('AddSupplier_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
 			// this.byId("pageDeleteButton").setEnabled(FALSE);
@@ -533,7 +539,7 @@ sap.ui.define([
 		_toShowMode: function(){
 			var TRUE = true;
 			this._showFormFragment('AddSupplier_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
 			// this.byId("pageDeleteButton").setEnabled(TRUE);
@@ -566,7 +572,10 @@ sap.ui.define([
 						text: "{SupplierFin>fiscal_quarter}"
                     }),
                     new Text({
-						text: "{SupplierFin>sales_amount}"
+                        text: {
+                            path: 'SupplierFin>sales_amount',
+                            formatter: '.numberFormatter.toNumberString'
+                        }
                     }),
                     new Text({
 						text: "{SupplierFin>opincom_amount}"
@@ -620,48 +629,34 @@ sap.ui.define([
 				type: sap.m.ListType.Inactive
 			});
 
-            var oLanguageCode = new ComboBox({
-                    selectedKey: "{SupplierFin>language_code}",
+            var oQuarter = new ComboBox({
+                    selectedKey: "{SupplierFin>fiscal_quarter}",
                     required : true
                 });
-                // oLanguageCode.bindItems({
-                //     path: 'util>/Code',
-                //     filters: [
-                //         new Filter("tenant_id", FilterOperator.EQ, 'L2600'),                        
-                //         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
-                //     ],
-                //     template: new Item({
-                //         key: "{util>code}",
-                //         text: "{util>code_name}"
-                //     })
-                // });
+                oQuarter.bindItems({
+                    path: 'util>/Code',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
+                        new Filter("group_code", FilterOperator.EQ, 'DP_GS_DATE_QUARTER')
+                    ],
+                    template: new Item({
+                        key: "{util>code}",
+                        text: "{util>code_name}"
+                    })
+                });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
                         icon:{ path:'SupplierFin>_row_state_', formatter: this.formattericon
                                 }                              
-                    }),
-                    // oLanguageCode,
-                    new Input({
-                        value: {
-                            path: 'SupplierFin>fiscal_year',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        },
-                        required : true
-                    }),
-                    new Input({
-                        value: {
-                            path: 'SupplierFin>fiscal_quarter',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        },
-                        required : true
-                    }),
+                    }),                    
+                    new DatePicker({
+                        value: "{SupplierFin>fiscal_year}",
+                        valueFormat: "yyyy",
+                        displayFormat: "yyyy",
+                        required: true
+                    }),                    
+                    oQuarter,                                        
                     new Input({
                         value: {
                             path: 'SupplierFin>sales_amount',
@@ -669,8 +664,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -679,8 +673,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -689,8 +682,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -699,8 +691,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -709,8 +700,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -719,8 +709,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -729,8 +718,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -739,8 +727,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -749,8 +736,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     })
 				]
             });
@@ -762,16 +748,22 @@ sap.ui.define([
                                 }                              
                     }),
                     // oLanguageCode,
-                    new Input({
-                        value: {
-                            path: 'SupplierSal>txn_year',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        },
-                        required : true
+                    new DatePicker({
+                        value: "{SupplierSal>txn_year}",
+                        valueFormat: "yyyy",
+                        displayFormat: "yyyy",
+                        required: true
                     }),
+                    // new Input({
+                    //     value: {
+                    //         path: 'SupplierSal>txn_year',
+                    //         type: 'sap.ui.model.type.String',
+                    //         constraints: {
+                    //             maxLength: 30
+                    //         }
+                    //     },
+                    //     required : true
+                    // }),
                     new Input({
                         value: {
                             path: 'SupplierSal>customer_english_name',
@@ -789,8 +781,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -799,8 +790,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
@@ -809,8 +799,7 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 30
                             }
-                        },
-                        required : true
+                        }
                     })
 				]
             });

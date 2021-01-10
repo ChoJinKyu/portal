@@ -16,6 +16,7 @@ entity Li_Request_List_View {
         loi_request_status_name    : String(30)             @title : 'LOI요청상태';
         investment_review_flag     : Boolean                @title : '투자심의여부';
         buyer_empno                : String(30)             @title : '구매자사번';
+        buyer_name                 : String(30)             @title : '구매자이름';
         publish_date               : Date                   @title : '발행일자';
         supplier_code              : String(15)             @title : '공급업체코드';
         special_note               : LargeString            @title : '특기사항';

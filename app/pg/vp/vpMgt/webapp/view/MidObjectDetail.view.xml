@@ -165,9 +165,20 @@
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL6 L2 M6 S12" />
+                                        <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
-                                </VBox> 
+                                </VBox>
+                                <VBox>
+                                    <Label text="Maker Flag" design="Bold"/> 
+                                        <Switch id="general_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
+                                    <layoutData>
+                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                    </layoutData> 
+                                </VBox>                                  
                                 <VBox>
                                     <Label text="SD Flag" design="Bold"/> 
                                         <Switch id="general_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
@@ -176,7 +187,7 @@
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL6 L2 M6 S12" />
+                                        <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox> 
                                 <VBox>
@@ -187,7 +198,7 @@
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL6 L2 M6 S12" />
+                                        <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>                                                                       
                                 <VBox>
@@ -279,17 +290,42 @@
                                 <OverflowToolbar>
                                     <Title text="List ({= ${suplist>/VpSupplierDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".onDialogSupList"   enabled="{mode>/viewFlag}" />
-                                    <Button id="sppListDel"     type="Emphasized" text="Delete"     press=".onSppListDelButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".supplierAddRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListDel"     type="Emphasized" text="Delete"     press=".supplierDelRow"   enabled="{mode>/viewFlag}" />
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
                             <table:columns>
-                                <table:Column label="Supplier Code" width="8em" filterProperty="supplier_code">
+                                <table:Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                                     <table:template>
-                                        <Text text="{suplist>supplier_code}" wrapping="false" />
+                                        <ObjectStatus icon="{
+                                            path: 'suplist>_row_state_',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
                                     </table:template>
                                 </table:Column>
+                                <table:Column label="Supplier Code" width="11em" filterProperty="supplier_code">
+                                    <table:template>
+                                        <lib-m:CodePicker id="supplier_code"
+                                            placeholder="Enter a department name"
+                                            keyField="supplier_code"
+                                            textField="supplier_local_name"
+                                            suggestionItems="{
+                                                path: '/',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                    {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                                ],
+                                                serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                                entityName: 'VpSupplierMstView'
+                                            }" value="{suplist>supplier_code}" change=".supplierChg">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
+                                                keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
+                                        </lib-m:CodePicker>
+                                    </table:template>
+                                </table:Column>
+                                
                                 <table:Column label="Supplier Name" width="8em" filterProperty="supplier_local_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_local_name}" wrapping="false" />
@@ -406,17 +442,41 @@
                             rows="{path: 'matlist>/vpMaterialDtlView'}">
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="List ({= ${matlist>/vPSearchMetListView}.length || 0})" level="H2"/>
+                                    <Title text="List ({= ${matlist>/vpMaterialDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="metListtAdd"    type="Emphasized" text="Add"        press=".onMetListAddButtonPress"   enabled="{mode>/viewFlag}" />
-                                    <Button id="metListDel"     type="Emphasized" text="Delete"     press=".onMetListDelButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="metListtAdd"    type="Emphasized" text="Add"        press=".materialAddRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="metListDel"     type="Emphasized" text="Delete"     press=".materialDelRow"   enabled="{mode>/viewFlag}" />                                    
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
                             <table:columns>
+                                <table:Column id="mainColumnStateMet" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                    <table:template>
+                                        <ObjectStatus icon="{
+                                            path: 'matlist>_row_state_',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
+                                    </table:template>
+                                </table:Column>
                                 <table:Column label="Material Code" width="20%" filterProperty="material_code">
                                     <table:template>
-                                        <Text text="{matlist>material_code}" wrapping="false" />
+                                        <lib-m:CodePicker id="material_code"
+                                            placeholder="Enter a material name"
+                                            keyField="material_code"
+                                            textField="material_desc"
+                                            suggestionItems="{
+                                                path: '/',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                    {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                                ],
+                                                serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                                entityName: 'VpMaterialMst'
+                                            }" value="{matlist>material_code}" change=".materialChg" enabled="{= ${matlist>_row_state_} === 'C' }">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a material"
+                                                keyFieldHeaderText="Material ID" textFieldHeaderText="Material"/>
+                                        </lib-m:CodePicker>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="Spec." width="50%" filterProperty="material_desc">
@@ -470,17 +530,49 @@
                                 <OverflowToolbar>
                                     <Title text="List ({= ${manlist>/vPSearchMngListView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".onMngListAddButtonPress"   enabled="{mode>/viewFlag}" />
-                                    <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".onMngListDelButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".managerAddRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".onDetailSaveButtonPress"   enabled="{mode>/viewFlag}" />                                    
+                                    <!-- <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                     -->
+                                    <!-- <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".onMngListAddButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".onDetailSaveButtonPress"   enabled="{mode>/viewFlag}" /> -->
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
                             <table:columns>
-                                <table:Column label="이름" width="20%" filterProperty="user_korean_name">
+                                <table:Column id="mainColumnStateMng" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                    <table:template>
+                                        <ObjectStatus icon="{
+                                            path: 'manlist>_row_state_',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="이름" width="20%" filterProperty="user_local_name">
+                                    <table:template>
+                                        <lib-m:CodePicker id="user_local_name"
+                                            placeholder="Enter a vendor_pool_person_empno"
+                                            keyField="vendor_pool_person_empno"
+                                            textField="user_local_name"
+                                            suggestionItems="{
+                                                path: '/',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                    {path : 'org_code', operator : 'EQ', value1 : 'BIZ00200'}
+                                                ],
+                                                serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                                entityName: 'vpManagerDtlView'
+                                            }" value="{manlist>user_local_name}" change=".managerChg" enabled="{= ${manlist>_row_state_} === 'C' }">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a material"
+                                                keyFieldHeaderText="Manager ID" textFieldHeaderText="Manager"/>
+                                        </lib-m:CodePicker>
+                                    </table:template>
+                                </table:Column>                            
+                                <!-- <table:Column label="이름" width="20%" filterProperty="user_korean_name">
                                     <table:template>
                                         <Text text="{manlist>user_local_name}" wrapping="false" />
                                     </table:template>
-                                </table:Column>
+                                </table:Column> -->
                                 <table:Column label="이름(EN)" width="0em" filterProperty="user_english_name">
                                     <table:template>
                                         <Text text="{manlist>user_english_name}" wrapping="false" />
@@ -534,9 +626,10 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+				<Button type="Emphasized" text="Save" press=".onDetailSaveButtonPress" />
 				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
+
 	</uxap:ObjectPageLayout>
 </mvc:View>

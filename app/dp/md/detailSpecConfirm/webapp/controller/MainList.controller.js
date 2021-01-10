@@ -88,10 +88,10 @@ sap.ui.define([
             this.setDivision('LGEKR');
 
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
 
             /** Date */
             var today = new Date();
@@ -106,7 +106,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -388,14 +388,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
             }
 
             var filter = new Filter({
@@ -403,8 +403,16 @@ sap.ui.define([
                             and: false
                         });
             
-            this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
-            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            var bindInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchDivisionS").bindItems(bindInfo);
+            this.getView().byId("searchDivisionE").bindItems(bindInfo);
         },
 
         handleSelectionFinishDiv: function(oEvent){
@@ -442,20 +450,20 @@ sap.ui.define([
             
             this.setValuHelpDialog(oEvent);
 
-            
-
             var aCols = this.oColModel.getData().cols;
-
             
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2600' );
                 
                 oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
                 oTable.setModel(this.oColModel, "columns");
 
                 if (oTable.bindRows) {
                     oTable.bindAggregation("rows", this.vhdPath);
+                    oTable.getBinding("rows").filter(_filter);
                 }
 
                 if (oTable.bindItems) {
@@ -466,6 +474,7 @@ sap.ui.define([
                             })
                         });
                     });
+                    oTable.getBinding("items").filter(_filter);
                 }
                 this._oValueHelpDialog.update();
 
@@ -528,7 +537,7 @@ sap.ui.define([
                 });
 
                 this.modelName = '';
-                this.vhdPath = '/PartNumbers';
+                this.vhdPath = "/PartNumbers";
                 this._oValueHelpDialog.setTitle('Part No');
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
@@ -592,7 +601,9 @@ sap.ui.define([
 			aFilters.push(new Filter({
 				filters: _tempFilters,
 				and: false
-			}));
+            }));
+            
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

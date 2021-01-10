@@ -36,6 +36,13 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
+            },
+            "orgMgrService": {
+                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -106,6 +113,16 @@
                     "useBatch": false
                 }
             },
+            "org": {
+                "dataSource": "orgMgrService",
+                "preload": true,
+                "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": true,
+                "useBatch": true
+                }
+            },
             "listModel": {
                 "type": "sap.ui.model.json.JSONModel",
                 "settings": {
@@ -147,9 +164,9 @@
                     "target": "ProjectMgtList"
                 },
                 {
-                    "pattern": "ProjectMgtDetail/{tenant_id}/{project_code}/{model_code}",
-                    "name": "ProjectMgtDetail",
-                    "target": "ProjectMgtDetail"
+                    "pattern": "ProjectInfo/{tenant_id}/{project_code}/{model_code}",
+                    "name": "ProjectInfo",
+                    "target": "ProjectInfo"
                 }
             ],
             "targets": {
@@ -157,9 +174,9 @@
                     "viewId": "ProjectMgtList",
                     "viewName": "ProjectMgtList"
                 },
-                "ProjectMgtDetail": {
-                    "viewId": "ProjectMgtDetail",
-                    "viewName": "ProjectMgtDetail"
+                "ProjectInfo": {
+                    "viewId": "ProjectInfo",
+                    "viewName": "ProjectInfo"
                 }
             }
         }

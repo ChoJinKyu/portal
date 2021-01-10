@@ -19,4 +19,7 @@ service OrgService {
     @readonly
     entity Plant   as projection on Org_Plant;
 
+    @readonly
+    entity Unit   as projection on Org_Unit;
+
 }

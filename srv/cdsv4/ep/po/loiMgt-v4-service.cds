@@ -130,21 +130,23 @@ service LoiMgtV4Service {
     };
 
     type SavedReqDetails : {
-        tenant_id           : String;
-        company_code        : String;
-        loi_write_number    : String;
-        loi_item_number     : String;
-        item_sequence       : String;
-        ep_item_code        : String;
-        item_desc           : String;
-        unit                : String;
-        request_quantity    : String;
-        currency_code       : String;
-        request_amount      : String;
-        supplier_code       : String;
-        buyer_empno         : String;
-        remark              : String;
-        row_state           : String;
+        tenant_id                   : String;
+        company_code                : String;
+        loi_write_number            : String;
+        loi_item_number             : String;
+        item_sequence               : String;
+        plant_code                  : String;
+        ep_item_code                : String;
+        item_desc                   : String;
+        unit                        : String;
+        request_quantity            : String;
+        currency_code               : String;
+        request_amount              : String;
+        supplier_code               : String;
+        buyer_empno                 : String;
+        purchasing_department_code  : String;
+        remark                      : String;
+        row_state                   : String;
     };
 
 
@@ -171,33 +173,30 @@ service LoiMgtV4Service {
     type saveReturnType {
         savedHeaders : array of SavedHeaders;
         savedReqDetails : array of SavedReqDetails;
+        //savedSuppliers : array of SavedSuppliers;
     }
 
     action SaveLoiRequestMultiEntitylProc (inputData : saveReturnType) returns saveReturnType; 
-
-    
-    type DeleteDetails : {
-        tenant_id : String;
-        company_code : String;
-        loi_write_number: String;
-        loi_item_number: String;
-    };
     
     type reqMulDelType {
-        tenant_id : String;
-        company_code : String;
-        loi_write_number : String; 
-    }
-
-    type reqDelType {
-        tenant_id : String;
-        company_code : String;
-        loi_write_number : String; 
-        details:  array of DeleteDetails;
+        tenant_id           : String;
+        company_code        : String;
+        loi_write_number    : String; 
     }
 
     //LOI 발행요청 MST & DTL 삭제
-    action DeleteLoiMulEntityProc (inputData : reqMulDelType) returns String;     
+    action DeleteLoiMulEntityProc (inputData : reqMulDelType) returns String;   
+
+    //LOI 발행요청시 수행업체 등록
+    type SavedSuppliers {
+        tenant_id           : String;
+        company_code        : String;
+        loi_write_number    : String; 
+        loi_item_number     : String;
+        supplier_code       : String;
+    }  
+
+    action SupplierMulEntityProc (inputData : array of SavedSuppliers) returns String;  
 
 
 }

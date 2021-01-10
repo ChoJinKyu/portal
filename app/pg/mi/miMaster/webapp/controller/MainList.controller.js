@@ -375,7 +375,7 @@ sap.ui.define([
 
 
 					var oDeleteMIMaterialCodeKey = {
-						tenant_id : oRecord.tenant_id,
+						tenant_id : that._sso.dept.tenant_id,
 						mi_material_code: oRecord.mi_material_code,
 						category_code:  oRecord.category_code
 					};
@@ -449,7 +449,7 @@ sap.ui.define([
 								oModel.read("/MIMaterialCodeText", {
 								filters: oFilter,
 								success: function(oData) {		
-									console.log(">>_readCheckLngEntity success");
+                                    console.log(">>_readCheckLngEntity success");                                    
 									resolve(oData);
 								},
 								error: function(oResult) {
@@ -480,24 +480,27 @@ sap.ui.define([
 
 						console.log("oBomCount", oBomCount);
 						console.log("oPriceCount", oPriceCount);
-						console.log("oLngEntity", oLngEntity);
+                        console.log("oLngEntity", oLngEntity);
+
+                     
 						if(oBomCount>0 || oPriceCount>0){
 							MessageToast.show(this.getModel("I18N").getText("/NPG00017"));  
 							return; 
 						}else{
-							if(oLngEntity>0){
+                           
+							if(oLngEntity>0){                                
 								var LanDataSource = values[2].results;
-								console.log(LanDataSource);
+								//console.log(LanDataSource);
 
 								for(var i=0;i<oLngEntity;i++){
 
 									var oMIMaterialCodeTextKey = {
-										tenant_id : LanDataSource[i].tenant_id,
+										tenant_id : that._sso.dept.tenant_id,
 										mi_material_code: LanDataSource[i].mi_material_code,
 										language_code: LanDataSource[i].language_code,
 									};
 									var oMIMaterialCodeTextPath = oModel.createKey(
-										this._m.serviceName.mIMaterialCodeText,
+										that._m.serviceName.mIMaterialCodeText,
 										oMIMaterialCodeTextKey
 									);
 
@@ -512,9 +515,9 @@ sap.ui.define([
 								}
 
 								console.log("oDeleteMaterialCodePath", oDeleteMaterialCodePath);
-								setTimeout(_deleteMiMaterialCode(oDeleteMaterialCodePath), 500);
-								setTimeout(that._setUseBatch(oModel), 500);
-                                setTimeout(dataRefresh, 500);
+								_deleteMiMaterialCode(oDeleteMaterialCodePath);
+								setTimeout(that._setUseBatch(oModel), 1000);
+                                setTimeout(dataRefresh, 1000);
                                 that._handleClose();
 							}
 						}
@@ -529,19 +532,20 @@ sap.ui.define([
 						console.log("bFlag" , bFlag);
 					}
 					var oFilter = [
-						new Filter("tenant_id", FilterOperator.EQ, oRecord.tenant_id),
+						new Filter("tenant_id", FilterOperator.EQ, that._sso.dept.tenant_id),
 						new Filter("mi_material_code", FilterOperator.EQ, oRecord.mi_material_code)
 					];
 
 					console.log("--Promise oFilter--", oFilter);
-					var bFlag = Promise.all([  
-									_readCheckBOMEntity(oFilter),
-									_readCheckPriceEntity(oFilter),
-									_readCheckLngEntity(oFilter)
-					]).then(_deleteEntityCheck.bind(that),
-							_deleteChecklistError.bind(that));
+					var bFlag = Promise.all([                                      
+                                    _readCheckBOMEntity(oFilter),
+                                    _readCheckPriceEntity(oFilter),
+                                    _readCheckLngEntity(oFilter)							
+					]).then(                        
+                        _deleteEntityCheck.bind(that)
+                        ,_deleteChecklistError.bind(that));
 
-					setTimeout(resut_bFlag, 1000);
+					//setTimeout(resut_bFlag, 1000);
 				});
 				
             } 
@@ -624,11 +628,11 @@ sap.ui.define([
 		 */
 		onMainTableCreate: function(){
 			console.log("onMainTableCreate");
-
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            var that = this;
+			var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenant_id: this._sso.dept.tenant_id,
+				tenant_id: that._sso.dept.tenant_id,
 				mi_material_code: "new"				
             });
 			//수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
@@ -667,6 +671,7 @@ sap.ui.define([
 		onMainTableItemPress: function(oEvent) {
 			console.group("onMainTableItemPress");
 
+            var that = this;
 			this._getSmartTableById().getTable().removeSelections(true);
    
 			
@@ -686,7 +691,7 @@ sap.ui.define([
 				}
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenant_id: this._setReplace(aParameters["tenant_id"]),
+				tenant_id: that._setReplace(aParameters["tenant_id"]),
 				mi_material_code: oRecord.mi_material_code
 				
             });

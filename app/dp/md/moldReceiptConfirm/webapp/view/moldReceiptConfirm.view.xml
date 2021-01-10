@@ -63,7 +63,7 @@
                                                 items="{
                                                     path: 'org>/Org_Company',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
@@ -82,7 +82,7 @@
                                                 items="{
                                                     path: '/Divisions',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
@@ -159,7 +159,7 @@
                                                 items="{
                                                     path: 'org>/Org_Company',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
@@ -178,7 +178,7 @@
                                                 items="{
                                                     path: '/Divisions',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
@@ -233,7 +233,7 @@
                                         items="{
                                                     path : 'util>/Code',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ],
                                                     sorter: { path: 'sort_no'}
@@ -252,7 +252,7 @@
                                         items="{
                                                     path : 'util>/Code',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ],
                                                     sorter: { path: 'sort_no'}
@@ -293,7 +293,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -311,7 +311,7 @@
                                     suggestionItems="{
                                         path: '/MoldNumbers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'mold_number' }
                             }">

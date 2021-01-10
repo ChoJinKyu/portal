@@ -54,7 +54,7 @@ sap.ui.define([
      * @param : oTableName 호출한 페이지에 추가할 테이블 아이디 
      * @param : oArges (company_code, org_code) 
      */
-    var oThis, oTableName, oArges, oCallback;
+    var oThis, oTableName, oArges, oCallback, oApproval_type_code;
 
     /**
      * @description MoldSelection 
@@ -72,12 +72,13 @@ sap.ui.define([
 		 */
         openMoldItemSelectionPop: function (pThis, oEvent, pArges, callback) {
             console.log("args >>>> ", pArges);
+            console.log("args >>>> ", pThis.approval_type_code);
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
-
             oThis.setModel(new ManagedModel(), "moldItemPop");
             oThis.setModel(new ManagedListModel(), "moldItemPopList");
+            oThis.setModel(new ManagedListModel(), "moldItemPopList_temp");
             oThis.setModel(new ManagedListModel(), "moldSelectionCompanyPopList");
             oThis.setModel(new ManagedListModel(), "moldSelectionPlantPopList");
 
@@ -107,7 +108,7 @@ sap.ui.define([
         _getSearchMoldSelection: function () {
             var aSearchFilters = [];
             // tenant_id  
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
             var company = oThis.byId('moldItemPopCompany').mProperties.selectedKey;
             var plant = oThis.byId('moldItemPopPlant').mProperties.selectedKey;
             var model = oThis.byId('moldItemPopModel').getValue().trim();
@@ -127,8 +128,18 @@ sap.ui.define([
             }
 
             // 추가 검색 조건 
-            if (oArges.mold_progress_status_code != undefined) {
-                aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, oArges.mold_progress_status_code));
+            if (oArges.mold_progress_status_code != undefined && oArges.mold_progress_status_code.length > 0) {
+
+                var nFilters = [];
+                oArges.mold_progress_status_code.forEach(function (mold_progress_status_code) {
+                    nFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, String(mold_progress_status_code)));
+                });
+                
+                var oInFilter = {
+                    filters: nFilters,
+                    and : false
+                };
+                aSearchFilters.push(new Filter(oInFilter));
             }
             // 추가 검색 조건 
             if (oArges.mold_purchasing_type_code != undefined) {
@@ -174,16 +185,18 @@ sap.ui.define([
             console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
             var oView = oThis.getView(),
                 oModel = oThis.getModel("moldItemPopList"),
+                oModel_temp = oThis.getModel("moldItemPopList_temp"),
                 companyModel = oThis.getModel("moldSelectionCompanyPopList"),
                 plantModel = oThis.getModel("moldSelectionPlantPopList")
 
                 ;
-
+            //  setData: function (oData, sPath, bMerge) 
             oView.setBusy(true);
-            oModel.setTransactionModel(oServiceModel);
-            oModel.read("/MoldItemSelect", {
+            oModel_temp.setTransactionModel(oServiceModel);
+            oModel_temp.read("/MoldItemSelect_"+ oArges.approval_type_code , {
                 filters: aSearchFilters,
-                success: function (oData) {
+                success: function (oData) { 
+                    oModel.setData(oData,"/MoldItemSelect",oData);
                     console.log(" oData ", oData);
                     oView.setBusy(false);
                 }
@@ -192,7 +205,7 @@ sap.ui.define([
             oView.setBusy(true);
             companyModel.setTransactionModel(oServiceModel2);
             companyModel.read("/Org_Company", {
-                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L1100')],
+                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L2600')],
                 success: function (oData) {
                     console.log(" company >>>>  ", oData);
                     oView.setBusy(false);
@@ -203,8 +216,8 @@ sap.ui.define([
             plantModel.setTransactionModel(oServiceModel3);
             plantModel.read("/Pur_Operation_Org", {
                 filters: [
-                      new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                    , new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                      new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                     , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
                 ],
                 success: function (oData) {

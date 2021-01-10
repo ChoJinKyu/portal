@@ -80,7 +80,7 @@ sap.ui.define([
                 
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
                 
                 var oModel = this.getModel('payment'),
@@ -128,19 +128,19 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval: function(){
-            this.byId("advanced").removeStyleClass("readonlyField");
-            this.byId("part").removeStyleClass("readonlyField");
-            this.byId("residual").removeStyleClass("readonlyField");
+            this.getView().byId("advanced").removeStyleClass("readonlyField");
+            this.getView().byId("part").removeStyleClass("readonlyField");
+            this.getView().byId("residual").removeStyleClass("readonlyField");
 
-            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
+            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
 		},
 
 		_toShowModeEachApproval: function(){
-            this.byId("advanced").addStyleClass("readonlyField");
-            this.byId("part").addStyleClass("readonlyField");
-            this.byId("residual").addStyleClass("readonlyField");
+            this.getView().byId("advanced").addStyleClass("readonlyField");
+            this.getView().byId("part").addStyleClass("readonlyField");
+            this.getView().byId("residual").addStyleClass("readonlyField");
             
-            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
+            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
 		},
 
         /**
@@ -150,17 +150,18 @@ sap.ui.define([
             var oModel = this.getModel("purOrderItem");
 
             var mIdArr = [];
-            if (oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length > 0) {
-                oModel.oData.ApprovalDetails.forEach(function (item) {
+            if (oModel.oData.PurchaseOrderItems != undefined && oModel.oData.PurchaseOrderItems.length > 0) {
+                oModel.oData.PurchaseOrderItems.forEach(function (item) {
                     mIdArr.push(item.mold_id);
                 });
             }
 
             var oArgs = {
-                company_code: this.company_code,
-                org_code: this.plant_code,
-                mold_progress_status_code: 'DTL_CNF',
-                mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
+                approval_type_code          : "V",
+                company_code                : this.company_code,
+                org_code                    : this.plant_code,
+                mold_progress_status_code   : ['DTL_CNF'],
+                mold_id_arr                 : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
@@ -196,7 +197,7 @@ sap.ui.define([
                 "target_amount": data.target_amount,
                 "mold_production_type_code": data.mold_production_type_code,
                 "family_part_number_1": data.family_part_number_1
-            }, "/ApprovalDetails", 0);
+            }, "/PurchaseOrderItems", 0);
             //this.validator.clearValueState(this.byId("poItemTable"));
 
             var pModel = this.getModel('payment'),
@@ -318,9 +319,18 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            var ap = this.getModel("approver").getData().Approvers;
-            for(var i = 0 ; i < ap.length -1 ; i++){
-                this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+            if(this.getModel("approver").getData().Approvers != undefined){ 
+                var ap = this.getModel("approver").getData().Approvers;
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+                for(var i = 0 ; i < len ; i++){
+                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                }
             }
             
             if (!this._oDialogPrev) {

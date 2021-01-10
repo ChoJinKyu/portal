@@ -4,9 +4,6 @@ sap.ui.define([
         "sap/ui/model/FilterOperator",
         "sap/m/MessageBox",
         "ext/lib/util/Multilingual"
-        // ,
-        // "sap/ui/model/json/JSONModel", 
-        // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -103,6 +100,21 @@ sap.ui.define([
             //     // this.getRouter().navTo("mainPage", {layout: sNextLayout});
             // }
 
+            },
+            selectImmediately: function(e) {
+                var fromDate = this.getView().byId("periodFromDatePicker");
+                var toDate = this.getView().byId("periodToDatePicker");
+                var insertDate = new Date();
+                fromDate.setDateValue(insertDate);
+                // var aa = new Date( parseInt(String(insertDate)) + 5 );
+                var aa = new DateTime() + 5;
+                var bb = aa + 5;
+                console.log("aa: ",aa);
+                console.log("bb: ",bb);
+                
+                // alert(aa);
+                // toDate.setDateValue(new Date(aa));
+                // alert("1");
             }
 		});
 	});

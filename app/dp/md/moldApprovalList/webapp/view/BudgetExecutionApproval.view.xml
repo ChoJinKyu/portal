@@ -46,11 +46,11 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-				    <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
+				    
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -122,195 +122,9 @@
 
             <uxap:ObjectPageSection titleUppercase="false" title="Item for Budget Execution">
 				<uxap:subSections>
-                    <uxap:ObjectPageSubSection> 
-                        <form:SimpleForm editable="true" 
-                         layout="ResponsiveGridLayout" 
-                         labelSpanXL="2" 
-                         labelSpanL="2" 
-                         labelSpanM="2" 
-                         labelSpanS="2" 
-                         adjustLabelSpan="false" 
-                         emptySpanXL="0" 
-                         emptySpanL="0" 
-                         emptySpanM="0" 
-                         emptySpanS="0" 
-                         columnsXL="2" 
-                         columnsL="1" 
-                         columnsM="1" 
-                         width="70%"
-                         singleContainerFullSize="true">
-			        <form:content>
-                    <VBox height="6em">
-					<!-- Budget Type -->
-					<Label text="Budget Type" required="true"/>
-					<SegmentedButton visible="{mode>/editFlag}"
-                                     id="segInspection" 
-                                     selectedKey="{mdCommon>/investment_ecst_type_code}" 
-                                     width="100%" 
-                                     items="{ path : 'util>/Code',
-                                              filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
-                                              ]
-                                            }">
-						<items>
-							<SegmentedButtonItem width="6em" text="{util>code_name}" key="{util>code}"/>
-						</items>
-					</SegmentedButton>
-                     <!-- view Mode -->
-                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" visible="{mode>/viewFlag}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="Acquisition Department" required="true"/>
-                    <!-- edit Mode -->
-					<Input value="" showValueHelp="true" visible="{mode>/editFlag}" />
-                    <!-- view Mode -->
-                    <Text text="" visible="{mode>/viewFlag}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="Account Department" required="true"/>
-                    <!-- edit Mode -->
-					<ComboBox visible="{mode>/editFlag}"
-                              width="100%" 
-                              id="acquisitionDepartment" 
-                              selectedKey="{mdCommon>/accounting_department_code}" 
-                              items="{}">
-						<core:Item key="{util>code}" text="{util>code_description}"/>
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/accounting_department_code}" visible="{mode>/viewFlag}"/>
+                   
 
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="Import Company"/>
-                    <!-- edit Mode -->
-					<ComboBox visible="{mode>/editFlag}"
-                              width="100%" 
-                              id="importCompany" 
-                              selectionChange=".onBCompanyChange"
-                              selectedKey="{mdCommon>/import_company_code}" 
-                              enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
-                              items="{
-                                   path: 'org>/Company',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                        ],
-                                        sorter: { path: 'company_code'}
-                              }">
-						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<!-- projectcode  {I18N>/PROJECT_CODE}-->
-					<Label text="Project Code" required="true"/> 
-                    <!-- edit Mode -->
-					<ComboBox visible="{mode>/editFlag}" 
-                              width="100%" 
-                              id="projectCode" 
-                              selectedKey="{mdCommon>/project_code}" 
-                              items="{}">
-						<core:Item key="{util>code}" text="{util>code_description}"/>
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/project_code}" visible="{mode>/viewFlag}"/>
-
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="Import Plant"/>
-					<ComboBox width="100%" 
-                              visible="{mode>/editFlag}" 
-                              id="importPlant" 
-                              selectedKey="{mdCommon>/import_company_org_code}" 
-                              enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
-                              items="{
-                                  path: 'importPlant>/Pur_Operation_Org'
-                              }">
-						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
-					</ComboBox>
-                     <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{mode>/viewFlag}"/> 
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="{I18N>/ACCOUNT}" required="true"/>
-					<ComboBox visible="{mode>/editFlag}"  
-                              width="100%" 
-                              id="account" 
-                              required="true"
-                              selectedKey="{mdCommon>/account_code}" 
-                              items="{ path : 'util>/Code',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
-                                        ]
-                                    }">
-						<core:Item key="{util>code}" text="{util>code_name}"/>
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/account_code_nm}" visible="{mode>/viewFlag}"/> 
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="{I18N>/CUSTOMER}"/>
-					<Input value="" showValueHelp="true" visible="{mode>/editFlag}" /> 
-                    <Text text="" visible="{mode>/viewFlag}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="Balanced Budget"/>
-					<HBox alignItems="End" justifyContent="End">
-						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
-						<ObjectStatus text="  KRW" state="Error"/>
-					</HBox>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox  height="6em">
-					<Label text="Customer PO No"/>
-					<Input value=""  visible="{mode>/editFlag}" />
-                    <Text text="" visible="{mode>/viewFlag}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<HBox>
-					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/AFFILIATE}"/>
-						<ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
-					</VBox>
-					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/BUSINESS_DIVISION}"/>
-						<ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
-					</VBox>
-				</HBox>
-                </form:content>
-		        </form:SimpleForm>
-                </uxap:ObjectPageSubSection>
-                <uxap:ObjectPageSubSection id="budgetExecutionTableFragment">
+                <uxap:ObjectPageSubSection id="pageItemSection">
                 
                 </uxap:ObjectPageSubSection>
                     
@@ -335,6 +149,7 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
+                <Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
                 <Button type="Transparent" text="Cancel"    press=".onPageCancelEditButtonPress" visible="{mode>/editFlag}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
                 <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"   visible="{=${appMaster>/approve_status_code}==='AR'?true:false}" />

@@ -183,7 +183,7 @@
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_description" width="10em" hAlign="Center">
-                                    <Label text="구매요총 품명" required="true"/>           
+                                    <Label text="구매요청 품명" required="true"/>           
                                     <table:template>
                                         <Input value="{detailModel>pr_desc}"/>
                                     </table:template>

@@ -28,7 +28,7 @@ entity It_Mst_Import_Exch_Rate {
     key currency_code      : String(8) not null  @title : '통화코드';
     key exrate_start_date  : Date not null       @title : '환율시작일자';
         exrate_end_date    : Date                @title : '환율종료일자';
-        exrate             : Decimal(9, 5)       @title : '환율';
+        exrate             : Decimal(20, 10)     @title : '환율';
         currency_unit_rate : Decimal(9, 0)       @title : '통화단위비율';
 }
 
