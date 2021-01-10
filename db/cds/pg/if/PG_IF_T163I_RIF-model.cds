@@ -22,7 +22,7 @@ using util from '../../cm/util/util-model';
 
 entity If_T163i_Rif {
     key tenant_id : String(5) not null @title : '테넌트ID';
-    key knttp     : String(2) not null @title : '계정지정범주';
+    key knttp     : String(2) not null @title : '계정지정범주코드';
         knttx     : String(30)         @title : '계정지정범주명';
 }
 
