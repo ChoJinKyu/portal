@@ -25,7 +25,7 @@ begin
     and scenario_number = :i_scenario_number
     ;
 -- delete table: company        
-    delete from pg_tm_master
+    delete from pg_tm_comp_code
     where tenant_id = :i_tenant_id
     and scenario_number = :i_scenario_number
     ;
@@ -39,8 +39,13 @@ begin
     where tenant_id = :i_tenant_id
     and scenario_number = :i_scenario_number
     ;
--- delete table:operation
+-- delete table: operation
     delete from pg_tm_operation_mode_code_lng
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: cycle
+    delete from pg_tm_cycle_code_lng
     where tenant_id = :i_tenant_id
     and scenario_number = :i_scenario_number
     ;
