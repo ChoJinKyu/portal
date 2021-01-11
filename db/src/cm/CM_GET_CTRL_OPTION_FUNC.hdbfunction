@@ -12,7 +12,7 @@ BEGIN
 
     /* 필수값 체크 - 테넌트, 제어옵션코드 */
     IF P_TENANT_ID IS NULL OR P_CONTROL_OPTION_CODE IS NULL THEN
-        D_RETURN := 'X';
+        D_RETURN := NULL;
     END IF;
 
     /* P_CONTROL_OPTION_LEVEL_CODE 값이 존재할 경우에는 해당 레벨코드에 해당하는 옵션값만 추출한다 */
