@@ -72,7 +72,7 @@ service marketIntelligenceSacDService {
     // Plant View: 플랜트
     view OrgPlantView @(title : '플랜트 마스터 View') as
         select
-            key tenant_id||'_'||plant_code  as  ID : String
+            key tenant_id||'_'||company_code||'_'||plant_code  as  ID : String
                ,plant_name                  as  Description
                ,plant_code                  as  PLANT_CODE
                ,tenant_id                   as  TENANT_ID
@@ -280,7 +280,7 @@ service marketIntelligenceSacDService {
     // Vendor Pool Item Dtl View: Vendor Pool Item Dtl
     view VpVendorPoolItemDtlView @(title : 'Vendor Pool 품목상세연결 View') as
         select
-            key vp.tenant_id||'_'||vp.material_code  as  ID : String
+            key vp.tenant_id||'_'||vp.company_code||'_'||vp.org_type_code||'_'||vp.org_code||'_'||vp.vendor_pool_code||'_'||vp.material_code  as  ID : String
                ,mm.material_desc                     as  Description
                ,vp.material_code                     as  MATERIAL_CODE
                ,vp.tenant_id                         as  TENANT_ID
@@ -299,63 +299,64 @@ service marketIntelligenceSacDService {
 
     // Supplier Mst View: Supplier Mst
     view SpSupplierMstView @(title : 'Supplier Mst View') as
-        select
+        select  
             key tenant_id||'_'||supplier_code     as  ID : String
-               ,supplier_local_name               as  Description
+               ,replace(supplier_local_name, char(10), '')  as  Description : String
                ,supplier_code                     as  SUPPLIER_CODE
                ,tenant_id                         as  TENANT_ID
-               ,supplier_local_name               as  SUPPLIER_LOCAL_NAME
-               ,supplier_english_name             as  SUPPLIER_ENGLISH_NAME
-               ,tax_id                            as  TAX_ID
+               ,replace(supplier_local_name, char(10), '')    as  SUPPLIER_LOCAL_NAME : String
+               ,replace(supplier_english_name, char(10), '')  as  SUPPLIER_ENGLISH_NAME : String
+               ,tax_id                            as  TAX_ID : String
                ,vat_number                        as  VAT_NUMBER
                ,tax_id_except_flag                as  TAX_ID_EXCEPTION_FLAG
-               ,tax_id_except_nm                  as  TAX_ID_EXCEPTION_NAME
-               ,tax_id_except_rsn                 as  TAX_ID_EXCEPTION_REASON
-               ,duns_number                       as  DUNS_NUMBER
-               ,duns_number_4                     as  DUNS_NUMBER_4
-               ,country_code                      as  COUNTRY_CODE
-               ,country_name                      as  COUNTRY_NAME
-               ,zip_code                          as  ZIP_CODE
-               ,local_address_1                   as  LOCAL_ADDRESS_1
-               ,local_address_2                   as  LOCAL_ADDRESS_2
-               ,local_address_3                   as  LOCAL_ADDRESS_3
-               ,local_address_4                   as  LOCAL_ADDRESS_4
-               ,english_address_1                 as  ENGLISH_ADDRESS_1
-               ,english_address_2                 as  ENGLISH_ADDRESS_2
-               ,english_address_3                 as  ENGLISH_ADDRESS_3
-               ,english_address_4                 as  ENGLISH_ADDRESS_4
-               ,local_full_address                as  LOCAL_FULL_ADDRESS
-               ,english_full_address              as  ENGLISH_FULL_ADDRESS
-               ,common_class_code                 as  COMMON_CLASS_CODE
-               ,common_class_name                 as  COMMON_CLASS_NAME
-               ,affiliate_code                    as  AFFILIATE_CODE
-               ,affiliate_code_name               as  AFFILIATE_CODE_NAME
+               ,replace(tax_id_except_nm, char(10), '')        as  TAX_ID_EXCEPTION_NAME : String
+               ,replace(tax_id_except_rsn, char(10), '')       as  TAX_ID_EXCEPTION_REASON : String
+               ,duns_number                       as  DUNS_NUMBER : String
+               ,duns_number_4                     as  DUNS_NUMBER_4 : String
+               ,country_code                      as  COUNTRY_CODE : String
+               ,replace(country_name, char(10), '')            as  COUNTRY_NAME : String
+               ,zip_code                          as  ZIP_CODE : String
+               ,replace(local_address_1, char(10), '')         as  LOCAL_ADDRESS_1 : String
+               ,replace(local_address_2, char(10), '')         as  LOCAL_ADDRESS_2 : String
+               ,replace(local_address_3, char(10), '')         as  LOCAL_ADDRESS_3 : String
+               ,replace(local_address_4, char(10), '')         as  LOCAL_ADDRESS_4 : String
+               ,replace(english_address_1, char(10), '')       as  ENGLISH_ADDRESS_1 : String
+               ,replace(english_address_2, char(10), '')       as  ENGLISH_ADDRESS_2 : String
+               ,replace(english_address_3, char(10), '')       as  ENGLISH_ADDRESS_3 : String
+               ,replace(english_address_4, char(10), '')       as  ENGLISH_ADDRESS_4 : String
+               ,replace(local_full_address, char(10), '')      as  LOCAL_FULL_ADDRESS : String
+               ,replace(english_full_address, char(10), '')    as  ENGLISH_FULL_ADDRESS : String
+               ,common_class_code                 as  COMMON_CLASS_CODE : String
+               ,replace(common_class_name, char(10), '')       as  COMMON_CLASS_NAME : String
+               ,affiliate_code                    as  AFFILIATE_CODE : String
+               ,replace(affiliate_code_name, char(10), '')     as  AFFILIATE_CODE_NAME : String
                ,individual_biz_flag               as  INDIVIDUAL_BIZ_FLAG
-               ,individual_biz_desc               as  INDIVIDUAL_BIZ_DESC
-               ,company_register_number           as  COMPANY_REGISTER_NUMBER
-               ,company_class_code                as  COMPANY_CLASS_CODE
-               ,company_class_name                as  COMPANY_CLASS_NAME
-               ,repre_name                        as  REPRE_NAME
-               ,biz_type                          as  BIZ_TYPE
-               ,industry                          as  INDUSTRY
-               ,biz_certi_attch_number            as  BIZ_CERTI_ATTCH_NUMBER
-               ,attch_number_2                    as  ATTCH_NUMBER_2
-               ,attch_number_3                    as  ATTCH_NUMBER_3
-               ,inactive_status_code              as  INACTIVE_STATUS_CODE
-               ,inactive_status_name              as  INACTIVE_STATUS_NAME
+               ,replace(individual_biz_desc, char(10), '')     as  INDIVIDUAL_BIZ_DESC : String
+               ,company_register_number           as  COMPANY_REGISTER_NUMBER : String
+               ,company_class_code                as  COMPANY_CLASS_CODE : String
+               ,replace(company_class_name, char(10), '')      as  COMPANY_CLASS_NAME : String
+               ,replace(repre_name, char(10), '')              as  REPRE_NAME : String
+               ,replace(biz_type, char(10), '')                as  BIZ_TYPE : String
+               ,replace(industry, char(10), '')                as  INDUSTRY : String
+               ,biz_certi_attch_number            as  BIZ_CERTI_ATTCH_NUMBER : String
+               ,attch_number_2                    as  ATTCH_NUMBER_2 : String
+               ,attch_number_3                    as  ATTCH_NUMBER_3 : String
+               ,inactive_status_code              as  INACTIVE_STATUS_CODE : String
+               ,replace(inactive_status_name, char(10), '')    as  INACTIVE_STATUS_NAME : String
                ,inactive_date                     as  INACTIVE_DATE
-               ,inactive_reason                   as  INACTIVE_REASON
-               ,bp_status_code                    as  BP_STATUS_CODE
-               ,bp_status_name                    as  BP_STATUS_NAME
-               ,tel_number                        as  TEL_NUMBER
-               ,extens_number                     as  EXTENS_NUMBER
-               ,mobile_phone_number               as  MOBILE_PHONE_NUMBER
-               ,fax_number                        as  FAX_NUMBER
-               ,url_address                       as  URL_ADDRESS
-               ,email_address                     as  EMAIL_ADDRESS
-               ,fmytr_code                        as  FMYTR_CODE
-               ,fmytr_name                        as  FMYTR_NAME
-               ,credit_evaluation_interface_code  as  CREDIT_EVAL_IF_NO
-        from  SupplierMst;
+               ,replace(inactive_reason, char(10), '')         as  INACTIVE_REASON : String
+               ,bp_status_code                    as  BP_STATUS_CODE : String
+               ,replace(bp_status_name, char(10), '')          as  BP_STATUS_NAME : String
+               ,tel_number                        as  TEL_NUMBER : String
+               ,extens_number                     as  EXTENS_NUMBER : String
+               ,mobile_phone_number               as  MOBILE_PHONE_NUMBER : String
+               ,fax_number                        as  FAX_NUMBER : String
+               ,replace(url_address, char(10), '')             as  URL_ADDRESS : String
+               ,replace(email_address, char(10), '')           as  EMAIL_ADDRESS : String
+               ,fmytr_code                        as  FMYTR_CODE : String
+               ,replace(fmytr_name, char(10), '')              as  FMYTR_NAME : String
+               ,credit_evaluation_interface_code  as  CREDIT_EVAL_IF_NO : String
+        from  SupplierMst
+    ;
 
 }
