@@ -275,9 +275,9 @@ sap.ui.define([
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
 
-            var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection");
+            var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection"); 
+            console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
             oPageGeneralInfoSection.removeAllBlocks();
-
             generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
