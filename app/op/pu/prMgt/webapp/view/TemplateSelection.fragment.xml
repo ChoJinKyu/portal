@@ -29,7 +29,7 @@
                               id="SelectionPR_TYPE2"
                               width="100%"
                               required="true"
-                              showSecondaryValues= "true"
+                              showSecondaryValues= "false"
                               selectionChange=".onInitPR_TYPE3"
                               items="{
                                 path: 'util>/Code',
@@ -50,7 +50,7 @@
                             <Label text = "Category" labelFor="SelectionPR_TYPE3" required="false"/> 
                              <ComboBox
                               id="SelectionPR_TYPE3"
-                              showSecondaryValues= "true"
+                              showSecondaryValues= "false"
                               width="100%"
                               required="true"
                               selectionChange=".onInitPR_TYPE">
@@ -63,7 +63,7 @@
                             <Label text = "구매요청 유형" labelFor="SelectionPR_TYPE" required="false"/>
                             <ComboBox
                               id="SelectionPR_TYPE"
-                              showSecondaryValues= "true"
+                              showSecondaryValues= "false"
                               width="100%"
                               required="true"
                               selectionChange=".onInitTemplate">
