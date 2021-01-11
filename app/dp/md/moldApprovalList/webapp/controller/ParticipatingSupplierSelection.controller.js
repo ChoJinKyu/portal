@@ -86,8 +86,15 @@ sap.ui.define([
                 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
-                ];
-
+                ];            
+                schFilter2 = [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
+                        new Filter("language_cd", FilterOperator.EQ, 'KO' )
+                ]; 
+                this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                        console.log("OrgCodeLanguages >>>>>>", oData);
+                });
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
