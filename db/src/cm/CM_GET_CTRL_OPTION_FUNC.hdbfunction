@@ -30,7 +30,7 @@ BEGIN
         AND  ( ( P_ORG_TYPE_CODE IS NOT NULL AND MAP(P_ORG_TYPE_CODE,'T','Default','P_ORG_TYPE_CODE') = D.ORG_TYPE_CODE )
           OR 
                ( P_ORG_TYPE_CODE IS NULL)
-             )
+             );
     END IF;
 
     
