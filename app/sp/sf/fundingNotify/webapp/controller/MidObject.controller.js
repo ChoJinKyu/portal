@@ -243,6 +243,7 @@ sap.ui.define([
                             success: function (ok) {
                                 that._toShowMode();
                                 view.setBusy(false);
+                                that.getModel("midObjectView").setProperty("/isAddedMode", false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                             }.bind(this)
                         });
