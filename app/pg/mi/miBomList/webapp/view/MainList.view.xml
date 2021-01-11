@@ -12,17 +12,14 @@
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:sv="sap.ui.comp.smartvariants"
     xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
-
     >
 
     <f:DynamicPage
         id="page"
-        toggleHeaderOnTitleClick="true"
-      
-        >
+        toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
-            <f:DynamicPageTitle>
+            <f:DynamicPageTitle >
                 <f:heading>
                     <Title text="{I18N>/MIMATERIAL_BOM_LIST_TITLE}"/>
                 </f:heading>
@@ -36,7 +33,7 @@
         <!-- DynamicPage Header -->
         <f:header>
 
-            <f:DynamicPageHeader pinnable="false">
+            <f:DynamicPageHeader pinnable="true">
                 <f:content>
                 <!-- <smartVariantManagement:SmartVariantManagement        
 				             id="pageVariantId"

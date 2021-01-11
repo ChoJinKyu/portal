@@ -15,34 +15,25 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "ext/lib/controller/BaseController",
-    "ext/lib/util/Multilingual"
+    "ext/lib/util/Multilingual",
+    "ext/lib/util/Validator"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, Fragment, Filter, FilterOperator, FilterType, MessageStrip, MessageBox, MessageToast, BaseController, Multilingual) {
+    function (Controller, Fragment, Filter, FilterOperator, FilterType, MessageStrip, MessageBox, MessageToast, BaseController, Multilingual, Validator) {
         "use strict";
 
         return BaseController.extend("pg.tm.tmMonitoring.controller.Main", {
+            //Validator
+            validator: new Validator(),
             onInit: function () {
                 var oMultilingual = new Multilingual();
                 this.setModel(oMultilingual.getModel(), "I18N");
 
                 this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
 
-                // oMultilingual.attachEvent("ready", function (oEvent) {
-                //     // Smart Filter Button 명 처리 START
-                //     var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-                //     $.each(b, function (index, item) {
-                //         if (item.sId.search("btnGo") !== -1) {
-                //             item.setText("조회");
-                //         }
-                //     }.bind(this));
-                //     // Smart Filter Button 명 처리 END
-                // }.bind(this));
-
-
-
+                this.getView().byId("tenant_combo").fireSelectionChange();
 
             },
 
