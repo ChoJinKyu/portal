@@ -189,24 +189,92 @@ sap.ui.define([
 
 
          onDialogCreate: function (){
+
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
+
             var oView = this.getView();
 
-			if (!this.pDialog) {
-				this.pDialog = Fragment.load({
-					id: oView.getId(),
-					name: "pg.vp.vpMgt.view.DialogCreate",
-					controller: this
-				}).then(function (oDialog) {
-					// connect dialog to the root view of this component (models, lifecycle)
-					oView.addDependent(oDialog);
-					return oDialog;
-				});
-			} 
-			this.pDialog.then(function(oDialog) {
-                oDialog.open();
-                this.onAfterDialog();
-			}.bind(this));
-        },
+            if(sSurffix ==="S")
+            {
+                var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
+                var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+
+                
+                if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0 && s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
+ 
+                    if (!this.pDialog) {
+                        this.pDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "pg.vp.vpMgt.view.DialogCreate",
+                            controller: this
+                        }).then(function (oDialog) {
+                            // connect dialog to the root view of this component (models, lifecycle)
+                            oView.addDependent(oDialog);
+                            return oDialog;
+                        });
+                    } 
+                    this.pDialog.then(function(oDialog) {
+                        oDialog.open();
+                        this.onAfterDialog();
+                    }.bind(this));
+
+                    // this.byId("tpop_Operation_ORG").setSelectedKey(s_Operation_ORG_S);
+                    // this.byId("tpop_operation_unit_code").setSelectedKey(s_Operation_UNIT_S);
+
+                }
+                else{
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
+            }
+            else if(sSurffix ==="E")
+            {
+
+                var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
+                var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+
+                if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0 && s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0) {
+
+                    if (!this.pDialog) {
+                        this.pDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "pg.vp.vpMgt.view.DialogCreate",
+                            controller: this
+                        }).then(function (oDialog) {
+                            // connect dialog to the root view of this component (models, lifecycle)
+                            oView.addDependent(oDialog);
+                            return oDialog;
+                        });
+                    } 
+                    this.pDialog.then(function(oDialog) {
+                        oDialog.open();
+                        this.onAfterDialog();
+                    }.bind(this));
+
+                    // this.byId("tpop_Operation_ORG").setSelectedKey(s_Operation_ORG_E);
+                    // this.byId("tpop_operation_unit_code").setSelectedKey(s_Operation_UNIT_E);                    
+                }
+                else{
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
+                            
+            }
+
+
+            // var oView = this.getView();
+
+			// if (!this.pDialog) {
+			// 	this.pDialog = Fragment.load({
+			// 		id: oView.getId(),
+			// 		name: "pg.vp.vpMgt.view.DialogCreate",
+			// 		controller: this
+			// 	}).then(function (oDialog) {
+			// 		// connect dialog to the root view of this component (models, lifecycle)
+			// 		oView.addDependent(oDialog);
+			// 		return oDialog;
+			// 	});
+		} ,
+
+
 
         onAfterDialog:function(){
 
@@ -236,9 +304,32 @@ sap.ui.define([
                 }
             });   
 
+var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
 
-        }
-        ,
+            var oView = this.getView();
+
+            if(sSurffix ==="S")
+            {
+                var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
+                var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+                this.byId("tpop_Operation_ORG").setSelectedKey(s_Operation_ORG_S);
+                this.byId("tpop_operation_unit_code").setSelectedKey(s_Operation_UNIT_S);
+                
+
+
+            }
+            else if(sSurffix ==="E")
+            {
+
+                var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
+                var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+                this.byId("tpop_Operation_ORG").setSelectedKey(s_Operation_ORG_E);
+                this.byId("tpop_operation_unit_code").setSelectedKey(s_Operation_UNIT_E);                    
+
+                            
+            }  
+
+        },
         onDialogCreatelower: function (){
   
             if(pop_h_lv === "2")
@@ -394,8 +485,8 @@ sap.ui.define([
             // "  sdom_oversea_netprice_diff_rate  " + sdom_oversea_netprice_diff_rate +
             // "  sdomestic_net_price_diff_rate  " + sdomestic_net_price_diff_rate
             // );
-            alert( "  soperation_unit_code :  " + soperation_unit_code  + 
-                   "  sparent_vendor_pool_code " + sparent_vendor_pool_code);
+            // alert( "  soperation_unit_code :  " + soperation_unit_code  + 
+            //        "  sparent_vendor_pool_code " + sparent_vendor_pool_code);
 
 
             var oView = this.getView();
@@ -501,6 +592,62 @@ sap.ui.define([
             // this.byId("ceateVpCategory").close();
         },
 
+
+        onDialogTreeSearch : function(event) {
+
+           var treeVendor = []; 
+
+            if (!!this.byId("treepop_vendor_pool_local_name").getValue()) {
+                treeVendor.push(new Filter({
+                    path:'keyword',
+                    filters: [
+                        new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("treepop_vendor_pool_local_name").getValue())
+                    ],
+                    and: false
+                }));
+            }
+
+            this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
+                this.getView().setBusy(true);
+                this.treeListModel
+                    .read("/VpPopupView", {
+                        filters: treeVendor
+                    })
+                    // 성공시
+                    .then((function (jNodes) {
+                        this.getView().setModel(new JSONModel({
+                            "VpPopupView": {
+                                "nodes": jNodes
+                            }
+                        }), "tree");
+                    }).bind(this))
+                    // 실패시
+                    .catch(function (oError) {
+                    })
+                    // 모래시계해제
+                    .finally((function () {
+                        this.getView().setBusy(false);
+                    }).bind(this));
+
+                    
+
+        },
+
+        selectTreeValue : function(oEvent){
+
+            var oTable = this.byId("diatreeTable");
+            var aIndices = oTable.getSelectedIndices();
+            //선택된 Tree Table Value 
+            var tree_vpName = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[0].mProperties.text
+            var tree_vpCode = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text
+
+            this.getView().byId("search_Vp_Name").setValue(tree_vpName);
+            this.getView().byId("search_Vp_Code").setValue(tree_vpCode);
+
+            this.createTreePopupClose();
+
+        },
+
         onDialogSearch : function (event) {
             
             var predicates = [];
@@ -513,6 +660,7 @@ sap.ui.define([
                 }                
             if (!!this.byId("tpop_vendor_pool_local_name").getValue()) {
                 predicates.push(new Filter({
+                    path:'keyword',
                     filters: [
                         new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
                     ],
@@ -587,8 +735,8 @@ sap.ui.define([
             pOperation_unit_code = rowData.operation_unit_code;
             pTemp_type = rowData.temp_type;
 
-            alert( "pVendorPool   : " + pVendorPool + 
-                   "pTenantId     : " + pTenantId);
+            // alert( "pVendorPool   : " + pVendorPool + 
+            //        "pTenantId     : " + pTenantId);
 
             // var oNavParam = {
             //     layout: oNextUIState.layout,
@@ -665,9 +813,47 @@ sap.ui.define([
 			// 	// refresh the list binding.
 			// 	this.onRefresh();
 			// } else {
-                 var aSearchFilters = this._getSearchStates();
-				 this._applySearch(aSearchFilters);
-			// }
+
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
+
+            // var aSearchFilters = [];
+
+
+            if(sSurffix ==="S")
+            {
+                var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
+                var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+
+                
+                if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0 && s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
+                    
+                    var aSearchFilters_S = this._getSearchStates();
+				    this._applySearch(aSearchFilters_S);
+                }
+                else{
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
+            }
+            else if(sSurffix ==="E")
+            {
+
+                var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
+                var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+
+                if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0 && s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0) {
+                    var aSearchFilters_E = this._getSearchStates();
+				    this._applySearch(aSearchFilters_E);
+                }
+                else{
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
+                            
+            }
+
+
+
+            // }
+            
 		},
 
 		/**
@@ -840,6 +1026,9 @@ sap.ui.define([
                 var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 var s_Dept = this.getView().byId("search_Dept").getSelectedKey();
                 var s_Man = this.getView().byId("search_Man").getSelectedKey();
+                var s_VPC = this.getView().byId("search_Vp_Code").getValue();
+                var s_Sup = this.getView().byId("search_Sup").getSelectedKey();
+                var s_SupT = this.getView().byId("search_Sup_Type").getSelectedKey();
 
                 // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
@@ -856,7 +1045,16 @@ sap.ui.define([
                 }
                 if (s_Man && s_Man.length > 0) {
                     aSearchFilters.push(new Filter("managers_name", FilterOperator.EQ, s_Man));
-                }                
+                }
+                if (s_VPC && s_VPC.length > 0) {
+                    aSearchFilters.push(new Filter("vendor_pool_code", FilterOperator.EQ, s_VPC));
+                }  
+                if (s_Sup && s_Sup.length > 0) {
+                    aSearchFilters.push(new Filter("supplier_code", FilterOperator.EQ, s_Sup));
+                }  
+                if (s_SupT && s_SupT.length > 0) {
+                    aSearchFilters.push(new Filter("supplier_type_name", FilterOperator.EQ, s_SupT));
+                }                                                                  
             }
 			return aSearchFilters;
 		},

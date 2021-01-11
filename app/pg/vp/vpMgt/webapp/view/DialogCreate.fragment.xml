@@ -34,7 +34,7 @@
                         <!-- 팝업 영역 -->
                         <VBox>
                             <Label text="Operation ORG" labelFor="search_Operation_ORG" required="true"></Label>
-                            <ComboBox id="tpop_Operation_ORG" width="100%" selectedKey="BIZ00200" items="{
+                            <ComboBox id="tpop_Operation_ORG" width="100%" items="{
                                 path: '/VpOperationOrg',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -67,6 +67,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
+                            <Label text = " " design="Bold" width="0rem"/> 
                             <Button id="popTreeTableSearchButton"          text="Search"     press=".onDialogSearch"     type="Emphasized" />
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M4 S12" />
