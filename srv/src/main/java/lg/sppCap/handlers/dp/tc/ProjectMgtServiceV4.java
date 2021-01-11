@@ -128,11 +128,11 @@ public class ProjectMgtServiceV4 implements EventHandler {
 
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL DP_TC_UPDATE_PROJECT_PROC(");        
-        v_sql_callProc.append("I_PROJECT => #LOCAL_TEMP_MST,");        
-        v_sql_callProc.append("I_SIMILAR_MODEL => #LOCAL_TEMP_SUPPLIER,");        
-        v_sql_callProc.append("I_ADD_INFO => #LOCAL_TEMP_ITEM, ");        
-        v_sql_callProc.append("I_BASE_EXRATE => #LOCAL_TEMP_MANAGER,");        
-        v_sql_callProc.append("I_USER_NO => ?,");        
+        v_sql_callProc.append("I_PROJECT => #LOCAL_TEMP_PROJECT,");        
+        v_sql_callProc.append("I_SIMILAR_MODEL => #LOCAL_TEMP_SIMILAR_MODEL,");        
+        v_sql_callProc.append("I_ADD_INFO => #LOCAL_TEMP_ADDITIONAL_INFO, ");        
+        v_sql_callProc.append("I_BASE_EXRATE => #LOCAL_TEMP_BASE_EXRATE,");        
+        v_sql_callProc.append("I_USER_ID => ?,");        
         v_sql_callProc.append("O_MSG => ?)");                    
 
         Collection<TcProjectType> v_inPrj = context.getInputData().getTcPjt();
@@ -140,226 +140,200 @@ public class ProjectMgtServiceV4 implements EventHandler {
         Collection<TcProjectAdditionInfoType> v_inAddInfo = context.getInputData().getTcPjtAddInfo();
         Collection<TcProjectBaseExrateType> v_inBaseExtract = context.getInputData().getTcPjtBaseExrate();
         Collection<TcProcOutType> v_result = new ArrayList<>();
-
+        /*
         if(!v_inPrj.isEmpty() && v_inPrj.size() > 0){
-            log.debug("-----> v_inPrj");
+            log.info("-----> v_inPrj");
             for(TcProjectType v_inRow : v_inPrj){
-                log.debug("> tenant_id : " + v_inRow.get("tenant_id"));
-                log.debug("> project_code : " + v_inRow.get("project_code"));
-                log.debug("> model_code : " + v_inRow.get("model_code"));
-                log.debug("> project_name : " + v_inRow.get("project_name"));
-                log.debug("> model_name : " + v_inRow.get("model_name"));
-                log.debug("> product_group_code : " + v_inRow.get("product_group_code"));
-                log.debug("> source_type_code : " + v_inRow.get("source_type_code"));
-                log.debug("> quotation_project_code : " + v_inRow.get("quotation_project_code"));
-                log.debug("> project_status_code : " + v_inRow.get("project_status_code"));
-                log.debug("> project_grade_code : " + v_inRow.get("project_grade_code"));
-                log.debug("> develope_event_code : " + v_inRow.get("develope_event_code"));
-                log.debug("> production_company_code : " + v_inRow.get("production_company_code"));
-                log.debug("> project_leader_empno : " + v_inRow.get("project_leader_empno"));
-                log.debug("> buyer_empno : " + v_inRow.get("buyer_empno"));
-                log.debug("> marketing_person_empno : " + v_inRow.get("marketing_person_empno"));
-                log.debug("> planning_person_empno : " + v_inRow.get("planning_person_empno"));
-                log.debug("> customer_local_name : " + v_inRow.get("customer_local_name"));
-                log.debug("> last_customer_name : " + v_inRow.get("last_customer_name"));
-                log.debug("> customer_model_desc : " + v_inRow.get("customer_model_desc"));
-                log.debug("> mcst_yield_rate : " + v_inRow.get("mcst_yield_rate"));
-                log.debug("> bom_type_code : " + v_inRow.get("bom_type_code"));
-                log.debug("> project_create_date : " + v_inRow.get("project_create_date"));
+                log.info("> tenant_id : " + v_inRow.get("tenant_id"));
+                log.info("> project_code : " + v_inRow.get("project_code"));
+                log.info("> model_code : " + v_inRow.get("model_code"));
+                log.info("> project_name : " + v_inRow.get("project_name"));
+                log.info("> model_name : " + v_inRow.get("model_name"));
+                log.info("> product_group_code : " + v_inRow.get("product_group_code"));
+                log.info("> source_type_code : " + v_inRow.get("source_type_code"));
+                log.info("> quotation_project_code : " + v_inRow.get("quotation_project_code"));
+                log.info("> project_status_code : " + v_inRow.get("project_status_code"));
+                log.info("> project_grade_code : " + v_inRow.get("project_grade_code"));
+                log.info("> develope_event_code : " + v_inRow.get("develope_event_code"));
+                log.info("> production_company_code : " + v_inRow.get("production_company_code"));
+                log.info("> project_leader_empno : " + v_inRow.get("project_leader_empno"));
+                log.info("> buyer_empno : " + v_inRow.get("buyer_empno"));
+                log.info("> marketing_person_empno : " + v_inRow.get("marketing_person_empno"));
+                log.info("> planning_person_empno : " + v_inRow.get("planning_person_empno"));
+                log.info("> customer_local_name : " + v_inRow.get("customer_local_name"));
+                log.info("> last_customer_name : " + v_inRow.get("last_customer_name"));
+                log.info("> customer_model_desc : " + v_inRow.get("customer_model_desc"));
+                log.info("> mcst_yield_rate : " + v_inRow.get("mcst_yield_rate"));
+                log.info("> bom_type_code : " + v_inRow.get("bom_type_code"));
+                log.info("> project_create_date : " + v_inRow.get("project_create_date"));
             }
         }
         
         if(!v_inSimilarModel.isEmpty() && v_inSimilarModel.size() > 0){
-            log.debug("-----> v_inSimilarModel");
+            log.info("-----> v_inSimilarModel");
             for(TcProjectSimilarModelType v_inRow : v_inSimilarModel){
-                log.debug("> tenant_id : " + v_inRow.get("tenant_id"));
-                log.debug("> project_code : " + v_inRow.get("project_code"));
-                log.debug("> model_code : " + v_inRow.get("model_code"));
-                log.debug("> similar_model_code : " + v_inRow.get("similar_model_code"));
-                log.debug("> code_desc : " + v_inRow.get("code_desc"));
-                log.debug("> direct_register_flag : " + v_inRow.get("direct_register_flag"));
+                log.info("> tenant_id : " + v_inRow.get("tenant_id"));
+                log.info("> project_code : " + v_inRow.get("project_code"));
+                log.info("> model_code : " + v_inRow.get("model_code"));
+                log.info("> similar_model_code : " + v_inRow.get("similar_model_code"));
+                log.info("> code_desc : " + v_inRow.get("code_desc"));
+                log.info("> direct_register_flag : " + v_inRow.get("direct_register_flag"));
             }
         }
 
         if(!v_inAddInfo.isEmpty() && v_inAddInfo.size() > 0){
-            log.debug("-----> v_inAddInfo");
+            log.info("-----> v_inAddInfo");
             for(TcProjectAdditionInfoType v_inRow : v_inAddInfo){
-                log.debug("> tenant_id : " + v_inRow.get("tenant_id"));
-                log.debug("> project_code : " + v_inRow.get("project_code"));
-                log.debug("> model_code : " + v_inRow.get("model_code"));
-                log.debug("> similar_model_code : " + v_inRow.get("similar_model_code"));
-                log.debug("> code_desc : " + v_inRow.get("code_desc"));
-                log.debug("> direct_register_flag : " + v_inRow.get("direct_register_flag"));
+                log.info("> tenant_id : " + v_inRow.get("tenant_id"));
+                log.info("> project_code : " + v_inRow.get("project_code"));
+                log.info("> model_code : " + v_inRow.get("model_code"));
+                log.info("> similar_model_code : " + v_inRow.get("similar_model_code"));
+                log.info("> code_desc : " + v_inRow.get("code_desc"));
+                log.info("> direct_register_flag : " + v_inRow.get("direct_register_flag"));
             }
         }
 
         if(!v_inBaseExtract.isEmpty() && v_inBaseExtract.size() > 0){
-            log.debug("-----> v_inBaseExtract");
+            log.info("-----> v_inBaseExtract");
             for(TcProjectBaseExrateType v_inRow : v_inBaseExtract){
-                log.debug("> tenant_id : " + v_inRow.get("tenant_id"));
-                log.debug("> project_code : " + v_inRow.get("project_code"));
-                log.debug("> model_code : " + v_inRow.get("model_code"));
-                log.debug("> currency_code : " + v_inRow.get("currency_code"));
-                log.debug("> period_code : " + v_inRow.get("period_code"));
-                log.debug("> exrate : " + v_inRow.get("exrate"));
+                log.info("> tenant_id : " + v_inRow.get("tenant_id"));
+                log.info("> project_code : " + v_inRow.get("project_code"));
+                log.info("> model_code : " + v_inRow.get("model_code"));
+                log.info("> currency_code : " + v_inRow.get("currency_code"));
+                log.info("> period_code : " + v_inRow.get("period_code"));
+                log.info("> exrate : " + v_inRow.get("exrate"));
             }
         }
-
+        */
         ResultSet v_rs = null;
-        /*
+        
 		try {            
             Connection conn = jdbc.getDataSource().getConnection();
 
-            // Vendor Pool Mst Local Temp Table 생성
-            PreparedStatement v_statement_tableMst = conn.prepareStatement(v_sql_createTableMst.toString());
-            v_statement_tableMst.execute();
+            // ProjectInfo Local Temp Table 생성
+            PreparedStatement v_statement_createProject = conn.prepareStatement(v_sql_createTableProject.toString());
+            v_statement_createProject.execute();
 
-            // Vendor Pool Mst Local Temp Table에 insert
-            PreparedStatement v_statement_insertMst = conn.prepareStatement(v_sql_insertTableMst);
+            // ProjectInfo Local Temp Table에 insert
+            PreparedStatement v_statement_insertProject = conn.prepareStatement(v_sql_insertTableProject);
 
-            if(!v_inMst.isEmpty() && v_inMst.size() > 0){
-                for(VpMstType v_inRow : v_inMst){
-                    v_statement_insertMst.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertMst.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertMst.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertMst.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertMst.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertMst.setObject(6, v_inRow.get("vendor_pool_local_name"));
-                    v_statement_insertMst.setObject(7, v_inRow.get("vendor_pool_english_name"));
-                    v_statement_insertMst.setObject(8, v_inRow.get("repr_department_code"));
-                    v_statement_insertMst.setObject(9, v_inRow.get("operation_unit_code"));
-                    v_statement_insertMst.setObject(10, v_inRow.get("inp_type_code"));
-                    v_statement_insertMst.setObject(11, v_inRow.get("mtlmob_base_code"));
-                    v_statement_insertMst.setObject(12, v_inRow.get("regular_evaluation_flag"));
-                    v_statement_insertMst.setObject(13, v_inRow.get("industry_class_code"));
-                    v_statement_insertMst.setObject(14, v_inRow.get("sd_exception_flag"));
-                    v_statement_insertMst.setObject(15, v_inRow.get("vendor_pool_apply_exception_flag"));
-                    v_statement_insertMst.setObject(16, v_inRow.get("domestic_net_price_diff_rate"));
-                    v_statement_insertMst.setObject(17, v_inRow.get("dom_oversea_netprice_diff_rate"));
-                    v_statement_insertMst.setObject(18, v_inRow.get("equipment_grade_code"));
-                    v_statement_insertMst.setObject(19, v_inRow.get("equipment_type_code"));
-                    v_statement_insertMst.setObject(20, v_inRow.get("vendor_pool_use_flag"));
-                    v_statement_insertMst.setObject(21, v_inRow.get("vendor_pool_desc"));
-                    v_statement_insertMst.setObject(22, v_inRow.get("vendor_pool_history_desc"));
-                    v_statement_insertMst.setObject(23, v_inRow.get("parent_vendor_pool_code"));
-                    v_statement_insertMst.setObject(24, v_inRow.get("leaf_flag"));
-                    v_statement_insertMst.setObject(25, v_inRow.get("level_number"));
-                    v_statement_insertMst.setObject(26, v_inRow.get("display_sequence"));
-                    v_statement_insertMst.setObject(27, v_inRow.get("register_reason"));
-                    v_statement_insertMst.setObject(28, v_inRow.get("approval_number"));
-                    v_statement_insertMst.addBatch();
+            if(!v_inPrj.isEmpty() && v_inPrj.size() > 0){
+            log.info("-----> v_inPrj : " + v_inPrj.size());
+                for(TcProjectType v_inRow : v_inPrj){
+                    v_statement_insertProject.setObject(1, v_inRow.get("tenant_id"));
+                    v_statement_insertProject.setObject(2, v_inRow.get("project_code"));
+                    v_statement_insertProject.setObject(3, v_inRow.get("model_code"));
+                    v_statement_insertProject.setObject(4, v_inRow.get("project_name"));
+                    v_statement_insertProject.setObject(5, v_inRow.get("model_name"));
+                    v_statement_insertProject.setObject(6, v_inRow.get("product_group_code"));
+                    v_statement_insertProject.setObject(7, v_inRow.get("source_type_code"));
+                    v_statement_insertProject.setObject(8, v_inRow.get("quotation_project_code"));
+                    v_statement_insertProject.setObject(9, v_inRow.get("project_status_code"));
+                    v_statement_insertProject.setObject(10, v_inRow.get("project_grade_code"));
+                    v_statement_insertProject.setObject(11, v_inRow.get("develope_event_code"));
+                    v_statement_insertProject.setObject(12, v_inRow.get("production_company_code"));
+                    v_statement_insertProject.setObject(13, v_inRow.get("project_leader_empno"));
+                    v_statement_insertProject.setObject(14, v_inRow.get("buyer_empno"));
+                    v_statement_insertProject.setObject(15, v_inRow.get("marketing_person_empno"));
+                    v_statement_insertProject.setObject(16, v_inRow.get("planning_person_empno"));
+                    v_statement_insertProject.setObject(17, v_inRow.get("customer_local_name"));
+                    v_statement_insertProject.setObject(18, v_inRow.get("last_customer_name"));
+                    v_statement_insertProject.setObject(19, v_inRow.get("customer_model_desc"));
+                    v_statement_insertProject.setObject(20, v_inRow.get("mcst_yield_rate"));
+                    v_statement_insertProject.setObject(21, v_inRow.get("bom_type_code"));
+                    v_statement_insertProject.setObject(22, v_inRow.get("project_create_date"));
+                    v_statement_insertProject.addBatch();
                 }
 
-                v_statement_insertMst.executeBatch();
+                v_statement_insertProject.executeBatch();
             }
 
-            // Vendor Pool Supplier Local Temp Table 생성
-            PreparedStatement v_statement_tableSupplier = conn.prepareStatement(v_sql_createTableSupplier.toString());
-            v_statement_tableSupplier.execute();
+            // SimilarModel Local Temp Table 생성
+            PreparedStatement v_statement_createSimilarModel = conn.prepareStatement(v_sql_createTableSimilarModel.toString());
+            v_statement_createSimilarModel.execute();
 
-            // Vendor Pool Supplier Local Temp Table에 insert
-            PreparedStatement v_statement_insertSupplier = conn.prepareStatement(v_sql_insertTableSupplier);
+            // SimilarModel Local Temp Table에 insert
+            PreparedStatement v_statement_insertSimilarModel = conn.prepareStatement(v_sql_insertTableSimilarModel);
 
-            if(!v_inSupplier.isEmpty() && v_inSupplier.size() > 0){
-                for(VpSuppilerType v_inRow : v_inSupplier){
-                    v_statement_insertSupplier.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertSupplier.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertSupplier.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertSupplier.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertSupplier.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertSupplier.setObject(6, v_inRow.get("supplier_code"));
-                    v_statement_insertSupplier.setObject(7, v_inRow.get("supeval_target_flag"));
-                    v_statement_insertSupplier.setObject(8, v_inRow.get("supplier_op_plan_review_flag"));
-                    v_statement_insertSupplier.setObject(9, v_inRow.get("supeval_control_flag"));
-                    v_statement_insertSupplier.setObject(10, v_inRow.get("supeval_control_start_date"));
-                    v_statement_insertSupplier.setObject(11, v_inRow.get("supeval_control_end_date"));
-                    v_statement_insertSupplier.setObject(12, v_inRow.get("supeval_restrict_start_date"));
-                    v_statement_insertSupplier.setObject(13, v_inRow.get("supeval_restrict_end_date"));
-                    v_statement_insertSupplier.setObject(14, v_inRow.get("inp_code"));
-                    v_statement_insertSupplier.setObject(15, v_inRow.get("supplier_rm_control_flag"));
-                    v_statement_insertSupplier.setObject(16, v_inRow.get("supplier_base_portion_rate"));
-                    v_statement_insertSupplier.setObject(17, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertSupplier.setObject(18, v_inRow.get("register_reason"));
-                    v_statement_insertSupplier.setObject(19, v_inRow.get("approval_number"));
-                    v_statement_insertSupplier.addBatch();
+            if(!v_inSimilarModel.isEmpty() && v_inSimilarModel.size() > 0){
+            log.info("-----> v_inSimilarModel : " + v_inSimilarModel.size());
+                for(TcProjectSimilarModelType v_inRow : v_inSimilarModel){
+                    v_statement_insertSimilarModel.setObject(1, v_inRow.get("tenant_id"));
+                    v_statement_insertSimilarModel.setObject(2, v_inRow.get("project_code"));
+                    v_statement_insertSimilarModel.setObject(3, v_inRow.get("model_code"));
+                    v_statement_insertSimilarModel.setObject(4, v_inRow.get("similar_model_code"));
+                    v_statement_insertSimilarModel.setObject(5, v_inRow.get("code_desc"));
+                    v_statement_insertSimilarModel.setObject(6, v_inRow.get("direct_register_flag"));
+                    v_statement_insertSimilarModel.addBatch();
                 }
 
-                v_statement_insertSupplier.executeBatch();
+                v_statement_insertSimilarModel.executeBatch();
             }
 
-            // Vendor Pool Item Local Temp Table 생성
-            PreparedStatement v_statement_tableItem = conn.prepareStatement(v_sql_createTableItem.toString());
-            v_statement_tableItem.execute();
+            // Additional Info Local Temp Table 생성
+            PreparedStatement v_statement_createAdditionalInfo = conn.prepareStatement(v_sql_createTableAdditionalInfo.toString());
+            v_statement_createAdditionalInfo.execute();
 
-            // Vendor Pool Mst Local Temp Table에 insert
-            PreparedStatement v_statement_insertItem = conn.prepareStatement(v_sql_insertTableItem);
+            // Additional Info Local Temp Table에 insert
+            PreparedStatement v_statement_insertAdditionalInfo = conn.prepareStatement(v_sql_insertTableAdditionalInfo);
 
-            if(!v_inItem.isEmpty() && v_inItem.size() > 0){
-                for(VpItemType v_inRow : v_inItem){
-                    v_statement_insertItem.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertItem.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertItem.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertItem.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertItem.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertItem.setObject(6, v_inRow.get("material_code"));
-                    v_statement_insertItem.setObject(7, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertItem.setObject(8, v_inRow.get("register_reason"));
-                    v_statement_insertItem.setObject(9, v_inRow.get("approval_number"));                    
-                    v_statement_insertItem.addBatch();
+            if(!v_inAddInfo.isEmpty() && v_inAddInfo.size() > 0){
+            log.info("-----> v_inAddInfo : " + v_inAddInfo.size());
+                for(TcProjectAdditionInfoType v_inRow : v_inAddInfo){
+                    v_statement_insertAdditionalInfo.setObject(1, v_inRow.get("tenant_id"));
+                    v_statement_insertAdditionalInfo.setObject(2, v_inRow.get("project_code"));
+                    v_statement_insertAdditionalInfo.setObject(3, v_inRow.get("model_code"));
+                    v_statement_insertAdditionalInfo.setObject(4, v_inRow.get("addition_type_code"));
+                    v_statement_insertAdditionalInfo.setObject(5, v_inRow.get("period_code"));
+                    v_statement_insertAdditionalInfo.setObject(6, v_inRow.get("addition_type_value"));
+                    v_statement_insertAdditionalInfo.addBatch();
                 }
 
-                v_statement_insertItem.executeBatch();
+                v_statement_insertAdditionalInfo.executeBatch();
             }
 
-            // Vendor Pool Manager Local Temp Table 생성
-            PreparedStatement v_statement_tableManager = conn.prepareStatement(v_sql_createTableManager.toString());
-            v_statement_tableManager.execute();
+            // BaseExtrate Local Temp Table 생성
+            PreparedStatement v_statement_createBaseExtrate = conn.prepareStatement(v_sql_createTableBaseExrate.toString());
+            v_statement_createBaseExtrate.execute();
 
-            // Vendor Pool Manager Local Temp Table에 insert
-            PreparedStatement v_statement_insertManager = conn.prepareStatement(v_sql_insertTableManager);
+            // BaseExtrate Local Temp Table에 insert
+            PreparedStatement v_statement_insertBaseExtrate = conn.prepareStatement(v_sql_insertTableBaseExrate);
 
-            if(!v_inManager.isEmpty() && v_inManager.size() > 0){
-                for(VpManagerType v_inRow : v_inManager){
-                    v_statement_insertManager.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertManager.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertManager.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertManager.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertManager.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertManager.setObject(6, v_inRow.get("vendor_pool_person_empno"));
-                    v_statement_insertManager.setObject(7, v_inRow.get("vendor_pool_person_role_text"));
-                    v_statement_insertManager.setObject(8, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertManager.setObject(9, v_inRow.get("register_reason"));
-                    v_statement_insertManager.setObject(10, v_inRow.get("approval_number"));
-                    v_statement_insertManager.addBatch();
+            if(!v_inBaseExtract.isEmpty() && v_inBaseExtract.size() > 0){
+            log.info("-----> v_inBaseExtract : " + v_inBaseExtract.size());
+                for(TcProjectBaseExrateType v_inRow : v_inBaseExtract){
+                    v_statement_insertBaseExtrate.setObject(1, v_inRow.get("tenant_id"));
+                    v_statement_insertBaseExtrate.setObject(2, v_inRow.get("project_code"));
+                    v_statement_insertBaseExtrate.setObject(3, v_inRow.get("model_code"));
+                    v_statement_insertBaseExtrate.setObject(4, v_inRow.get("currency_code"));
+                    v_statement_insertBaseExtrate.setObject(5, v_inRow.get("period_code"));
+                    v_statement_insertBaseExtrate.setObject(6, v_inRow.get("exrate"));
+                    v_statement_insertBaseExtrate.addBatch();
                 }
 
-                v_statement_insertManager.executeBatch();
+                v_statement_insertBaseExtrate.executeBatch();
             }
 
             // Procedure Call
             CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
 
             v_statement_proc.setString(1, context.getInputData().getUserId());
-            v_statement_proc.setString(2, context.getInputData().getUserNo());
             v_rs = v_statement_proc.executeQuery();
             
 
-            //VpOutType
-
-            // Procedure Out put 담기
+            // Procedure Out put 담기 TcProcOutType
             while (v_rs.next()){
-                VpOutType v_row = VpOutType.create();
+                TcProcOutType v_row = TcProcOutType.create();
                 v_row.setReturnCode(v_rs.getString("return_code"));
                 v_row.setReturnMsg(v_rs.getString("return_msg"));                
-                v_result.add(v_row);
+                context.setResult(v_row);
             }
 
-            context.setResult(v_result);
             context.setCompleted();
 
 		} catch (SQLException e) { 
 			e.printStackTrace();
         }
-        */
+        
     }
 }

@@ -5,8 +5,9 @@ sap.ui.define([
   "ext/lib/formatter/DateFormatter",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
+  "sap/m/MessageBox"
 ],
-  function (BaseController, JSONModel, ManagedListModel, DateFormatter, Filter, FilterOperator) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, Filter, FilterOperator, MessageBox) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectInfo", {
@@ -35,7 +36,15 @@ sap.ui.define([
          * Project 상세정보 read 후 model 에 set 한다.
          */
         , _getProjectDetail: function (oEvent) {
-            let oParam = oEvent.getParameter("arguments");
+            let oParam = {};
+            if(oEvent) {
+                oParam = oEvent.getParameter("arguments");
+            } else {
+                oParam.tenant_id = this.getModel("detailModel").getProperty("/tenant_id");
+                oParam.project_code = this.getModel("detailModel").getProperty("/project_code");
+                oParam.model_code = this.getModel("detailModel").getProperty("/model_code");
+            }
+            
             var oView = this.getView();
 
             let oModel = this.getModel();
@@ -55,8 +64,7 @@ sap.ui.define([
 
                     if( data && data.results && 0<data.results.length ) {
                         oView.getModel("detailModel").setData(data.results[0]);
-                        oView.getModel("detailModel").setProperty("/mode", {readMode : true});
-                        oView.getModel("detailModel").setProperty("/mode/editMode", false);
+                        oView.getModel("detailModel").setProperty("/mode", {readMode : true, editMode : false});
                     }
                 }.bind(this),
                 error : function(data){
@@ -80,7 +88,6 @@ sap.ui.define([
             //var url = oModel.sServiceUrl + "TcUpdateProjectProc";
             var targetName = "TcUpdateProjectProc";
             var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.ProjectMgtV4Service/" + targetName;
-            debugger;
             $.ajax({
                 url: url,
                 type: "POST",
@@ -90,12 +97,17 @@ sap.ui.define([
                 contentType: "application/json",
                 success: function(data){
                     console.log("_sendSaveData", data);
-                    debugger;
-                    
-                },
+                    //debugger;
+                    if(data.return_code === "OK") {
+                        MessageBox.show("적용되었습니다.", {at: "Center Center"});
+                        this._getProjectDetail();
+                    } else {
+                        MessageBox.show("저장 실패 하였습니다.", {at: "Center Center"});
+                    }
+                }.bind(this),
                 error: function(e){
                     console.log("error", e);
-                    debugger;
+                    //debugger;
                 }
             });
         }
@@ -191,7 +203,7 @@ sap.ui.define([
 
             var aBaseExtractResult = [];
             $.each(aExchangeData.datas, function(idx, oTableData) {
-                debugger;
+                //debugger;
                 $.each(aBaseExtract, function(idx2, oBaseEx) {
                     if(JSON.stringify(oTableData).indexOf(oBaseEx.currency_code) > -1) {
                         aBaseExtractResult.push({
@@ -226,8 +238,15 @@ sap.ui.define([
          * 저장
          */
         , onSavePress: function (oEvent) {
-            debugger;
-            this._reFactorySaveModel();
+            MessageBox.confirm("저장 하시겠습니까?", {
+                title : "저장",
+                initialFocus : MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        this._reFactorySaveModel();
+                    }
+                }.bind(this)
+            });
         }
 
         /**
