@@ -1,0 +1,251 @@
+<mvc:View controllerName="cm.test.controller.TemplateMainList" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.control.m"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="false" 
+        showFooter="{= ${message>/}.length > 0 }"
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{I18N>/MESSAGE_MANAGEMENT}" />
+                </f:heading>
+                <f:snappedContent>
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainS"></Label>
+                                <lib-m:CodeComboBox id="searchChainS" width="100%" showSecondaryValues="true" 
+                                    useEmpty="true" emptyText="ALL"
+                                    items="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageS"></Label>
+                                <lib-m:CodeComboBox id="searchLanguageS" width="100%" showSecondaryValues="true"
+                                useEmpty="true" emptyText="ALL"
+                                    items="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordS"></Label>
+                                <Input id="searchKeywordS" placeholder="{I18N>/NCM02001}" change=".onPageSearchButtonPress"></Input>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:snappedContent>
+                <f:expandedContent>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainE" required="true"></Label>
+                                <lib-m:CodeComboBox id="searchChainE" width="100%" showSecondaryValues="true" 
+                                    useEmpty="true"
+                                    items="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageE"></Label>
+                                <lib-m:CodeComboBox id="searchLanguageE" width="100%" showSecondaryValues="true"
+                                useEmpty="true"
+                                    items="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordE"></Label>
+                                <Input id="searchKeywordE" placeholder="{I18N>/NCM02001}"></Input>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <Table id="mainTable" 
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    inset="false"
+                    noDataText="{I18N>/NCM01004}"
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onMainTableUpdateFinished"
+                    items="{list>/Message}"
+                    width="auto">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="{I18N>/MESSAGE} {= ${list>/Message}.length > 0 ? '(' + ${list>/Message}.length + ')' : ''}" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
+                        <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                        <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        <ToolbarSeparator/>
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="NeverOverflow" />
+                            </layoutData>
+                        </Button>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                        <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                    </Column>
+                    <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                        <Text text="{I18N>/CHAIN}" />
+                    </Column>
+                    <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                        <Text text="{I18N>/LANGUAGE}" />
+                    </Column>
+                    <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Center" width="15em" >
+                        <Text text="{I18N>/CODE}" />
+                    </Column>
+                    <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Center">
+                        <Text text="{I18N>/CONTENTS}" />
+                    </Column>
+                    <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                        <Text text="{I18N>/TYPE}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <ObjectStatus icon="{
+                                path: 'list>_row_state_',
+                                formatter: '.formatter.toModelStateColumnIcon'
+                            }" />
+                            <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
+                            </ComboBox>
+                            <ComboBox selectedKey="{list>language_code}" width="100%" items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                    ]
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
+                            </ComboBox>
+                            <Input value="{
+                                    path: 'list>message_code',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true"></Input>
+                            <Input value="{list>message_contents}" required="true" ></Input>
+                            <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
+                                    path: 'util>/CodeDetails',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 1000
+                                    },
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
+                            </ComboBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </f:content>
+        <!-- DynamicPage Footer -->
+		<f:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Reject"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+			</OverflowToolbar>
+		</f:footer>
+    </f:DynamicPage>
+</mvc:View>
