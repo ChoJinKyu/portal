@@ -148,7 +148,7 @@ sap.ui.define([
                     customer_local_name     : oData.customer_local_name,
                     last_customer_name      : oData.last_customer_name,
                     customer_model_desc     : oData.customer_model_desc,
-                    mcst_yield_rate         : oData.mcst_yield_rate, 10,
+                    mcst_yield_rate         : oData.mcst_yield_rate,
                     bom_type_code           : oData.bom_type_code,
                     project_create_date     : sCreateDate
                 };
