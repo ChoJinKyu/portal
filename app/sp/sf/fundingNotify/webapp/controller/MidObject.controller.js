@@ -256,7 +256,9 @@ sap.ui.define([
          * @public
          */
         onPageCancelEditButtonPress: function () {
-            if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
+            // this.onPageNavBackButtonPress.call(this);
+            var sTenantId = this._sTenantId;
+            if (this.getModel("midObjectView").getProperty("/isAddedMode") == true && sTenantId=="new") {
                 this.onPageNavBackButtonPress.call(this);
             } else {
                 this._toShowMode();
@@ -343,7 +345,7 @@ sap.ui.define([
                 this.getView().getModel("midObjectView").setProperty("/showMode", false);
                 this._toEditMode();
             } else {
-                //this.getModel("midObjectView").setProperty("/isAddedMode", false);
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
                 this._bindView("/SfFundingNotify(tenant_id='" + this._sTenantId + "',funding_notify_number='" + this._sFundingNotifyNumber + "')");
 
@@ -417,7 +419,6 @@ sap.ui.define([
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageSaveButton").setEnabled(false);
             oMidObjectView.setProperty("/editMode", false);
-            
         },
 
         // _oFragments: {},
