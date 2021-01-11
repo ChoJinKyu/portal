@@ -19,7 +19,20 @@ service ExampleV4Service {
     type PivotData {
       columns: many PivotColumn;
       records: many PivotRecord;
-    }
+    };
     action GetPivotData() returns PivotData;
+
+
+    // UI5 Example - Get Multilingual messages
+    type MessageDefine {
+      code: String;
+      text: String;
+    };
+    type LocalizedMessage {
+      labels: many MessageDefine;
+      buttons: many MessageDefine;
+      messages: many MessageDefine;
+    };
+    action GetLocalizedMessage(language_code: String) returns LocalizedMessage;
 
 }

@@ -129,7 +129,7 @@
                         <VBox>
                             <Label text="관리대상여부 : "></Label>
                             <HBox>
-                                <CheckBox id="selectManagementTargetFlag" text="대상" checked="true"/>
+                                <CheckBox id="selectManagementTargetFlag" text="대상" selected="true"/>
                                 <Text text=" " class="sapUiTinyMarginEnd" />
                                 <CheckBox id="selectManagementTargetFlag2" text="비대상" />
                             </HBox>
@@ -140,7 +140,7 @@
                         <VBox>
                             <Label text="신고대상여부 : "></Label>
                             <HBox>
-                                <CheckBox id="selectDeclareTargetFlag" text="대상" />
+                                <CheckBox id="selectDeclareTargetFlag" text="대상" selected="true" />
                                 <Text text=" " class="sapUiTinyMarginEnd" />
                                 <CheckBox id="selectDeclareTargetFlag2" text="비대상" />
                             </HBox>
@@ -167,7 +167,7 @@
             rows="{
                 path: 'list>/ForexDeclarationView'                 
             }"
-            cellClick=".onCellClick"
+            cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
             columnResize="onColumnResize">
@@ -187,12 +187,6 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <!-- <t:Column width="0rem" hAlign="Center" visible="false">
-                <Label text="tenant_id"/>
-                <t:template>
-                    <Text text="{list>tenant_id}"/>
-                </t:template>
-                </t:Column> -->
                 <t:Column id="mainPoNumber" width="6rem">
                 <Label text="PO번호" textAlign="Center" width="100%"/>
                 <t:template>

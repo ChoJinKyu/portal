@@ -32,15 +32,19 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import cds.gen.ep.loimgtv4service.DeleteLoiSupplySelectionProcContext;
-import cds.gen.ep.loimgtv4service.HdSaveType;
+import cds.gen.ep.loimgtv4service.DeleteLoiPublishProcContext;
+import cds.gen.ep.loimgtv4service.SaveLoiSelectionType;
+import cds.gen.ep.loimgtv4service.SaveLoiPublishType;
 import cds.gen.ep.loimgtv4service.InputData;
 import cds.gen.ep.loimgtv4service.LoiMgtV4Service_;
-import cds.gen.ep.loimgtv4service.LssDelType;
+import cds.gen.ep.loimgtv4service.DelLoiSelectionType;
+import cds.gen.ep.loimgtv4service.DelLoiPublishType;
 import cds.gen.ep.loimgtv4service.SaveLoiQuotationNumberProcContext;
 import cds.gen.ep.loimgtv4service.SaveLoiRmkProcContext;
 import cds.gen.ep.loimgtv4service.SaveLoiSupplySelectionProcContext;
+import cds.gen.ep.loimgtv4service.SaveLoiPublishProcContext;
 import cds.gen.ep.loimgtv4service.SaveLoiVosProcContext;
-import cds.gen.ep.loimgtv4service.SavedDetails;
+import cds.gen.ep.loimgtv4service.LoiDtlType;
 import cds.gen.ep.loimgtv4service.SavedHeaders;
 import cds.gen.ep.loimgtv4service.SavedReqDetails;
 import cds.gen.ep.loimgtv4service.SaveReturnType;
@@ -177,7 +181,7 @@ public class LoiMgtV4 implements EventHandler {
     }
 
 
-	// 
+	//견적번호 저장 
 	@On(event=SaveLoiQuotationNumberProcContext.CDS_NAME)
 	public void onSaveLoiQuotationNumberProc(SaveLoiQuotationNumberProcContext context) {
 
@@ -264,8 +268,8 @@ public class LoiMgtV4 implements EventHandler {
         log.info("### EP_SAVE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출시작 ###");
 
         
-        HdSaveType v_indata = context.getInputData();
-        // Collection<HdSaveType> v_results = new ArrayList<>();
+        SaveLoiSelectionType v_indata = context.getInputData();
+        // Collection<SaveLoiSelectionType> v_results = new ArrayList<>();
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
@@ -311,13 +315,13 @@ public class LoiMgtV4 implements EventHandler {
             PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
             v_statement_tableD.execute();
 
-            //for(HdSaveType v_indata :  v_inMultiData){
+            //for(SaveLoiSelectionType v_indata :  v_inMultiData){
 
             log.info("###getDetails().size()===="+v_indata.getDetails().size());
 
-            Collection<SavedDetails> v_inDetails = v_indata.getDetails();
-            // HdSaveType v_result = HdSaveType.create();
-            // Collection<SavedDetails> v_resultDetails = new ArrayList<>();
+            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
+            // SaveLoiSelectionType v_result = SaveLoiSelectionType.create();
+            // Collection<LoiDtlType> v_resultDetails = new ArrayList<>();
 
             log.info("###getTenantId===="+v_indata.getTenantId());
             log.info("###getCompanyCode===="+v_indata.getCompanyCode());
@@ -328,7 +332,7 @@ public class LoiMgtV4 implements EventHandler {
             PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
 
             if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
-                for(SavedDetails v_inRow : v_inDetails){
+                for(LoiDtlType v_inRow : v_inDetails){
 
                     log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
 
@@ -401,8 +405,8 @@ public class LoiMgtV4 implements EventHandler {
         log.info("### EP_DELETE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출시작 ###");
 
         
-        LssDelType v_indata = context.getInputData();
-        // Collection<HdSaveType> v_results = new ArrayList<>();
+        DelLoiSelectionType v_indata = context.getInputData();
+        // Collection<SaveLoiSelectionType> v_results = new ArrayList<>();
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
@@ -438,13 +442,13 @@ public class LoiMgtV4 implements EventHandler {
             PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
             v_statement_tableD.execute();
 
-            //for(HdSaveType v_indata :  v_inMultiData){
+            //for(SaveLoiSelectionType v_indata :  v_inMultiData){
 
             log.info("###getDetails().size()===="+v_indata.getDetails().size());
 
-            Collection<SavedDetails> v_inDetails = v_indata.getDetails();
-            // HdSaveType v_result = HdSaveType.create();
-            // Collection<SavedDetails> v_resultDetails = new ArrayList<>();
+            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
+            // SaveLoiSelectionType v_result = SaveLoiSelectionType.create();
+            // Collection<LoiDtlType> v_resultDetails = new ArrayList<>();
 
             log.info("###getTenantId===="+v_indata.getTenantId());
             log.info("###getCompanyCode===="+v_indata.getCompanyCode());
@@ -455,7 +459,7 @@ public class LoiMgtV4 implements EventHandler {
             PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
 
             if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
-                for(SavedDetails v_inRow : v_inDetails){
+                for(LoiDtlType v_inRow : v_inDetails){
 
                     log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
 
@@ -510,6 +514,437 @@ public class LoiMgtV4 implements EventHandler {
 			context.setCompleted();
 		}
     }    
+
+    //LOI 발행품의
+    @On(event = SaveLoiPublishProcContext.CDS_NAME)
+    public void onSaveLoiPublishProc(SaveLoiPublishProcContext context) {
+
+        log.info("### EP_SAVE_LOI_PUBLISH_PROC 프로시저 호출시작 ###");
+        
+        SaveLoiPublishType v_indata = context.getInputData();
+        // Collection<SaveLoiPublishType> v_results = new ArrayList<>();
+
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        StringBuffer v_sql_createTable = new StringBuffer();
+        StringBuffer v_sql_callProc = new StringBuffer();
+
+        v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH ( ")
+                            .append("TENANT_ID NVARCHAR(5), ")
+                            .append("COMPANY_CODE NVARCHAR(10), ")
+                            .append("LOI_WRITE_NUMBER NVARCHAR(50), ")
+                            .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
+                        .append(")");
+        
+        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH VALUES (?, ?, ?, ?)";
+
+        v_sql_callProc.append("CALL EP_SAVE_LOI_PUBLISH_PROC ( ")
+                    .append(" I_TENANT_ID => ?, ")
+                    .append(" I_COMPANY_CODE => ?, ")
+                    .append(" I_LOI_PUBLISH_NUMBER => ?, ")
+                    .append(" I_LOI_PUBLISH_TITLE => ?, ")
+                    .append(" I_LOI_PUBLISH_STATUS_CODE => ?, ")
+                    .append(" I_SUPPLIER_CODE => ?, ")
+                    .append(" I_CONTRACT_FORMAT_ID => ?, ")
+                    .append(" I_OFFLINE_FLAG => ?, ")
+                    .append(" I_CONTRACT_DATE => ?, ")
+                    .append(" I_ADDITIONAL_CONDITION_DESC => ?, ")
+                    .append(" I_SPECIAL_NOTE => ?, ")
+                    .append(" I_ATTCH_GROUP_NUMBER => ?, ")
+                    .append(" I_APPROVAL_NUMBER => ?, ")
+                    .append(" I_BUYER_EMPNO => ?, ")
+                    .append(" I_PURCHASING_DEPARTMENT_CODE => ?, ")
+                    .append(" I_REMARK => ?, ")
+                    .append(" I_ORG_TYPE_CODE => ?, ")
+                    .append(" I_ORG_CODE => ?, ")
+                    .append(" I_USER_ID => ?, ")
+                    .append(" I_TABLE => #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH, ")
+                    .append(" O_RTN_MSG => ? ")
+                .append(" )");        
+
+        StringBuffer strRsltBuf = new StringBuffer();  
+        //int uCnt = 0;              
+
+        try {
+
+            Connection conn = jdbc.getDataSource().getConnection();
+
+            // Detail Local Temp Table 생성
+            PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
+            v_statement_tableD.execute();
+
+            //for(SaveLoiPublishType v_indata :  v_inMultiData){
+
+            log.info("###getDetails().size()===="+v_indata.getDetails().size());
+
+            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
+            // SaveLoiPublishType v_result = SaveLoiPublishType.create();
+            // Collection<LoiDtlType> v_resultDetails = new ArrayList<>();
+
+            log.info("###getTenantId===="+v_indata.getTenantId());
+            log.info("###getCompanyCode===="+v_indata.getCompanyCode());
+            log.info("###getLoiPublishNumber11===="+v_indata.getLoiPublishNumber());
+            log.info("###getLoiPublishNumber22===="+v_indata.get("loi_publish_number"));
+
+            // Detail Local Temp Table에 insert
+            PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
+
+            if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+                for(LoiDtlType v_inRow : v_inDetails){
+
+                    log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
+
+                    v_statement_insertD.setObject(1, v_inRow.getTenantId());
+                    v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
+                    v_statement_insertD.setObject(3, v_inRow.getLoiWriteNumber());
+                    v_statement_insertD.setObject(4, v_inRow.getLoiItemNumber());
+                    v_statement_insertD.addBatch();
+                }
+                v_statement_insertD.executeBatch();
+            }
+
+            // Procedure Call
+            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+            v_statement_proc.setObject(1, v_indata.get("tenant_id"));
+            v_statement_proc.setObject(2, v_indata.get("company_code"));
+            v_statement_proc.setObject(3, v_indata.get("loi_publish_number"));
+            v_statement_proc.setObject(4, v_indata.get("loi_publish_title"));
+            v_statement_proc.setObject(5, v_indata.get("loi_publish_status_code"));
+            v_statement_proc.setObject(6, v_indata.get("supplier_code"));
+            v_statement_proc.setObject(7, v_indata.get("contract_format_id"));
+            v_statement_proc.setObject(8, v_indata.get("offline_flag"));
+            v_statement_proc.setObject(9, v_indata.get("contract_date"));
+            v_statement_proc.setObject(10, v_indata.get("additional_condition_desc"));
+            v_statement_proc.setObject(11, v_indata.get("special_note"));
+            v_statement_proc.setObject(12, v_indata.get("attch_group_number"));
+            v_statement_proc.setObject(13, v_indata.get("approval_number"));
+            v_statement_proc.setObject(14, v_indata.get("buyer_empno"));
+            v_statement_proc.setObject(15, v_indata.get("purchasing_department_code"));
+            v_statement_proc.setObject(16, v_indata.get("remark"));
+            v_statement_proc.setObject(17, v_indata.get("org_type_code"));
+            v_statement_proc.setObject(18, v_indata.get("org_code"));
+            v_statement_proc.setObject(19, v_indata.get("user_id"));
+
+            int dCnt = v_statement_proc.executeUpdate();
+            log.info("###dCnt===="+dCnt);
+
+            // v_result.setDetails(v_resultDetails);
+            // v_results.add(v_result);
+
+            // Detail Local Temp Table trunc
+            PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
+            v_statement_trunc_tableD.execute();
+
+            //uCnt += dCnt;
+
+            //}
+
+			String rsltMesg = "SUCCESS";
+
+			strRsltBuf.append("{")
+					.append("\"rsltCd\":\"000\"")
+					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
+					.append(", \"rsltCnt\":"+dCnt+"")
+					.append("}");
+
+            context.setResult(strRsltBuf.toString());
+            log.info("### EP_SAVE_LOI_PUBLISH_PROC 프로시저 호출종료 ###");
+
+		} catch (SQLException sqlE) {
+			sqlE.printStackTrace();
+			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
+		} finally {
+			context.setCompleted();
+		}
+    }    
+
+    // //발행품의 테스트
+    // @Transactional(rollbackFor = SQLException.class)
+    // @On(event = SaveLoiPublishProcContext.CDS_NAME)
+    // public void onSaveLoiPublishProc(SaveLoiPublishProcContext context) {
+
+    //     log.info("### EP_SAVE_LOI_PUBLISH_PROC 프로시저 호출시작 ###");
+
+    //     // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+    //     String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+
+    //     // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+    //     //String v_sql_createTableH = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_H (HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+    //     //String v_sql_createTableD = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (DETAIL_ID BIGINT, HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+
+    //     StringBuffer v_sql_createTableH = new StringBuffer();
+	// 	v_sql_createTableH.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH ( ")
+	// 								.append("TENANT_ID NVARCHAR(5), ")
+	// 								.append("COMPANY_CODE NVARCHAR(10), ")
+    //                                 .append("LOI_PUBLISH_NUMBER NVARCHAR(50), ")
+    //                                 .append("LOI_PUBLISH_TITLE NVARCHAR(100), ")
+    //                                 .append("LOI_PUBLISH_STATUS_CODE NVARCHAR(30), ")
+    //                                 .append("SUPPLIER_CODE NVARCHAR(15), ")
+    //                                 .append("CONTRACT_FORMAT_ID NVARCHAR(100), ")
+    //                                 .append("OFFLINE_FLAG BOOLEAN, ")
+    //                                 .append("CONTRACT_DATE NVARCHAR(8), ")
+    //                                 .append("ADDITIONAL_CONDITION_DESC NVARCHAR(1000), ")
+    //                                 .append("SPECIAL_NOTE NCLOB, ")
+    //                                 .append("ATTCH_GROUP_NUMBER NVARCHAR(100), ")
+    //                                 .append("APPROVAL_NUMBER NVARCHAR(50), ")
+    //                                 .append("BUYER_EMPNO NVARCHAR(30), ")
+    //                                 .append("PURCHASING_DEPARTMENT_CODE NVARCHAR(50), ")
+    //                                 .append("REMARK NVARCHAR(3000), ")
+    //                                 .append("ORG_TYPE_CODE NVARCHAR(2), ")
+    //                                 .append("ORG_CODE NVARCHAR(10) ")
+    //                             .append(")");
+
+        
+    //     StringBuffer v_sql_createTableD = new StringBuffer();
+	// 	v_sql_createTableD.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_EP_SAVE_LOI_DTL ( ")
+	// 								.append("TENANT_ID NVARCHAR(5), ")
+	// 								.append("COMPANY_CODE NVARCHAR(10), ")
+	// 								.append("LOI_WRITE_NUMBER NVARCHAR(50), ")
+    //                                 .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
+    //                             .append(")");   
+
+
+    //     String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_H";
+    //     String v_sql_dropableD = "DROP TABLE #LOCAL_TEMP_D";
+
+    //     String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    //     String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?)";
+
+    //     String v_sql_callProc = "CALL EP_SAVE_LOI_PUBLISH_PROC(I_H_TABLE => #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH, I_D_TABLE => #LOCAL_TEMP_EP_SAVE_LOI_DTL, O_D_TABLE => ?)";
+
+    //     Collection<SaveLoiPublishType> v_inHeaders = context.getInputData().getSaveLoiPublishType();
+    //     Collection<SaveLoiDtlType> v_inDetails = context.getInputData().getSavedReqDetails();
+ 
+    //     SavePublishReturnType v_result = SavePublishReturnType.create();
+    //     Collection<SaveLoiPublishType> v_resultH = new ArrayList<>();
+    //     //Collection<SaveLoiDtlType> v_resultD = new ArrayList<>();
+
+
+    //     // Commit Option
+    //     jdbc.execute(v_sql_commitOption);
+
+    //     // Local Temp Table 생성
+    //     jdbc.execute(v_sql_createTableH.toString());
+    //     jdbc.execute(v_sql_createTableD.toString());
+
+    //     // Header Local Temp Table에 insert
+    //     List<Object[]> batchH = new ArrayList<Object[]>();
+    //     if(!v_inHeaders.isEmpty() && v_inHeaders.size() > 0){
+    //         for(SavedHeaders v_inRow : v_inHeaders){
+    //             Object[] values = new Object[] {
+    //                 v_inRow.get("tenant_id"),
+    //                 v_inRow.get("company_code"),
+    //                 v_inRow.get("loi_publish_number"),
+    //                 v_inRow.get("loi_publish_title"),
+    //                 v_inRow.get("loi_publish_status_code"),
+    //                 v_inRow.get("supplier_code"),
+    //                 v_inRow.get("contract_format_id"),
+    //                 v_inRow.get("offline_flag"),
+    //                 v_inRow.get("contract_date"),
+    //                 v_inRow.get("additional_condition_desc"),
+    //                 v_inRow.get("special_note"),
+    //                 v_inRow.get("attch_group_number"),
+    //                 v_inRow.get("approval_number"),
+    //                 v_inRow.get("buyer_empno"),
+    //                 v_inRow.get("purchasing_department_code"),
+    //                 v_inRow.get("remark"),
+    //                 v_inRow.get("org_type_code"),
+    //                 v_inRow.get("org_code"),
+    //             };
+    //             //log.info("header values====", values);
+    //             batchH.add(values);
+    //         }
+    //     }
+
+    //     int[] updateCountsH = jdbc.batchUpdate(v_sql_insertTableH, batchH);
+
+    //     // Detail Local Temp Table에 insert
+    //     List<Object[]> batchD = new ArrayList<Object[]>();
+    //     if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+    //         for(SavedReqDetails v_inRow : v_inDetails){
+    //             Object[] values = new Object[] {
+    //                 v_inRow.get("tenant_id"),
+    //                 v_inRow.get("company_code"),
+    //                 v_inRow.get("loi_write_number"),
+    //                 v_inRow.get("loi_item_number"),
+    //             };
+    //             // log.info("detail values====", values);
+    //             batchD.add(values);
+    //         }
+    //     } 
+
+    //     int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+
+    //     boolean delFlag = false;
+
+    //     SqlReturnResultSet oDTable = new SqlReturnResultSet("O_D_TABLE", new RowMapper<SavedReqDetails>(){
+    //         @Override
+    //         public SavedReqDetails mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+    //             SavedReqDetails v_row = SavedReqDetails.create();
+    //             // v_row.setTenantId(v_rs.getString("tenant_id"));
+    //             // v_row.setCompanyCode(v_rs.getString("company_code"));
+    //             // v_row.setLoiWriteNumber(v_rs.getString("loi_publish_number"));
+    //             // v_row.setLoiItemNumber(v_rs.getString("loi_publish_title"));
+    //             // v_row.setItemSequence(v_rs.getString("loi_publish_status_code"));
+    //             // v_row.setPlantCode(v_rs.getString("supplier_code"));
+    //             // v_row.setEpItemCode(v_rs.getString("contract_format_id"));
+    //             // v_row.setItemDesc(v_rs.getString("offline_flag"));
+    //             // v_row.setUnit(v_rs.getString("contract_date"));
+    //             // v_row.setRequestQuantity(v_rs.getString("additional_condition_desc"));
+    //             // v_row.setCurrencyCode(v_rs.getString("special_note"));
+    //             // v_row.setRequestAmount(v_rs.getString("attch_group_number"));
+    //             // v_row.setSupplierCode(v_rs.getString("approval_number"));
+    //             // v_row.setBuyerEmpno(v_rs.getString("buyer_empno"));
+    //             // v_row.setPurchasingDepartmentCode(v_rs.getString("purchasing_department_code"));
+    //             // v_row.setRemark(v_rs.getString("remark"));
+    //             // v_row.setRowState(v_rs.getString("org_type_code"));
+    //             // v_row.setRowState(v_rs.getString("org_code"));
+    //             v_resultD.add(v_row);
+    //             return v_row;
+    //         }
+    //     });
+        
+    //     List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+    //     paramList.add(oDTable);
+
+    //     Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+    //         @Override
+    //         public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+    //             String callProc = "";
+
+    //             callProc = v_sql_callProc;
+                
+    //             CallableStatement callableStatement = connection.prepareCall(callProc);
+    //             return callableStatement;
+    //         }
+    //     }, paramList);
+
+    //     // Local Temp Table DROP
+    //     jdbc.execute(v_sql_dropableH);
+    //     jdbc.execute(v_sql_dropableD);
+
+    //     v_result.setSavedHeaders(v_resultH);
+    //     v_result.setSavedReqDetails(v_resultD);
+
+    //     context.setResult(v_result);
+    //     context.setCompleted();
+
+    // }    
+
+    //LOI 발행품의 삭제
+    @On(event = DeleteLoiPublishProcContext.CDS_NAME)
+    public void onDeleteLoiPublishProc(DeleteLoiPublishProcContext context) {
+
+        log.info("### EP_DELETE_LOI_PUBLISH_PROC 프로시저 호출시작 ###");
+
+        
+        DelLoiPublishType v_indata = context.getInputData();
+
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        StringBuffer v_sql_createTable = new StringBuffer();
+        StringBuffer v_sql_callProc = new StringBuffer();
+
+        v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH ( ")
+                            .append("TENANT_ID NVARCHAR(5), ")
+                            .append("COMPANY_CODE NVARCHAR(10), ")
+                            .append("LOI_WRITE_NUMBER NVARCHAR(50), ")
+                            .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
+                        .append(")");
+        
+        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH VALUES (?, ?, ?, ?)";
+
+        v_sql_callProc.append("CALL EP_DELETE_LOI_PUBLISH_PROC ( ")
+                    .append(" I_TENANT_ID => ?, ")
+                    .append(" I_COMPANY_CODE => ?, ")
+                    .append(" I_LOI_PUBLISH_NUMBER => ?, ")
+                    .append(" I_USER_ID => ?, ")
+                    .append(" I_TABLE => #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH, ")
+                    .append(" O_RTN_MSG => ? ")
+                .append(" )");        
+
+        StringBuffer strRsltBuf = new StringBuffer();  
+        //int uCnt = 0;              
+
+        try {
+
+            Connection conn = jdbc.getDataSource().getConnection();
+
+            // Detail Local Temp Table 생성
+            PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
+            v_statement_tableD.execute();
+
+            log.info("###getDetails().size()===="+v_indata.getDetails().size());
+
+            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
+
+            log.info("###getTenantId===="+v_indata.getTenantId());
+            log.info("###getCompanyCode===="+v_indata.getCompanyCode());
+            log.info("###getLoiPublishNumber11===="+v_indata.getLoiPublishNumber());
+            log.info("###getLoiPublishNumber22===="+v_indata.get("loi_publish_number"));
+
+            // Detail Local Temp Table에 insert
+            PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
+
+            if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+                for(LoiDtlType v_inRow : v_inDetails){
+
+                    log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
+
+                    v_statement_insertD.setObject(1, v_inRow.getTenantId());
+                    v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
+                    v_statement_insertD.setObject(3, v_inRow.getLoiWriteNumber());
+                    v_statement_insertD.setObject(4, v_inRow.getLoiItemNumber());
+                    v_statement_insertD.addBatch();
+                }
+                v_statement_insertD.executeBatch();
+            }
+
+            // Procedure Call
+            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+            v_statement_proc.setObject(1, v_indata.get("tenant_id"));
+            v_statement_proc.setObject(2, v_indata.get("company_code"));
+            v_statement_proc.setObject(3, v_indata.get("loi_publish_number"));
+            v_statement_proc.setObject(4, v_indata.get("user_id"));
+
+            int dCnt = v_statement_proc.executeUpdate();
+            log.info("###dCnt===="+dCnt);
+
+            // v_result.setDetails(v_resultDetails);
+            // v_results.add(v_result);
+
+            // Detail Local Temp Table trunc
+            PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
+            v_statement_trunc_tableD.execute();
+
+            //uCnt += dCnt;
+
+            //}
+
+			String rsltMesg = "SUCCESS";
+
+			strRsltBuf.append("{")
+					.append("\"rsltCd\":\"000\"")
+					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
+					.append(", \"rsltCnt\":"+dCnt+"")
+					.append("}");
+
+            context.setResult(strRsltBuf.toString());
+            log.info("### EP_DELETE_LOI_PUBLISH_PROC 프로시저 호출종료 ###");
+
+		} catch (SQLException sqlE) {
+			sqlE.printStackTrace();
+			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
+		} finally {
+			context.setCompleted();
+		}
+    }        
 
     @Transactional(rollbackFor = SQLException.class)
     @On(event = SaveLoiRequestMultiEntitylProcContext.CDS_NAME)
@@ -685,7 +1120,7 @@ public class LoiMgtV4 implements EventHandler {
 
         v_result.setSavedHeaders(v_resultH);
         v_result.setSavedReqDetails(v_resultD);
-
+  
         context.setResult(v_result);
         context.setCompleted();
 
@@ -757,10 +1192,11 @@ public class LoiMgtV4 implements EventHandler {
 									.append("COMPANY_CODE NVARCHAR(10), ")
 									.append("LOI_WRITE_NUMBER NVARCHAR(50), ")
 									.append("LOI_ITEM_NUMBER NVARCHAR(50), ")
-									.append("SUPPLIER_CODE NVARCHAR(15) ")
+                                    .append("SUPPLIER_CODE NVARCHAR(15), ")
+                                    .append("ROW_STATE NVARCHAR(5) ")
 								.append(")");
 
-		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE VALUES (?, ?, ?, ?, ?)";
+		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE VALUES (?, ?, ?, ?, ?, ?)";
 		String v_sql_callProc = "CALL EP_PO_SUPPLIER_SAVE_PROC( I_TABLE => #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE, O_RTN_MSG => ? )";
 
 		String v_result = "";
@@ -781,13 +1217,14 @@ public class LoiMgtV4 implements EventHandler {
 			if(!v_inRows.isEmpty() && v_inRows.size() > 0){
 				for(SavedSuppliers v_inRow : v_inRows){
 
-					log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber()+"###"+v_inRow.getSupplierCode());
+					log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber()+"###"+v_inRow.getSupplierCode()+"###"+v_inRow.getRowState());
 
                     v_statement_insert.setString(1, v_inRow.getTenantId());
 	 				v_statement_insert.setString(2, v_inRow.getCompanyCode());
 	 				v_statement_insert.setString(3, v_inRow.getLoiWriteNumber());
 	 				v_statement_insert.setString(4, v_inRow.getLoiItemNumber());
                     v_statement_insert.setString(5, v_inRow.getSupplierCode());
+                    v_statement_insert.setString(6, v_inRow.getRowState());
                      
 
 					//v_statement_insert.executeUpdate();
@@ -822,5 +1259,7 @@ public class LoiMgtV4 implements EventHandler {
 		}
 
     }
+
+
 
 }

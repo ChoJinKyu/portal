@@ -163,6 +163,31 @@ sap.ui.define([
          * @see 사용처 DialogCreate Fragment Open 이벤트
          */
 
+         onDialogTreeCreate: function (){
+            var oView = this.getView();
+
+			if (!this.treeDialog) {
+				this.treeDialog = Fragment.load({
+					id: oView.getId() ,
+					name: "pg.vp.vpMgt.view.DialogCreateTree",
+					controller: this
+				}).then(function (tDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(tDialog);
+					return tDialog;
+				});
+			} 
+			this.treeDialog.then(function(tDialog) {
+                tDialog.open();
+                // this.onAfterDialog();
+			}.bind(this));
+        },
+        createTreePopupClose: function (oEvent){
+            console.log(oEvent);
+            this.byId("ceateVpCategorytree").close();
+        }, 
+
+
          onDialogCreate: function (){
             var oView = this.getView();
 

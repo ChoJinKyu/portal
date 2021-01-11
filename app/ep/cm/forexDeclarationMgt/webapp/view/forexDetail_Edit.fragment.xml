@@ -1,0 +1,142 @@
+<!-- <core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogForex" class="sapUiSmallMargin" title="" contentWidth="35%" >
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm id="RfqForm" editable="false" >
+                <form:toolbar>
+                    <Toolbar>
+                        <Title id="Title1" text="외화신고대상 상세"/>
+                    </Toolbar>
+                </form:toolbar>   
+       
+                    <Label text="PO번호"/>
+                    <Input id="saveQuotationNumber" value="{
+                        type: 'sap.ui.model.type.String',
+                        constraints: {
+                            maxLength: 50
+                        }
+                    }" required="true" editable="true"/>
+                    <Label text="PO명"/>
+                    <Input id="saveQuotationItemNumber" value="{
+                        type: 'sap.ui.model.type.String',
+                        constraints: {
+                            maxLength: 50
+                        }
+                    }" required="true" editable="true"/>      
+           
+            </form:SimpleForm> 
+        </VBox>       
+      
+        <ToolbarSpacer/>
+        <HBox alignItems="Center" justifyContent="Center" >
+            <Button text="Cancel" class="sapUiSmallMargin" press=".onExitForex"/>
+            <Button text="Save" class="sapUiSmallMargin" type="Emphasized" press=".onRfqSave"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition> -->
+
+
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:uxap="sap.uxap" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout">
+    <Dialog id="dialogForex" class="sapUiSmallMargin" title="외화신고대상 상세" contentWidth="35%">
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm
+                editable="false"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="3"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="4"
+                emptySpanM="0"
+                emptySpanS="0"
+     
+                singleContainerFullSize="false" >
+                    
+                    <form:content>
+                        <VBox>
+                            <Label text = "PO번호 : "/> 
+                             <Text id="poNumber" width="100%"/> 
+
+                             <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "PO명 : "/>
+                             <Text id="poName" width="100%"/> 
+                             <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "입고예정일자 : "/> 
+                             <!-- <Text id="receiptScheduledDate" text="{path: 'receiptScheduledDate', formatter: '.dateFormatter.toDateString'}"/> -->
+                              <Text id="receiptScheduledDate" text="{path: 'receiptScheduledDate', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
+                             <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text="신고예정일자 : " labelFor="declareScheduledDate"></Label>
+                            <DatePicker id="declareScheduledDate" placeholder="Date" />
+                            <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="신고일자 : " labelFor="declareDate"></Label>
+                            <DatePicker id="declareDate" placeholder="Date" />
+                            <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData>
+                        </VBox>
+                        
+                        <VBox>
+                            <Label text = "처리완료일자 : "/>
+                             <Text id="processedCompleteDate" width="100%"/>
+                             <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text="* 비고 : "/>
+                            <Input id="remark" value="" editable="true"/>
+                            <layoutData>
+                                <layout:GridData span="L12 M12 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text = "첨부파일 : "/>
+                             <Text id="attchGroupNumber" width="100%"/>
+                             <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData> 
+                        </VBox>
+                        
+                       </form:content>
+                    
+                  </form:SimpleForm>
+            </VBox>       
+      
+         <ToolbarSpacer/>
+        <HBox alignItems="Center" justifyContent="Center" >
+            <Button text="Draft" class="sapUiSmallMargin" type="Transparent" press=".onForexSave('S')"/>
+            <Button text="Cancel" class="sapUiSmallMargin" type="Transparent" press=".onExitForex"/>
+            <Button text="Complete" class="sapUiSmallMargin" type="Emphasized" press=".onForexSave('C')"/>
+            
+        </HBox>
+
+    </Dialog>
+</core:FragmentDefinition>

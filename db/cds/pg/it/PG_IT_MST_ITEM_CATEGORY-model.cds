@@ -25,7 +25,7 @@ entity It_Mst_Item_Category {
     key company_code          : String(10) not null @title : '회사코드';
     key org_type_code         : String(30) not null @title : '조직유형코드';
     key org_code              : String(10) not null @title : '조직코드';
-    key po_item_category_code : String(2) not null  @title : 'PO품목범주코드';
+    key po_item_category_code : String(30) not null @title : 'PO품목범주코드';
         po_item_category_name : String(30)          @title : 'PO품목범주명';
 }
 

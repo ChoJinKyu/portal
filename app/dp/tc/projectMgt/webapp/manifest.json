@@ -164,9 +164,9 @@
                     "target": "ProjectMgtList"
                 },
                 {
-                    "pattern": "ProjectMgtDetail/{tenant_id}/{project_code}/{model_code}",
-                    "name": "ProjectMgtDetail",
-                    "target": "ProjectMgtDetail"
+                    "pattern": "ProjectInfo/{tenant_id}/{project_code}/{model_code}",
+                    "name": "ProjectInfo",
+                    "target": "ProjectInfo"
                 }
             ],
             "targets": {
@@ -174,9 +174,9 @@
                     "viewId": "ProjectMgtList",
                     "viewName": "ProjectMgtList"
                 },
-                "ProjectMgtDetail": {
-                    "viewId": "ProjectMgtDetail",
-                    "viewName": "ProjectMgtDetail"
+                "ProjectInfo": {
+                    "viewId": "ProjectInfo",
+                    "viewName": "ProjectInfo"
                 }
             }
         }

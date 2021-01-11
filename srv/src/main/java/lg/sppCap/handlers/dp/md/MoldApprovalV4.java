@@ -201,7 +201,7 @@ public class MoldApprovalV4 implements EventHandler {
                 ApprovalMasters master =  ApprovalMasters.create();  
                 master.setTenantId(aMaster.getTenantId());
                 master.setApprovalNumber(approvalNumer_create);
-                master.setOrgTypeCode("AU");
+                master.setOrgTypeCode(aMaster.getOrgTypeCode());
                 master.setCompanyCode(aMaster.getCompanyCode());
                 master.setOrgCode(aMaster.getOrgCode());
                 master.setChainCode(aMaster.getChainCode());

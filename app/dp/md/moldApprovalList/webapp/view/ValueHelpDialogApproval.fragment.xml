@@ -41,7 +41,7 @@
                                     showValueHelp="false"
                                     suggestionItems="{
                                         path: '/Requestors',
-                                        sorter: { path: 'user_id' }
+                                        sorter: { path: 'email_id' }
                                     }"
                             >
                                 <core:Item key="{tenant_id}" text="{tenant_id}" />

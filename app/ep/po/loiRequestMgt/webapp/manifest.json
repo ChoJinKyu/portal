@@ -46,13 +46,6 @@
         "settings": {
           "odataVersion": "2.0"
         }
-      },
-      "orgMgtService": {
-        "uri": "srv-api/odata/v2/cm.util.OrgService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
       }
     }
   },
@@ -133,16 +126,6 @@
           "autoExpandSelect": true
         }
       },
-      "org": {
-        "dataSource": "orgMgtService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": true,
-          "useBatch": true
-        }
-      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -171,12 +154,12 @@
       ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../../lib",
-      
-      "3rd.lib": "../../../node_modules"
+      "ext.lib": "../../../../lib"
     },
     "routing": {
-      "config": {
+  
+
+       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "ep.po.loiRequestMgt.view",
@@ -189,39 +172,44 @@
         },
         "async": true
       },
+ 
+
+      
       "routes": [
-        {
-          "pattern": "",
-          "name": "mainPage",
-          "target": [
-            "mainObject"
-          ]
-        },
-        {
-          "pattern": "midObject/{tenantId}/{companyCode}/{loiWriteNumber}",
-          "name": "midPage",
-          "target": [
-            "midObject"
-          ]
-        }
-      ],
-      "targets": {
-        "mainObject": {
-          "viewName": "MainList",
-          "viewId": "mainPage",
-          "viewLevel": 1
-        },
-        "midObject": {
-          "viewName": "MidObject",
-          "viewId": "midPage",
-          "viewLevel": 2
-        },
-        "notFound": {
+				{
+					"pattern": "",
+					"name": "mainPage",
+					"target": [
+						"mainObject"
+					]
+				},
+				{
+					"pattern": "midObject/{layout}/{tenantId}/{companyCode}/{loiWriteNumber}",
+					"name": "midPage",
+					"target": [
+						"midObject"
+					]
+				}
+            ],
+        "targets": {
+
+                "mainObject": {
+                    "viewName": "MainList",
+                    "viewId": "mainPage",
+                    "viewLevel": 1
+                },
+				"midObject": {
+                    "viewName": "MidObject",
+                    "viewId": "midPage",
+                    "viewLevel": 2
+				},
+				"notFound": {
           "viewName": "NotFound",
           "viewPath": "ext.lib.view",
           "viewId": "notFound"
         }
-      }
+    }
+
     }
   },
   "sap.cloud": {

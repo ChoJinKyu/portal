@@ -1,115 +1,153 @@
 sap.ui.define([
     "sap/ui/core/Control",
     "ext/lib/control/m/ValueHelpDialog",
-    "sap/m/Button",
-    "sap/m/Text",
-    "sap/m/Table",
-    "sap/m/Column",
-    "sap/m/ColumnListItem",
+    "ext/lib/core/service/ODataV2ServiceProvider",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/model/Sorter",
-], function (Parent, ValueHelpDialog, Button, Text, Table, Column, ColumnListItem, Filter, FilterOperator, Sorter) {
+    "sap/ui/layout/GridData",
+    "sap/m/VBox",
+    "sap/m/Column",
+    "sap/m/Label",
+    "sap/m/Text",
+    "sap/m/Input"
+], function (Parent, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
+    //TODO : Localization (Title)
     var CodeValueHelp = Parent.extend("ext.lib.control.m.CodeValueHelp", {
 
         metadata: {
             properties: {
-                title: { type: "string", group: "Appearance", defaultValue: "Choose a Code" },
-                contentWidth: { type: "string", group: "Appearance" },
+                title: { type: "string", group: "Appearance" },
+                multiSelection: { type: "boolean", group: "Misc", defaultValue: false },
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "35em"},
                 contentHeight: { type: "string", group: "Appearance" },
-                keyFieldHeaderText: { type: "string", group: "Misc", defaultValue: "Code" },
-                textFieldHeaderText: { type: "string", group: "Misc", defaultValue: "Name" },
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
                 textField: { type: "string", group: "Misc", defaultValue: "code_name" }
             },
+            defaultAggregation: "items",
+            aggregations: {
+                items: {}
+            },
             events: {
-                ok: {},
+                apply: {},
                 cancel: {}
             }
         },
 
-        init: function () {
-            Parent.prototype.init.call(this);
-            this.oDialog = new ValueHelpDialog();
-            this._firstTime = 0;
-            this.oDialog.attachEvent("beforeOpen", this._onBeforeOpen.bind(this));
+        constructor: function () {
+            Parent.apply(this, arguments);
+            this.createDialog();
         },
 
-        open: function(){
-            this.oDialog.open();
-        },
+        createDialog: function(){
+            this.oSearchKeyword = new Input({ placeholder: "Keyword"});
+            this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
 
-        onItemPress: function(oEvent){
-            var oData = this.getModel().getProperty(oEvent.getSource().getBindingContextPath());
-            this.fireEvent("ok", {data: oData});
-            this.oDialog.close();
-        },
-
-
-        _onBeforeOpen: function(){
-            if(this._firstTime++ != 0) return;
+            this.oDialog = new ValueHelpDialog({
+                multiSelection: this.getProperty("multiSelection"),
+                keyField: this.getProperty("keyField"),
+                textField: this.getProperty("textField"),
+                filters: [
+                    new VBox({
+                        items: [
+                            new Label({ text: "Keyword"}),
+                            this.oSearchKeyword
+                        ],
+                        layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    })
+                ],
+                columns: [
+                    new Column({
+                        width: "75%",
+                        header: new Text({text: "Text"})
+                    }),
+                    new Column({
+                        width: "25%",
+                        hAlign: "Center",
+                        header: new Text({text: "Code"})
+                    })
+                ],
+                cells: [
+                    new Text({text: "{"+this.getProperty("textField")+"}"}),
+                    new Text({text: "{"+this.getProperty("keyField")+"}"})
+                ]
+            });
 
             this.oDialog.setTitle(this.getProperty("title"));
             if(this.getProperty("contentWidth"))
                 this.oDialog.setContentWidth(this.getProperty("contentWidth"));
             if(this.getProperty("contentHeight"))
                 this.oDialog.setContentHeight(this.getProperty("contentHeight"));
-            this.oDialog.setModel(this.getModel());
-            this.oDialog.setBeginButton(new Button({
-                text: "Cancel",
-                press: function () {
-                    this.fireEvent("cancel");
-                    this.oDialog.close();
-                }.bind(this)
-            }));
 
-            this.oTable = new Table({
-                headerToolbar: new sap.m.OverflowToolbar({
-                    content: [
-                        new sap.m.ToolbarSpacer(),
-                        new sap.m.SearchField({
-                             width: "70%",
-                             search: this._onTableFilterSearch.bind(this)
-                        })
-                    ]
-                }),
-                columns: [
-                    new Column({
-                        width: "75%",
-                        header: new Text({text: this.getProperty("textFieldHeaderText")})
-                    }),
-                    new Column({
-                        width: "25%",
-                        hAlign: "Center",
-                        header: new Text({text: this.getProperty("keyFieldHeaderText")})
-                    })
-                ],
-                items: {
-                    path: "/",
-                    template: new ColumnListItem({
-                        type: "Active",
-                        cells: [
-                            new Text({text: "{"+this.getProperty("textField")+"}"}),
-                            new Text({text: "{"+this.getProperty("keyField")+"}"})
-                        ],
-                        press: this.onItemPress.bind(this)
-                    })
-                }
-            });
-            this.oDialog.addContent(this.oTable);
+            this.oDialog.attachEvent("searchPress", function(oEvent){
+                this.loadData();
+            }.bind(this));
+
+            this.oDialog.attachEvent("apply", function(oEvent){
+                this.fireEvent("apply", { 
+                    items: oEvent.getParameter("items"),
+                    item: oEvent.getParameter("item")
+                });
+            }.bind(this));
+
+            this.oDialog.attachEvent("cancel", function(oEvent){
+                this.fireEvent("cancel");
+            }.bind(this));
         },
 
-        _onTableFilterSearch: function(oEvent){
-            var sValue = oEvent.getSource().getValue();
-            this.oTable.getBinding("items").filter(new Filter({
-                    filters: [
-                        new Filter(this.getProperty("keyField"), FilterOperator.Contains, sValue),
-                        new Filter(this.getProperty("textField"), FilterOperator.Contains, sValue)
-                    ],
-                    and: false
-                }));
+        getTokens: function(){
+            return this.oDialog.getTokens();
+        },
+
+        setTokens: function(aTokens){
+            return this.oDialog.setTokens(aTokens);
+        },
+
+        extractBindingInfo(oValue, oScope){
+            if(oValue && (oValue.serviceName || oValue.serviceUri) && oValue.entityName){
+                var oParam = jQuery.extend(true, {}, oValue);
+
+                delete oValue.filters;
+                delete oValue.sorters;
+                delete oValue.parameters;
+                delete oValue.serviceName;
+                delete oValue.serviceUri;
+                delete oValue.entityName;
+
+                this.oServiceModel = oParam.serviceName ? 
+                    ODataV2ServiceProvider.getService(oParam.serviceName) : ODataV2ServiceProvider.getServiceByUrl(oParam.serviceUri);
+                this.oServiceParam = jQuery.extend(oParam, {
+                    success: function(oData){
+                        var aRecords = oData.results;
+                        this.oDialog.setData(aRecords, false);
+                    }.bind(this)
+                });
+            }else{
+                return Parent.prototype.extractBindingInfo.call(this, oValue, oScope);
+            }
+        },
+
+        loadData: function(){
+            var sKeyword = this.oSearchKeyword.getValue(),
+                oParam = jQuery.extend(true, {}, this.oServiceParam);
+            if(sKeyword){
+                oParam.filters.push(
+                    new Filter({
+                        filters: [
+                            new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
+                            new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                        ],
+                        and: false
+                    })
+                );
+            }
+            this.oServiceModel.read("/" + oParam.entityName, oParam);
+        },
+        
+        open: function(){
+            this.loadData();
+            this.oDialog.open();
         }
 
     });

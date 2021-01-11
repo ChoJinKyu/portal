@@ -214,9 +214,9 @@
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
-                                        sorter: { path: 'user_id' }
+                                        sorter: { path: 'email_id' }
                             }">
-                            <core:Item key="{user_id}" text="{user_id}" />
+                            <core:Item key="{email_id}" text="{email_id}" />
                                 
                             </Input>
                            

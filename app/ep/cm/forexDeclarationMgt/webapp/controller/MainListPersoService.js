@@ -4,57 +4,105 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "ctryMgr-mainList-mainColumnCode",
+                id: "forexDeclarationMgt-mainTable-mainPoNumber",
                 order: 0,
-                text: "Code",
+                text: "PO번호",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnName",
+                id: "forexDeclarationMgt-mainTable-mainPoName",
                 order: 1,
-                text: "Name",
-                visible: false
+                text: "PO명",
+                visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnStartDate",
+                id: "forexDeclarationMgt-mainTable-mainPlantName",
                 order: 2,
-                text: "Start Date",
-                visible: false
+                text: "플랜트",
+                visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnEndDate",
+                id: "forexDeclarationMgt-mainTable-mainCurrencyName",
                 order: 3,
-                text: "End Date",
+                text: "통화",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnSiteFlag",
+                id: "forexDeclarationMgt-mainTable-mainPoAmount",
                 order: 4,
-                text: "Site",
+                text: "PO금액",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnCompanyFlag",
+                id: "forexDeclarationMgt-mainTable-mainPrepayAmount",
                 order: 5,
-                text: "Company",
+                text: "선급금액",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnRoleFlag",
-                order: 5,
-                text: "Role",
-                visible: true
-            },
-            {
-                id: "ctryMgr-mainList-mainColumnOrganizationFlag",
+                id: "forexDeclarationMgt-mainTable-mainSupplierName",
                 order: 6,
-                text: "Organization",
+                text: "협력사",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnUserFlag",
+                id: "forexDeclarationMgt-mainTable-mainPoDate",
                 order: 7,
-                text: "User",
+                text: "PO일자",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainReceiptScheduledDate",
+                order: 8,
+                text: "입고예정일자",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainReceiptDate",
+                order: 9,
+                text: "입고일자",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainDeclareScheduledDate",
+                order: 10,
+                text: "신고예정일자",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainDeclareDate",
+                order: 11,
+                text: "신고일자",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainManagementTargetFlag",
+                order: 12,
+                text: "관리대상여부",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainDeclareTargetFlag",
+                order: 13,
+                text: "신고대상여부",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainForexDeclareStatusName",
+                order: 14,
+                text: "진행상태",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainPurchasingDepartmentName",
+                order: 15,
+                text: "구매담당부서",
+                visible: true
+            },
+            {
+                id: "forexDeclarationMgt-mainTable-mainBuyerName",
+                order: 16,
+                text: "구매담당자",
                 visible: true
             }
         ];

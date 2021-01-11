@@ -736,7 +736,7 @@ sap.ui.define([
                 companyCode: oRecord.company_code,
                 loiWriteNumber: oRecord.loi_write_number,
                 loiItemNumber: oRecord.loi_item_number,
-                loiSelectionNumber: oRecord.loi_selection_number,
+                loiPublishNumber: oRecord.loi_publish_number,
                 loiNumber: oRecord.loi_number
             }, true);
         },
@@ -759,17 +759,19 @@ sap.ui.define([
                 sLoiWriteNumber = "",
                 sLoiItemNumber = "",
                 sLoiSelectionNumber = "",
+                sLoiSelectionStatusCode = "",
+                sLoiPublishNumber = "",
                 sLoiNumber = "";
-            // '122010'	'RFQ진행중'
-            // '122020'	'RFQ완료'
-            // '122030'	'작성중'
-            // '122040'	'결재진행중'
-            // '122050'	'결재반려'
-            // '122060'	'업체선정완료'         
+                // 123010	작성중			
+                // 123020	결재진행중			
+                // 123030	결재반려			
+                // 123040	결재완료			
+                // 123050	발행완료			
+                // 123060	서명완료         
 
             //RFQ 번호,상태에 따라 이동가능 여부 체크  
             var canSelect = true;
-            var quotationNumberrArr = [];
+            var loiSelectionNumberrArr = [];
 
             if (oSelected.length > 0) {
                 oSelected.forEach(function (chkIdx, index) {
@@ -781,66 +783,40 @@ sap.ui.define([
                     sCompanyCode += oModel.getData().LOIPublishItemView[chkIdx].company_code + (oSelected.length == index + 1 ? "" : ",");
                     sLoiWriteNumber += oModel.getData().LOIPublishItemView[chkIdx].loi_write_number + (oSelected.length == index + 1 ? "" : ",");
                     sLoiItemNumber += oModel.getData().LOIPublishItemView[chkIdx].loi_item_number + (oSelected.length == index + 1 ? "" : ",");
+                    sLoiSelectionNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_selection_number;
+                    sLoiSelectionStatusCode = oModel.getData().LOIPublishItemView[chkIdx].loi_selection_status_code;
                     sLoiPublishNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_publish_number;
                     sLoiNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_number;
 
                     console.log("sLoiWriteNumber=", sLoiWriteNumber);
                     console.log("sLoiItemNumber=", sLoiItemNumber);
                     console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
+                    console.log("sLoiPublishNumber=", sLoiPublishNumber);
                     console.log("sLoiNumber=", sLoiNumber);
 
-                    //업체선정번호가 있으면 링크불가
-                    if (sLoiSelectionNumber) {
-                        MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 업체선정진행상태 항목을 클릭해 주세요.");
+                    //발행번호가 있으면 링크불가
+                    if (sLoiPublishNumber) {
+                        MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 LOI발행상태 항목을 클릭해 주세요.");
                         canSelect = false;
                         return false;
                     }
 
                     /*
-                        향후 견적테이블이 생성되면 1번로직 주석 2번 로직 주석해제
+                         업체선정완료가 아니면 링크불가
                     */
-
-                    /*
-                        1번 로직
-                        견적번호가 없으면 링크불가
-                    */
-                    if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
-                        MessageToast.show("견적번호가 없습니다.");
+                    if (sLoiSelectionStatusCode != "122060") {
+                        MessageToast.show("업체선정완료된 항목만 선택해주세요.");
                         canSelect = false;
                         return false;
                     }
 
-                    //견적번호 동일한지 체크
-                    var quotationNumber = oModel.getData().LOIPublishItemView[chkIdx].quotation_number;
-                    // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
-                    if (index > 0 && !quotationNumberrArr.includes(quotationNumber)) {
-                        MessageToast.show("견적번호가 동일하지 않습니다.");
+                    //업체선정번호가 동일한지 체크
+                    if (index > 0 && !loiSelectionNumberrArr.includes(sLoiSelectionNumber)) {
+                        MessageToast.show("업체선정번호가 동일하지 않습니다.");
                         canSelect = false;
                         return false;
                     }
-                    quotationNumberrArr.push(oModel.getData().LOIPublishItemView[chkIdx].quotation_number);
-
-                    //업체선정번호 동일한지 체크로직 추가여부 확인
-
-                    /*
-                        2번 로직
-                        RFQ 상태가 모두 완료이면 신규 등록화면 이동 - 견적테이블 조회
-                    */
-
-                    //업체선정상태코드에 따라 loiSelectionNumber 설정(신규/수정/조회)
-                    // var loiSelectionStatusCode = oModel.getData().LOIPublishItemView[chkIdx].loi_selection_status_code;
-                    // //업체선정상태가 진행중/결재반려 이면 수정화면 이동
-                    // if(loiSelectionStatusCode === "122030" || loiSelectionStatusCode === "122050") {
-                    //     linkType = "U";
-                    // }
-                    // //업체선정상태가 결재진행중/업체선정완료 이면 조회화면 이동
-                    // else if(loiSelectionStatusCode === "122040" || loiSelectionStatusCode === "122060") {
-                    //     linkType = "V";
-                    // }
-                    // else {
-                    //     linkType = "C";
-                    //     sLoiSelectionNumber = "new";
-                    // }
+                    loiSelectionNumberrArr.push(sLoiSelectionNumber);
 
                 });
             }else {
@@ -849,11 +825,11 @@ sap.ui.define([
             }
 
             //업체선정번호가 없으면 신규저장모드
-            if (!sLoiSelectionNumber) {
-                sLoiSelectionNumber = "new";
+            if (!sLoiPublishNumber) {
+                sLoiPublishNumber = "new";
             }
 
-            console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
+            console.log("sLoiPublishNumber=", sLoiPublishNumber);
             console.log("canSelect=", canSelect);
 
             if (canSelect) {
@@ -865,7 +841,7 @@ sap.ui.define([
                     companyCode: sCompanyCode,
                     loiWriteNumber: sLoiWriteNumber,
                     loiItemNumber: sLoiItemNumber,
-                    loiSelectionNumber: sLoiSelectionNumber,
+                    loiPublishNumber: sLoiPublishNumber,
                     loiNumber: sLoiNumber
                 }, true);
 
