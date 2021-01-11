@@ -16,10 +16,7 @@ BEGIN
 
 		
 	/* 2. 배열가져와서 각 품의별 몰드 테이블 업데이트 NULL치는 작업*/	
-	CASE I_APPROVAL_TYPE_CODE 
 
-       
-	END CASE;
 
 		
 	/* 3. 품의서 공통으로 포함되는 테이블 데이터 삭제*/
