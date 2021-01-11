@@ -9,7 +9,7 @@
     xmlns:form="sap.ui.layout.form"
     displayBlock="true">
 	
-	<Dialog title="Supplier"
+	<Dialog title="{I18N>/SUPPLIER}"
             contentWidth="50%"
             contentHeight="50%">
 		<content>
@@ -21,31 +21,35 @@
                 <headerToolbar>
                     <OverflowToolbar>
                         <content>
-                            <Title text="Supplier List" level="H2" />
+                            <Title text="{I18N>/SUPPLIER_LIST}" level="H2" />
                             <ToolbarSpacer />
-                            <SearchField search=".onGetDialogData" width="15rem"/>
+                            <SearchField search=".onGetDialogData" width="15rem">
+                                <customData>
+                                    <core:CustomData key="dialog" value="supplier"  />
+                                </customData>
+                            </SearchField>
                         </content>
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column hAlign="Center" width="3rem" >
+                    <Column hAlign="Center" width="4rem" >
                         <header>
-                            <Label text="Div" />                            
+                            <Label text="{I18N>/BUSINESS_DIVISION}" />                            
                         </header>
                     </Column>
                     <Column hAlign="Center" width="7rem" >
                         <header>
-                            <Label text="Supplier Code" />                            
+                            <Label text="{I18N>/SUPPLIER_CODE}" />                            
                         </header>
                     </Column>
                     <Column hAlign="Center" width="20rem" >
                         <header>
-                            <Label text="Local Name" />                            
+                            <Label text="{I18N>/SUPPLIER_LOCAL_NAME}" />                            
                         </header>
                     </Column>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="English Name" />                            
+                            <Label text="{I18N>/SUPPLIER_ENGLISH_NAME}" />                            
                         </header>
                     </Column>
                 </columns>
@@ -64,10 +68,10 @@
 		<beginButton>
             <Button text="Close" press=".onClose" />
         </beginButton>
-        <endButton>
+        <!-- <endButton>
             <Button  text="Apply" 
                 type="Emphasized"
                 press=".onDailogRowDataApply" />
-        </endButton>
+        </endButton> -->
 	</Dialog>
 </core:FragmentDefinition>

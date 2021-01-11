@@ -2,7 +2,8 @@ sap.ui.define([
   "ext/lib/controller/BaseController",
   "sap/ui/model/json/JSONModel",
   "ext/lib/model/ManagedListModel",
-  "ext/lib/formatter/DateFormatter"
+  "ext/lib/formatter/DateFormatter",
+  "ext/lib/formatter/NumberFormatter"
     ],
     /**
      * 
@@ -11,12 +12,13 @@ sap.ui.define([
      * @param {*} ManagedListModel 
      * @param {*} DateFormatter 
      */
-  function (BaseController, JSONModel, ManagedListModel, DateFormatter) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.blocks.project.BlockPrice", {
 
-        dateFormatter: DateFormatter
+          dateFormatter: DateFormatter
+        , numberFormatter: NumberFormatter
 
         , onInit: function () {
             this._pivottingData();
@@ -27,7 +29,7 @@ sap.ui.define([
          */
         , _pivottingData: function() {
             var oDetailData = this.getOwnerComponent().getModel("detailModel").getData();
-            //Grid Table 별로 re
+            //Grid Table 별로 
             var oEvents = oDetailData.events ? oDetailData.events.results : [];//개발일정
 
             var oMtlmob = oDetailData.mtlmob ? oDetailData.mtlmob.results : [];//판가/물동/원가의 예상물동
@@ -41,22 +43,44 @@ sap.ui.define([
             var aEventsData = this._reCompositData(oEvents, "develope_event_code", "start_date");
             this.setModel(new JSONModel(aEventsData), "eventsModel");
             this._factoryTableColumns("tblEvents", "Center", true);
-            this._factoryTableColumns("tblEvents_edit", "Center", false);
+            this._factoryTableColumns("tblEvents_edit", "Center", false, "DatePicker");
 
 
             //판가/물동/원가
-            oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동"});
-            oSalesPrice.unshift({"period_code" : "구분", "addition_type_value" : "판가"});
-            oPrcsCost.unshift({"period_code" : "구분", "addition_type_value" : "가공비"});
-            oSgna.unshift({"period_code" : "구분", "addition_type_value" : "판관비"});
-
-            var aPriceData = this._reCompositData(oMtlmob, "period_code", "addition_type_value");
+            var aPriceData = {};
+            if(oMtlmob.length > 0) {
+                oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동"});
+                aPriceData = this._reCompositData(oMtlmob, "period_code", "addition_type_value");
+            }
+            if(oSalesPrice.length > 0) {
+                oSalesPrice.unshift({"period_code" : "구분", "addition_type_value" : "판가"});
+                if(!aPriceData.hasOwnProperty("datas")) {
+                    aPriceData = this._reCompositData(oSalesPrice, "period_code", "addition_type_value");
+                } else {
+                    aPriceData.datas.push(this._addRowToPivotObj(oSalesPrice, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "판가"}));                    
+                }
+            }
+            if(oPrcsCost.length > 0) {
+                oPrcsCost.unshift({"period_code" : "구분", "addition_type_value" : "가공비"});
+                if(!aPriceData.hasOwnProperty("datas")) {
+                    aPriceData = this._reCompositData(oPrcsCost, "period_code", "addition_type_value");
+                } else {
+                    aPriceData.datas.push(this._addRowToPivotObj(oPrcsCost, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "가공비"}));
+                }
+                
+            }
+            if(oSgna.length > 0) {
+                oSgna.unshift({"period_code" : "구분", "addition_type_value" : "판관비"});
+                if(!aPriceData.hasOwnProperty("datas")) {
+                    aPriceData = this._reCompositData(oSgna, "period_code", "addition_type_value");
+                } else {
+                    aPriceData.datas.push(this._addRowToPivotObj(oSgna, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "판관비"}));
+                }
+                
+            }
+            
             if(aPriceData.datas && aPriceData.datas.length > 0) {
                 //aPriceData.datas.concat(oSalesPrice).concat(oPrcsCost).concat(oSgna);
-                aPriceData.datas.push(this._addRowToPivotObj(oSalesPrice, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "판가"}));
-                aPriceData.datas.push(this._addRowToPivotObj(oPrcsCost, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "가공비"}));
-                aPriceData.datas.push(this._addRowToPivotObj(oSgna, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "판관비"}));
-
                 this.setModel(new JSONModel(aPriceData), "priceModel");
                 this._factoryTableColumns("tblPrice", "End", true);
                 this._factoryTableColumns("tblPrice_edit", "Center", false);
@@ -117,6 +141,9 @@ sap.ui.define([
             if(Object.keys(newObj).length > 0 && newObj.constructor === Object) {
                 aDatas.push(newObj);
             }
+            if(aCols.length === 0) {
+                aCols.push({name: '구분', text: '구분'});
+            }
             return {columns: aCols, datas: aDatas};
         }
 
@@ -124,7 +151,7 @@ sap.ui.define([
          * {columns:[], data:[]} 구조의 모델정보를 바탕으로 table aggregation binding 한다.
          * @param {string} biding 하고자 하는 table name
          */
-        , _factoryTableColumns: function(sTableName, sHAlign, bReadMode) {
+        , _factoryTableColumns: function(sTableName, sHAlign, bReadMode, sEditControl) {
             var oTable = this.getView().byId(sTableName);
             var sModelName = oTable.getBindingInfo("items").model;
             var oModel  = oTable.getModel(sModelName);
@@ -143,19 +170,44 @@ sap.ui.define([
             oTable.bindAggregation("items", sModelName + ">/datas", function() {
                 return new sap.m.ColumnListItem({
                     cells : aCols.map(function (column) {
-                                console.log(column);
+                                //console.log(column);
                                 if(bReadMode) {
-                                    return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
+                                    //return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
+                                    return new sap.m.ObjectIdentifier ({
+                                        text: {
+                                            path: sModelName + ">" + column.name,
+                                            formatter: function(val) {
+                                                if($.isNumeric(val)) {
+                                                    return this.numberFormatter.toNumberString(val);
+                                                } else {
+                                                    return val;
+                                                }
+                                            }.bind(this)
+                                        }
+                                    });
                                 } else {
                                     //return new sap.m.Input({value : "{"+ sModelName +">" + column.name + "}"})
-                                    return new sap.m.Input({value: {
-                                        path: sModelName + ">" + column.name
-                                    }, textAlign: 'End'});
+                                    if(column.name === "구분") {// 나중에 별도 property 값을 적용해서 구분하게 변경 할 것.
+                                        return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
+                                    } else if(sEditControl) {
+                                        if(sEditControl === "DatePicker") {
+                                            return new sap.m.DatePicker({
+                                                value: {path: sModelName + ">" + column.name},
+                                                displayFormat: 'yyyy-MM'
+                                            });
+                                        }
+
+                                    } else {
+                                        return new sap.m.Input({value: {
+                                            path: sModelName + ">" + column.name
+                                        }, textAlign: 'End'});
+                                    }
+                                    
                                 }
                                 
-                            })
+                            }.bind(this))
                 });
-            });
+            }.bind(this));
 
             oTable.bindProperty("visible", {path : "detailModel>/mode/" + (bReadMode ? "readMode" : "editMode")});
 
@@ -218,6 +270,26 @@ sap.ui.define([
             });
             
             return {columns: aCols, datas: aDatas};
+        }
+
+        /**
+         * Input validation checking
+         */
+        , onChangeInput: function(oEvent){
+            var oSource = oEvent.getSource(),                       //input 컨트롤
+                oBinding = oSource.getBinding("value"),             //binding 정보
+                sValueState = "None",                               //valueState
+                sValueStateText = "",                               //valueStateText
+                sValue = oSource.getValue().replaceAll(",","");     //input value (decimal이지만, 아래 try부분에 넣을 때 ','가 있으면 오류를 뱉는 문제가 있어서 첨가함)
+            try {
+                oBinding.getType().validateValue(sValue)            //체크 로직(문제가 있으면 catch한다.)
+            } catch (error) {
+                sValueState = "Error";
+                sValueStateText = error.message;                    //error.message에 어떤 문제로 catch했는지 갖고있음
+            } finally {
+                oSource.setValueState(sValueState);                 //위 체크가 끝난 후 ValueState 변경
+                oSource.setValueStateText(sValueStateText);         //위 체크가 끝난 후 ValueStateText 변경
+            }
         }
     });
   }

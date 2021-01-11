@@ -91,6 +91,7 @@
                                                 class="sapUiSmallMarginBottom"                                                    
                                                 showValueHelp="true" 
                                                 enabled = "true"
+                                                valueHelpOnly="true"
                                                 placeholder="{I18N>/OPTION}"
                                                 valueHelpRequest=".handleValueHelpMaterial"
                                                 value="{
@@ -322,9 +323,10 @@
                                                             <Input value="{midList>reqm_quantity_unit}" 
                                                                 visible="{=!${oUi>/readMode}}"
                                                                 required="{=!${oUi>/readMode}}"
-                                                                submit=".onReqmQuantityUnit" 
-                                                                valueHelpRequest=".onReqmQuantityUnit" 
+                                                                submit=".onReqmQuantityUnit"                                          
+                                                                valueHelpRequest=".onReqmQuantityUnit"                                                                 
                                                                 showValueHelp="true"
+                                                                valueHelpOnly="true"
                                                                 width="90px"/> 
                                                             <Text   text="{midList>reqm_quantity_unit}"
                                                                     visible="{oUi>/readMode}"/>                                                          
@@ -348,7 +350,8 @@
                                                             <ComboBox   placeholder="{I18N>/OPTION}"
                                                                         visible="{=!${oUi>/readMode}}" 
                                                                         required="{=!${oUi>/readMode}}"
-                                                                        items ="{/UseYNView}"        
+                                                                        items ="{/UseYNView}"
+                                                                        forceSelection="false"
                                                                         selectedKey="{midList>use_flag}">  
                                                                 <items> 
                                                                     <core:ListItem key="{code}" text="{code_name}"/>

@@ -12,20 +12,25 @@
 	<Table
 		id="table"
 		mode="SingleSelectMaster"
+        showRowCount="true" 
 		growing="true"
-		growingThreshold="20"
+		growingThreshold="15"
+        sticky="HeaderToolbar,ColumnHeaders" 
 		beforeOpenContextMenu="onBeforeOpenContextMenu"
 		items="{
-			path: '{list>/MdCategory}'
-		}">
+			path: '/value'
+		}"
+        width="auto">
 		<contextMenu>
 			<Menu>
-				<MenuItem text="Move to Selected Products" press="moveToSelectedProductsTable" />
+				<MenuItem text="Move to Selected Items" press="moveToSelectedItemsTable" />
 			</Menu>
 		</contextMenu>
 		<headerToolbar>
 			<OverflowToolbar>
 				<Title text="SPMD Character List" />
+				<ToolbarSpacer/> 
+				<SearchField id="tableSearchField" width="15rem" search=".onTableFilterPress" />									
 			</OverflowToolbar>
 		</headerToolbar>
 		<columns>
@@ -48,7 +53,7 @@
 				sourceAggregation="items" />
 			<dnd:DropInfo
 				groupName="selected2available"
-				drop="onDropAvailableProductsTable" />
+				drop="onDropAvailableItemsTable" />
 		</dragDropConfig>
 		<items>
 			<ColumnListItem>

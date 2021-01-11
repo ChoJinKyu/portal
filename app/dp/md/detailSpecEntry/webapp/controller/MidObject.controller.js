@@ -138,7 +138,7 @@ sap.ui.define([
 
 			var oView = this.getView(),
                 me = this;
-                
+
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
@@ -169,6 +169,9 @@ sap.ui.define([
 
 						oTransactionManager.submit({
 							success: function(ok){
+
+                                console.log('ok',ok);
+
 								me._toShowMode();
 								oView.setBusy(false);
 								MessageToast.show(me.getModel('I18N').getText('/NCM01001') || 'NCM01001');

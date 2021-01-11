@@ -72,14 +72,14 @@ BEGIN
         VALUES (
             :I_TENANT_ID
             , :I_COMPANY_CODE 
-            , EP_LOI_SELECTION_NUMBER_SEQ.NEXTVAL
+            , LPAD(EP_LOI_SELECTION_NUMBER_SEQ.NEXTVAL, 12, '122000000001') 
             , :I_LOI_SELECTION_TITLE 
             , :I_LOI_SELECTION_STATUS_CODE  
             , :I_SPECIAL_NOTE
             -- , :I_ATTCH_GROUP_NUMBER 
             , '1234' 
-            , '5450'
-            , '58665481'
+            , '9586'
+            , '50008948'
             , CURRENT_TIMESTAMP
             , :I_REMARK 
             -- , :I_ORG_TYPE_CODE
@@ -92,7 +92,7 @@ BEGIN
             , CURRENT_TIMESTAMP
         );
 
-        SELECT MAX(CAST(LOI_SELECTION_NUMBER AS INTEGER)) 
+        SELECT MAX(CAST(LOI_SELECTION_NUMBER AS DECIMAL)) 
         INTO   R_LOI_SELECTION_NUMBER 
         FROM   EP_LI_SUPPLIER_SELECTION
         WHERE TENANT_ID = :I_TENANT_ID

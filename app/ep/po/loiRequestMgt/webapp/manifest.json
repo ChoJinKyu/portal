@@ -154,17 +154,17 @@
       ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../../lib",
-      
-      "3rd.lib": "../../../node_modules"
+      "ext.lib": "../../../../lib"
     },
     "routing": {
-      "config": {
+  
+
+       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "ep.po.loiRequestMgt.view",
-        "controlId": "fcl",
-        "transition": "slide",
+        "controlId": "app",
+        "controlAggregation": "pages",
         "bypassed": {
           "target": [
             "notFound"
@@ -172,38 +172,44 @@
         },
         "async": true
       },
+ 
+
+      
       "routes": [
-        {
-          "pattern": ":layout:",
-          "name": "mainPage",
-          "target": [
-            "mainObject"
-          ]
-        },
-        {
-          "pattern": "midObject/{layout}/{tenantId}/{companyCode}/{loiWriteNumber}",
-          "name": "midPage",
-          "target": [
-            "mainObject",
-            "midObject"
-          ]
-        }
-      ],
-      "targets": {
-        "mainObject": {
-          "viewName": "MainList",
-          "controlAggregation": "beginColumnPages"
-        },
-        "midObject": {
-          "viewName": "MidObject",
-          "controlAggregation": "midColumnPages"
-        },
-        "notFound": {
+				{
+					"pattern": "",
+					"name": "mainPage",
+					"target": [
+						"mainObject"
+					]
+				},
+				{
+					"pattern": "midObject/{layout}/{tenantId}/{companyCode}/{loiWriteNumber}",
+					"name": "midPage",
+					"target": [
+						"midObject"
+					]
+				}
+            ],
+        "targets": {
+
+                "mainObject": {
+                    "viewName": "MainList",
+                    "viewId": "mainPage",
+                    "viewLevel": 1
+                },
+				"midObject": {
+                    "viewName": "MidObject",
+                    "viewId": "midPage",
+                    "viewLevel": 2
+				},
+				"notFound": {
           "viewName": "NotFound",
           "viewPath": "ext.lib.view",
           "viewId": "notFound"
         }
-      }
+    }
+
     }
   },
   "sap.cloud": {

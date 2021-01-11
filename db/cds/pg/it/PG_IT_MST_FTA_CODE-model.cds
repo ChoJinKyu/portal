@@ -25,7 +25,7 @@ entity It_Mst_Fta_Code {
     key company_code  : String(10) not null @title : '회사코드';
     key org_type_code : String(30) not null @title : '조직유형코드';
     key org_code      : String(10) not null @title : '조직코드';
-    key fta_code      : String(6) not null  @title : 'FTA코드';
+    key fta_code      : String(30) not null @title : 'FTA코드';
         fta_desc      : String(500)         @title : 'FTA내역';
 }
 

@@ -1,10 +1,16 @@
 sap.ui.define([
 	"./Empty.controller",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "ext/cm/util/control/codePopUp"
-], function (Controller, JSONModel, MessageBox, MessageToast, codePopUp) {
+	"sap/m/MessageToast",
+	"ext/lib/control/m/CodeValueHelp",
+    "cm/util/control/CodePopUp",
+    "cm/util/control/EmployeeDialog",
+	"sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
+], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, CodePopUp, EmployeeDialog,
+        Filter, FilterOperator, Sorter) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -22,12 +28,11 @@ sap.ui.define([
                 }
             ]), "list");
 
-            this.cmCodePopUp = new codePopUp();
+            this.cmCodePopUp = new CodePopUp();
 
         },
 
         onCheckButtonPress: function(){
-            debugger;
             var sPickerCode = this.byId("searchCodePicker").getSelectedKey();
             var sPickerCodeText = this.byId("searchCodePicker").getValue();
             var sPickerTimezone = this.byId("searchTimezonePicker").getSelectedKey();
@@ -76,6 +81,77 @@ sap.ui.define([
             this.byId("cmCodePopUpGroup_Code").setText(oData.group_code);
         },
 
+        onCodeDialogPress: function(){
+            if(!this.oSearchCodeDialog){
+                this.oSearchCodeDialog = new CodeValueHelp({
+                    title: "Choose a Country",
+                    multiSelection: false,
+                    contentWidth: "25em",
+                    keyField: "country_code",
+                    textField: "country_code_name",
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ],
+                        serviceName: "cm.util.CommonService",
+                        entityName: "Country"
+                    }
+                });
+                this.oSearchCodeDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchCodeFromValueHelp").setValue(oEvent.getParameter("item").country_code);
+                }.bind(this));
+            }
+            this.oSearchCodeDialog.open();
+        },
+
+        onCodeMultiDialogPress: function(){
+            if(!this.oSearchMultiCodeDialog){
+                this.oSearchMultiCodeDialog = new CodeValueHelp({
+                    title: "Choose Chains",
+                    multiSelection: true,
+                    contentWidth: "30em",
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("group_code", FilterOperator.EQ, "CM_CHAIN_CD")
+                        ],
+                        sorters: [
+                            new Sorter("sort_no", true)
+                        ],
+                        serviceName: "cm.util.CommonService",
+                        entityName: "Code"
+                    }
+                });
+                this.oSearchMultiCodeDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiCodeFromValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oSearchMultiCodeDialog.open();
+
+            var aTokens = this.byId("searchMultiCodeFromValueHelp").getTokens();
+            this.oSearchMultiCodeDialog.setTokens(aTokens);
+        },
+
+        onEmployeeMultiDialogPress: function(){
+            if(!this.oSearchMultiEmployeeDialog){
+                this.oSearchMultiEmployeeDialog = new EmployeeDialog({
+                    title: "Choose Employee",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oSearchMultiEmployeeDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiEmployeeFromDialog").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oSearchMultiEmployeeDialog.open();
+
+            var aTokens = this.byId("searchMultiEmployeeFromDialog").getTokens();
+            this.oSearchMultiEmployeeDialog.setTokens(aTokens);
+        },
 
 	});
 });

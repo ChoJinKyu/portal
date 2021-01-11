@@ -1,15 +1,41 @@
 {
-  "name": "sppfiori",
-  "version": "1.0.0",
-  "description": "sapfiori",
-  "license": "ISC",
-  "dependencies": {
-    "@sap/approuter": "^8.5.4",
-    "@sap/html5-repo-mock": "^1.7.0"
-  },
-  "cds": {
-    "folders": {
-      "srv": "../srv/"
+    "name": "sppportal",
+    "version": "1.0.0",
+    "description": "sppportal",
+    "license": "ISC",
+    "dependencies": {
+        "@sap/approuter": "^8.5.4",
+        "@sap/html5-repo-mock": "^1.7.0",
+        "copyfiles": "^2.4.1",
+        "make-dir": "^3.1.0",
+        "make-dir-cli": "^2.0.0",
+        "move-file": "^2.0.0",
+        "move-file-cli": "^2.0.0"
+    },
+    "devDependencies": {
+        "@sapui5/ts-types": "1.71.x",
+        "@ui5/cli": "2.2.6",
+        "@sap/ui5-builder-webide-extension": "1.0.x",
+        "bestzip": "2.1.4",
+        "rimraf": "3.0.2"
+    },
+    "cds": {
+        "folders": {
+            "srv": "../srv/"
+        }
+    },
+    "scripts": {
+        "build": "npm run clean && npm run copy_portal && ui5 build --include-task=generateManifestBundle generateCachebusterInfo && npm run copy_dev && npm run copy_lib && npm run copy_app && npm run zip",
+        "copy_portal": "cd portal && npx copyfiles './**/*' ../webapp/",
+        "copy_dev": "cd build_dev && npx npx copyfiles './manifest.json' ../dist/",
+        "copy_lib": "npx copyfiles 'lib/**/*' dist",
+        "copy_app": "npx copyfiles 'cm/**/*' dist && npx copyfiles 'dp/**/*' dist && npx copyfiles 'ep/**/*' dist && npx copyfiles 'op/**/*' dist && npx copyfiles 'pg/**/*' dist && npx copyfiles 'sp/**/*' dist && npx copyfiles 'xx/**/*' dist",
+        "zip": "cd dist && npx bestzip ../portal-content.zip *",
+        "clean": "npx rimraf portal-content.zip dist webapp"
+    },
+    "ui5": {
+        "dependencies": [
+            "@sap/ui5-builder-webide-extension"
+        ]
     }
-  }
 }

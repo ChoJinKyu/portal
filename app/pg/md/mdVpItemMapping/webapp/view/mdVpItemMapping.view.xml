@@ -26,21 +26,37 @@
         </f:DynamicPageTitle>
       </f:title>
       <f:content>
-        <HBox renderType="Bare">
-            <mvc:XMLView id="availableItems" viewName="pg.md.mdVpItemMapping.view.availableItems" />
-            <VBox justifyContent="Center" class="sapUiTinyMarginBeginEnd">
-                <Button
-                    class="sapUiTinyMarginBottom"
-                    icon="sap-icon://navigation-right-arrow"
-                    tooltip="Move to selected"
-                    press="moveToSelectedProductsTable"/>
-                <Button
-                    icon="sap-icon://navigation-left-arrow"
-                    tooltip="Move to available"
-                    press="moveToAvailableProductsTable"/>
-            </VBox>
-            <mvc:XMLView id="selectedItems" viewName="pg.md.mdVpItemMapping.view.selectedItems" />
-        </HBox>
+        <VBox> 
+            <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <Label text="VP Level 1" design="Bold"/>
+                    <Text text="Circuit"/>   
+                </layout:VerticalLayout>      
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <Label text="VP Level 2" design="Bold"/>
+                    <Text text="PCB"/>
+                </layout:VerticalLayout>     
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <Label text="VP Level 3" design="Bold"/>
+                    <Text text="Circuit"/>       
+                </layout:VerticalLayout>
+            </FlexBox> 
+            <HBox renderType="Bare">
+                <mvc:XMLView id="availableItems" viewName="pg.md.mdVpItemMapping.view.availableItems" />
+                <VBox justifyContent="Center" class="sapUiTinyMarginBeginEnd">
+                    <Button
+                        class="sapUiTinyMarginBottom"
+                        icon="sap-icon://navigation-right-arrow"
+                        tooltip="Move to selected"
+                        press="moveToSelectedItemsTable"/>
+                    <Button
+                        icon="sap-icon://navigation-left-arrow"
+                        tooltip="Move to available"
+                        press="moveToAvailableItemsTable"/>
+                </VBox>
+                <mvc:XMLView id="selectedItems" viewName="pg.md.mdVpItemMapping.view.selectedItems" />
+            </HBox>
+        </VBox>
       </f:content>
     </f:DynamicPage>
 </mvc:View>

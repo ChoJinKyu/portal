@@ -47,7 +47,7 @@ sap.ui.define([
             oMultilingual.attachEvent("ready", function (oEvent) {
                 var oi18nModel = oEvent.getParameter("model");
                 this.addHistoryEntry({
-                    title: oi18nModel.getText("/prMgt"),   //제어옵션관리
+                    title: oi18nModel.getText("/prMgt"),   //구매..
                     icon: "sap-icon://table-view",
                     intent: "#Template-display"
                 }, true);
@@ -109,6 +109,67 @@ sap.ui.define([
             MainListPersoService.resetPersData();
             this._oTPC.refresh();
         },
+
+        onPrDeletePress: function () {
+            var oTable = this.byId("mainTable"),
+                oModel = this.getModel("list"),
+                oView = this.getView(),
+                data ={},
+                //oSelected  = oTable.getSelectedItems(),
+                oSelected = [],
+                delPrData = [],
+                chkArr =[],
+                chkRow ="",
+                j=0,
+                checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs"),
+                aItems = oTable.getSelectedItems(),
+                aIndices = [];
+
+            var that = this;
+            console.log("checkBoxs ::::", checkBoxs);
+
+            //checkBoxs[0].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()
+            // for (var i = 0; i < checkBoxs.length; i++) {
+            //     if (checkBoxs[i].getSelected() === true )
+            //     {
+            //         aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
+            //     }
+            // }
+            aItems.forEach(function(oItem){
+                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "DR" )
+                {
+                //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+                 aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
+                }
+            });
+
+            console.log("delPrList >>>>", aIndices);
+
+            if (aIndices.length > 0) {
+                MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                       if (sButton === MessageBox.Action.OK) {
+                        aIndices = aIndices.sort(function(a, b){return b-a;});
+                        aIndices.forEach(function(nIndex){                            
+                            oModel.removeRecord(nIndex);
+                            //oModel.markRemoved(nIndex);
+                        });
+
+                        } else if (sButton === MessageBox.Action.CANCEL) { 
+
+                        };    
+                    }
+                });
+
+            } else {
+                MessageBox.error("선택된 임시저장 요청이 없습니다.");
+            }
+
+        },
+
+
 
         /**
          * @public
@@ -415,18 +476,20 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0),
+          
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
-                controlOptionCode: oRecord.control_option_code
+                pr_number: oRecord.pr_number
             });
 
-            if (oNextUIState.layout === "TwoColumnsMidExpanded") {
-                this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
+            if (oNextUIState.layout === "TwoColumnsMidExpanded") {   
+                this.getModel("mainListViewModel").setProperty("/headerExpanded", false);             
+                //this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 
             var oItem = oEvent.getSource();

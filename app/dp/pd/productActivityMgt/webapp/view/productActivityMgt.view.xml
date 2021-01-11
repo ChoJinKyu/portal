@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.pd.productActivityMgt.controller.productActivityMgt"
+<mvc:View controllerName="dp.pd.productActivityMgt.controller.ProductActivityMgt"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -9,52 +9,20 @@
     height="100%">
 
     <f:DynamicPage id="page" 
-        headerExpanded="false" 
-        toggleHeaderOnTitleClick="true"
-        preserveHeaderStateOnScroll="true"
-        fitContent="true">
+        headerExpanded="{mainListView>/headerExpanded}" 
+        toggleHeaderOnTitleClick="true">
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:snappedContent>
-                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                        <form:content>
-                            <VBox>
-                                <Label text="사업본부" labelFor="searchPdOperationOrg" required="true"></Label>
-                                <MultiComboBox id="searchPdOperationOrg" width="100%" selectedKey="" required="true"  items="{
-                                    path: '/PdOperationOrg',
-                                    filters: [],
-                                    sorter: { path: 'operation_org_name'}
-                                    }">
-                                    <items>
-                                        <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
-                                    </items>
-                                </MultiComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="{i18n>status}:" labelFor="searchStatusButton"></Label>
-                                <SegmentedButton id="searchStatusButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
-                                    <items>
-                                        <SegmentedButtonItem text="All" key="all" width="3rem" />
-                                        <SegmentedButtonItem text="Active" key="true" width="5rem" />
-                                        <SegmentedButtonItem text="Inactive" key="false" width="5rem" />
-                                    </items>
-                                </SegmentedButton>
-                                <layoutData>
-                                    <layout:GridData span="XL6 L6 M12 S12" />
-                                </layoutData>
-                            </VBox>
-                        </form:content>
-                    </form:SimpleForm>
                 </f:snappedContent>
+                <f:expandedContent>
+                </f:expandedContent>
                 <!-- 조회 -->
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSearch"/>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
                 </f:actions>
                 <!-- 즐겨찾기 -->
                 <f:navigationActions>
@@ -62,47 +30,71 @@
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
+        <!-- DynamicPage Header -->
         <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="{I18N>/BUSINESS_UNIT}: " labelFor="searchPdOperationOrg" required="true"></Label>
+                            <MultiComboBox id="searchPdOperationOrg" width="100%" selectedKey="" required="true"  items="{
+                                path: '/PdOperationOrg',
+                                filters: [],
+                                sorter: { path: 'operation_org_name'}
+                                }">
+                                <items>
+                                    <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                </items>
+                            </MultiComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="{I18N>/STATUS}: " labelFor="searchStatusButton"></Label>
+                            <SegmentedButton id="searchStatusButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
+                                <items>
+                                    <SegmentedButtonItem text="All" key="all" width="3rem" />
+                                    <SegmentedButtonItem text="Active" key="true" width="5rem" />
+                                    <SegmentedButtonItem text="Inactive" key="false" width="5rem" />
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData span="XL6 L6 M12 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
         </f:header>
         <f:content>
             <VBox>
                 <Table id="mainTable"
-                    title="ResponsibleTable"
-                    mode="SingleSelectLeft" 
-                    noDataText="{I18N>/NCM0001}"
+                    mode="MultiSelect" 
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    noDataText="{I18N>/NCM01004}"
+                    updateFinished=".onMainTableUpdateFinished"
                     items="{
                     path: 'list>/PdProdActivityTemplate'
                     }"
                     selectionChange=".onSelectionChange" 
                     width="auto">
-                    <!--
-                    selectionChange=".onSelectionChange" 
-                    selectionBehavior="Row"
-                    class="sapFDynamicPageAlignContent"
-                    itemPress=".onSelectionChange"
-                    columnResize="onColumnResize"  
-                    mode="MultiSelect" 
-                    mode="MultiSelect" 
-                    mode="SingleSelect" 
-                    growing="true"
-                    growingThreshold="6"
-                    growingScrollToLoad="false"   -->
                     <headerToolbar>
                         <OverflowToolbar class="sapFDynamicPageAlignContent">
-                            <Title text="제품 Activity List" level="H2"/>
+                            <Title id="mainTableTitle" text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/LIST}" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button text="Add" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/>
+                            <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/>
                             <!--Button text="Edit" id="buttonMainEditRow" press=".onSelectRow('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/-->
-                            <Button text="Cancel" id="buttonMainCancelRow" press=".onCancel"  type="Transparent" enabled="false"/>
-                            <Button text="Delete" id="buttonMainDeleteRow" press=".onDelete"   type="Transparent" enabled="true" />
+                            <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onCancel"  type="Transparent" enabled="false"/>
+                            <Button text="{I18N>/DELETE}" id="buttonMainDeleteRow" press=".onDelete"   type="Transparent" enabled="true" />
                             <!--<Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/-->
-                            <Button text="Save2" id="buttonSaveProc" press=".onSave"   type="Emphasized"/>
+                            <Button text="{I18N>/SAVE}" id="buttonSaveProc" press=".onSave"   type="Emphasized"/>
                             <ToolbarSeparator/>
-                            <Button id="gTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
-                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
-                            <layoutData>
-                                <OverflowToolbarLayoutData priority="NeverOverflow"/>
-                            </layoutData>
+                            <Button id="gTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                            <Button icon="sap-icon://action-settings" press=".onPersoButtonPressed" >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
                             </Button>
                         </OverflowToolbar>
                     </headerToolbar>
@@ -110,25 +102,25 @@
                     <columns>
                         <Column id="stat" minScreenWidth="Tablet" hAlign="Left" width="1.5rem"/>
                         <Column id="productActivityCode" minScreenWidth="Tablet" hAlign="Left" >
-                            <Text text="{i18n>productActivityCode}" />
+                            <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/CODE}" />
                         </Column>
                         <Column id="productActivityHan" minScreenWidth="Tablet" hAlign="Left">
-                            <Text text="{i18n>productActivityHan}" />
+                            <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY}" />
                         </Column>
                         <Column id="productActivityEnd" minScreenWidth="Tablet" hAlign="Left">
-                            <Text text="{i18n>productActivityEnd}" />
+                            <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/ENGLISH}" />
                         </Column>
-                        <Column id="milestone" minScreenWidth="Tablet" hAlign="Left" width="8rem">
-                            <Text text="{i18n>milestone}" />
+                        <Column id="milestone" minScreenWidth="Tablet" hAlign="Left" width="7rem">
+                            <Text text="{I18N>/MILESTONE}" />
                         </Column>
-                        <Column id="status" minScreenWidth="Tablet" hAlign="Left" width="8rem">
-                            <Text text="{i18n>status}" />
+                        <Column id="status" minScreenWidth="Tablet" hAlign="Left" width="7rem">
+                            <Text text="{I18N>/STATUS}" />
                         </Column>
-                        <Column id="updateDate" minScreenWidth="Tablet" hAlign="Left" width="5rem">
-                            <Text text="{i18n>updateDate}" />
+                        <Column id="updateDate" minScreenWidth="Tablet" hAlign="Left" width="10rem">
+                            <Text text="{I18N>/DATE_TIME}" />
                         </Column>
-                        <Column id="updateUser" minScreenWidth="Tablet" hAlign="Left" width="6rem">
-                            <Text text="{i18n>updateUser}" />
+                        <Column id="updateUser" minScreenWidth="Tablet" hAlign="Left" width="10rem">
+                            <Text text="{I18N>/UPDATE_USER_ID}" />
                         </Column>
                     </columns>
 
@@ -153,7 +145,7 @@
                                 </HBox>
                                 <HBox>
                                     <Text text="{list>product_activity_english_name}" visible="true"></Text>
-                                    <Input value="{list>product_activity_english_name}" visible="false" required="true"></Input>
+                                    <Input value="{list>product_activity_english_name}" visible="false"></Input>
                                 </HBox>
                                 <HBox>
                                     <Text text="{list>milestone_flag}" visible="false"></Text>

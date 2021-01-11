@@ -86,10 +86,11 @@ sap.ui.define([
      
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
-                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { });
-                this._mdraViewFragment(); // New 가 아닐때는 초기 로드 안해줌 
+                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
+                    console.log("data>>>> ", oData);
+                 });
             }  
         },
 
@@ -108,8 +109,32 @@ sap.ui.define([
             },
 
 
-        _toEditModeEachApproval : function(){ this._mdraEditFragment() },
-        _toShowModeEachApproval : function(){ this._mdraViewFragment() }  ,
+        _toEditModeEachApproval : function(){ 
+            console.log(" Mold RecepitApproval  _toEditModeEachApproval ");
+            
+            var oRows = this.byId("moldRecepitTable").getRows();
+            oRows.forEach(function(oCell, idx){
+               oCell.mAggregations.cells.forEach(function(item, jdx){ 
+                   console.log("item>>> " , item , ">>> jdx " , jdx);
+                    if(jdx == 12){
+                         item.removeStyleClass("readonlyField");
+                    }
+                });
+            });
+
+         },
+        _toShowModeEachApproval : function(){ 
+            console.log(" Mold RecepitApproval  _toShowModeEachApproval ");
+            var oRows = this.byId("moldRecepitTable").getRows();
+            oRows.forEach(function(oCell, idx){
+               oCell.mAggregations.cells.forEach(function(item, jdx){ 
+                   console.log("item>>> " , item , ">>> jdx " , jdx);
+                    if(jdx == 12){
+                         item.addStyleClass("readonlyField");
+                    }
+                });
+            });
+         } ,
       
        /**
          * @description moldItemSelect 공통팝업   
@@ -164,7 +189,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */  
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": "L1100",
+                "tenant_id": "L2600",
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,
@@ -214,31 +239,22 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         } ,
-        _mdraEditFragment : function(){
-            console.log(" _mdraEditFragment ");
-            var oPageSection = this.byId("moldRecepitTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("MoldRecepitTableEdit", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
-        _mdraViewFragment : function(){
-             console.log(" _mdraViewFragment ");
-             var oPageSection = this.byId("moldRecepitTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("MoldRecepitTableView", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
         /**
          * @description 미리보기 버튼눌렀을 경우 
          */
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            if(this.getModel("approver").getData().Approvers != undefined){  // approver 는 맨 마지막 줄이 있어서 걔는 안보여주기 위해 새로 담음 
+            if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+                for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }

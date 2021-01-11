@@ -61,10 +61,21 @@ service MoldApprovalListService {
     from moldMstSpecView.Md_Mst_Spec_View a
     where a.create_user_id is not null;
 
+    // view Requestors as
+    // select 
+    //     key a.tenant_id, key a.user_id, a.english_employee_name
+    // from req.User a
+    // where  a.use_flag = true;
+    
     view Requestors as
-    select key a.tenant_id, key a.user_id, a.english_employee_name
-    from req.User a
-    where  a.use_flag = true;
+    select 
+        key a.tenant_id, 
+        key a.email_id, 
+        a.employee_number,
+        a.user_english_name,
+	    a.user_korean_name
+    from emp.Hr_Employee a
+    where a.employee_number is not null;
 
 
     /** approval Object */

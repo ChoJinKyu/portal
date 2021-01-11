@@ -6,11 +6,14 @@ select
     dtl.loi_item_number,   
     mst.loi_number, 
     dtl.item_sequence,
+    dtl.plant_code,
+    dtl.plant_code as plant_name,
     dtl.ep_item_code,
     dtl.item_desc,
     dtl.unit,
     dtl.request_quantity,
     dtl.currency_code,
+    dtl.currency_code as currency_name,
     dtl.request_amount,
     (select STRING_AGG(vd.supplier_code,','ORDER BY vd.supplier_code DESC) AS result 
         from ep_li_supplier as vd
@@ -20,7 +23,17 @@ select
       and vd.loi_item_number  = dtl.loi_item_number
     group by vd.tenant_id,vd.company_code,vd.loi_write_number,vd.loi_item_number
     ) as supplier_code,
+    (select STRING_AGG(vd.supplier_code,','ORDER BY vd.supplier_code DESC) AS result 
+        from ep_li_supplier as vd
+    where vd.tenant_id        = dtl.tenant_id
+      and vd.company_code     = dtl.company_code
+      and vd.loi_write_number = dtl.loi_write_number
+      and vd.loi_item_number  = dtl.loi_item_number
+    group by vd.tenant_id,vd.company_code,vd.loi_write_number,vd.loi_item_number
+    ) as supplier_name,
     dtl.buyer_empno,
+    (select cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) from dummy) as buyer_name,
+    dtl.purchasing_department_code,
     dtl.remark,
     dtl.local_create_dtm,
     dtl.local_update_dtm,

@@ -32,8 +32,8 @@
 					<Title text="품의정보" />
 				</uxap:snappedTitleOnMobile>
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="false"/>
+					<!-- <OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="false"/> -->
 					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -190,7 +190,7 @@
                                 <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="금액" />
 								</Column>
-                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="수행업체" />
 								</Column>
                                 <Column id="midEndDateColumn5" minScreenWidth="Tablet" hAlign="Center" >
@@ -213,16 +213,44 @@
                                         <!-- <Input value="{details>item_sequence}"/> -->
                                         <!-- <Input value="{details>tenant_id}"/> -->
                                         <lib-m:CodePicker id="searchTenantPicker"
-                                            placeholder="Enter a tenant name"
-                                            keyField="tenant_id"
-                                            textField="tenant_name"
+                                            placeholder="Enter a plant name"
+                                            keyField="plant_code"
+                                            textField="plant_name"
                                             suggestionItems="{
                                                 path: '/',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ],
+                                                sorter: {
+                                                    path: 'plant_code',
+                                                    descending: true
+                                                },
                                                 serviceName: 'cm.util.OrgService',
-                                                entityName: 'Tenant'
-                                            }">
-                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Timezone"
-                                                keyFieldHeaderText="Tenant ID" textFieldHeaderText="Tenant" />
+                                                entityName: 'Plant'
+                                            }"
+                                            selectedKey="{details>plant_code}">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Plant"
+                                                keyFieldHeaderText="Plant ID" textFieldHeaderText="Plant" />
+
+
+
+                                                <!-- <MultiComboBox id="searchCompanyS" width="100%" selectedKey=""
+                                        items="{
+                                            path: 'org>/Company',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            ],
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        selectionFinish="handleSelectionFinishComp" required="true">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox> -->
+
+
+
+
                                         </lib-m:CodePicker>
                                         <Input value="{details>ep_item_code}"/>
                                         <Input value="{details>item_desc}"/>
@@ -241,7 +269,7 @@
                                             ]
                                         }">
                                         <items>
-                                            <core:Item key="{currency_code}" text="{currency_code}" />
+                                            <core:Item key="{details>currency_code}" text="{currency_code}" />
                                         </items>
                                         </ComboBox>
                                         <!-- <Input value="{details>request_amount}"/> -->
@@ -251,7 +279,23 @@
                                             formatter: '.numberFormatter.toNumberString'
                                         }"/>
                                         <Input value="{details>supplier_code}"/>
-                                        <Input value="{details>buyer_empno}"/>
+                                        <!-- <Input value="{details>buyer_name}"/> -->
+                                        <lib-m:CodePicker id="searchRequestorS"
+                                            placeholder="Enter a Employee name"
+                                            keyField="employee_number"
+                                            textField="user_local_name"
+                                            suggestionItems="{
+                                                path: '/',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ],
+                                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                                entityName: 'Employee'
+                                            }"
+                                            selectedKey="{details>buyer_empno}">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                        </lib-m:CodePicker>
                                         <Input value="{details>remark}"/>
 									</cells>
 								</ColumnListItem>
@@ -296,9 +340,9 @@
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
                 <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
-				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress('S')" />
-                <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
+				<Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('S')" />
                 <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
+                <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
 				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

@@ -12,19 +12,20 @@
 		growingThreshold="10"
 		beforeOpenContextMenu="onBeforeOpenContextMenu"
 		items="{
-			path: '{list>/MdCategory}'
+			path: '/value',
+			filters: {path: 'Rank', operator: 'GT', value1: '0'}
 		}"
-		noDataText="Please drag-and-drop products here.">
+		noDataText="Please drag-and-drop Character here.">
 		<contextMenu>
 			<Menu>
-				<MenuItem text="Move to Available Products" press="moveToAvailableProductsTable" />
-				
+				<MenuItem text="Move to Available Products" press="moveToAvailableItemsTable" />
 			</Menu>
 		</contextMenu>
 		<headerToolbar>
 			<OverflowToolbar>
 				<Title text="Assigned Character" />
-				<ToolbarSpacer/>
+				<ToolbarSpacer/> 
+                <Button id="midTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onSave"/>
 			</OverflowToolbar>
 		</headerToolbar>
 		<columns>
@@ -49,12 +50,12 @@
 				groupName="available2selected"
 				targetAggregation="items"
 				dropPosition="Between"
-				drop="onDropSelectedProductsTable" />
+				drop="onDropSelectedItemsTable" />
 			<dnd:DragDropInfo
 				sourceAggregation="items"
 				targetAggregation="items"
 				dropPosition="Between"
-				drop="onDropSelectedProductsTable"/>
+				drop="onDropSelectedItemsTable"/>
 		</dragDropConfig>
 		<items>
 			<ColumnListItem>

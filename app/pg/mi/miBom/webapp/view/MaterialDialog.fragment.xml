@@ -7,90 +7,92 @@
     xmlns:layout="sap.ui.layout"
     xmlns:table="sap.ui.table"
     xmlns:form="sap.ui.layout.form"
-	width 			= "500px"
+	width 			= "50%"
 	height			= "40%"
     showHeader="false"    
     displayBlock="true">
 	
 	<Dialog id="materialDialog" title="{I18N>/MIMATERIAM_BOM_SEARCH_TITLE}" contentWidth="50%">
+        <subHeader >
+			<Toolbar>   
+                <Panel class="sapUiTinyMarginTop">                             
+                <FlexBox alignItems="Center" justifyContent="End">
+                <Label  text="Vendor :" 
+                        width="55px" 
+                        class="sapUiTinyMarginBegin"/>
+                <ComboBox   enabled="false"   
+                            class="sapUiTinyMarginBegin sapUiSmallMarginEnd"
+                            placeholder="{I18N>/OPTION}">
+                            <core:Item key="{vendor_pool_code}" text="{vendor_pool_local_name}"/>
+                </ComboBox>
+                <Label  text="{I18N>/MATERIAL_CODE} :" 
+                        width="65px"
+                        class="sapUiTinyMarginBegin"
+                        visible="{= ${_oUiData>/radioButtonGroup} === 0 }"
+                />
+                <ComboBox  
+                    id="comboBox_materialView"
+                    class="sapUiTinyMarginBegin"                            
+                    items="{path: '/MaterialView', 
+                            filters : [
+                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                            ],                            
+                            templateShareable:true}"                     
+                    visible="{= ${_oUiData>/radioButtonGroup} === 0 }"                            
+                    placeholder="{I18N>/OPTION}">
+                    <core:Item key="{material_code}" text="{material_code}"/>
+                </ComboBox>                
+                <Label text="{I18N>/SUPPLIER} :"
+                       class="sapUiTinyMarginBegin"
+                       visible="{= ${_oUiData>/radioButtonGroup} === 1 }"
+                />
+                <ComboBox  
+                    id="comboBox_supplierView"
+                    class="sapUiTinyMarginBegin"
+                    visible="{= ${_oUiData>/radioButtonGroup} === 1 }"
+                    items="{path: '/SupplierView', 
+                            filters : [
+                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                            ],                             
+                            templateShareable:true}"                     
+                    placeholder="{I18N>/OPTION}">
+                    <core:Item key="{supplier_code}" text="{supplier_code}"/>
+                </ComboBox>           
+
+                <Label  text="{I18N>/MATERIAL} :"
+                        class="sapUiSmallMarginBegin"
+                        visible="{= ${_oUiData>/radioButtonGroup} === 0}"
+                />                  
+                <Input  id="input_material_desc" 
+                        width="200px"
+                        class="sapUiSmallMarginBegin"
+                        visible="{= ${_oUiData>/radioButtonGroup} === 0}" 
+                />  
+                <Label  text="{I18N>/SUPPLIER_NAME}"
+                        class="sapUiSmallMarginBegin" 
+                        visible="{= ${_oUiData>/radioButtonGroup} === 1}" />
+                <Input  id="input_supplier_local_name"
+                        width="200px"
+                        visible="{= ${_oUiData>/radioButtonGroup} === 1}"
+                        class="sapUiSmallMarginBegin" 
+                />       
+                <Button type="Transparent" class="sapUiTinyMarginBegin" text="{I18N>/SEARCH}" press=".onValueHelpMaterialDialogSearch"/>                            
+             </FlexBox>
+            </Panel>
+			</Toolbar>
+        </subHeader>
 		<content>
-            <Panel>
-            <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
-                <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="Vendor"/>
-                   <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 
-                                        items="{path: '/PG_VP_VENDOR_POOL_MST_VIEW', 
-                                filters : [
-                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
-                                ],
-                                templateShareable:true}" 
-                
-                -->
-                    <ComboBox enabled="false" 
-                        placeholder="{I18N>/OPTION}">
-                        <core:Item key="{vendor_pool_code}" text="{vendor_pool_local_name}"/>
-                    </ComboBox>
-                </layout:VerticalLayout>  
-                <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0 }">
-                        <Label text="{I18N>/MATERIAL_CODE}"/>
-                        <!--수정사항 자재명 확인 -->
-                        <ComboBox  
-                            id="comboBox_materialView"                            
-                            items="{path: '/MaterialView', 
-                                    filters : [
-                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
-                                    ],                            
-                                    templateShareable:true}"                     
-                            placeholder="{I18N>/OPTION}">
-                            <core:Item key="{material_code}" text="{material_code}"/>
-                        </ComboBox>
-                    </VBox>
-                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
-                        <Label text="{I18N>/SUPPLIER}"/>
-                        <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
-                        <ComboBox  
-                            id="comboBox_supplierView"
-                            items="{path: '/SupplierView', 
-                                    filters : [
-                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
-                                    ],                             
-                                    templateShareable:true}"                     
-                            placeholder="{I18N>/OPTION}">
-                            <core:Item key="{supplier_code}" text="{supplier_local_name}"/>
-                        </ComboBox>
-                    </VBox>
-                </layout:VerticalLayout> 
-                <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0}">
-                        <Label  text="{I18N>/MATERIAL}"/>
-                        <Input  id="input_material_desc"
-                                class="sapUiSmallMarginBottom" 
-                        />   
-                    </VBox>
-                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1}">
-                        <Label text="{I18N>/SUPPLIER_NAME}"/>
-                        <Input  id="input_supplier_local_name"
-                                class="sapUiSmallMarginBottom" 
-                        />  
-                    </VBox>                    
-                </layout:VerticalLayout>  
-                <layout:VerticalLayout class="sapUiTinyMarginEnd">
-                    <Label text="　"/>
-                    <Button type="Transparent" text="{I18N>/SEARCH}" press=".onValueHelpMaterialDialogSearch"/>
-                </layout:VerticalLayout>  
-            </FlexBox> 
-            </Panel>  
-            <ScrollContainer
-            width="100%"
-		    vertical="true"
-		    focusable="true"
-            > 
+            <VBox>
             <Table  id="materialTable"
                     items="{materialTable>/}"                    
                     mode="SingleSelectLeft"
                     updateFinished="onDtlUpdateFinished" 
-                    class="sapUiSmallMarginTop"
+                    noDataText="{I18N>/NCM0001}"
+                    growingScrollToLoad="true"
+                    growing="true"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    growingThreshold="50"
+                    inset="false"
             >
             <layoutData>
             </layoutData>
@@ -139,7 +141,7 @@
                     </ColumnListItem>
                 </items>
             </Table>
-            </ScrollContainer> 
+        </VBox>
 		</content>
 			<beginButton>
 				<Button type="Transparent" text="{I18N>/CANCEL}" press="onMaterialDialog_close" />

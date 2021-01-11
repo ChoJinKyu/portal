@@ -18,11 +18,19 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
+using { dp as Idea } from './DP_IM_SUPPLIER_IDEA-model';
+
 
 entity Im_Supplier_Idea_Performance {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key company_code : String(10)  not null @title: '회사코드' ;	
   key idea_number : String(100)  not null @title: '아이디어번호' ;	
+
+    parent: Association to Idea.Im_Supplier_Idea
+        on parent.tenant_id = tenant_id 
+        and parent.company_code = company_code
+        and parent.idea_number = idea_number;
+
   key material_code : String(40)  not null @title: '자재코드' ;	
     purchasing_uom_code : String(3)   @title: '구매단위코드' ;	
     currency_code : String(3)   @title: '통화코드' ;	

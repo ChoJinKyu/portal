@@ -116,7 +116,7 @@ sap.ui.define([
             //importOrg filter
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, importCompanyCode)
                                 ],
                                 and: true
@@ -213,12 +213,9 @@ sap.ui.define([
         },
 
         checkChange: function(){
-            debugger
             var omMaster = this.getModel('master');
             var omSchedule = this.getModel('schedule');
             var omSpec = this.getModel('spec');
-
-            console.log('omSpec.isChanged()',omSpec.isChanged());
 
             if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
                 return true;
@@ -460,7 +457,7 @@ sap.ui.define([
 
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, params.selectedItem.getKey() )
                                 ],
                                 and: true
