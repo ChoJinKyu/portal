@@ -68,7 +68,7 @@ sap.ui.define([
                         .filterExpression("language_code", "eq", UserChoices.getLanguage())
                         )
                     .orderBy("chain_code asc,message_code asc,language_code desc");
-                    oXhr.get("Message", oQuery, true).then(function(oData){
+                oXhr.get("Message", oQuery, true).then(function(oData){
                     oData.forEach(function(oItem){
                         if(oItem && oItem.d && oItem.d.results)
                             this.oModel.setData(oItem.d.results);

@@ -22,7 +22,12 @@
     {
         "name": "Code Combo",
         "icon": "sap-icon://source-code",
-        "viewName": "example5"
+        "viewName": "example5_1"
+    },
+    {
+        "name": "Code Dialog",
+        "icon": "sap-icon://source-code",
+        "viewName": "example5_2"
     },
     {
         "name": "Import / Export Excel",
