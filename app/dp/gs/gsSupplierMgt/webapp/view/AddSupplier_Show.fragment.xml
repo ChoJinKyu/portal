@@ -22,21 +22,21 @@
         columnsM="1" >
 		
         <form:content>            
-			<Label text="공급업체 로컬명"/>
+			<Label text="{I18N>/SOURCING_SUPPLIER_LOCAL_NAME}"/>
 			<Input value="{SupplierGen>/sourcing_supplier_local_name}" editable="false" class="readonlyField"/>
-            <Label text="공급업체 영문명"/>
+            <Label text="{I18N>/SOURCING_SUPPLIER_ENGLISH_NAME}"/>
 			<Input value="{SupplierGen>/sourcing_supplier_english_name}" editable="false" class="readonlyField"/>
-            <Label text="사업장 주소(로컬)"/>
+            <Label text="{I18N>/LOCAL_FULL_ADDRESS}"/>
 			<Input value="{SupplierGen>/local_full_address}" editable="false" class="readonlyField"/>
-            <Label text="사업장 주소(영문)"/>
+            <Label text="{I18N>/ENGLISH_FULL_ADDRESS}"/>
 			<Input value="{SupplierGen>/english_full_address}" editable="false" class="readonlyField"/>
-            <Label text="제안품목"/>
+            <Label text="{I18N>/PRODUCT_DESC}"/>
 			<Input value="{SupplierGen>/product_desc}" editable="false" class="readonlyField"/>
-            <Label text="이메일"/>
+            <Label text="{I18N>/EMAIL_ADDRESS}" required="true"/>
 			<Input value="{SupplierGen>/email_address}" editable="false" class="readonlyField"/>
-            <Label text="AN 프로파일"/>
+            <Label text="{I18N>/AN_PROFILE}"/>
 			<Input value="{SupplierGen>/an_profile}" editable="false" class="readonlyField"/>
-            <Label text="비고"/>
+            <Label text="{I18N>/REMARK}"/>
 			<Input value="{SupplierGen>/remark}" editable="false" class="readonlyField"/>			
 	    </form:content>
     </form:SimpleForm>   

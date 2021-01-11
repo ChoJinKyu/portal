@@ -163,20 +163,17 @@
                             <HBox>
                                 <Text text="{list>activity_dependency_name}" visible="true" />
                                 <ComboBox  visible="false"
-                                    id="searchPdCombo"
-                                    width="100%"
-                                    selectedKey="{list>activity_dependency_name}"
+                                    selectedKey="{list>activity_dependency_code}"
                                     items="{
-                                        path: '/PdGetCmCodeCombo',
-                                        filters: [
+                                    path: 'util>/Code',
+                                    filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'language_cd', operator: 'EQ', value1: 'KO'},
                                             {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_DEPENDENCY'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{code}" text="{code} : {code_name}" />
-                                    </items>
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
                                 </ComboBox>
                             </HBox>
                             <HBox>

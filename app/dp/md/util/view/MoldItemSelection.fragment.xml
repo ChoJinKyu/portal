@@ -9,7 +9,7 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogMolItemSelection" class="sapUiSmallMargin" title="" contentWidth="35%" >
+    <Dialog id="dialogMolItemSelection" class="sapUiSmallMargin" title="" contentWidth="45%" >
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm
                 editable="false"
@@ -23,7 +23,7 @@
                 emptySpanL="4"
                 emptySpanM="0"
                 emptySpanS="0"
-                singleContainerFullSize="false" >
+                singleContainerFullSize="true" >
                     
                     <form:content>
                         <VBox>
@@ -185,7 +185,7 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="End" justifyContent="End" >
-            <Button text="Cancel" class="sapUiSmallMarginEnd" press=".onExit"/>
+            <Button text="Cancel" type="Transparent" class="sapUiSmallMarginEnd" press=".onExit"/>
             <Button text="Apply" class="sapUiSmallMarginEnd" type="Emphasized" press=".onMoldItemSelectionApply"/>
         </HBox>
     </Dialog>

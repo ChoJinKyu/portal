@@ -62,7 +62,32 @@ sap.ui.define([
       onAfterRendering: function () {
         this.onSearch();
       },
+    
+      /** 회사(tenant_id)값으로 법인, 사업본부 combobox item filter 기능
+    * @public
+    */
+    onChangeTenant: function (oEvent) {
+        var oSelectedkey = oEvent.getSource().getSelectedKey();                  //법인 
+        var business_combo = this.getView().byId("searchChain");  
+        business_combo.setValue("");
 
+        var aFiltersComboBox = [];
+        var oFilterComboBox = new sap.ui.model.Filter("tenant_id", "EQ", oSelectedkey);
+        aFiltersComboBox.push(oFilterComboBox);
+        // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
+        var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+        
+        business_combo.bindAggregation("items", {
+            path: "org>/Org_Unit",
+            sorter: businessSorter,
+            filters: aFiltersComboBox,
+            // @ts-ignore
+            template: new sap.ui.core.Item({
+                key: "{org>bizunit_code}",
+                text: "{org>bizunit_name}"
+            })
+        });
+    },
       onSeletionChange: function () {
         var oTable = this.byId("mainTable"),
             oModel = this.getView().getModel("list"),
@@ -100,6 +125,18 @@ sap.ui.define([
             var aSorter = [];
             aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
             aSorter.push(new Sorter("spmd_character_sort_seq", false));
+            var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),         //회사 콤보박스       //회사 콤보박스
+                // tenant_name = tenant_combo.getValue(),
+                bizunit_combo = this.getView().byId("searchChain").getSelectedKey();           //사업본부 콤보박스
+                // bizunit_name = bizunit_combo.getValue();
+            
+            if (tenant_combo.length > 0) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.Contains, tenant_combo));
+            }
+            if (bizunit_combo.length > 0) {
+                aFilters.push(new Filter("org_code", FilterOperator.Contains, bizunit_combo));
+                
+            }
 
             // var oView = this.getView();
             // var param1 = "'C001'";

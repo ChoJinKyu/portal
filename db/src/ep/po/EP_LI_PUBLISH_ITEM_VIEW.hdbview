@@ -49,6 +49,9 @@ select
     sel.supplier_selection_date,
     coalesce(dtl.supplier_opinion, '') as supplier_opinion,
     coalesce(dtl.remark, '') as remark,
+    coalesce(dtl.plant_code, '') as plant_code,
+    coalesce(pl.plant_name, '') as plant_name,
+    coalesce(dtl.spec_desc, '') as spec_desc,
     dtl.local_create_dtm,
     dtl.local_update_dtm,
     dtl.create_user_id,
@@ -68,5 +71,8 @@ select
     on dtl.tenant_id = sel.tenant_id 
     and dtl.company_code = sel.company_code
     and dtl.loi_selection_number = sel.loi_selection_number
-    where mst.loi_request_status_code = '121040'
-    ;
+    left outer join cm_org_plant as pl
+    on dtl.tenant_id = pl.tenant_id 
+    -- and dtl.company_code = pl.company_code 
+    and dtl.plant_code = pl.plant_code
+    where mst.loi_request_status_code = '121040';

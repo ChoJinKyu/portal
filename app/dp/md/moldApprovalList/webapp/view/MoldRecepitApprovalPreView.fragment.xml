@@ -232,7 +232,7 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-								<Text text="{mdRecepit>provisional_budget_amount}"/>
+								<Text text="{mdRecepit>provisional_budget_amount}" textAlign="Right"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="15em" hAlign="Center">

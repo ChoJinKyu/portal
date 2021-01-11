@@ -60,13 +60,13 @@
                                 <Text id="t_approval_number" text="{mdItemMaster>approval_number}"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="c_model" width="20em" hAlign="Center">
+                        <table:Column id="c_model" width="10em" hAlign="Center">
                             <Label text="{I18N>/MODEL}"/>
                             <table:template>
                                 <Text id="t_model" text="{mdItemMaster>model}"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
+                        <table:Column id="c_moldPartNo" width="15em" hAlign="Center">
                             <Label text="Mold No"/>
                             <table:template>
                                 <Text id="t_mold_part_no" text="{mdItemMaster>mold_number}"/>
@@ -78,7 +78,7 @@
                                 <Text id="t_seq" text="{mdItemMaster>mold_sequence}"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="c_description" width="15em" hAlign="Center">
+                        <table:Column id="c_description" width="10em" hAlign="Center">
                             <Label text="{I18N>/DESCRIPTION}"/>
                             <table:template>
                                 <Text id="description" text="{mdItemMaster>spec_name}"/>
@@ -122,7 +122,7 @@
                                 <Label text="Amount"/>
                             </VBox>
                             <table:template>
-                                <Text text="{mdItemMaster>provisional_budget_amount}"/>
+                                <Text textAlign="End" text="{mdItemMaster>provisional_budget_amount}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="c_currency" width="10em" hAlign="Center">
@@ -156,7 +156,7 @@
                             </VBox>
                             <!-- <Label text="Budget Amount"/> -->
                             <table:template>
-                                <Input id="target_amount" class="readonlyField" editable="{mode>/editFlag}" value="{mdItemMaster>target_amount}"/>
+                                <Input id="target_amount" class="readonlyField" textAlign="End" editable="{mode>/editFlag}" value="{mdItemMaster>target_amount}"/>
                                 <!-- <Input value="{mdItemMaster>provisional_budget_amount}"/> -->
                             </table:template>
                         </table:Column>

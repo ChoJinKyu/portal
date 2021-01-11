@@ -1033,12 +1033,13 @@ sap.ui.define([
                 );
             }
             
-            if (sModel) {
-                aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sModel.toLowerCase().replace("'", "''") + "'"));
-            }
 
+            if (sModel) {
+                aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sModel.toLowerCase().replace("'","''")+"'"));
+            }
+            
             if (sPart) {
-                aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'" + sPart.toLowerCase() + "'"));
+				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sPart.toLowerCase().replace("'","''")+"'"));
             }
 
             if (sRequestor) {
@@ -1053,7 +1054,7 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
             
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
+            //aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
             return aSearchFilters;
         },
 

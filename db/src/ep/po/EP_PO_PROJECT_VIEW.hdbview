@@ -27,4 +27,6 @@ view EP_PO_PROJECT_VIEW as
         left outer join cm_org_division as div
         on ep.tenant_id = div.tenant_id and ep.bizdivision_code = div.bizdivision_code   
         left outer join cm_org_plant as pl
-        on ep.tenant_id = pl.tenant_id and ep.company_code = pl.company_code and ep.plant_code = pl.plant_code;
+        on ep.tenant_id = pl.tenant_id 
+        and ep.company_code = pl.company_code 
+        and ep.plant_code = pl.plant_code;

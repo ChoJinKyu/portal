@@ -154,7 +154,65 @@ service MdCategoryV4Service {
 								)
 		;
 
-    // Item특성 목록 Parameter View V4호출
+
+    // VP3별 Item특성 Mapping Right 진행 목록 Parameter View V4호출
+    // URL : /pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set
+    /*********************************
+    {"language_code":"EN"}
+    *********************************/
+    view MdVpMappingItemIngView( language_code:String ) as
+        select 
+			key civma.tenant_id
+			, key civma.company_code
+			, key civma.org_type_code
+			, key civma.org_code
+            , key civma.vendor_pool_code
+            , key civma.spmd_category_code
+            , key civma.spmd_character_code
+            , mst.spmd_category_sort_sequence
+            , mst.rgb_cell_clolor_code
+            , mst.rgb_font_color_code
+            , mst.spmd_category_code_name
+            , mst.spmd_character_code_name
+            , mst.spmd_character_desc
+			, mst.spmd_character_sort_seq
+			, mst.spmd_character_serial_no
+			, civma.local_create_dtm
+			, civma.local_update_dtm
+			, civma.create_user_id
+			, civma.update_user_id
+			, civma.system_create_dtm
+			, civma.system_update_dtm
+        from vpItemMappingAttr.Md_Vp_Item_Mapping_Attr as civma
+        join (
+                select 
+                    tenant_id
+                    , company_code
+                    , org_type_code
+                    , org_code
+                    , spmd_category_code
+                    , spmd_category_code_name
+                    , spmd_category_sort_sequence
+                    , rgb_cell_clolor_code
+                    , rgb_font_color_code
+                    , spmd_character_code
+                    , spmd_character_code_name
+                    , spmd_character_desc
+                    , spmd_character_sort_seq
+                    , spmd_character_serial_no
+                    , language_code
+                from MdItemListConditionView(language_code: :language_code) 
+        ) as mst on (
+                    mst.tenant_id = civma.tenant_id
+                    and mst.company_code = civma.company_code
+                    and mst.org_type_code = civma.org_type_code
+                    and mst.org_code = civma.org_code
+                    and mst.spmd_category_code = civma.spmd_category_code
+                    and mst.spmd_character_code = civma.spmd_character_code
+        )
+        ;
+
+    // 전체 Item특성 Mapping Left 목록 Parameter View V4호출
     // URL : /pg.MdCategoryV4Service/MdItemListConditionView(language_code='EN')/Set
     /*********************************
     {"language_code":"EN"}
@@ -168,6 +226,9 @@ service MdCategoryV4Service {
 			, key citm.spmd_category_code
 			, key citm.spmd_character_code
 			, cid.spmd_category_code_name
+            , cid.spmd_category_sort_sequence
+            , cid.rgb_cell_clolor_code
+            , cid.rgb_font_color_code
 			, citm.spmd_character_sort_seq
 			, citm.spmd_character_serial_no
             , ifnull(citml.language_code, :language_code) as language_code : String(4)
@@ -195,6 +256,9 @@ service MdCategoryV4Service {
 								, cid.org_type_code
 								, cid.org_code
 								, cid.spmd_category_code
+                                , cid.rgb_cell_clolor_code
+                                , cid.rgb_font_color_code
+                                , cid.spmd_category_sort_sequence
 								, ifnull(cidl.spmd_category_code_name, cid.spmd_category_code_name) as spmd_category_code_name : String(50)
 							from cateId.Md_Category_Id as cid
 									left outer join cateIdLng.Md_Category_Id_Lng as cidl on (cid.tenant_id = cidl.tenant_id

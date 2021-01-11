@@ -70,11 +70,18 @@ sap.ui.define([
     },
 
       onSearch: function () {
+			var sChain = this.getView().byId("searchChain").getSelectedKey();
+			var aSearchFilters = [];
+			if (sChain && sChain.length > 0) {
+				aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, sChain));
+			}
+			
             this.getView()
                 .setBusy(true)
                 .getModel("list")
                 .setTransactionModel(this.getView().getModel())
                 .read("/MdCategory", {
+				    filters: aSearchFilters,
                     success: (function (oData) {
                     this.getView().setBusy(false);
                     }).bind(this)
