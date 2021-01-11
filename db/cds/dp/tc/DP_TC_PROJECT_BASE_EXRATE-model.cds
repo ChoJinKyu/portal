@@ -36,7 +36,7 @@ entity Tc_Project_Base_Exrate {
     key model_code    : String(40) not null @title : '모델코드';
     key currency_code : String(3) not null  @title : '통화코드';
     key period_code   : String(30) not null @title : '기간코드';
-        exrate        : Decimal             @title : '환율';
+        exrate        : String(30)          @title : '환율';
 /*
         exrate_ref    : Association[1.. * ] to Project.Tc_Project
                             on  exrate_ref.tenant_id    = tenant_id

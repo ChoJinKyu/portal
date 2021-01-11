@@ -5,7 +5,7 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"ext/lib/control/m/CodeValueHelp",
     "cm/util/control/CodePopUp",
-    "cm/util/control/EmployeeDialog",
+    "cm/util/control/ui/EmployeeDialog",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
