@@ -1,6 +1,8 @@
 namespace pg;
 
-using {pg.Md_Category_Item_Lng as itemLngs} from './PG_MD_CATEGORY_ITEM_LNG-model';
+using {pg as itemLngs} from './PG_MD_CATEGORY_ITEM_LNG-model';
+using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
+using {cm as orgBizunit} from '../../cm/CM_ORG_UNIT-model';
 using util from '../../cm/util/util-model';
 
 
@@ -15,14 +17,21 @@ entity Md_Category_Item {
         spmd_character_desc      : String(500)          @title : 'SPMD특성설명';
         spmd_character_sort_seq  : Integer64 not null   @title : 'SPMD특성정렬순서';
         spmd_character_serial_no : Integer64 not null   @title : 'SPMD특성일련번호';
-                                          
-        lngs                     : Association to many itemLngs
-                                    on  lngs.tenant_id          = tenant_id
-                                    and lngs.company_code       = company_code
-                                    and lngs.org_type_code      = org_type_code
-                                    and lngs.org_code           = org_code
-                                    and lngs.spmd_category_code = spmd_category_code
-                                    and lngs.spmd_character_code = spmd_character_code;
+
+        tenant_infos                : Association to orgTenant.Org_Tenant
+                                        on tenant_infos.tenant_id = tenant_id;
+
+        org_infos                   : Association to orgBizunit.Org_Unit
+                                        on org_infos.tenant_id = tenant_id
+                                        and org_infos.bizunit_code = org_code;
+
+        lngs                        : Association to many itemLngs.Md_Category_Item_Lng
+                                       on  lngs.tenant_id           = tenant_id
+                                       and lngs.company_code        = company_code
+                                       and lngs.org_type_code       = org_type_code
+                                       and lngs.org_code            = org_code
+                                       and lngs.spmd_category_code  = spmd_category_code
+                                       and lngs.spmd_character_code = spmd_character_code;
 }
 
 extend Md_Category_Item with util.Managed;

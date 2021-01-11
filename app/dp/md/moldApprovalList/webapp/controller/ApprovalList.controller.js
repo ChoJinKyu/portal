@@ -129,8 +129,8 @@ sap.ui.define([
             var today = new Date();
 
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
             // this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
             // this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
             // this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
@@ -434,12 +434,12 @@ sap.ui.define([
                         {
                             "label": "Name",
                             //"template": "requestors>english_employee_name"
-                            "template": "english_employee_name"
+                            "template": "user_english_name"
                         },
                         {
                             "label": "ID",
                             //"template": "requestors>user_id"
-                            "template": "user_id"
+                            "template": "email_id"
                         }
                     ]
                 });
@@ -447,8 +447,8 @@ sap.ui.define([
                 //path = 'requestors>/Requestors';
                 path = '/Requestors';
                 this._oValueHelpDialog.setTitle('Requestor');
-                this._oValueHelpDialog.setKey('user_id');
-                this._oValueHelpDialog.setDescriptionKey('english_employee_name');
+                this._oValueHelpDialog.setKey('email_id');
+                this._oValueHelpDialog.setDescriptionKey('user_english_name');
                
             }
 
@@ -546,12 +546,12 @@ sap.ui.define([
 
             if (path.indexOf("Models") > -1) {
                 // /Models
-                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sSearchQuery.toLowerCase().replace("'", "''") + "'"));
 
             } else if (path.indexOf("PartNumbers") > -1) {
                 //PartNumbers
-                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+               //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
@@ -559,9 +559,9 @@ sap.ui.define([
 
             else if (path.indexOf("Requestors") > -1) {
                 //Requestors
-                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(email_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(user_english_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
 
@@ -1052,6 +1052,7 @@ sap.ui.define([
             if (sStatus) {
                 aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
+            
             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
             return aSearchFilters;
         },

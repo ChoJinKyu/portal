@@ -238,7 +238,8 @@ sap.ui.define([
 		_getSearchStates: function(){
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
 				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
-				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
+                language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
+                flag = this.getView().byId("search_useflag"+sSurffix).getSelectedKey(),
                 keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
 				
 			var aTableSearchState = [];
@@ -247,7 +248,10 @@ sap.ui.define([
 			}
 			if (language && language.length > 0) {
 				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
-			}
+            }
+            if (flag && flag.length > 0) {
+				aTableSearchState.push(new Filter("message_type_code", FilterOperator.EQ, flag));
+            }
 			if (keyword && keyword.length > 0) {
 				aTableSearchState.push(new Filter({
 					filters: [

@@ -358,14 +358,15 @@
                 <t:Column id="mainLoiSelectionStatusCode" width="6rem">
                 <Label text="업체선정진행상태" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
                 <t:template>
-			    <Link text="{list>loi_selection_status_name}" press="onTableSupplierSelectionPress" enabled="{= ${list>loi_selection_status_code} !== '122020' ? true : false }" />                
+			        <Link text="{list>loi_selection_status_name}" press="onTableSupplierSelectionPress" enabled="{= ${list>loi_selection_status_code} !== '122020' ? true : false }" />                
                 <!-- <Text text="{list>loi_selection_status_name}" visible="{= ${list>loi_selection_status_code} === '122020' ? true : false }" /> -->
                 </t:template>
                 </t:Column>
                 <t:Column id="mainLoiPublishStatusCode" width="4rem">
                 <Label text="LOI발행상태" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
                 <t:template>
-                    <Text text="{list>loi_publish_status_name}"/>
+                    <Link text="{list>loi_publish_status_name}" press="onTablePublishPress" />
+                    <!-- <Text text="{list>loi_publish_status_name}"/> -->
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainPoStatusCode" width="4rem">

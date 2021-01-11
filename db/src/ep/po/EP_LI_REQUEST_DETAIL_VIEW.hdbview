@@ -32,7 +32,7 @@ select
     group by vd.tenant_id,vd.company_code,vd.loi_write_number,vd.loi_item_number
     ) as supplier_name,
     dtl.buyer_empno,
-    (select cm_get_dept_name_func(dtl.tenant_id, dtl.purchasing_department_code) from dummy) as buyer_name,
+    (select cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) from dummy) as buyer_name,
     dtl.purchasing_department_code,
     dtl.remark,
     dtl.local_create_dtm,

@@ -121,13 +121,19 @@ sap.ui.define([
                 , detailModel = this.getModel("mdItemMaster")
                 , oSelected = psTable.getSelectedIndices();
             ;
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    detailModel.removeRecord(idx)
-                    //  detailModel.markRemoved(idx)
-                });
-                psTable.clearSelection();
+            console.log(" psTable.getRows().length " , psTable);
 
+            if (oSelected.length > 0) {
+                if(detailModel.getData().ParticipatingSupplier.length <= oSelected.length){
+                    MessageBox.error("취소할 품의대상이 하나이상이어야 합니다.");
+                    return;
+                }else{
+                    oSelected.forEach(function (idx) {
+                        detailModel.removeRecord(idx)
+                        //  detailModel.markRemoved(idx)
+                    });
+                    psTable.clearSelection();
+                }
                 console.log("detailModel", detailModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");

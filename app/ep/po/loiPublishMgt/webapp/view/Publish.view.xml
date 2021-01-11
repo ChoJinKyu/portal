@@ -1,4 +1,4 @@
-<mvc:View controllerName="ep.po.loiPublishMgt.controller.SupplySelection" 
+<mvc:View controllerName="ep.po.loiPublishMgt.controller.Publish" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -22,10 +22,10 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="LOI 업체선정 품의" wrapping="true" />
+					<Title text="LOI 발행품의" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="LOI 업체선정 품의" wrapping="true" />
+					<Title text="LOI 발행품의" wrapping="true" />
 				</uxap:snappedHeading>
 				<!-- <uxap:expandedContent>
 					<Text text="Details for control option {control_option_code}" />
@@ -65,7 +65,7 @@
                         id="createDate"
                         title="작성일자"
                         text="{
-                                path: 'master>/supplier_selection_date',
+                                path: 'master>/publish_date',
                                 formatter: '.dateFormatter.toUTCDateString'
                             }" />
 
@@ -79,7 +79,7 @@
                         <Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{master>/loi_selection_status_name}"
+                        text="{master>/loi_publish_status_name}"
                         state="Error" />
                 </layout:VerticalLayout>
 
@@ -110,133 +110,6 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
-                    <form:SimpleForm id="midObjectForm" editable="true">                    
-                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
-                            <Label  text="* 품의명" 
-                                    required="true"
-                                    design="Bold" 
-                                    class="sapUiSmallMarginBottom" visible="{midObjectViewModel>/isEditMode}"/>
-                            <Input value="{
-                                path: 'master>/loi_selection_title',
-                                type: 'sap.ui.model.type.String',
-                                constraints: {
-                                    maxLength: 50
-                                }
-                            }" class="sapMLabelNoText" required="true" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
-                            <Label  text="* 품의명" 
-                                    design="Bold" 
-                                    class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
-                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>
-
-                            <Label  text="* 업체선정결과" 
-                                    design="Bold" 
-                                    class="sapUiSmallMarginTop"/>
-                            <Table id="tableAttachments" 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-                                inset="false" 
-                                class="sapFDynamicPageAlignContent" 
-                                mode="None"
-                                width="98%">
-                                <columns>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Line No." />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="플랜트" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="품명" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="단위" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="수량" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="통화" />
-                                    </Column>  
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="요청금액" />
-                                    </Column> 
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="선정결과" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="참여업체" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="환산견적금액" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="요청납기일자" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="회신납기일자" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="비고" />
-                                    </Column>  
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="견적번호" />
-                                    </Column>                                                                                                                                                                                    
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text="10"/>
-                                            <Text text="여수"/>
-                                            <Text text="FFU"/>
-                                            <Text text="EA"/>
-                                            <Text text="3,260"/>
-                                            <Text text="KRW"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="1(선정)"/>
-                                            <Text text="신성이엔지"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="2021-02-01"/>
-                                            <Text text="2021-02-01"/>
-                                            <Text text=""/>
-                                            <Text text="123400"/>
-                                         </cells>
-                                    </ColumnListItem>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text="20"/>
-                                            <Text text="대산"/>
-                                            <Text text="FFU용 Filter"/>
-                                            <Text text="EA"/>
-                                            <Text text="1"/>
-                                            <Text text="KRW"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="1(선정)"/>
-                                            <Text text="OO공조"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="2021-03-01"/>
-                                            <Text text="2021-02-25"/>
-                                            <Text text=""/>
-                                            <Text text="123400"/>
-                                         </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-
-                            <Label  text="* 특기사항" 
-                                        design="Bold" 
-                                        class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
-                            <richtexteditor:RichTextEditor
-                                editorType="TinyMCE4"
-                                width="98%"
-                                height="200px"
-                                editable="{midObjectViewModel>/isEditMode}"
-                                customToolbar="true"
-                                showGroupFont="true"
-                                showGroupLink="true"
-                                showGroupInsert="true"
-                                value="{master>/special_note}">
-                            </richtexteditor:RichTextEditor>                            
-                        </VBox>
-                        </form:SimpleForm>                    
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
