@@ -54,14 +54,14 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
-            //this.setModel(new ManagedListModel(), "details");
+            this.setModel(new ManagedListModel(), "details");
             this.setModel(new JSONModel(), "midObjectViewModel");
 
             //this.setModel(new JSONModel(), "loiSupplySelection");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
-            //oTransactionManager.addDataModel(this.getModel("details"));
+            oTransactionManager.addDataModel(this.getModel("details"));
 
             this.getRouter().getRoute("publishPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -175,7 +175,7 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
                                 oView.setBusy(false);
                                 that.onPageNavBackButtonPress.call(that);
-                                MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                             },
                             error: function (e) {
                                 console.log("error====", e);
@@ -390,6 +390,55 @@ sap.ui.define([
 
             this._sLoiDtlArrr = loiDtlArr;
 
+            //뷰생성해서 변경예정
+            var orFilter = [];
+            //var andFilter = [];
+
+            loiDtlArr.forEach(function(item) { 
+                var andFilter = [];
+                andFilter.push(new Filter("tenant_id", FilterOperator.EQ, item.tenant_id));
+                andFilter.push(new Filter("company_code", FilterOperator.EQ, item.company_code));
+                andFilter.push(new Filter("loi_write_number", FilterOperator.EQ, item.loi_write_number));
+                andFilter.push(new Filter("loi_item_number", FilterOperator.EQ, item.loi_item_number));
+                orFilter.push(new Filter(andFilter, false));
+                //orFilter.push()
+                console.log("andFilter==", andFilter);
+            });     
+            //orFilter.push(new Filter(orFilter, false));
+
+            var oDetailsModel = this.getModel("details");
+            oDetailsModel.setTransactionModel(this.getModel());
+            oDetailsModel.read("/LOIPublishItemView", {
+                filters: orFilter,
+
+                // filters: [
+                //     new Filter({
+                //         and: true,
+                //         filters: [
+                //             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                //             new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
+                //             new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber),
+                //             new Filter("loi_item_number", FilterOperator.EQ, this._sLoiItemNumber
+                //         ]}),
+                //     new Filter({
+                //         and: true,
+                //         filters: [
+                //         new Filter("property3", FilterOperator.Contains, sQuery),
+                //         new Filter("property4", FilterOperator.Contains, sQuery)
+                //         ]}),
+                //     new Filter({
+                //         and: true,
+                //         filters: [
+                //         new Filter("property5", FilterOperator.Contains, sQuery),
+                //         new Filter("property6", FilterOperator.Contains, sQuery)
+                //         ]})
+                // ]});
+
+                success: function(oData){
+                    oView.setBusy(false);
+                    console.log("details=====", oData);
+                }
+            });                    
 
             //발행요청시 품목의 tenantId, companyCode 와 업체선정품의의 tenantId, companyCode가 다를 수 있다면 둘다 함께 체크
             if (oArgs.loiPublishNumber == "new") {
@@ -463,7 +512,7 @@ sap.ui.define([
             var oMasterModel = this.getModel("master")
             var statusCode = oMasterModel.getData().loi_publish_status_code;
             this._showFormFragment('Publish_Edit');
-            this.byId("page").setSelectedSection("pageSectionMain");
+            // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
@@ -499,7 +548,7 @@ sap.ui.define([
             var statusCode = oMasterModel.getData().loi_publish_status_code;
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             this._showFormFragment('Publish_Show');
-            this.byId("page").setSelectedSection("pageSectionMain");
+            // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(true);
             // if (statusCode === "122040" || statusCode === "122060") {
@@ -533,6 +582,7 @@ sap.ui.define([
             })
         },
         _loadFragment: function (sFragmentName, oHandler) {
+            var that = this;
             if (!this._oFragments[sFragmentName]) {
                 Fragment.load({
                     id: this.getView().getId(),
@@ -541,9 +591,13 @@ sap.ui.define([
                 }).then(function (oFragment) {
                     this._oFragments[sFragmentName] = oFragment;
                     if (oHandler) oHandler(oFragment);
+                    this.byId("page").setSelectedSection("pageSectionMain");
+                    this.byId("pageSectionMain").setSelectedSubSection("pageSubSection1");
                 }.bind(this));
             } else {
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
+                this.byId("page").setSelectedSection("pageSectionMain");
+                this.byId("pageSectionMain").setSelectedSubSection("pageSubSection1");
             }
         }
 

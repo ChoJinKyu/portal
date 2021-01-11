@@ -135,6 +135,24 @@ sap.ui.define([
             }
         },
 
+        goToLoiRequest: function (oEvent) {
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
+
+            location.href = "../../../../ep/po/loiRequestMgt/webapp";    
+
+            // this.getRouter().navTo("selectionPage", {
+            //     //layout: oNextUIState.layout,
+            //     tenantId: oRecord.tenant_id,
+            //     companyCode: oRecord.company_code,
+            //     loiWriteNumber: oRecord.loi_write_number,
+            //     loiItemNumber: oRecord.loi_item_number,
+            //     loiSelectionNumber: oRecord.loi_selection_number,
+            //     loiNumber: oRecord.loi_number
+            // }, true);
+
+        },
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -502,7 +520,7 @@ sap.ui.define([
 
 
                 });
-            }else {
+            } else {
                 canSelect = false;
                 MessageToast.show("한개이상 선택해주세요.");
             }
@@ -693,7 +711,7 @@ sap.ui.define([
                     // }
 
                 });
-            }else {
+            } else {
                 canSelect = false;
                 MessageToast.show("한개이상 선택해주세요.");
             }
@@ -762,19 +780,19 @@ sap.ui.define([
                 sLoiSelectionStatusCode = "",
                 sLoiPublishNumber = "",
                 sLoiNumber = "";
-                // 123010	작성중			
-                // 123020	결재진행중			
-                // 123030	결재반려			
-                // 123040	결재완료			
-                // 123050	발행완료			
-                // 123060	서명완료         
+            // 123010	작성중			
+            // 123020	결재진행중			
+            // 123030	결재반려			
+            // 123040	결재완료			
+            // 123050	발행완료			
+            // 123060	서명완료         
 
             //RFQ 번호,상태에 따라 이동가능 여부 체크  
             var canSelect = true;
             var loiSelectionNumberrArr = [];
 
             if (oSelected.length > 0) {
-                oSelected.forEach(function (chkIdx, index) {
+                oSelected.some(function (chkIdx, index) {
                     console.log("aaaaaaaaaa=", oModel.getData().LOIPublishItemView[chkIdx].loi_number);
                     console.log("oSelected.length=", oSelected.length);
                     console.log("chkIdx=", chkIdx);
@@ -798,8 +816,11 @@ sap.ui.define([
                     if (sLoiPublishNumber) {
                         MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 LOI발행상태 항목을 클릭해 주세요.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
+
+                    console.log("canSelect====", canSelect);
+
 
                     /*
                          업체선정완료가 아니면 링크불가
@@ -807,19 +828,19 @@ sap.ui.define([
                     if (sLoiSelectionStatusCode != "122060") {
                         MessageToast.show("업체선정완료된 항목만 선택해주세요.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
 
                     //업체선정번호가 동일한지 체크
                     if (index > 0 && !loiSelectionNumberrArr.includes(sLoiSelectionNumber)) {
                         MessageToast.show("업체선정번호가 동일하지 않습니다.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
                     loiSelectionNumberrArr.push(sLoiSelectionNumber);
 
                 });
-            }else {
+            } else {
                 canSelect = false;
                 MessageToast.show("한개이상 선택해주세요.");
             }
@@ -850,7 +871,7 @@ sap.ui.define([
                 // }
             }
 
-        },        
+        },
 
         /* =========================================================== */
         /* internal methods                                            */

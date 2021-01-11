@@ -585,6 +585,12 @@ public class LoiMgtV4 implements EventHandler {
             log.info("###getCompanyCode===="+v_indata.getCompanyCode());
             log.info("###getLoiPublishNumber11===="+v_indata.getLoiPublishNumber());
             log.info("###getLoiPublishNumber22===="+v_indata.get("loi_publish_number"));
+            log.info("###supplier_code===="+v_indata.get("supplier_code"));
+            log.info("###contract_format_id===="+v_indata.get("contract_format_id"));
+            log.info("###offline_flag===="+v_indata.get("offline_flag"));
+            log.info("###contract_date===="+v_indata.get("contract_date"));
+            log.info("###additional_condition_desc===="+v_indata.get("additional_condition_desc"));
+
 
             // Detail Local Temp Table에 insert
             PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
