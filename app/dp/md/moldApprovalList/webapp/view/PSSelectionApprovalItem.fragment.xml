@@ -94,12 +94,14 @@
                                 <ComboBox 
                                         editable="false"
                                         class="readonlyField"
-                                        selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/Code',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                        ]
-                                    }">
+                                        selectedKey="{mdItemMaster>mold_item_type_code}" 
+                                        items="{ 
+                                                path : 'util>/Code',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                ]
+                                        }">
                                     <core:Item key="{util>code}" text="{util>code_name}"/> 
                                 </ComboBox>
                                 <!-- <Text id="moldItemTypeCodeNm" text="{mdItemMaster>mold_item_type_code_nm}"/> -->
@@ -138,7 +140,8 @@
                                         path : 'psOrgCode>/OrgCodeLanguages',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_LOCAL_CURRENCY'}
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_LOCAL_CURRENCY'},
+                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
                                         ]
                                     }">
                                     <core:Item key="{psOrgCode>code}" text="{psOrgCode>code_name}"/> 

@@ -117,6 +117,16 @@ sap.ui.define([
         // 입찰대상 협력사 취소품의 이동 
         onPageCancellationButtonPress: function () {
 
+            var Cancellation = this.getView().getModel('Cancellation');
+            Cancellation.setProperty("/approvalNumber", this.approval_number);
+            Cancellation.setProperty("/isCreate", true);
+            this.getRouter().navTo("pssCancelApproval", {
+                company_code: this.company_code
+                , plant_code: this.plant_code
+                , approval_type_code: "A"
+                , approval_number: "New"
+            });
+
             /**
              * 이동시 기존거 리셋 
              */
@@ -125,19 +135,16 @@ sap.ui.define([
                     return;
                 }
                
-                this._oFragments[sPropertyName].destroy();
-                this._oFragments[sPropertyName] = null;
+              //  if(sPropertyName !== "GeneralInfo"){
+                    this._oFragments[sPropertyName].destroy();
+                    this._oFragments[sPropertyName] = null;
+                    console.log(sPropertyName);
+              //  }
             }
 
-            var Cancellation = this.getView().getModel('Cancellation');
-            Cancellation.setProperty("/approvalNumber", this.approval_number);
-            Cancellation.setProperty("/isCreate", true);
-            this.getRouter().navTo("participatingSupplierSelectionCancelApproval", {
-                company_code: this.company_code
-                , plant_code: this.plant_code
-                , approval_type_code: "A"
-                , approval_number: "New"
-            });
+            console.log(" onPageCancellationButtonPress ");
+
+           
         },
 
         /* =========================================================== */
