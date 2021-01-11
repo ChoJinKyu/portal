@@ -206,11 +206,11 @@ sap.ui.define([
         
 
         /**
-		 * Event handler when selection change of table
+		 * Event handler when item press of table
 		 * @param {sap.ui.base.Event} oEvent
 		 * @public
 		 */
-        onSelectionChange: function(oEvent){
+        onItemPress: function(oEvent){
 
             var oSelectedItem = oEvent.getParameter("listItem");
 

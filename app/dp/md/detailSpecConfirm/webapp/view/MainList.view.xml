@@ -217,7 +217,7 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         mode="SingleSelectMaster"
-                        selectionChange="onSelectionChange"
+                        itemPress="onItemPress"
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/MoldMasterSpec}"
                         width="auto">

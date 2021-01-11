@@ -201,7 +201,7 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        selectionChange="onSelectionChange"
+                        itemPress="onItemPress"
                         items="{list>/MoldMasterSpec}"
                         width="auto">
                     <headerToolbar>
