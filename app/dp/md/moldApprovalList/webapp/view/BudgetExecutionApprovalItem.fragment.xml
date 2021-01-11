@@ -44,7 +44,8 @@
                                               filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
-                                              ]
+                                              ],
+                                              sorter: { path: 'util>sort_no'}
                                             }">
 						<items>
 							<SegmentedButtonItem width="6em" text="{util>code_name}" key="{util>code}"/>
@@ -150,7 +151,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'util>sort_no'}
                                     }">
 						<core:Item key="{util>code}" text="{util>code_name}"/>
 					</ComboBox>
@@ -266,7 +268,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'util>sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
@@ -283,7 +286,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                        ]
+                                        ] ,
+                                        sorter: { path: 'util>sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
@@ -312,7 +316,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'util>sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
