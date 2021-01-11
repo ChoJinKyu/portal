@@ -12,7 +12,8 @@
         xmlns:si="sap.suite.ui.commons.statusindicator" 
         xmlns:u="sap.ui.unified" 
         xmlns:table="sap.ui.table" 
-        xmlns:lib-m="ext.lib.m"
+        xmlns:lib-m="ext.lib.m" 
+         core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
         >
 
       	<!-- moldItem Recepit Table -->
@@ -54,13 +55,13 @@
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Mold No"/>
+							<Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text  text="{mdRecepit>mold_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="5em" hAlign="Center">
-							<Label text="Seq"/>
+							<Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text  text="{mdRecepit>mold_sequence}"/>
 							</table:template>
@@ -73,31 +74,31 @@
 						</table:Column>
                         <!--  여기까지 픽스 -->
 						<table:Column width="10em" hAlign="Center">
-							<Label text="Mold Item Type"/>
+							 <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text text="{mdRecepit>mold_item_type_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="Currency"/>
+							 <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text text="{mdRecepit>currency_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="Receipt Amount"/>
+							<Label text="{path:'I18N>/RECEIPT_AMOUNT', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Text text="{mdRecepit>receiving_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="Book Currency"/>
+							<Label text="{path:'I18N>/BOOK_CURRENCY', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text text="{mdRecepit>book_currency_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="Budget Amount"/>
+							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Text text="{mdRecepit>provisional_budget_amount}"/>
 							</table:template>

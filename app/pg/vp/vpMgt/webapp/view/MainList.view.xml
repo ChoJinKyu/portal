@@ -35,7 +35,7 @@
 
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_S" width="10rem" selectedKey="BIZ00200" items="{
+                                    <ComboBox id="search_Operation_ORG_S" width="10rem" items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -77,7 +77,7 @@
 
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_E" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_E" width="10rem" selectedKey="BIZ00200"  items="{
+                                    <ComboBox id="search_Operation_ORG_E" width="10rem"  items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -170,7 +170,15 @@
                                 </layoutData>                                
                             </VBox>
                             <VBox>
-                                <Label text="Vendor Pool" labelFor="search_Vp_Code"></Label>
+                                <Label text= "Vendor Pool" labelFor="search_Vp_Name"></Label>
+                                <HBox>
+                                    <SearchField id="search_Vp_Name"
+                                                search=".onDialogTreeCreate" 
+
+                                                />
+                                    <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
+                                </HBox>
+                                <!-- <Label text="Vendor Pool" labelFor="search_Vp_Code"></Label>
                                 <HBox>
                                     <ComboBox id="search_Vp_lvc" selectedKey="" change=".onDialogTreeCreate"  width="8em">
                                         <core:Item key="0" text="1Level"/>
@@ -178,14 +186,32 @@
                                         <core:Item key="2" text="3Level"/>
                                     </ComboBox>  
                                     <Input id="search_Vp_Code" placeholder="Input data"></Input>
-                                </HBox>
+                                </HBox> -->
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>                        
                             <VBox>
                                 <Label text="Supplier" labelFor="search_Sup"></Label>
-                                <Input id="search_Sup" placeholder="Input data"></Input>
+
+                                <lib-m:CodePicker id="search_Sup"
+                                    placeholder="Enter a department name"
+                                    keyField="supplier_code"
+                                    textField="supplier_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                        entityName: 'VpSupplierMstView'
+                                    }"  >
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
+                                        keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
+                                </lib-m:CodePicker>
+
+                                <!-- <Input id="search_Sup" placeholder="Input data"></Input> -->
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -194,8 +220,8 @@
                                 <Label text="Supplier Type" labelFor="search_Sup_Type"></Label>
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
-                                        <core:Item key="A" text="Potential"/>
-                                        <core:Item key="B" text="Informal"/>                                                            
+                                        <core:Item key="Potential" text="Potential"/>
+                                        <core:Item key="Informal" text="Informal"/>                                                            
                                     </ComboBox>  
                                 <layoutData>
                                     <layout:GridData

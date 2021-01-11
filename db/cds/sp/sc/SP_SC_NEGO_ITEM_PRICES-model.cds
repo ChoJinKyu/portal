@@ -2,6 +2,7 @@ namespace sp;
 
 using util from '../../cm/util/util-model';
 using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
+using {sp as negoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 
 // using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 
@@ -9,11 +10,14 @@ entity Sc_Nego_Item_Prices {
     key tenant_id                    : String(5) not null  @title : '테넌트ID';
     key nego_header_id               : Integer64 not null  @title : '협상헤더ID';
     key nego_item_number             : String(10) not null @title : '협상품목번호';
+        Suppliers                    : Composition of many negoSuppliers.Sc_Nego_Suppliers
+                                           on Suppliers.up_ = $self;
         up_                          : Association to negoHeaders.Sc_Nego_Headers;
-        operation_org_a_id           : String(30) not null @title : '운영조직AID';
+        operation_org_code           : String(30) not null @title : '운영조직코드';
         operation_unit_code          : String(30) not null @title : '운영단위코드';
         award_progress_status_code   : String(25)          @title : '낙찰진행상태코드';
         item_type_code               : String(30) not null @title : '품목유형코드';
+        line_type_code               : String(30) not null @title : '라인유형코드';
         inventory_item_code          : String(30) not null @title : '재고품목코드';
         material_code                : String(40)          @title : '자재코드';
         material_desc                : String(240)         @title : '자재내역';
@@ -33,6 +37,7 @@ entity Sc_Nego_Item_Prices {
         award_quantity               : Decimal(20, 3)      @title : '낙찰수량';
         pr_number                    : String(50)          @title : '구매요청번호';
         pr_item_number               : String(10)          @title : '구매요청품목번호';
+        pr_approve_number            : String(50)          @title : '구매요청승인번호';
         file_group_number            : String(100)         @title : '파일그룹번호';
         update_date                  : Date                @title : '수정일자';
         origin_source_name           : String(30)          @title : '원천소스명';

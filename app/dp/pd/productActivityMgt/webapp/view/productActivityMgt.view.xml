@@ -135,7 +135,7 @@
                                     }" />
                                 </HBox>
                                 <HBox>
-                                    <Text text="{list>product_activity_code}" visible="true"></Text>
+                                    <Text text="{list>product_activity_code}" ></Text>
                                     <Input value="{list>product_activity_code}" visible="false" required="true"></Input>
                                     <Input value="{list>product_activity_code_ori}" visible="false"></Input>
                                 </HBox>

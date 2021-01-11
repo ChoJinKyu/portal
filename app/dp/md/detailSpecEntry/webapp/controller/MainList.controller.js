@@ -202,16 +202,20 @@ sap.ui.define([
                 var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
 			}
-		},
+        },
+        
 
-		/**
-		 * Event handler when pressed the item of table
+        /**
+		 * Event handler when item press of table
 		 * @param {sap.ui.base.Event} oEvent
 		 * @public
 		 */
-		onMainTableItemPress: function(oEvent) {
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oEvent.getSource().getBindingContext("list").getPath(),
+        onItemPress: function(oEvent){
+
+            var oSelectedItem = oEvent.getParameter("listItem");
+
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+				sPath = oSelectedItem.getBindingContext("list").getPath(),
 				oRecord = this.getModel("list").getProperty(sPath);
 
 			this.getRouter().navTo("midPage", {
@@ -224,12 +228,12 @@ sap.ui.define([
                 this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
             }
 
-			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
+			oSelectedItem.setNavigated(true);
+			var oParent = oSelectedItem.getParent();
 			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
-		},
+			this.iIndex = oParent.indexOfItem(oSelectedItem);
+        },
+
 
 		/* =========================================================== */
 		/* internal methods                                            */
