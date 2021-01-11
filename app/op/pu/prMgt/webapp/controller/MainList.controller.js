@@ -540,8 +540,8 @@ sap.ui.define([
             var sPR_TEMPLATE_NUMBER = this.getView().byId("searchPR_TEMPLATE_NUMBER").getSelectedKeys();
             var sPrNumber = this.getView().byId("searchPrNumber").getSelectedKey();
             var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
-            var sDEPARTMENT_NAME = this.getView().byId("searchDEPARTMENT_NAME").getValue();
-            var sRequestor_name = this.getView().byId("searchRequestor_name").getValue();
+            var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
+            var sRequestor = this.getView().byId("searchRequestorS").getValue();
             var sPr_desc = this.getView().byId("searchPr_desc").getValue();
             var _tempFilters = [];
 
@@ -622,9 +622,9 @@ sap.ui.define([
             }
 
 
-            if (sDEPARTMENT_NAME) {
+            if (sDepartment) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("requestor_department_name", FilterOperator.EQ, sDEPARTMENT_NAME));
+                _tempFilters.push(new Filter("requestor_department_code", FilterOperator.EQ, sDepartment));
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,
@@ -633,9 +633,9 @@ sap.ui.define([
                 );
             }
 
-            if (sRequestor_name) {
+            if (sRequestor) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("requestor_name", FilterOperator.EQ, sRequestor_name));
+                _tempFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestor));
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,

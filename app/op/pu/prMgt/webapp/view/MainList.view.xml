@@ -5,7 +5,7 @@
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -77,8 +77,23 @@
                                 <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
-                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="searchDEPARTMENT_NAME" required="false"></Label>
-                            <Input id="searchDEPARTMENT_NAME" placeholder="Search"></Input>
+                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="searchRequestDepartmentS"></Label>
+                                <!-- <Input id="searchRequestDepartment" placeholder="Input data"></Input> -->
+                                <lib-m:CodePicker id="searchRequestDepartmentS"
+                                    placeholder="Enter a department name"
+                                    keyField="department_id"
+                                    textField="department_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Department'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                        keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -101,8 +116,23 @@
                                             additionalText="{pr_template_number}" />
                                     </items>
                                 </MultiComboBox>
-                            <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchRequestor_name" ></Label>
-                            <Input id="searchRequestor_name" placeholder="Search"></Input>
+                                <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchRequestorS"></Label>
+                                <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
+                                <lib-m:CodePicker id="searchRequestorS"
+                                    placeholder="Enter a Employee name"
+                                    keyField="employee_number"
+                                    textField="user_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Employee'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                </lib-m:CodePicker>    
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -110,12 +140,13 @@
                         
                         <VBox>
                             <Label text="{I18N>/PR_NUMBER}" labelFor="searchPrNumber" ></Label>
-                             <Input id="searchPrNumber" placeholder="Search"></Input>
-                            <Label text="{I18N>/PR_DESC}" labelFor="searchPr_desc"></Label>
+                            <Input id="searchPrNumber" placeholder="Search"></Input>
+                            <Label text="{I18N>/PR_DESC}" labelFor="searchPr_desc" ></Label>
                             <Input id="searchPr_desc" placeholder="Search"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
+                            
                         </VBox>                      
                             
                     </form:content>

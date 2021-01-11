@@ -11,7 +11,9 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m" >
+    xmlns="sap.m" 
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+    >
 <Dialog id="budgetExecutionPreview" class="sapUiSmallMargin" title="Preview" contentWidth="100%" contentHeight="630px">
 	<uxap:ObjectPageLayout 
         height="600px"
@@ -161,7 +163,7 @@
 			        <form:content>
                 <VBox  height="6em">
 					<!-- Budget Type -->
-					<Label text="Budget Type" required="true"/>
+					<Label text="{path:'I18N>/BUDGET_TYPE', formatter:'I18NFormatter'}" required="true"/>
                      <!-- view Mode -->
                     <Text text="{mdCommon>/investment_ecst_type_code_nm}" />
 					<layoutData>
@@ -177,7 +179,7 @@
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Account Department" required="true"/>
+					<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
                     <!-- view Mode -->
                     <ComboBox 
                               editable="false" 
@@ -187,13 +189,12 @@
                               items="{}">
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
-
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Import Company"/>
+					<Label text="{path:'I18N>/IMPORT_COMPANY', formatter:'I18NFormatter'}"/>
                     <!-- view Mode -->
                   	<ComboBox  editable="false" 
                               class="readonlyField"
@@ -215,7 +216,7 @@
 				</VBox>
 				<VBox height="6em">
 					<!-- projectcode  {I18N>/PROJECT_CODE}-->
-					<Label text="Project Code" required="true"/> 
+					<Label text="{I18N>/PROJECT_CODE}" required="true"/> 
                     <!-- view Mode -->
                     <ComboBox editable="false" 
                               class="readonlyField"
@@ -230,7 +231,7 @@
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Import Plant"/>
+					<Label text="{path:'I18N>/IMPORT_PLANT', formatter:'I18NFormatter'}" />
                      <!-- view Mode -->
                    <ComboBox width="100%" 
                               editable="false" 
@@ -273,7 +274,7 @@
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Balanced Budget"/>
+					<Label text="{path:'I18N>/BALANCED_BUDGET', formatter:'I18NFormatter'}"/>
 					<HBox alignItems="End" justifyContent="End">
 						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
 						<ObjectStatus text="  KRW" state="Error"/>
@@ -283,7 +284,7 @@
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Customer PO No"/>
+					<Label text="{path:'I18N>/CUSTOMER_PO_NO', formatter:'I18NFormatter'}"/>
                     <Text text="" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -322,7 +323,7 @@
 							</table:template>
 						</table:Column>
 						<table:Column visible="false">
-							<Label text="approval_number"/>
+							<Label text="{path:'I18N>/APPROVAL_NUMBER', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Text text="{mdItemMaster>approval_number}"/>
 							</table:template>
@@ -334,13 +335,13 @@
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Mold No"/>
+							<Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text  text="{mdItemMaster>mold_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="5em" hAlign="Center">
-							<Label text="Seq"/>
+							<Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text  text="{mdItemMaster>mold_sequence}"/>
 							</table:template>
@@ -352,7 +353,7 @@
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Production Type"/>
+							<Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
                                 <ComboBox editable="false"  
                                         class="readonlyField" 
@@ -368,7 +369,7 @@
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Item Type"/>
+							<Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
 							<table:template>
 								<ComboBox  editable="false" 
                                         selectedKey="{mdItemMaster>mold_item_type_code}" 
@@ -384,19 +385,19 @@
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="Book Currency"/>
+							<Label text="{path:'I18N>/BOOK_CURRENCY', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text text="{mdItemMaster>book_currency_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Budget Amount"/>
+							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
 							<table:template>
                                 <Text  text="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Asset Type"/>
+							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
                                 <ComboBox 
                                         editable="false" 
@@ -413,20 +414,20 @@
 							</table:template>
 						</table:Column>
 						<table:Column  width="15em" hAlign="Center">
-							<Label text="Family Part No"/>
+							<Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Text  text="{mdItemMaster>family_part_number_1}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Expected Sales Date"/>
+							<Label text="{path:'I18N>/EXPECTED_SALES_DATE', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<!-- 임시 컬럼명 -->
 								<DatePicker value="{mdItemMaster>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Expected Disposal Date"/>
+							<Label text="{path:'I18N>/EXPECTED_DISPOSAL_DATE', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<!-- 임시 컬럼명 -->
 								<DatePicker value="{mdItemMaster>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
