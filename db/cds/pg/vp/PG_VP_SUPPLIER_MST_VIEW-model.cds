@@ -20,6 +20,6 @@ entity Vp_Supplier_Mst_View {
     supplier_register_status_name: String(240) @title: '공급업체등록상태명';
     supplier_flag: Boolean @title: '공급업체여부';
     maker_flag: Boolean @title: '메이커여부';
-    supplier_old_supplier_code: String(10) @title: '공급업체OLD코드';
-    maker_old_supplier_code: String(10) @title: '메이커OLD코드';
+    supplier_old_supplier_code: String(15) @title: '공급업체OLD코드';
+    maker_old_supplier_code: String(15) @title: '메이커OLD코드';
 }
