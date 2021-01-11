@@ -21,28 +21,22 @@
         columnsL="1"
         columnsM="1" >
 		
-        <form:content>
-            <!-- <Label text="소싱 공급업체"/>
-			<Input value="{SupplierGen>/sourcing_supplier_nickname}" editable="false"/>
-            <Label text="발굴일자"/>			
-            <DatePicker placeholder="Develop Date" value="{path: 'SupplierGen>/develop_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
-            <Label text="발굴자"/>
-			<Input value="{SupplierGen>/developer_empno}" editable="false"/> -->                       
-			<Label text="공급업체 로컬명"/>
+        <form:content>            
+			<Label text="{I18N>/SOURCING_SUPPLIER_LOCAL_NAME}"/>
 			<Input value="{SupplierGen>/sourcing_supplier_local_name}" editable="true"/>
-            <Label text="공급업체 영문명"/>
+            <Label text="{I18N>/SOURCING_SUPPLIER_ENGLISH_NAME}"/>
 			<Input value="{SupplierGen>/sourcing_supplier_english_name}" editable="true"/>
-            <Label text="사업장 주소(로컬)"/>
+            <Label text="{I18N>/LOCAL_FULL_ADDRESS}"/>
 			<Input value="{SupplierGen>/local_full_address}" editable="true"/>
-            <Label text="사업장 주소(영문)"/>
+            <Label text="{I18N>/ENGLISH_FULL_ADDRESS}"/>
 			<Input value="{SupplierGen>/english_full_address}" editable="true"/>
-            <Label text="제안품목"/>
+            <Label text="{I18N>/PRODUCT_DESC}"/>
 			<Input value="{SupplierGen>/product_desc}" editable="true"/>
-            <Label text="이메일"/>
-			<Input value="{SupplierGen>/email_address}" editable="true"/>
-            <Label text="AN 프로파일"/>
+            <Label text="{I18N>/EMAIL_ADDRESS}"/>
+			<Input id="eidtEmail" value="{SupplierGen>/email_address}" editable="true" required="true"/>
+            <Label text="{I18N>/AN_PROFILE}"/>
 			<Input value="{SupplierGen>/an_profile}" editable="true"/>
-            <Label text="비고"/>
+            <Label text="{I18N>/REMARK}"/>
 			<Input value="{SupplierGen>/remark}" editable="true"/>			
 	    </form:content>
     </form:SimpleForm>  

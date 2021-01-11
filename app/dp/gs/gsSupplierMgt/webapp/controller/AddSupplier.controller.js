@@ -9,6 +9,8 @@ sap.ui.define([
     "sap/f/LayoutType",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/formatter/NumberFormatter",
+    "sap/m/TablePersoController",
+	"./FinListPersoService",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -23,7 +25,7 @@ sap.ui.define([
     "sap/ui/core/Item",
     "sap/m/ObjectStatus"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, LayoutType, DateFormatter, NumberFormatter,
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	TablePersoController, FinListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, DatePicker, ComboBox, Item, ObjectStatus) {
 		
 	"use strict";
@@ -82,6 +84,7 @@ sap.ui.define([
 
             this._initTableTemplates();
             this.enableMessagePopover();
+            // this._doInitTablePerso();
         }, 
 
         formattericon: function(sState){
@@ -252,6 +255,7 @@ sap.ui.define([
                 oMasterModel = this.getModel("SupplierGen"),
                 oDetailsModel = this.getModel("SupplierFin"),
                 oDetailsModel2 = this.getModel("SupplierSal"),
+                email = this.getView().byId("eidtEmail").getValue(),
                 that = this;
 
             if (this._sTenantId !== "new"){
@@ -264,6 +268,12 @@ sap.ui.define([
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("finTable")) !== true) return;
             if(this.validator.validate(this.byId("salTable")) !== true) return;
+
+            var chkEmail = this.CheckEmail(email);
+            if(!chkEmail){
+                MessageBox.alert("이메일 형식이 잘못되었습니다.");
+                return false;
+            }
 
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -286,7 +296,23 @@ sap.ui.define([
             });
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("finTable"));
-		},
+            this.validator.clearValueState(this.byId("salTable"));
+        },
+        
+        CheckEmail: function (str) {                                                 
+
+            var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+
+            if(!reg_email.test(str)) {                            
+
+                return false;         
+
+            }else {                       
+
+                return true;         
+
+            }
+        },
 		
 		
 		/**
@@ -358,7 +384,8 @@ sap.ui.define([
                 this._toShowMode();
             }
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
-            this.validator.clearValueState(this.byId("midTable"));
+            this.validator.clearValueState(this.byId("finTable"));
+            this.validator.clearValueState(this.byId("salTable"));
         },
 
 		/* =========================================================== */
@@ -493,6 +520,15 @@ sap.ui.define([
             var oFirstSection = oObjectPageLayout.getSections()[0];
             oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
             
+        },
+
+        onFinTablePersoButtonPressed: function(oEvent){
+			this._oTPC.openDialog();
+		},
+        
+        onFinTablePersoRefresh : function() {
+			FinListPersoService.resetPersData();
+			this._oTPC.refresh();
 		},
 
 		/**
@@ -631,6 +667,7 @@ sap.ui.define([
 
             var oQuarter = new ComboBox({
                     selectedKey: "{SupplierFin>fiscal_quarter}",
+                    editable: "{= ${SupplierFin>_row_state_} === 'C' }",
                     required : true
                 });
                 oQuarter.bindItems({
@@ -654,6 +691,7 @@ sap.ui.define([
                         value: "{SupplierFin>fiscal_year}",
                         valueFormat: "yyyy",
                         displayFormat: "yyyy",
+                        editable: "{= ${SupplierFin>_row_state_} === 'C' }",
                         required: true
                     }),                    
                     oQuarter,                                        
@@ -752,6 +790,7 @@ sap.ui.define([
                         value: "{SupplierSal>txn_year}",
                         valueFormat: "yyyy",
                         displayFormat: "yyyy",
+                        editable: "{= ${SupplierSal>_row_state_} === 'C' }",
                         required: true
                     }),
                     // new Input({
@@ -772,6 +811,7 @@ sap.ui.define([
                                 maxLength: 30
                             }
                         },
+                        editable: "{= ${SupplierSal>_row_state_} === 'C' }",
                         required : true
                     }),
                     new Input({
@@ -845,6 +885,16 @@ sap.ui.define([
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
         },
+
+        _doInitTablePerso: function(){
+			// init and activate controller
+			this._oTPC = new TablePersoController({
+				table: this.byId("finTable"),
+				componentName: "gsSupplierMgt",
+				persoService: FinListPersoService,
+				hasGrouping: true
+			}).activate();
+        }
         
         // onMidTableFilterPress: function() {
         //     this._MidTableApplyFilter();
