@@ -12,9 +12,9 @@
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:sv="sap.ui.comp.smartvariants"
     xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
-    height="100%"
+
     >
-  
+
     <f:DynamicPage
         id="page"
         toggleHeaderOnTitleClick="true"
