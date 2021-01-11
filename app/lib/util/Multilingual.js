@@ -74,10 +74,10 @@ sap.ui.define([
                             this.oModel.setData(oItem.d.results);
                         else if(oItem.results)
                             this.oModel.setData(oItem.results);
-                        this.fireEvent("ready", {
-                            model: this.oModel
-                        });
                     }.bind(this));
+                    this.fireEvent("ready", {
+                        model: this.oModel
+                    });
                 }.bind(this));
             }else{
                 setTimeout(function(){
