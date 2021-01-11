@@ -434,12 +434,12 @@ sap.ui.define([
                         {
                             "label": "Name",
                             //"template": "requestors>english_employee_name"
-                            "template": "english_employee_name"
+                            "template": "user_english_name"
                         },
                         {
                             "label": "ID",
                             //"template": "requestors>user_id"
-                            "template": "user_id"
+                            "template": "email_id"
                         }
                     ]
                 });
@@ -447,8 +447,8 @@ sap.ui.define([
                 //path = 'requestors>/Requestors';
                 path = '/Requestors';
                 this._oValueHelpDialog.setTitle('Requestor');
-                this._oValueHelpDialog.setKey('user_id');
-                this._oValueHelpDialog.setDescriptionKey('english_employee_name');
+                this._oValueHelpDialog.setKey('email_id');
+                this._oValueHelpDialog.setDescriptionKey('user_english_name');
                
             }
 
@@ -560,8 +560,8 @@ sap.ui.define([
             else if (path.indexOf("Requestors") > -1) {
                 //Requestors
                 //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(email_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(user_english_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
 
