@@ -24,6 +24,13 @@
           "localUri": "localService/metadata.xml"
         }
       },
+      "orgService": {
+        "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      }, 
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -91,6 +98,16 @@
           "useBatch": true
         }
       },
+      "org": {
+        "dataSource": "orgService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },  
       "": {
         "dataSource": "mainService",
         "preload": true,
