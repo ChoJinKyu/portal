@@ -66,8 +66,7 @@
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
                                 <VBox>
-                                    <Label text="Item"/>
-                                    <Label text="Type"/>
+                                     <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
                                 </VBox>
                                 <table:template>
                                     <Text text="{mdItemMaster>mold_item_type_code_nm}"/>
@@ -75,7 +74,7 @@
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
                                 <VBox>
-                                    <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
+                                    <Label text="{path:'I18N>/BOOK_CURRENCY', formatter:'I18NFormatter'}" />
                                 </VBox>
                                 <table:template>
                                     <Text text="{mdItemMaster>book_currency_code}"/>
