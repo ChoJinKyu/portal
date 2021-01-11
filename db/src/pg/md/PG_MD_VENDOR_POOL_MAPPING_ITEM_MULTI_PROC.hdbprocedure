@@ -64,7 +64,7 @@ BEGIN
                         , TMP.COMPANY_CODE
                         , TMP.ORG_TYPE_CODE
                         , TMP.ORG_CODE
-                        , '@'||::SQL_ERROR_CODE||TMP.VENDOR_POOL_CODE AS VENDOR_POOL_CODE
+                        , TMP.VENDOR_POOL_CODE AS VENDOR_POOL_CODE
                         , VIMA.SPMD_CATEGORY_CODE
                         , VIMA.SPMD_CHARACTER_CODE
                     FROM PG_MD_VP_ITEM_MAPPING_ATTR VIMA
@@ -224,7 +224,7 @@ BEGIN
                 , TMP.COMPANY_CODE
                 , TMP.ORG_TYPE_CODE
                 , TMP.ORG_CODE
-                , '#'||TMP.VENDOR_POOL_CODE AS VENDOR_POOL_CODE
+                , TMP.VENDOR_POOL_CODE AS VENDOR_POOL_CODE
                 , VIMA.SPMD_CATEGORY_CODE
                 , VIMA.SPMD_CHARACTER_CODE
             FROM PG_MD_VP_ITEM_MAPPING_ATTR VIMA

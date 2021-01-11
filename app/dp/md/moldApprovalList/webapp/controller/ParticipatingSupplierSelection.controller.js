@@ -86,8 +86,15 @@ sap.ui.define([
                 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
-                ];
-
+                ];            
+                schFilter2 = [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
+                        new Filter("language_cd", FilterOperator.EQ, 'KO' )
+                ]; 
+                this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                        console.log("OrgCodeLanguages >>>>>>", oData);
+                });
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
@@ -332,10 +339,17 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-        //    this.getModel("approverPreview").setData(this.getModel("approver").getData());
             if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+               
+                for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
