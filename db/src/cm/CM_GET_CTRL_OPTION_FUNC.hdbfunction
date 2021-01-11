@@ -17,6 +17,9 @@ BEGIN
     /* P_CONTROL_OPTION_LEVEL_CODE 값이 없을 경우에는 상위로 계층형태로 추출한다 */
 
     /* P_CONTROL_OPTION_LEVEL_CODE 값이 존재할 경우에는 해당 레벨코드에 해당하는 옵션값만 추출한다 */
+    IF P_CONTROL_OPTION_LEVEL_CODE IS NOT NULL THEN
+        D_RETURN := 'Y';
+    END IF;
 
     
 END
