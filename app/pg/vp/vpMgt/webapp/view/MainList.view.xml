@@ -350,18 +350,28 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Maker Flag" width="8rem" hAlign="Center">
+                            <!-- <table:Column label="Maker Flag" width="8rem" hAlign="Center">
                                 <table:template>
-                                    <Text text="{= !!${list>maker_flag} ? 'Y' : 'N'}" wrapping="false" />
+                                    <Text text="{list>maker_flag}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                                         
                             <table:Column label="Supplier Flag" width="8rem"  hAlign="Center">
                                 <table:template>
-                                    <Text text="{= !!${list>supplier_flag} ? 'Y' : 'N'}" wrapping="false" />
+                                    <Text text="{list>supplier_flag}" wrapping="false" />
+                                </table:template>
+                            </table:Column> -->
+                            <table:Column label="Maker Flag" width="8rem" hAlign="Center">
+                                <table:template>
+                                    <Text text="{path : 'list>maker_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-
+                                        
+                            <table:Column label="Supplier Flag" width="8rem"  hAlign="Center">
+                                <table:template>
+                                    <Text text="{path : 'list>supplier_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
                             <table:Column label="Status" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false"  />
