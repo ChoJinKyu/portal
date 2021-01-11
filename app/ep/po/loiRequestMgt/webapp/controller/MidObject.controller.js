@@ -713,7 +713,7 @@ sap.ui.define([
                     "loi_write_number": "",
                     "loi_number": "",
                     "loi_request_title": "",
-                    "loi_request_status_code": "",
+                    "loi_request_status_code": "121010",
                     "loi_publish_purpose_desc": "",
                     "investment_review_flag": false,
                     "special_note": "",
