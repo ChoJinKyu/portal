@@ -23,9 +23,11 @@ service ProjectMgtV4Service {
         customer_local_name     : String(50);
         last_customer_name      : String(240);
         customer_model_desc     : String(1000);
-        mcst_yield_rate         : Decimal;
+        //mcst_yield_rate         : Decimal;
+        mcst_yield_rate         : String(30);
         bom_type_code           : String(30);
-        project_create_date     : Date;
+        //project_create_date     : Date;
+        project_create_date     : String(30);
     };
 
     type TcProjectSimilarModelType : {
@@ -52,7 +54,8 @@ service ProjectMgtV4Service {
         model_code    : String(40);
         currency_code : String(3);
         period_code   : String(30);
-        exrate        : Decimal;
+        //exrate        : Decimal;
+        exrate        : String(30);
     };
 
     type TcProcOutType : {
