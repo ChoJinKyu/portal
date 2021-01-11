@@ -21,7 +21,7 @@ entity Dp_Tc_Project_Type {
         customer_local_name     : String(50)          @title : '고객로컬명';
         last_customer_name      : String(240)         @title : '최종고객명';
         customer_model_desc     : String(1000)        @title : '고객모델설명';
-        mcst_yield_rate         : Decimal             @title : '재료비수율';
+        mcst_yield_rate         : String(30)          @title : '재료비수율';
         bom_type_code           : String(30)          @title : '자재명세서유형코드';
-        project_create_date     : Date                @title : '프로젝트생성일자';
+        project_create_date     : String(30)          @title : '프로젝트생성일자';
 }
