@@ -31,6 +31,9 @@ sap.ui.define([
         , onBeforeRendering: function() {
         }
         
+        /**
+         * Project 상세정보 read 후 model 에 set 한다.
+         */
         , _getProjectDetail: function (oEvent) {
             let oParam = oEvent.getParameter("arguments");
             var oView = this.getView();
@@ -48,13 +51,12 @@ sap.ui.define([
                 success : function(data){
                     debugger;
                     oView.setBusy(false);
-                    console.log("success", data);
+                    console.log("ProjectInfo.Controller", data);
 
                     if( data && data.results && 0<data.results.length ) {
                         oView.getModel("detailModel").setData(data.results[0]);
                         oView.getModel("detailModel").setProperty("/mode", {readMode : true});
                         oView.getModel("detailModel").setProperty("/mode/editMode", false);
-
                     }
                 }.bind(this),
                 error : function(data){
@@ -64,17 +66,38 @@ sap.ui.define([
             });
         }
 
+        /**
+         * Icon Tab 선택시 발생하는 event
+         */
         , onTabSelect: function(oEvent) {
             return;
             if(oEvent.getParameter("selectedKey") ==="1") {
-            //  this.getView().byId("dynaPage").title.visible = oEvnet.getSource().getExpanded ? false : true;
-                var oDtHeader = this.byId(this.getView().byId("blProjectInfoDt").getAssociation("selectedView")).byId("opDetailTitle");
-                if(oEvent.getSource().getExpanded()) {
-                    oDtHeader.setVisible(false);
-                } else {
-                    oDtHeader.setVisible(true);
-                }
             }
+        }
+
+        , _sendSaveData: function(oSendData) {
+            var oModel = this.getModel("v4Proc");
+            //var url = oModel.sServiceUrl + "TcUpdateProjectProc";
+            var targetName = "TcUpdateProjectProc";
+            var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.ProjectMgtV4Service/" + targetName;
+            debugger;
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                //data: input,
+                data : JSON.stringify(oSendData),
+                contentType: "application/json",
+                success: function(data){
+                    console.log("_sendSaveData", data);
+                    debugger;
+                    
+                },
+                error: function(e){
+                    console.log("error", e);
+                    debugger;
+                }
+            });
         }
 
         /**
@@ -83,11 +106,122 @@ sap.ui.define([
         , _reFactorySaveModel: function() {
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
-            console.log(":: data ::", oData);
-            debugger;
+            var aSimilarModelData = oData.similar_model.results || [];
+            var aBaseExtract = oData.base_extra.results || [];
+            
+            //tblPrice_edit
+            var oTblPrice   = this.byId(this.getView().byId("blPrice").getAssociation("selectedView")).byId("tblPrice_edit");
+            var oTblExchange = this.byId(this.getView().byId("blPrice").getAssociation("selectedView")).byId("tblExchange_edit");
 
+            var aPriceData = [];
+            var aExchangeData = [];
+            if(oTblPrice) {
+                aPriceData = oTblPrice.getModel("priceModel").getData();
+            }
+            if(oTblExchange) {
+                aExchangeData = oTblExchange.getModel("exchangeModel").getData();
+            }
+
+            console.log(":: data ::", oData);
+            var tmpDate = new Date(oData.project_create_date);
+            var iMonth  = tmpDate.getMonth()+1;
+            var iDay    = tmpDate.getDate();
+            var sCreateDate = tmpDate.getFullYear() + "-" + (iMonth < 10 ? "0"+iMonth : iMonth ) + "-" + (iDay < 10 ? "0"+iDay : iDay);
+
+            var oTcPjt = {
+                    tenant_id               : oData.tenant_id,
+                    project_code            : oData.project_code,
+                    model_code              : oData.model_code,
+                    project_name            : oData.project_name,
+                    model_name              : oData.model_name,
+                    product_group_code      : oData.product_group_code,
+                    source_type_code        : oData.source_type_code,
+                    quotation_project_code  : oData.quotation_project_code,
+                    project_status_code     : oData.project_status_code,
+                    project_grade_code      : oData.project_grade_code,
+                    develope_event_code     : oData.develope_event_code,
+                    production_company_code : oData.production_company_code,
+                    project_leader_empno    : oData.project_leader_empno,
+                    buyer_empno             : oData.buyer_empno,
+                    marketing_person_empno  : oData.marketing_person_empno,
+                    planning_person_empno   : oData.planning_person_empno,
+                    customer_local_name     : oData.customer_local_name,
+                    last_customer_name      : oData.last_customer_name,
+                    customer_model_desc     : oData.customer_model_desc,
+                    mcst_yield_rate         : oData.mcst_yield_rate, 10,
+                    bom_type_code           : oData.bom_type_code,
+                    project_create_date     : sCreateDate
+                };
+            var aTcPjt = [oTcPjt];
+            
+            var aSimModelResult = aSimilarModelData.map(function(oSimModel) {
+                return {
+                    tenant_id            : oSimModel.tenant_id,
+                    project_code         : oSimModel.project_code,
+                    model_code           : oSimModel.model_code,
+                    similar_model_code   : oSimModel.similar_model_code,
+                    code_desc            : oSimModel.code_desc,
+                    direct_register_flag : oSimModel.direct_register_flag
+                };
+            });
+
+            var aPriceResult = [];
+            $.each(aPriceData.datas, function(idx, oPrice) {
+                if(oData.hasOwnProperty(oPrice.addition_type_code.toLowerCase())) {
+                    var aAddition = oData[oPrice.addition_type_code.toLowerCase()].results;
+                    $.each(Object.keys(oPrice), function(idx2, sKey) {
+                        $.each(aAddition, function(idx3, oAddition) {
+                            if(!oAddition.addition_type_code) {
+                                    return true;
+                            } else if(oAddition.period_code === sKey) {
+                                aPriceResult.push({
+                                    tenant_id           : oAddition.tenant_id,
+                                    project_code        : oAddition.project_code,
+                                    model_code          : oAddition.model_code,
+                                    addition_type_code  : oAddition.addition_type_code,
+                                    period_code         : oAddition.period_code,
+                                    addition_type_value : oPrice[sKey]                                
+                                });
+                                return false;
+                            }
+                        });
+                    })
+                }
+            });
+
+            var aBaseExtractResult = [];
+            $.each(aExchangeData.datas, function(idx, oTableData) {
+                debugger;
+                $.each(aBaseExtract, function(idx2, oBaseEx) {
+                    if(JSON.stringify(oTableData).indexOf(oBaseEx.currency_code) > -1) {
+                        aBaseExtractResult.push({
+                            tenant_id     : oBaseEx.tenant_id,
+                            project_code  : oBaseEx.project_code,
+                            model_code    : oBaseEx.model_code,
+                            currency_code : oBaseEx.currency_code,
+                            period_code   : oBaseEx.period_code,
+                            exrate        : oTableData[oBaseEx.period_code]
+                        })
+                    }
+                });
+            });
+            
+            var oSendData = {
+                inputData : {
+                    tcPjt             : aTcPjt,
+                    tcPjtSimilarModel : aSimModelResult,
+                    tcPjtAddInfo      : aPriceResult,
+                    tcPjtBaseExrate   : aBaseExtractResult,
+                    user_id           : "A60262"                   
+                }
+            };
+            
+            this._sendSaveData(oSendData);
         }
 
+
+        
+        
         /**
          * 저장
          */
@@ -96,16 +230,25 @@ sap.ui.define([
             this._reFactorySaveModel();
         }
 
+        /**
+         * 수정모드로 전환
+         */
         , onEditPress: function(oEvent) {
             this.getModel("detailModel").setProperty("/mode/readMode", false);
             this.getModel("detailModel").setProperty("/mode/editMode", true);
         }
 
+        /**
+         * 보기모드로 전환
+         */
         , onReadPress: function(oEvent) {
             this.getModel("detailModel").setProperty("/mode/readMode", true);
             this.getModel("detailModel").setProperty("/mode/editMode", false);
         }
 
+        /**
+         * 뒤로 가기 기능
+         */
         , onBackPress: function(oEvent) {
             this.getRouter().navTo("ProjectMgtList", {});
         }

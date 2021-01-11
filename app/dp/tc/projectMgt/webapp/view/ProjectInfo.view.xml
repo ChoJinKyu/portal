@@ -195,55 +195,5 @@
             </OverflowToolbar>
         </uxap:footer>
 	</uxap:ObjectPageLayout>
-<!--
-<Page
-    floatingFooter="true">
-    <IconTabBar
-		id="itbProgress"
-		select=".onTabSelect"
-        style="padding:0px !important" class="sapUiNoContentPadding">
-		<items>
-			<IconTabFilter
-				icon="sap-icon://hint"
-				iconColor="Default"
-				design="Horizontal"
-				text="Project Info."
-				key="1" />
-			<IconTabSeparator icon="sap-icon://process" />
-			<IconTabFilter
-				icon="sap-icon://add-product"
-				iconColor="Default"
-				design="Horizontal"
-				text="BOM Info."
-				key="2" />
-			<IconTabSeparator icon="sap-icon://process" />
-			<IconTabFilter
-				icon="sap-icon://expense-report"
-				iconColor="Default"
-				design="Horizontal"
-				text="Net Price Info."
-				key="3" />
-		</items>
-        <content>
-                <block:BlockProjectInfoHd/>
-        </content>
-	</IconTabBar>
 
-    <content>
-        <layout:VerticalLayout>
-            <block:BlockProjectInfoDt id="blProjectInfoDt"/>
-        </layout:VerticalLayout>
-    </content>
-    
-    <footer>
-        <OverflowToolbar>
-            <ToolbarSpacer />
-                <Button type="Transparent" text="취소" press=".onBackPress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/readMode}"/>
-                <Button type="Transparent" text="취소" press=".onReadPress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
-                <Button type="Transparent" text="수정" press=".onEditPress" class="sapUiSmallMarginEnd" enabled="{detailModel>/mode/readMode}"/>
-                <Button type="Emphasized"  text="저장"  press=".onSavePress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
-        </OverflowToolbar>
-    </footer>
-</Page>
--->
 </mvc:View>
