@@ -42,7 +42,7 @@
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="{I18N>/USE_FLAG}" labelFor="searchChain"></Label>
                             <ComboBox id="searchChain" selectedKey=""
                                                     width="auto">
@@ -52,6 +52,26 @@
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M3 S3" />
+                            </layoutData>
+                        </VBox> -->
+                        <VBox>
+                            <Label
+                                text="{I18N>/USE_FLAG}: "
+                                labelFor="search_codeGroupUseflag">
+                            </Label>
+                            <SegmentedButton 
+                                id="search_useflag"
+                                selectedKey="" 
+                                width="100%">
+                                <items>
+                                    <SegmentedButtonItem text="All" width="3em"/>
+                                    <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                    <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         

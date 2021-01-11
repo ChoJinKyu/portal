@@ -224,13 +224,13 @@ sap.ui.define([
 		 * @private
 		 */
 		_getSearchStates: function(){
-			var sChain = this.getView().byId("searchChain").getSelectedKey(),
+			var sUseflag = this.getView().byId("search_useflag").getSelectedKey(),
 				sKeyword = this.getView().byId("searchKeyword").getValue();
 			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
 			
             var aSearchFilters = [];
-			if (sChain && sChain.length > 0) {
-                var vChain = (sChain === "true")?true:false;
+			if (sUseflag && sUseflag.length > 0) {
+                var vChain = (sUseflag === "true")?true:false;
 				aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, vChain));
 			}
 			if (sKeyword && sKeyword.length > 0) {
