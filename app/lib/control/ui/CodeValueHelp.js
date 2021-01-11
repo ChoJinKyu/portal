@@ -48,28 +48,8 @@ sap.ui.define([
                 multiSelection: this.getProperty("multiSelection"),
                 keyField: this.getProperty("keyField"),
                 textField: this.getProperty("textField"),
-                filters: [
-                    new VBox({
-                        items: [
-                            new Label({ text: "Keyword"}),
-                            this.oSearchKeyword
-                        ],
-                        layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                    })
-                ],
-                columns: [
-                    new Column({
-                        width: "75%",
-                        label: new Label({text: "Text"}),
-                        template: new Text({text: "{"+this.getProperty("textField")+"}"})
-                    }),
-                    new Column({
-                        width: "25%",
-                        hAlign: "Center",
-                        label: new Label({text: "Code"}),
-                        template: new Text({text: "{"+this.getProperty("keyField")+"}"})
-                    })
-                ]
+                filters: this.createSearchFilters(),
+                columns: this.createTableColumns()
             });
 
             this.oDialog.setTitle(this.getProperty("title"));
@@ -92,6 +72,34 @@ sap.ui.define([
             this.oDialog.attachEvent("cancel", function(oEvent){
                 this.fireEvent("cancel");
             }.bind(this));
+        },
+
+        createSearchFilters: function(){
+            return [
+                new VBox({
+                    items: [
+                        new Label({ text: "Keyword"}),
+                        this.oSearchKeyword
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                })
+            ];
+        },
+
+        createTableColumns: function(){
+            return [
+                new Column({
+                    width: "75%",
+                    label: new Label({text: "Text"}),
+                    template: new Text({text: "{"+this.getProperty("textField")+"}"})
+                }),
+                new Column({
+                    width: "25%",
+                    hAlign: "Center",
+                    label: new Label({text: "Code"}),
+                    template: new Text({text: "{"+this.getProperty("keyField")+"}"})
+                })
+            ];
         },
 
         getTokens: function(){
