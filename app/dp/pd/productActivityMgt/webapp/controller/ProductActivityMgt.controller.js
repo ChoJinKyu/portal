@@ -126,7 +126,7 @@ sap.ui.define([
                         oView.setBusy(false);
                         
                         oTable.removeSelections(true);
-                        
+                    
                     },
                     error: function (data) {
                         oView.setBusy(false);
@@ -143,7 +143,7 @@ sap.ui.define([
                     oTable = oEvent.getSource(),
                     iTotalItems = oEvent.getParameter("total");
                 sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("appTitle");
-                console.log(sTitle+" ["+iTotalItems+"]");
+                //console.log(sTitle+" ["+iTotalItems+"]");
                 this.byId("mainTableTitle").setText(sTitle+"["+iTotalItems+"]");
             
             },
@@ -378,7 +378,7 @@ sap.ui.define([
                     aItems = oTable.getSelectedItems(),
                     aIndices = [];
 
-                for (var i = 0; i < oTable._iVisibleItemsLength-1; i++) {
+                for (var i = 0; i < oTable.getItems().length-1; i++) {
                     oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
@@ -437,35 +437,40 @@ sap.ui.define([
 
 
             onSelectionChange: function (oEvent) {
-                var [tId, mName, sEntity, aCol] = arguments;
                 var oTable = this.byId("mainTable");
-                var oModel = this.getView().getModel(mName);
+                var oModel = this.getView().getModel("list");
                 var oItem = oTable.getSelectedItem();
                 var idxs = [];
                 //oTable.removeSelections(true);
-                for (var i = 0; i < oTable._iVisibleItemsLength-1; i++) {
-                    oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                    oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
-                    oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
-                    oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
-                    oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
-                    oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
-                    //oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
-                    oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
-                    oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
+                for (var i = 0; i < oTable.getItems().length; i++) {
+                    if(oTable.getAggregation('items')[i] !=null && oTable.getAggregation('items')[i].getCells()!=undefined){
+
+                        oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
+                        oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
+                        oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
+                        oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
+                        oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
+                        oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
+                        //oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
+                        oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
+                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
+                    }
                 }
                 if (oItem != null && oItem != undefined) {
                     this.byId("buttonMainCancelRow").setEnabled(true);                    
                     for(var k=0; k<oTable.getSelectedContextPaths().length; k++){
                         idxs[k] = oTable.getSelectedContextPaths()[k].split("/")[2];
-                        oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[0].setVisible(false);
-                        oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[1].setVisible(true);
-                        oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
-                        oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
-                        oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[0].setVisible(false);
-                        oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[1].setVisible(true);
-                        oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[2].setEnabled(true);
-                        oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[2].setEnabled(true);
+                        if(oTable.getAggregation('items')[idxs[k]] !=null && oTable.getAggregation('items')[idxs[k]].getCells()!=undefined){
+
+                            oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[0].setVisible(false);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[1].setVisible(true);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[0].setVisible(false);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[1].setVisible(true);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[2].setEnabled(true);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[2].setEnabled(true);
+                        }
                     }
                 }
             },

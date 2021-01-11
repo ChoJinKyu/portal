@@ -1,5 +1,6 @@
 sap.ui.define([
     "sap/ui/core/Control",
+    "ext/lib/control/DummyRenderer",
     "ext/lib/control/ui/ValueHelpDialog",
     "ext/lib/core/service/ODataV2ServiceProvider",
 	"sap/ui/model/Filter",
@@ -10,7 +11,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input"
-], function (Parent, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
+], function (Parent, Renderer, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     //TODO : Localization (Title)
@@ -34,6 +35,8 @@ sap.ui.define([
                 cancel: {}
             }
         },
+
+        renderer: Renderer,
 
         constructor: function () {
             Parent.apply(this, arguments);

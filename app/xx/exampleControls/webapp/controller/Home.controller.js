@@ -18,16 +18,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit: function () {
-			var oViewModel,
-				oResourceBundle = this.getResourceBundle();
-
-			// Add the home page to the flp routing history
-			this.addHistoryEntry({
-				title: oResourceBundle.getText("homeViewTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
-			}, true);
-
 			var oModel = new JSONModel(sap.ui.require.toUrl("xx/exampleControls/mockdata") + "/exam-list.json");
 			this.setModel(oModel, "examples");
 		},
@@ -37,17 +27,13 @@ sap.ui.define([
 		/* event handlers                                              */
 		/* =========================================================== */
 
-		onTestPress: function () {
-			var oModel = this.getView().getModel("examples");
-		},
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
 		 * @public
 		 */
 		onListItemPress: function (oEvent) {
-			var oModel = this.getModel("examples"),
-				oItem = this.getModel("examples").getProperty(oEvent.getSource().getBindingContextPath());
+			var oItem = this.getModel("examples").getProperty(oEvent.getSource().getBindingContextPath());
 			this.getRouter().navTo(oItem.viewName, {}, true);
 		},
 

@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
+    "ext/lib/control/DummyRenderer",
     "ext/lib/core/service/ODataV2ServiceProvider",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -10,7 +11,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input"
-], function (Parent, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     var EmployeeDialog = Parent.extend("cm.util.control.ui.EmployeeDialog", {

@@ -2,6 +2,7 @@ sap.ui.define([
     "ext/lib/controller/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/Item",
+    "sap/ui/core/ListItem",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     'sap/ui/core/Fragment',
@@ -12,7 +13,7 @@ sap.ui.define([
 	/**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-    function (Controller, JSONModel, Item, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
+    function (Controller, JSONModel, Item, ListItem, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
         "use strict";
 
         return Controller.extend("cm.purOrgMgt.controller.purOrgMgt", {
@@ -84,8 +85,8 @@ sap.ui.define([
                         filters: [
                             new Filter('tenant_id', FilterOperator.EQ, key)
                         ],
-                        template: new Item({
-                            key: "{org>company_code}", text: "{org>company_code} : {org>company_name}"
+                        template: new ListItem({
+                            key: "{org>company_code}", text: "{org>company_name}", additionalText: "{org>company_code}"
                         })
                     });
                     // 조직유형

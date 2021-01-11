@@ -211,10 +211,17 @@
           ]
         },
         {
-          "pattern": "example5",
-          "name": "example5",
+          "pattern": "example5_1",
+          "name": "example5_1",
           "target": [
-            "example5"
+            "example5_1"
+          ]
+        },
+        {
+          "pattern": "example5_2",
+          "name": "example5_2",
+          "target": [
+            "example5_2"
           ]
         },
         {
@@ -274,9 +281,13 @@
           "viewName": "InlineEditTable",
           "viewId": "example4"
         },
-        "example5": {
+        "example5_1": {
           "viewName": "CodeCombo",
-          "viewId": "example5"
+          "viewId": "example5_1"
+        },
+        "example5_2": {
+          "viewName": "CodeDialog",
+          "viewId": "example5_2"
         },
         "example6": {
           "viewName": "ExcelUtilExam",
