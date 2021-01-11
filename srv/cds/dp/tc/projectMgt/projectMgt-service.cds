@@ -4,7 +4,7 @@ using {dp as pjtExrate} from '../../../../../db/cds/dp/tc/DP_TC_PROJECT_BASE_EXR
 using {dp as pjtSimilarModel} from '../../../../../db/cds/dp/tc/DP_TC_PROJECT_SIMILAR_MODEL-model';
 using {dp as pjtAddInfo} from '../../../../../db/cds/dp/tc/DP_TC_PROJECT_ADDITION_INFO-model';
 using {dp as pjtView} from '../../../../../db/cds/dp/tc/DP_TC_PROJECT_VIEW-model';
-using {cm.Org_Division as cm_Org_Division} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
+using {cm as cmOrgDiv} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
 
 namespace dp;
 
@@ -28,7 +28,7 @@ service ProjectMgtService {
             a.hq_au_flag,
             a.bizunit_code
         from
-            cm_Org_Division a
+            cmOrgDiv.Org_Division a
         where
             a.use_flag = true
     ;    
