@@ -885,7 +885,8 @@ sap.ui.define([
                 , approval_number: this.approval_number
                 , company_code: this.company_code
                 , org_code: this.plant_code
-                , chain_code: 'DP'
+                , chain_code: 'DP' 
+                , org_type_code : 'PL' 
                 , approval_type_code: this.approval_type_code
                 , approval_title: mst.approval_title
                 , approval_contents: mst.approval_contents
