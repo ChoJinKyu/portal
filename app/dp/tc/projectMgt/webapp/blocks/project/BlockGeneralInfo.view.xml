@@ -204,7 +204,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
             </Label>
-            <Text text="{=${detailModel>/last_customer_name} || ''}">
+            <Text text="{detailModel>/last_customer_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -378,11 +378,6 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
                 </layoutData>
             </Label>
-            <!--<Input value="{detailModel>/project_status_text}">
-                <layoutData>
-                    <layout:GridData span="XL2 L2 M3 S12" />
-                </layoutData>
-            </Input>-->
             <ComboBox
                 width="100%"
                 selectedKey="{detailModel>/project_status_code}"
@@ -511,7 +506,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
             </Label>
-            <Input value="{=${detailModel>/last_customer_name} || ''}">
+            <Input value="{detailModel>/last_customer_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>

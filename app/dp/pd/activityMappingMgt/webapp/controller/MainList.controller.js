@@ -19,8 +19,9 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-    "ext/lib/util/ExcelUtil"
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil) {
+    "ext/lib/util/ExcelUtil",
+    "sap/ui/core/Fragment"
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
 	"use strict";
 
 	return BaseController.extend("dp.pd.activityMappingMgt.controller.MainList", {
@@ -33,7 +34,6 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new ManagedListModel(), "list");
-
             this.getView().setModel(this.getOwnerComponent().getModel());
 
             oMultilingual.attachEvent("ready", function (oEvent) {
@@ -79,7 +79,7 @@ sap.ui.define([
                 filters: aSearchFilters,
 				success: function(oData){
                     oView.setBusy(false);
-
+                    
                     for (var i = 0; i < oTable.getItems().length; i++) {
                         oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
                         oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
@@ -424,9 +424,83 @@ sap.ui.define([
             }
         },
 
-        onSearchProdecuActivity: function() {
+        onSearchProdecuActivity: function(oEvent) {
+            var oButton = oEvent.getSource(),
+				oView = this.getView();
 
+			if (!this._pDialog) {
+				this._pDialog = Fragment.load({
+					id: oView.getId(),
+					name: "dp.pd.activityMappingMgt.view.ProductActivity",
+					controller: this
+				}).then(function(oDialog){
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+
+			this._pDialog.then(function(oDialog){
+				oDialog.open();
+            });
         },
+
+        handleSearch: function (oEvent) {
+			var sValue = oEvent.getParameter("value");
+			var oFilter = new Filter("product_activity_code", FilterOperator.Contains, sValue);
+			var oBinding = oEvent.getSource().getBinding("items");
+			oBinding.filter([oFilter]);
+		},
+
+		handleClose: function (oEvent) {
+            //product_activity_code
+            var productActivityCode = oEvent.mParameters.selectedItem.mAggregations.cells[0].getText();
+            //product_activity_name
+            var productActivityName = oEvent.mParameters.selectedItem.mAggregations.cells[1].getText();
+            
+
+			
+
+		},
+
+        onSearchActivity: function(oEvent) {
+            var oButton = oEvent.getSource(),
+				oView = this.getView();
+
+			if (!this._atDialog) {
+				this._atDialog = Fragment.load({
+					id: oView.getId(),
+					name: "dp.pd.activityMappingMgt.view.Activity",
+					controller: this
+				}).then(function(_oDialog){
+					oView.addDependent(_oDialog);
+					return _oDialog;
+				}.bind(this));
+			}
+
+			this._atDialog.then(function(_oDialog){
+				_oDialog.open();
+            });
+        },
+
+        handleActivitySearch: function (oEvent) {
+            var sValue = oEvent.getParameter("value");
+            var oFilter = [];
+            oFilter.push(new Filter("activity_code", FilterOperator.Contains, sValue));
+            //oFilter.push(new Filter("activity_name", FilterOperator.Contains, sValue));
+			var oBinding = oEvent.getSource().getBinding("items");
+			oBinding.filter([oFilter]);
+		},
+
+		handleActivityClose: function (oEvent) {
+            //activity_code
+            var activityCode = oEvent.mParameters.selectedItem.mAggregations.cells[0].getText();
+            //activity_name
+            var activityName = oEvent.mParameters.selectedItem.mAggregations.cells[1].getText();
+            
+
+			
+
+		},
 
 	});
 });

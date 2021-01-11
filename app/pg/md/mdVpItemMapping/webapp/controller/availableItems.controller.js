@@ -15,6 +15,8 @@ sap.ui.define([
             
             this.getModel("tblModel").setProperty("/table1",this.getView().byId("table").getId());
 
+            // var oModel = this.getView().getModel();
+            // oModel.setSizeLimit(10);
         },
         onDropAvailableItemsTable: function(oEvent) {
 			var oDraggedItem = oEvent.getParameter("draggedControl");
