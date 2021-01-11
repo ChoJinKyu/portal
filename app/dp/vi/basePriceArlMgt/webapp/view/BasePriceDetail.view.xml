@@ -74,9 +74,9 @@
                         </co:MicroProcessFlow>
                     </HBox>
                     <HBox>
-                        <Text text="Draft" width="4rem" />
-                        <Text text="Requested" width="6rem" textAlign="Center" />
-                        <Text text="Approved" width="6rem" textAlign="Center" />
+                        <Text text="{rootModel>/processList/0/code_name}" width="4rem" />
+                        <Text text="{rootModel>/processList/1/code_name}" width="6rem" textAlign="Center" />
+                        <Text text="{rootModel>/processList/2/code_name}" width="6rem" textAlign="Center" />
                     </HBox>
 				</layout:VerticalLayout>
                 <!-- Process 시작 -->
@@ -92,7 +92,7 @@
                             <VBox>
                                 <HBox alignItems="Center">
                                     <Label
-                                        text="{I18N>/SUBJECT}"
+                                        text="{I18N>/TITLE}"
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
@@ -135,12 +135,9 @@
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
-                                            <Button text="{I18N>/UPLOAD}" type="Transparent"/>
-                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" />
-                                            <!-- <Button text="Upload" type="Transparent" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
-                                            <Button text="Add" type="Transparent" press=".onAddBasePrice" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" /> -->
-                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" />
-                                            <!-- <Button text="Delete" type="Transparent" press=".onDeleteDetailRow" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" /> -->
+                                            <Button text="{I18N>/UPLOAD}" type="Transparent" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
+                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
+                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
                                             <!-- <Button icon="sap-icon://excel-attachment" />
                                             <Button icon="sap-icon://group-2" />
                                             <Button icon="sap-icon://action-settings" /> -->
@@ -156,7 +153,7 @@
                                         </t:Column>
                                         <t:Column hAlign="Center" width="6rem">
                                             <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" /> -->
-                                            <Label text="Pur Org" textAlign="Center" />
+                                            <Label text="{I18N>/PLANT}" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{detailModel>org_code}" />
                                             </t:template>
@@ -340,7 +337,7 @@
                                                 <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
                                                 <!-- <Label text="Family Material Code" textAlign="Center" width="100%" /> -->
                                                 <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" /> -->
-                                                <Label text="Pur Org" textAlign="Center" width="100%" />
+                                                <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Text text="{detailModel>PART_NO}" />
@@ -520,12 +517,11 @@
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"
-                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
-                    visible="{= ${detailModel>/approval_number} !== '' ? true : false}"
+                    visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                     press=".onChangeDeveloper" />
 				<Button
                     text="{I18N>/DRAFT}" 
-                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                    visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                     press=".onDraft" />
                 <!-- <Button
                     text="{I18N>/PREVIEW}" 
@@ -535,13 +531,12 @@
                     text="{I18N>/CANCEL}" press=".onBack" /> -->
                 <Button
                     text="{I18N>/DELETE}" 
-                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
-                    visible="{= ${detailModel>/approval_number} !== '' ? true : false}"
+                    visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                     press=".onDelete" />
                 <Button
                     type="Emphasized"
                     text="{I18N>/REQUEST}"
-                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                    visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                     press=".onRequest" />
 			</OverflowToolbar>
 		</uxap:footer>
