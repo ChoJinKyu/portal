@@ -142,6 +142,70 @@
             </uxap:ObjectPageSection>
             <!-- 첨부파일 끝 -->
 
+			<!-- Detail 에 관한 정보 -->
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="대상품목">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<Table id="midTable" 
+								sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+								items="{details>/LOIRequestDetailView}"
+                                rows="{
+                                    path: 'details>/LOIRequestDetailView',
+                                    sorter: { 
+                                        path: 'item_sequence',
+                                        descending: false 
+                                    }                   
+                                }"
+								class="sapFDynamicPageAlignContent" 
+								updateFinished=".onMidTableUpdateFinished"
+								mode="MultiSelect" 
+								width="auto">
+
+							<headerToolbar>
+								<OverflowToolbar>
+                                    <Title text="Items ({= ${details>/LOIRequestDetailView}.length || 0})" level="H2"/>
+									<ToolbarSpacer/>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+                                <Column id="midOrgTypeCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+									<Text text="플랜트" />
+								</Column>
+								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" width="200px">
+									<Text text="품명" />
+								</Column>
+								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center"  width="200px">
+									<Text text="규격" />
+								</Column>                                
+                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
+									<Text text="단위" />
+								</Column>
+                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
+									<Text text="수량" />
+								</Column>
+                                <Column id="midEndDateColumn6" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="비고" />
+								</Column>
+
+							</columns>
+							<items>
+                                <ColumnListItem>
+									<cells>
+                                        <Text text="{details>plant_name}"/>
+                                        <Text text="{details>plant_name}"/>
+                                        <Text text="{details>plant_name}"/>
+                                        <Text text="{details>plant_name}"/>
+                                        <Text text="{details>plant_name}"/>
+                                        <Text text="{details>plant_name}"/>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>             -->
+
             <!-- 결재라인 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
 				<uxap:subSections>

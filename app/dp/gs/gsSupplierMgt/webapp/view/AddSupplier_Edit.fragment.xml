@@ -23,21 +23,69 @@
 		
         <form:content>            
 			<Label text="{I18N>/SOURCING_SUPPLIER_LOCAL_NAME}"/>
-			<Input value="{SupplierGen>/sourcing_supplier_local_name}" editable="true"/>
+            <Input value="{
+                    path: 'SupplierGen>/sourcing_supplier_local_name',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 240
+                    }
+                }" editable="true"></Input>			
             <Label text="{I18N>/SOURCING_SUPPLIER_ENGLISH_NAME}"/>
-			<Input value="{SupplierGen>/sourcing_supplier_english_name}" editable="true"/>
+            <Input value="{
+                    path: 'SupplierGen>/sourcing_supplier_english_name',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 240
+                    }
+                }" editable="true"></Input>			
             <Label text="{I18N>/LOCAL_FULL_ADDRESS}"/>
-			<Input value="{SupplierGen>/local_full_address}" editable="true"/>
+            <Input value="{
+                    path: 'SupplierGen>/local_full_address',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 1000
+                    }
+                }" editable="true"></Input>			
             <Label text="{I18N>/ENGLISH_FULL_ADDRESS}"/>
-			<Input value="{SupplierGen>/english_full_address}" editable="true"/>
+            <Input value="{
+                    path: 'SupplierGen>/english_full_address',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 1000
+                    }
+                }" editable="true"></Input>			
             <Label text="{I18N>/PRODUCT_DESC}"/>
-			<Input value="{SupplierGen>/product_desc}" editable="true"/>
+            <Input value="{
+                    path: 'SupplierGen>/product_desc',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 300
+                    }
+                }" editable="true"></Input>			
             <Label text="{I18N>/EMAIL_ADDRESS}"/>
-			<Input id="eidtEmail" value="{SupplierGen>/email_address}" editable="true" required="true"/>
+            <Input id="eidtEmail"  value="{
+                    path: 'SupplierGen>/email_address',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 100
+                    }
+                }" editable="true" required="true"></Input>			
             <Label text="{I18N>/AN_PROFILE}"/>
-			<Input value="{SupplierGen>/an_profile}" editable="true"/>
+            <Input value="{
+                    path: 'SupplierGen>/an_profile',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 100
+                    }
+                }" editable="true"></Input>			
             <Label text="{I18N>/REMARK}"/>
-			<Input value="{SupplierGen>/remark}" editable="true"/>			
+            <Input value="{
+                    path: 'SupplierGen>/remark',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 3000
+                    }
+                }" editable="true"></Input>			
 	    </form:content>
     </form:SimpleForm>  
 </VBox>

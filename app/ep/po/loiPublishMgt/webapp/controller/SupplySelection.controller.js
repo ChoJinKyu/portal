@@ -175,7 +175,7 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
                                 oView.setBusy(false);
                                 that.onPageNavBackButtonPress.call(that);
-                                MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                             },
                             error: function (e) {
                                 console.log("error====", e);

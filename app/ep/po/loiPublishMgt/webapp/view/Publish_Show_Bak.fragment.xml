@@ -6,66 +6,54 @@
     xmlns:richtexteditor="sap.ui.richtexteditor"
 	xmlns:core="sap.ui.core">
 
-    <VBox id="publishShowBox">
+    <VBox>
 
-        <form:SimpleForm id="publishForm1Show" editable="false"> 
+        <form:SimpleForm id="publishForm1Show" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
                 <Label text="* 품의명" design="Bold" class="sapMLabelNoText"/>
-                <Input value="{
-                    path: 'master>/loi_publish_title',
-                    type: 'sap.ui.model.type.String',
-                    constraints: {
-                        maxLength: 50
-                    }
-                }" editable="false" width="98%"/>
+                <Text text="{master>/loi_publish_title}" width="100%"/>
             </VBox>
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm2Show" editable="false" layout="ColumnLayout"
+        <form:SimpleForm id="publishForm2Show" editable="true" layout="ColumnLayout"
                         columnsM="2"
                         columnsL="2"
                         columnsXL="2">
 
             <Label text="* 협력사명" design="Bold" class="sapMLabelNoText" />
-            <Input value="{
-                    path: 'master>/supplier_code',
-                    type: 'sap.ui.model.type.String',
-                    constraints: {
-                        maxLength: 50
-                    }
-                }" editable="false" width="100%"/>
+            <Text text="OO공조"/>
 
             <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
-            <Select selectedKey="K" editable="false">
-                <items>
-                    <core:Item key="K" text="구매의향서(국문)" />
-                    <core:Item key="E" text="구매의향서(영문)" />
-                </items>
-            </Select>            
+            <Text text="구매의향서(국문)"/>
 
             <Label text="* 계약일자" design="Bold" class="sapMLabelNoText"/>
-            <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" editable="false" value="{master>/contract_date}" placeholder="Date"/>   
+            <Text text="{master>/contract_date}" />   
 
             <Label text="* 서명방식" design="Bold" class="sapMLabelNoText"/>
-            <SegmentedButton enabled="false" class="sapUiSmallMarginBottom" selectedKey="{master>/offline_flag}" width="100%">                                            
-                <items>
-                    <SegmentedButtonItem text="온라인" key="false" />
-                    <SegmentedButtonItem text="오프라인" key="true" />
-                </items>
-            </SegmentedButton>   
+            <Text text="{master>/offline_flag}" />   
                                   
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm3Show" editable="false"> 
+        <form:SimpleForm id="publishForm3Show" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
                 <Label  text="* 부대조건" 
                             design="Bold" 
                             class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
-                <TextArea editable="false" value="{master>/additional_condition_desc}" rows="8" width="98%" />     
+                <richtexteditor:RichTextEditor
+                    editorType="TinyMCE4"
+                    width="98%"
+                    height="200px"
+                    editable="false"
+                    customToolbar="true"
+                    showGroupFont="true"
+                    showGroupLink="true"
+                    showGroupInsert="true"
+                    value="{master>/additional_condition_desc}">
+                </richtexteditor:RichTextEditor> 
             </VBox>
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm4Show" editable="false"> 
+        <form:SimpleForm id="publishForm4Show" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
                 <Label  text="* 특기사항" 
                             design="Bold" 
