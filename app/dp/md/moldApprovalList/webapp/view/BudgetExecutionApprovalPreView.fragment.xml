@@ -55,19 +55,19 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus
-                        title="Report No"
+                  <ObjectStatus
+                        title="{I18N>/APPROVAL_NUMBER}"
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
-                        title="Requester"
+                        title="{I18N>/REQUESTOR}"
                         text="[{appMaster>/requestor_empno}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
-                        title="Request Date"
+                        title="{I18N>/REQUEST_DATE}"
                         text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
@@ -76,7 +76,7 @@
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
-                        <Title text="Process"/>
+                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox>
                         <sc:MicroProcessFlow>
