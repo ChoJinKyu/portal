@@ -83,6 +83,8 @@ sap.ui.define([
             this.enableMessagePopover();
             //this.onAfterRendering();
 
+            console.log("onIn");
+
         },
 
         /* =========================================================== */
@@ -127,6 +129,10 @@ sap.ui.define([
 		onPageNavBackButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
+            // this._setScreen(sNextLayout);
+            // this._setModelEditCancelMode();
+
+
         },
 
         _setScreen: function (screen){
@@ -177,7 +183,7 @@ sap.ui.define([
        
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/DeleteLoiMulEntityProc";   
 
-			MessageBox.confirm("Are you sure to delete this control option and details?", {
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -193,7 +199,7 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
                                 oView.setBusy(false);
                                 that.onPageNavBackButtonPress.call(that);
-                                MessageToast.show("Success to delete.");
+                                MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
                             },
                             error: function(e){
                                 console.log("error====", e);
@@ -232,21 +238,21 @@ sap.ui.define([
             console.log(">>> detail", detail.getData());
 
             // Validation
-            if (!master.getData()["loi_request_title"]) {
-                MessageBox.alert("요청명을 입력하세요");
-                return;
-            }
-            if (!master.getData()["loi_publish_purpose_desc"]) {
-                MessageBox.alert("목적을 입력하세요");
-                return;
-            }
+            // if (!master.getData()["loi_request_title"]) {
+            //     MessageBox.alert("요청명을 입력하세요");
+            //     return;
+            // }
+            // if (!master.getData()["loi_publish_purpose_desc"]) {
+            //     MessageBox.alert("목적을 입력하세요");
+            //     return;
+            // }
 
-            //  if (flag != "R" && flag != "B" && master.getData()["_state_"] != "U") {
-            //      if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-            //          MessageBox.alert("변경사항이 없습니다.");
-            //          return;
-            //      }
-            //  }
+             if (flag != "R" && flag != "B" && master.getData()["_state_"] != "U") {
+                 if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+                     MessageBox.alert("변경사항이 없습니다.");
+                     return;
+                 }
+             }
 
 
             var input = {
@@ -301,6 +307,8 @@ sap.ui.define([
 
             console.log(" 111::: ");
             console.log("oMasterModel.getData()=", detail.getData());
+            console.log(" detail.getChanges().length::: " , detail.getChanges().length);
+            console.log(" LOIRequestDetailView::: " , detail.getData()["LOIRequestDetailView"]);
 
             if (detail.getChanges().length > 0) {
                 
@@ -317,6 +325,8 @@ sap.ui.define([
 
                     if (r["_row_state_"] == "D") {
                         delfalg = "D";
+                    }else{
+                        delfalg = r["_row_state_"];
                     }
 
                     console.log("1111 loiWriteNum_val :: ", loiWriteNum_val);
@@ -378,12 +388,11 @@ sap.ui.define([
             }
 
 
-            //if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
 
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";
 
-            //MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
-            MessageBox.confirm("Are you sure ?", {
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
                 initialFocus: MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
@@ -405,10 +414,7 @@ sap.ui.define([
 
                                 view.setBusy(false);
                                 that._toShowMode();
-                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                //MessageToast.show(that.getModel("I18N").getText("/NCM0005"));   
-                                MessageToast.show("Success to save.");
-                                //that._toShowMode();
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                             },
                             error: function (e) {
 
@@ -488,7 +494,9 @@ sap.ui.define([
                     this.validator.clearValueState(this.byId("page"));
                     this._toShowMode();
                 } else {
+                    console.log("cancel.....");
                     this.onPageNavBackButtonPress.call(this);
+                    this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 }
             }
         },
@@ -593,15 +601,8 @@ sap.ui.define([
 
             console.log("---------before ssss-------", JSON.stringify(data));
             console.log("---------before ssss-------",data.savedReqDetails.length );
-            console.log("---------before ssss-------",data.savedReqDetails.length );
-            //console.log(">>> before supInput", supInput_.inputData);
-            //console.log(">>> before supInput", supInput_.inputData.length);
-            // console.log(">>> before supInput", supInput_.inputData[0].loi_write_number);
-            // console.log(">>> loi_write_number", data.savedReqDetails[0].loi_write_number);
-            // console.log(">>> loi_item_number", data.savedReqDetails[0].loi_item_number);
 
-
-                    if (detail.getChanges().length > 0 && data.savedReqDetails.length > 0) {
+                    if (detail.getChanges().length > 0 && data.savedReqDetails.length > 0 && supInput_.inputData.length > 0) {
                         // if (r["supplier_code"] !== '' && r["supplier_code"] != null && r["supplier_code"] !== undefined) {
                         //     var supplierCode = r["supplier_code"];
                         //     supplierCodeArray = supplierCode.split(",");
@@ -610,18 +611,21 @@ sap.ui.define([
                          var supplierCodeArray_val = [];
                          for(var k = 0; k < data.savedReqDetails.length; k++) {
                              supplierCode_val = data.savedReqDetails[k].supplier_code;
-                             supplierCodeArray_val = supplierCode_val.split(",");  
+                             console.log("supplierCode_val :: " , supplierCode_val);
+                             if(supplierCode_val != null){
+                                supplierCodeArray_val = supplierCode_val.split(",");  
 
-                            for (var i = 0; i < supplierCodeArray_val.length; i++) {
-                                suppliers.push({
-                                    tenant_id: data.savedReqDetails[k].tenant_id,
-                                    company_code: data.savedReqDetails[k].company_code,
-                                    loi_write_number: data.savedReqDetails[k].loi_write_number,
-                                    loi_item_number: data.savedReqDetails[k].loi_item_number,
-                                    supplier_code: supplierCodeArray_val[i],
-                                    row_state : data.savedReqDetails[k].row_state
-                                });
+                                for (var i = 0; i < supplierCodeArray_val.length; i++) {
+                                    suppliers.push({
+                                        tenant_id: data.savedReqDetails[k].tenant_id,
+                                        company_code: data.savedReqDetails[k].company_code,
+                                        loi_write_number: data.savedReqDetails[k].loi_write_number,
+                                        loi_item_number: data.savedReqDetails[k].loi_item_number,
+                                        supplier_code: supplierCodeArray_val[i],
+                                        row_state : data.savedReqDetails[k].row_state
+                                    });
 
+                                }
                             }
 
                             console.log("suppliers :: " , suppliers);
@@ -714,13 +718,16 @@ sap.ui.define([
                     "loi_number": "",
                     "loi_request_title": "",
                     "loi_request_status_code": "121010",
+                    "loi_request_status_name": "작성중",
                     "loi_publish_purpose_desc": "",
                     "investment_review_flag": false,
                     "special_note": "",
                     "attch_group_number": "",
                     "approval_number": "",
                     "requestor_empno": "5450",
+                    "requestor_name": "**운",
                     "request_department_code": "58665481",
+                    "request_department_name": "IT소재.품질1.양산품질2팀(1P)",
                     "request_date": new Date(),
                     "org_type_code": "",
                     "org_code": "",

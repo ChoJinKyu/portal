@@ -101,7 +101,7 @@
                                 <Label text="요청자" labelFor="searchRequestorS"></Label>
                                 <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
                                 <lib-m:CodePicker id="searchRequestorS"
-                                    placeholder="Enter a Employee name"
+                                    placeholder="Enter a employee name"
                                     keyField="employee_number"
                                     textField="user_local_name"
                                     suggestionItems="{

@@ -56,6 +56,8 @@ sap.ui.define([
             //     intent: "#Template-display"
             // }, true);
 
+            console.log("1.11 -------------------->");
+
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             /** Date */
@@ -71,6 +73,7 @@ sap.ui.define([
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
         },
+
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -195,6 +198,7 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("mainListView").setProperty("/headerExpanded", true);
+            this.byId("pageSearchButton").firePress();
         },
 
 		/**
