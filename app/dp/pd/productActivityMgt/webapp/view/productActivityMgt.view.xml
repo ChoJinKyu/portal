@@ -90,7 +90,7 @@
                             <!--<Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/-->
                             <Button text="{I18N>/SAVE}" id="buttonSaveProc" press=".onSave"   type="Emphasized"/>
                             <ToolbarSeparator/>
-                            <Button id="gTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                            <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                             <Button icon="sap-icon://action-settings" press=".onPersoButtonPressed" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
