@@ -1,7 +1,6 @@
 namespace sp;
 
 using util from '../../cm/util/util-model';
-
 using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 // using {sp as nogoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 
@@ -10,7 +9,10 @@ entity Sc_Nego_Suppliers {
     key nego_header_id                   : Integer64 not null  @title : '협상헤더ID';
     key nego_item_number                 : String(10) not null @title : '협상품목번호';
     key item_supplier_sequence           : String(10) not null @title : '품목공급업체순번';
-        up_                          : Association to negoItemPrices.Sc_Nego_Item_Prices;
+        Item                             : Association to negoItemPrices.Sc_Nego_Item_Prices
+                                               on  Item.tenant_id        = $self.tenant_id
+                                               and Item.nego_header_id   = $self.nego_header_id
+                                               and Item.nego_item_number = $self.nego_item_number;
         operation_org_code               : String(30)          @title : '운영조직코드';
         operation_unit_code              : String(30)          @title : '운영단위코드';
         nego_supplier_register_type_code : String(10)          @title : '협상공급업체등록유형코드';

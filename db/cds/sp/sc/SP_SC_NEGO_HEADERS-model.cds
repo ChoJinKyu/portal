@@ -13,7 +13,8 @@ entity Sc_Nego_Headers {
         // key tenant_id                       : Association to orgTenant.Org_Tenant @title : '테넌트ID';
     key nego_header_id                  : Integer64 not null  @title : '협상헤더ID';
         Items                           : Composition of many negoItemPrices.Sc_Nego_Item_Prices
-                                              on Items.up_ = $self;
+                                              on  Items.tenant_id      = $self.tenant_id
+                                              and Items.nego_header_id = $self.nego_header_id;
         operation_unit_code             : String(30) not null @title : '운영단위코드';
         reference_nego_header_id        : Integer64           @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64           @title : '기존협상헤더ID';

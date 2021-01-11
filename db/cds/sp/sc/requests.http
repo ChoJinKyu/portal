@@ -3,7 +3,9 @@
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service
 @reviews-service = http://localhost:8080/odata/v4/sp.negoHeadersV4Service
-
+@reviews-service = http://localhost:8080/odata/v2/sp.negoHeadersService
+# @bookshop = http://localhost:4004
+# @reviews-service = http://localhost:4004/sp.negoHeadersV4Service
 
 #################################################
 #
@@ -14,7 +16,7 @@
 GET {{reviews-service}}/NegoHeaders
 
 ### Single Select
-GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=3)
 
 ### INSERT 
 # https://cap.cloud.sap/docs/java/query-api#upsert
@@ -162,6 +164,116 @@ GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=2)
 ### Single Select
 GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=3)
 
+
+#################################################
+#
+#   NegoItemPrices Service
+#
+GET {{reviews-service}}/NegoItemPrices
+
+### Insert Single
+POST {{reviews-service}}/NegoItemPrices
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 1,
+    "nego_item_number": "00001",
+    "operation_org_code": "",
+    "operation_unit_code": "",
+    # "line_type_code": "",
+    # "inventory_item_code": "",
+    "item_type_code": "",
+    "local_create_dtm": "2021-01-11T19:29:17Z",
+    "local_update_dtm": "2021-01-11T19:29:17Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-11T10:29:17Z",
+    "system_update_dtm": "2021-01-11T10:29:17Z"
+}
+
+
+#################################################
+#
+#   NegoSuppliers Service
+#
+GET {{reviews-service}}/NegoSuppliers?
+&$select=*
+&$top=3
+
+### Insert Single
+POST {{reviews-service}}/NegoSuppliers
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 1,
+    "nego_item_number": "00001",
+    "item_supplier_sequence": "00001",
+    "local_create_dtm": "2021-01-11T19:29:17Z",
+    "local_update_dtm": "2021-01-11T19:29:17Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-11T10:29:17Z",
+    "system_update_dtm": "2021-01-11T10:29:17Z"
+}
+
+
+#################################################
+#   NegoHeaders Service
+#   NegoItemPrices Service
+#   NegoSuppliers Service
+
+### Single NegoHeaders
+GET {{reviews-service}}/NegoHeaders?$format=json&$top=1
+### Single NegoHeaders/NegoItemPrices
+GET {{reviews-service}}/NegoItemPrices?$format=json&$top=1
+### Single NegoHeaders/NegoItemPrices
+GET {{reviews-service}}/NegoSuppliers?$format=json&$top=1
+### Complex NegoHeaders + NegoItemPrices
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)?
+&$format=json
+&$select=*,Items
+&$expand=Items
+### Complex NegoHeaders + NegoItemPrices Aster V4 Only
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items?
+&$format=json
+&$select=*
+&$expand=*
+### Complex NegoItemPrices + NegoHeaders
+GET {{reviews-service}}/NegoItemPrices(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')?
+&$format=json
+&$expand=Header
+### Complex NegoItemPrices + NegoHeaders
+GET {{reviews-service}}/NegoItemPrices?
+&$format=json
+&$select=*,Header
+&$expand=Header
+### Complex 
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items?
+&$format=json
+&$select=*
+&$expand=Suppliers
+### Complex 
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')/Suppliers?
+&$format=json
+&$select=*
+&$expand=Item,Item/Header
+### Complex # V4 Only
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')/Suppliers?
+&$format=json
+&$select=*
+&$expand=Item($expand=Header)
+
+
+
+
+
+
+
+
+
+<!--   
 #################################################
 #
 #   Bookshop Services
@@ -189,9 +301,6 @@ GET {{bookshop}}/orders/Orders
 
 
 
-
-
-
 ### Create order, still inactive
 POST {{bookshop}}/orders/Orders
 Content-Type: application/json
@@ -207,3 +316,4 @@ Content-Type: application/json
 
 ### Get active order
 GET {{bookshop}}/orders/Orders(ID={{newOrderID}},IsActiveEntity=true)
+>
