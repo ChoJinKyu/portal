@@ -6,4 +6,10 @@ namespace tmp;
 service TmpMgrService {
     entity Emp as projection on TMP_EMP.emp;
     entity prjt as projection on TMP_PRJT.prjt;
+
+    type SampleType{
+        result : String(2000);
+    };
+    
+    action SampleLogicTransition(TENANT_ID : String) returns SampleType;
 }

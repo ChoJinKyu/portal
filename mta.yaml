@@ -46,7 +46,7 @@ modules:
 - name: sppCap_ui_deployer
   type: com.sap.application.content
   path: .
-  requires:                 
+  requires:
   - name: sppCap_html_repo_host
     parameters:
       content-target: true
@@ -57,9 +57,21 @@ modules:
       - portal-content.zip
       name: portal
       target-path: resources/
+    - artifacts:
+      - SampleSolutionized-content.zip
+      name: SampleSolutionized
+      target-path: resources/
 - name: portal
   type: html5
   path: app
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: SampleSolutionized
+  type: html5
+  path: app/tmp/SampleSolutionized
   build-parameters:
     builder: custom
     commands:
