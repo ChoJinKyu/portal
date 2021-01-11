@@ -393,7 +393,7 @@
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
 							<table:template>
-                                <Text  text="{mdItemMaster>provisional_budget_amount}"/>
+                                <Text  text="{mdItemMaster>provisional_budget_amount}" textAlign="Right"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
