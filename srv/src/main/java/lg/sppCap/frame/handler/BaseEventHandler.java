@@ -26,6 +26,7 @@ public class BaseEventHandler implements EventHandler {
      */
     protected String getLanguageCode(EventContext context){
         Locale locale = context.getParameterInfo().getLocale();
+        if(locale == null) locale = new Locale("KO", "KR");
         return locale.getLanguage().toUpperCase();
     }
     
@@ -33,13 +34,14 @@ public class BaseEventHandler implements EventHandler {
      * 
      * @param messageCode
      * @param context
+     * @param replacement
      * @return
      * @throws Exception
      */
-    protected String getMessage(String messageCode, EventContext context) throws Exception {
+    protected String getMessage(String messageCode, EventContext context, Object... replacement){
         String tenantId = this.getTenantId();
         String languageCode = this.getLanguageCode(context);
-        return this.getMessage(messageCode, tenantId, languageCode);
+        return this.getMessage(messageCode, tenantId, languageCode, replacement);
     }
 
     /**
@@ -47,11 +49,12 @@ public class BaseEventHandler implements EventHandler {
      * @param messageCode
      * @param tenantId
      * @param languageCode
+     * @param replacement
      * @return
      * @throws Exception
      */
-    protected String getMessage(String messageCode, String tenantId, String languageCode) throws Exception {
-        return this.i18n.getMessageContent(tenantId, messageCode, languageCode);
+    protected String getMessage(String messageCode, String tenantId, String languageCode, Object... replacement){
+        return this.i18n.getMessageContent(tenantId, messageCode, languageCode, replacement);
     }
     
 }

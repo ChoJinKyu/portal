@@ -50,7 +50,7 @@ entity It_Txn_Po_Doc {
         po_desc                          : String(100)         @title : 'PO내역';
         material_code                    : String(40)          @title : '자재코드';
         plant_code                       : String(4)           @title : '플랜트코드';
-        sl_code                          : String(6)           @title : '저장위치코드';
+        sloc_code                        : String(30)          @title : '저장위치코드';
         po_unit                          : String(3)           @title : '구매오더단위';
         purchasing_quantity              : Decimal             @title : '구매수량';
         price_unit_switch_numerator      : Decimal(5, 0)       @title : '가격단위전환분자';
@@ -58,7 +58,7 @@ entity It_Txn_Po_Doc {
         base_unit_switch_numerator       : Decimal(5, 0)       @title : '기본단위전환분자';
         base_unit_switch_denominator     : Decimal(5, 0)       @title : '기본단위전환분모';
         po_net_price                     : Decimal             @title : 'PO단가';
-        price_unit                       : Decimal(5, 0)       @title : '가격단위';
+        po_price_unit                    : Decimal(5, 0)       @title : 'PO가격단위';
         po_amount                        : Decimal             @title : '구매오더금액';
         tax_code                         : String(10)          @title : '세금코드';
         valuation_type_code              : String(30)          @title : '평가유형코드';

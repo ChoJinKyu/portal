@@ -1,5 +1,7 @@
 package lg.sppCap.handlers.dp.vi;
 
+import lg.sppCap.frame.handler.BaseEventHandler;
+
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +15,15 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import java.text.MessageFormat;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+// Log
+// import java.util.logging.Level;
+// import java.util.logging.Logger;
+// import org.apache.commons.logging.Log;
+// import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Java Sql
 import java.sql.Connection;
@@ -29,6 +37,8 @@ import com.sap.cds.services.cds.CdsCreateEventContext;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.EventContext;
+import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
@@ -46,9 +56,11 @@ import cds.gen.dp.basepricearlservice.BasePriceArlPrice_;
 
 @Component
 @ServiceName("dp.BasePriceArlService")
-public class BasePriceArlService implements EventHandler {
+public class BasePriceArlService extends BaseEventHandler {
 
-    private final static Logger log = Logger.getGlobal();
+    // private final static Logger log = Logger.getGlobal();
+    // private final static Logger log = Logger.getLogger(BasePriceArlService.class);
+    private static final Logger log = LoggerFactory.getLogger(BasePriceArlService.class);
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -81,6 +93,27 @@ public class BasePriceArlService implements EventHandler {
     //     // context.setCompleted();
     // }
 
+    public void validMandatory(String validSource, String displayEnWord1, String displayEnWord2, String displayKoWord1, String displayKoWord2) {
+        String messageCode = "EDP30001";
+        String languageCode = "KO";
+        String msg = "";
+        
+        if (validSource == null || validSource.equals("")) {
+            try{
+                msg = this.getMessage(messageCode, "L2100", languageCode);
+                if(log.isDebugEnabled()) log.debug(msg);
+            } catch(Exception e) {
+                log.error(e.getLocalizedMessage(), e);
+            }
+
+            if (languageCode.equals("EN")) {
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageFormat.format(msg, displayEnWord1, displayEnWord2));
+            } else {
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageFormat.format(msg, displayKoWord1, displayKoWord2));
+            }
+        }
+    }
+
     /**
      * BasePriceArlMaster의 Create Before Event Handler 
      */
@@ -98,12 +131,15 @@ public class BasePriceArlService implements EventHandler {
          * basePriceArlMaster
         */
         for (BasePriceArlMaster basePriceArlMaster : basePriceArlMasters) {
+            // Validation
+            validMandatory(basePriceArlMaster.getTenantId(), "title", "title", "제목", "제목");
+
             String tenant_id = basePriceArlMaster.getTenantId();
 
             // Init Data Setting : approval_number
             String approval_number = "";
             
-            if (basePriceArlMaster.getApprovalNumber() == null) {
+            if (basePriceArlMaster.getApprovalNumber() == null || basePriceArlMaster.getApprovalNumber().equals("")) {
                 sql = "SELECT DP_APPROVAL_NUMBER_FUNC(?) FROM DUMMY";
                 approval_number = jdbc.queryForObject(sql, new Object[] { tenant_id }, String.class);
                 basePriceArlMaster.setApprovalNumber(approval_number);
@@ -127,7 +163,7 @@ public class BasePriceArlService implements EventHandler {
                 // Init Data Setting : item_sequence
                 BigDecimal item_sequence = new BigDecimal(1);
 
-                if (basePriceArlDetail.getItemSequence() == null) {
+                if (basePriceArlDetail.getItemSequence() == null || basePriceArlDetail.getItemSequence().equals("")) {
                     sql = "SELECT DP_ITEM_SEQUENCE_FUNC(?, ?, ?) FROM DUMMY";
                     item_sequence = jdbc.queryForObject(sql, new Object[] { tenant_id, approval_number, increament }, BigDecimal.class);
                     increament = increament.add(new BigDecimal("1"));

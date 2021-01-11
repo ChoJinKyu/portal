@@ -141,7 +141,6 @@
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onMainTableUpdateFinished"
                     items="{list>/Message}"
-                    mode="MultiSelect" 
                     width="auto">
                 <headerToolbar>
                     <OverflowToolbar>

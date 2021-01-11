@@ -149,22 +149,23 @@ sap.ui.define([
                         
             var oNewMasterData = {
                 tenant_id: "L2100",
-                company_code: "",
+                company_code: "LGCKR",
                 pr_number: "NEW",
                 pr_type_code: oArgs.pr_type_code,
                 pr_type_code_2: oArgs.pr_type_code_2,
                 pr_type_code_3: oArgs.pr_type_code_3,
                 pr_template_number: oArgs.pr_template_number,
-                pr_create_system_code: "",
-                requestor_empno: "",
+                pr_create_system_code: "TEST",
+                requestor_empno: "A60264",
                 requestor_name: "김구매",
                 requestor_department_code: "10010",
                 requestor_department_name: "생산1팀",
                 request_date: new Date(),
-                pr_create_status_code: "A",
+                pr_create_status_code: "10",
                 pr_header_text: "테스트 구매요청",
                 approval_flag: false,
                 approval_number: "",
+                approval_contents: "",
                 erp_interface_flag: false,
                 erp_pr_type_code: "",
                 erp_pr_number: "",
@@ -174,6 +175,7 @@ sap.ui.define([
                 pr_type_name: "",
                 pr_type_name_2: "",
                 pr_type_name_3: "",
+                pr_desc: "",
                 details: []
             };
 
@@ -197,14 +199,26 @@ sap.ui.define([
 
             var itemNumber = aDetails.length + 1;
 
-            aDetails.push({tenant_id:"", 
-                        company_code: "LGEKR", 
-                        pr_number: "1",
+            aDetails.push({tenant_id:"L2100", 
+                        company_code: "LGCKR", 
+                        pr_number: "",
                         pr_item_number: itemNumber,
+                        org_type_code: "XX", 
                         org_code: "", 
+                        buyer_empno: "", 
+                        currency_code: "", 
+                        estimated_price: "", 
                         material_code: "", 
                         material_group_code: "", 
-                        pr_desc: ""
+                        pr_desc: "",                        
+                        pr_quantity: "", 
+                        pr_unit: "", 
+                        requestor_empno: "A60264", 
+                        requestor_name: "김구매", 
+                        purchasing_group_code: "", 
+                        price_unit: "", 
+                        pr_progress_status_code: "10", 
+                        remark: ""
                         });
             oDetailModel.refresh();
         },
@@ -423,6 +437,20 @@ sap.ui.define([
             var oDetailModel = this.getModel("detailModel");
             var oData = $.extend(true, {}, oDetailModel.getData());
 
+            //대표품목명
+            var prDesc = "";
+            if(oData.details.length === 0){
+                prDesc = oData.details[0].pr_desc;
+            }else{
+                prDesc = oData.details[0].pr_desc + ' 외 ' + (oData.details.length-1) + "건";
+            }
+            oData.pr_desc = prDesc;
+
+            //품의내용
+            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            oData.approval_contents = approvalContents;
+
+            //Send data
             var sendData = {}, masterDatas=[];
             masterDatas.push(oData);
             sendData.inputData = masterDatas;
@@ -455,7 +483,7 @@ sap.ui.define([
                         if(result.value[0].return_code === "0000") {
                             MessageToast.show(that.getModel("I18N").getText("/" + result.value[0].return_code));
                         }
-                        MessageToast.show("Call ajax end - " + result.value[0].return_msg);                        
+                        MessageToast.show(result.value[0].return_msg);                        
                     }
                     callback(result);
                 },

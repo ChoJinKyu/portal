@@ -8,11 +8,14 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 
 import org.springframework.stereotype.Component;
 
+import cds.gen.xx.examplev4service.ExampleV4Service_;
+import cds.gen.xx.examplev4service.GetLocalizedMessageContext;
 import cds.gen.xx.examplev4service.GetPivotDataContext;
+import cds.gen.xx.examplev4service.LocalizedMessage;
+import cds.gen.xx.examplev4service.MessageDefine;
 import cds.gen.xx.examplev4service.PivotColumn;
 import cds.gen.xx.examplev4service.PivotData;
 import cds.gen.xx.examplev4service.PivotRecord;
-import cds.gen.xx.examplev4service.ExampleV4Service_;
 import lg.sppCap.frame.handler.BaseEventHandler;
 
 @Component
@@ -84,6 +87,95 @@ public class ExampleV4Service extends BaseEventHandler {
         data.setRecords(records);
 
         context.setResult(data);
+        context.setCompleted();
+    }
+
+
+    @On(event = GetLocalizedMessageContext.CDS_NAME)
+    public void onGetPivotData(GetLocalizedMessageContext context) {
+
+        String tenantId = "L2100";
+        String languageCode = context.getLanguageCode();
+
+        LocalizedMessage result = LocalizedMessage.create();
+        MessageDefine define;
+
+        List<MessageDefine> buttons = new ArrayList<>();
+
+        define = MessageDefine.create();
+        define.setCode("TEMP_SAVE");
+        define.setText(super.getMessage("TEMP_SAVE", context));
+        buttons.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("TEMP_SAVE");
+        define.setText(super.getMessage("TEMP_SAVE", tenantId, languageCode));
+        buttons.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("REJECT");
+        define.setText(super.getMessage("REJECT", context));
+        buttons.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("REJECT");
+        define.setText(super.getMessage("REJECT", tenantId, languageCode));
+        buttons.add(define);
+
+        result.setButtons(buttons);
+
+
+
+        List<MessageDefine> labels = new ArrayList<>();
+
+        define = MessageDefine.create();
+        define.setCode("ACCOUNT_CODE");
+        define.setText(super.getMessage("ACCOUNT_CODE", context));
+        labels.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("ACCOUNT_CODE");
+        define.setText(super.getMessage("ACCOUNT_CODE", tenantId, languageCode));
+        labels.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("ACQ_DEPARTMENT_CODE");
+        define.setText(super.getMessage("ACQ_DEPARTMENT_CODE", context));
+        labels.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("ACQ_DEPARTMENT_CODE");
+        define.setText(super.getMessage("ACQ_DEPARTMENT_CODE", tenantId, languageCode));
+        labels.add(define);
+
+        result.setLabels(labels);
+
+
+        List<MessageDefine> messages = new ArrayList<>();
+
+        define = MessageDefine.create();
+        define.setCode("NCM00501");
+        define.setText(super.getMessage("NCM00501", context, 2, "Save"));
+        messages.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("NCM00501");
+        define.setText(super.getMessage("NCM00501", tenantId, languageCode, 2, "Save"));
+        messages.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("ECM01502");
+        define.setText(super.getMessage("ECM01502", context, "Reject"));
+        messages.add(define);
+
+        define = MessageDefine.create();
+        define.setCode("ECM01502");
+        define.setText(super.getMessage("ECM01502", tenantId, languageCode, "Reject"));
+        messages.add(define);
+
+        result.setMessages(messages);
+        
+        context.setResult(result);
         context.setCompleted();
     }
 

@@ -23,7 +23,7 @@ using util from '../../cm/util/util-model';
 entity If_Impfta_Rif {
     key tenant_id : String(5) not null @title : '테넌트ID';
     key zfftart   : String(6) not null @title : 'FTA코드';
-        zfftart_t : String(383)        @title : 'FTA코드 내역';
+        zfftart_t : String(383)        @title : 'FTA코드내역';
 }
 
 extend If_Impfta_Rif with util.Managed;

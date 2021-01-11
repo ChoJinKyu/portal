@@ -20,8 +20,8 @@ entity Li_Request_Detail_View {
         currency_code              : String(15)          @title : '통화코드';
         currency_name              : String(15)          @title : '통화';
         request_amount             : Decimal             @title : '요청금액';
-        supplier_code              : String(15)          @title : '공급업체코드';
-        supplier_name              : String(15)          @title : '공급업체';
+        supplier_code              : String(100)         @title : '공급업체코드';
+        supplier_name              : String(100)         @title : '공급업체';
         buyer_empno                : String(30)          @title : '구매자사번';
         buyer_name                 : String(30)          @title : '구매자이름';
         purchasing_department_code : String(50)          @title : '구매부서코드';

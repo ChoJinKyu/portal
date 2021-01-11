@@ -77,14 +77,14 @@
                                 <Text text="{approver>approve_sequence}" />
                                 <ComboBox width="100%"
                                     selectedKey="{approver>approver_type_code}" 
-                                    items="{ path : 'util>/CodeDetails',
+                                    items="{ path : 'util>/Code',
                                                 filters : [
                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
                                                 ]
                                             }"
                                     enabled="{= ${approver>editMode}?${mode>/editFlag}:false }">  
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
                                 <SearchField search=".onApproverSearch" width="100%"
                                     value="{approver>approver_name}" placeholder="Search employee" 

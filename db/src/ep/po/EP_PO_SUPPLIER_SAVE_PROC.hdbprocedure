@@ -3,7 +3,8 @@ PROCEDURE EP_PO_SUPPLIER_SAVE_PROC (
                         COMPANY_CODE NVARCHAR(10), 
                         LOI_WRITE_NUMBER NVARCHAR(50), 
                         LOI_ITEM_NUMBER NVARCHAR(50), 
-                        SUPPLIER_CODE NVARCHAR(15)
+                        SUPPLIER_CODE NVARCHAR(15),
+                        ROW_STATE NVARCHAR(5)
     ),
     OUT O_RTN_MSG NVARCHAR(3000)
 )
@@ -20,6 +21,7 @@ BEGIN
             , A.LOI_WRITE_NUMBER
             , A.LOI_ITEM_NUMBER
             , A.SUPPLIER_CODE
+            , A.ROW_STATE
         FROM :I_TABLE A
         ;
 	
@@ -78,6 +80,17 @@ BEGIN
             , CURRENT_TIMESTAMP
             , CURRENT_TIMESTAMP)
         ;
+
+    MERGE INTO EP_LI_SUPPLIER AS SUPP
+        USING DUMMY
+        ON  SUPP.TENANT_ID           = curItem.TENANT_ID
+        AND SUPP.COMPANY_CODE        = curItem.COMPANY_CODE
+        AND SUPP.LOI_WRITE_NUMBER    = curItem.LOI_WRITE_NUMBER
+        AND SUPP.LOI_ITEM_NUMBER     = curItem.LOI_ITEM_NUMBER
+        AND SUPP.SUPPLIER_CODE       = curItem.SUPPLIER_CODE
+        AND 'D'                      = curItem.ROW_STATE
+
+    WHEN MATCHED THEN DELETE;
 
     END FOR;
 

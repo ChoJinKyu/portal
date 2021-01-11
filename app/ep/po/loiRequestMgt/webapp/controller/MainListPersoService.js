@@ -4,57 +4,57 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "ctryMgr-mainList-mainColumnCode",
+                id: "loiRequestMgt-mainTable-mainLoiNumber",
                 order: 0,
-                text: "Code",
+                text: "LOI번호",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnName",
+                id: "loiRequestMgt-mainTable-mainRequestDepartmentCode",
                 order: 1,
-                text: "Name",
-                visible: false
+                text: "요청부서",
+                visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnStartDate",
+                id: "loiRequestMgt-mainTable-mainRequestorEmpno",
                 order: 2,
-                text: "Start Date",
-                visible: false
+                text: "요청자",
+                visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnEndDate",
+                id: "loiRequestMgt-mainTable-mainRequestDate",
                 order: 3,
-                text: "End Date",
+                text: "요청일자",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnSiteFlag",
+                id: "loiRequestMgt-mainTable-mainLoiRequestTitle",
                 order: 4,
-                text: "Site",
+                text: "요청명",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnCompanyFlag",
+                id: "loiRequestMgt-mainTable-mainLoiRequestStatusCode",
                 order: 5,
-                text: "Company",
+                text: "진행상태",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnRoleFlag",
-                order: 5,
-                text: "Role",
-                visible: true
-            },
-            {
-                id: "ctryMgr-mainList-mainColumnOrganizationFlag",
+                id: "loiRequestMgt-mainTable-mainBuyerEmpno",
                 order: 6,
-                text: "Organization",
+                text: "구매담당자",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnUserFlag",
+                id: "loiRequestMgt-mainTable-mainPublishDate",
                 order: 7,
-                text: "User",
+                text: "발행일자",
+                visible: true
+            },
+            {
+                id: "loiRequestMgt-mainTable-mainVendorPoolCode",
+                order: 8,
+                text: "협력사",
                 visible: true
             }
         ];

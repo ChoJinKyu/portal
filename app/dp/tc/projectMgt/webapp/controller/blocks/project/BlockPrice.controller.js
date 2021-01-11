@@ -21,14 +21,18 @@ sap.ui.define([
         , numberFormatter: NumberFormatter
 
         , onInit: function () {
-            this._pivottingData();
+            
         }
 
+        , onBeforeRendering: function() {
+            this._pivottingData()
+        }
          /**
          * Table Control 에 pivot type 으로 binding 시키기 위함.
          */
         , _pivottingData: function() {
             var oDetailData = this.getOwnerComponent().getModel("detailModel").getData();
+            console.log("BlockPrice.Controller", oDetailData);
             //Grid Table 별로 
             var oEvents = oDetailData.events ? oDetailData.events.results : [];//개발일정
 
@@ -43,13 +47,12 @@ sap.ui.define([
             var aEventsData = this._reCompositData(oEvents, "develope_event_code", "start_date");
             this.setModel(new JSONModel(aEventsData), "eventsModel");
             this._factoryTableColumns("tblEvents", "Center", true);
-            this._factoryTableColumns("tblEvents_edit", "Center", false, "DatePicker");
-
+            //this._factoryTableColumns("tblEvents_edit", "Center", false, "DatePicker");
 
             //판가/물동/원가
             var aPriceData = {};
             if(oMtlmob.length > 0) {
-                oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동"});
+                oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동", "addition_type_copde" : oMtlmob.addition_type_copde});
                 aPriceData = this._reCompositData(oMtlmob, "period_code", "addition_type_value");
             }
             if(oSalesPrice.length > 0) {
@@ -57,7 +60,7 @@ sap.ui.define([
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSalesPrice, "period_code", "addition_type_value");
                 } else {
-                    aPriceData.datas.push(this._addRowToPivotObj(oSalesPrice, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "판가"}));                    
+                    aPriceData.datas.push(this._addRowToPivotObj(oSalesPrice, aPriceData.datas[0], "period_code", "addition_type_value", oSalesPrice.addition_type_code));                    
                 }
             }
             if(oPrcsCost.length > 0) {
@@ -65,7 +68,7 @@ sap.ui.define([
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oPrcsCost, "period_code", "addition_type_value");
                 } else {
-                    aPriceData.datas.push(this._addRowToPivotObj(oPrcsCost, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "가공비"}));
+                    aPriceData.datas.push(this._addRowToPivotObj(oPrcsCost, aPriceData.datas[0], "period_code", "addition_type_value", oPrcsCost.addition_type_code));
                 }
                 
             }
@@ -74,7 +77,7 @@ sap.ui.define([
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSgna, "period_code", "addition_type_value");
                 } else {
-                    aPriceData.datas.push(this._addRowToPivotObj(oSgna, aPriceData.datas[0], "period_code", "addition_type_value", {"remark" : "판관비"}));
+                    aPriceData.datas.push(this._addRowToPivotObj(oSgna, aPriceData.datas[0], "period_code", "addition_type_value", oSgna.addition_type_code));
                 }
                 
             }
@@ -105,6 +108,7 @@ sap.ui.define([
                 $.each(Object.keys(oObj), function(idx2, sKey) {
                     if(oRowData[sName] === sKey) {
                         newObj[sKey] = oRowData[sText];
+                        newObj.addition_type_code = aRowData[idx].addition_type_code;
                         return false;
                     }
                 });
@@ -117,6 +121,7 @@ sap.ui.define([
          * @param aDatas {Array} row data
          * @param sKeyName {string} 칼럼 name 으로 지정할 property 명
          * @param sTextName {string} 칼럼 value 값으로 지정할 property 명
+         * @param sTypeCode {string} Addition_type_code - 저장할때 필요
          * @return newDatas {Array} 재조합된 data
          */
         , _reCompositData: function (aRowDatas, sKeyName, sTextName) {
@@ -136,6 +141,7 @@ sap.ui.define([
                 }
                 //newObj.set(sKey, sTxt);
                 newObj[sKey] = sTxt;
+                newObj.addition_type_code = oData.addition_type_code;
                 aCols.push({name: sKey, text: sKey});
             });
             if(Object.keys(newObj).length > 0 && newObj.constructor === Object) {
@@ -209,7 +215,10 @@ sap.ui.define([
                 });
             }.bind(this));
 
-            oTable.bindProperty("visible", {path : "detailModel>/mode/" + (bReadMode ? "readMode" : "editMode")});
+            if(sTableName !== "tblEvents") {//일정은 수정 불가
+                oTable.bindProperty("visible", {path : "detailModel>/mode/" + (bReadMode ? "readMode" : "editMode")});
+            }
+            
 
         }
 

@@ -21,10 +21,10 @@ using util from '../../cm/util/util-model';
 
 
 entity If_T604_Rif {
-    key tenant_id : String(5) not null @title : '테넌트ID';
-    key land1     : String(2) not null @title : '국가키';
-    key stawn     : String(2) not null @title : 'HS_CODE';
-        text1     : String(30)         @title : 'HS_CODE명';
+    key tenant_id : String(5) not null  @title : '테넌트ID';
+    key land1     : String(5) not null  @title : '국가키';
+    key stawn     : String(26) not null @title : 'HS_CODE';
+        text1     : String(60)          @title : 'HS_CODE명';
 }
 
 extend If_T604_Rif with util.Managed;

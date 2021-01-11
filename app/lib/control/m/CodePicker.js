@@ -7,7 +7,7 @@ sap.ui.define([
     "./CodePickerValueHelp"
 ], function (Parent, Renderer, ODataV2ServiceProvider, ListItem, JSONModel, CodePickerValueHelp) {
     "use strict";
-
+    
     var CodePicker = Parent.extend("ext.lib.control.m.CodePicker", {
         
         renderer: Renderer,
