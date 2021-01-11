@@ -197,11 +197,12 @@
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         growing="true"
+                        mode="SingleSelectMaster"
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
+                        selectionChange="onSelectionChange"
                         items="{list>/MoldMasterSpec}"
-                        mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
@@ -252,7 +253,8 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                        <!-- <ColumnListItem type="Navigation" press=".onMainTableItemPress"> -->
+                        <ColumnListItem type="Navigation" >
                             <cells>
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />
