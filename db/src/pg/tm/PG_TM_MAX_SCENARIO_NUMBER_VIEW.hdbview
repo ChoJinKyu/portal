@@ -1,10 +1,4 @@
 view pg_Tm_Max_Scenario_Number_View as
-    select 
-            tenant_id,
-            cast(max(scenario_number)+ 1 as integer) as max_scenario_number 
+    select  cast(max(scenario_number)+ 1 as integer) as max_scenario_number 
     from    pg_tm_master
-    group by
-            tenant_id
-    order by
-            tenant_id
     ;
