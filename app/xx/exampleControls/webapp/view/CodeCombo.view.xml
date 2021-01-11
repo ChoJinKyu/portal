@@ -404,7 +404,7 @@
             adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
             <form:content>
                 <VBox>
-                    <Label text="Code 선택(팝업): " labelFor="searchCodeFromValueHelp"></Label>
+                    <Label text="Country (m.CodeValueHelp): " labelFor="searchCodeFromValueHelp"></Label>
                     <Input id="searchCodeFromValueHelp"
                         placeholder="Choose a code from the ValueHelp"
                         showValueHelp="true" valueHelpRequest=".onCodeDialogPress">
@@ -414,7 +414,7 @@
                     </layoutData>
                 </VBox>
                 <VBox>
-                    <Label text="Code 다중 선택(팝업): " labelFor="searchMultiCodeFromValueHelp"></Label>
+                    <Label text="Chain (m.CodeValueHelp): " labelFor="searchMultiCodeFromValueHelp"></Label>
                     <MultiInput id="searchMultiCodeFromValueHelp"
                         placeholder="Choose codes from the ValueHelp"
                         showValueHelp="true" valueHelpRequest=".onCodeMultiDialogPress">
@@ -424,7 +424,7 @@
                     </layoutData>
                 </VBox>
                 <VBox>
-                    <Label text="Employee 다중 선택(팝업): " labelFor="searchMultiEmployeeFromDialog"></Label>
+                    <Label text="Employee (cm.util.control.ui.EmployeeDialog): " labelFor="searchMultiEmployeeFromDialog"></Label>
                     <MultiInput id="searchMultiEmployeeFromDialog"
                         placeholder="Choose codes from the ValueHelp"
                         showValueHelp="true" valueHelpRequest=".onEmployeeMultiDialogPress">
