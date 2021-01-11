@@ -116,6 +116,7 @@
 			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageGeneralInfoSection">
+                    
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
