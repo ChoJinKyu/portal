@@ -44,6 +44,7 @@
                                                     <!-- items="{mSearch>/tenant/items}" -->
                                                     <ComboBox
                                                         id="searchTenantCombo"
+                                                        showSecondaryValues="true"
                                                         required="true"
                                                         selectionChange=".onSelectionChange($event, 'tenant_id')"
                                                         width="100%"
@@ -54,14 +55,15 @@
                                                         }"
                                                     >
                                                     <items>
-                                                        <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                                        <core:ListItem key="{org>tenant_id}" text="{org>tenant_name}" additionalText="{org>tenant_id}"/>
                                                     </items>
                                                     </ComboBox>
                                                 </VBox>
                                                 <VBox>
                                                     <Label text = "회사" labelFor="searchCompanyCode"/> 
                                                     <ComboBox 
-                                                        id="searchCompanyCode"  
+                                                        id="searchCompanyCode"
+                                                        showSecondaryValues="true"
                                                         items="{
                                                             path: 'org>/Org_Company',
                                                             filters: [
@@ -69,7 +71,7 @@
                                                         }"
                                                     >
                                                         <items>
-                                                            <core:Item key="{org>company_code}"  text="{org>company_code} : {org>company_name}"/>
+                                                            <core:ListItem key="{org>company_code}" text="{org>company_name}" additionalText="{org>company_code}"/>
                                                         </items>
                                                     </ComboBox>
 

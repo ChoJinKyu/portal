@@ -44,18 +44,31 @@ sap.ui.define([
     /* lifecycle methods                                           */
     /* =========================================================== */
 
-    selectionChange: function (event) {
-      var combo = event.getSource().getParent().getCells()[3].getItems()[0];
-      combo.clearSelection();
-      combo.bindItems({
-        path: 'org>/organization',
-        filters: [
-          new Filter('type', FilterOperator.EQ, event.getSource().getSelectedKey())
-        ],
-        template: new Item({
-          key: "{org>code}", text: "{org>code}"
-        })
-      });
+    onSelectionChange: function () {
+        var [event, field] = arguments;
+        let combo, key = this.getModel("details").getProperty(event.getSource().mBindingInfos.selectedKey.binding.oContext.sPath)[field];
+        this["onSelectionChange"][field] = key;
+        // 제어옵션레벨코드
+        // if (field == "control_option_level_code") {
+        //     // 조직유형코드
+        //     combo = event.getSource().getParent().getCells()[2].getItems()[0];
+        //     combo.setEnabled(key === "O");
+        // }
+        // 조직유형코드
+        if (field == "org_type_code") {
+            // 제어옵션레벨값
+            combo = event.getSource().getParent().getCells()[3].getItems()[0];
+            combo.clearSelection();
+            combo.bindItems({
+                path: 'org>/organization',
+                filters: [
+                    new Filter('type', FilterOperator.EQ, key)
+                ],
+                template: new Item({
+                    key: "{org>code}", text: "{org>code}"
+                })
+            });
+        }
     },
 
 		/**
@@ -256,6 +269,7 @@ sap.ui.define([
       var view = this.getView(),
         master = view.getModel("master"),
         detail = view.getModel("details"),
+        length,
         that = this;
 
       console.log(">>> detail", detail.getData());
@@ -289,7 +303,19 @@ sap.ui.define([
           return r;
         });
       }
-
+    //   length = detail.getData()["ControlOptionDetails"].length
+    //   && 
+    //   detail.getData()["ControlOptionDetails"].map(r => {
+    //     if (r["_row_state_"] == "C") {
+    //       r["tenant_id"] = master.getData()["tenant_id"];
+    //       r["control_option_code"] = master.getData()["control_option_code"];
+    //     }
+    //     if (r["control_option_level_code"] == "O") {
+    //         r["org_type_code"] = "*";
+    //     }
+    //     return r;
+    //   });
+      // transaction
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
         initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -388,21 +414,6 @@ sap.ui.define([
           }
         });
 
-        // var oDetailsModel = this.getModel("details");
-        // oDetailsModel.setTransactionModel(this.getModel());
-        // oDetailsModel.addRecord({
-        //   "tenant_id": "",
-        //   "control_option_code": "",
-        //   "control_option_level_code": "",
-        //   "org_type_code": "",
-        //   "control_option_level_val": "",
-        //   "control_option_val": "",
-        //   "start_date": new Date(),
-        //   "end_date": new Date(9999, 11, 31),
-        //   "local_create_dtm": new Date(),
-        //   "local_update_dtm": new Date()
-        // }, "/ControlOptionDetails", 0);
-
         this._toEditMode();
       }
       else {
@@ -494,107 +505,6 @@ sap.ui.define([
           })
         ],
         type: sap.m.ListType.Inactive
-      });
-
-      this.oEditableTemplate = new ColumnListItem({
-        cells: [
-          new Text({
-            text: "{details>_row_state_}"
-          }),
-
-          // 제어옵션레벨코드
-          new ComboBox({
-            selectedKey: "{details>control_option_level_code}",
-            items: {
-              path: 'util>/Code',
-              filters: [
-                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                new Filter("group_code", FilterOperator.EQ, 'CM_CTRL_OPTION_LEVEL_CODE')
-              ],
-              template: new Item({
-                key: "{util>code}",
-                text: "{= ${util>code} + ':' + ${util>code_description}}"
-              })
-            },
-            editable: "{= ${details>_row_state_} === 'C' }",
-            required: true
-          }),
-
-          // // 조직유형
-          // new ComboBox({
-          //   selectedKey: "{details>org_type_code}",
-          //   items: {
-          //     path: 'util>/Code',
-          //     filters: [
-          //       new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-          //       new Filter("group_code", FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
-          //     ],
-          //     template: new Item({
-          //       key: "{util>code}",
-          //       text: "{= ${util>code} + ':' + ${util>code_description}}"
-          //     })
-          //   },
-          //   editable: "{= ${details>_row_state_} === 'C' }",
-          //   display: "none",
-          //   required: true
-          // }),
-
-          (function (level) {
-            //console.log(">>>>> level", level);
-            if (level == "T") {
-              // 조직유형
-              return new ComboBox({
-                selectedKey: "{details>org_type_code}",
-                items: {
-                  path: 'util>/Code',
-                  filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                    new Filter("group_code", FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
-                  ],
-                  template: new Item({
-                    key: "{util>code}",
-                    text: "{= ${util>code} + ':' + ${util>code_description}}"
-                  })
-                },
-                editable: "{= ${details>_row_state_} === 'C' }",
-                display: "none",
-                required: true
-              })
-            }
-            else {
-              new Input({
-                value: {
-                  path: "details>control_option_level_val",
-                  type: new sap.ui.model.type.String(null, {
-                    maxLength: 100
-                  }),
-                },
-                editable: "{= ${details>_row_state_} === 'C' }",
-                required: true
-              })
-            }
-          })("{= ${details>control_option_level_code}}"),
-
-          new Input({
-            value: {
-              path: "details>control_option_level_val",
-              type: new sap.ui.model.type.String(null, {
-                maxLength: 100
-              }),
-            },
-            editable: "{= ${details>_row_state_} === 'C' }",
-            required: true
-          }),
-          new Input({
-            value: {
-              path: "details>control_option_val",
-              type: new sap.ui.model.type.String(null, {
-                maxLength: 100
-              })
-            },
-            required: true
-          })
-        ]
       });
     },
 
