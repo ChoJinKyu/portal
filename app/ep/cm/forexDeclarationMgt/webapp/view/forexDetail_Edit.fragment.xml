@@ -47,7 +47,7 @@
     xmlns:uxap="sap.uxap" 
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout">
-    <Dialog id="dialogForex" class="sapUiSmallMargin" title="" contentWidth="35%">
+    <Dialog id="dialogForex" class="sapUiSmallMargin" title="외화신고대상 상세" contentWidth="35%">
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm
                 editable="false"
