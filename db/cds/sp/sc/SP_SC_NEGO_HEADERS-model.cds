@@ -24,6 +24,8 @@ entity Sc_Nego_Headers {
         nego_progress_status_code       : String(30)          @title : '협상진행상태코드';
         award_progress_status_code      : String(25)          @title : '낙찰진행상태코드';
         award_date                      : Date                @title : '낙찰일자';
+        reply_times                     : Integer             @title : '회신횟수';
+        supplier_count                  : Integer             @title : '공급업체개수';
         nego_type_code                  : String(25)          @title : '협상유형코드';
         purchasing_order_type_code      : String(30)          @title : '구매주문유형코드';
         negotiation_output_class_code   : String(100)         @title : '협상산출물분류코드';
@@ -49,7 +51,6 @@ entity Sc_Nego_Headers {
         close_date_ext_enabled_count    : Integer             @title : '마감일자연장가능횟수';
         actual_extension_count          : Integer             @title : '실제연장횟수';
         note_content                    : String(4000)        @title : '노트내용';
-        // supplier_notice                 : String(4000)        @title : '공급업체특기사항';
         award_type_code                 : String(100)         @title : '낙찰유형코드';
         target_amount_config_flag       : String(1)           @title : '목표금액설정여부';
         target_amount                   : Decimal(20, 2)      @title : '목표금액';
@@ -76,6 +77,9 @@ entity Sc_Nego_Headers {
         change_reason_desc              : String(1000)        @title : '변경사유설명';
         prcd_validation_target_flag     : String(1)           @title : '선행검증대상여부';
         approval_flag                   : String(1)           @title : '품의여부';
+        request_submit_number           : String(30)          @title : '요청제출번호';
+        request_submit_status_code      : String(1)           @title : '요청제출상태코드';
+        request_reapprove_flag          : String(1)           @title : '요청서재승인여부';
         suffix_flag                     : String(1)           @title : 'SUFFIX여부';
         usage_code                      : String(40)          @title : '용도코드';
 }
