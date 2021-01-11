@@ -120,19 +120,22 @@ sap.ui.define([
             /**
              * 이동시 기존거 리셋 
              */
-            for (var sPropertyName in this._oFragments) {
+         for (var sPropertyName in this._oFragments) {
                 if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
                     return;
                 }
                
-                this._oFragments[sPropertyName].destroy();
-                this._oFragments[sPropertyName] = null;
+              //  if(sPropertyName !== "GeneralInfo"){
+                    this._oFragments[sPropertyName].destroy();
+                    this._oFragments[sPropertyName] = null;
+                    console.log(sPropertyName);
+              //  }
             }
 
             var Cancellation = this.getView().getModel('Cancellation');
             Cancellation.setProperty("/approvalNumber", this.approval_number);
             Cancellation.setProperty("/isCreate", true);
-            this.getRouter().navTo("participatingSupplierSelectionCancelApproval", {
+            this.getRouter().navTo("pssCancelApproval", {
                 company_code: this.company_code
                 , plant_code: this.plant_code
                 , approval_type_code: "A"
