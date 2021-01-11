@@ -35,9 +35,11 @@ using {
 
 entity Sc_Nego_Headers_Test01 : managed {
         // key tenant_id                       : String(5) not null  @title : '테넌트ID';
-    key tenant_id           : Association to orgTenant.Org_Tenant @title : '테넌트ID';
-    key nego_header_id      : Integer64 not null                  @title : '협상헤더ID';
-        operation_unit_code : String(30) not null                 @title : '운영단위코드';
+    key tenant_id              : Association to orgTenant.Org_Tenant @title : '테넌트ID';
+    key nego_header_id         : Integer64 not null                  @title : '협상헤더ID';
+        operation_unit_code    : String(30) not null                 @title : '운영단위코드';
+        currency_code          : Currency not null                   @title : '환율코드';
+        response_currency_code : Currency not null                   @title : '응답환율코드';
 }
 
 
