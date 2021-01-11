@@ -35,7 +35,6 @@ sap.ui.define([
             
             this.setModel(new JSONModel(oFilterModel), "filterModel");
             this.setModel(new JSONModel(), "updateModel");
-            debugger;
 
             this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
         }
@@ -48,7 +47,6 @@ sap.ui.define([
             var oFilterModel = this.getModel("filterModel"),
                 oFilterData = oFilterModel.getData(),
                 aFilters = [];
-            debugger;
             Object.keys(oFilterData).forEach(function(sKey) {
                 var oTemp = oFilterData[sKey];
                 if(oTemp.value || oTemp.start) {
@@ -169,7 +167,6 @@ sap.ui.define([
             let oModel = this.getModel();
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
-            debugger;
             oModel.read("/ProjectView", {
                 filters : filtersParam,
                 success : function(data){
@@ -241,7 +238,6 @@ sap.ui.define([
          * @param {event} oEvent
          */
         , onExcludeCalPress : function (oEvent) {
-            //debugger;
             var oView = this.getView();
             var oTable = oView.byId("mainTable");
             var nSelIdx = this._getSelectedIndex(oTable);
@@ -278,7 +274,6 @@ sap.ui.define([
 
         , onExcludeCalSavePress: function() {
             //MessageToast.show("Update Service", {at: "Center Center"});
-            debugger;
             var oApplyData = this.getModel("updateModel").getProperty("/");
             if(!oApplyData.mcst_excl_reason) {
                 MessageBox.alert("제외 사유를 입력하세요.", {at: "Center Center"});
@@ -302,7 +297,6 @@ sap.ui.define([
             var sCreatePath = oDataModel.createKey("/Project", oKey);
             oDataModel.update(sCreatePath, oProjectData, {
                 success: function(data){
-                    debugger;
                     MessageBox.show("적용되었습니다.", {at: "Center Center"});
                     this.onSearch();
                     this.byId("dialogExclusion").close();

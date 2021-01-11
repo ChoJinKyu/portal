@@ -4,25 +4,25 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "gsSupplierMgt-mainList-mainColumnNN",
+                id: "gsSupplierMgt-finList-mainColumnNN",
                 order: 0,
                 text: "소싱공급업체별칭",
                 visible: true
             },
             {
-                id: "gsSupplierMgt-mainList-mainColumnMail",
+                id: "gsSupplierMgt-finList-mainColumnMail",
                 order: 1,
                 text: "이메일주소",
                 visible: false
             },            
             {
-                id: "gsSupplierMgt-mainList-mainColumnDate",
+                id: "gsSupplierMgt-finList-mainColumnDate",
                 order: 2,
                 text: "발굴일자",
                 visible: true
             },
             {
-                id: "gsSupplierMgt-mainList-mainColumnEmp",
+                id: "gsSupplierMgt-finList-mainColumnEmp",
                 order: 3,
                 text: "발굴자사번",
                 visible: true
@@ -30,7 +30,7 @@ sap.ui.define(["jquery.sap.global"],
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
-        var MainListPersoService = {
+        var FinListPersoService = {
 
             oData: {
                 _persoSchemaVersion: "1.0",
@@ -88,6 +88,6 @@ sap.ui.define(["jquery.sap.global"],
             }
         };
 
-        return MainListPersoService;
+        return FinListPersoService;
 
     });

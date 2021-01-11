@@ -36,34 +36,36 @@
             <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                 <form:content>
                     <VBox>
-                    
-                        <!-- <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
-                        <ComboBox id="search_Operation_ORG_S" width="10rem" selectedKey="BIZ00200" items="{
-                                path: '/VpOperationOrg',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                ],
-                                sorter: { path: 'operation_org_code'}
-                            }">
+                        <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                        <ComboBox id="searchTenantCombo" width="100%" items="{
+                                path: 'org>/Org_Tenant',
+                                filters: []
+                            }"
+                            selectionChange="onChangeTenant">
                             <items>
-                                <core:Item key="{operation_org_code}" text="{operation_org_name}" />
-                            </items>
-                        </ComboBox> -->
-                        <Label text="사업본부: " labelFor="searchDeptS"></Label>
-                        <ComboBox id="searchDeptS" width="100%" items="{
-                                path: 'util>/CodeDetails',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
-                                ]
-                            }">
-                            <items>
-                                <core:Item key="{util>code}" text="{util>code_description} : {util>code}" />
+                                <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
                             </items>
                         </ComboBox>
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
-                        </layoutData>
+                        </layoutData> 
+                    </VBox>
+                    <VBox>
+                        <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
+                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
+                        <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
+                                path: 'org>/Org_Unit',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }"> -->
+                            <items>
+                                <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData> 
                     </VBox>
                 </form:content>
             </form:SimpleForm>

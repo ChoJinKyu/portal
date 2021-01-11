@@ -25,6 +25,8 @@ sap.ui.define([
                 }.bind(this)                        
             });
 
+            // var oModel = this.getView().getModel();
+            // oModel.setSizeLimit(10);
         },
 
 		onExit: function() {

@@ -21,9 +21,9 @@
                     emptySpanS="0"     
                     singleContainerFullSize="false" >
                     <form:content>                        
-                        <core:Title text="공급업체 기본정보 등록" />
+                        <core:Title text="{I18N>/SUPPLIER} {I18N>/BASIC_INFO} {I18N>/REGISTER}" />
                         
-                            <Label text="공급업체명" required="true"/>                            
+                            <Label text="{I18N>/SOURCING_SUPPLIER_NICKNAME}" required="true"/>                            
                             <Input id="ssn" value="{
                                 path: 'master>/sourcing_supplier_nickname',
                                 type: 'sap.ui.model.type.String',
@@ -39,7 +39,7 @@
                                 <layout:GridData span="XL3 L3 M3 S3" />
                             </layoutData>
                             </Button>
-                            <Label text="이메일" required="true"/> 
+                            <Label text="{I18N>/EMAIL_ADDRESS}" required="true"/> 
                             <Input id="email" value="{
                                 path: 'master>/email_address',
                                 type: 'sap.ui.model.type.String',
@@ -47,9 +47,9 @@
                                     maxLength: 30
                                 }
                             }" required="true"></Input>
-                            <Label text="발급일자" required="true"/> 
+                            <Label text="{I18N>/DEVELOP_DATE}" required="true"/> 
                             <DatePicker required="true" placeholder="Develop Date" value="{path: 'master>/develop_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>                            
-                            <Label text="발급자" required="true"/> 
+                            <Label text="{I18N>/DEVELOPER_EMP}" required="true"/> 
                             <Input id="devEmp" value="{
                                 path: 'master>/developer_empno',
                                 type: 'sap.ui.model.type.String',

@@ -32,6 +32,28 @@
       </f:title>
       <!--DynamicPage Header -->
       <f:header>
+        <f:DynamicPageHeader pinnable="false">
+            <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:content>
+                    <VBox>   
+                        <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
+                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
+                                path: 'org>/Org_Unit',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }">
+                            <items>
+                                <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData> 
+                    </VBox>
+                </form:content>
+            </form:SimpleForm>
+        </f:DynamicPageHeader>
       </f:header>
       <f:content>
         <VBox>
