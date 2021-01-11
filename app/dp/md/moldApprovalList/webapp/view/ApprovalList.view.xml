@@ -323,6 +323,12 @@
                         <Column visible="false" id="mainColumnEmail"  >
                             <!-- <Text text="Status" /> -->
                         </Column>
+                        <Column visible="false" id="mainColumnModel"  >
+                            <!-- <Text text="Status" /> -->
+                        </Column>
+                        <Column visible="false" id="mainColumnMoldNumber"  >
+                            <!-- <Text text="Status" /> -->
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
@@ -340,6 +346,8 @@
                                 <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <Text text="{list>approve_status}" />
                                 <Text text="{list>email_id}" />
+                                <Text text="{list>model}" />
+                                <Text text="{list>mold_number}" />
                                 <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
                                 
 

@@ -14,10 +14,10 @@ entity Md_Approvals_View {
     org_type_code       : String(10)                            ;
     org_code            : String(10)                            ;
     model               : String(100)                           ;
-    mold_id             : String(100)                            ;
+    mold_id             : String(100)                           ;
     mold_number         : String(40)                            ;
     requestor_empno     : String(30)                            ;
-    requestor_name      : String(240)                            ;
+    requestor_name      : String(240)                           ;
     request_date        : String(8)                            ;
     approve_status_code : String(30)                            ;
     approve_status      : String(240)                            ;
