@@ -27,20 +27,36 @@ view Sc_Language as
     from cm.Currency_Lng;
 
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
-using {managed} from '@sap/cds/common';
+using {
+    Currency,
+    managed,
+    sap
+} from '@sap/cds/common';
 
 entity Sc_Nego_Headers_Test01 : managed {
         // key tenant_id                       : String(5) not null  @title : '테넌트ID';
-    key tenant_id                : Association to orgTenant.Org_Tenant @title : '테넌트ID';
-    key nego_header_id           : Integer64 not null                  @title : '협상헤더ID';
-        operation_unit_code      : String(30) not null                 @title : '운영단위코드';
-        reference_nego_header_id : Integer64                           @title : '참조협상헤더ID';
-        previous_nego_header_id  : Integer64                           @title : '기존협상헤더ID';
-        nego_document_round      : Integer                             @title : '협상문서회차';
-        nego_document_number     : String(50)                          @title : '협상문서번호';
-        nego_document_title      : String(300)                         @title : '협상문서제목';
+    key tenant_id           : Association to orgTenant.Org_Tenant @title : '테넌트ID';
+    key nego_header_id      : Integer64 not null                  @title : '협상헤더ID';
+        operation_unit_code : String(30) not null                 @title : '운영단위코드';
 }
 
+
+// type Language : Association to sap.common.Languages;
+type Currency2 : Association to sap.common.Countries;
+// type Country : Association to sap.common.Countries;
+type Org_Tenant : Association to orgTenant.Org_Tenant;
+
+using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
+
+type MaterialMst : Association to materialMst.Mm_Material_Mst;
+
+entity Sc_Nego_Headers_Test02 : managed {
+        // key tenant_id                       : String(5) not null  @title : '테넌트ID';
+    key tenant_id           : Org_Tenant          @title : '테넌트ID';
+    key nego_header_id      : Integer64 not null  @title : '협상헤더ID';
+        operation_unit_code : String(30) not null @title : '운영단위코드';
+        material_code       : MaterialMst         @title : '자재코드';
+}
 
 /*  Deployed
     SELECT

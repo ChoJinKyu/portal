@@ -3,15 +3,17 @@ namespace sp;
 using util from '../../cm/util/util-model';
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
 using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
+using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
+
 
 entity Sc_Nego_Headers {
     key tenant_id                       : String(5) not null  @title : '테넌트ID';
         // key tenant_id                       : Association to orgTenant.Org_Tenant @title : '테넌트ID';
     key nego_header_id                  : Integer64 not null  @title : '협상헤더ID';
-    
-        Items    : Composition of many negoItemPrices.Sc_Nego_Item_Prices on Items.up_ = $self;
+        Items                           : Composition of many negoItemPrices.Sc_Nego_Item_Prices
+                                              on Items.up_ = $self;
         operation_unit_code             : String(30) not null @title : '운영단위코드';
         reference_nego_header_id        : Integer64           @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64           @title : '기존협상헤더ID';
@@ -47,6 +49,7 @@ entity Sc_Nego_Headers {
         close_date_ext_enabled_count    : Integer             @title : '마감일자연장가능횟수';
         actual_extension_count          : Integer             @title : '실제연장횟수';
         note_content                    : String(4000)        @title : '노트내용';
+        // supplier_notice                 : String(4000)        @title : '공급업체특기사항';
         award_type_code                 : String(100)         @title : '낙찰유형코드';
         target_amount_config_flag       : String(1)           @title : '목표금액설정여부';
         target_amount                   : Decimal(20, 2)      @title : '목표금액';
