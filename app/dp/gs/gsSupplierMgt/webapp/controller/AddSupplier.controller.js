@@ -700,7 +700,7 @@ sap.ui.define([
                             path: 'SupplierFin>sales_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -709,7 +709,7 @@ sap.ui.define([
                             path: 'SupplierFin>opincom_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -718,7 +718,7 @@ sap.ui.define([
                             path: 'SupplierFin>asset_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -727,7 +727,7 @@ sap.ui.define([
                             path: 'SupplierFin>curasset_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -736,7 +736,7 @@ sap.ui.define([
                             path: 'SupplierFin>nca_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -745,7 +745,7 @@ sap.ui.define([
                             path: 'SupplierFin>liabilities_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -754,7 +754,7 @@ sap.ui.define([
                             path: 'SupplierFin>curliablities_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -763,7 +763,7 @@ sap.ui.define([
                             path: 'SupplierFin>ncl_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -772,7 +772,7 @@ sap.ui.define([
                             path: 'SupplierFin>equity_capital',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     })
@@ -792,23 +792,13 @@ sap.ui.define([
                         displayFormat: "yyyy",
                         editable: "{= ${SupplierSal>_row_state_} === 'C' }",
                         required: true
-                    }),
-                    // new Input({
-                    //     value: {
-                    //         path: 'SupplierSal>txn_year',
-                    //         type: 'sap.ui.model.type.String',
-                    //         constraints: {
-                    //             maxLength: 30
-                    //         }
-                    //     },
-                    //     required : true
-                    // }),
+                    }),                    
                     new Input({
                         value: {
                             path: 'SupplierSal>customer_english_name',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 240
                             }
                         },
                         editable: "{= ${SupplierSal>_row_state_} === 'C' }",
@@ -819,7 +809,7 @@ sap.ui.define([
                             path: 'SupplierSal>customer_local_name',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 240
                             }
                         }
                     }),
@@ -828,7 +818,7 @@ sap.ui.define([
                             path: 'SupplierSal>annual_txn_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     }),
@@ -837,7 +827,7 @@ sap.ui.define([
                             path: 'SupplierSal>sales_weight',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
                         }
                     })
