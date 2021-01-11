@@ -211,7 +211,8 @@ sap.ui.define([
             oModel.read("/LOIRequestListView", {
                 filters: aSearchFilters,
                 sorters: [
-                    new Sorter("loi_number", false)
+                    new Sorter("request_date", true),
+                    new Sorter("loi_number", true)
                 ],
                 success: function (oData) {
                     oView.setBusy(false);

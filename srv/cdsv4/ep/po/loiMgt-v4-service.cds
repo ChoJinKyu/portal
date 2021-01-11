@@ -261,14 +261,15 @@ service LoiMgtV4Service {
 
     //LOI 발행요청시 수행업체 등록
     type SavedSuppliers {
-        tenant_id        : String;
-        company_code     : String;
-        loi_write_number : String;
-        loi_item_number  : String;
-        supplier_code    : String;
-    }
+        tenant_id           : String;
+        company_code        : String;
+        loi_write_number    : String; 
+        loi_item_number     : String;
+        supplier_code       : String;
+        row_state           : String;
+    }  
 
-    action SupplierMulEntityProc(inputData : array of SavedSuppliers) returns String;
+    action SupplierMulEntityProc (inputData : array of SavedSuppliers) returns String;  
 
 
 }

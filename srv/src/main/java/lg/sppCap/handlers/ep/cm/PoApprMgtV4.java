@@ -43,8 +43,10 @@ public class PoApprMgtV4 implements EventHandler {
                          .append(", COMPANY_CODE NVARCHAR(10) ")
                          .append(", PO_NUMBER NVARCHAR(50) ")
                          .append(", FOREX_DECLARE_STATUS_CODE NVARCHAR(30) ")
-                         .append(", DECLARE_SCHEDULED_DATE DATE ")
-                         .append(", DECLARE_DATE DATE ")
+                         //.append(", DECLARE_SCHEDULED_DATE DATE ")
+                         //.append(", DECLARE_DATE DATE")
+                         .append(", DECLARE_SCHEDULED_DATE NVARCHAR(50) ")
+                         .append(", DECLARE_DATE NVARCHAR(50)")
                          .append(", ATTCH_GROUP_NUMBER NVARCHAR(100) ")
                          .append(", REMARK NVARCHAR(3000) ")
                          .append(", UPDATE_USER_ID NVARCHAR(255) ")
@@ -54,7 +56,12 @@ public class PoApprMgtV4 implements EventHandler {
 		String v_sql_callProc = "CALL EP_PO_FOREX_DECLARATION_SAVE_PROC( I_TABLE => #LOCAL_TEMP_EP_PO_FOREX_DECLARATION, O_TABLE => ? )";
 
 		Collection<ResultForexItems> v_result = new ArrayList<>();
-		Collection<SavedForexItems> v_inRows = context.getForexItems();
+        Collection<SavedForexItems> v_inRows = context.getForexItems();
+        
+
+         log.info("###111111===="+context.getForexItems()); 
+         log.info("###v_inRows.size(===="+v_inRows.size()); 
+
 
         ResultSet v_rs = null;
 		try {

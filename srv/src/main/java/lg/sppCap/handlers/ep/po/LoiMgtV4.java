@@ -1120,7 +1120,7 @@ public class LoiMgtV4 implements EventHandler {
 
         v_result.setSavedHeaders(v_resultH);
         v_result.setSavedReqDetails(v_resultD);
-
+  
         context.setResult(v_result);
         context.setCompleted();
 
@@ -1192,10 +1192,11 @@ public class LoiMgtV4 implements EventHandler {
 									.append("COMPANY_CODE NVARCHAR(10), ")
 									.append("LOI_WRITE_NUMBER NVARCHAR(50), ")
 									.append("LOI_ITEM_NUMBER NVARCHAR(50), ")
-									.append("SUPPLIER_CODE NVARCHAR(15) ")
+                                    .append("SUPPLIER_CODE NVARCHAR(15), ")
+                                    .append("ROW_STATE NVARCHAR(5) ")
 								.append(")");
 
-		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE VALUES (?, ?, ?, ?, ?)";
+		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE VALUES (?, ?, ?, ?, ?, ?)";
 		String v_sql_callProc = "CALL EP_PO_SUPPLIER_SAVE_PROC( I_TABLE => #LOCAL_TEMP_EP_PO_SUPPLIER_SAVE, O_RTN_MSG => ? )";
 
 		String v_result = "";
@@ -1216,13 +1217,14 @@ public class LoiMgtV4 implements EventHandler {
 			if(!v_inRows.isEmpty() && v_inRows.size() > 0){
 				for(SavedSuppliers v_inRow : v_inRows){
 
-					log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber()+"###"+v_inRow.getSupplierCode());
+					log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber()+"###"+v_inRow.getSupplierCode()+"###"+v_inRow.getRowState());
 
                     v_statement_insert.setString(1, v_inRow.getTenantId());
 	 				v_statement_insert.setString(2, v_inRow.getCompanyCode());
 	 				v_statement_insert.setString(3, v_inRow.getLoiWriteNumber());
 	 				v_statement_insert.setString(4, v_inRow.getLoiItemNumber());
                     v_statement_insert.setString(5, v_inRow.getSupplierCode());
+                    v_statement_insert.setString(6, v_inRow.getRowState());
                      
 
 					//v_statement_insert.executeUpdate();
@@ -1257,5 +1259,7 @@ public class LoiMgtV4 implements EventHandler {
 		}
 
     }
+
+
 
 }
