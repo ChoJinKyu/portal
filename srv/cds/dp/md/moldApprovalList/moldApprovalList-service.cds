@@ -74,7 +74,7 @@ service MoldApprovalListService {
         a.employee_number,
         a.user_english_name,
 	    a.user_korean_name
-    from emp.Hr_Employee a;
+    from emp.Hr_Employee a
     where a.employee_number is not null;
 
 

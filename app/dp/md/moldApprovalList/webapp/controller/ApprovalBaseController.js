@@ -49,7 +49,8 @@ sap.ui.define([
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
-        onInit: function () {
+        onInit: function () { 
+            this.firstStatusCode = "";
             // 각자 fragment 에서 세팅할 테이터 
             this.approvalDetails_data = [];
             this.moldMaster_data = [];
@@ -311,7 +312,8 @@ sap.ui.define([
             if (approvalNumber !== "New") {
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
 
-                    console.log(" oData >>> ", oData);
+                    console.log(" oData >>> ", oData); 
+                    this.firstStatusCode = oData.approve_status_code; // 저장하시겠습니까? 하고 취소 눌렀을 경우 다시 되돌리기 위해서 처리 
                     //this.oRichTextEditor.setValue(oData.approval_contents);
                 }.bind(this));
             }
@@ -943,13 +945,23 @@ sap.ui.define([
 
             console.log("data>>>> ", data);
 
+            var msg = this.getModel("I18N").getText("/NCM00001") ;
+
+            if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){
+                msg = "요청 취소 하시겠습니까?";
+            }else if(this.getModel('appMaster').getProperty("/approve_status_code") == "AR"){
+                msg = "결제 요청 하시겠습니까?";
+            }
+
+
             var oView = this.getView();
             var that = this;
-             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+             MessageBox.confirm(msg, {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
+                    if (sButton === MessageBox.Action.OK) { 
+                        this.firstStatusCode = that.getModel('appMaster').getProperty("/approve_status_code");
                         oView.setBusy(true);
                         that.callAjax(data, "saveMoldApproval"
                             , function(result){
@@ -958,8 +970,10 @@ sap.ui.define([
                             if (result.resultCode > -1) {
                                 that.onLoadThisPage(result);
                             }
-
                         });
+                    }else{
+                         // this.firstStatusCode   
+                         that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
                     };
                 }
             });
