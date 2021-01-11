@@ -8,7 +8,7 @@ AS
 BEGIN 
 	
     /* 1. 몰드 정보 배열로 담음*/
-	DECLARE CURSOR curItemList IS
+	DECLARE CURSOR curItemList FOR
         SELECT 
             MOLD_ID
         FROM DP_MD_APPROVAL_DTL
