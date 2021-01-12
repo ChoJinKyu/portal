@@ -120,5 +120,9 @@ select pjt.tenant_id                  /*테넌트ID*/
      , 'CONFIRMED' AS target_status_code
      , 'Draft(2차)' AS forecast_status_name
      , 'DRAFT' AS forecast_status_code
+     , (select cod.bizdivision_name
+          from cm_org_division cod
+         where cod.tenant_id = pjt.tenant_id
+           and cod.bizdivision_code = pjt.bizdivision_code) AS bizdivision_text     /*사업부명*/     
   from dp_tc_project pjt
   ;
