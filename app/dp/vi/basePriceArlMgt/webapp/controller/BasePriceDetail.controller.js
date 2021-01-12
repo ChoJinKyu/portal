@@ -49,8 +49,8 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("rootModel");
-            sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+            var oRootModel = this.getOwnerComponent().getModel("rootModel");
+            sTenantId = oRootModel.getProperty("/tenantId");
 
             // 하드코딩 시작
             var oCodeData = {
@@ -88,37 +88,6 @@ sap.ui.define([
             });
             // Currency 데이터 조회 끝
 
-            // Plant 데이터 조회 시작
-            var oPurOrgModel = this.getOwnerComponent().getModel("purOrg");
-            var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            oPurOrgModel.read("/Pur_Operation_Org", {
-                filters : aPurOrgFilter,
-                success : function(data){
-                    if( data && data.results ) {
-                        var aResults = data.results;
-                        var aCompoany = [];
-                        var oPurOrg = {};
-
-                        for( var i=0; i<aResults.length; i++ ) {
-                            var oResult = aResults[i];
-                            if( -1===aCompoany.indexOf(oResult.company_code) ) {
-                                aCompoany.push(oResult.company_code);
-                                oPurOrg[oResult.company_code] = [];
-                            }
-
-                            oPurOrg[oResult.company_code].push({org_code: oResult.org_code, org_name: oResult.org_name});
-                        }
-
-                        oCodeData.purOrg = oPurOrg;
-                    }
-                },
-                error : function(data){
-                    console.log("error", data);
-                }
-            });
-            // Plant 데이터 조회 끝
-
-
             // 해당 View(BasePriceDetail)에서 사용할 메인 Model 생성
             this.setModel(new JSONModel(), "detailModel");
 
@@ -141,10 +110,10 @@ sap.ui.define([
         _getBasePriceDetail: function () {
             var oView = this.getView();
             var oCodeModel = this.getModel("codeModel");
-            var oBasePriceListRootModel = this.getModel("rootModel");
-            var oSelectedData = oBasePriceListRootModel.getProperty("/selectedData");
+            var oRootModel = this.getModel("rootModel");
+            var oSelectedData = oRootModel.getProperty("/selectedData");
 
-            sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+            sTenantId = oRootModel.getProperty("/tenantId");
 
             // 리스트에서 선택해서 넘어오는 경우
             if( oSelectedData && oSelectedData.tenant_id ) {
@@ -187,7 +156,7 @@ sap.ui.define([
             {
                 var oToday = new Date();
                 var oNewBasePriceData = {
-                                    "tenant_id": oBasePriceListRootModel.getProperty("/tenantId"),
+                                    "tenant_id": oRootModel.getProperty("/tenantId"),
                                     "approval_number": "",
                                     "approval_title": "",
                                     "approval_type_code": "10",
@@ -213,10 +182,9 @@ sap.ui.define([
          */
         onChangeCompany: function (oEvent) {
             var oDetailModel = this.getModel("detailModel");
-            var oCodeModel = this.getModel("codeModel");
             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
             
-            oDetailModel.setProperty(sSelectedPath+"/purOrg", oCodeModel.getProperty("/purOrg/"+oDetailModel.getProperty(sSelectedPath+"/company_code")));
+            oDetailModel.setProperty(sSelectedPath+"/purOrg", this.getModel("rootModel").getProperty("/purOrg/"+oDetailModel.getProperty(sSelectedPath+"/company_code")));
             oDetailModel.setProperty(sSelectedPath+"/org_code", "");
             //oEvent.getSource().getParent().mAggregations.cells[1].setValue("");
         },
@@ -268,7 +236,6 @@ sap.ui.define([
          * 리턴 데이터 화면에 맞게 변경
          */
         _returnDataRearrange: function (oDataParam) {
-            var oCodeModel = this.getModel("codeModel");
             var oMaster = oDataParam;
             var aDetails = oMaster.details.results;
             var iDetailsLen = aDetails.length;
@@ -277,7 +244,7 @@ sap.ui.define([
                 var oDetail = aDetails[i];
                 oDetail.prices = oDetail.prices.results;
 
-                oDetail.purOrg = oCodeModel.getProperty("/purOrg/"+oDetail.company_code);
+                oDetail.purOrg = this.getModel("rootModel").getProperty("/purOrg/"+oDetail.company_code);
             }
 
             oMaster.details = aDetails;
@@ -495,8 +462,8 @@ sap.ui.define([
          * List 화면으로 이동
          */
         onBack: function () {
-            var oBasePriceListRootModel = this.getModel("rootModel");
-            oBasePriceListRootModel.setProperty("/selectedData", null);
+            var oRootModel = this.getModel("rootModel");
+            oRootModel.setProperty("/selectedData", null);
 
             this.getRouter().navTo("basePriceList");
         },

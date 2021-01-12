@@ -42,7 +42,7 @@ sap.ui.define([
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
 
-            this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
+            //this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
         },
 
         /**

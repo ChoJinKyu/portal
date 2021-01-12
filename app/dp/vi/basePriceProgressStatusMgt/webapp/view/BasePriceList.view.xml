@@ -95,7 +95,7 @@
                         <!-- Material Code 시작 -->
                         <VBox>
                             <Label text="{I18N>/MATERIAL_CODE}"></Label>
-                            <SearchField value="{filterModel>/materialCode}" search=".onGetDialogData" />
+                            <SearchField value="{filterModel>/materialCode}" search=".onGetMaterialCodeDialogData" />
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -226,10 +226,10 @@
                             <Text text="{listModel>company_code_fk/company_name}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="6rem">
-                        <Label text="{I18N>/PLANT}" textAlign="Center" />
+                    <t:Column width="12rem">
+                        <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" />
                         <t:template>
-                            <Text text="{listModel>org_code}" />
+                            <Text text="{listModel>org_code_fk/org_name}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="8rem">

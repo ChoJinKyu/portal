@@ -9,6 +9,7 @@
     xmlns:lib-m="ext.lib.m"
     xmlns:t="sap.ui.table"
     xmlns:co="sap.suite.ui.commons"
+    xmlns:rte="sap.ui.richtexteditor"
     height="100%">
 
     <uxap:ObjectPageLayout
@@ -22,7 +23,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-                    <Title text="(NPD) {I18N>/NEW_BASE_PRICE}" wrapping="true"/>
+                    <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
 					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" />

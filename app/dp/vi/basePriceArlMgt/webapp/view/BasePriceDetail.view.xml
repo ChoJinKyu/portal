@@ -23,7 +23,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-                    <Title text="(NPD) {I18N>/NEW_BASE_PRICE}" wrapping="true"/>
+                    <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
 					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" />
