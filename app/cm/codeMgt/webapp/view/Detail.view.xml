@@ -26,11 +26,14 @@
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
                 <heading>
-                    <m:Title text="Code Group Detail" wrapping="true" class="sapUiSmallMarginEnd"/>
+                    <m:HBox alignItems="End">
+                        <m:OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".handleClose"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <m:Title text="Code Group Detail" wrapping="true" class="" />
+                    </m:HBox>
                 </heading>
 
                 <navigationActions>
-                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press=".handleClose"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                    
                 </navigationActions>
 
             </ObjectPageDynamicHeaderTitle>
@@ -164,7 +167,18 @@
                                     <m:VBox>
                                         <m:Label
                                             text="{I18N>/USE_FLAG}: "/>
-                                        <tnt:InfoLabel 
+                                            <m:SegmentedButton 
+                                                id="search_useflag"
+                                                selectedKey="{viewModel>/detail/use_flag}" 
+                                                selectionChange=""
+                                                enabled="{contModel>/detail/editMode}"
+                                                width="100%">
+                                                <m:items>
+                                                    <m:SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                                    <m:SegmentedButtonItem text="No" width="3em" key="false"/>
+                                                </m:items>
+                                            </m:SegmentedButton>
+                                        <!-- <tnt:InfoLabel 
                                             text="True" 
                                             visible="{= (${contModel>/detail/readMode} &amp;&amp; ${viewModel>/detail/use_flag}) ? true : false}"
                                             renderMode="Narrow" 
@@ -175,18 +189,20 @@
                                             visible="{= (${contModel>/detail/readMode} &amp;&amp; !${viewModel>/detail/use_flag}) ? true : false}"
                                             renderMode="Narrow" 
                                             colorScheme="5" 
-                                            displayOnly= "true" />
+                                            displayOnly= "true" /> -->
                                         
                                         <!-- <m:Text
                                             visible="{contModel>/detail/readMode}"
                                             text="{= ${viewModel>/detail/use_flag}?'Yes':'No'}">
-                                        </m:Text> -->
-                                        
+                                        </m:Text> 
+                                        -->
+<!--                                         
                                         <m:Switch 
                                             visible="{contModel>/detail/editMode}"
                                             state="{viewModel>/detail/use_flag}" 
                                             customTextOn="Yes" 
                                             customTextOff="No"/>
+                                         -->
                                         <m:layoutData>
                                             <layout:GridData
                                                 span="XL2 L3 M6 S12" />

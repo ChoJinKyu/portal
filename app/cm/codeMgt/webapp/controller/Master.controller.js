@@ -73,11 +73,27 @@ sap.ui.define([
                 oCodeMasterTable.setBusy(true);
 
                 var oViewModel = this.getModel('viewModel');
+                var oUtilModel = this.getModel('util');
                 var oServiceModel = this.getModel();
                 oServiceModel.read("/CodeMasters",{
                     filters : aFilters,
                     success : function(data){
                         oViewModel.setProperty("/CodeMasters", data.results);
+
+                        data.results.forEach(function(item,i){
+                            var oChainKey = {
+                                tenant_id:item.tenant_id,
+                                group_code:"CM_CHAIN_CD",
+                                code:item.chain_code
+                            };
+                            var sChainPath =  oUtilModel.createKey("/CodeDetails", oChainKey);
+                            var oChain = oUtilModel.getProperty(sChainPath);
+                            var sChainText = (oChain)?oChain.code_description:"";
+
+                            var sTargetPath = "/CodeMasters/"+i+"/chain_name";
+                            oViewModel.setProperty(sTargetPath, sChainText);
+                        })
+
                         oCodeMasterTable.setBusy(false);
                     },
                     error : function(data){
