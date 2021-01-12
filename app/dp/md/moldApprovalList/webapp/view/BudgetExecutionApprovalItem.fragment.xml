@@ -300,13 +300,13 @@
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
+							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
 								<Input id="b_provisional_budget_amount" class="readonlyField" required="true" textAlign="Right" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}"/>
+							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
 								<ComboBox id="b_asset_type_code" 
                                         required="true" 
