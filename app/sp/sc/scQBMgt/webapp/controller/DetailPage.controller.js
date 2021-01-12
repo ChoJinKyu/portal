@@ -5,15 +5,18 @@ sap.ui.define([
         "sap/m/MessageBox",
         "ext/lib/util/Multilingual",
         "sap/ui/model/json/JSONModel", 
+        "../controller/SupplierSelection"
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSONModel) {
+	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSONModel,SupplierSelection) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBMgt.controller.DetailPage", {
+
+            supplierSelection :  new SupplierSelection(),
             
 			onInit: function () {
                 
@@ -318,6 +321,15 @@ sap.ui.define([
             //     // this.getRouter().navTo("mainPage", {layout: sNextLayout});
             // }
 
+            },
+            onSupplierPress: function(e){
+                // debugger;
+                this._oIndex = e.oSource.getParent().getIndex();
+                
+                this.supplierSelection.showSupplierSelection(this, e, "L1100", "", true);
+                
+
+                
             }
 		});
 	});

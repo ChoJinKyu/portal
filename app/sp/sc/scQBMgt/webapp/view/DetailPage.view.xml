@@ -491,7 +491,7 @@
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="Specific Supplier" />
                                         <t:template>
-                                            <Input showValueHelp="true" ></Input>
+                                            <Input valueHelpRequest=".onSupplierPress" value="0" showValueHelp="true" valueHelpOnly="true" type="Number" ></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem" hAlign="Center">
