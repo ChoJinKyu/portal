@@ -277,6 +277,7 @@ sap.ui.define([
             'AR'	'결재요청'	'L1100'
             'IA'	'결재중'	'L1100'
             'AP'	'결재완료'	'L1100'
+            'RJ'	'반려'	'L1100'
             */
             var oUiModel = this.getView().getModel("mode"); 
             var oModel = this.getModel("appMaster");
@@ -300,6 +301,12 @@ sap.ui.define([
                     oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", false);
                 }else if(oModel.getData().approve_status_code == 'AP'){ // 결재완료
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'RJ'){ // 반려
                     oUiModel.setProperty("/btnEditFlag", false);
                     oUiModel.setProperty("/btnCancelFlag", false);
                     oUiModel.setProperty("/btnDraftFlag", false);
@@ -331,6 +338,12 @@ sap.ui.define([
                     oUiModel.setProperty("/btnDraftFlag", false);
                     oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'RJ'){ // 반려
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);    
                 }else if(oModel.getData().approve_status_code == 'AP'){ // 결재완료
                     oUiModel.setProperty("/btnEditFlag", false);
                     oUiModel.setProperty("/btnCancelFlag", false);
