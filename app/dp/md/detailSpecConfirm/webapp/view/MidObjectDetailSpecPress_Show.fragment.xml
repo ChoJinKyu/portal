@@ -49,6 +49,7 @@
             <VBox height="3.5rem">
                 <Label text="Mold Structure" />
                 <Select   width="100%"
+                        forceSelection="false"
                         editable="false" class="readonlyField"
                             selectedKey="{spec>/die_form}"
                             items="{
@@ -109,6 +110,7 @@
             <VBox height="3.5rem">
                 <Label text="Size" />
                 <Select   width="100%"
+                            forceSelection="false"
                             editable="false" class="readonlyField"
                             selectedKey="{spec>/mold_size}"
                             items="{

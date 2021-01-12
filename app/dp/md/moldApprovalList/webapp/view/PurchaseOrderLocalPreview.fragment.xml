@@ -402,7 +402,7 @@
                             <Column  minScreenWidth="Tablet" hAlign="Center" width="10em" >
                                 <Text text="Type" />
                             </Column>
-                            <Column  minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="25em" >
                                 <Text text="Name/Dept" />
                             </Column>
                             <Column  minScreenWidth="Tablet" hAlign="Center" width="12em" >
