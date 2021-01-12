@@ -934,7 +934,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-            
+
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);

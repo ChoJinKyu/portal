@@ -254,7 +254,7 @@ sap.ui.define([
             ]; 
             this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
                     console.log("OrgCodeLanguages >>>>>>", oData);
-            });
+            }); 
             console.log(data);
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.approval_number;
