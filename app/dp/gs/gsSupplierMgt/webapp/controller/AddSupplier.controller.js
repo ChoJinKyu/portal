@@ -188,15 +188,15 @@ sap.ui.define([
 				"sourcing_supplier_nickname": this._sSsn,
 				"fiscal_year": "",
 				"fiscal_quarter": "",
-                "sales_amount": "",
-                "opincom_amount": "",
-                "asset_amount": "",
-                "curasset_amount": "",
-                "nca_amount": "",
-                "liabilities_amount": "",
-                "curliablities_amount": "",
-                "ncl_amount": "",
-                "equity_capital": ""                				
+                "sales_amount": 0,
+                "opincom_amount": 0,
+                "asset_amount": 0,
+                "curasset_amount": 0,
+                "nca_amount": 0,
+                "liabilities_amount": 0,
+                "curliablities_amount": 0,
+                "ncl_amount": 0,
+                "equity_capital": 0                				
 			}, "/SupplierFin");
         },
         
@@ -209,8 +209,8 @@ sap.ui.define([
 				"txn_year": "",
 				"customer_english_name": "",
                 "customer_local_name": "",
-                "annual_txn_amount": "",
-                "sales_weight": ""                				
+                "annual_txn_amount": 0,
+                "sales_weight": 0                				
 			}, "/SupplierSal");
 		},
 
@@ -815,21 +815,15 @@ sap.ui.define([
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierSal>annual_txn_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierSal>annual_txn_amount'                            
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierSal>sales_weight',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierSal>sales_weight'                            
+                        },
+                        type: "Number"
                     })
 				]
             });
