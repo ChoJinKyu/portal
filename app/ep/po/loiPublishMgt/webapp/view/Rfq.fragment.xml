@@ -9,7 +9,7 @@
             <form:SimpleForm id="RfqForm" editable="false" >
                 <form:toolbar>
                     <Toolbar>
-                        <Title id="Title1" text="견적번호 입력"/>
+                        <Title text="견적번호 입력"/>
                     </Toolbar>
                 </form:toolbar>   
        
