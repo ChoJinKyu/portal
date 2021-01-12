@@ -38,33 +38,22 @@ public class FundingNotifyService implements EventHandler {
         System.out.println("#### beforeCreateFundingNotify START....");
 
         Instant current = Instant.now();
-
-        
         String funding_notify_number = "";
         String f_sql = "SELECT 'N' || YEAR(CURRENT_DATE) || '-' || LPAD(SP_SF_FUNDING_NOTIFY_SEQ.NEXTVAL, 3, '0') AS FUNDING_NOTIFY_NUMBER FROM DUMMY";
         //String f_sql = "SELECT 'N' || YEAR(CURRENT_DATE) || '-' || LPAD(IFNULL(MAX(SUBSTR(FUNDING_NOTIFY_NUMBER, 7, 3)), 0)+1,3,'0') AS FUNDING_NOTIFY_NUMBER FROM SP_SF_FUNDING_NOTIFY WHERE TENANT_ID = 'L2100' AND SUBSTR(FUNDING_NOTIFY_NUMBER, 2, 4) = YEAR(CURRENT_DATE)";
-        ResultSet f_rs = null;    
+        
+        //ResultSet f_rs = null;    
 
         try {
-            Connection conn = jdbc.getDataSource().getConnection();
+            // Connection conn = jdbc.getDataSource().getConnection();
             
             // Local Temp Table 생성
-            PreparedStatement f_statement = conn.prepareStatement(f_sql);
-            f_rs = f_statement.executeQuery();
+            // PreparedStatement f_statement = conn.prepareStatement(f_sql);
+            // f_rs = f_statement.executeQuery();
             
-            if(f_rs.next()) funding_notify_number = String.valueOf(f_rs.getString("FUNDING_NOTIFY_NUMBER"));
-
+            // if(f_rs.next()) funding_notify_number = String.valueOf(f_rs.getString("FUNDING_NOTIFY_NUMBER"));
             
-            //Connection conn = jdbc.getDataSource().getConnection();
-
-            // Local Temp Table 생성
-            //PreparedStatement v_statement = conn.prepareStatement(v_sql);
-            //v_rs = v_statement.executeQuery();
-
-            //if(v_rs.next()) vendor_pool_code = String.valueOf(v_rs.getString("VENDOR_POOL_CODE"));
             funding_notify_number = jdbc.queryForObject(f_sql, String.class);
-
-            //System.out.println("FUNDING_NOTIFY_NUMBER ============= "+f_rs.getString("FUNDING_NOTIFY_NUMBER"));
 
             for(SfFundingNotify fundingNotify : SfFundingNotify) {
                 fundingNotify.setFundingNotifyNumber(funding_notify_number);
