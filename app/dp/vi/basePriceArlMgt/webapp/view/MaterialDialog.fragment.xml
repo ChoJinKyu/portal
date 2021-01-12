@@ -33,7 +33,7 @@
                             <content>
                                 <Title text="{I18N>/MATERIAL_CODE_LIST}" level="H2" />
                                 <ToolbarSpacer />
-                                <SearchField search=".onGetDialogData" width="15rem">
+                                <SearchField search=".onGetMaterialCodeDialogData" width="15rem">
                                     <customData>
                                         <core:CustomData key="dialog" value="materialCode" />
                                     </customData>

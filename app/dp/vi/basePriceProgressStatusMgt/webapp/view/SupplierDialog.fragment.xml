@@ -25,7 +25,7 @@
                             <ToolbarSpacer />
                             <SearchField search=".onGetDialogData" width="15rem">
                                 <customData>
-                                    <core:CustomData key="dialog" value="supplier"  />
+                                    <core:CustomData key="dialog" value="supplier" />
                                 </customData>
                             </SearchField>
                         </content>
