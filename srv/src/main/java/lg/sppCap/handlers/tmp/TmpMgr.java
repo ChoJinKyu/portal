@@ -26,6 +26,8 @@ public class TmpMgr implements EventHandler {
         String test = (String)context.get("test");
         System.out.println("test : " + test);
         System.out.println("주 업무 로직 수행");
+
+
         context.setResult(sampleType);
         context.setCompleted();
     }
