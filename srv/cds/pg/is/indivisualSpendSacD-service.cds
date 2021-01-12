@@ -318,7 +318,7 @@ service individualSpendSacDService {
         select
             key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||cctr_code  as  ID : String
                ,cctr_code_name      as  Description
-               ,cctr_code           as  PRCTR_CODE
+               ,cctr_code           as  CCTR_CODE
         from  CctrMst
         ;
 
