@@ -297,6 +297,7 @@ sap.ui.define([
             var oTable = oView.byId("mainTable"),
                 oModel = this.getView().getModel("list");
             var rowData = oEvent.getParameter('rowBindingContext').getObject();
+            var that = this;
             
             var input = {};
             var saveForexDtl = [];
@@ -408,23 +409,21 @@ sap.ui.define([
             this._forexDialog.then(function (_forexDialog) {
                 _forexDialog.open();
 
-                
-
                 if(forexDeclareStatusName == "작성대기" || forexDeclareStatusName == "신고진행중"){
                     oView.byId("poNumber").setText(rowData.po_number);
                     oView.byId("poName").setText(rowData.po_name);
-                    oView.byId("receiptScheduledDate").setText(rowData.receipt_scheduled_date);
+                    oView.byId("receiptScheduledDate").setText(that.getFormatDate(rowData.receipt_scheduled_date));
                     oView.byId("declareScheduledDate").setDateValue(rowData.declare_scheduled_date);
                     oView.byId("declareDate").setDateValue(rowData.declare_date);
-                    oView.byId("processedCompleteDate").setText(rowData.processed_complete_date);
+                    oView.byId("processedCompleteDate").setText(that.getFormatDate(rowData.processed_complete_date));
                     oView.byId("remark").setValue(rowData.remark);
                 }else{
                     oView.byId("poNumber").setText(rowData.po_number);
                     oView.byId("poName").setText(rowData.po_name);
-                    oView.byId("receiptScheduledDate").setText(rowData.receipt_scheduled_date);
-                    oView.byId("declareScheduledDate").setText(rowData.declare_scheduled_date);
-                    oView.byId("declareDate").setText(rowData.declare_date);
-                    oView.byId("processedCompleteDate").setText(rowData.processed_complete_date);
+                    oView.byId("receiptScheduledDate").setText(that.getFormatDate(rowData.receipt_scheduled_date));
+                    oView.byId("declareScheduledDate").setText(that.getFormatDate(rowData.declare_scheduled_date));
+                    oView.byId("declareDate").setText(that.getFormatDate(rowData.declare_date));
+                    oView.byId("processedCompleteDate").setText(that.getFormatDate(rowData.processed_complete_date));
                     oView.byId("remark").setText(rowData.remark);
                 }
                  
@@ -591,6 +590,7 @@ sap.ui.define([
             day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
             return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         }
+
 
 
     });
