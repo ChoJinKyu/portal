@@ -37,14 +37,6 @@ BEGIN
         FROM :I_TABLE A
         ;
 
-	/* SQL Error 처리 */
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-        -- O_RTN_MSG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
-        O_TABLE_MESSAGE = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnMessage, '' as savedKey from dummy;
-	END;         
-
     IF (COALESCE(:I_LOI_SELECTION_NUMBER,'') = '') THEN
         
         INSERT INTO 
@@ -137,8 +129,6 @@ BEGIN
 
     END FOR;
 
-	COMMIT;
-	-- O_RTN_MSG := 'SUCCESS';	
-    o_table_message =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, R_LOI_SELECTION_NUMBER as savedKey from dummy;
+    O_TABLE_MESSAGE =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, R_LOI_SELECTION_NUMBER as savedKey from dummy;
 
 END

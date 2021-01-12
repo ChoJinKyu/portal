@@ -274,11 +274,11 @@
                     <Text text="{list>item_sequence}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainLoiRequestTitle" width="10rem">
+                <t:Column id="mainLoiRequestTitle" width="12rem">
                 <Label text="요청명" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Link text="{list>loi_request_title}" press="goToLoiRequest" tooltip="{list>loi_request_title}" />
-                    <!-- <Text text="{list>loi_request_title}" press="goToLoiRequest" /> -->
+                    <!-- <Link text="{list>loi_request_title}" press="goToLoiRequest" tooltip="{list>loi_request_title}" /> -->
+                    <Text text="{list>loi_request_title}" />
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainItemDesc" width="6rem">

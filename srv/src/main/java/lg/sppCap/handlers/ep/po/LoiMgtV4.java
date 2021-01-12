@@ -57,6 +57,9 @@ import cds.gen.ep.loimgtv4service.SavedSuppliers;
 import cds.gen.ep.loimgtv4service.SupplierMulEntityProcContext;
 import cds.gen.ep.loimgtv4service.OutType;
 
+import org.springframework.jdbc.core.SqlParameter;
+import java.sql.Types;
+
 @Component
 @ServiceName(LoiMgtV4Service_.CDS_NAME)
 public class LoiMgtV4 implements EventHandler {
@@ -65,16 +68,16 @@ public class LoiMgtV4 implements EventHandler {
 
     @Autowired
     private JdbcTemplate jdbc;
-    
 
-    // Procedure 호출해서 header 저장
-    /*********************************
-    {"tenant_id":"1000", "company_code":"C100", "loi_write_number":"121000000001", "loi_item_number":"1", "supplier_opinion":"기타의견"}    
-    *********************************/
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = SaveLoiVosProcContext.CDS_NAME)
     public void onSaveLoiVosProc(SaveLoiVosProcContext context) {
         
         log.info("### EP_SAVE_LOI_VOS_PROC 프로시저 호출시작 ###");
+        
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
         
         StringBuffer v_sql = new StringBuffer();
         v_sql.append("CALL EP_SAVE_LOI_VOS_PROC ( ")
@@ -86,52 +89,33 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" O_RTN_MSG => ? ")
                 .append(" )");        
 
-        //ResultSet v_rs = null;
-        StringBuffer strRsltBuf = new StringBuffer();
-        Connection conn = null;
-		try {
-            
-            conn = jdbc.getDataSource().getConnection();
-            CallableStatement statement = jdbc.getDataSource().getConnection().prepareCall(v_sql.toString());
-            
-            statement.setString(1, context.getTenantId());
-            statement.setString(2, context.getCompanyCode());
-            statement.setString(3, context.getLoiWriteNumber());
-            statement.setString(4, context.getLoiItemNumber());
-            statement.setString(5, context.getSupplierOpinion());
-            
-            int iCnt = statement.executeUpdate();
+        String resultMessage = "";
 
-			String rsltMesg = "SUCCESS";
+        jdbc.update(v_sql.toString()
+        , context.getTenantId()
+        , context.getCompanyCode()
+        , context.getLoiWriteNumber()
+        , context.getLoiItemNumber()
+        , context.getSupplierOpinion()
+        , resultMessage
+        );
 
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+iCnt+"")
-					.append("}");
-
-			context.setResult(strRsltBuf.toString());
-
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
-		} catch (Exception e) {
-			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
-		} finally {
-            context.setCompleted();
-            //if(conn != null) conn.close();
-		}
+        context.setResult("SUCCESS");
+        context.setCompleted();
 
         log.info("### EP_SAVE_LOI_VOS_PROC 프로시저 종료 ###");
 
-    }
+    }    
 
     //비고 저장
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = SaveLoiRmkProcContext.CDS_NAME)
     public void onSaveLoiRmkProc(SaveLoiRmkProcContext context) {
         
         log.info("### EP_SAVE_LOI_RMK_PROC 프로시저 호출시작 ###");
+
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";        
         
         StringBuffer v_sql = new StringBuffer();
         v_sql.append("CALL EP_SAVE_LOI_RMK_PROC ( ")
@@ -143,55 +127,36 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" O_RTN_MSG => ? ")
                 .append(" )");        
 
-        //ResultSet v_rs = null;
-        StringBuffer strRsltBuf = new StringBuffer();
+        // Commit Option
+        jdbc.execute(v_sql_commitOption); 
+        
+        String resultMessage = "";
 
-        Connection conn = null;
+        jdbc.update(v_sql.toString(),
+                            context.getTenantId()
+                            , context.getCompanyCode()
+                            , context.getLoiWriteNumber()
+                            , context.getLoiItemNumber()
+                            , context.getRemark()
+                            , resultMessage
+                            );
 
-		try {
-            
-            conn = jdbc.getDataSource().getConnection();
-            CallableStatement statement = jdbc.getDataSource().getConnection().prepareCall(v_sql.toString());
-            
-            statement.setString(1, context.getTenantId());
-            statement.setString(2, context.getCompanyCode());
-            statement.setString(3, context.getLoiWriteNumber());
-            statement.setString(4, context.getLoiItemNumber());
-            statement.setString(5, context.getRemark());
-            
-            int iCnt = statement.executeUpdate();
-
-			String rsltMesg = "SUCCESS";
-
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+iCnt+"")
-					.append("}");
-
-			context.setResult(strRsltBuf.toString());
-
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
-		} catch (Exception e) {
-			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
-		} finally {
-            context.setCompleted();
-            //if(conn != null) conn.close();
-		}
+        context.setResult("SUCCESS");
+        context.setCompleted();                            
 
         log.info("### EP_SAVE_LOI_RMK_PROC 프로시저 종료 ###");
 
     }
 
-
-	//견적번호 저장 
+    //견적번호 저장 
+    @Transactional(rollbackFor = SQLException.class)
 	@On(event=SaveLoiQuotationNumberProcContext.CDS_NAME)
 	public void onSaveLoiQuotationNumberProc(SaveLoiQuotationNumberProcContext context) {
 
-		log.info("### EP_SAVE_LOI_QUOTATION_NUMBER_PROC 프로시저 호출시작 ###");
+        log.info("### EP_SAVE_LOI_QUOTATION_NUMBER_PROC 프로시저 호출시작 ###");
+        
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";          
 
 		// local Temp table은 테이블명이 #(샵) 으로 시작해야 함
 		StringBuffer v_sql_createTable = new StringBuffer();
@@ -204,81 +169,79 @@ public class LoiMgtV4 implements EventHandler {
 									.append("QUOTATION_ITEM_NUMBER DECIMAL ")
 								.append(")");
 
-		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_SAVE_LOI_QUOTATION_NUMBER VALUES (?, ?, ?, ?, ?, ?)";
-		String v_sql_callProc = "CALL EP_SAVE_LOI_QUOTATION_NUMBER_PROC( I_TABLE => #LOCAL_TEMP_EP_SAVE_LOI_QUOTATION_NUMBER, O_RTN_MSG => ? )";
+        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_SAVE_LOI_QUOTATION_NUMBER";                                        
+		String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_SAVE_LOI_QUOTATION_NUMBER VALUES (?, ?, ?, ?, ?, ?)";
+		String v_sql_callProc = "CALL EP_SAVE_LOI_QUOTATION_NUMBER_PROC( I_TABLE => #LOCAL_TEMP_EP_SAVE_LOI_QUOTATION_NUMBER, O_TABLE_MESSAGE => ? )";
 
-		String v_result = "";
-		Collection<InputData> v_inRows = context.getInputData();
-        StringBuffer strRsltBuf = new StringBuffer();
+
+        Collection<OutType> v_result = new ArrayList<>(); 
+        Collection<InputData> v_inDetails = context.getInputData();
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);          
+
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTable.toString()); 
+
+        // Detail Local Temp Table에 insert
+        List<Object[]> batchD = new ArrayList<Object[]>();
+        if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+            for(InputData v_inRow : v_inDetails){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("loi_write_number"),
+                    v_inRow.get("loi_item_number"),
+                    v_inRow.get("quotation_number"),
+                    v_inRow.get("quotation_item_number")};
+                batchD.add(values);
+            }
+        }    
+
+        int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+            
+        SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutType>(){
+            @Override
+            public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                OutType v_row = OutType.create();
+                v_row.setReturncode(v_rs.getString("returncode"));
+                v_row.setReturnmessage(v_rs.getString("returnmessage"));
+                v_row.setSavedkey(v_rs.getString("savedkey"));
+                v_result.add(v_row);
+                return v_row;
+            }
+        });     
         
-        Connection conn = null;
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(oDTable);
 
-		try {
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection con) throws SQLException {
+                CallableStatement stmt = con.prepareCall(v_sql_callProc.toString());
+                return stmt;
+            }
+        }, paramList);       
+        
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableD);
 
-			conn = jdbc.getDataSource().getConnection();
+        context.setResult(v_result);            
+        context.setCompleted();          
 
-			// Local Temp Table 생성
-			PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable.toString());
-			v_statement_table.execute();
-
-			// Local Temp Table에 insert
-			PreparedStatement v_statement_insert = conn.prepareStatement(v_sql_insertTable);
-
-			if(!v_inRows.isEmpty() && v_inRows.size() > 0){
-				for(InputData v_inRow : v_inRows){
-
-					log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber()+"###"+v_inRow.getQuotationNumber()+"###"+v_inRow.getQuotationItemNumber());
-
-					v_statement_insert.setString(1, v_inRow.getTenantId());
-					v_statement_insert.setString(2, v_inRow.getCompanyCode());
-					v_statement_insert.setString(3, v_inRow.getLoiWriteNumber());
-					v_statement_insert.setString(4, v_inRow.getLoiItemNumber());
-					v_statement_insert.setString(5, v_inRow.getQuotationNumber());
-					v_statement_insert.setString(6, v_inRow.getQuotationItemNumber());
-
-					//v_statement_insert.executeUpdate();
-					v_statement_insert.addBatch();
-				}
-				// Temp Table에 Multi건 등록
-				v_statement_insert.executeBatch();
-			}
-
-			// Procedure Call
-			CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-			//ResultSet v_rs = v_statement_proc.executeQuery();
-			int iCnt = v_statement_proc.executeUpdate();
-			String rsltMesg = "SUCCESS";
-
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+iCnt+"")
-					.append("}");
-
-			context.setResult(strRsltBuf.toString());
-
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
-		} catch (Exception e) {
-			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
-		} finally {
-            context.setCompleted();
-            //if(conn != null) conn.close();
-		}
+        log.info("### EP_SAVE_LOI_QUOTATION_NUMBER_PROC 프로시저 호출종료 ###");
 
     }    
     
     //LOI 업체선정 품의
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = SaveLoiSupplySelectionProcContext.CDS_NAME)
     public void onSaveLoiSupplySelectionProc(SaveLoiSupplySelectionProcContext context) {
 
         log.info("### EP_SAVE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출시작 ###");
 
-        
-        SaveLoiSelectionType v_indata = context.getInputData();
-        // Collection<SaveLoiSelectionType> v_results = new ArrayList<>();
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";           
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
@@ -291,7 +254,7 @@ public class LoiMgtV4 implements EventHandler {
                             .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
                         .append(")");
         
-        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_EP_SAVE_LOI_SUPPLY_SELECTION";        
+        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_SAVE_LOI_SUPPLY_SELECTION";        
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_SAVE_LOI_SUPPLY_SELECTION VALUES (?, ?, ?, ?)";
 
         v_sql_callProc.append("CALL EP_SAVE_LOI_SUPPLY_SELECTION_PROC ( ")
@@ -313,129 +276,104 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" O_TABLE_MESSAGE => ? ")
                 .append(" )");        
 
-        StringBuffer strRsltBuf = new StringBuffer();  
-        //int uCnt = 0;              
-        ResultSet v_rs = null;       
+        SaveLoiSelectionType v_indata = context.getInputData();
         Collection<OutType> v_result = new ArrayList<>(); 
+        Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
 
-        Connection conn = null;
+        // log.info("###getTenantId===="+v_indata.getTenantId());
 
-        try {
-
-            conn = jdbc.getDataSource().getConnection();
-
-            // Detail Local Temp Table 생성
-            PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
-            v_statement_tableD.execute();
-
-            //for(SaveLoiSelectionType v_indata :  v_inMultiData){
-
-            log.info("###getDetails().size()===="+v_indata.getDetails().size());
-
-            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
-            // SaveLoiSelectionType v_result = SaveLoiSelectionType.create();
-            // Collection<LoiDtlType> v_resultDetails = new ArrayList<>();
-
-            log.info("###getTenantId===="+v_indata.getTenantId());
-            log.info("###getCompanyCode===="+v_indata.getCompanyCode());
-            log.info("###getLoiSelectionNumber11===="+v_indata.getLoiSelectionNumber());
-            log.info("###getLoiSelectionNumber22===="+v_indata.get("loi_selection_number"));
-
-            // Detail Local Temp Table에 insert
-            PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
-
-            if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
-                for(LoiDtlType v_inRow : v_inDetails){
-
-                    log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
-
-                    v_statement_insertD.setObject(1, v_inRow.getTenantId());
-                    v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
-                    v_statement_insertD.setObject(3, v_inRow.getLoiWriteNumber());
-                    v_statement_insertD.setObject(4, v_inRow.getLoiItemNumber());
-                    v_statement_insertD.addBatch();
-                }
-                v_statement_insertD.executeBatch();
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);     
+        
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTable.toString());    
+    
+        // Detail Local Temp Table에 insert
+        List<Object[]> batchD = new ArrayList<Object[]>();
+        if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+            for(LoiDtlType v_inRow : v_inDetails){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("loi_write_number"),
+                    v_inRow.get("loi_item_number")};
+                batchD.add(values);
             }
+        }    
 
-            // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
-            v_statement_proc.setObject(1, v_indata.get("tenant_id"));
-            v_statement_proc.setObject(2, v_indata.get("company_code"));
-            v_statement_proc.setObject(3, v_indata.get("loi_selection_number"));
-            v_statement_proc.setObject(4, v_indata.get("loi_selection_title"));
-            v_statement_proc.setObject(5, v_indata.get("loi_selection_status_code"));
-            v_statement_proc.setObject(6, v_indata.get("special_note"));
-            v_statement_proc.setObject(7, v_indata.get("attch_group_number"));
-            v_statement_proc.setObject(8, v_indata.get("approval_number"));
-            v_statement_proc.setObject(9, v_indata.get("buyer_empno"));
-            v_statement_proc.setObject(10, v_indata.get("purchasing_department_code"));
-            v_statement_proc.setObject(11, v_indata.get("remark"));
-            v_statement_proc.setObject(12, v_indata.get("org_type_code"));
-            v_statement_proc.setObject(13, v_indata.get("org_code"));
-            v_statement_proc.setObject(14, v_indata.get("user_id"));
-
-            // int dCnt = v_statement_proc.executeUpdate();
-            // log.info("###dCnt===="+dCnt);
-
-            v_rs = v_statement_proc.executeQuery();
-            int dCnt = 0;
-            // Procedure Out put 담기
-            while (v_rs.next()){
+        int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+            
+        SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutType>(){
+            @Override
+            public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 OutType v_row = OutType.create();
-                v_row.setReturncode(v_rs.getString("returncode")); 
+                v_row.setReturncode(v_rs.getString("returncode"));
                 v_row.setReturnmessage(v_rs.getString("returnmessage"));
                 v_row.setSavedkey(v_rs.getString("savedkey"));
-                log.info("###returncode===="+v_rs.getString("returncode"));
-                log.info("###returnmessage===="+v_rs.getString("returnmessage"));
-                log.info("###savedkey===="+v_rs.getString("savedkey"));
                 v_result.add(v_row);
+                return v_row;
             }
+        });     
+        
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
-            context.setResult(v_result);
+        paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_COMPANY_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_SELECTION_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_SELECTION_TITLE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_SELECTION_STATUS_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_SPECIAL_NOTE", Types.NCLOB));
+        paramList.add(new SqlParameter("I_ATTCH_GROUP_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_APPROVAL_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_BUYER_EMPNO", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_PURCHASING_DEPARTMENT_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_REMARK", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_ORG_TYPE_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_ORG_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+        paramList.add(oDTable);
 
-            // Detail Local Temp Table trunc
-            PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
-            v_statement_trunc_tableD.execute();
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection con) throws SQLException {
+                CallableStatement stmt = con.prepareCall(v_sql_callProc.toString());
+                stmt.setObject(1, v_indata.get("tenant_id"));
+                stmt.setObject(2, v_indata.get("company_code"));
+                stmt.setObject(3, v_indata.get("loi_selection_number"));
+                stmt.setObject(4, v_indata.get("loi_selection_title"));
+                stmt.setObject(5, v_indata.get("loi_selection_status_code"));
+                stmt.setObject(6, v_indata.get("special_note"));
+                stmt.setObject(7, v_indata.get("attch_group_number"));
+                stmt.setObject(8, v_indata.get("approval_number"));
+                stmt.setObject(9, v_indata.get("buyer_empno"));
+                stmt.setObject(10, v_indata.get("purchasing_department_code"));
+                stmt.setObject(11, v_indata.get("remark"));
+                stmt.setObject(12, v_indata.get("org_type_code"));
+                stmt.setObject(13, v_indata.get("org_code"));
+                stmt.setObject(14, v_indata.get("user_id"));
+                return stmt;
+            }
+        }, paramList);       
+        
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableD);
 
-            //uCnt += dCnt;
+        context.setResult(v_result);            
+        context.setCompleted();         
+        
+        log.info("### EP_SAVE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출종료 ###");
 
-            //}
-
-			// String rsltMesg = "SUCCESS";
-
-			// strRsltBuf.append("{")
-			// 		.append("\"rsltCd\":\"000\"")
-			// 		.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-			// 		.append(", \"rsltCnt\":"+dCnt+"")
-			// 		.append("}");
-
-            //context.setResult(strRsltBuf.toString());
-
-            log.info("### EP_SAVE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출종료 ###");
-
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
-		} catch (Exception e) {
-			e.printStackTrace();
-			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
-		} finally {
-            context.setCompleted();
-            //if(conn != null) conn.close();
-		}
     }    
 
     //LOI 업체선정 품의 삭제
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = DeleteLoiSupplySelectionProcContext.CDS_NAME)
     public void onDeleteLoiSupplySelectionProc(DeleteLoiSupplySelectionProcContext context) {
 
         log.info("### EP_DELETE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출시작 ###");
 
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
         
-        DelLoiSelectionType v_indata = context.getInputData();
-        // Collection<SaveLoiSelectionType> v_results = new ArrayList<>();
-
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -447,7 +385,7 @@ public class LoiMgtV4 implements EventHandler {
                             .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
                         .append(")");
         
-        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_EP_DELETE_LOI_SUPPLY_SELECTION";        
+        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_DELETE_LOI_SUPPLY_SELECTION";        
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_DELETE_LOI_SUPPLY_SELECTION VALUES (?, ?, ?, ?)";
 
         v_sql_callProc.append("CALL EP_DELETE_LOI_SUPPLY_SELECTION_PROC ( ")
@@ -456,104 +394,87 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" I_LOI_SELECTION_NUMBER => ?, ")
                     .append(" I_USER_ID => ?, ")
                     .append(" I_TABLE => #LOCAL_TEMP_EP_DELETE_LOI_SUPPLY_SELECTION, ")
-                    .append(" O_RTN_MSG => ? ")
+                    .append(" O_TABLE_MESSAGE => ? ")
                 .append(" )");        
 
-        StringBuffer strRsltBuf = new StringBuffer();  
-        //int uCnt = 0;         
+        DelLoiSelectionType v_indata = context.getInputData();
+        Collection<OutType> v_result = new ArrayList<>(); 
+        Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
+
+        // log.info("###getTenantId===="+v_indata.getTenantId());
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);     
         
-        Connection conn = null;
-
-        try {
-
-            conn = jdbc.getDataSource().getConnection();
-
-            // Detail Local Temp Table 생성
-            PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
-            v_statement_tableD.execute();
-
-            //for(SaveLoiSelectionType v_indata :  v_inMultiData){
-
-            log.info("###getDetails().size()===="+v_indata.getDetails().size());
-
-            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
-            // SaveLoiSelectionType v_result = SaveLoiSelectionType.create();
-            // Collection<LoiDtlType> v_resultDetails = new ArrayList<>();
-
-            log.info("###getTenantId===="+v_indata.getTenantId());
-            log.info("###getCompanyCode===="+v_indata.getCompanyCode());
-            log.info("###getLoiSelectionNumber11===="+v_indata.getLoiSelectionNumber());
-            log.info("###getLoiSelectionNumber22===="+v_indata.get("loi_selection_number"));
-
-            // Detail Local Temp Table에 insert
-            PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
-
-            if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
-                for(LoiDtlType v_inRow : v_inDetails){
-
-                    log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
-
-                    v_statement_insertD.setObject(1, v_inRow.getTenantId());
-                    v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
-                    v_statement_insertD.setObject(3, v_inRow.getLoiWriteNumber());
-                    v_statement_insertD.setObject(4, v_inRow.getLoiItemNumber());
-                    v_statement_insertD.addBatch();
-                }
-                v_statement_insertD.executeBatch();
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTable.toString());    
+    
+        // Detail Local Temp Table에 insert
+        List<Object[]> batchD = new ArrayList<Object[]>();
+        if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+            for(LoiDtlType v_inRow : v_inDetails){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("loi_write_number"),
+                    v_inRow.get("loi_item_number")};
+                batchD.add(values);
             }
+        }    
 
-            // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
-            v_statement_proc.setObject(1, v_indata.get("tenant_id"));
-            v_statement_proc.setObject(2, v_indata.get("company_code"));
-            v_statement_proc.setObject(3, v_indata.get("loi_selection_number"));
-            v_statement_proc.setObject(4, v_indata.get("user_id"));
+        int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+            
+        SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutType>(){
+            @Override
+            public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                OutType v_row = OutType.create();
+                v_row.setReturncode(v_rs.getString("returncode"));
+                v_row.setReturnmessage(v_rs.getString("returnmessage"));
+                v_row.setSavedkey(v_rs.getString("savedkey"));
+                v_result.add(v_row);
+                return v_row;
+            }
+        });     
+        
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
-            int dCnt = v_statement_proc.executeUpdate();
-            log.info("###dCnt===="+dCnt);
+        paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_COMPANY_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_SELECTION_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+        paramList.add(oDTable);
 
-            // v_result.setDetails(v_resultDetails);
-            // v_results.add(v_result);
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection con) throws SQLException {
+                CallableStatement stmt = con.prepareCall(v_sql_callProc.toString());
+                stmt.setObject(1, v_indata.get("tenant_id"));
+                stmt.setObject(2, v_indata.get("company_code"));
+                stmt.setObject(3, v_indata.get("loi_selection_number"));
+                stmt.setObject(4, v_indata.get("user_id"));
+                return stmt;
+            }
+        }, paramList);       
+        
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableD);
 
-            // Detail Local Temp Table trunc
-            PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
-            v_statement_trunc_tableD.execute();
+        context.setResult(v_result);            
+        context.setCompleted();      
+        
+        log.info("### EP_DELETE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출종료 ###");
 
-            //uCnt += dCnt;
-
-            //}
-
-			String rsltMesg = "SUCCESS";
-
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+dCnt+"")
-					.append("}");
-
-            context.setResult(strRsltBuf.toString());
-            log.info("### EP_DELETE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출종료 ###");
-
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
-		} catch (Exception e) {
-			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
-		} finally {
-            context.setCompleted();
-            //if(conn != null) conn.close();
-		}
     }    
 
     //LOI 발행품의
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = SaveLoiPublishProcContext.CDS_NAME)
     public void onSaveLoiPublishProc(SaveLoiPublishProcContext context) {
 
         log.info("### EP_SAVE_LOI_PUBLISH_PROC 프로시저 호출시작 ###");
-        
-        SaveLoiPublishType v_indata = context.getInputData();
-        // Collection<SaveLoiPublishType> v_results = new ArrayList<>();
+
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";        
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
@@ -566,7 +487,7 @@ public class LoiMgtV4 implements EventHandler {
                             .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
                         .append(")");
         
-        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH";        
+        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH";        
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_SAVE_LOI_PUBLISH VALUES (?, ?, ?, ?)";
 
         v_sql_callProc.append("CALL EP_SAVE_LOI_PUBLISH_PROC ( ")
@@ -593,140 +514,115 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" O_TABLE_MESSAGE => ? ")
                 .append(" )");        
 
-        StringBuffer strRsltBuf = new StringBuffer();  
-        //int uCnt = 0;     
-        ResultSet v_rs = null;       
+        SaveLoiPublishType v_indata = context.getInputData();
         Collection<OutType> v_result = new ArrayList<>(); 
+        Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
 
-        Connection conn = null; 
+        // log.info("###getTenantId===="+v_indata.getTenantId());
 
-        try {
-
-            conn = jdbc.getDataSource().getConnection();
-
-            // Detail Local Temp Table 생성
-            PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
-            v_statement_tableD.execute();
-
-            //for(SaveLoiPublishType v_indata :  v_inMultiData){
-
-            log.info("###getDetails().size()===="+v_indata.getDetails().size());
-
-            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
-            // SaveLoiPublishType v_result = SaveLoiPublishType.create();
-            // Collection<LoiDtlType> v_resultDetails = new ArrayList<>();
-
-            log.info("###getTenantId===="+v_indata.getTenantId());
-            log.info("###getCompanyCode===="+v_indata.getCompanyCode());
-            log.info("###getLoiPublishNumber11===="+v_indata.getLoiPublishNumber());
-            log.info("###getLoiPublishNumber22===="+v_indata.get("loi_publish_number"));
-            log.info("###supplier_code===="+v_indata.get("supplier_code"));
-            log.info("###contract_format_id===="+v_indata.get("contract_format_id"));
-            log.info("###offline_flag===="+v_indata.get("offline_flag"));
-            log.info("###contract_date===="+v_indata.get("contract_date"));
-            log.info("###additional_condition_desc===="+v_indata.get("additional_condition_desc"));
-
-
-            // Detail Local Temp Table에 insert
-            PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
-
-            if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
-                for(LoiDtlType v_inRow : v_inDetails){
-
-                    log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
-
-                    v_statement_insertD.setObject(1, v_inRow.getTenantId());
-                    v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
-                    v_statement_insertD.setObject(3, v_inRow.getLoiWriteNumber());
-                    v_statement_insertD.setObject(4, v_inRow.getLoiItemNumber());
-                    v_statement_insertD.addBatch();
-                }
-                v_statement_insertD.executeBatch();
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);     
+        
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTable.toString());    
+    
+        // Detail Local Temp Table에 insert
+        List<Object[]> batchD = new ArrayList<Object[]>();
+        if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+            for(LoiDtlType v_inRow : v_inDetails){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("loi_write_number"),
+                    v_inRow.get("loi_item_number")};
+                batchD.add(values);
             }
+        }    
 
-            // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
-            v_statement_proc.setObject(1, v_indata.get("tenant_id"));
-            v_statement_proc.setObject(2, v_indata.get("company_code"));
-            v_statement_proc.setObject(3, v_indata.get("loi_publish_number"));
-            v_statement_proc.setObject(4, v_indata.get("loi_publish_title"));
-            v_statement_proc.setObject(5, v_indata.get("loi_publish_status_code"));
-            v_statement_proc.setObject(6, v_indata.get("supplier_code"));
-            v_statement_proc.setObject(7, v_indata.get("contract_format_id"));
-            v_statement_proc.setObject(8, v_indata.get("offline_flag"));
-            v_statement_proc.setObject(9, v_indata.get("contract_date"));
-            v_statement_proc.setObject(10, v_indata.get("additional_condition_desc"));
-            v_statement_proc.setObject(11, v_indata.get("special_note"));
-            v_statement_proc.setObject(12, v_indata.get("attch_group_number"));
-            v_statement_proc.setObject(13, v_indata.get("approval_number"));
-            v_statement_proc.setObject(14, v_indata.get("buyer_empno"));
-            v_statement_proc.setObject(15, v_indata.get("purchasing_department_code"));
-            v_statement_proc.setObject(16, v_indata.get("remark"));
-            v_statement_proc.setObject(17, v_indata.get("org_type_code"));
-            v_statement_proc.setObject(18, v_indata.get("org_code"));
-            v_statement_proc.setObject(19, v_indata.get("user_id"));
-
-            // int dCnt = v_statement_proc.executeUpdate();
-            // log.info("###dCnt===="+dCnt);
-            v_rs = v_statement_proc.executeQuery();
-            int dCnt = 0;
-            // Procedure Out put 담기
-            while (v_rs.next()){
+        int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+            
+        SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutType>(){
+            @Override
+            public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 OutType v_row = OutType.create();
-                v_row.setReturncode(v_rs.getString("returncode")); 
+                v_row.setReturncode(v_rs.getString("returncode"));
                 v_row.setReturnmessage(v_rs.getString("returnmessage"));
                 v_row.setSavedkey(v_rs.getString("savedkey"));
-                log.info("###returncode===="+v_rs.getString("returncode"));
-                log.info("###returnmessage===="+v_rs.getString("returnmessage"));
-                log.info("###savedkey===="+v_rs.getString("savedkey"));
                 v_result.add(v_row);
+                return v_row;
             }
+        });     
 
-            context.setResult(v_result);
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
-            // v_result.setDetails(v_resultDetails);
-            // v_results.add(v_result);
+        paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_COMPANY_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_PUBLISH_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_PUBLISH_TITLE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_PUBLISH_STATUS_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_SUPPLIER_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_CONTRACT_FORMAT_ID", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_OFFLINE_FLAG", Types.BOOLEAN));
+        paramList.add(new SqlParameter("I_CONTRACT_DATE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_ADDITIONAL_CONDITION_DESC", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_SPECIAL_NOTE", Types.NCLOB));
+        paramList.add(new SqlParameter("I_ATTCH_GROUP_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_APPROVAL_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_BUYER_EMPNO", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_PURCHASING_DEPARTMENT_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_REMARK", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_ORG_TYPE_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_ORG_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+        paramList.add(oDTable);
 
-            // Detail Local Temp Table trunc
-            PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
-            v_statement_trunc_tableD.execute();
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection con) throws SQLException {
+                CallableStatement stmnt = con.prepareCall(v_sql_callProc.toString());
+                stmnt.setObject(1, v_indata.get("tenant_id"));
+                stmnt.setObject(2, v_indata.get("company_code"));
+                stmnt.setObject(3, v_indata.get("loi_publish_number"));
+                stmnt.setObject(4, v_indata.get("loi_publish_title"));
+                stmnt.setObject(5, v_indata.get("loi_publish_status_code"));
+                stmnt.setObject(6, v_indata.get("supplier_code"));
+                stmnt.setObject(7, v_indata.get("contract_format_id"));
+                stmnt.setObject(8, v_indata.get("offline_flag"));
+                stmnt.setObject(9, v_indata.get("contract_date"));
+                stmnt.setObject(10, v_indata.get("additional_condition_desc"));
+                stmnt.setObject(11, v_indata.get("special_note"));
+                stmnt.setObject(12, v_indata.get("attch_group_number"));
+                stmnt.setObject(13, v_indata.get("approval_number"));
+                stmnt.setObject(14, v_indata.get("buyer_empno"));
+                stmnt.setObject(15, v_indata.get("purchasing_department_code"));
+                stmnt.setObject(16, v_indata.get("remark"));
+                stmnt.setObject(17, v_indata.get("org_type_code"));
+                stmnt.setObject(18, v_indata.get("org_code"));
+                stmnt.setObject(19, v_indata.get("user_id"));  
+   
+                return stmnt;
+            }
+        }, paramList);       
+        
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableD);
 
-            //uCnt += dCnt;
+        context.setResult(v_result);            
+        context.setCompleted();            
 
-            //}
+        log.info("### EP_SAVE_LOI_PUBLISH_PROC 프로시저 호출종료 ###");
 
-			String rsltMesg = "SUCCESS";
-
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+dCnt+"")
-					.append("}");
-
-            //context.setResult(strRsltBuf.toString());
-
-            log.info("### EP_SAVE_LOI_PUBLISH_PROC 프로시저 호출종료 ###");
-
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
-		} catch (Exception e) {
-			e.printStackTrace();
-			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
-		} finally {
-            context.setCompleted();
-            //if(conn != null) conn.close();
-		}
     }    
 
     //LOI 발행품의 삭제
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = DeleteLoiPublishProcContext.CDS_NAME)
     public void onDeleteLoiPublishProc(DeleteLoiPublishProcContext context) {
 
         log.info("### EP_DELETE_LOI_PUBLISH_PROC 프로시저 호출시작 ###");
 
-        
-        DelLoiPublishType v_indata = context.getInputData();
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;"; 
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
@@ -739,7 +635,7 @@ public class LoiMgtV4 implements EventHandler {
                             .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
                         .append(")");
         
-        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH";        
+        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH";        
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH VALUES (?, ?, ?, ?)";
 
         v_sql_callProc.append("CALL EP_DELETE_LOI_PUBLISH_PROC ( ")
@@ -748,90 +644,75 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" I_LOI_PUBLISH_NUMBER => ?, ")
                     .append(" I_USER_ID => ?, ")
                     .append(" I_TABLE => #LOCAL_TEMP_EP_DELETE_LOI_PUBLISH, ")
-                    .append(" O_RTN_MSG => ? ")
+                    .append(" O_TABLE_MESSAGE => ? ")
                 .append(" )");        
 
-        StringBuffer strRsltBuf = new StringBuffer();  
-        //int uCnt = 0;   
+        DelLoiPublishType v_indata = context.getInputData();                
+        Collection<OutType> v_result = new ArrayList<>(); 
+        Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);     
         
-        Connection conn = null;
-
-        try {
-
-            conn = jdbc.getDataSource().getConnection();
-
-            // Detail Local Temp Table 생성
-            PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
-            v_statement_tableD.execute();
-
-            log.info("###getDetails().size()===="+v_indata.getDetails().size());
-
-            Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
-
-            log.info("###getTenantId===="+v_indata.getTenantId());
-            log.info("###getCompanyCode===="+v_indata.getCompanyCode());
-            log.info("###getLoiPublishNumber11===="+v_indata.getLoiPublishNumber());
-            log.info("###getLoiPublishNumber22===="+v_indata.get("loi_publish_number"));
-
-            // Detail Local Temp Table에 insert
-            PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
-
-            if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
-                for(LoiDtlType v_inRow : v_inDetails){
-
-                    log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getLoiWriteNumber()+"###"+v_inRow.getLoiItemNumber());
-
-                    v_statement_insertD.setObject(1, v_inRow.getTenantId());
-                    v_statement_insertD.setObject(2, v_inRow.getCompanyCode());
-                    v_statement_insertD.setObject(3, v_inRow.getLoiWriteNumber());
-                    v_statement_insertD.setObject(4, v_inRow.getLoiItemNumber());
-                    v_statement_insertD.addBatch();
-                }
-                v_statement_insertD.executeBatch();
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTable.toString());    
+    
+        // Detail Local Temp Table에 insert
+        List<Object[]> batchD = new ArrayList<Object[]>();
+        if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+            for(LoiDtlType v_inRow : v_inDetails){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("loi_write_number"),
+                    v_inRow.get("loi_item_number")};
+                batchD.add(values);
             }
+        }    
 
-            // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
-            v_statement_proc.setObject(1, v_indata.get("tenant_id"));
-            v_statement_proc.setObject(2, v_indata.get("company_code"));
-            v_statement_proc.setObject(3, v_indata.get("loi_publish_number"));
-            v_statement_proc.setObject(4, v_indata.get("user_id"));
+        int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+            
+        SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutType>(){
+            @Override
+            public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                OutType v_row = OutType.create();
+                v_row.setReturncode(v_rs.getString("returncode"));
+                v_row.setReturnmessage(v_rs.getString("returnmessage"));
+                v_row.setSavedkey(v_rs.getString("savedkey"));
+                v_result.add(v_row);
+                return v_row;
+            }
+        });     
+        
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
-            int dCnt = v_statement_proc.executeUpdate();
-            log.info("###dCnt===="+dCnt);
+        paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_COMPANY_CODE", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_LOI_PUBLISH_NUMBER", Types.NVARCHAR));
+        paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+        paramList.add(oDTable);
 
-            // v_result.setDetails(v_resultDetails);
-            // v_results.add(v_result);
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection con) throws SQLException {
+                CallableStatement stmnt = con.prepareCall(v_sql_callProc.toString());
+                stmnt.setObject(1, v_indata.get("tenant_id"));
+                stmnt.setObject(2, v_indata.get("company_code"));
+                stmnt.setObject(3, v_indata.get("loi_publish_number"));
+                stmnt.setObject(4, v_indata.get("user_id"));  
+   
+                return stmnt;
+            }
+        }, paramList);       
+        
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableD);
 
-            // Detail Local Temp Table trunc
-            PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
-            v_statement_trunc_tableD.execute();
+        context.setResult(v_result);            
+        context.setCompleted();      
+        
+        log.info("### EP_DELETE_LOI_PUBLISH_PROC 프로시저 호출종료 ###");
 
-            //uCnt += dCnt;
-
-            //}
-
-			String rsltMesg = "SUCCESS";
-
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+dCnt+"")
-					.append("}");
-
-            context.setResult(strRsltBuf.toString());
-            log.info("### EP_DELETE_LOI_PUBLISH_PROC 프로시저 호출종료 ###");
-
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
-		} catch (Exception e) {
-			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
-		} finally {
-            context.setCompleted();
-            //if(conn != null) conn.close();
-		}
     }        
 
     @Transactional(rollbackFor = SQLException.class)
