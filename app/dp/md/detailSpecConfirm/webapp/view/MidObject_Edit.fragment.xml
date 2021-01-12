@@ -6,6 +6,7 @@
     xmlns:uxap="sap.uxap" >
 <VBox class="sapUiSmallMargin">    
     <form:SimpleForm 
+        id="detailSpecForm"
         editable="false"
         layout="ResponsiveGridLayout"
         adjustLabelSpan="false"
@@ -73,8 +74,9 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Mold Supplier"/>
+                <Label text="Mold Supplier" required="true"/>
                 <Input id="inpMoldSupplier" 
+                    required="true"
                     value="{master>/mold_mfger_code}" 
                     showValueHelp="true"
                     valueHelpOnly="true"
@@ -96,8 +98,9 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Production Supplier"/>
+                <Label text="Production Supplier" required="true"/>
                 <Input id="inpProductionSupplier"
+                    required="true"
                     value="{master>/production_supplier_code}" 
                     showValueHelp="true"
                     valueHelpOnly="true"

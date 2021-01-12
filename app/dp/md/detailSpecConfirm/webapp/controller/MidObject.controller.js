@@ -109,6 +109,7 @@ sap.ui.define([
             this.validator.clearValueState( this.byId('scheduleTable1E') );
             this.validator.clearValueState( this.byId('frmMold') );
             this.validator.clearValueState( this.byId('frmPress') );
+            this.validator.clearValueState( this.byId('detailSpecForm') );
         },
         
         setImportOrg: function(){
@@ -169,6 +170,11 @@ sap.ui.define([
             //     MessageToast.show(this.getModel('I18N').getText("/NCM0002"));
             //     return;
             // }
+
+            if(this.validator.validate( this.byId('detailSpecForm') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
