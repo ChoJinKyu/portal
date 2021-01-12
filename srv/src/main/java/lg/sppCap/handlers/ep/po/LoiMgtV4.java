@@ -88,9 +88,10 @@ public class LoiMgtV4 implements EventHandler {
 
         //ResultSet v_rs = null;
         StringBuffer strRsltBuf = new StringBuffer();
+        Connection conn = null;
 		try {
             
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
             CallableStatement statement = jdbc.getDataSource().getConnection().prepareCall(v_sql.toString());
             
             statement.setString(1, context.getTenantId());
@@ -118,7 +119,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
 
         log.info("### EP_SAVE_LOI_VOS_PROC 프로시저 종료 ###");
@@ -143,9 +145,12 @@ public class LoiMgtV4 implements EventHandler {
 
         //ResultSet v_rs = null;
         StringBuffer strRsltBuf = new StringBuffer();
+
+        Connection conn = null;
+
 		try {
             
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
             CallableStatement statement = jdbc.getDataSource().getConnection().prepareCall(v_sql.toString());
             
             statement.setString(1, context.getTenantId());
@@ -173,7 +178,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
 
         log.info("### EP_SAVE_LOI_RMK_PROC 프로시저 종료 ###");
@@ -203,11 +209,13 @@ public class LoiMgtV4 implements EventHandler {
 
 		String v_result = "";
 		Collection<InputData> v_inRows = context.getInputData();
-		StringBuffer strRsltBuf = new StringBuffer();
+        StringBuffer strRsltBuf = new StringBuffer();
+        
+        Connection conn = null;
 
 		try {
 
-			Connection conn = jdbc.getDataSource().getConnection();
+			conn = jdbc.getDataSource().getConnection();
 
 			// Local Temp Table 생성
 			PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable.toString());
@@ -256,7 +264,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
 
     }    
@@ -309,9 +318,11 @@ public class LoiMgtV4 implements EventHandler {
         ResultSet v_rs = null;       
         Collection<OutType> v_result = new ArrayList<>(); 
 
+        Connection conn = null;
+
         try {
 
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
 
             // Detail Local Temp Table 생성
             PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
@@ -410,7 +421,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
     }    
 
@@ -448,11 +460,13 @@ public class LoiMgtV4 implements EventHandler {
                 .append(" )");        
 
         StringBuffer strRsltBuf = new StringBuffer();  
-        //int uCnt = 0;              
+        //int uCnt = 0;         
+        
+        Connection conn = null;
 
         try {
 
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
 
             // Detail Local Temp Table 생성
             PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
@@ -527,7 +541,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
     }    
 
@@ -581,11 +596,13 @@ public class LoiMgtV4 implements EventHandler {
         StringBuffer strRsltBuf = new StringBuffer();  
         //int uCnt = 0;     
         ResultSet v_rs = null;       
-        Collection<OutType> v_result = new ArrayList<>();  
+        Collection<OutType> v_result = new ArrayList<>(); 
+
+        Connection conn = null; 
 
         try {
 
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
 
             // Detail Local Temp Table 생성
             PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
@@ -697,7 +714,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
     }    
 
@@ -734,11 +752,13 @@ public class LoiMgtV4 implements EventHandler {
                 .append(" )");        
 
         StringBuffer strRsltBuf = new StringBuffer();  
-        //int uCnt = 0;              
+        //int uCnt = 0;   
+        
+        Connection conn = null;
 
         try {
 
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
 
             // Detail Local Temp Table 생성
             PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTable.toString());
@@ -809,7 +829,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
     }        
 
@@ -1009,11 +1030,13 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" O_RTN_MSG => ? ")
                 .append(" )");        
 
-        StringBuffer strRsltBuf = new StringBuffer();  
+        StringBuffer strRsltBuf = new StringBuffer(); 
+        
+        Connection conn = null;
  
         try {
 
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
 
             // Procedure Call
             CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
@@ -1042,7 +1065,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
     }  
 
@@ -1070,9 +1094,11 @@ public class LoiMgtV4 implements EventHandler {
 		Collection<SavedSuppliers> v_inRows = context.getInputData();
         StringBuffer strRsltBuf = new StringBuffer();
 
+        Connection conn = null;
+
 		try {
 
-			Connection conn = jdbc.getDataSource().getConnection();
+			conn = jdbc.getDataSource().getConnection();
 
 			// Local Temp Table 생성
 			PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable.toString());
@@ -1122,7 +1148,8 @@ public class LoiMgtV4 implements EventHandler {
 			e.printStackTrace();
 			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
-			context.setCompleted();
+            context.setCompleted();
+            //if(conn != null) conn.close();
 		}
 
     }
