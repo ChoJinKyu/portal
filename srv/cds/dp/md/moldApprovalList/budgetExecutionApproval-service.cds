@@ -7,7 +7,9 @@ using {cm as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using { cm as codeLng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm as orgPlant}from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
 using {cm as orgCompany} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
-using {cm.Pur_Operation_Org as org } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
+using {cm.Pur_Operation_Org as org } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model'; 
+using { cm as purOrgTypeMap } from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
+
 namespace dp;
 
 @path : '/dp.BudgetExecutionApprovalService'
@@ -134,7 +136,8 @@ service BudgetExecutionApprovalService {
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst  on dtl.mold_id = mst.mold_id 
         left outer join orgCompany.Org_Company as com on com.company_code = mst.import_company_code 
-        left outer join org as plant on mst.import_company_org_code = plant.org_code and mst.import_company_code = plant.company_code and plant.org_type_code = 'AU'
+        left outer join org as plant on mst.import_company_org_code = plant.org_code and mst.import_company_code = plant.company_code 
+        and plant.org_type_code = (select ma.org_type_code from purOrgTypeMap.Pur_Org_Type_Mapping as ma where ma.tenant_id = dtl.tenant_id and ma.process_type_code = 'DP05') 
         
         ; 
 
