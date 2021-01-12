@@ -533,7 +533,7 @@ service MoldItemSelectionService {
                  select dtl.mold_id from 
                     approvalMst.Approval_Mst m2  
                     join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
-                    where m2.approval_type_code = 'E'
+                    where m2.approval_type_code = 'I'
             );
 
      view MoldItemSelect_A as
@@ -637,7 +637,7 @@ service MoldItemSelectionService {
                  select dtl.mold_id from 
                     approvalMst.Approval_Mst m2  
                     join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
-                    where m2.approval_type_code = 'E'
+                    where m2.approval_type_code = 'A'
             );
 
 
