@@ -1,11 +1,35 @@
 
 @bookshop = http://localhost:8080
+
+# Local PC : cds serve all --with-mocks --in-memory?
+@serviceUrl = http://localhost:4004
+# Local PC : mvn spring-boot:run : v2
+@serviceUrl = http://localhost:8080/odata/v2
+# Local PC : mvn spring-boot:run : v4
+@serviceUrl = http://localhost:8080/odata/v4
+# Cloud Container Service : sppCap
+@serviceUrl = https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap
+# Cloud Container Service : sppCap
+@serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service
-@reviews-service = http://localhost:8080/odata/v4/sp.negoHeadersV4Service
-@reviews-service = http://localhost:8080/odata/v2/sp.negoHeadersService
-@bookshop = http://localhost:4004
-@reviews-service = http://localhost:4004/sp.negoHeadersV4Service
+# Odata v2 service
+@reviews-service = {{serviceUrl}}/sp.negoHeadersService
+# Odata v4 service
+@reviews-service = {{serviceUrl}}/sp.negoHeadersV4Service
+
+### Need a Cookie for credential not in local
+# https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
+@cookie = JTENANTSESSIONID_services=5fZp7Tlz85JCf51p0PLyDiYoWX3fugTkSnF61L2Fb%2BU%3D
+# https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap/
+@cookie = workspaces-ws-bhnz4_WSR_SESSIONID=Suul34z22XoXRlxYluU9QksQxt8qigb2ta2/lfMddWFIULR6WT0dlXHk360aRnC26I8LsXkRuewqAPbJIwQ22A==
+
+# @cookie = 
+
+### Test
+GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
+Cookie: {{cookie}}
 
 #################################################
 #
@@ -14,13 +38,16 @@
 
 ### Multi Select
 GET {{reviews-service}}/NegoHeaders
+Cookie: {{cookie}}
 
 ### Single Select
 GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=3)
+Cookie: {{cookie}}
 
 ### INSERT 
 # https://cap.cloud.sap/docs/java/query-api#upsert
 POST {{reviews-service}}/NegoHeaders
+Cookie: {{cookie}}
 Content-Type: application/json
 
 {

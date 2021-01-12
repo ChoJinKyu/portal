@@ -93,24 +93,20 @@ public class BasePriceArlService extends BaseEventHandler {
     //     // context.setCompleted();
     // }
 
-    public void validMandatory(String validSource, String displayEnWord1, String displayEnWord2, String displayKoWord1, String displayKoWord2) {
+    public void validMandatory(String validSource, EventContext context, Object... replacement) {
         String messageCode = "EDP30001";
-        String languageCode = "KO";
+        // String languageCode = "KO";
         String msg = "";
-        
+
         if (validSource == null || validSource.equals("")) {
             try{
-                msg = this.getMessage(messageCode, "L2100", languageCode);
+                msg = this.getMessage(messageCode, context, replacement);
                 if(log.isDebugEnabled()) log.debug(msg);
             } catch(Exception e) {
                 log.error(e.getLocalizedMessage(), e);
             }
 
-            if (languageCode.equals("EN")) {
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageFormat.format(msg, displayEnWord1, displayEnWord2));
-            } else {
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageFormat.format(msg, displayKoWord1, displayKoWord2));
-            }
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
         }
     }
 
@@ -132,7 +128,7 @@ public class BasePriceArlService extends BaseEventHandler {
         */
         for (BasePriceArlMaster basePriceArlMaster : basePriceArlMasters) {
             // Validation
-            validMandatory(basePriceArlMaster.getTenantId(), "title", "title", "제목", "제목");
+            validMandatory(basePriceArlMaster.getApprovalTitle(), context, this.getMessage("TITLE", context), this.getMessage("TITLE", context));
 
             String tenant_id = basePriceArlMaster.getTenantId();
 

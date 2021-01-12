@@ -161,13 +161,13 @@
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
-                                <table:Column width="15em" >
+                                <table:Column width="12em" >
                                     <Label text="Model"/>
                                     <table:template>
                                         <Text text="{purOrderItem>model}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="8em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center">
                                     <Label text="Mold No"/>
                                     <table:template>
                                         <Text text="{purOrderItem>mold_number}"/>
@@ -402,7 +402,7 @@
                             <Column  minScreenWidth="Tablet" hAlign="Center" width="10em" >
                                 <Text text="Type" />
                             </Column>
-                            <Column  minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="25em" >
                                 <Text text="Name/Dept" />
                             </Column>
                             <Column  minScreenWidth="Tablet" hAlign="Center" width="12em" >

@@ -80,7 +80,7 @@
                         <Column id="mainFundingNumberColumn" minScreenWidth="Tablet" width="8em" hAlign="Center">
                             <Text text="{I18N>/NOTIFICATION_NUMBER}" />
                         </Column>
-                        <Column id="mainFundingTitleComlumn" minScreenWidth="Tablet" width="30em" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainFundingTitleComlumn" minScreenWidth="Tablet" width="40em" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="{I18N>/TITLE}" />
                         </Column>
                         <Column id="mainFundingCreateUser" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">

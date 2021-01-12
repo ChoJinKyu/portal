@@ -81,7 +81,7 @@ sap.ui.define([
             var schFilter2 = [];
    
             if (this.approval_number == "New") {
-                
+
             } else {
                 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
@@ -274,8 +274,11 @@ sap.ui.define([
                 "target_amount": data.target_amount,
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
-            }, "/ParticipatingSupplier", 0);
+            }, "/ParticipatingSupplier", 0); 
 
+            if(oModel.getProperty("/entityName") == undefined){ // 신규시 entityName 없어서 행삭제를 못하고 있음 
+                oModel.setProperty("/entityName","ParticipatingSupplier");
+            }
         },
 
     
@@ -296,6 +299,9 @@ sap.ui.define([
                 , detailModel = this.getModel("mdItemMaster")
                 , oSelected = psTable.getSelectedIndices();
             ;
+
+            console.log(" detailModel >>> " , detailModel);
+
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
                     detailModel.removeRecord(idx)

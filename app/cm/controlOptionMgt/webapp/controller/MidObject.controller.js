@@ -49,11 +49,21 @@ sap.ui.define([
         let combo, key = this.getModel("details").getProperty(event.getSource().mBindingInfos.selectedKey.binding.oContext.sPath)[field];
         this["onSelectionChange"][field] = key;
         // 제어옵션레벨코드
-        // if (field == "control_option_level_code") {
-        //     // 조직유형코드
-        //     combo = event.getSource().getParent().getCells()[2].getItems()[0];
-        //     combo.setEnabled(key === "O");
-        // }
+        if (field == "control_option_level_code") {
+            // 조직유형코드
+            combo = event.getSource().getParent().getCells()[2].getItems()[0];
+            //combo.setEnabled(key === "O");
+            combo.bindItems({
+                path: 'util>/Code',
+                filters: [
+                    new Filter('tenant_id', FilterOperator.EQ, 'L2100'),
+                    new Filter('group_code', FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
+                ].filter(f => f.oValue1 || f.oValue2),
+                template: new Item({
+                    key: "{util>code}", text: "{util>code} : {util>code_description}"
+                })
+            });
+        }
         // 조직유형코드
         if (field == "org_type_code") {
             // 제어옵션레벨값
@@ -62,8 +72,9 @@ sap.ui.define([
             combo.bindItems({
                 path: 'org>/organization',
                 filters: [
+                    new Filter('tenant_id', FilterOperator.EQ, "L2100"),
                     new Filter('type', FilterOperator.EQ, key)
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{org>code}", text: "{org>code}"
                 })
@@ -76,6 +87,7 @@ sap.ui.define([
 		 * @public
 		 */
     onInit: function () {
+      this.getOwnerComponent().getModel("org").setSizeLimit(1000);
       // Model used to manipulate controlstates. The chosen values make sure,
       // detail page shows busy indication immediately so there is no break in
       // between the busy indication for loading the view's meta data
@@ -410,7 +422,7 @@ sap.ui.define([
             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId || "XXXXX"),
           ],
           success: function (oData) {
-            //console.log("##### ", oData, oDetailsModel);
+            //console.log("##### 1", oData, oDetailsModel);
           }
         });
 
@@ -428,9 +440,10 @@ sap.ui.define([
             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
             new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
           ],
-          success: function (oData) {
+          success: (function (oData) {
+            //console.log("##### 2", oData, oDetailsModel);
             oView.setBusy(false);
-          }
+          }).bind(this)
         });
         this._toShowMode();
       }

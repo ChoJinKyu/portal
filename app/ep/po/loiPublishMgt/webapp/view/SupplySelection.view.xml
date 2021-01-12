@@ -110,9 +110,21 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
-                    <form:SimpleForm id="midObjectForm" editable="true">                    
+                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
                             <Label  text="* 품의명" 
+                                    required="{midObjectViewModel>/isEditMode}"
+                                    design="Bold" 
+                                    class="sapUiSmallMarginBottom" />
+                            <Input value="{
+                                path: 'master>/loi_selection_title',
+                                type: 'sap.ui.model.type.String',
+                                constraints: {
+                                    maxLength: 50
+                                }
+                            }" class="sapMLabelNoText" required="{midObjectViewModel>/isEditMode}" width="98%" editable="{midObjectViewModel>/isEditMode}"/>
+                   
+                            <!-- <Label  text="* 품의명" 
                                     required="true"
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{midObjectViewModel>/isEditMode}"/>
@@ -126,7 +138,7 @@
                             <Label  text="* 품의명" 
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
-                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>
+                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/> -->
 
                             <Label  text="* 업체선정결과" 
                                     design="Bold" 
@@ -185,7 +197,7 @@
                                     <ColumnListItem type="Inactive" >
                                         <cells>
                                             <Text text="10"/>
-                                            <Text text="여수"/>
+                                            <Text text="여수 공통"/>
                                             <Text text="FFU"/>
                                             <Text text="EA"/>
                                             <Text text="3,260"/>
@@ -203,14 +215,14 @@
                                     <ColumnListItem type="Inactive" >
                                         <cells>
                                             <Text text="20"/>
-                                            <Text text="대산"/>
+                                            <Text text="여수 공통"/>
                                             <Text text="FFU용 Filter"/>
                                             <Text text="EA"/>
                                             <Text text="1"/>
                                             <Text text="KRW"/>
                                             <Text text="10,000,000"/>
                                             <Text text="1(선정)"/>
-                                            <Text text="OO공조"/>
+                                            <Text text="신성이엔지"/>
                                             <Text text="10,000,000"/>
                                             <Text text="2021-03-01"/>
                                             <Text text="2021-02-25"/>

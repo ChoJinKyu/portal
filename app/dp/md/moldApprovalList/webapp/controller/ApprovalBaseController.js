@@ -941,16 +941,19 @@ sap.ui.define([
 
             var aprArr = [];
             if (apr.Approvers != undefined && apr.Approvers.length > 0) {
-                apr.Approvers.forEach(function (item) {
-                    aprArr.push({
-                        tenant_id: that.tenant_id
-                        , approval_number: that.approval_number
-                        , approve_comment: item.approve_comment
-                        , approve_sequence: item.approve_sequence
-                        , approve_status_code: item.approve_status_code
-                        , approver_type_code: item.approver_type_code
-                        , approver_empno: item.approver_empno
-                    });
+                apr.Approvers.forEach(function (item) { 
+                    if(item.approver_empno != "" && item.approver_empno != undefined){
+                        aprArr.push({
+                            tenant_id: that.tenant_id
+                            , approval_number: that.approval_number
+                            , approve_comment: item.approve_comment
+                            , approve_sequence: item.approve_sequence
+                            , approve_status_code: item.approve_status_code
+                            , approver_type_code: item.approver_type_code
+                            , approver_empno: item.approver_empno
+                        });
+                    }
+                    
                 });
             }
 
@@ -984,37 +987,52 @@ sap.ui.define([
             console.log("data>>>> ", data);
 
             var msg = this.getModel("I18N").getText("/NCM00001") ;
-
-            if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){
+            var isOk = false;
+            if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
+                isOk = true;
                 msg = "요청 취소 하시겠습니까?";
             }else if(this.getModel('appMaster').getProperty("/approve_status_code") == "AR"){
-                msg = "결제 요청 하시겠습니까?";
+
+                if(aprArr.length == 0){ 
+                    isOk = false;
+                     msg = "Approval Line 을 추가해 주세요.";   
+                }else{
+                    isOk = true;
+                    msg = "결제 요청 하시겠습니까?";
+                }
+            }else{
+                isOk = true;
             }
 
+            if(isOk){
 
-            var oView = this.getView();
-            var that = this;
-             MessageBox.confirm(msg, {
-                title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) { 
-                        this.firstStatusCode = that.getModel('appMaster').getProperty("/approve_status_code");
-                        oView.setBusy(true);
-                        that.callAjax(data, "saveMoldApproval"
-                            , function(result){
-                                oView.setBusy(false);
-                                MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
-                            if (result.resultCode > -1) {
-                                that.onLoadThisPage(result);
-                            }
-                        });
-                    }else{
-                         // this.firstStatusCode   
-                         that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
-                    };
-                }
-            });
+                var oView = this.getView();
+                var that = this;
+                MessageBox.confirm(msg, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) { 
+                            this.firstStatusCode = that.getModel('appMaster').getProperty("/approve_status_code");
+                            oView.setBusy(true);
+                            that.callAjax(data, "saveMoldApproval"
+                                , function(result){
+                                    oView.setBusy(false);
+                                    MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                                if (result.resultCode > -1) {
+                                    that.onLoadThisPage(result);
+                                }
+                            });
+                        }else{
+                            // this.firstStatusCode   
+                            that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
+                        };
+                    }
+                });
+            }else{
+                MessageToast.show(msg);
+                that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
+            }
         },
 
         callAjax: function (data, fn , callback) {

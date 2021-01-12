@@ -19,14 +19,14 @@
 
         <form:content>
             <VBox>
-                <Label text="* 요청명"/>
+                <Label text="* 요청명" required="true"/>
                 <Input value="{master>/loi_request_title}" editable="true" required="true"/>
                 <layoutData>
                     <layout:GridData span="L12 M12 S12" />
                 </layoutData>
             </VBox>
             <VBox>
-                <Label text="* 목적"/>
+                <Label text="* 목적" required="true"/>
                 <TextArea value="{master>/loi_publish_purpose_desc}" rows="2" width="100%"  editable="true" required="true"/>
                 <layoutData>
                     <layout:GridData span="L12 M12 S12" />

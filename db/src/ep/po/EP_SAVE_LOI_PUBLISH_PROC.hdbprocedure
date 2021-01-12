@@ -23,7 +23,7 @@ PROCEDURE EP_SAVE_LOI_PUBLISH_PROC (
                         LOI_WRITE_NUMBER NVARCHAR(50), 
                         LOI_ITEM_NUMBER NVARCHAR(50)
     ),
-    OUT O_RTN_MSG NVARCHAR(3000)
+    OUT O_TABLE_MESSAGE EP_PO_PROC_OUT_TYPE
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
@@ -46,7 +46,8 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
-        O_RTN_MSG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
+        -- O_RTN_MSG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
+        O_TABLE_MESSAGE = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnMessage, '' as savedKey from dummy;
 	END;         
 
     IF (COALESCE(:I_LOI_PUBLISH_NUMBER,'') = '') THEN
@@ -157,6 +158,7 @@ BEGIN
     END FOR;
 
 	COMMIT;
-	O_RTN_MSG := 'SUCCESS';	
+	-- O_RTN_MSG := 'SUCCESS';	
+    o_table_message =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, R_LOI_PUBLISH_NUMBER as savedKey from dummy;
 
 END

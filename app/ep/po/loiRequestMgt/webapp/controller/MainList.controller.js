@@ -47,7 +47,7 @@ sap.ui.define([
             this.setModel(new JSONModel(), "mainListViewModel");
 
 
-            // this.setModel(oViewModel, "mainListView");
+             //this.setModel(oViewModel, "mainListView");
 
             // // Add the mainList page to the flp routing history
             // this.addHistoryEntry({
@@ -100,7 +100,7 @@ sap.ui.define([
             } else {
                 sTitle = this.getResourceBundle().getText("mainListTableTitle");
             }
-    //1.12        this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
+            this.getModel("mainListViewModel").setProperty("/mainListTableTitle", sTitle);
         },
 
 		/**
@@ -177,9 +177,9 @@ sap.ui.define([
                 loiWriteNumber: oRecord.loi_write_number
             });
 
-            //1.12 if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
-            //1.12     this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
-            //1.12 }
+             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
+                 this.getView().getModel('mainListViewModel').setProperty("/headerExpandFlag", false);
+             }
 
             var oItem = oEvent.getSource();
             oItem.setNavigated(true);
@@ -202,6 +202,9 @@ sap.ui.define([
             console.log("_onRoutedThisPage main");
             //this.getModel("mainListView").setProperty("/headerExpanded", true);
             //this.byId("pageSearchButton").firePress();
+
+            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+
             var aSearchFilters = this._getSearchStates();
             this._applySearch(aSearchFilters);
         },

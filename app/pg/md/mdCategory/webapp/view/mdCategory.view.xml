@@ -92,31 +92,31 @@
             </headerToolbar>
 
             <columns>
-                <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="80px" >
+                <Column id="mainColumnCode"  hAlign="Center" mergeDuplicates="false" width="80px" >
                     <Text text="범주코드" />
                 </Column>
-                <Column id="mainColumnSort" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="80px" >
+                <Column id="mainColumnSort"  hAlign="Center" mergeDuplicates="false" width="80px" >
                     <Text text="범주정렬순서" />
                 </Column>
-                <Column id="mainColumnCodeName" minScreenWidth="Tablet" hAlign="Center" >
+                <Column id="mainColumnCodeName"  hAlign="Center" width="500px">
                     <Text text="범주명" />
                 </Column>
-                <Column id="mainColumnFontCode" minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                <Column id="mainColumnFontCode"  hAlign="Center" width="150px" >
                     <Text text="RGB글꼴색상코드" />
                 </Column>
-                <Column id="mainColumnCellCode" minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                <Column id="mainColumnCellCode" hAlign="Center" width="150px" >
                     <Text text="RGB셀색상코드" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                <Column  hAlign="Center" width="150px" >
                     <Text text="생성자" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                <Column  hAlign="Center" width="150px" >
                     <Text text="수정자" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                <Column  hAlign="Center" width="150px" >
                     <Text text="생성 시간" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                <Column  hAlign="Center" width="150px" >
                     <Text text="수정 시간" />
                 </Column>
             </columns>

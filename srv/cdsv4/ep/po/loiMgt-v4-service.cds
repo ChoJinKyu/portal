@@ -88,7 +88,7 @@ service LoiMgtV4Service {
     }
 
     //LOI업체선정 등록
-    action SaveLoiSupplySelectionProc(inputData : saveLoiSelectionType) returns String;
+    action SaveLoiSupplySelectionProc(inputData : saveLoiSelectionType) returns array of OutType;
 
     type delLoiSelectionType {
         tenant_id            : String;
@@ -102,59 +102,36 @@ service LoiMgtV4Service {
     action DeleteLoiSupplySelectionProc(inputData : delLoiSelectionType) returns String;
 
     type saveLoiPublishType {
-        tenant_id : String;
-        company_code : String;
-        loi_publish_number : String;
-        loi_publish_title: String;
-        loi_publish_status_code: String;
-        supplier_code: String;
-        contract_format_id: String;
-        offline_flag: Boolean;
-        contract_date: String;
-        additional_condition_desc: String;
-        special_note: String;
-        attch_group_number: String;
-        approval_number: String;
-        buyer_empno: String;
-        purchasing_department_code: String;
-        remark: String;
-        org_type_code: String;
-        org_code: String;
-        user_id: String;
-        details:  array of loiDtlType;
+        tenant_id                  : String;
+        company_code               : String;
+        loi_publish_number         : String;
+        loi_publish_title          : String;
+        loi_publish_status_code    : String;
+        supplier_code              : String;
+        contract_format_id         : String;
+        offline_flag               : Boolean;
+        contract_date              : String;
+        additional_condition_desc  : String;
+        special_note               : String;
+        attch_group_number         : String;
+        approval_number            : String;
+        buyer_empno                : String;
+        purchasing_department_code : String;
+        remark                     : String;
+        org_type_code              : String;
+        org_code                   : String;
+        user_id                    : String;
+        details                    : array of loiDtlType;
     }
 
+    type OutType : {
+        returncode    : String(2);
+        returnmessage : String(500);
+        savedkey      : String(50);
+    };
+
     //LOI발행 등록
-    action SaveLoiPublishProc (inputData : saveLoiPublishType) returns String;
-
-    // type SaveLoiPublishType : {
-    //     tenant_id                  : String;
-    //     company_code               : String;
-    //     loi_publish_number         : String;
-    //     loi_publish_title          : String;
-    //     loi_publish_status_code    : String;
-    //     supplier_code              : String;
-    //     contract_format_id         : String;
-    //     offline_flag               : Boolean;
-    //     contract_date              : String;
-    //     additional_condition_desc  : String;
-    //     special_note               : String;
-    //     attch_group_number         : String;
-    //     approval_number            : String;
-    //     buyer_empno                : String;
-    //     purchasing_department_code : String;
-    //     remark                     : String;
-    //     org_type_code              : String;
-    //     org_code                   : String;
-    //     user_id                    : String;
-    // };
-
-    // type savePublishReturnType {
-    //     savedHeaders : array of SaveLoiPublishType;
-    //     savedDetails : array of loiDtlType;
-    // }
-
-    // action SaveLoiPublishProc(inputData : savePublishReturnType) returns savePublishReturnType;
+    action SaveLoiPublishProc(inputData : saveLoiPublishType) returns array of OutType;
 
     type delLoiPublishType {
         tenant_id          : String;
@@ -261,15 +238,15 @@ service LoiMgtV4Service {
 
     //LOI 발행요청시 수행업체 등록
     type SavedSuppliers {
-        tenant_id           : String;
-        company_code        : String;
-        loi_write_number    : String; 
-        loi_item_number     : String;
-        supplier_code       : String;
-        row_state           : String;
-    }  
+        tenant_id        : String;
+        company_code     : String;
+        loi_write_number : String;
+        loi_item_number  : String;
+        supplier_code    : String;
+        row_state        : String;
+    }
 
-    action SupplierMulEntityProc (inputData : array of SavedSuppliers) returns String;  
+    action SupplierMulEntityProc(inputData : array of SavedSuppliers) returns String;
 
 
 }

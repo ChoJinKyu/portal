@@ -40,7 +40,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Order Qty"/>
-                <Input value="{spec>/order_qty}"/>
+                <Input value="{spec>/order_qty}" editable="false"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -50,6 +50,7 @@
             <VBox height="3.5rem">
                 <Label text="Mold Structure" required="true"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/die_form}"
                             items="{
                                         path : 'util>/Code',
@@ -109,6 +110,7 @@
             <VBox height="3.5rem">
                 <Label text="Size" required="true"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_size}"
                             items="{
                                         path : 'util>/Code',
