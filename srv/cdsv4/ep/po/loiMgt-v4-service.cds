@@ -88,7 +88,7 @@ service LoiMgtV4Service {
     }
 
     //LOI업체선정 등록
-    action SaveLoiSupplySelectionProc(inputData : saveLoiSelectionType) returns String;
+    action SaveLoiSupplySelectionProc(inputData : saveLoiSelectionType) returns array of OutType;
 
     type delLoiSelectionType {
         tenant_id            : String;

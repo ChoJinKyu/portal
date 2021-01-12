@@ -237,7 +237,7 @@ sap.ui.define([
                 "loi_publish_status_code": statusCode,
                 "supplier_code": oMasterModel.getData().supplier_code,
                 "contract_format_id": oMasterModel.getData().contract_format_id,
-                "offline_flag": (oMasterModel.getData().offline_flag == "On" ? false : true),
+                "offline_flag": (oMasterModel.getData().offline_flag == "false" ? false : true),
                 "contract_date": oMasterModel.getData().contract_date,
                 "additional_condition_desc": oMasterModel.getData().additional_condition_desc,
                 "special_note": oMasterModel.getData().special_note,
@@ -480,8 +480,8 @@ sap.ui.define([
                     "loi_publish_status_code": "123010",
                     "loi_publish_status_name": "작성중",
                     "supplier_code": "",
-                    "contract_format_id": "",
-                    "offline_flag": "",
+                    "contract_format_id": "K",
+                    "offline_flag": "false",
                     "contract_date": "",
                     "additional_condition_desc": "",
                     "special_note": "",
@@ -510,6 +510,7 @@ sap.ui.define([
                     success: function (oData) {
                         console.log("oData====", oData.loi_publish_status_code);
                         oView.setBusy(false);
+                        that._toShowMode();
                         // loi_status = oData.loi_publish_status_code;
                         // if (loi_status == "122030") {
                         //     that._toEditMode();
@@ -518,7 +519,7 @@ sap.ui.define([
                         // }
                     }
                 });
-                this._toShowMode();
+                
             }
 
             //oTransactionManager.setServiceModel(this.getModel());
@@ -566,8 +567,13 @@ sap.ui.define([
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             this._showFormFragment('Publish_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("page").setProperty("showFooter", true);
-            this.byId("pageEditButton").setVisible(true);
+            if(statusCode == "123040") {
+                this.byId("page").setProperty("showFooter", false);
+            }else {
+                this.byId("page").setProperty("showFooter", true);
+            }
+            
+            //this.byId("pageEditButton").setVisible(true);
             // if (statusCode === "122040" || statusCode === "122060") {
             //     this.byId("pageEditButton").setVisible(false);
             //     this.byId("pageDeleteButton").setVisible(false);
@@ -575,11 +581,13 @@ sap.ui.define([
             this.byId("pageEditButton").setVisible(true);
             this.byId("pageDeleteButton").setVisible(true)
             //}
-            this.byId("pageDeleteButton").setEnabled(true);
+            //this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageByPassButton").setEnabled(false);
-            this.byId("pageRequestButton").setEnabled(false);
+            
+            this.byId("pageSaveButton").setVisible(false);
+            this.byId("pageByPassButton").setVisible(false);
+            this.byId("pageRequestButton").setVisible(false);
+
             this.byId("pageCancelButton").setEnabled(true);
             // this.byId("midTableAddButton").setEnabled(!TRUE);
             // this.byId("midTableDeleteButton").setEnabled(!TRUE);

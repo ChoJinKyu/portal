@@ -59,7 +59,7 @@
                         </VBox>
                         <VBox>
                             <Label text="요청일자 : " labelFor="searchRequestDate"/>
-                            <DateRangeSelection id="searchRequestDate" width="100%" placeholder="" />                                
+                            <DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                                
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -137,7 +137,7 @@
                                 id="searchSystemCreateDate"
                                 visible="true"
                                 placeholder="Date"/>                            -->
-                            <DateRangeSelection id="searchSystemCreateDate" width="100%" placeholder="" />       
+                            <DateRangeSelection id="searchSystemCreateDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />       
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -148,7 +148,7 @@
                                 id="searchPublishDate"
                                 visible="true"
                                 placeholder="Date"/>      -->
-                                <DateRangeSelection id="searchPublishDate" width="100%" placeholder="" />                        
+                                <DateRangeSelection id="searchPublishDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                        
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>

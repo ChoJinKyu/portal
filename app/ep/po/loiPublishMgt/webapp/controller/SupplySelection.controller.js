@@ -274,27 +274,29 @@ sap.ui.define([
                             contentType: "application/json",
                             success: function (data) {
 
-                                console.log("#########Success#####", data.value);
+                                //console.log("#########Success#####", data.value[0].savedkey);
                                 oView.setBusy(false);
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                var sObjectPath = "/LOISupplySelectionView(tenant_id='" + that._sTenantId + "',company_code='" + that._sCompanyCode + "',loi_selection_number='" + data.value[0].savedkey + "')";
+                                var oMasterModel = that.getModel("master");
+                                oView.setBusy(true);
+                                oMasterModel.setTransactionModel(that.getModel());
+                                oMasterModel.read(sObjectPath, {
+                                    success: function (oData) {
+                                        oView.setBusy(false);
+                                        oView.getModel("master").updateBindings(true);
+                                    }
+                                });
                                 that._toShowMode();
                                 //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+
                                 // if (flag == "D") {
                                 //     that._toEditMode();
                                 // } else {
                                 //     that._toShowMode();
                                 // }
 
-                                console.log("loi_selection_status_code===", that.getModel("master").getData().loi_selection_status_code);
-                                that.getModel("master").getData().loi_selection_status_code = statusCode;
-                                that.getModel("master").getData().loi_selection_status_name = statusName;
-                                console.log("loi_selection_status_code===", that.getModel("master").getData().loi_selection_status_name);
-                                oView.getModel("master").updateBindings(true);
-                                // if(data.value.rsltCnt > 0) {
-                                //     MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-                                // }else {
-                                //     MessageToast.show(that.getModel("I18N").getText("/NCM01005"));
-                                // }
+                                console.log("master=======", oView.getModel("master"));
 
                             },
                             error: function (e) {
@@ -556,20 +558,26 @@ sap.ui.define([
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             // this._showFormFragment('MidObject_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("page").setProperty("showFooter", true);
-            this.byId("pageEditButton").setVisible(true);
+            if(statusCode == "122060") {
+                this.byId("page").setProperty("showFooter", false);
+            }else {
+                this.byId("page").setProperty("showFooter", true);
+            }
+            //this.byId("pageEditButton").setVisible(true);
             // if (statusCode === "122040" || statusCode === "122060") {
             //     this.byId("pageEditButton").setVisible(false);
             //     this.byId("pageDeleteButton").setVisible(false);
             // } else {
-                this.byId("pageEditButton").setVisible(true);
-                this.byId("pageDeleteButton").setVisible(true)
+            this.byId("pageEditButton").setVisible(true);
+            this.byId("pageDeleteButton").setVisible(true)
             //}
-            this.byId("pageDeleteButton").setEnabled(true);
+            //this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageByPassButton").setEnabled(false);
-            this.byId("pageRequestButton").setEnabled(false);
+            
+            this.byId("pageSaveButton").setVisible(false);
+            this.byId("pageByPassButton").setVisible(false);
+            this.byId("pageRequestButton").setVisible(false);
+
             this.byId("pageCancelButton").setEnabled(true);
             // this.byId("midTableAddButton").setEnabled(!TRUE);
             // this.byId("midTableDeleteButton").setEnabled(!TRUE);

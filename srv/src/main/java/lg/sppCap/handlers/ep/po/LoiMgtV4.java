@@ -301,11 +301,13 @@ public class LoiMgtV4 implements EventHandler {
                     .append(" I_ORG_CODE => ?, ")
                     .append(" I_USER_ID => ?, ")
                     .append(" I_TABLE => #LOCAL_TEMP_EP_SAVE_LOI_SUPPLY_SELECTION, ")
-                    .append(" O_RTN_MSG => ? ")
+                    .append(" O_TABLE_MESSAGE => ? ")
                 .append(" )");        
 
         StringBuffer strRsltBuf = new StringBuffer();  
         //int uCnt = 0;              
+        ResultSet v_rs = null;       
+        Collection<OutType> v_result = new ArrayList<>(); 
 
         try {
 
@@ -362,11 +364,24 @@ public class LoiMgtV4 implements EventHandler {
             v_statement_proc.setObject(13, v_indata.get("org_code"));
             v_statement_proc.setObject(14, v_indata.get("user_id"));
 
-            int dCnt = v_statement_proc.executeUpdate();
-            log.info("###dCnt===="+dCnt);
+            // int dCnt = v_statement_proc.executeUpdate();
+            // log.info("###dCnt===="+dCnt);
 
-            // v_result.setDetails(v_resultDetails);
-            // v_results.add(v_result);
+            v_rs = v_statement_proc.executeQuery();
+            int dCnt = 0;
+            // Procedure Out put 담기
+            while (v_rs.next()){
+                OutType v_row = OutType.create();
+                v_row.setReturncode(v_rs.getString("returncode")); 
+                v_row.setReturnmessage(v_rs.getString("returnmessage"));
+                v_row.setSavedkey(v_rs.getString("savedkey"));
+                log.info("###returncode===="+v_rs.getString("returncode"));
+                log.info("###returnmessage===="+v_rs.getString("returnmessage"));
+                log.info("###savedkey===="+v_rs.getString("savedkey"));
+                v_result.add(v_row);
+            }
+
+            context.setResult(v_result);
 
             // Detail Local Temp Table trunc
             PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
@@ -376,23 +391,24 @@ public class LoiMgtV4 implements EventHandler {
 
             //}
 
-			String rsltMesg = "SUCCESS";
+			// String rsltMesg = "SUCCESS";
 
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+dCnt+"")
-					.append("}");
+			// strRsltBuf.append("{")
+			// 		.append("\"rsltCd\":\"000\"")
+			// 		.append(", \"rsltMesg\":\""+rsltMesg+"\"")
+			// 		.append(", \"rsltCnt\":"+dCnt+"")
+			// 		.append("}");
 
-            context.setResult(strRsltBuf.toString());
+            //context.setResult(strRsltBuf.toString());
+
             log.info("### EP_SAVE_LOI_SUPPLY_SELECTION_PROC 프로시저 호출종료 ###");
 
 		} catch (SQLException sqlE) {
 			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
+			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
 		} catch (Exception e) {
 			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
+			//context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
 		} finally {
 			context.setCompleted();
 		}
