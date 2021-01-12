@@ -203,7 +203,7 @@
                                     <HBox  width="100%" alignItems="Center">
                                         <HBox  width="50%" height="100%" alignItems="Center" >
                                             <Label  text="Bid Style" width="100px" class="sapMLabelNoText"/>
-                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedKey="{NegoHeaders>/negotiation_style_code}" editable="{=${propInfo>/isEditMode}}" >
+                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedKey="{NegoHeaders>/negotiation_style_code}" visible="{=${propInfo>/isEditMode}}" >
                                                 <RadioButton id="RB1-1" key="S" text="Sealed (purchaser : X,Supplier :X)" />
                                                 <RadioButton id="RB1-2" key="B" text="Blind (purchaser : O,Supplier :X)" />
                                             </RadioButtonGroup>
@@ -212,7 +212,8 @@
                                         <HBox  width="50%" height="100%" alignItems="Center" >
                                             <Label  text="Incoterms" width="130px" class="sapMLabelNoText"/>
                                             <VBox alignContent="Center" alignItems="Stretch" width="100%" class="sapUiSmallMarginEnd">
-                                                <ComboBox id="combobox_Incoterms" width="100%"  editable="{=${propInfo>/isEditMode}}"/>
+                                                <ComboBox id="combobox_Incoterms" width="100%" visible="{=${propInfo>/isEditMode}}"/>
+                                                <Text text="{}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </VBox>
                                         </HBox>                                        
                                     </HBox>

@@ -322,6 +322,59 @@ sap.ui.define([
             // }
 
             },
+            onSupplierResult: function(pToken){
+                
+            // oSuppValueHelpDialog.close();
+            // // $().sapui.k.setValue("aaa");
+            // var oParent = oEvent.oSource.getParent().getController().getView();
+            // oEvent.oSource.getParent().getController().onTest("1");
+            // var specificTable = oParent.byId("table_spacific");
+            // var addItem = oParent.byId("columnListItem_spacific").clone();
+            // addItem.getCells()[0].setText("1");
+            // addItem.getCells()[1].setText(aTokens[0].getKey());
+            // addItem.getCells()[2].setText(aTokens[0].getText());
+                // alert( this._oIndex);
+                if(this._oIndex != null){
+                    // var osTable = this.getView().getModel("NegoHeaders").oData.slist;
+                
+                    // for(var i=0; i<pToken.length; i++){
+                    //     var oData = {};
+                    //     oData.key = this._oIndex;
+                    //     oData.col1 = pToken[i].mProperties.key;
+                    //     oData.col2 = pToken[i].mProperties.text;
+                    //     osTable.push(oData);
+                    //     console.log(this._oIndex , " : ",oData)
+                    // }
+                    
+                    var bLength = this.getView().byId("table1").getRows()[this._oIndex].getCells()[13].getValue();
+                    bLength = parseInt(bLength);
+                    this.getView().byId("table1").getRows()[this._oIndex].getCells()[13].setValue(pToken.length + bLength);
+
+                    // this.supplierSelection.onValueHelpSuppAfterClose();
+
+                }else{
+                    var oIndices = this._Indices;
+                    for(var j=0; j<oIndices.length; j++){
+                        var oInd = oIndices[j];
+
+                        var osTable = this.getView().getModel().oData.slist;
+                
+                        for(var i=0; i<pToken.length; i++){
+                            var oData2 = {};
+                            oData2.key = oInd;
+                            oData2.col1 = pToken[i].mProperties.key;
+                            oData2.col2 = pToken[i].mProperties.text;
+                            osTable.push(oData2);
+                            console.log(j, " + ", i , " : ",oData2);
+                        }
+                        
+                        var bLength = this.getView().byId("table1").getRows()[oInd].getCells()[13].getValue();
+                        bLength = parseInt(bLength);
+                        this.getView().byId("table1").getRows()[oInd].getCells()[13].setValue(pToken.length + bLength);
+
+                    }
+                }
+            },
             onSupplierPress: function(e){
                 // debugger;
                 this._oIndex = e.oSource.getParent().getIndex();
