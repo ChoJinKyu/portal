@@ -104,7 +104,7 @@ sap.ui.define([
                 var statusKey = oEvent.getSource().getProperty("selectedKey");
                 //console.log("statusKey" + statusKey);
                 that.byId("search_effective_end_date").setValue(null);
-                if (statusKey !== "all") {
+                if (statusKey === "expPrc") {
                     that.byId("search_effective_end_date").setValue(that.getToday());
                 } else {
                     that.byId("search_effective_end_date").setValue("9999.12.31");
@@ -162,26 +162,28 @@ sap.ui.define([
                 if (!!materialCode) {
                     oFilter.push(new Filter("material_code", FilterOperator.EQ, materialCode));
                 }
-
+                
                 var netPriceDocumentTypeCode = that.byId("search_document").getSelectedKey();
-
+                
                 if (!!netPriceDocumentTypeCode) {
                     oFilter.push(new Filter("net_price_document_type_code", FilterOperator.EQ, netPriceDocumentTypeCode));
                 }
-
+                
                 var searchEffectiveEndDate = that.byId("search_effective_end_date").getValue();
                 var searchEffectiveStartDate = that.byId("search_effective_start_date");
-
+                
                 if (!!searchEffectiveEndDate) {
                     oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
                 }
-
+                
                 if (!!searchEffectiveStartDate.getValue()) {
                     oFilter.push(new Filter("effective_start_date", FilterOperator.BT, 
-                        this.formatDate(searchEffectiveStartDate.getDateValue()),
-                        this.formatDate(searchEffectiveStartDate.getSecondDateValue())
+                    this.formatDate(searchEffectiveStartDate.getDateValue()),
+                    this.formatDate(searchEffectiveStartDate.getSecondDateValue())
                     ));
                 }
+                
+                oFilter.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
 
                 that.mainTable = this.byId("mainTable");
                 var oDataLen = 0;

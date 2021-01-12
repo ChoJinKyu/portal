@@ -36,7 +36,12 @@ sap.ui.define([
             
             oMode = new JSONModel({
                 editFlag : false,
-                viewFlag : true,
+                viewFlag : true, 
+                btnEditFlag : false, // 하단 버튼 visible 상태 
+                btnCancelFlag : false,  // 하단 버튼 visible 상태 
+                btnDraftFlag : false,   // 하단 버튼 visible 상태  
+                btnRequestCancelFlag : false,  // 하단 버튼 visible 상태 
+                btnRequestFlag : false,  // 하단 버튼 visible 상태 
                 class : "readonlyField"
             });
 

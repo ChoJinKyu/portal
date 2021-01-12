@@ -52,19 +52,40 @@ sap.ui.define([
 		},
 
 		moveToAvailableItemsTable: function() {
-            
-            //////////////////////////////////////////////////////////////////
+
             var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
             Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
-                var oItemsModel = oSelectedItemsTable.getModel();
-                oItemsModel.setProperty("Rank", Utils.ranking.Initial, oSelectedItemContext);
-                oItemsModel.refresh(true);
+                debugger;
+                var item = this.getModel("tblModel").getProperty(oSelectedItemContext.getPath());
+                var arr = this.getModel("tblModel").getProperty("/right");
+                var idx = oSelectedItemContext.getPath().split("/")[2];
+                var length =  arr.length;
+                var str = "/right/"+length;
+
+                arr.splice(idx,1);
+                this.getModel("tblModel").setProperty("/right",arr);
                 
-				var oNextContext = oSelectedItemsTable.getContextByIndex(iSelectedItemIndex + 1);
-				if (!oNextContext) {
-					oSelectedItemsTable.setSelectedIndex(iSelectedItemIndex - 1);
-				}
-            });
+                this.getModel("tblModel").refresh(true);
+            }.bind(this));
+            // oSelectedItemsTable.setSelectedIndex(idx-1);
+
+            
+            //////////////////////////////////////////////////////////////////
+            // var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
+            // Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
+            //     var oItemsModel = oSelectedItemsTable.getModel();
+            //     oItemsModel.setProperty("Rank", Utils.ranking.Initial, oSelectedItemContext);
+            //     oItemsModel.refresh(true);
+                
+			// 	var oNextContext = oSelectedItemsTable.getContextByIndex(iSelectedItemIndex + 1);
+			// 	if (!oNextContext) {
+			// 		oSelectedItemsTable.setSelectedIndex(iSelectedItemIndex - 1);
+			// 	}
+            // });
+
+
+
+
 			// var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
 			// Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
             //     // reset the rank property and update the model to refresh the bindings
@@ -91,7 +112,7 @@ sap.ui.define([
 				return;
             }
             
-            var item = this.getModel("tblModel").getProperty(oDraggedRowContext.getPath())
+            var item = this.getModel("tblModel").getProperty(oDraggedRowContext.getPath());
             var length =  this.getModel("tblModel").getProperty("/right").length;
             var str = "/right/"+length;
             this.getModel("tblModel").setProperty(str,item);
@@ -174,29 +195,29 @@ sap.ui.define([
 
         onSave: function() { 
 			var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
-			var oItemsModel = oSelectedItemsTable.getModel();
-			var oModel = this.getModel();
+			//var oItemsModel = oSelectedItemsTable.getModel();
+			var oModel = this.getModel("tblModel");
             var oView = this.getView();
             var that = this;
-            
-            var selectedItems = this.byId("table").getItems();
+
+            var selectedItems = this.getModel("tblModel").getProperty("/right");
             //this.byId("table").getSelectedContextPaths();
 
             if(selectedItems.length > 0 ){
                 var param = {};
                 var items = [];
                 for(var i = 0 ; i < selectedItems.length; i++){
-                    var selectedItemstPath = selectedItems[i].getBindingContextPath();
-                    var curData = this.getView().getModel().getProperty(selectedItemstPath);
+                    // var selectedItemstPath = selectedItems[i].getBindingContextPath();
+                    // var curData = this.getView().getModel().getProperty(selectedItemstPath);
                     
                     items.push({
-                        tenant_id: curData.tenant_id,
-                        company_code: curData.company_code,
-                        org_type_code: curData.org_type_code,
-                        org_code: curData.org_code,
-                        spmd_category_code: curData.spmd_category_code,
-                        spmd_character_code: curData.spmd_character_code,
-                        spmd_character_serial_no: Number(curData.spmd_character_serial_no),
+                        tenant_id: selectedItems[i].tenant_id,
+                        company_code: selectedItems[i].company_code,
+                        org_type_code: selectedItems[i].org_type_code,
+                        org_code: selectedItems[i].org_code,
+                        spmd_category_code: selectedItems[i].spmd_category_code,
+                        spmd_character_code: selectedItems[i].spmd_character_code,
+                        spmd_character_serial_no: Number(selectedItems[i].spmd_character_serial_no),
                         vendor_pool_code: "VP201610260087"  // TODO:Mapping 페이지에 선택 되어있는 VendorPool Lavel3 코드값 으로 셋팅바람.
                     });
 

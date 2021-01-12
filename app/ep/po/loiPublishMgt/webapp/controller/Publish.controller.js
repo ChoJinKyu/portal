@@ -284,7 +284,7 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 
-                                var sObjectPath = "/LOIPublishView(tenant_id='" + that._sTenantId + "',company_code='" + that._sCompanyCode + "',loi_publish_number='" + data.value[0].savedkey + "')";
+                                var sObjectPath = "/LOIPublishView(tenant_id='" + tenantId + "',company_code='" + companyCode + "',loi_publish_number='" + data.value[0].savedkey + "')";
                                 var oMasterModel = that.getModel("master");
                                 oView.setBusy(true);
                                 oMasterModel.setTransactionModel(that.getModel());

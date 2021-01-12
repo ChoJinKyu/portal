@@ -54,14 +54,14 @@
                                 <core:Item key="{loi_number}" text="{loi_number}" />
                             </MultiInput>                            
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="요청일자 : " labelFor="searchRequestDate"/>
                             <DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                                
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -139,7 +139,7 @@
                                 placeholder="Date"/>                            -->
                             <DateRangeSelection id="searchSystemCreateDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />       
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -150,7 +150,7 @@
                                 placeholder="Date"/>      -->
                                 <DateRangeSelection id="searchPublishDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                        
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
