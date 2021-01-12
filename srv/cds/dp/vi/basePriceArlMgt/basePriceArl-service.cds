@@ -5,6 +5,7 @@ using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model'
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as comp} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
+using {cm.Pur_Operation_Org as org} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 using {cm.Hr_Employee as employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm.Control_Option_Dtl as controlDtl} from '../../../../../db/cds/cm/CM_CONTROL_OPTION_DTL-model';
 using {dp.Mm_Material_Mst as masterialMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
@@ -92,6 +93,9 @@ service BasePriceArlService {
     entity Org_Company           as projection on comp;
 
     @readonly
+    entity Pur_Operation_Org     as projection on org;
+
+    @readonly
     entity Hr_Employee           as projection on employee;
 
     @readonly
@@ -116,20 +120,20 @@ service BasePriceArlService {
                 o.material_status_code
         };
 
-// @readonly
-// entity Material_Mst          as
-//     select from masterialMst {
-//         tenant_id,
-//         material_code,
-//         material_type_code,
-//         material_desc,
-//         ifnull(
-//             material_spec, ''
-//         ) as material_spec : String(1000),
-//         base_uom_code,
-//         purchasing_uom_code,
-//         commodity_code
-//     };
+@readonly
+entity Material_Mst          as
+    select from masterialMst {
+        tenant_id,
+        material_code,
+        material_type_code,
+        material_desc,
+        ifnull(
+            material_spec, ''
+        ) as material_spec : String(1000),
+        base_uom_code,
+        purchasing_uom_code,
+        commodity_code
+    };
 
 // @readonly
 // entity Material_Org          as projection on masterialOrg;
