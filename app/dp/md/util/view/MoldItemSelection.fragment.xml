@@ -145,7 +145,10 @@
                             </Column>					
                             <Column visible="false" >
                                   <Text text="mold_production_type_code" />
-                            </Column>	
+                            </Column>
+                            <Column visible="false" >
+                                  <Text text="account_code" />
+                            </Column>
                         </columns>
                         <items>
                              <ColumnListItem>
@@ -170,6 +173,7 @@
                                     <Text text="{moldItemPopList>supplier_code}" />
                                     <Text text="{moldItemPopList>target_amount}" />
                                     <Text text="{moldItemPopList>mold_production_type_code}" />
+                                    <Text text="{moldItemPopList>account_code}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>
