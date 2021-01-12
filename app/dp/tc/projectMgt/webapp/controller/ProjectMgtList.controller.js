@@ -24,20 +24,21 @@ sap.ui.define([
             //this.setModel(new JSONModel(), "listModel");
             var oFilterModel = {
                 company_code : {operator: 'EQ', value: ''},
-                project_code : {operator: 'CONTAINS', value: ''},
-                model_code: {operator: 'EQ', value: ''},
+                bizdivision_code : {operator: 'EQ', value: ''},
+                project_code : {operator: 'Contains', value: ''},
+                model_code: {operator: 'Contains', value: ''},
                 product_group_code : {operator: 'EQ', value: ''},
                 project_status_code : {operator: 'EQ', value: ''},
                 massprod_start_date : {operator: 'BT', start: null, end: null},
                 project_grade_code : {operator: 'EQ', value: ''},
                 project_develope_event_code : {operator: 'EQ', value: ''},
-                buyer_name : {operator: 'CONTAINS', value: ''}
+                buyer_name : {operator: 'Contains', value: ''}
             };
             
             this.setModel(new JSONModel(oFilterModel), "filterModel");
             this.setModel(new JSONModel(), "updateModel");
 
-            this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
+            //this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
         }
 
         /**
@@ -48,19 +49,36 @@ sap.ui.define([
             var oFilterModel = this.getModel("filterModel"),
                 oFilterData = oFilterModel.getData(),
                 aFilters = [];
+
+            if(!oFilterData.company_code.value) {
+                MessageToast.show("회사는 필수 조회조건 입니다.", {at: "Center Center"});
+                return;
+            }
+            //filterModel>/divistion/value
+            if(!oFilterData.bizdivision_code.value) {
+                MessageToast.show("사업부는 필수 조회조건 입니다.", {at: "Center Center"});
+                return;
+            }
+
             Object.keys(oFilterData).forEach(function(sKey) {
                 var oTemp = oFilterData[sKey];
                 if(oTemp.value || oTemp.start) {
-                    if(oTemp.operator === "EQ" || oTemp.operator === "CONTAINS") {
+                    if(oTemp.operator === "EQ" || oTemp.operator === "Contains") {
                         aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.value));
                     } else if(oTemp.operator === "BT") {
-                        aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.start, oTemp.end));
+                        //aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.start, oTemp.end));
+                        aFilters.push(new Filter(sKey, FilterOperator.BT, oTemp.start, this._getNowDayAndTimes(true, oTemp.end)));
                     }
 
                 }
-            });
+            }.bind(this));
 
             this._getProjectMgtList(aFilters);
+        }
+        
+        ,onExcelExportPress: function() {
+            MessageToast.show("준비중", {at: "Center Center"});
+            return;
         }
 
         /**
@@ -74,7 +92,6 @@ sap.ui.define([
          * RowAction 클릭 후 상세화면으로 이동
          */
         , onRowActionPress: function(oEvent) {
-            debugger;
             var oContext = oEvent.getParameter("row").getBindingContext("listModel");
             this._goLastesProjView(oContext);
         }
@@ -92,7 +109,7 @@ sap.ui.define([
                 iSeconds = oDate.getSeconds();
 
             let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
-            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds) + "Z";
+            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds);
 
             if( bTimesParam ) {
                 sReturnValue += sTimes;
@@ -325,14 +342,13 @@ sap.ui.define([
         , onChangeCompnay: function(oEvent){
 
             //this.copyMultiSelected(oEvent);
-            debugger;
             var oComboSnap = this.getView().byId("cbxSnapDivision");
             var oComboExpand = this.getView().byId("cbxExpandDivision");
 
             var sCompCode = oEvent.getSource().getSelectedItem().getKey();
             var filter = new Filter({
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L2600' )
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2100' )
                                 //,new Filter("company_code", FilterOperator.EQ, sCompCode )
                             ],
                             and: true
