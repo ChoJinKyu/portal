@@ -36,7 +36,7 @@
                     <VBox height="6em">
 					<!-- Budget Type -->
 					<Label text="{path:'I18N>/BUDGET_TYPE', formatter:'I18NFormatter'}" required="true"/>
-					<SegmentedButton visible="{mode>/editFlag}"
+					<SegmentedButton enabled="{mode>/editFlag}"
                                      id="segInspection" 
                                      selectedKey="{mdCommon>/investment_ecst_type_code}" 
                                      width="100%" 
@@ -51,8 +51,6 @@
 							<SegmentedButtonItem width="6em" text="{util>code_name}" key="{util>code}"/>
 						</items>
 					</SegmentedButton>
-                     <!-- view Mode -->
-                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" visible="{mode>/viewFlag}"/>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
