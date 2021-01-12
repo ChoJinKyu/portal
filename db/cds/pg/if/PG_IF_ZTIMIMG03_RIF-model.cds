@@ -21,10 +21,10 @@ using util from '../../cm/util/util-model';
 
 
 entity If_Ztimimg03_Rif {
-    key tenant_id : String(5) not null @title : '테넌트ID';
-    key zcode     : String(3) not null @title : '코드구분';
-    key zfbnar    : String(15)         @title : '보세구역';
-        zfbnarm   : String(75)         @title : '보세구역명';
+    key tenant_id : String(5) not null  @title : '테넌트ID';
+    key zcode     : String(3) not null  @title : '코드구분';
+    key zfbnar    : String(15) not null @title : '보세구역';
+        zfbnarm   : String(75)          @title : '보세구역명';
 }
 
 extend If_Ztimimg03_Rif with util.Managed;

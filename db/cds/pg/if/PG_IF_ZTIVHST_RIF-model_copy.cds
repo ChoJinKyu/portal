@@ -9,22 +9,22 @@
   - 소문자로 작성
   4. .hdbview, .hdbfunction 등으로 이미 생성된 DB Object 사용시 entity 위에 @cds.persistence.exists 명시    
   5. namespace : pg
-  6. entity : If_Ztimimg08_Rif
-  7. entity description : 수입관리코드 마스터 Interface
+  6. entity : If_Ztivhst_Rif
+  7. entity description : 수입통관 입고이력정보 Interface
   8. history
   -. 2020.12.22 : 이기현
 *************************************************/
-
 namespace pg;
 
 using util from '../../cm/util/util-model';
 
 
-entity If_Ztimimg08_Rif {
-    key tenant_id : String(5) not null @title : '테넌트ID';
-    key zfcdty    : String(5) not null @title : '코드구분';
-    key zfcd      : String(5) not null @title : '관리코드';
-        zfcdnm    : String(105)        @title : '코드명';
+entity If_Ztivhst_Rif {
+    key tenant_id : String(5) not null  @title : '테넌트ID';
+    key zfivno    : String(15) not null @title : '통관요청관리번호';
+    key zfivhst   : String(5) not null  @title : '입고순번';
+        budat     : Date                @title : '전표전기일자';
+        cbudat    : Date                @title : '취소전기일자';
 }
 
-extend If_Ztimimg08_Rif with util.Managed;
+extend If_Ztivhst_Rif with util.Managed;
