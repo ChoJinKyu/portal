@@ -1011,6 +1011,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 sLoiPublishStatus.forEach(function (item, idx, arr) {
+                    //console.log("loi_publish_status_code=", item);
                     _tempFilters.push(new Filter("loi_publish_status_code", FilterOperator.EQ, item));
                 });
 
@@ -1035,10 +1036,10 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("buyer_empno", FilterOperator.EQ, sBuyer));
             }
 
-            if (sLoiPublishStatus.length > 0) {
+            if (sLoiPoStatus.length > 0) {
                 var _tempFilters = [];
 
-                sLoiPublishStatus.forEach(function (item, idx, arr) {
+                sLoiPoStatus.forEach(function (item, idx, arr) {
                     _tempFilters.push(new Filter("po_status_code", FilterOperator.EQ, item));
                 });
 
