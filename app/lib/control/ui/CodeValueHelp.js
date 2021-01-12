@@ -1,6 +1,7 @@
 sap.ui.define([
     "sap/ui/core/Control",
     "ext/lib/control/DummyRenderer",
+    "ext/lib/util/Multilingual",
     "ext/lib/control/ui/ValueHelpDialog",
     "ext/lib/core/service/ODataV2ServiceProvider",
 	"sap/ui/model/Filter",
@@ -11,7 +12,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input"
-], function (Parent, Renderer, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
+], function (Parent, Renderer, Multilingual, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     //TODO : Localization (Title)
@@ -40,7 +41,16 @@ sap.ui.define([
 
         constructor: function () {
             Parent.apply(this, arguments);
-            this.createDialog();
+
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            if(this.getModel("I18N").isReady()){
+                this.createDialog();
+            }else{
+                oMultilingual.attachEvent("ready", function(){
+                    this.createDialog();
+                }.bind(this));
+            }
         },
 
         createDialog: function(){

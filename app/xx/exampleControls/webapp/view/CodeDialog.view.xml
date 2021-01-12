@@ -9,7 +9,7 @@
     height="100%">
 
     <Page id="page" 
-        title="Code Combo" 
+        title="Code Dialog" 
         titleLevel="H2" 
         class="sapUiContentPadding" 
         showNavButton="true" 

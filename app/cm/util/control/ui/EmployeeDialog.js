@@ -24,21 +24,23 @@ sap.ui.define([
             }
         },
 
+        renderer: Renderer,
+
         createSearchFilters: function(){
             this.oDepartment = new Input({ placeholder: "Department Name or No."});
             this.oDepartment.attachEvent("change", this.loadData.bind(this));
-
+            
             return [
                 new VBox({
                     items: [
-                        new Label({ text: "Department"}),
+                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "Name or Employee No."}),
+                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE")}),
                         this.oDepartment
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})

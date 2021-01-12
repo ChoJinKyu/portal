@@ -75,6 +75,7 @@ sap.ui.define([
                         else if(oItem.results)
                             this.oModel.setData(oItem.results);
                     }.bind(this));
+                    this.oModel.setReady(true);
                     this.fireEvent("ready", {
                         model: this.oModel
                     });
@@ -92,7 +93,9 @@ sap.ui.define([
 
         getModel: function(){
             return this.oModel;
-        }
+        },
+
+
     });
 
     return Multilingual;
