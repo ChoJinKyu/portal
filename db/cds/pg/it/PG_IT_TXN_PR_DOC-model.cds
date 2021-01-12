@@ -22,10 +22,13 @@ using util from '../../cm/util/util-model';
 
 entity It_Txn_Pr_Doc {
     key tenant_id             : String(5) not null  @title : '테넌트ID';
+    key company_code          : String(10) not null @title : '회사코드';
+    key org_type_code         : String(30) not null @title : '조직유형코드';
+    key org_code              : String(10) not null @title : '조직코드';
     key erp_pr_number         : String(50) not null @title : '구매요청번호';
     key pr_item_number        : String(10) not null @title : '구매요청품목번호';
-        po_number             : String(50) not null @title : 'PO번호';
-        po_item_number        : String(10) not null @title : 'PO품목번호';
+        po_number             : String(50)          @title : 'PO번호';
+        po_item_number        : String(10)          @title : 'PO품목번호';
         delete_flag           : String(1)           @title : '삭제여부';
         material_code         : String(40)          @title : '자재코드';
         pr_desc               : String(100)         @title : 'PR내역';
@@ -38,7 +41,6 @@ entity It_Txn_Pr_Doc {
         delivery_request_date : Date                @title : '납품요청일';
         approve_date          : Date                @title : '결재완료일자';
         purchasing_group_code : String(3)           @title : '구매그룹';
-
 }
 
 extend It_Txn_Pr_Doc with util.Managed;
