@@ -219,7 +219,12 @@ sap.ui.define([
                 "completion_result": data.completion_result,
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
-            }, "/MoldRecepit");
+            }, "/MoldRecepit"); 
+
+            if(oModel.getProperty("/entityName") == undefined){ // 신규시 entityName 없어서 행삭제를 못하고 있음 
+                oModel.setProperty("/entityName","MoldRecepit");
+            }
+
         },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 

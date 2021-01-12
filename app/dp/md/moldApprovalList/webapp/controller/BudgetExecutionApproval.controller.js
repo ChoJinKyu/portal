@@ -82,7 +82,7 @@ sap.ui.define([
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
-
+               
             } else {
 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
@@ -257,6 +257,11 @@ sap.ui.define([
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
             }, "/ItemBudgetExecution");
+
+            if(oModel.getProperty("/entityName") == undefined){ // 신규시 entityName 없어서 행삭제를 못하고 있음 
+                oModel.setProperty("/entityName","ItemBudgetExecution");
+            }
+
         },
         
         /**
