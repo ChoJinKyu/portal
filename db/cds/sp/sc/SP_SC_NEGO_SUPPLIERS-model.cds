@@ -33,7 +33,7 @@ entity Sc_Nego_Suppliers {
         primary_pass_flag                : String(1)           @title : '1차통과여부';
         participation_type_code          : String(10)          @title : '참여유형코드';
         reply_date                       : Date                @title : '회신일자';
-        note_content                     : String(4000)        @title : '노트내용';
+        note_content                     : LargeBinary         @title : '노트내용';
         file_group_number                : String(100)         @title : '파일그룹번호';
         s_c_s_user_id                    : String(50)          @title : 'SCS사용자ID';
         penalty_flag                     : String(1)           @title : '벌금여부';
