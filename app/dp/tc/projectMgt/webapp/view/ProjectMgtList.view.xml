@@ -179,7 +179,7 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <SearchField value="{filterModel>/model_code/value}" submit="onSearch">
+                            <SearchField value="{filterModel>/model_code/value}" >
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
@@ -316,7 +316,7 @@
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
-                        <SearchField value="{filterModel>/buyer_name/value}" submit="onSearch">
+                        <SearchField value="{filterModel>/buyer_name/value}" >
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
