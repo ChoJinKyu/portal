@@ -26,17 +26,17 @@ service SourcingV4Service {
     // type tyNegoItemPrices : negoItemPrices;
     // type tyNegoSuppliers : negoSuppliers;
 
-    type negoDeepUpsertIn : {
-        negoHeaders    : array of negoHeaders;
-        negoItemPrices : array of negoItemPrices;
-        negoSuppliers  : array of negoSuppliers;
-    };
+    // type negoDeepUpsertIn : {
+    //     negoHeaders    : array of negoHeaders;
+    //     negoItemPrices : array of negoItemPrices;
+    //     negoSuppliers  : array of negoSuppliers;
+    // };
 
-    type negoDeepUpsertOut : {
-        returncode    : String(2);
-        returnmessage : String(500);
-    };
+    // type negoDeepUpsertOut : {
+    //     returncode    : String(2);
+    //     returnmessage : String(500);
+    // };
     
-    action upsertSourcingNegoProc(InputData : negoDeepUpsertIn) returns array of negoDeepUpsertOut;
+    // action upsertSourcingNegoProc(InputData : negoDeepUpsertIn) returns array of negoDeepUpsertOut;
 
 }
