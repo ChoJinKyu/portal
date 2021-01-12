@@ -19,8 +19,9 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/ui/model/json/JSONModel",
+    "sap/ui/core/ListItem"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, Validator, TablePersoController, MainListPersoService,
-    Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, JSONModel) {
+    Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, JSONModel, ListItem) {
     "use strict";
 
     var _aValidTabKeys = ["Tenant", "Company", "Plant", "Purchasing", "Unit", "Division"];
@@ -85,12 +86,6 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
-            // this.setModel(new JSONModel({
-            //     selectedTabKey: "",
-            //     tenant_id: "",
-            //     company_code: "",
-            //     add: "",
-            // }), "view");
             var oRouter = this.getRouter();
 
 
@@ -137,10 +132,6 @@ sap.ui.define([
                     tab: oEvent.getParameter("selectedKey")
                 }
             }, false /*without history*/);
-            //this._clearValueState();
-            
-            //this.onPageSearchButtonPress();
-            //this._applySearch(aTableSearchState, selectedKey);
 
         },
 
@@ -180,7 +171,7 @@ sap.ui.define([
                 
 
         onRenderedFirst: function () {
-            //this.byId("pageSearchButton").firePress();
+            this.getView().byId("tenant").fireEvent();
         },
 
         /* =========================================================== */
@@ -231,7 +222,6 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var selectedKey = this.getView().getModel("view").getProperty("/selectedTabKey"),
                 vSelectKey = selectedKey + "Table",
                 vReturn;
@@ -264,7 +254,6 @@ sap.ui.define([
 
         onMainTableAddButtonPress: function () {
             var vSelectKey = this.getModel("view").getProperty("/selectedTabKey") + "Table",
-                //oTable = this.byId("mainTable"),
                 oModel = this.getModel("list"),
                 tenant_id = this.getModel("view").getProperty("/tenant_id"),
                 company_code = this.getModel("view").getProperty("/company_code");
@@ -367,7 +356,6 @@ sap.ui.define([
             });
             aIndices = aIndices.sort(function (a, b) { return b - a; });
             aIndices.forEach(function (nIndex) {
-                //oModel.removeRecord(nIndex);
                 oModel.markRemoved(nIndex);
             });
             oTable.removeSelections(true);
@@ -379,15 +367,6 @@ sap.ui.define([
             var oModel = this.getModel("list"),
                 oView = this.getView(),
                 vSelectKeyTable = this.getModel("view").getProperty("/selectedTabKey") + "Table";
-
-            // if (!oModel.isChanged()) {
-            //     MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-            //     return;
-            // }
-
-            // if (this.validator.validate(this.byId(vSelectKeyTable)) !== true) {
-            //     return;
-            // }
 
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
@@ -425,19 +404,13 @@ sap.ui.define([
             oModel.read(oTable, {
                 filters: aTableSearchState,
                 success: function (oData) {
-                    //this.validator.clearValueState(this.byId("page"));
-                    //this.validator.clearValueState(this.byId("mainTable"));
                     oView.setBusy(false);
                 }.bind(this)
             });
         },
-
         _getSearchStates: function () {
-            var oModel = this.getModel("list");
-            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var tenant,
                 company,
-                //keyword = this.getView().byId("midTableSearchField").getValue(),
                 selectedKey = this.getModel("view").getProperty("/selectedTabKey"),
                 nameFilter;
 
@@ -479,14 +452,12 @@ sap.ui.define([
             }).activate();
         },
         onTenantChange: function (oEvent) {
-            // var sTenant = oEvent.getSource().getSelectedKey();
-            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var oContModel = this.getModel("view");
             var sTenant = oContModel.getProperty("/tenant_id");
             var aFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, sTenant)
             ];
-            var oItemTemplate = new sap.ui.core.ListItem({
+            var oItemTemplate = new ListItem({
                 key: "{company_code}",
                 text: "{company_name}",
                 additionalText: "{company_code}"
