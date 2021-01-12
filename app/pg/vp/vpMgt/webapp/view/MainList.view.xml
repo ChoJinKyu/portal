@@ -221,7 +221,7 @@
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
                                         <core:Item key="Potential" text="Potential"/>
-                                        <core:Item key="Informal" text="Informal"/>                                                            
+                                        <core:Item key="Formal" text="Formal"/>                                                            
                                     </ComboBox>  
                                 <layoutData>
                                     <layout:GridData
@@ -258,10 +258,10 @@
                             <ToolbarSpacer/>
                             <Button id="mainTableCreateButton"          type="Emphasized" text="Create Level"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
                             <!-- Add the Personalization button -->
-                            <Button id="mainTableEditButton"            type="Emphasized" text="Info.Edit"        press=".onMainTableEditButtonPress"     enabled="{mode>/viewFlag}" />
-                            <Button id="mainTableChangeListButton"      type="Emphasized" text="Change List"      press=".onMainTableChangeListButtonPress"   enabled="{mode>/viewFlag}" />
-                            <Button id="mainTableCombineButton"         type="Emphasized" text="Combine/Move"     press=".onMainTableCombineButtonPress"   enabled="{mode>/viewFlag}" />
-                            <Button id="mainTableSplitButton"           type="Emphasized" text="Split"            press=".onMainTableSplitButtonPress"  enabled="{mode>/viewFlag}" />
+                            <Button id="mainTableEditButton"             text="Info.Edit"        press=".onMainTableEditButtonPress"     enabled="false" />
+                            <Button id="mainTableChangeListButton"       text="Change List"      press=".onMainTableChangeListButtonPress"   enabled="false" />
+                            <Button id="mainTableCombineButton"          text="Combine/Move"     press=".onMainTableCombineButtonPress"   enabled="false" />
+                            <Button id="mainTableSplitButton"            text="Split"            press=".onMainTableSplitButtonPress"  enabled="false" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                                 <layoutData>

@@ -17,7 +17,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "ext/lib/util/Validator",
     "ext/lib/formatter/Formatter",
-   "sap/ui/model/resource/ResourceModel"        
+    "sap/ui/model/resource/ResourceModel"        
 ], function (
     BaseController, 
     History, 
@@ -73,7 +73,7 @@ sap.ui.define([
             this.setModel(oModel,"returnModel");
 
             var i18nModel = new ResourceModel({
-            bundleName: "pg.vp.vpCallProcTest.i18n.i18n_en",
+            bundleName: "pg.vp.vpMgt.i18n.i18n_en",
             supportedLocales: [""],
             fallbackLocale: ""
             });
@@ -293,10 +293,10 @@ sap.ui.define([
                 ,sd_exception_flag : this.getView().byId("general_sd_exception_flag").getState()//  view value set
                 ,vendor_pool_apply_exception_flag : this.getView().byId("general_vendor_pool_apply_exception_flag").getState()//  view value set
                 ,maker_material_code_mngt_flag : this.getView().byId("general_maker_material_code_mngt_flag").getState()//  view value set
-                // ,domestic_net_price_diff_rate : this.getView().byId("general_domestic_net_price_diff_rate").getValue()// view value set
-                // ,dom_oversea_netprice_diff_rate : this.getView().byId("general_dom_oversea_netprice_diff_rate").getValue()// view value set
-                ,domestic_net_price_diff_rate : 10.0// view value set
-                ,dom_oversea_netprice_diff_rate : 10.0// view value set                
+                ,domestic_net_price_diff_rate : parseFloat(this.getView().byId("general_domestic_net_price_diff_rate").getValue())// view value set
+                ,dom_oversea_netprice_diff_rate : parseFloat(this.getView().byId("general_dom_oversea_netprice_diff_rate").getValue())// view value set
+                // ,domestic_net_price_diff_rate : 10.0// view value set
+                // ,dom_oversea_netprice_diff_rate : 10.0// view value set                
                 ,equipment_grade_code : this.getView().byId("general_equipment_grade_code").getSelectedKey()//  view value set
                 ,equipment_type_code : this.getView().byId("general_equipment_type_code").getSelectedKey()//   view value set
                 ,vendor_pool_use_flag : true//  default
@@ -341,7 +341,7 @@ sap.ui.define([
                         //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
                         //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
                         ,supplier_rm_control_flag: this.currnetSppObj[i].supplier_rm_control_flag
-                        ,supplier_base_portion_rate: this.currnetSppObj[i].supplier_base_portion_rate
+                        ,supplier_base_portion_rate: parseFloat(this.currnetSppObj[i].supplier_base_portion_rate)
                         ,vendor_pool_mapping_use_flag: this.currnetSppObj[i].vendor_pool_mapping_use_flag
                         ,register_reason: this.currnetSppObj[i].register_reason
                         ,approval_number: this.currnetSppObj[i].approval_number
@@ -393,7 +393,7 @@ sap.ui.define([
                     })
                 }
             }
-            
+
             inputInfo.inputData.vpMst = vpMstList;   
             inputInfo.inputData.vpSupplier = vpSupplierList;   
             inputInfo.inputData.vpItem = vpItemList;                   
@@ -560,7 +560,7 @@ sap.ui.define([
             oView.setBusy(true);
             var oFilter = [];
             oFilter.push(new Filter("supplier_code", FilterOperator.Contains, supplierCode));
-            oFilter.push(new Filter("language_cd", FilterOperator.Contains, "KO"));
+            oFilter.push(new Filter("language_cd", FilterOperator.Contains, "EN"));
             oFilter.push(new Filter("bizunit_code", FilterOperator.Contains, this._sOrgCode));
             var oModel = this.getModel("mapping");
             var sModel = this.getModel("suplist");
@@ -613,7 +613,7 @@ sap.ui.define([
             oView.setBusy(true);
             var oFilter = [];
             oFilter.push(new Filter("material_code", FilterOperator.EQ, materialCode));
-            oFilter.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
+            oFilter.push(new Filter("language_cd", FilterOperator.EQ, "EN"));
             oFilter.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
             var oModel = this.getModel("mapping");
             var sModel = this.getModel("matlist");
