@@ -22,47 +22,37 @@
                         <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <Label text="Operation ORG" labelFor="search_operation_org_s" required="true"></Label>
-                                    <MultiComboBox id="search_operation_org_s" width="100%" selectedKey=""
-                                            items="{
-                                                path: 'org>/Org_Company',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
-                                            }"
-                                            selectionFinish="handleSelectionFinishComp">
+                                    <Label text="Company" labelFor="search_company_s" required="true"></Label>
+                                    <MultiComboBox id="search_company_s" width="100%" required="true" 
+                                        items="{
+                                                    path: 'org>/Org_Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    ],
+                                                    sorter: { path: 'org>company_code'}
+                                                }">
                                         <items>
                                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                         </items>
                                     </MultiComboBox>
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
-                                    </layoutData>
+                                    <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Material" labelFor="search_material_s" required="true"></Label>
-                                    <Input id="search_material_s" placeholder="Input data"></Input>
-                                    <!-- <lib-mat:MaterialMstPicker id="search_material_s"
-                                            placeholder="Enter a material name"
-                                            keyField="material_code"
-                                            textField="material_desc"
-                                           suggestionItems="{
-                                                                path: '/',
-                                                                filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                                    {path : 'language_cd', operator : 'EQ', value1 : 'KO'},
-                                                                    {path : 'org_code', operator : 'EQ', value1 : 'BIZ00200'}
-                                                                ],
-                                                                serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
-                                                                entityName: 'vpMaterialDtlView'
-                                                            }" value="{matlist>material_code}">
-                                            <lib-mat:MaterialMstPickerValueHelp contentWidth="500px" title="Choose a Material"
-                                                keyFieldHeaderText="Material ID" textFieldHeaderText="material" />
-                                        </lib-mat:MaterialMstPicker> -->
-                                    <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12"/>                                        
-                                    </layoutData>                                     
+                                    <Label text="Operation ORG" labelFor="search_operation_org_s" required="true"></Label>
+                                    <MultiComboBox id="search_operation_org_s" width="100%" 
+                                            items="{
+                                                path: 'org>/organization',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ],
+                                                sorter: { path: 'org>code'}
+                                            }"
+                                            selectionFinish="handleSelectionFinishComp">
+                                        <items>
+                                            <core:Item key="{org>code}" text="[{org>code}] {org>type}" />
+                                        </items>
+                                    </MultiComboBox>
+                                    <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>                                   
                                 </VBox>
                                 <VBox>
                                     <Label text="Status" labelFor="status" required="true"></Label>
@@ -84,28 +74,37 @@
                         <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <Label text="Operation ORG" labelFor="search_operation_org_e" required="true"></Label>
-                                    <MultiComboBox id="search_operation_org_e" width="100%" selectedKey=""
-                                            items="{
-                                                path: 'org>/Org_Company',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
-                                            }"
-                                            selectionFinish="handleSelectionFinishComp">
+                                    <Label text="Company" labelFor="search_company_e" required="true"></Label>
+                                    <MultiComboBox id="search_company_e" width="100%" required="true" 
+                                        items="{
+                                                    path: 'org>/Org_Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    ],
+                                                    sorter: { path: 'org>company_code'}
+                                                }">
                                         <items>
                                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                         </items>
                                     </MultiComboBox>
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
-                                    </layoutData>
+                                    <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Material" labelFor="search_material_e" required="true"></Label>
-                                    <Input id="search_material_e" placeholder="Input data"></Input>
-                                    <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
+                                    <Label text="Operation ORG" labelFor="search_operation_org_e" required="true"></Label>
+                                    <MultiComboBox id="search_operation_org_e" width="100%" 
+                                            items="{
+                                                path: 'org>/organization',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ],
+                                                sorter: { path: 'org>code'}
+                                            }"
+                                            selectionFinish="handleSelectionFinishComp">
+                                        <items>
+                                            <core:Item key="{org>code}" text="[{org>code}] {org>type}" />
+                                        </items>
+                                    </MultiComboBox>
+                                    <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Status" labelFor="status_e" required="true"></Label>
@@ -135,34 +134,79 @@
                     <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Supplier" labelFor="search_Sup"></Label>
-                                <Input id="search_Sup" placeholder="Input data"></Input>
-                                <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
+                                <Label text="Supplier" labelFor="search_supplier_code"></Label>
+                                <lib-m:CodePicker id="search_supplier_code"
+                                    placeholder="Enter a department name"
+                                    keyField="supplier_code"
+                                    textField="supplier_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                        entityName: 'VpSupplierMstView'
+                                    }" value="">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
+                                        keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
+                                </lib-m:CodePicker>
+                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Matrial" labelFor="search_material_code"></Label>
+                                <lib-m:CodePicker id="search_material_code"
+                                    placeholder="Enter a material name"
+                                    keyField="material_code"
+                                    textField="material_desc"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                        entityName: 'VpMaterialMst'
+                                    }" value="{matlist>material_code}" change=".materialChg" enabled="{= ${matlist>_row_state_} === 'C' }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a material"
+                                        keyFieldHeaderText="Material ID" textFieldHeaderText="Material"/>
+                                </lib-m:CodePicker>
+                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Document Type" labelFor="search_document"></Label>
-                                <ComboBox id="search_document" selectedKey="" width="auto">
-                                    <core:Item key="A" text="평가"/>
-                                    <core:Item key="B" text="잠재"/>                                                            
-                                </ComboBox>  
+                                <ComboBox id="search_document" width="100%"
+                                    items="{
+                                        path: 'util>/Code',
+                                        filters: [
+                                            {path: 'group_code', operator: 'EQ', value1: 'SP_DOCUMENT_TYPE'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                    </items>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M3 S12" />
+                                    </layoutData>
+                                </ComboBox>
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Net Price Type" labelFor="search_net_price"></Label>
                                 <ComboBox id="search_net_price" selectedKey="" width="auto">
-                                    <core:Item key="A" text="평가"/>
-                                    <core:Item key="B" text="잠재"/>                                                            
+                                    <core:Item key="A" text="양산"/>
+                                    <core:Item key="B" text="샘플"/>                                                            
                                 </ComboBox>  
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Effective Start Date" labelFor="search_effective_start_date"></Label>
-                                <DateRangeSelection id="searchEffectiveDateS" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="search_effective_start_date" width="100%" change="handleChange"/>
                                 <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Effective End Date" labelFor="search_effective_end_date"></Label>
-                                <DatePicker id="searchEffectiveDateE" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-ddThh:mm:ss" editable="true" navigate="onclickDate" value="9999-12-31"/>
+                                <DatePicker id="search_effective_end_date" displayFormat="yyyy.MM.dd" valueFormat="yyyy.MM.dd" editable="true" navigate="onclickDate" value="9999-12-31"/>
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                         </form:content>
@@ -212,7 +256,7 @@
                             </table:Column>
                             <table:Column label="Supplier Code" width="8rem" filterProperty="supplier_code" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>supplier_code}" wrapping="false" />
+                                    <Text text="{list>supplier_code}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column label="Supplier Name" width="8rem" filterProperty="supplier_name" hAlign="Center">
