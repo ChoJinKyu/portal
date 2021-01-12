@@ -24,29 +24,32 @@ sap.ui.define([
         },
 
         _fnGetLanguage : function(){
-            var oUtilModel = this.getModel("util");
-            var oViewModel = this.getModel("viewModel");
-            var aLanguages = oViewModel.getProperty("/languageList");
-
-            var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2100'));
-            aFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE'));
-
+            var that = this;
             return new Promise(function(reselve, reject){
+                var oUtilModel = that.getModel("util");
+                var oViewModel = that.getModel("viewModel");
+                var aLanguages = oViewModel.getProperty("/languageList");
+
                 if(aLanguages && aLanguages.length > 0){
                     reselve(aLanguages);
-                };
-                oUtilModel.read("/CodeDetails",{
-                    filters : aFilters,
-                    success : function(data){
-                        var aLang = data.results;
-                        oViewModel.setProperty("/languageList", aLang);
-                        reselve(aLang);
-                    },
-                    error : function(data){
-                        // oCodeMasterTable.setBusy(false);
-                    }
-                });
+                }else{
+                    var aFilters = [];
+                    aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2100'));
+                    aFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE'));
+                    oUtilModel.read("/CodeDetails",{
+                        filters : aFilters,
+                        success : function(data){
+                            aLanguages = data.results;
+                            oViewModel.setProperty("/languageList", aLanguages);
+                            reselve(aLanguages);
+                        },
+                        error : function(data){
+                            reject(data);
+                            // oCodeMasterTable.setBusy(false);
+                        }
+                    });
+                }
+
             });
         },
 
@@ -130,20 +133,19 @@ sap.ui.define([
             var model = this.getModel('languages');
             model.setProperty("/CodeLanguages", []);
 
-            this._fnGetLanguage().then(function(languageList){
-                languageList.forEach(function(item,i){
-                    var oData = {
-                        code: "",
-                        code_name: "",
-                        group_code: "",
-                        language_cd: item.code,
-                        tenant_id: "",
-                        local_create_dtm: new Date(),
-                        local_update_dtm: new Date()
-                    }
-                    model.addRecord(oData, "/CodeLanguages", i);
-                });
-            })
+            var aLanguages = oViewModel.getProperty("/languageList");
+            aLanguages.forEach(function(item,i){
+                var oData = {
+                    code: "",
+                    code_name: "",
+                    group_code: "",
+                    language_cd: item.code,
+                    tenant_id: "",
+                    local_create_dtm: new Date(),
+                    local_update_dtm: new Date()
+                }
+                model.addRecord(oData, "/CodeLanguages", i);
+            });
 
 
             /*
@@ -222,7 +224,7 @@ sap.ui.define([
             };
 
             var that = this;
-            this._fnGetLanguage().then(function(){
+            this._fnGetLanguage().then(function(languageList){
                 if(bCreateMode){
                     that._fnSetCreateMode();
                     that._fnSetCreateData();
@@ -246,11 +248,18 @@ sap.ui.define([
 
             var oViewModel = this.getModel('viewModel');
             // var oServiceModel = this.getModel();
-            var oServiceModel = this.getModel("languages").setTransactionModel(this.getModel());
+            var oServiceModel = this.getModel("languages");
+            oServiceModel.setTransactionModel(this.getModel());
+            var that = this;
             oServiceModel.read("/CodeLanguages",{
                 filters : aFilters,
                 success : function(data){
-                    // oViewModel.setProperty("/languages", data.results);
+                    var aCodeLanguages = oServiceModel.getProperty("/CodeLanguages");
+                    aCodeLanguages.forEach(function(item, i){
+                        var sPath = "/CodeLanguages/"+i+"/language_name";
+                        var sLanguageText = that.languageText(item.language_cd);
+                        oServiceModel.setProperty(sPath, sLanguageText);
+                    })
                     // oCodeMasterTable.setBusy(false);
                 },
                 error : function(data){
@@ -408,7 +417,6 @@ sap.ui.define([
         table.getSelectedItems().reverse().forEach(function(item){
             var iSelectIndex = table.indexOfItem(item);
             if(iSelectIndex > -1){
-                console.log('del : ',iSelectIndex)
                 model.markRemoved(iSelectIndex);
             }
         });
@@ -494,19 +502,16 @@ sap.ui.define([
         },
 
         languageText : function(langCode){
-            console.log(langCode)
             var sLangText = "";
-            this._fnGetLanguage().then(function(languageList){
-                languageList.forEach(function(item){
-                    if(item.code === langCode){
-                        sLangText = item.code_description;
-                        // return false;
-                    }
-                });
-            })
-            console.log('sLangText',sLangText)
+            var oViewModel = this.getModel("viewModel");
+            var aLanguages = oViewModel.getProperty("/languageList");
+            aLanguages.forEach(function(item){
+                if(item.code === langCode){
+                    sLangText = item.code_description;
+                    return false;
+                }
+            });
             return sLangText;
-            // return langCode;
         }
 	});
 });

@@ -254,13 +254,42 @@
                             beforeRebindTable="beforeRebindTable"
                             >
 				<!-- layout data used to make the table growing but the filter bar fixed -->
-				<smartTable:layoutData>
+				<!-- <smartTable:layoutData>
 					<FlexItemData growFactor="1" baseSize="0%"/>
-				</smartTable:layoutData>
-                    <t:Table id="testTable" rows="{viewModel>/NegoHeaders}" cellClick="tableCellClick">
+				</smartTable:layoutData> -->
+                    <smartTable:customToolbar>
+                        <OverflowToolbar design="Transparent">
+                            <ToolbarSpacer/>
+                            <OverflowToolbarButton text="Test"/>
+                            <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
+                            <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
+                            <!-- <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/> -->
+                        </OverflowToolbar>
+                    </smartTable:customToolbar>
+                    <t:Table id="mainTable" rows="{viewModel>/NegoHeaders}" cellClick="tableCellClick">
+                        <!-- <t:extension>
+                        <OverflowToolbar>
+                            <Title text="Negotiation Workbench List (17)"/>
+                            <ToolbarSpacer/>
+                            <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true"  />
+                            <Button text="{I18N>/CREATE}" type="Transparent" press=".onMainTableCreate" enabled="true"  />
+                            <Button
+                                icon="sap-icon://sort" type="Transparent"
+                                tooltip="Sort"
+                                press="getSelectedIndices"/>
+                            <Button
+                                icon="sap-icon://filter" type="Transparent"
+                                tooltip="Filter"
+                                press="getSelectedIndices"/>
+                            <Button
+                                icon="sap-icon://settings" type="Transparent"
+                                tooltip="setting"
+                                press="getSelectedIndices"/>
+                        </OverflowToolbar>
+                    </t:extension> -->
                         <t:columns>
                             <t:Column width="10rem">
-                                <Label text="tenant_id" design="Bold"/>
+                                <Label text="Negotiation No" design="Bold"/>
                                 <t:template>
                                     <Text text="{viewModel>nego_document_number}" wrapping="false" />
                                 </t:template> 

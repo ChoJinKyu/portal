@@ -322,13 +322,43 @@ sap.ui.define([
 
             },
             tableCellClick: function(e){
-                // var vIndex = e.getParameters().rowIndex;
+                
                 // if(vIndex == 0 ){
-                    this.getOwnerComponent().getRouter().navTo("detailPage", { type : "0" , outcome : "0"  } );
+                    
+                var vIndex = e.getParameters().rowIndex;
+                var oRow = this.getView().byId("mainTable").getModel("viewModel").oData.NegoHeaders[vIndex];
+                if(oRow.nego_type_code == null){
+                    var nego_type = " ";
+                }
+                this.getOwnerComponent().getRouter().navTo("detailPage", { type : nego_type , outcome : oRow.negotiation_output_class_code, header_id: String(oRow.nego_header_id)  } );
+                // this.getOwnerComponent().getRouter().navTo("detailPage", { type : "" , outcome : "", } );
                 // }else{
                 //     this.getOwnerComponent().getRouter().navTo("detailPage2", { type : "0" , outcome : "0" } );
                 // }
 
+            },
+            _getSmartTable: function () {
+                if (!this._oSmartTable) {
+                    this._oSmartTable = this.getView().byId("sTable1");
+                }
+                return this._oSmartTable;
+            },
+            onSort: function () {
+                alert("준비중입니다.");
+                return;
+                var oSmartTable = this._getSmartTable();
+                if (oSmartTable) {
+                    oSmartTable.openPersonalisationDialog("Sort");
+                }
+            },
+
+            onFilter: function () {
+                alert("준비중입니다.");
+                return;
+                var oSmartTable = this._getSmartTable();
+                if (oSmartTable) {
+                    oSmartTable.openPersonalisationDialog("Filter");
+                }
             },
             ManagerTablePress: function(e){
                 var selectValue = e.getParameters().listItem.getCells()[0].getText();
