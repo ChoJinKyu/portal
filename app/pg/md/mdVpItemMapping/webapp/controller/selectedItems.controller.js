@@ -112,7 +112,7 @@ sap.ui.define([
 				return;
             }
             
-            var item = this.getModel("tblModel").getProperty(oDraggedRowContext.getPath())
+            var item = this.getModel("tblModel").getProperty(oDraggedRowContext.getPath());
             var length =  this.getModel("tblModel").getProperty("/right").length;
             var str = "/right/"+length;
             this.getModel("tblModel").setProperty(str,item);
@@ -195,29 +195,29 @@ sap.ui.define([
 
         onSave: function() { 
 			var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
-			var oItemsModel = oSelectedItemsTable.getModel();
-			var oModel = this.getModel();
+			//var oItemsModel = oSelectedItemsTable.getModel();
+			var oModel = this.getModel("tblModel");
             var oView = this.getView();
             var that = this;
 
-            var selectedItems = this.byId("table").getItems();
+            var selectedItems = this.getModel("tblModel").getProperty("/right");
             //this.byId("table").getSelectedContextPaths();
 
             if(selectedItems.length > 0 ){
                 var param = {};
                 var items = [];
                 for(var i = 0 ; i < selectedItems.length; i++){
-                    var selectedItemstPath = selectedItems[i].getBindingContextPath();
-                    var curData = this.getView().getModel().getProperty(selectedItemstPath);
+                    // var selectedItemstPath = selectedItems[i].getBindingContextPath();
+                    // var curData = this.getView().getModel().getProperty(selectedItemstPath);
                     
                     items.push({
-                        tenant_id: curData.tenant_id,
-                        company_code: curData.company_code,
-                        org_type_code: curData.org_type_code,
-                        org_code: curData.org_code,
-                        spmd_category_code: curData.spmd_category_code,
-                        spmd_character_code: curData.spmd_character_code,
-                        spmd_character_serial_no: Number(curData.spmd_character_serial_no),
+                        tenant_id: selectedItems[i].tenant_id,
+                        company_code: selectedItems[i].company_code,
+                        org_type_code: selectedItems[i].org_type_code,
+                        org_code: selectedItems[i].org_code,
+                        spmd_category_code: selectedItems[i].spmd_category_code,
+                        spmd_character_code: selectedItems[i].spmd_character_code,
+                        spmd_character_serial_no: Number(selectedItems[i].spmd_character_serial_no),
                         vendor_pool_code: "VP201610260087"  // TODO:Mapping 페이지에 선택 되어있는 VendorPool Lavel3 코드값 으로 셋팅바람.
                     });
 
