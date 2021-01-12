@@ -68,16 +68,17 @@ sap.ui.define([
                         .filterExpression("language_code", "eq", UserChoices.getLanguage())
                         )
                     .orderBy("chain_code asc,message_code asc,language_code desc");
-                    oXhr.get("Message", oQuery, true).then(function(oData){
+                oXhr.get("Message", oQuery, true).then(function(oData){
                     oData.forEach(function(oItem){
                         if(oItem && oItem.d && oItem.d.results)
                             this.oModel.setData(oItem.d.results);
                         else if(oItem.results)
                             this.oModel.setData(oItem.results);
-                        this.fireEvent("ready", {
-                            model: this.oModel
-                        });
                     }.bind(this));
+                    this.oModel.setReady(true);
+                    this.fireEvent("ready", {
+                        model: this.oModel
+                    });
                 }.bind(this));
             }else{
                 setTimeout(function(){
@@ -92,7 +93,9 @@ sap.ui.define([
 
         getModel: function(){
             return this.oModel;
-        }
+        },
+
+
     });
 
     return Multilingual;

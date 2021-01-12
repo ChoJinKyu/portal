@@ -92,13 +92,13 @@
                               selectedKey="{mdCommon>/import_company_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
-                                   path: 'org>/Company',
+                                   path: 'importCompany>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'company_code'}
                               }">
-						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+						<core:Item key="{importCompany>company_code}" text="[{importCompany>company_code}] {importCompany>company_name}" />
 					</ComboBox>
                    
 					<layoutData>
@@ -233,13 +233,13 @@
 								<Text id="b_approval_number" text="{mdItemMaster>approval_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="20em" hAlign="Center">
+						<table:Column width="12em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
 								<Text id="b_model" text="{mdItemMaster>model}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="15em" hAlign="Center">
 							<Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text id="b_mold_number"  text="{mdItemMaster>mold_number}"/>
@@ -251,7 +251,7 @@
 								<Text  id="b_mold_sequence" text="{mdItemMaster>mold_sequence}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="15em" hAlign="Center">
+						<table:Column width="12em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
 								<Text text="{mdItemMaster>spec_name}"/>
@@ -300,15 +300,16 @@
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
+							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
-								<Input id="b_provisional_budget_amount" class="readonlyField" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input id="b_provisional_budget_amount" class="readonlyField" required="true" textAlign="Right" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}"/>
+							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
-								<ComboBox id="b_asset_type_code"
+								<ComboBox id="b_asset_type_code" 
+                                        required="true" 
                                         editable="{mode>/editFlag}" 
                                         class="readonlyField"
                                         selectedKey="{mdItemMaster>asset_type_code}" 

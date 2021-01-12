@@ -272,12 +272,12 @@
                                             <core:Item key="{details>currency_code}" text="{currency_code}" />
                                         </items>
                                         </ComboBox>
-                                        <!-- <Input value="{details>request_amount}"/> -->
+                                        <Input value="{details>request_amount}"/>
 
-                                         <Input value="{
+                                         <!-- <Input value="{
                                             path: 'details>request_amount',
                                             formatter: '.numberFormatter.toNumberString'
-                                        }"/>
+                                        }"/> -->
                                         <Input value="{details>supplier_code}"/>
                                         <!-- <Input value="{details>buyer_name}"/> -->
                                         <lib-m:CodePicker id="searchRequestorS"

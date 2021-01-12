@@ -25,8 +25,8 @@ sap.ui.define([
         }
 
         , onAfterRendering: function () {
-            let sId = this.byId("oplProjectInfo").getHeaderContent()[0].getParent().sId;
-            jQuery("#"+sId).removeClass("sapUxAPObjectPageHeaderContent");
+            //let sId = this.byId("oplProjectInfo").getHeaderContent()[0].getParent().sId;
+            //jQuery("#"+sId).removeClass("sapUxAPObjectPageHeaderContent");
         }
 
         , onBeforeRendering: function() {

@@ -55,6 +55,7 @@ BEGIN
     DECLARE V_MASTER_COUNT INT := 0;
 	DECLARE V_MASTER_EXIST_CNT INT := 0;
 	DECLARE V_MASTER_EXIST_DELETE_CNT INT := 0;
+	DECLARE V_MASTER_CHILD_EXIST_COUNT INT := 0;
 	
 	/*****************************************************
 	MAPPING정보 CUD 전 체크를 위한 변수
@@ -1006,58 +1007,77 @@ BEGIN
 		         --기존 데이터가 존재하는 경우 수정(삭제)
 		    	IF V_MASTER_EXIST_CNT = 1 THEN
 		    		
-					SELECT	COUNT(*)
-					INTO    V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER
-					FROM	PG_VP_VENDOR_POOL_SUPPLIER_DTL
-					WHERE   TENANT_ID       				= loop_mst.TENANT_ID
-					AND     COMPANY_CODE        			= loop_mst.COMPANY_CODE
-					AND     ORG_TYPE_CODE       			= loop_mst.ORG_TYPE_CODE
-					AND     ORG_CODE            			= loop_mst.ORG_CODE
-					AND     VENDOR_POOL_CODE    			= loop_mst.VENDOR_POOL_CODE
-					AND     VENDOR_POOL_MAPPING_USE_FLAG	= TRUE
-					;
-					
-					IF V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER;
+		    		--최종 DEPTH에 대한 삭제 시
+					IF loop_mst.LEAF_FLAG = TRUE THEN
+					    SELECT	COUNT(*)
+						INTO    V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER
+						FROM	PG_VP_VENDOR_POOL_SUPPLIER_DTL
+						WHERE   TENANT_ID       				= loop_mst.TENANT_ID
+						AND     COMPANY_CODE        			= loop_mst.COMPANY_CODE
+						AND     ORG_TYPE_CODE       			= loop_mst.ORG_TYPE_CODE
+						AND     ORG_CODE            			= loop_mst.ORG_CODE
+						AND     VENDOR_POOL_CODE    			= loop_mst.VENDOR_POOL_CODE
+						AND     VENDOR_POOL_MAPPING_USE_FLAG	= TRUE
+						;
+						
+						IF V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER > 0 THEN
+							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER;
+						END IF;
+						
+						--SUPPLIER 승인 대기인 데이터가 있는 경우 VP마스터의 정보를 삭제할 수 없다.
+						IF V_SUPPLIER_TEMP_CNT > 0 THEN
+							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER;
+						END IF;
+						
+						SELECT	COUNT(*)
+						INTO    V_ITEM_EXIST_CNT_FOR_DELETE_MASTER
+						FROM	PG_VP_VENDOR_POOL_ITEM_DTL
+						WHERE   TENANT_ID       				= loop_mst.TENANT_ID
+						AND     COMPANY_CODE        			= loop_mst.COMPANY_CODE
+						AND     ORG_TYPE_CODE       			= loop_mst.ORG_TYPE_CODE
+						AND     ORG_CODE            			= loop_mst.ORG_CODE
+						AND     VENDOR_POOL_CODE    			= loop_mst.VENDOR_POOL_CODE
+						AND     VENDOR_POOL_MAPPING_USE_FLAG	= TRUE
+						;
+						
+						IF V_ITEM_EXIST_CNT_FOR_DELETE_MASTER > 0 THEN
+							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Item) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER;
+						END IF;
+						
+						SELECT	COUNT(*)
+						INTO    V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER
+						FROM	PG_VP_VENDOR_POOL_MANAGER_DTL
+						WHERE   TENANT_ID       				= loop_mst.TENANT_ID
+						AND     COMPANY_CODE        			= loop_mst.COMPANY_CODE
+						AND     ORG_TYPE_CODE       			= loop_mst.ORG_TYPE_CODE
+						AND     ORG_CODE            			= loop_mst.ORG_CODE
+						AND     VENDOR_POOL_CODE    			= loop_mst.VENDOR_POOL_CODE
+						AND     VENDOR_POOL_MAPPING_USE_FLAG	= TRUE
+						;
+						
+						IF V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER  > 0 THEN
+							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Manager) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER||',[M CNT]:'||V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER;
+						END IF;
+						
+					--최종 DEPTH가 아닌 부모 DEPTH에 대한 삭제 시
+					ELSE
+					    SELECT  COUNT(*)
+					    INTO    V_MASTER_CHILD_EXIST_COUNT
+					    FROM    PG_VP_VENDOR_POOL_MST
+					    WHERE   TENANT_ID           	   = loop_mst.TENANT_ID
+						AND     COMPANY_CODE        	   = loop_mst.COMPANY_CODE
+						AND     ORG_TYPE_CODE       	   = loop_mst.ORG_TYPE_CODE
+						AND     ORG_CODE            	   = loop_mst.ORG_CODE
+						AND     PARENT_VENDOR_POOL_CODE    = loop_mst.VENDOR_POOL_CODE
+						AND     VENDOR_POOL_USE_FLAG	   = TRUE;
+						
+						--하위 노드에 사용중인 데이터가 존재하는 경우 삭제가 불가능합니다.
+						IF V_MASTER_CHILD_EXIST_COUNT > 0 THEN
+							SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00027'||'-'||'Master Parent Delete Error.';
+						END IF;
 					END IF;
 					
-					--SUPPLIER 승인 대기인 데이터가 있는 경우 VP마스터의 정보를 삭제할 수 없다.
-					IF V_SUPPLIER_TEMP_CNT > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER;
-					END IF;
-					
-					SELECT	COUNT(*)
-					INTO    V_ITEM_EXIST_CNT_FOR_DELETE_MASTER
-					FROM	PG_VP_VENDOR_POOL_ITEM_DTL
-					WHERE   TENANT_ID       				= loop_mst.TENANT_ID
-					AND     COMPANY_CODE        			= loop_mst.COMPANY_CODE
-					AND     ORG_TYPE_CODE       			= loop_mst.ORG_TYPE_CODE
-					AND     ORG_CODE            			= loop_mst.ORG_CODE
-					AND     VENDOR_POOL_CODE    			= loop_mst.VENDOR_POOL_CODE
-					AND     VENDOR_POOL_MAPPING_USE_FLAG	= TRUE
-					;
-					
-					IF V_ITEM_EXIST_CNT_FOR_DELETE_MASTER > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Item) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER;
-					END IF;
-					
-					SELECT	COUNT(*)
-					INTO    V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER
-					FROM	PG_VP_VENDOR_POOL_MANAGER_DTL
-					WHERE   TENANT_ID       				= loop_mst.TENANT_ID
-					AND     COMPANY_CODE        			= loop_mst.COMPANY_CODE
-					AND     ORG_TYPE_CODE       			= loop_mst.ORG_TYPE_CODE
-					AND     ORG_CODE            			= loop_mst.ORG_CODE
-					AND     VENDOR_POOL_CODE    			= loop_mst.VENDOR_POOL_CODE
-					AND     VENDOR_POOL_MAPPING_USE_FLAG	= TRUE
-					;
-					
-					IF V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER  > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||'Master(Manager) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER||',[M CNT]:'||V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER;
-					END IF;
-					
-		    	
-		    	    UPDATE  PG_VP_VENDOR_POOL_MST MST
+					UPDATE  PG_VP_VENDOR_POOL_MST MST
 					SET     VENDOR_POOL_USE_FLAG 				= FALSE
 						   ,LOCAL_UPDATE_DTM       				= NOW()
 						   ,UPDATE_USER_ID         				= I_USER_ID
@@ -1075,6 +1095,7 @@ BEGIN
 				        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Master Delete Error.';
 				    	--raise_application_error(-20001, 'PG_VP_VENDOR_POOL_MST UPDATE ERROR '|| loop_mst.VENDOR_POOL_CODE||' ['||::ROWCOUNT||']');
 				    END IF;
+					
 				 --조회 조건에 해당하는 데이터 존재하지 않는 경우(삭제 시)   
 				ELSE
 					SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00010'||'-'||'Master Error.';

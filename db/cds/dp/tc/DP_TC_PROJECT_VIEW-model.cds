@@ -61,6 +61,7 @@ entity TC_Project_View {
         target_status_code          : String(30)          @title : '목표재료비상태코드';
         forecast_status_name        : String(30)          @title : '예상재료비상태명';
         forecast_status_code        : String(30)          @title : '예상재료비상태코드';
+        bizdivision_text            : String(100)         @title : '사업부명';
 
         events                      : Composition of many Project_Event.Tc_Project_Event
                                           on  events.tenant_id    = tenant_id

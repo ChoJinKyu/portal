@@ -150,52 +150,59 @@
 							<items>
 								<ColumnListItem press=".onMidTableItemPress">
 									<cells>
-                    <!-- 상태 -->
+                                        <!-- 상태 -->
 										<Text text="{details>_row_state_}"/>
-                    <!-- 제어옵션레벨코드 -->
-                    <ComboBox
-                      id="midLevelCombo"
-                      selectedKey="{details>control_option_level_code}"
-                      width="100%"
-                      items="{
-                        path: 'util>/Code',
-                        filters: [
-                          {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                          {path: 'group_code', operator: 'EQ', value1: 'CM_CTRL_OPTION_LEVEL_CODE'}
-                        ]
-                      }">
-                      <items>
-                        <core:Item key="{util>code}" text="{util>code} : {util>code_description}" />
-                      </items>
-                    </ComboBox>
-                    <!-- 조직유형 -->
-										<!-- selectedKey="{details>org_type_code}" -->
-                    <ComboBox
-											enabled="{= ${details>control_option_level_code} === 'O'}"
-                      id="midOrgTypeCombo"
-                      selectedKey="{= ${details>control_option_level_code} === 'O' ? ${details>org_type_code} : ''}"
-                      width="100%"
-                      selectionChange=".selectionChange"
-                      items="{
-                        path: 'util>/Code',
-                        filters: [
-                          {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                          {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
-                        ]
-                      }">
-                      <items>
-                        <core:Item key="{util>code}" text="{util>code} : {util>code_description}"/>
-                      </items>
-                    </ComboBox>
-                    <!-- 제어옵션레벨값 -->
+                                        <!-- 제어옵션레벨코드 -->
+                                        <ComboBox
+                                            id="midLevelCombo"
+                                            selectedKey="{details>control_option_level_code}"
+                                            selectionChange=".onSelectionChange($event, 'control_option_level_code')"
+                                            width="100%"
+                                            items="{
+                                                path: 'util>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'CM_CTRL_OPTION_LEVEL_CODE'}
+                                                ]
+                                            }"
+                                        >
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code} : {util>code_description}" />
+                                        </items>
+                                        </ComboBox>
+                                        <!-- 조직유형 -->
+                                        <!-- selectedKey="{details>org_type_code}" -->
+                                        <!-- selectedKey="{= ${details>control_option_level_code} === 'O' ? ${details>org_type_code} : ''}" -->
+                                        <!-- enabled="{= ${details>control_option_level_code} === 'O'}" -->
+                                        <ComboBox
+                                            selectedKey="{details>org_type_code}"
+                                            enabled="{= ${details>control_option_level_code} === 'O'}"
+                                            id="midOrgTypeCombo"
+                                            width="100%"
+                                            selectionChange=".onSelectionChange($event, 'org_type_code')"
+                                            items="{
+                                                path: 'util>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
+                                                ]
+                                            }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code} : {util>code_description}"/>
+                                        </items>
+                                        </ComboBox>
+                                        <!-- 제어옵션레벨값 -->
 										<HBox>
 											<ComboBox
 												width="100%"
+                                                id="midControlOptionLevelValCombo"
 												selectedKey="{details>control_option_level_val}"
 												visible="{= ${details>control_option_level_code} === 'O'}"
 												items="{
 													path: 'org>/organization',
-													filters: []
+													filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    ]
 												}">
 												<items>
 													<core:Item key="{org>code}" text="{org>code}" />
@@ -203,16 +210,16 @@
 											</ComboBox>
 											<Input value="{details>control_option_level_val}" visible="{= ${details>control_option_level_code} !== 'O'}"/>
 										</HBox>
-                    <!-- 제어옵션값 -->
+                                        <!-- 제어옵션값 -->
 										<Input value="{details>control_option_val}"/>
-                    <!-- 시작일자 -->
-		                <!-- <DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{details>start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
-                    <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
-                    <!-- 종료일자 -->
-                    <!-- <DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{details>end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
-                    <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
-                    <!-- <DateTimePicker value="{ path: 'details>local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true } }" />
-                    <DateTimePicker value="{ path: 'details>local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: false } }" /> -->
+                                        <!-- 시작일자 -->
+                                        <!-- <DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{details>start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
+                                        <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                        <!-- 종료일자 -->
+                                        <!-- <DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{details>end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
+                                        <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                        <!-- <DateTimePicker value="{ path: 'details>local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true } }" />
+                                        <DateTimePicker value="{ path: 'details>local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: false } }" /> -->
 									</cells>
 								</ColumnListItem>
 							</items>

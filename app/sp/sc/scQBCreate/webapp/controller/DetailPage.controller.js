@@ -136,13 +136,14 @@ sap.ui.define([
                 this.getView().byId("panel_Header").setExpanded(true);
                 this.getView().byId("panel_Control").setExpanded(true);
                 this.getView().byId("panel_Content").setExpanded(true);
-                this.getView().byId("panel_SuppliersContent").setExpanded(true);
+                // this.getView().byId("panel_SuppliersContent").setExpanded(true);
                 this.getView().byId("panel_Evaluation").setExpanded(true);
                 this.getView().byId("panel_Potential").setExpanded(true);
                 this.getView().byId("panel_Specific").setExpanded(true);
 
                
                 console.log("_onRouteMatched ");
+                console.log(e.getParameter("arguments"));
                 
                 this._type = e.getParameter("arguments").type;
 

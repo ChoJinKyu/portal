@@ -32,19 +32,24 @@ sap.ui.define([
         },
 
         onSetStatus: function (sStatusCodeParam) {
-            var sReturnValue = "Draft";
+            var oRootModel = this.getModel("rootModel");
 
-            if( sStatusCodeParam === "20" ) {
-                sReturnValue = "Requested";
-            }else if( sStatusCodeParam === "30" ) {
-                sReturnValue = "Requested";
+            if( oRootModel ) {
+                var aProcessList = oRootModel.getProperty("/processList");
+                var sReturnValue = aProcessList[0].code_name;
+    
+                if( sStatusCodeParam === "20" ) {
+                    sReturnValue = aProcessList[1].code_name;
+                }else if( sStatusCodeParam === "30" ) {
+                    sReturnValue = aProcessList[2].code_name;
+                }
             }
 
             return sReturnValue;
         },
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlMgtRootModel");
+            var oBasePriceListRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
 
             switch (sTenantId) {
@@ -102,7 +107,7 @@ sap.ui.define([
         _getBasePriceDetail: function () {
             var oView = this.getView();
             var oCodeModel = this.getModel("codeModel");
-            var oBasePriceListRootModel = this.getModel("basePriceArlMgtRootModel");
+            var oBasePriceListRootModel = this.getModel("rootModel");
             var oSelectedData = oBasePriceListRootModel.getProperty("/selectedData");
 
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
@@ -150,7 +155,7 @@ sap.ui.define([
                 var oNewBasePriceData = {
                                     "tenant_id": oBasePriceListRootModel.getProperty("/tenantId"),
                                     "approval_number": "",
-                                    "approval_title": "개발VI 품의서 테스트_"+new Date().toLocaleDateString(),
+                                    "approval_title": "",
                                     "approval_type_code": "10",
                                     "new_change_code": "10",
                                     "approval_status_code": "10",
@@ -314,10 +319,11 @@ sap.ui.define([
         onDraft: function (sActionParam) {
             var that = this;
             var oDetailModel = this.getModel("detailModel");
+            var oI18NModel = this.getModel("I18N");
             var oModel = this.getModel();
             var oData = $.extend(true, {}, oDetailModel.getData());
             var aDetails = oData.details;
-            var sMessage = "저장되었습니다.";
+            var sMessage = oI18NModel.getText("/NCM01001");
 
             // detail 데이터가 있을 경우 checked property 삭제(OData에 없는 property 전송 시 에러)
             if( aDetails ) {
@@ -338,9 +344,9 @@ sap.ui.define([
             // 상신일 경우 approval_status_code를 20으로 변경
             if( sActionParam === "approval" ) {
                 oData.approval_status_code = "20";
-                sMessage = "상신되었습니다.";
+                sMessage = oI18NModel.getText("/NCM01001");
             }else if( oData.approval_number ) {
-                sMessage = "수정되었습니다.";
+                sMessage = oI18NModel.getText("/NPG00008");
             }
             
             // approval_status_code 값이 10이 아닌 20일 경우 approval number유무에 상관없이 상신
@@ -392,7 +398,9 @@ sap.ui.define([
          * 삭제
          */
         onDelete: function () {
-            MessageBox.confirm("삭제 하시겠습니까?", {
+            var oI18nModel = this.getModel("I18N");
+
+            MessageBox.confirm(oI18nModel.getText("/NCM00003"), {
                 title : "Delete",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
@@ -402,7 +410,7 @@ sap.ui.define([
                         
                         oModel.remove(sDeletePath, {
                             success: function(data){
-                                MessageToast.show("삭제되었습니다.");
+                                MessageToast.show(oI18nModel.getText("/NCM01002"));
                                 this.onBack();
                             }.bind(this),
                             error: function(data){
@@ -419,7 +427,9 @@ sap.ui.define([
          * 상신
          */
         onRequest : function () {
-            MessageBox.confirm("상신 하시겠습니까?", {
+            var oI18nModel = this.getModel("I18N");
+
+            MessageBox.confirm("요청 하시겠습니까?", {
                 title : "Request",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
@@ -434,7 +444,7 @@ sap.ui.define([
          * List 화면으로 이동
          */
         onBack: function () {
-            var oBasePriceListRootModel = this.getModel("basePriceArlMgtRootModel");
+            var oBasePriceListRootModel = this.getModel("rootModel");
             oBasePriceListRootModel.setProperty("/selectedData", null);
 
             this.getRouter().navTo("basePriceList");
@@ -485,7 +495,7 @@ sap.ui.define([
                 });
             }
 
-            oOpenDialog = this._oMaterialDialog;
+            oOpenDialog = this._oSupplierDialog;
             
             this._oSupplierDialog.then(function(oDialog) {
                 oDialog.open();
@@ -496,7 +506,7 @@ sap.ui.define([
         /**
          * Supplier Dialog.fragment open
          */
-		openFamilyMaterialCodeDialog: function (sQueryParam, sTableIdParam) {
+		_openFamilyMaterialCodeDialog: function (sQueryParam, sTableIdParam) {
             var oView = this.getView();
 
             if ( !this._oFamilyMaterialDialog ) {
@@ -553,10 +563,18 @@ sap.ui.define([
             // modelPath: dialogModel에 바인딩할  path
             var oSelectedDialogInfo = oDialogInfoModel.getProperty("/"+sSelectedDialogInfo);
             
-            aFilters.push(new Filter(oSelectedDialogInfo.filterPropertyName, FilterOperator.Contains, sQuery));
+            if( sQuery ) {
+                aFilters.push(new Filter(oSelectedDialogInfo.filterPropertyName, FilterOperator.Contains, sQuery));
+            }
+
+            var sUrlParameter = {};
+            if( sSelectedDialogInfo === "supplier" ) {
+                sUrlParameter = {"$top": 40};
+            }
 
             oModel.read(oSelectedDialogInfo.oDataUrl, {
                 filters : aFilters,
+                urlParameters: sUrlParameter,
                 success: function(data) {
                     // Table에서 클릭한 경우
                     if( oBindingContext ) { 
@@ -575,7 +593,7 @@ sap.ui.define([
                                     this._openMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);
                                     break;
                                 case "supplier":
-                                    this._openMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);
+                                    this._openSupplierDialog(sQuery, oSelectedDialogInfo.tableId);
                                     break;
                                 case "familyMaterialCode":
                                     this._openFamilyMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);
@@ -592,7 +610,7 @@ sap.ui.define([
                 }.bind(this),
                 error: function(data){
                     console.log('error', data);
-                    MessageBox.error(data.message);
+                    MessageBox.error(JSON.parse(data.responseText).error.message.value);
                 }
             });
         },

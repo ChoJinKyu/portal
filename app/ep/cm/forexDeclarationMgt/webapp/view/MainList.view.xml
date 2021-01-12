@@ -53,16 +53,12 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="PO일자 : " labelFor="searchPoDate"/>
-                            <!-- <DatePicker
-                                id="searchRequestDate"
-                                visible="true"
-                                placeholder="Date"/>                             -->
-                            <DateRangeSelection id="searchPoDate" width="100%" placeholder="" />                                
-                            <layoutData>
-                                <layout:GridData span="XL3 L2 M6 S12" />
-                            </layoutData>
-                        </VBox>
+                                <Label text="PO일자" labelFor="searchPoDate"></Label>
+                                    <DateRangeSelection id="searchPoDate" width="100%" change="creationDateChange"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L2 M6 S12" />
+                                </layoutData>
+                            </VBox>
                         <VBox>
                             <Label text="담당부서 :" labelFor="searchPurchasingDepartmentName"></Label>
                             <!-- <Input id="searchPurchasingDepartmentName" placeholder=""></Input> -->
@@ -163,7 +159,7 @@
 
         <f:content>
             <t:Table id="mainTable"
-            selectionMode="MultiToggle"
+            selectionMode="None"
             rows="{
                 path: 'list>/ForexDeclarationView'                 
             }"
@@ -173,7 +169,7 @@
             columnResize="onColumnResize">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                <Title text="LOI발행현황 {= ${list>/ForexDeclarationView}.length > 0 ? '(' + ${list>/ForexDeclarationView}.length + ')' : ''}" level="H2"/>
+                <Title text="외화신고대상 목록 : {= ${list>/ForexDeclarationView}.length > 0 ? '(' + ${list>/ForexDeclarationView}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
                 <Button text="Summary Chart" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
                 <ToolbarSeparator/>
@@ -229,7 +225,7 @@
                     <Text text="{list>supplier_name}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainPoDate" width="6rem">
+                <t:Column id="mainPoDate" width="8rem">
                 <Label text="PO일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -238,7 +234,7 @@
                             }"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="mainReceiptScheduledDate" width="6rem">
+                <t:Column id="mainReceiptScheduledDate" width="8rem">
                 <Label text="입고예정일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -247,7 +243,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainReceiptDate" width="6rem">
+                <t:Column id="mainReceiptDate" width="8rem">
                 <Label text="입고일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -256,7 +252,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainDeclareScheduledDate" width="5rem">
+                <t:Column id="mainDeclareScheduledDate" width="8rem">
                 <Label text="신고예정일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -265,7 +261,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainDeclareDate" width="5rem">
+                <t:Column id="mainDeclareDate" width="8rem">
                 <Label text="신고일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -274,31 +270,31 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainManagementTargetFlag" width="3rem">
+                <t:Column id="mainManagementTargetFlag" width="8rem">
                 <Label text="관리대상여부" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>management_target_flag}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainDeclareTargetFlag" width="3rem">
+                <t:Column id="mainDeclareTargetFlag" width="8rem">
                 <Label text="신고대상여부" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>declare_target_flag}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainForexDeclareStatusName" width="3rem">
+                <t:Column id="mainForexDeclareStatusName" width="8rem">
                 <Label text="진행상태" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>forex_declare_status_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainPurchasingDepartmentName" width="4rem">
+                <t:Column id="mainPurchasingDepartmentName" width="8rem">
                 <Label text="구매담당부서" textAlign="Center" width="100%" tooltip="구매담당부서"/>
                 <t:template>
                     <Text text="{list>purchasing_department_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainBuyerName" width="4rem">
+                <t:Column id="mainBuyerName" width="8rem">
                 <Label text="구매담당자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>buyer_name}"/>

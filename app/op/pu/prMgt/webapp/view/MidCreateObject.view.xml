@@ -196,27 +196,33 @@
                                 <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
                                     <Label text="요청수량" required="true"/>
                                     <table:template>
-                                        <Input value="{detailModel>pr_quantity}"/>
+                                        <Input maxLength="20" value="{detailModel>pr_quantity}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
                                     <Label text="단위" required="true"/>           
                                     <table:template>
-                                        <Input value="{detailModel>pr_unit}"/>
+                                        <Input maxLength="3" value="{detailModel>pr_unit}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column id="c_budetAmount" width="10em" hAlign="Center">
                                     <Label text="구매요청가격" required="true"/>           
                                     <table:template>
-                                        <Input value="{detailModel>estimated_price}"/>
+                                        <Input maxLength="20" value="{detailModel>estimated_price}"/>
                                     </table:template>
                                 </table:Column>                               
                                 <table:Column id="c_currency" width="10em" hAlign="Center">
-                                    <Label text="통화" required="true"/>           
+                                    <Label text="통화" required="true" labelFor="i_currency"/>           
                                     <table:template>
-                                        <Input id="currency" value="{detailModel>currency_code}"/>
+                                        <Input id="i_currency" value="{detailModel>currency_code}"/>
                                     </table:template>
-                                </table:Column>                                     
+                                </table:Column>                                 
+                                <table:Column id="c_price_unit" width="10em" hAlign="Center">
+                                    <Label text="가격단위" required="true" labelFor="i_price_unit"/>           
+                                    <table:template>
+                                        <Input id="i_price_unit" value="{detailModel>price_unit}"/>
+                                    </table:template>
+                                </table:Column>                                   
                                 <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
                                     <Label text="구매담당자"/>           
                                     <table:template>
@@ -225,31 +231,34 @@
                                             showValueHelp="true"
                                             valueHelpRequest=".onOpenMaterialDialog" />
                                     </table:template>
-                                </table:Column> 
-                                <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
-                                    <Label text="규격"/>    
-                                    <table:template>
-                                        <Input value="{detailModel>price_unit}"/>
-                                    </table:template>
                                 </table:Column>
                                 <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
                                     <Label text="비고"/>
                                     <table:template>
-                                        <Input value="{detailModel>remark}"/>
+                                        <Input maxLength="2000" value="{detailModel>remark}" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
-                                    <Label text="구매그룹"/>           
+                                    <Label text="구매그룹"/>
                                     <table:template>
                                         <Input value="{detailModel>purchasing_group_code}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
-                                    <Label text="저장위치"/>           
+                                    <Label text="저장위치"/>
                                     <table:template>
-                                        <Input value=""/>
+                                        <Input value="{detailModel>sloc_code}" />
                                     </table:template>
-                                </table:Column>                              
+                                </table:Column>
+                                <table:Column id="c_delivery_request_date" width="10em" hAlign="Center">
+                                    <Label text="납품요청일"/>    
+                                    <table:template>
+                                        <DatePicker id="i_delivery_request_date" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
+                                                    placeholder="Enter Date"
+                                                    class="sapUiSmallMarginBottom"
+                                                    value="{detailModel>delivery_request_date}" />
+                                    </table:template>
+                                </table:Column>
                             </table:columns>
                           </table:Table>
                        

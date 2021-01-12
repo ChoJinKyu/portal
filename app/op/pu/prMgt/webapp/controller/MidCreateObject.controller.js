@@ -9,7 +9,8 @@ sap.ui.define([
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
+    "sap/ui/core/Fragment",
+    "sap/f/LayoutType",
     "sap/m/MessageBox",
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
@@ -18,7 +19,7 @@ sap.ui.define([
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
-            , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
+            , LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
     
     "use strict";
     
@@ -86,7 +87,7 @@ sap.ui.define([
             if(sTenantId && sTenantId === "new") {
                 this._fnSetCreateData(oArgs);
             }else{
-                this._fnGetMasterData(oArgs);
+                this._fnReadPrMaster(oArgs);
             }
 
             //this._createViewBindData(oArgs); 
@@ -182,11 +183,28 @@ sap.ui.define([
             this.setModel(new JSONModel(oNewMasterData), "detailModel");
         },
 
-        /**
-         * 기존 데이터 조회  
-         */
-        _fnGetMasterData : function(){
+        _fnReadPrMaster : function(oArgs){
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id));
+            aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
 
+            var aSorter = [];
+            aSorter.push(new Sorter("pr_number", false));
+
+            var oViewModel = this.getModel('viewModel');
+            var oServiceModel = this.getModel();
+            oServiceModel.read("/Pr_MstView",{
+                filters : aFilters,
+                sorters : aSorter,
+                success : function(data){
+                    oViewModel.setProperty("/PrMst", data.results);
+                    console.log(data.results);
+                    // oCodeMasterTable.setBusy(false);
+                },
+                error : function(data){
+                    MessageToast.show("Pr_MstView read failed.");
+                }
+            });
         },
 
         /**
@@ -215,25 +233,142 @@ sap.ui.define([
                         pr_unit: "", 
                         requestor_empno: "A60264", 
                         requestor_name: "김구매", 
+                        delivery_request_date: "",
                         purchasing_group_code: "", 
                         price_unit: "", 
                         pr_progress_status_code: "10", 
-                        remark: ""
+                        remark: "",
+                        sloc_code: ""
                         });
             oDetailModel.refresh();
         },
 
+        
+		/**
+		 * Event handler for saving page changes
+		 * @public
+		 */
+        onPageSaveButtonPress: function(){
+			var oView = this.getView(),
+                that = this;
+                
+			// var	oMessageContents = this.byId("inputMessageContents");
+			// if(!oMessageContents.getValue()) {
+			// 	oMessageContents.setValueState(sap.ui.core.ValueState.Error);
+			// 	return;
+            // }
+            
+			MessageBox.confirm("저장 하시겠습니까 ?", {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+
+                        that._fnPrSave();
+
+						// oView.setBusy(true);
+						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
+						// 	me._toShowMode();
+						// 	oView.setBusy(false);
+                        //     MessageToast.show("Success to save.");
+						// }).catch(function(err){
+                        //     MessageBox.error("Error while saving.");
+						// });
+					};
+				}
+			});
+        },
+        
         /**
+         * 구매요청 저장
+         */
+        _fnPrSave: function(){
+            var oView = this.getView();
+            var that = this;
+            var oDetailModel = this.getModel("detailModel");
+            var oData = $.extend(true, {}, oDetailModel.getData());
+
+            //대표품목명
+            var prDesc = "";
+            if(oData.details.length === 0){
+                prDesc = oData.details[0].pr_desc;
+            }else{
+                prDesc = oData.details[0].pr_desc + ' 외 ' + (oData.details.length-1) + "건";
+            }
+            oData.pr_desc = prDesc;
+
+            //품의내용
+            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            oData.approval_contents = approvalContents;
+
+            //Send data
+            var sendData = {}, masterDatas=[];
+            masterDatas.push(oData);
+            sendData.inputData = masterDatas;
+
+            that._fnCallAjax(
+                sendData,
+                "SavePrCreateProc",
+                function(result){
+                    oView.setBusy(false);
+                    that._fnNavigationMainPage();
+                }
+            );
+        },
+        
+        /**
+         * Ajax 호출 함수
+         */
+        _fnCallAjax: function (sendData, targetName , callback) {
+            console.log("send data >>>> ", sendData);
+            
+            var that = this;            
+            var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/op.PrCreateV4Service/" + targetName;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(sendData),
+                contentType: "application/json",
+                success: function (result){                     
+                    if(result && result.value && result.value.length > 0) {
+                        if(result.value[0].return_code === "0000") {
+                            MessageToast.show(that.getModel("I18N").getText("/" + result.value[0].return_code));
+                        }
+                        MessageToast.show(result.value[0].return_msg);                        
+                    }
+                    callback(result);
+                },
+                error: function(e){
+                    MessageToast.show("Call ajax failed");
+                    callback(e);
+                }
+            });
+        },
+
+         /**
          * List 화면으로 이동
          */
+        _fnNavigationMainPage: function(){
+            var sLayout = LayoutType.OneColumn;
+            this.getRouter().navTo("mainPage", {layout: sLayout});
+        },
+
+                
+        /**
+         * 이전 화면으로 이동
+         */
         onNavigationBackPress: function () {
-			var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				// eslint-disable-next-line sap-no-history-manipulation
-				history.go(-1);
-			} else {
-				this.getRouter().navTo("mainPage", {}, true);
-			}
+
+            this._fnNavigationMainList();
+
+			// var sPreviousHash = History.getInstance().getPreviousHash();
+			// if (sPreviousHash !== undefined) {
+			// 	// eslint-disable-next-line sap-no-history-manipulation
+			// 	history.go(-1);
+			// } else {
+			// 	this._fnNavigationMainList();
+			// }
 		},
         
         /**
@@ -393,106 +528,6 @@ sap.ui.define([
 		},
 
 
-		/**
-		 * Event handler for saving page changes
-		 * @public
-		 */
-        onPageSaveButtonPress: function(){
-			var oView = this.getView(),
-                that = this;
-                
-			// var	oMessageContents = this.byId("inputMessageContents");
-			// if(!oMessageContents.getValue()) {
-			// 	oMessageContents.setValueState(sap.ui.core.ValueState.Error);
-			// 	return;
-            // }
-            
-			MessageBox.confirm("저장 하시겠습니까 ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-
-                        that.fnPrSave();
-
-						// oView.setBusy(true);
-						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
-						// 	me._toShowMode();
-						// 	oView.setBusy(false);
-                        //     MessageToast.show("Success to save.");
-						// }).catch(function(err){
-                        //     MessageBox.error("Error while saving.");
-						// });
-					};
-				}
-			});
-        },
-        
-        /**
-         * 구매요청 저장
-         */
-        fnPrSave: function(){
-            var oView = this.getView();
-            var that = this;
-            var oDetailModel = this.getModel("detailModel");
-            var oData = $.extend(true, {}, oDetailModel.getData());
-
-            //대표품목명
-            var prDesc = "";
-            if(oData.details.length === 0){
-                prDesc = oData.details[0].pr_desc;
-            }else{
-                prDesc = oData.details[0].pr_desc + ' 외 ' + (oData.details.length-1) + "건";
-            }
-            oData.pr_desc = prDesc;
-
-            //품의내용
-            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            oData.approval_contents = approvalContents;
-
-            //Send data
-            var sendData = {}, masterDatas=[];
-            masterDatas.push(oData);
-            sendData.inputData = masterDatas;
-
-            that.fnCallAjax(
-                sendData,
-                "SavePrCreateProc",
-                function(result){
-                    oView.setBusy(false);
-                }
-            );
-        },
-        
-        /**
-         * Ajax 호출 함수
-         */
-        fnCallAjax: function (sendData, targetName , callback) {
-            console.log("send data >>>> ", sendData);
-            
-            var that = this;            
-            var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/op.PrCreateV4Service/" + targetName;
-
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: JSON.stringify(sendData),
-                contentType: "application/json",
-                success: function (result){                     
-                    if(result && result.value && result.value.length > 0) {
-                        if(result.value[0].return_code === "0000") {
-                            MessageToast.show(that.getModel("I18N").getText("/" + result.value[0].return_code));
-                        }
-                        MessageToast.show(result.value[0].return_msg);                        
-                    }
-                    callback(result);
-                },
-                error: function(e){
-                    MessageToast.show("Call ajax failed");
-                    callback(e);
-                }
-            });
-        },
 
 		/**
 		 * Event handler for cancel page editing

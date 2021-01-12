@@ -24,8 +24,8 @@
           "localUri": "localService/metadata.xml"
         }
       },
-      "materialCodeService": {
-        "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
+      "commonService": {
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
@@ -99,8 +99,8 @@
           "useBatch": true
         }
       },
-      "materialCodeODataModel": {
-        "dataSource": "materialCodeService",
+      "commonODataModel": {
+        "dataSource": "commonService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

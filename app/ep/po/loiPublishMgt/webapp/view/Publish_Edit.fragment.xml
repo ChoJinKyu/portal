@@ -36,7 +36,7 @@
                 }" required="true" editable="true" width="100%"/>
 
             <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
-            <Select selectedKey="K">
+            <Select selectedKey="{master>/contract_format_id}">
                 <items>
                     <core:Item key="K" text="구매의향서(국문)" />
                     <core:Item key="E" text="구매의향서(영문)" />
@@ -47,7 +47,7 @@
             <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" value="{master>/contract_date}" placeholder="Date"/>   
 
             <Label text="* 서명방식" design="Bold" required="true" class="sapMLabelNoText"/>
-            <SegmentedButton id="searchUsageSegmentButton" class="sapUiSmallMarginBottom" selectedKey="{master>/offline_flag}" width="100%">                                            
+            <SegmentedButton class="sapUiSmallMarginBottom" selectedKey="{master>/offline_flag}" width="100%">                                            
                 <items>
                     <SegmentedButtonItem text="온라인" key="false" />
                     <SegmentedButtonItem text="오프라인" key="true" />
@@ -61,17 +61,7 @@
                 <Label  text="* 부대조건" 
                             design="Bold" 
                             class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
-                <richtexteditor:RichTextEditor
-                    editorType="TinyMCE4"
-                    width="98%"
-                    height="200px"
-                    editable="true"
-                    customToolbar="true"
-                    showGroupFont="true"
-                    showGroupLink="true"
-                    showGroupInsert="true"
-                    value="{master>/additional_condition_desc}">
-                </richtexteditor:RichTextEditor> 
+                <TextArea value="{master>/additional_condition_desc}" rows="8" width="98%" />            
             </VBox>
         </form:SimpleForm>
 

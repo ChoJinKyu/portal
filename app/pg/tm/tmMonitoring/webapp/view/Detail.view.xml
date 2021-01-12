@@ -166,12 +166,12 @@
                                             <l:VerticalLayout width="100%">
                                             <VBox class="sapUiTinyMarginTop" id="monitoringVBox">
                                                     <Label text="{I18N>/MONITORING_PURPOSE}" design="Bold"/>
-                                                    <rte:RichTextEditor id="reMonitoringPurpose" editorType="TinyMCE4" width="100%" visible="{=${DetailView>/isEditMode}}"  editable="true" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                    <rte:RichTextEditor id="reMonitoringPurpose" wrapping="false" editorType="TinyMCE4" width="100%" visible="{=${DetailView>/isEditMode}}"  editable="true" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                                     <FormattedText id="PurposeFormattedText"  visible="{=!${DetailView>/isEditMode}}"/>
                                                 </VBox>
                                                 <VBox class="sapUiSmallMarginTop" id="scenarioVBox">
                                                     <Label text="{I18N>/SCENARIO_DESC}" design="Bold"/>
-                                                    <rte:RichTextEditor id="reMonitoringScenario" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                    <rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                                     <FormattedText id="ScenarioDescFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
                                                 </VBox>
                                            </l:VerticalLayout>
@@ -190,7 +190,7 @@
                                      <l:VerticalLayout width="100%">
                                             <VBox class="sapUiSmallMarginTop" id="systemVBox">
                                                 <Label text="{I18N>/SOURCE_SYSTEM_DESC}" design="Bold"/>
-                                                <rte:RichTextEditor id="reSourceSystemDetail" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                <rte:RichTextEditor id="reSourceSystemDetail" wrapping="false" beforeEditorInit="onBeforeEditorInit" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                                 <FormattedText id="ReSourceSystemFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
                                             </VBox>
                                         </l:VerticalLayout>
@@ -306,12 +306,10 @@
                         <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer/>
-                        
                             <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
                             <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
                             <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/>
-                            <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onSave" enabled="{=${DetailView>/isEditMode}}"/>
-                              
+                            <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
                         </OverflowToolbar>
                         </uxap:footer>
                         </uxap:ObjectPageLayout>

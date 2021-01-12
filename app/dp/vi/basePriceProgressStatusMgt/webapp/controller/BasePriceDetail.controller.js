@@ -485,7 +485,7 @@ sap.ui.define([
                 });
             }
 
-            oOpenDialog = this._oMaterialDialog;
+            oOpenDialog = this._oSupplierDialog;
             
             this._oSupplierDialog.then(function(oDialog) {
                 oDialog.open();
@@ -496,7 +496,7 @@ sap.ui.define([
         /**
          * Supplier Dialog.fragment open
          */
-		openFamilyMaterialCodeDialog: function (sQueryParam, sTableIdParam) {
+		_openFamilyMaterialCodeDialog: function (sQueryParam, sTableIdParam) {
             var oView = this.getView();
 
             if ( !this._oFamilyMaterialDialog ) {
@@ -553,10 +553,18 @@ sap.ui.define([
             // modelPath: dialogModel에 바인딩할  path
             var oSelectedDialogInfo = oDialogInfoModel.getProperty("/"+sSelectedDialogInfo);
             
-            aFilters.push(new Filter(oSelectedDialogInfo.filterPropertyName, FilterOperator.Contains, sQuery));
+            if( sQuery ) {
+                aFilters.push(new Filter(oSelectedDialogInfo.filterPropertyName, FilterOperator.Contains, sQuery));
+            }
+
+            var sUrlParameter = {};
+            if( sSelectedDialogInfo === "supplier" ) {
+                sUrlParameter = {"$top": 40};
+            }
 
             oModel.read(oSelectedDialogInfo.oDataUrl, {
                 filters : aFilters,
+                urlParameters: sUrlParameter,
                 success: function(data) {
                     // Table에서 클릭한 경우
                     if( oBindingContext ) { 
@@ -575,7 +583,7 @@ sap.ui.define([
                                     this._openMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);
                                     break;
                                 case "supplier":
-                                    this._openMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);
+                                    this._openSupplierDialog(sQuery, oSelectedDialogInfo.tableId);
                                     break;
                                 case "familyMaterialCode":
                                     this._openFamilyMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);

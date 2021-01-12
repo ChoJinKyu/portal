@@ -86,6 +86,7 @@
                 <Label text="Mold Type" required="true"/>
                 <Select   width="100%"
                             required="true"
+                            forceSelection="false"
                             selectedKey="{master>/mold_type_code}"
                             items="{
                                         path : 'util>/Code',
@@ -118,6 +119,7 @@
                 <Label text="Hot Runner Maker" required="true"/>
                 <Select   width="100%"
                             required="true"
+                            forceSelection="false"
                             selectedKey="{spec>/hot_runner_maker_name}"
                             items="{
                                         path : 'util>/Code',
@@ -141,6 +143,7 @@
                 <Label text="Mold Structure" required="true"/>
                 <Select   width="100%"
                             required="true"
+                            forceSelection="false"
                             selectedKey="{spec>/die_form}"
                             items="{
                                         path : 'util>/Code',
@@ -164,6 +167,7 @@
                 <Label text="Size" required="true"/>
                 <Select   width="100%"
                             required="true"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_size}"
                             items="{
                                         path : 'util>/Code',
@@ -202,6 +206,7 @@
             <VBox height="3.5rem">
                 <Label text="Runner"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_hot_runner_spec_name}"
                             items="{
                                         path : 'util>/Code',
@@ -224,6 +229,7 @@
             <VBox height="3.5rem">
                 <Label text="Gate"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_gate_spec_name}"
                             items="{
                                         path : 'util>/Code',
@@ -246,6 +252,7 @@
             <VBox height="3.5rem">
                 <Label text="Under Cut"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_undercut_spec_name}"
                             items="{
                                         path : 'util>/Code',
@@ -268,6 +275,7 @@
             <VBox height="3.5rem">
                 <Label text="Return Type"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_return_type_name}"
                             items="{
                                         path : 'util>/Code',
@@ -290,6 +298,7 @@
             <VBox height="3.5rem">
                 <Label text="Form Out"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_formout_method}"
                             items="{
                                         path : 'util>/Code',
@@ -312,6 +321,7 @@
             <VBox height="3.5rem">
                 <Label text="Out Process"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_outform_spec_name}"
                             items="{
                                         path : 'util>/Code',
@@ -334,6 +344,7 @@
             <VBox height="3.5rem">
                 <Label text="Runner Out"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_runnerout_spec_name}"
                             items="{
                                         path : 'util>/Code',
@@ -444,6 +455,7 @@
 
                 <Label text="Cavity/Punch"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_cavity_material_name}"
                             items="{
                                         path : 'util>/Code',
@@ -467,6 +479,7 @@
 
                 <Label text="Core/Die"/> 
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_core_material_name}"
                             items="{
                                         path : 'util>/Code',
@@ -490,6 +503,7 @@
 
                 <Label text="Slide Core"/> 
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_slide_core_material_name}"
                             items="{
                                         path : 'util>/Code',
@@ -513,6 +527,7 @@
 
                 <Label text="Taper Pin"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/mold_slope_material_name}"
                             items="{
                                         path : 'util>/Code',
@@ -536,6 +551,7 @@
 
                 <Label text="Top Circle"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/top_circle_material_name}"
                             items="{
                                         path : 'util>/Code',
@@ -559,6 +575,7 @@
 
                 <Label text="Bottom Circle"/>
                 <Select   width="100%"
+                            forceSelection="false"
                             selectedKey="{spec>/bottom_circle_material_name}"
                             items="{
                                         path : 'util>/Code',

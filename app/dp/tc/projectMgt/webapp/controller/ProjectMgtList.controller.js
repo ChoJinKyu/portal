@@ -8,10 +8,11 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "sap/ui/core/Fragment"
+  "sap/ui/core/Fragment",
+  "sap/ui/core/Item"
 ],
   function (BaseController, JSONModel, ManagedListModel, Multilingual, DateFormatter, Filter, FilterOperator
-         , MessageToast, MessageBox, Fragment) {
+         , MessageToast, MessageBox, Fragment, Item) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectMgtList", {
@@ -58,10 +59,6 @@ sap.ui.define([
 
                 }
             });
-            //RFA No가 있는 경우
-            //if( sRfaNo ) {
-            //   aFilters.push(new Filter("project_code", FilterOperator.Contains, sRfaNo));
-            //}
 
             this._getProjectMgtList(aFilters);
         }
@@ -70,14 +67,16 @@ sap.ui.define([
          * Cell 클릭 후 상세화면으로 이동
          */
         , onCellClickPress: function() {
-            this._goDetailView();
+            //this._goLastesProjView();
         }
 
         /**
          * RowAction 클릭 후 상세화면으로 이동
          */
-        , onRowActionPress: function() {
-            this._goDetailView();
+        , onRowActionPress: function(oEvent) {
+            debugger;
+            var oContext = oEvent.getParameter("row").getBindingContext("listModel");
+            this._goLastesProjView(oContext);
         }
 
         /**
@@ -114,19 +113,14 @@ sap.ui.define([
         /**
          * 입력/수정하는 화면으로 이동
          */
-        , _goProgressView: function(oEvent) {
-            var iSelIdx = this._getSelectedIndex(this.getView().byId("mainTable"));
-            if(iSelIdx < 0) { return; }//skip
-
-            let oTable = this.getView().byId("mainTable");
-            let oContext = oTable.getContextByIndex(iSelIdx);
-            let oModel = oContext.getModel();
-            let oObj = oModel.getProperty(oContext.getPath());
-
+        , _goLastesProjView: function(oContext) {
+            if(!oContext) {
+                return;
+            }
             var oNavParam = {
-                tenant_id : oObj.tenant_id,
-                project_code : oObj.project_code,
-                model_code : oObj.model_code
+                tenant_id : oContext.getObject("tenant_id"),
+                project_code : oContext.getObject("project_code"),
+                model_code : oContext.getObject("model_code")
             };
             this.getRouter().navTo("ProjectInfo", oNavParam);
         }
@@ -173,6 +167,7 @@ sap.ui.define([
                     oView.setBusy(false);
 
                     oView.getModel("listModel").setData(data);
+                    oView.byId("mainTable").clearSelection();
                 },
                 error : function(data){
                     oView.setBusy(false);
@@ -211,11 +206,29 @@ sap.ui.define([
 
         }
 
+        , _goProgressView: function(oEvent) {
+            MessageToast.show("준비중", {at: "Center Center"});
+            return;
+        }
+
         /**
          * 견적재료비 생성 클릭
          */
         , onEstimateCreatePress: function() {
-            this._goProgressView();
+            var iSelIdx = this._getSelectedIndex(this.getView().byId("mainTable"));
+            if(iSelIdx < 0) { return; }//skip
+
+            let oTable = this.getView().byId("mainTable");
+            let oContext = oTable.getContextByIndex(iSelIdx);
+            let oModel = oContext.getModel();
+            let oObj = oModel.getProperty(oContext.getPath());
+
+            var oNavParam = {
+                tenant_id : oObj.tenant_id,
+                project_code : oObj.project_code,
+                model_code : oObj.model_code
+            };
+            this.getRouter().navTo("ProjectInfo", oNavParam);
         }
 
         , onGoalCreatePress: function() {
@@ -309,6 +322,32 @@ sap.ui.define([
             
         }
 
+        , onChangeCompnay: function(oEvent){
+
+            //this.copyMultiSelected(oEvent);
+            debugger;
+            var oComboSnap = this.getView().byId("cbxSnapDivision");
+            var oComboExpand = this.getView().byId("cbxExpandDivision");
+
+            var sCompCode = oEvent.getSource().getSelectedItem().getKey();
+            var filter = new Filter({
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2600' )
+                                //,new Filter("company_code", FilterOperator.EQ, sCompCode )
+                            ],
+                            and: true
+                         });
+            var oBindingInfo = oComboSnap.getBindingInfo("items");
+            var bindInfo = {
+                    path: '/Division',
+                    filters: filter,
+                    template: oBindingInfo.template
+                };
+
+            oComboSnap.bindItems(bindInfo);
+            oComboExpand.bindItems(bindInfo);
+
+        }
 
         /**
          * @param {object} oODataModel OData 통신 모델

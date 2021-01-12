@@ -141,6 +141,16 @@ entity Tc_Mcst_Project {
                                       on  project_status_text.tenant_id  = tenant_id
                                       and project_status_text.group_code = 'DP_TC_PROJECT_STATUS_CODE'
                                       and project_status_text.code       = project_status_code; //프로젝트상태명
+
+        mcst_text               : Association to Code_Dtl.Code_Dtl
+                                      on  mcst_text.tenant_id  = tenant_id
+                                      and mcst_text.group_code = 'DP_TC_MCST_CODE'
+                                      and mcst_text.code       = mcst_code; //재료비구분명
+
+        mcst_status_text        : Association to Code_Dtl.Code_Dtl
+                                      on  mcst_status_text.tenant_id  = tenant_id
+                                      and mcst_status_text.group_code = 'DP_TC_MCST_STATUS_CODE'
+                                      and mcst_status_text.code       = mcst_status_code; //재료비상태명
 }
 
 extend Tc_Mcst_Project with util.Managed;

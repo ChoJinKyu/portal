@@ -51,10 +51,12 @@ service PrCreateV4Service {
         pr_unit: String;
         requestor_empno: String;
         requestor_name: String;
+        delivery_request_date: Date;
         purchasing_group_code: String;
         price_unit: String;
         pr_progress_status_code: String;
         remark: String;
+        sloc_code       : String;
     };  
 
     // (단일 Header에 multi Detail) 가 multi

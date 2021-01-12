@@ -11,6 +11,15 @@
     xmlns:u="sap.ui.unified"
     xmlns:t="sap.ui.table"
 	height="100%">
+
+    <!-- <layout:VerticalLayout id="vLayout"
+		binding="{viewModel>/NegoHeaders}"
+		width="100%">
+			<Text text="{viewModel>nego_document_number}" />
+			<Text text="{viewModel>buyer_empno}" />
+			<Text text="{viewModel>local_create_dtm}" />
+	</layout:VerticalLayout> 
+     -->
     <!-- <Page showNavButton="true" navButtonPress=".onNavBack"  title="견적계획"> -->
 	<uxap:ObjectPageLayout id="page"
 		toggleHeaderOnTitleClick="true"
@@ -40,16 +49,18 @@
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
-            <FlexBox wrap="Wrap">
+            <FlexBox wrap="Wrap"
+                items="{viewModel>/NegoHeaders}" >
+                
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus title="Negotiation No" text="2426536-1" class="sapUiLargeMarginBegin" />
-                    <ObjectStatus title="Creater" text="김갑수[ks.kim]" class="sapUiLargeMarginBegin" />
-                    <ObjectStatus title="Create Date" text="2020/07/20"  class="sapUiLargeMarginBegin" />
+                    <ObjectStatus id="objectStatus_nego_document_number" title="Negotiation No" text="{path: 'viewModel>/nego_document_number'}" class="sapUiLargeMarginBegin" />
+                    <ObjectStatus title="Creater" text="{viewModel>/buyer_empno}" class="sapUiLargeMarginBegin" />
+                    <ObjectStatus title="Create Date" text="{viewModel>local_create_dtm}"  class="sapUiLargeMarginBegin" />
                 </layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<Label text="Status :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="Draft" state="Error" />
+                    <ObjectStatus class="sapMObjectStatusLarge" text="{viewModel>nego_progress_status_code}" state="Error" />
 				</layout:VerticalLayout>
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <!-- <co:ProcessFlow id="pageHeaderProcessFlow" scrollable="false" nodePress="onNodePress">
@@ -151,29 +162,34 @@
 			<uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="Header" visible="true" subSectionLayout="titleOnTop" >
 				<uxap:subSections >
 					<uxap:ObjectPageSubSection>
-                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content"
+                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content"                          
                             class="sapUiDemoFlexBoxSizeAdjustments">
+                            <content>
                             <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
                                             columnsM="2"
                                             columnsL="2"
                                             columnsXL="3">
 
                                 <Label  text="Negotiation No"  class="sapMLabelNoText"/>
-                                <Input   id="inputNegotiationNo" />
+                                <Input  id="inputNegotiationNo" value="{viewModel>/nego_document_number}"/>
                                 <Label  text="Type"  class="sapMLabelNoText"/>
-                                <Input  id="inputType" enabled="false" value="RFQ" class="sapUiSmallMarginEnd"/>
+                                <Input  id="inputType" enabled="false" value="{viewModel>/nego_type_code}" class="sapUiSmallMarginEnd"/>
                                 <Label  text="Outcome"  class="sapMLabelNoText"/>
-                                <Input  id="inputOutcome" enabled="false" value="BPA" />  
+                                <Input  id="inputOutcome" enabled="false" value="{viewModel>negotiation_output_class_code}" />  
                             </form:SimpleForm>
                   
                             <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
                                 <Label  text="Title" required="true"  class="sapMLabelNoText"/>
-                                <Input  id="inputTitle" width="100%"/>
+                                <Input  id="inputTitle" width="100%" value="{nego_document_title}"/>
                             </VBox>
 
                             <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin" >
                                 <Label  text="Description"  class="sapMLabelNoText sapUiTinyMarginBottom"/>
-                                <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
+                                    showGroupFont="true" showGroupLink="true" showGroupInsert="false"
+                                    />
+                                <!-- <FormattedText id="PurposeFormattedText"  visible="{=!${DetailView>/isEditMode}}"/> -->
+                                <!-- nego_document_desc -->
                             </VBox>
 
     
@@ -183,7 +199,7 @@
                                     <HBox  width="100%" alignItems="Center">
                                         <HBox  width="50%" height="100%" alignItems="Center" >
                                             <Label  text="Bid Style" width="100px" class="sapMLabelNoText"/>
-                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" >
+                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedKey="{negotiation_style_code}" >
                                                 <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
                                                 <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
                                             </RadioButtonGroup>
@@ -201,11 +217,14 @@
 
                                         <HBox  width="50%" height="100%" alignItems="Center" >
                                             <Label  text="Period" width="100px" required="true" class="sapMLabelNoText"/> 
-                                            <CheckBox text="Immediately"/> 
+                                            <CheckBox text="Immediately" selected="{immediate_apply_flag}"/> 
                                             <ToolbarSpacer width="1rem"/> 
-                                            <DateTimePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
+                                            <DateTimePicker id="searchFromDatePicker" placeholder="Start Date ..." 
+                                                displayFormat="short" 
+                                                value="{open_date}" />
                                             <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                            <DateTimePicker placeholder="End Date ..." id="searchToDatePicker"/>
+                                            <DateTimePicker id="searchToDatePicker" placeholder="End Date ..." 
+                                                displayFormat="short" />
                                         </HBox>
 
                                         <HBox  width="50%" height="100%" alignItems="Center" >
@@ -233,10 +252,13 @@
 								inset="false" 
 								class="sapUiSmallMarginBegin sapFDynamicPageAlignContent" 
 								mode="None" noDataText="파일 없음"
+
+                                items="{viewModel>/NegoHeaders}"
+
 								width="auto">
                                 <headerToolbar>
                                     <OverflowToolbar>
-                                        <Title text="Attachments (2)" level="H2"/>
+                                        <Title text="Attachments ()" level="H2"/>
                                         <ToolbarSpacer/>
                                         
                                         <Button  text="Load Attached file From Requisition" type="Transparent" press=".onMidTableAddButtonPress"  />
@@ -248,16 +270,16 @@
                                     
                                     <!-- language_code -->
                                     <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
-                                        <Text text="Type" />
+                                        <Text text="tenant_id" />
                                     </Column>
-                                    <!-- <Column id="category_code" minScreenWidth="Tablet" hAlign="Center" >
-                                        <Text text="category_code" />
-                                    </Column> -->
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
+                                    <Column id="category_code" minScreenWidth="Tablet" hAlign="Center" >
+                                        <Text text="nego_header_id" />
+                                    </Column>
+                                    <!-- <Column minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
                                         <Text text="File Name" />
-                                    </Column>
+                                    </Column> -->
                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Description" />
+                                        <Text text="nego_document_number" />
                                     </Column>
                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
                                         <Text text="Submission No" />
@@ -279,20 +301,20 @@
                                             <Text text="20109040_미정단가_홍길동"/>
                                             <CheckBox />  
                                         </cells>
-                                    </ColumnListItem>
+                                    </ColumnListItem>-->
                                     <ColumnListItem type="Inactive" >
                                         <cells>
-                                            <Text text="xlsm"/>
-                                            <Text text="fileName2"/>
-                                            <Text text="Bare PCB ** LM195WF1-SPA1-T"/>
+                                            <Text text="{viewModel>tenant_id}"/>
+                                            <Text text="{viewModel>nego_header_id}"/>
+                                            <Text text="{viewModel>nego_document_number}"/>
                                             <Text text="2198865-1"/>
                                             <Text text="20109046_미정단가_홍길동"/>
                                             <CheckBox />  
                                         </cells>
-                                    </ColumnListItem> -->
+                                    </ColumnListItem> 
                                 </items>
 						    </Table>
-
+                            </content>
                         </Panel>
                        
 					</uxap:ObjectPageSubSection>

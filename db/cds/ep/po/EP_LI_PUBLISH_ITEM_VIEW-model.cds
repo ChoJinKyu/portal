@@ -43,6 +43,9 @@ entity Li_Publish_Item_View {
         supplier_selection_date    : Date                @title : '업체선정일자';
         supplier_opinion           : String(3000)        @title : 'VOC';
         remark                     : String(3000)        @title : '비고';
+        plant_code                 : String(10)          @title : '플랜트코드';
+        plant_name                 : String(240)         @title : '플랜트명';
+        spec_desc                  : String(1000)        @title : '규격설명';
 
 }
 

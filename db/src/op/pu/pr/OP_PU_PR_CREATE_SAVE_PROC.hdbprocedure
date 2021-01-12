@@ -33,6 +33,7 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
 							PR_UNIT NVARCHAR(3),
                             REQUESTOR_EMPNO NVARCHAR(30),
                             REQUESTOR_NAME NVARCHAR(50),
+                            DELIVERY_REQUEST_DATE DATE, 
                             BUYER_EMPNO NVARCHAR(30),
                             PURCHASING_GROUP_CODE NVARCHAR(3),
                             ESTIMATED_PRICE DECIMAL(34),
@@ -40,6 +41,7 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
                             PRICE_UNIT NVARCHAR(3),
                             PR_PROGRESS_STATUS_CODE NVARCHAR(30),
                             REMARK NVARCHAR(3000),
+                            SLOC_CODE NVARCHAR(3),
 							UPDATE_USER_ID NVARCHAR(255)
         ),
         OUT O_RTN_MSG TABLE( RETURN_CODE NVARCHAR(4),
@@ -69,6 +71,7 @@ BEGIN
 				PR_UNIT,
                 REQUESTOR_EMPNO ,
                 REQUESTOR_NAME ,
+                DELIVERY_REQUEST_DATE,
                 BUYER_EMPNO ,
                 PURCHASING_GROUP_CODE,
                 ESTIMATED_PRICE ,
@@ -76,6 +79,7 @@ BEGIN
                 PRICE_UNIT ,
                 PR_PROGRESS_STATUS_CODE ,
                 REMARK ,
+                SLOC_CODE, 
 				UPDATE_USER_ID 
         FROM :I_D_TABLE DTL
         ;
@@ -231,6 +235,7 @@ BEGIN
             PRICE_UNIT ,
             PR_PROGRESS_STATUS_CODE ,
             REMARK ,
+            SLOC_CODE,
             DELETE_FLAG,
             CLOSING_FLAG,
             LOCAL_CREATE_DTM,
@@ -254,7 +259,7 @@ BEGIN
             curDtl.REQUESTOR_EMPNO,
             curDtl.REQUESTOR_NAME,
             CURRENT_TIMESTAMP,
-            CURRENT_TIMESTAMP,
+            curDtl.DELIVERY_REQUEST_DATE,
             curDtl.BUYER_EMPNO,
             curDtl.PURCHASING_GROUP_CODE,
             curDtl.ESTIMATED_PRICE ,
@@ -262,6 +267,7 @@ BEGIN
             curDtl.PRICE_UNIT ,
             curDtl.PR_PROGRESS_STATUS_CODE ,
             curDtl.REMARK ,
+            curDtl.SLOC_CODE,
             FALSE ,
             FALSE ,       
             CURRENT_TIMESTAMP,

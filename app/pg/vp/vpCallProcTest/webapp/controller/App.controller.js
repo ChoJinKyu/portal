@@ -111,7 +111,7 @@ vpSupplierList.push({
     ,supeval_control_end_date: "20211229"
     //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
     //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
-    //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
+    //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  나중에
     ,supplier_rm_control_flag: false
     ,supplier_base_portion_rate: 0.0
     ,vendor_pool_mapping_use_flag: true

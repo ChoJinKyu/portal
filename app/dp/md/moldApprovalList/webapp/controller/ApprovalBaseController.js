@@ -167,6 +167,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
             this.getView().setModel(new ManagedModel(), "appType");
+            this.getView().setModel(new ManagedModel(), "oEmployee");
 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 
@@ -567,7 +568,7 @@ sap.ui.define([
          */
         handleEmployeeSelectDialogPress: function (oEvent) {
             var oTable = this.byId("ApproverTable");
-
+            var that = this;
             var aItems = oTable.getItems();
             if (aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == undefined
                 || aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == "") {
@@ -588,9 +589,39 @@ sap.ui.define([
 
                 this._oDialog.then(function (oDialog) {
                     oDialog.open();
+                    that.byId("btnEmployeeSrch").firePress();
                 });
             }
         },
+        /**
+         * @description employee 팝업에서 search 버튼 누르기 
+         */
+        onEmployeeSearch : function(){
+
+            var aSearchFilters = []; 
+             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600')); 
+             var employee = this.byId('employSearch').getValue().trim();
+            if (employee != undefined && employee != "" && employee != null) {
+                var nFilters = [];
+              
+                nFilters.push(new Filter("approver_name", FilterOperator.Contains, String(employee)));
+                nFilters.push(new Filter("employee_number", FilterOperator.Contains, String(employee)));
+;                
+                var oInFilter = {
+                    filters: nFilters,
+                    and : false
+                };
+                aSearchFilters.push(new Filter(oInFilter));
+            }
+
+            this._bindView("/RefererSearch", "oEmployee", aSearchFilters, function (oData) {
+                console.log("/RefererSearch " , oData);
+            }.bind(this)); 
+            
+            console.log(" oEmployee " , this.getModel('oEmployee'));
+
+        },
+
         /**
          * @description employee 팝업에서 apply 버튼 누르기 
          */

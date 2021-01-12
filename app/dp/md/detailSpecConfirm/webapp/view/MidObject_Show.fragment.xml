@@ -116,6 +116,7 @@
                 <Select width="100%"
                         editable="false"
                         class="readonlyField"
+                        forceSelection="false"
                         selectedKey="{master>/account_code}"
                         items="{
                                     path : 'util>/Code',
@@ -147,6 +148,7 @@
                 <Select width="100%"
                         editable="false"
                         class="readonlyField"
+                        forceSelection="false"
                         selectedKey="{master>/market_type_code}"
                         items="{
                                     path : 'util>/Code',
@@ -178,6 +180,7 @@
                 <Select width="100%"
                         editable="false"
                         class="readonlyField"
+                        forceSelection="false"
                         selectedKey="{master>/investment_ecst_type_code}"
                         items="{
                                     path : 'util>/Code',

@@ -28,7 +28,8 @@ sap.ui.define([
     'sap/m/SearchField',
     "ext/lib/util/ValidatorUtil",
     "sap/f/library",
-    "ext/lib/util/ControlUtil"
+    "ext/lib/util/ControlUtil",
+    "sap/ui/model/resource/ResourceModel"  
     
 ], function (BaseController,
 	History,
@@ -59,7 +60,8 @@ sap.ui.define([
     SearchField,
     ValidatorUtil,
     library,
-    ControlUtil   
+    ControlUtil,
+    ResourceModel,   
 
 ) {
     "use strict";
@@ -75,7 +77,8 @@ sap.ui.define([
     var pop_o_unitcode = "";
     // var pop_vp_cd = "";
     var pop_p_vp_cd = "";
-
+    var pop_hierarchy_level = "";
+    var pop_target_level = "";
     //routing param
     var pVendorPool = "";
     var pTenantId  = "";
@@ -107,6 +110,12 @@ sap.ui.define([
 				oResourceBundle = this.getResourceBundle();
 
             this.oRouter = this.getOwnerComponent().getRouter();
+
+            var i18nModel = new ResourceModel({
+            bundleName: "pg.vp.vpMgt.i18n.i18n_en",
+            supportedLocales: [""],
+            fallbackLocale: ""
+            });
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
@@ -288,6 +297,7 @@ sap.ui.define([
             this.byId("pop_inp_type_code").setEnabled(false);
             this.byId("pop_plan_base").setEnabled(false);
             this.byId("pop_regular_evaluation_flag").setEnabled(false);
+            this.byId("pop_maker_material_code_mngt_flag").setEnabled(false);
             this.byId("pop_sd_exception_flag").setEnabled(false);
             this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
             this.byId("pop_equipment_grade_code").setEnabled(false);
@@ -295,18 +305,18 @@ sap.ui.define([
             this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
             this.byId("pop_domestic_net_price_diff_rate").setEnabled(false);
 
-            var oView = this.getView();
-            var oModel = oView.getModel("VpMst");  
-            oModel.setTransactionModel(oView.getModel());
-            oModel.read("/VpMst", {
-                success: function(oData){
-                    oView.setBusy(false);
-                }
-            });   
+            this.resetValue();
 
-var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
+            // var oView = this.getView();
+            // var oModel = oView.getModel("VpMst");  
+            // oModel.setTransactionModel(oView.getModel());
+            // oModel.read("/VpMst", {
+            //     success: function(oData){
+            //         oView.setBusy(false);
+            //     }
+            // });   
 
-            var oView = this.getView();
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
 
             if(sSurffix ==="S")
             {
@@ -325,77 +335,243 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
                 var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 this.byId("tpop_Operation_ORG").setSelectedKey(s_Operation_ORG_E);
                 this.byId("tpop_operation_unit_code").setSelectedKey(s_Operation_UNIT_E);                    
-
-                            
+               
             }  
+
+            this.onDialogSearch();
 
         },
         onDialogCreatelower: function (){
-  
-            if(pop_h_lv === "2")
-            {
-                MessageBox.error("Lower Level를 생성 할 수 없습니다.  *임시*");
-            }
-            else
-            {
-                this.byId("pop_higher_level_path").setText(pop_lv);
-                this.byId("pop_operation_unit_name").setText(pop_org);
-                
-                //화면 LAYOUT
-                this.byId("pop_save_bt").setVisible(true);
-                this.byId("pop_vendor_pool_local_name").setEnabled(true);
-                this.byId("pop_vendor_pool_english_name").setEnabled(true);
-                this.byId("pop_vendor_pool_desc").setEnabled(true);
-                this.byId("pop_repr_department_code").setEnabled(true);
-                this.byId("pop_industry_class_code").setEnabled(true);
-                this.byId("pop_inp_type_code").setEnabled(true);
-                this.byId("pop_plan_base").setEnabled(true);
-                this.byId("pop_regular_evaluation_flag").setEnabled(true);
-                this.byId("pop_sd_exception_flag").setEnabled(true);
-                this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
-                this.byId("pop_equipment_grade_code").setEnabled(true);
-                this.byId("pop_equipment_type_code").setEnabled(true);
-                this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
-                this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);
-            }
+
+            if (this.byId("tpop_Operation_ORG").getSelectedKey() && 
+            this.byId("tpop_Operation_ORG").getSelectedKey().length > 0 &&
+             this.byId("tpop_operation_unit_code").getSelectedKey() && 
+             this.byId("tpop_operation_unit_code").getSelectedKey().length > 0){
+
+                if(pop_h_lv === "0"){
+                    pop_target_level = "1";
+                }else if(pop_h_lv === "1"){
+                    pop_target_level = "2";
+                }
+
+                if(pop_h_lv === "2")
+                {
+                    MessageBox.error("Lower Level를 생성 할 수 없습니다.  *임시*");
+                }
+                else if (pop_h_lv === "1")
+                {
+                    this.byId("pop_higher_level_path").setText(pop_lv);
+                    this.byId("pop_operation_unit_name").setText(pop_org);
+                    
+                    //화면 LAYOUT
+                    this.byId("pop_save_bt").setVisible(true);
+                    this.byId("pop_vendor_pool_local_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_english_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_desc").setEnabled(true);
+                    this.byId("pop_repr_department_code").setEnabled(true);
+                    this.byId("pop_industry_class_code").setEnabled(true);
+                    this.byId("pop_inp_type_code").setEnabled(true);
+                    this.byId("pop_plan_base").setEnabled(true);
+                    this.byId("pop_regular_evaluation_flag").setEnabled(true);
+                    this.byId("pop_sd_exception_flag").setEnabled(true);
+                    this.byId("pop_maker_material_code_mngt_flag").setEnabled(true);
+                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
+                    this.byId("pop_equipment_grade_code").setEnabled(true);
+                    this.byId("pop_equipment_type_code").setEnabled(true);
+                    this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
+                    this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);
+                }
+                else{
+                    //화면 LAYOUT
+                    this.byId("pop_save_bt").setVisible(true);
+                    this.byId("pop_vendor_pool_local_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_english_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_desc").setEnabled(true);
+                    this.byId("pop_repr_department_code").setEnabled(false);
+                    this.byId("pop_industry_class_code").setEnabled(false);
+                    this.byId("pop_inp_type_code").setEnabled(false);
+                    this.byId("pop_plan_base").setEnabled(false);
+                    this.byId("pop_regular_evaluation_flag").setEnabled(false);
+                    this.byId("pop_sd_exception_flag").setEnabled(false);
+                    this.byId("pop_maker_material_code_mngt_flag").setEnabled(false);
+                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
+                    this.byId("pop_equipment_grade_code").setEnabled(false);
+                    this.byId("pop_equipment_type_code").setEnabled(false);
+                    this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
+                    this.byId("pop_domestic_net_price_diff_rate").setEnabled(false);
+                }
+             }    
         },
 
         onDialogCreateSame: function (){
  
-            if(pop_h_lv === "0")
-            {
-                MessageBox.error("추후 ORG UNIT 입력가능 콤보로 변경  *임시*");
-                this.byId("pop_higher_level_path").setText(pop_h_path);
-                this.byId("pop_operation_unit_name").setText(pop_org);
-            }
-            else
-            {
-                this.byId("pop_higher_level_path").setText(pop_h_path);
-                this.byId("pop_operation_unit_name").setText(pop_org);
-            }       
-            //화면 LAYOUT
-            this.byId("pop_save_bt").setVisible(true);
-            this.byId("pop_vendor_pool_local_name").setEnabled(true);
-            this.byId("pop_vendor_pool_english_name").setEnabled(true);
-            this.byId("pop_vendor_pool_desc").setEnabled(true);
-            this.byId("pop_repr_department_code").setEnabled(true);
-            this.byId("pop_industry_class_code").setEnabled(true);
-            this.byId("pop_inp_type_code").setEnabled(true);
-            this.byId("pop_plan_base").setEnabled(true);
-            this.byId("pop_regular_evaluation_flag").setEnabled(true);
-            this.byId("pop_sd_exception_flag").setEnabled(true);
-            this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
-            this.byId("pop_equipment_grade_code").setEnabled(true);
-            this.byId("pop_equipment_type_code").setEnabled(true);
-            this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
-            this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);    
+            pop_target_level = pop_h_lv;
+
+            if (this.byId("tpop_Operation_ORG").getSelectedKey() && 
+            this.byId("tpop_Operation_ORG").getSelectedKey().length > 0 &&
+             this.byId("tpop_operation_unit_code").getSelectedKey() && 
+             this.byId("tpop_operation_unit_code").getSelectedKey().length > 0){
+
+                // if(pop_h_lv === "0")
+                // {
+                //     // MessageBox.error("추후 ORG UNIT 입력가능 콤보로 변경  *임시*");
+                //     this.byId("pop_higher_level_path").setText(pop_h_path);
+                //     this.byId("pop_operation_unit_name").setText(pop_org);
+                // }
+                // else 
+                if (pop_target_level === "2")
+                {
+                    this.byId("pop_higher_level_path").setText(pop_h_path);
+                    this.byId("pop_operation_unit_name").setText(pop_org);
+                    //화면 LAYOUT
+                    this.byId("pop_save_bt").setVisible(true);
+                    this.byId("pop_vendor_pool_local_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_english_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_desc").setEnabled(true);
+                    this.byId("pop_repr_department_code").setEnabled(true);
+                    this.byId("pop_industry_class_code").setEnabled(true);
+                    this.byId("pop_inp_type_code").setEnabled(true);
+                    this.byId("pop_plan_base").setEnabled(true);
+                    this.byId("pop_regular_evaluation_flag").setEnabled(true);
+                    this.byId("pop_sd_exception_flag").setEnabled(true);
+                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
+                    this.byId("pop_maker_material_code_mngt_flag").setEnabled(true);
+                    this.byId("pop_equipment_grade_code").setEnabled(true);
+                    this.byId("pop_equipment_type_code").setEnabled(true);
+                    this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
+                    this.byId("pop_domestic_net_price_diff_rate").setEnabled(true); 
+
+                }else{
+                    this.byId("pop_higher_level_path").setText(pop_h_path);
+                    this.byId("pop_operation_unit_name").setText(pop_org);
+                    //화면 LAYOUT
+                    this.byId("pop_save_bt").setVisible(true);
+                    this.byId("pop_vendor_pool_local_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_english_name").setEnabled(true);
+                    this.byId("pop_vendor_pool_desc").setEnabled(true);
+                    this.byId("pop_repr_department_code").setEnabled(false);
+                    this.byId("pop_industry_class_code").setEnabled(false);
+                    this.byId("pop_inp_type_code").setEnabled(false);
+                    this.byId("pop_plan_base").setEnabled(false);
+                    this.byId("pop_regular_evaluation_flag").setEnabled(false);
+                    this.byId("pop_sd_exception_flag").setEnabled(false);
+                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
+                    this.byId("pop_maker_material_code_mngt_flag").setEnabled(false);
+                    this.byId("pop_equipment_grade_code").setEnabled(false);
+                    this.byId("pop_equipment_type_code").setEnabled(false);
+                    this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
+                    this.byId("pop_domestic_net_price_diff_rate").setEnabled(false);  
+                }       
+  
             
             // this.getView().byId("pop_vendor_pool_local_name").setValue("");
 
-		
+            }
         },
 
-        
+        onDialogDel: function (){
+
+
+
+            var oModel = this.getModel("vpMappingProc"),
+            oView = this.getView(),   
+            oBundle = this.getView().getModel("i18n").getResourceBundle(),                
+            sMsg,
+            v_returnModel,
+            urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
+
+            var inputInfo = {},
+                vpMstList = []
+                
+                inputInfo = {
+                    inputData: {
+                        vpMst: [],
+                        vpSupplier: [],
+                        vpItem: [],
+                        vpManager: [],
+                        user_id: "testerId",
+                        user_no: "testerNo"
+                    }
+                };
+    
+
+            vpMstList.push({
+                
+                tenant_id: pop_t_id //auto set
+                ,company_code: pop_com_cd //auto set
+                ,org_type_code: pop_orgtype  //auto set
+                ,org_code: pop_org  //auto set
+                ,vendor_pool_code: pop_p_vp_cd  //auto set
+                ,crud_type_code : "D" // 삭제
+            
+            });
+
+            inputInfo.inputData.vpMst = vpMstList; 
+            
+            $.ajax({
+                url: urlInfo,
+                type: "POST",
+                //datatype: "json",
+                //data: input,
+                data: JSON.stringify(inputInfo),
+                contentType: "application/json",
+                success: function (data) {
+                    //MessageToast.show("Success 1st Proc!");
+                    console.log('data:', data);
+                    console.log('data:', data.value[0]);
+                    v_returnModel = oView.getModel("returnModel").getData().data;
+                    console.log('v_returnModel:', v_returnModel);
+                    v_returnModel.return_code = data.value[0].return_code;
+                    v_returnModel.return_msg = data.value[0].return_msg.substring(0, 8);
+                    oView.getModel("returnModel").updateBindings(true);
+
+                    //MessageToast.show(data.value[0].return_msg);
+                    console.log(data.value[0].return_msg.substring(0, 8));
+                    //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
+                    sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
+                    //MessageToast.show(sMsg);
+                    console.log(data.value[0].return_msg);
+                    alert(sMsg);
+                    MessageToast.show(sMsg);
+                },
+                error: function (e) {
+                    var eMessage = "callProcError",
+                        errorType,
+                        eMessageDetail;
+
+                    v_returnModel = oView.getModel("returnModel").getData().data;
+                    console.log('v_returnModel_e:', v_returnModel);
+                    v_returnModel.return_code = 'error';
+                    v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
+
+                    
+                    //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
+                    if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
+                        eMessage = "callProcError";
+                        eMessageDetail = "callProcError";
+                    }else{
+                        eMessage = e.responseJSON.error.message.substring(0, 8);
+                        eMessageDetail = e.responseJSON.error.message.substring(9);
+                        errorType = e.responseJSON.error.message.substring(0, 1);
+                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                        
+                        //MessageToast.show(eMessageDetail);
+                    }
+
+                    sMsg = oBundle.getText(eMessage);
+                    if(errorType === 'E'){
+                        alert(sMsg);                    
+                    }else{
+                        alert(eMessageDetail);                    
+                    }
+                    
+                    
+                    MessageToast.show(sMsg);                    
+                }
+            });
+
+            
+        },
         
         onCheck: function (oEvent){
             // debugger;
@@ -414,7 +590,7 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             var p_org_type_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[7].mProperties.text            
             var p_parent_vendor_pool_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[8].mProperties.text   
             var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[9].mProperties.text   
-
+            // var p_hierarchy_level = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[10].mProperties.text   
             // alert("p_vendor_pool_local_name : " + p_vendor_pool_local_name  + 
             // "   p_higher_level_path : " + p_higher_level_path + 
             // "   p_level_path : " + p_level_path + 
@@ -431,6 +607,7 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             pop_orgtype = p_org_type_code;
             pop_p_vp_cd = p_parent_vendor_pool_code;
             pop_o_unitcode = p_operation_unit_code;
+            pop_hierarchy_level= p_hierarchy_level;
             console.log(this.getModel("util"));
 
         },                 
@@ -440,6 +617,29 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             this.byId("ceateVpCategory").close();
         },      
 
+        resetValue: function (){
+
+            this.getView().byId("pop_higher_level_path").setText("");
+            this.getView().byId("pop_operation_unit_name").setText("");
+            this.getView().byId("pop_vendor_pool_local_name").setValue("");
+            this.getView().byId("pop_vendor_pool_english_name").setValue("");
+            this.getView().byId("pop_vendor_pool_desc").setValue("");
+            this.getView().byId("pop_repr_department_code").setValue("");
+            // this.getView().byId("pop_repr_department_code").setSelectedKey("");
+            // this.getView().byId("general_industry_class_code").setSelectedKey("");
+            this.getView().byId("pop_industry_class_code").setSelectedKey("");
+            this.getView().byId("pop_inp_type_code").setSelectedKey("");
+            this.getView().byId("pop_plan_base").setSelectedKey("");
+            this.getView().byId("pop_regular_evaluation_flag").setState(false);
+            this.getView().byId("pop_sd_exception_flag").setState(false);
+            this.getView().byId("pop_vendor_pool_apply_exception_flag").setState(false);
+            this.getView().byId("pop_maker_material_code_mngt_flag").setState(false);
+            this.getView().byId("pop_equipment_grade_code").setSelectedKey("");
+            this.getView().byId("pop_equipment_type_code").setSelectedKey("");
+            this.getView().byId("pop_dom_oversea_netprice_diff_rate").setValue("");
+            this.getView().byId("pop_domestic_net_price_diff_rate").setValue("");
+        },
+
         handleSave: function (oEvent){
 
             var stenant_id = pop_t_id;
@@ -448,22 +648,26 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             var sorg_code = pop_org;
             var soperation_unit_code = pop_o_unitcode;
             var sparent_vendor_pool_code = pop_p_vp_cd;
-            var svendor_pool_code = "VP202010280410";
+            // var svendor_pool_code = "VP202010280410";
             var svendor_pool_use_flag = true;
             var svendor_pool_local_name = this.getView().byId("pop_vendor_pool_local_name").getValue().trim();
             var svendor_pool_english_name = this.getView().byId("pop_vendor_pool_english_name").getValue().trim();
             var svendor_pool_desc = this.getView().byId("pop_vendor_pool_desc").getValue().trim();
-            var srepr_department_code = this.getView().byId("pop_repr_department_code").getValue().trim();
-			var sindustry_class_code = this.getView().byId("pop_industry_class_code").getSelectedKey();
-            var	sinp_type_code = this.getView().byId("pop_inp_type_code").getSelectedKey();
-            var splan_base = this.getView().byId("pop_plan_base").getSelectedKey();
-            var sregular_evaluation_flag = this.getView().byId("pop_regular_evaluation_flag").getState();
-            var ssd_exception_flag = this.getView().byId("pop_sd_exception_flag").getState();
-            var svendor_pool_apply_exception_flag = this.getView().byId("pop_vendor_pool_apply_exception_flag").getState();
-			var sequipment_grade_code = this.getView().byId("pop_equipment_grade_code").getSelectedKey();
-            var	sequipment_type_code = this.getView().byId("pop_equipment_type_code").getSelectedKey();    
-			var sdom_oversea_netprice_diff_rate = this.getView().byId("pop_dom_oversea_netprice_diff_rate").getValue().trim();
-            var	sdomestic_net_price_diff_rate = this.getView().byId("pop_domestic_net_price_diff_rate").getValue().trim();                        
+            if(pop_target_level === "2")
+            {
+                var srepr_department_code = this.getView().byId("pop_repr_department_code").getSelectedKey().trim();
+                var sindustry_class_code = this.getView().byId("pop_industry_class_code").getSelectedKey();
+                var	sinp_type_code = this.getView().byId("pop_inp_type_code").getSelectedKey();
+                var splan_base = this.getView().byId("pop_plan_base").getSelectedKey();
+                var sregular_evaluation_flag = this.getView().byId("pop_regular_evaluation_flag").getState();
+                var smaker_material_code_mngt_flag = this.getView().byId("pop_maker_material_code_mngt_flag").getState();
+                var ssd_exception_flag = this.getView().byId("pop_sd_exception_flag").getState();
+                var svendor_pool_apply_exception_flag = this.getView().byId("pop_vendor_pool_apply_exception_flag").getState();
+                var sequipment_grade_code = this.getView().byId("pop_equipment_grade_code").getSelectedKey();
+                var	sequipment_type_code = this.getView().byId("pop_equipment_type_code").getSelectedKey();    
+                var sdom_oversea_netprice_diff_rate = this.getView().byId("pop_dom_oversea_netprice_diff_rate").getValue().trim();
+                var	sdomestic_net_price_diff_rate = this.getView().byId("pop_domestic_net_price_diff_rate").getValue().trim();                        
+            }
 
             // alert(" stenant_id  " + stenant_id +
             // "  scompany_code  " + scompany_code +
@@ -494,7 +698,9 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             // var oModel =  oView.getModel();
             // console.log(oModel);
             // oModel.setTransactionModel(this.getModel());
-            oModel.addRecord({
+            if(pop_target_level === "2")
+            {
+                oModel.addRecord({
                 "tenant_id" : stenant_id,
                 "company_code" : scompany_code,
                 "org_type_code" : sorg_type_code,
@@ -510,6 +716,7 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
                 "industry_class_code" : sindustry_class_code,
                 "inp_type_code" : sinp_type_code,
                 "mtlmob_base_code" : splan_base,
+                "maker_material_code_mngt_flag " : smaker_material_code_mngt_flag,
                 "regular_evaluation_flag" : sregular_evaluation_flag,
                 "sd_exception_flag" : ssd_exception_flag,
                 "vendor_pool_apply_exception_flag" : svendor_pool_apply_exception_flag,
@@ -519,8 +726,25 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
                 // "local_update_dtm": "2020-11-09T00:00:00Z",
                 "dom_oversea_netprice_diff_rate" : sdom_oversea_netprice_diff_rate,
                 "domestic_net_price_diff_rate" : sdomestic_net_price_diff_rate
-                
-            }, 0);
+                            }, 0);
+            }
+            else{
+
+                        
+            oModel.addRecord({
+                "tenant_id" : stenant_id,
+                "company_code" : scompany_code,
+                "org_type_code" : sorg_type_code,
+                "org_code" : sorg_code,
+                "operation_unit_code" : soperation_unit_code,
+                "parent_vendor_pool_code" : sparent_vendor_pool_code,
+                "vendor_pool_use_flag" : svendor_pool_use_flag,
+                // "vendor_pool_code" : svendor_pool_code,
+                "vendor_pool_local_name" : svendor_pool_local_name,
+                "vendor_pool_english_name" : svendor_pool_english_name,
+                "vendor_pool_desc" : svendor_pool_desc,
+                    }, 0);
+                }
             // var sServiceUrl = "/VpMst";
             // var oParameters = {
             //     "tenant_id" : stenant_id,
@@ -652,43 +876,52 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             
             var predicates = [];
 
-            if (!!this.byId("tpop_Operation_ORG").getSelectedKey()) {
-                    predicates.push(new Filter("org_code", FilterOperator.Contains, this.byId("tpop_Operation_ORG").getSelectedKey()));
+            if (this.byId("tpop_Operation_ORG").getSelectedKey() && this.byId("tpop_Operation_ORG").getSelectedKey().length > 0 && this.byId("tpop_operation_unit_code").getSelectedKey() && this.byId("tpop_operation_unit_code").getSelectedKey().length > 0){
+
+                if (!!this.byId("tpop_Operation_ORG").getSelectedKey()) {
+                        predicates.push(new Filter("org_code", FilterOperator.Contains, this.byId("tpop_Operation_ORG").getSelectedKey()));
+                    }
+                if (!!this.byId("tpop_operation_unit_code").getSelectedKey()) {
+                        predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("tpop_operation_unit_code").getSelectedKey()));
+                    }                
+                if (!!this.byId("tpop_vendor_pool_local_name").getValue()) {
+                    predicates.push(new Filter({
+                        path:'keyword',
+                        filters: [
+                            new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
+                        ],
+                        and: false
+                    }));
                 }
-            if (!!this.byId("tpop_operation_unit_code").getSelectedKey()) {
-                    predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("tpop_operation_unit_code").getSelectedKey()));
-                }                
-            if (!!this.byId("tpop_vendor_pool_local_name").getValue()) {
-                predicates.push(new Filter({
-                    path:'keyword',
-                    filters: [
-                        new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
-                    ],
-                    and: false
-                }));
+
+                this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
+                    this.getView().setBusy(true);
+                    this.treeListModel
+                        .read("/VpPopupView", {
+                            filters: predicates
+                        })
+                        // 성공시
+                        .then((function (jNodes) {
+                            this.getView().setModel(new JSONModel({
+                                "VpPopupView": {
+                                    "nodes": jNodes
+                                }
+                            }), "tree");
+                        }).bind(this))
+                        // 실패시
+                        .catch(function (oError) {
+                        })
+                        // 모래시계해제
+                        .finally((function () {
+                            this.getView().setBusy(false);
+                        }).bind(this));
+
+            }
+            else{
+                MessageToast.show("필수값을 입력 하세요.");
             }
 
-            this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
-                this.getView().setBusy(true);
-                this.treeListModel
-                    .read("/VpPopupView", {
-                        filters: predicates
-                    })
-                    // 성공시
-                    .then((function (jNodes) {
-                        this.getView().setModel(new JSONModel({
-                            "VpPopupView": {
-                                "nodes": jNodes
-                            }
-                        }), "tree");
-                    }).bind(this))
-                    // 실패시
-                    .catch(function (oError) {
-                    })
-                    // 모래시계해제
-                    .finally((function () {
-                        this.getView().setBusy(false);
-                    }).bind(this));
+           
             
         },
 
@@ -1109,6 +1342,14 @@ var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
 
             // this.getView().byId(idPreFix+'S').setSelectedKeys(selectedKeys);
             // this.getView().byId(idPreFix+'E').setSelectedKeys(selectedKeys);
+        },
+        fnSetFlagValue: function(flagValue) {
+            // console.log("플래그:::::" + flagValue);
+            var rtnStr = flagValue;
+            if (rtnStr !== null) {
+                rtnStr = rtnStr ? "Y" : "N"
+            }
+            return rtnStr;
         },
 
         onValueHelpRequested : function () {

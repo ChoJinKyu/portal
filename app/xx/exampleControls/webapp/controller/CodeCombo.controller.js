@@ -82,26 +82,11 @@ sap.ui.define([
         },
 
         onCodeDialogPress: function(){
-            if(!this.oSearchCodeDialog){
-                this.oSearchCodeDialog = new CodeValueHelp({
-                    title: "Choose a Country",
-                    multiSelection: false,
-                    contentWidth: "25em",
-                    keyField: "country_code",
-                    textField: "country_code_name",
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                        ],
-                        serviceName: "cm.util.CommonService",
-                        entityName: "Country"
-                    }
-                });
-                this.oSearchCodeDialog.attachEvent("apply", function(oEvent){
-                    this.byId("searchCodeFromValueHelp").setValue(oEvent.getParameter("item").country_code);
-                }.bind(this));
-            }
-            this.oSearchCodeDialog.open();
+            this.byId("employeeDialog").open();
+        },
+
+        onCodeDialogPressApply: function(oEvent){
+            this.byId("searchCodeFromValueHelp").setValue(oEvent.getParameter("item").user_local_name);
         },
 
         onCodeMultiDialogPress: function(){
