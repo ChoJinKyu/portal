@@ -103,7 +103,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox> 
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantE" required="true"></Label>
                                 <MultiComboBox id="searchPlantE" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
