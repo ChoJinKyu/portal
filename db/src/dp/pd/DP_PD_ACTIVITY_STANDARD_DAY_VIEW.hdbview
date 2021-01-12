@@ -1,0 +1,37 @@
+VIEW DP_PD_ACTIVITY_STANDARD_DAY_VIEW AS
+SELECT pca.tenant_id,
+       pca.company_code,
+       pca.org_type_code,
+       pca.org_code,
+       pca.category_code,
+       pc.category_name,
+			 pca.part_project_type_code,
+			 ccl.code_name as part_project_type_name,
+       pca.activity_code,
+       pat.activity_name,
+       pca.s_grade_standard_days,
+       pca.a_grade_standard_days,
+       pca.b_grade_standard_days,
+       pca.c_grade_standard_days,
+       pca.d_grade_standard_days,
+       pca.active_flag,
+       pca.update_user_id,
+       pca.local_update_dtm
+  FROM DP_PD_PART_CATEGORY_ACTIVITY pca
+    LEFT JOIN DP_PD_PART_ACTIVITY_TEMPLATE pat
+    ON  pca.tenant_id = pat.tenant_id
+    AND pca.company_code = pat.company_code
+    AND pca.org_type_code = pat.org_type_code
+    AND pca.org_code = pat.org_code
+    AND pca.activity_code = pat.activity_code
+    LEFT JOIN DP_PD_PART_CATEGORY pc
+        ON  pca.tenant_id = pc.tenant_id
+        AND pca.company_code = pc.company_code
+        AND pca.org_type_code = pc.org_type_code
+        AND pca.org_code = pc.org_code
+        AND pca.category_code = pc.category_code
+    LEFT JOIN CM_CODE_LNG ccl
+        ON  pca.tenant_id = ccl.tenant_id
+        AND pca.part_project_type_code = ccl.code
+        AND ccl.language_cd = 'KO'
+;
