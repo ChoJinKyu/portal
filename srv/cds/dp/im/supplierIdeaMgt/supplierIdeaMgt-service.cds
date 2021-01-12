@@ -101,6 +101,7 @@ service SupplierIdeaMgtService {
     from Idea.Im_Supplier_Idea   isi 
     inner join Supplier.Sm_Supplier_Mst  ssm 
     on ssm.tenant_id = isi.tenant_id
+    and ssm.supplier_code = isi.supplier_code
     left join Performance.Im_Supplier_Idea_Performance isp 
     on isp.tenant_id = isi.tenant_id
     and isp.company_code = isi.company_code
