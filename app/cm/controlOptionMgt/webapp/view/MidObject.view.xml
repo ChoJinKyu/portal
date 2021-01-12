@@ -107,9 +107,6 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
-
-
-
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
 								items="{details>/ControlOptionDetails}"
@@ -159,6 +156,7 @@
                                         <ComboBox
                                             id="midLevelCombo"
                                             selectedKey="{details>control_option_level_code}"
+                                            selectionChange=".onSelectionChange($event, 'control_option_level_code')"
                                             width="100%"
                                             items="{
                                                 path: 'util>/Code',
@@ -202,7 +200,10 @@
 												visible="{= ${details>control_option_level_code} === 'O'}"
 												items="{
 													path: 'org>/organization',
-													filters: []
+													filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                        {path: 'type', operator: 'EQ', value1: 'AU'}
+                                                    ]
 												}">
 												<items>
 													<core:Item key="{org>code}" text="{org>code}" />
