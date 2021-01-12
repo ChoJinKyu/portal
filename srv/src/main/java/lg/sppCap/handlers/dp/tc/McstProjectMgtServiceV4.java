@@ -89,7 +89,7 @@ public class McstProjectMgtServiceV4 implements EventHandler {
              // Procedure Out put 담기 TcProcOutType
             while (v_rs.next()){
                 log.info("3333");
-                OutputDataType v_row = OutputDataType.create();
+                CreatePjtOutputData v_row = CreatePjtOutputData.create();
                 log.info("444");
                 log.info("version_number : "+ v_rs.getString("version_number"));
                 log.info("return_code : "+ v_rs.getString("return_code"));
