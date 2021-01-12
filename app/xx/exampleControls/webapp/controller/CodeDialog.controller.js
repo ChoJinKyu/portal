@@ -18,7 +18,7 @@ sap.ui.define([
             this.setModel(new JSONModel({
                     chain: "CM",
                     processTypes: [
-                        {key: "PG01", text: "시장분석(MI)관리"}
+                        {key: "PG01", text: "시장분석(MI)관리"}
                     ],
                     employee: "",
                     list: [{

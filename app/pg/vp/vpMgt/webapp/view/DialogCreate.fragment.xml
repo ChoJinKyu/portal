@@ -103,6 +103,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="popTableCreateButton"          text="Create Same Level"     press=".onDialogCreateSame"     enabled="{mode>/viewFlag}" />
                                     <Button id="popTableEditButton"            text="Create Lower Level"    press=".onDialogCreatelower"     enabled="{mode>/viewFlag}" />
+                                    <Button id="popTableDelButton"            icon="sap-icon://delete" text="Delete"    press=".onDialogDel"     enabled="{mode>/viewFlag}" />
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>     

@@ -315,7 +315,7 @@
                                                 path: '/',
                                                 filters : [
                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                                    {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
                                                 ],
                                                 serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
                                                 entityName: 'VpSupplierMstView'
@@ -469,7 +469,7 @@
                                                 path: '/',
                                                 filters : [
                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                                    {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
                                                 ],
                                                 serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
                                                 entityName: 'VpMaterialMst'
@@ -557,8 +557,8 @@
                                             suggestionItems="{
                                                 path: '/',
                                                 filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'org_code', operator : 'EQ', value1 : 'BIZ00200'}
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+
                                                 ],
                                                 serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
                                                 entityName: 'vpManagerDtlView'

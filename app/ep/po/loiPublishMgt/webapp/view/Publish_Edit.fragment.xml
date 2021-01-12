@@ -36,7 +36,7 @@
                 }" required="true" editable="true" width="100%"/>
 
             <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
-            <Select selectedKey="K">
+            <Select selectedKey="{master>/contract_format_id}">
                 <items>
                     <core:Item key="K" text="구매의향서(국문)" />
                     <core:Item key="E" text="구매의향서(영문)" />

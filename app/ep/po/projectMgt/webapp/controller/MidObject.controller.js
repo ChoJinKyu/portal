@@ -135,9 +135,9 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 that = this;
-            MessageBox.confirm("Are you sure to delete this control option and details?", {
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                 title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                initialFocus: MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
@@ -146,8 +146,9 @@ sap.ui.define([
                         oMasterModel.submitChanges({
                             success: function (ok) {
                                 oView.setBusy(false);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 that.onPageNavBackButtonPress.call(that);
-                                MessageToast.show("Success to delete.");
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                             }
                         });
                     };
@@ -202,22 +203,17 @@ sap.ui.define([
             // this.validator.validate(this.byId("midObjectForm1Edit"))
             if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if (this.validator.validate(this.byId("midObjectForm2Edit")) !== true) return;
-            MessageBox.confirm("Are you sure ?", {
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                initialFocus: MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
-                        console.log("############111111111111");
                         oTransactionManager.submit({
                             success: function (ok) {
-                                console.log("############22222222");
-                                console.log("############3333333333333");
                                 oView.setBusy(false);
-                                console.log("############4444444444");
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                console.log("############55555555555");
-                                MessageToast.show("Success to save.");
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that._toShowMode();
                             }
                         });
@@ -283,6 +279,7 @@ sap.ui.define([
                     "tenant_id": this._sTenantId,
                     "company_code": this._sCompanyCode,
                     "ep_project_number": "",
+                    "ep_purchasing_type_code": "E",
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date()
                 }, "/Project");
@@ -319,17 +316,17 @@ sap.ui.define([
                     }
                 });
 
-                // //조회용
-                var sViewObjectPath = "/ProjectView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
-                var oMasterViewModel = this.getModel("masterView");
-                oView.setBusy(true);
-                oMasterViewModel.setTransactionModel(this.getModel());
-                oMasterViewModel.read(sViewObjectPath, {
-                    success: function (oData) {
-                        console.log("oData=", oData);
-                        oView.setBusy(false);
-                    }
-                });
+                // // //조회용
+                // var sViewObjectPath = "/ProjectView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
+                // var oMasterViewModel = this.getModel("masterView");
+                // oView.setBusy(true);
+                // oMasterViewModel.setTransactionModel(this.getModel());
+                // oMasterViewModel.read(sViewObjectPath, {
+                //     success: function (oData) {
+                //         console.log("oData=", oData);
+                //         oView.setBusy(false);
+                //     }
+                // });
 
                 // oView.setBusy(true);
                 // var oDetailsModel = this.getModel("details");
