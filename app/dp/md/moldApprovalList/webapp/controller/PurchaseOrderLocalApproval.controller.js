@@ -190,7 +190,8 @@ sap.ui.define([
                 "supplier_code": data.supplier_code,
                 "target_amount": data.target_amount,
                 "mold_production_type_code": data.mold_production_type_code,
-                "family_part_number_1": data.family_part_number_1
+                "family_part_number_1": data.family_part_number_1,
+                "account_code": data.account_code
             }, "/PurchaseOrderItems", 0);
             //this.validator.clearValueState(this.byId("poItemTable"));
 
@@ -382,7 +383,7 @@ sap.ui.define([
                 return;
             }
             
-            if(oModel.getData().PurchaseOrderItems === undefined || oModel.getData().PurchaseOrderItems.length === 0){
+            if(oModel.getData().PurchaseOrderItems.length === 0){
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;
             }
@@ -396,11 +397,8 @@ sap.ui.define([
                 return;
             }
 
-            this.approval_type_code = "V";
-
-            this.getModel("appMaster").setProperty("/approve_status_code", approveStatusCode);
-
             var oModel = this.getModel("purOrderItem"),
+                orderItems = oModel.getData().PurchaseOrderItems,
                 pModel = this.getModel("payment"),
                 split_pay_type_code = pModel.getData().split_pay_type_code,
                 prepay_rate =  pModel.getData().prepay_rate,
@@ -409,9 +407,26 @@ sap.ui.define([
                 purchasing_amount =  pModel.getData().purchasing_amount,
                 total = Number(prepay_rate) + Number(progresspay_rate) + Number(rpay_rate);
 
-            this.approvalDetails_data = [] ;
-            this.moldMaster_data = [] ;
-            
+            if(orderItems.length > 1){
+                var accountCode = orderItems[0].account_code,
+                    supplierCode = orderItems[0].supplier_code,
+                    currencyCode = orderItems[0].currency_code;
+                for(var idx = 1; idx < orderItems.length; idx++){
+                    if(accountCode !== orderItems[idx].account_code){
+                        MessageToast.show("계정코드가 같지 않습니다.");
+                        return;
+                    }
+                    if(supplierCode !== orderItems[idx].supplier_code){
+                        MessageToast.show("업체가 같지 않습니다.");
+                        return;
+                    }
+                    if(currencyCode !== orderItems[idx].currency_code){
+                        MessageToast.show("통화가 같지 않습니다.");
+                        return;
+                    }
+                }
+            }
+
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
                     if(prepay_rate >= total){
@@ -451,8 +466,15 @@ sap.ui.define([
                 rpay_rate =  null;
             }
 
-            if(oModel.getData().PurchaseOrderItems != undefined && oModel.getData().PurchaseOrderItems.length > 0){
-                oModel.getData().PurchaseOrderItems.forEach(function(item){
+            this.approval_type_code = "V";
+
+            this.getModel("appMaster").setProperty("/approve_status_code", approveStatusCode);
+
+            this.approvalDetails_data = [];
+            this.moldMaster_data = [];
+            
+            if(orderItems != undefined && orderItems.length > 0){
+                orderItems.forEach(function(item){
                     this.approvalDetails_data.push({
                         tenant_id : this.tenant_id, 
                         approval_number : this.approval_number, 
