@@ -113,7 +113,7 @@ entity Sc_Nego_Headers_Test03 {
         close_date_ext_enabled_hours    : Integer             @title : '마감일자연장가능시개수';
         close_date_ext_enabled_count    : Integer             @title : '마감일자연장가능횟수';
         actual_extension_count          : Integer             @title : '실제연장횟수';
-        note_content                    : String(4000)        @title : '노트내용';
+        note_content                    : LargeBinary(4000)   @title : '노트내용';
         // supplier_notice                 : String(4000)        @title : '공급업체특기사항';
         award_type_code                 : String(100)         @title : '낙찰유형코드';
         target_amount_config_flag       : String(1)           @title : '목표금액설정여부';

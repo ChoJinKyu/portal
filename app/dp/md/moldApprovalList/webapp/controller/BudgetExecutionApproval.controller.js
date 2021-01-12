@@ -56,6 +56,7 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
+            this.getView().setModel(new ManagedListModel(), "importCompany"); 
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
         },
@@ -72,8 +73,12 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
             this.getView().setModel(new ManagedModel(), "mdCommon"); 
             this.getView().setModel(new ManagedListModel(), "importPlant"); 
+            
 
             console.log(" this.approval_number "  ,  this.approval_number);
+
+            this._searchImportCompany();
+
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
@@ -132,6 +137,26 @@ sap.ui.define([
                     }
                 });
             },
+
+        _searchImportCompany : function(){
+              var nFilter = [
+                         new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                       , new Filter("company_code", FilterOperator.NE , this.company_code )
+                ];
+            console.log("nFilter>>>>> " , nFilter);
+            var oView = this.getView(),
+                oModel = this.getModel("importCompany");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("org"));
+            oModel.read("/Company", {
+                filters: nFilter,
+                success: function (oData) {
+                    console.log("Company oData>>> " , oData) 
+                    oView.setBusy(false);
+                }
+            });
+
+        },
 
         /**
          * Import Company 파라미터 받고 조회 
@@ -385,12 +410,15 @@ sap.ui.define([
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
-
+            
             if(bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0){
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;
             }
-
+            if(this.validator.validate(this.byId("budgetExecutionTable")) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
 
             var that = this;
             

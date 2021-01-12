@@ -4,8 +4,8 @@
 # Uncomment this when running a separate reviews service
 @reviews-service = http://localhost:8080/odata/v4/sp.negoHeadersV4Service
 @reviews-service = http://localhost:8080/odata/v2/sp.negoHeadersService
-# @bookshop = http://localhost:4004
-# @reviews-service = http://localhost:4004/sp.negoHeadersV4Service
+@bookshop = http://localhost:4004
+@reviews-service = http://localhost:4004/sp.negoHeadersV4Service
 
 #################################################
 #
