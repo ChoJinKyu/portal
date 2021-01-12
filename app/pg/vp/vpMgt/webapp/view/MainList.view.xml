@@ -245,12 +245,13 @@
                             {path: 'language_cd', operator: 'EQ', value1: 'KO'}
                             ]
                         }"
-                        cellClick=".onCellClick"
-                        rowSelectionChange=".onCheck"                    
+
+                    
                         enableColumnReordering="false"
                         filter="filterPrice"
                         visibleRowCountMode="Auto"
                         >
+                        <!-- cellClick=".onCellClick" -->
                         <!-- visibleRowCountMode="Auto"> -->
                     <table:extension>
                         <OverflowToolbar>

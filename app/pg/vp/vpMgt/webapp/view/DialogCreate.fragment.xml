@@ -114,6 +114,7 @@
                                             <Text id="t_vpNm" text="{tree>vendor_pool_local_name}" wrapping="false" />
                                         </table:template>
                                     </table:Column>
+                                  
                                     <table:Column label="Higher Level" width="0rem" >
                                         <table:template>
                                             <Text text="{tree>higher_level_path}" wrapping="false" />
@@ -159,6 +160,16 @@
                                             <Text text="{tree>operation_unit_code}" wrapping="false" />
                                         </table:template>
                                     </table:Column>
+                                    <table:Column label="Drill State" width="0rem">
+                                        <table:template>
+                                            <Text text="{tree>drill_state}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column label="Vendor Pool" width="8rem">
+                                        <table:template>
+                                            <Text text="{tree>vendor_pool_code}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>                                    
                             </table:columns>
                             </table:TreeTable>  
                             <layoutData>

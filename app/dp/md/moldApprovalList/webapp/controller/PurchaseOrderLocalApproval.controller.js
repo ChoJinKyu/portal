@@ -70,7 +70,6 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage: function () {
-
             this.getView().setModel(new ManagedListModel(), "purOrderItem");
             this.getView().setModel(new ManagedModel(), "payment");
             
@@ -375,14 +374,15 @@ sap.ui.define([
         },
 
         onPageRequestButtonPress : function () {
-            var oModel = this.getModel("purOrderItem");
-
-            if(this.getModel("appMaster").getProperty("/approve_status_code") !== "DR"){
+            var oModel = this.getModel("purOrderItem"),
+                status = this.getModel("appMaster").getProperty("/approve_status_code");
+                
+            if(!(status === undefined || status === "DR")){
                 MessageToast.show( "Draft 상태 또는 신규일 때만 Request 가능합니다." );
                 return;
             }
             
-            if(oModel.getData().PurchaseOrderItems == undefined || oModel.getData().PurchaseOrderItems.length == 0){
+            if(oModel.getData().PurchaseOrderItems === undefined || oModel.getData().PurchaseOrderItems.length === 0){
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;
             }
