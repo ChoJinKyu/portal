@@ -566,8 +566,8 @@ sap.ui.define([
 			this.byId("midTable2DeleteButton").setEnabled(!FALSE);
 			// this.byId("midTableSearchField").setEnabled(FALSE);
 			//this.byId("midTableApplyFilterButton").setEnabled(FALSE);
-            this.byId("finTable").setMode(sap.m.ListMode.SingleSelectLeft);
-            this.byId("salTable").setMode(sap.m.ListMode.SingleSelectLeft);
+            this.byId("finTable").setMode(sap.m.ListMode.MultiSelect);
+            this.byId("salTable").setMode(sap.m.ListMode.MultiSelect);
             this._bindMidTable(this.oEditableTemplate, "Edit");
             this._bindMidTable2(this.oEditableTemplate2, "Edit");
 		},

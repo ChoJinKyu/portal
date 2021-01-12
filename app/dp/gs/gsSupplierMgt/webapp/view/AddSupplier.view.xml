@@ -173,7 +173,7 @@
 								items="{SupplierFin>/SupplierFin}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
-                                mode="SingleSelectLeft"
+                                mode="MultiSelect"
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
@@ -203,31 +203,31 @@
                                 <Column minScreenWidth="Tablet" hAlign="Center" width="8em">
 									<Text text="{I18N>/FISCAL_QUARTER}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/SALES_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/OPINCOM_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/ASSET_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/CURASSET_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/NCA_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/LIABILITIES_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/CURLIABLITIES_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/NCL_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/EQUITY_CAPITAL}" />
 								</Column>								
 							</columns>
@@ -263,7 +263,7 @@
 								items="{SupplierSal>/SupplierSal}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
-                                mode="SingleSelectLeft"
+                                mode="MultiSelect"
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
@@ -291,10 +291,10 @@
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="{I18N>/CUSTOMER_LOCAL_NAME}" />
 								</Column>                                
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/ANNUAL_TXN_AMOUNT}" />
 								</Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Right" >
 									<Text text="{I18N>/SALES_WEIGHT}" />
 								</Column>                                								
 							</columns>
