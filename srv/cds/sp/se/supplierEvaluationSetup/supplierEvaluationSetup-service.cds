@@ -7,6 +7,7 @@ using { cm.Code_Dtl as codeDtl } from '../../../../../db/cds/cm/CM_CODE_DTL-mode
 using { cm.Code_Lng as codeLng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using { cm.Hr_Employee as employee } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using { cm.Hr_Department as department } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
+using { sp.Se_Eval_Type as evalType } from '../../../../../db/cds/sp/se/SP_SE_EVAL_TYPE-model';
 using { sp.Se_Quantitative_Item as qttiveItem } from '../../../../../db/cds/sp/se/SP_SE_QUANTITATIVE_ITEM-model';
 using { sp.Se_Eval_Grade as evalGrade } from '../../../../../db/cds/sp/se/SP_SE_EVAL_GRADE-model';
 
@@ -30,6 +31,42 @@ service SupEvalSetupService {
         ;
 
     /* Evaluation Operation Unit Master */
+    view SupEvalOpUnitListView as
+    select Key tenant_id,
+           Key company_code,
+           Key org_type_code,
+           Key org_code,
+           Key evaluation_operation_unit_code,
+           evaluation_operation_unit_name,
+           case when (select distinct
+                             evaluation_operation_unit_code
+                      from   opUnitManager
+                      where  tenant_id = mst.tenant_id
+                      and    company_code = mst.company_code
+                      and    org_type_code = mst.org_type_code
+                      and    org_code = mst.org_code
+                      and    evaluation_operation_unit_code = mst.evaluation_operation_unit_code) = mst.evaluation_operation_unit_code then 'N'
+                when  (select distinct
+                              evaluation_operation_unit_code
+                       from   evalType
+                       where  tenant_id = mst.tenant_id
+                       and    company_code = mst.company_code
+                       and    org_type_code = mst.org_type_code
+                       and    org_code = mst.org_code
+                       and    evaluation_operation_unit_code = mst.evaluation_operation_unit_code) = mst.evaluation_operation_unit_code then 'N'
+                when  (select distinct
+                              evaluation_operation_unit_code
+                       from   qttiveItem
+                       where  tenant_id = mst.tenant_id
+                       and    company_code = mst.company_code
+                       and    org_type_code = mst.org_type_code
+                       and    org_code = mst.org_code
+                       and    evaluation_operation_unit_code = mst.evaluation_operation_unit_code) = mst.evaluation_operation_unit_code then 'N'
+                else 'Y'
+            end delete_flag : String(1)
+        from   OpUnitMst mst
+        ;
+
     entity OpUnitMst as projection on opUnitMst;
     
     /* Evaluation Operation Unit VP Mapping */
@@ -37,8 +74,7 @@ service SupEvalSetupService {
 
     /* Evaluation Operation Unit Manager */
     view managerListView as
-        select Key lng.language_cd,
-               Key mgr.tenant_id,
+        select Key mgr.tenant_id,
                Key mgr.company_code,
                Key mgr.org_type_code,
                Key mgr.org_code,
@@ -46,20 +82,8 @@ service SupEvalSetupService {
                Key mgr.evaluation_op_unt_person_empno,
                emp.user_local_name,
                dept.department_local_name,
-               mgr.evaluation_execute_role_code,
-               ifnull((select code_name
-       	               from   codeLng
-       	               where  tenant_id = mgr.tenant_id
-       	               and    group_code = 'SP_SE_EVAL_EXECUTE_ROLE_CODE'
-       	               and    code = mgr.evaluation_execute_role_code
-       	               and    language_cd = lng.language_cd), mgr.evaluation_execute_role_code) evaluation_execute_role_name : String(100)
-        from   opUnitManager mgr
-               left outer join (select tenant_id,
-	                                   code language_cd
-	                            from   codeDtl
-	                            where  group_code = 'CM_LANG_CODE'
-	                            and    now() between start_date and end_date) lng
-               on    mgr.tenant_id = lng.tenant_id,
+               mgr.evaluation_execute_role_code
+        from   opUnitManager mgr,
                employee emp,
                department dept
         where  mgr.tenant_id = emp.tenant_id
@@ -68,36 +92,36 @@ service SupEvalSetupService {
         and    emp.department_id = dept.department_id
         ;
 
+    /* Evaluation Type List */
+    view evalTypeListView as
+        select Key typ.tenant_id,
+               Key typ.company_code,
+               Key typ.org_type_code,
+               Key typ.org_code,
+               Key typ.evaluation_operation_unit_code,
+               Key typ.evaluation_type_code,
+               typ.evaluation_type_name,
+               typ.evaluation_type_distrb_score_rate,
+               case when (select distinct evaluation_type_code
+                          from   evalGrade
+                          where  tenant_id = typ.tenant_id
+                          and    company_code = typ.company_code
+                          and    org_type_code = typ.org_type_code
+                          and    org_code = typ.org_code
+                          and    evaluation_operation_unit_code = typ.evaluation_operation_unit_code
+                          and    evaluation_type_code = typ.evaluation_type_code) = typ.evaluation_type_code then 'N'
+                    else 'Y'
+               end delete_flag : String(1)
+        from   evalType typ
+        ;
+
+    entity EvalType as projection on  evalType;
+
     /* Evaluation Operation Unit Quantitative Item List */
     entity QttiveItem as projection on qttiveItem;
 
     /* Evaluation Operation Unit Scale List */
-    view evalGradeView as
-        select Key lng.language_cd,
-               Key grad.tenant_id,
-               Key grad.company_code,
-               Key grad.org_type_code,
-               Key grad.org_code,
-               Key grad.evaluation_operation_unit_code,
-               Key grad.evaluation_type_code,
-               Key grad.evaluation_grade,
-               grad.evaluation_grade_start_score,
-               grad.evaluation_grade_end_score,
-               grad.inp_apply_code,
-               ifnull((select code_name
-       	               from   codeLng
-       	               where  tenant_id = grad.tenant_id
-       	               and    group_code = 'SP_SE_INP_APPLY_CODE'
-       	               and    code = grad.inp_apply_code
-       	               and    language_cd = lng.language_cd), grad.inp_apply_code) inp_apply_name : String(100)
-        from   evalGrade grad
-               left outer join (select tenant_id,
-	                                   code language_cd
-	                            from   codeDtl
-	                            where  group_code = 'CM_LANG_CODE'
-	                            and    now() between start_date and end_date) lng
-               on    grad.tenant_id = lng.tenant_id
-        ;    
+    entity EvalGrade as projection on evalGrade;
 
-
+ 
 }
