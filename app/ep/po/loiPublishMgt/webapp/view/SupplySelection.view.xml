@@ -197,7 +197,7 @@
                                     <ColumnListItem type="Inactive" >
                                         <cells>
                                             <Text text="10"/>
-                                            <Text text="여수"/>
+                                            <Text text="여수 공통"/>
                                             <Text text="FFU"/>
                                             <Text text="EA"/>
                                             <Text text="3,260"/>
@@ -215,14 +215,14 @@
                                     <ColumnListItem type="Inactive" >
                                         <cells>
                                             <Text text="20"/>
-                                            <Text text="대산"/>
+                                            <Text text="여수 공통"/>
                                             <Text text="FFU용 Filter"/>
                                             <Text text="EA"/>
                                             <Text text="1"/>
                                             <Text text="KRW"/>
                                             <Text text="10,000,000"/>
                                             <Text text="1(선정)"/>
-                                            <Text text="OO공조"/>
+                                            <Text text="신성이엔지"/>
                                             <Text text="10,000,000"/>
                                             <Text text="2021-03-01"/>
                                             <Text text="2021-02-25"/>

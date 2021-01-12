@@ -9,7 +9,7 @@
             <form:SimpleForm id="RmkForm" editable="false" >
                 <form:toolbar>
                     <Toolbar>
-                        <Title id="Title1" text="비고"/>
+                        <Title text="비고"/>
                     </Toolbar>
                 </form:toolbar>             
                 <Label text="비고"/>
