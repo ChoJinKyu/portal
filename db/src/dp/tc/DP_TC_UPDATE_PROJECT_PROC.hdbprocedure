@@ -44,7 +44,7 @@ BEGIN
     DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            EXEC (:var_rollback);
+            --EXEC (:var_rollback);
             O_MSG = SELECT 'NG' RETURN_CODE, ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE RETURN_MSG FROM DUMMY;
         END;
         
@@ -123,6 +123,7 @@ BEGIN
                   	 , PROJECT_CODE
                   	 , MODEL_CODE
                   	 , SIMILAR_MODEL_CODE
+                     , CODE_DESC
                   	 , DIRECT_REGISTER_FLAG
                   	 , LOCAL_CREATE_DTM
                   	 , LOCAL_UPDATE_DTM
@@ -135,6 +136,7 @@ BEGIN
                      , loop_similar_model.PROJECT_CODE
                      , loop_similar_model.MODEL_CODE
                      , loop_similar_model.SIMILAR_MODEL_CODE
+                     , loop_similar_model.CODE_DESC
                      , loop_similar_model.DIRECT_REGISTER_FLAG
                      , CURRENT_TIMESTAMP
                      , CURRENT_TIMESTAMP

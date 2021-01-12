@@ -84,7 +84,8 @@ sap.ui.define([
                 ];
                 
                 var oModel = this.getModel('payment'),
-                    poAmount = 0;
+                    poAmount = 0,
+                    currencyCode = "";
                 this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
                     var splitPayTypeCode = null;
                     if (oData.results.length > 0) {
@@ -92,14 +93,15 @@ sap.ui.define([
                             poAmount = poAmount + Number(item.purchasing_amount);
                         });
                         splitPayTypeCode = oData.results[0].split_pay_type_code;
+                        currencyCode = oData.results[0].currency_code;
                         oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
                         oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
                         oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
                         oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
-                        oModel.setProperty("/purchasing_amount", poAmount);
-                        oModel.setProperty("/currency_code", oData.results[0].currency_code);
                     }
 
+                    oModel.setProperty("/purchasing_amount", poAmount);
+                    oModel.setProperty("/currency_code", currencyCode);
                     oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
                     
                 }.bind(this));
@@ -201,8 +203,11 @@ sap.ui.define([
             //this.validator.clearValueState(this.byId("poItemTable"));
 
             var pModel = this.getModel('payment'),
-                poAmount = Number(pModel.getProperty("/purchasing_amount")) + Number(data.purchasing_amount);
+                poAmount = Number(pModel.getData().purchasing_amount) + Number(data.purchasing_amount);
             pModel.setProperty("/purchasing_amount", poAmount);
+            if(pModel.getProperty("/currency_code") === ""){
+                pModel.setProperty("/currency_code", data.currency_code);
+            }
         },
 
         /**

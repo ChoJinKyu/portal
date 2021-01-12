@@ -196,8 +196,9 @@ sap.ui.define([
             oModel_temp.read("/MoldItemSelect_"+ oArges.approval_type_code , {
                 filters: aSearchFilters,
                 success: function (oData) { 
-                    oModel.setData(oData,"/MoldItemSelect",oData);
+                    oModel.setData(oData,"/MoldItemSelect");
                     console.log(" oData ", oData);
+                    console.log(" oModel_temp ", oModel_temp);
                     oView.setBusy(false);
                 }
             });

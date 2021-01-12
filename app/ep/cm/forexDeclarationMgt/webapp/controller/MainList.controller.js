@@ -158,7 +158,22 @@ sap.ui.define([
 
             var poName = this.getView().byId("searchPoName").getValue();
 
+            var selectManagementTargetFlag = this.getView().byId("selectManagementTargetFlag").getSelected(),
+                selectManagementTargetFlag2 = this.getView().byId("selectManagementTargetFlag2").getSelected(),
+                selectDeclareTargetFlag = this.getView().byId("selectDeclareTargetFlag").getSelected(),
+                selectDeclareTargetFlag2 = this.getView().byId("selectDeclareTargetFlag2").getSelected();
+
+     
+            
+            
+
             console.log("poName -----> " , poName);
+             console.log("selectManagementTargetFlag -----> " , this.getView().byId("selectManagementTargetFlag").getSelected());
+             console.log("selectManagementTargetFlag2 -----> " , this.getView().byId("selectManagementTargetFlag2").getSelected());
+
+            
+
+            
 
 
             var aSearchFilters = [];
@@ -179,7 +194,7 @@ sap.ui.define([
             }
 
             if (requestFromDate && requestToDate) {
-                //aSearchFilters.push(new Filter("request_date", FilterOperator.BT, requestFromDate, requestToDate));
+                aSearchFilters.push(new Filter("po_date", FilterOperator.BT, this.getFormatDate(requestFromDate), this.getFormatDate(requestToDate)));
             }
 
             // if (sRequestDepartment && sRequestDepartment.length > 0) {
@@ -203,6 +218,35 @@ sap.ui.define([
             if (poName && poName.length > 0) {
                  aSearchFilters.push(new Filter("po_name", FilterOperator.EQ, poName));
             }
+
+            if (selectManagementTargetFlag === true && selectManagementTargetFlag2 === false) {
+                aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
+            }
+
+            if (selectManagementTargetFlag === false && selectManagementTargetFlag2 === true) {
+                aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, false));
+            }
+
+            if (selectDeclareTargetFlag === true && selectDeclareTargetFlag2 === false) {
+                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
+            }
+
+            if (selectDeclareTargetFlag === false && selectDeclareTargetFlag2 === true) {
+                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, false));
+            }
+
+            
+            // if(selectManagementTargetFlag){
+            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, selectManagementTargetFlag));
+            // }else if(selectManagementTargetFlag2){
+            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, selectManagementTargetFlag2));
+            // }
+
+            // if(selectDeclareTargetFlag){
+            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, selectDeclareTargetFlag));
+            // }else if(selectDeclareTargetFlag2){
+            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, selectDeclareTargetFlag2));
+            // }
 
 
             console.log("aSearchFilters -----> " , aSearchFilters);
@@ -337,26 +381,34 @@ sap.ui.define([
             // }
 
             if(forexDeclareStatusName == "작성대기" || forexDeclareStatusName == "신고진행중"){
+                console.log("edit :: ");
                 pageVal = "ep.cm.forexDeclarationMgt.view.forexDetail_Edit"
             }else{
+                console.log("show :: ");
                 pageVal = "ep.cm.forexDeclarationMgt.view.forexDetail_Show"
             }
 
 
-            if (!this._forexDialog) {
+            //if (!this._forexDialog) {
+//oView.removeAllDependents();
+ //this._forexDialog.destroy(); 
+
                 this._forexDialog = Fragment.load({
                     id: oView.getId(),
                     name: pageVal,
                     controller: this
                 }).then(function (_forexDialog) {
                     oView.addDependent(_forexDialog);
+                    
                     //console.log("_forexDialog :::: " , oView);
                     return _forexDialog;
                 }.bind(this));
-            }
+            //}
 
             this._forexDialog.then(function (_forexDialog) {
                 _forexDialog.open();
+
+                
 
                 if(forexDeclareStatusName == "작성대기" || forexDeclareStatusName == "신고진행중"){
                     oView.byId("poNumber").setText(rowData.po_number);
@@ -379,6 +431,11 @@ sap.ui.define([
 
             });
 
+        },
+
+
+        dialogAfterclose: function() {
+            this.byId("dialogForex").destroy();
         },
 
 
@@ -520,6 +577,20 @@ sap.ui.define([
         //     // }).setTable(this.byId("mainTable"));            
 
         // }
+
+        getFormatDate : function (date) {
+
+            if(!date){
+                return '';
+            }
+
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        }
 
 
     });

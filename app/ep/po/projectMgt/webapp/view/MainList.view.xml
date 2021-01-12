@@ -94,7 +94,13 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/ProjectView}"
+                        items="{
+                            path: 'list>/ProjectView',
+                            sorter: { 
+                                path: 'system_create_dtm',
+                                descending: true 
+                            }                   
+                        }"                        
                         mode="None" 
                         width="auto">
                     <headerToolbar>
@@ -168,7 +174,7 @@
                                 <ObjectIdentifier text="{list>bizdivision_name}"/>
                                 <ObjectIdentifier text="{list>project_name}"/>
                                 <ObjectIdentifier text="{list>plant_name}"/>
-                                <ObjectIdentifier text="{list>ep_purchasing_type_code}"/>
+                                <ObjectIdentifier text="{list>ep_purchasing_type_name}"/>
                                 <ObjectIdentifier text="{list>create_user_id}"/>
                                 <ObjectIdentifier text="{
                                         path: 'list>system_create_dtm',

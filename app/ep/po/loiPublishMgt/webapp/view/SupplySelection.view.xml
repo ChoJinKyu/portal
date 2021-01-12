@@ -123,10 +123,10 @@
                                     maxLength: 50
                                 }
                             }" class="sapMLabelNoText" required="true" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
-                            <Label  text="* 품의명" 
+                            <!-- <Label  text="* 품의명" 
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
-                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>
+                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/> -->
 
                             <Label  text="* 업체선정결과" 
                                     design="Bold" 

@@ -117,40 +117,40 @@
             </headerToolbar>
 
             <columns> 
-                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="3em" >
+                <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
                     <Text text="" />
                 </Column>
-                <!-- <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                <!-- <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="범주코드(임시:확인용)" />
                 </Column> -->
-                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                <Column  hAlign="Center" mergeDuplicates="false" width="10em" >
                     <Text text="사업본부코드" />
                 </Column>
-                <!-- <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                <!-- <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="사업본부명" />
                 </Column> -->
-                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                <Column  hAlign="Center" mergeDuplicates="false" width="10em" >
                     <Text text="특성코드" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="10em" >
+                <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
                     <Text text="특성정렬순서" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" >
+                <Column  hAlign="Center" width="20em" >
                     <Text text="특성코드명" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                <Column  hAlign="Center" width="20em" >
                     <Text text="특성설명" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                <Column  hAlign="Center" width="10em" >
                     <Text text="생성자" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                <Column  hAlign="Center" width="10em" >
                     <Text text="수정자" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                <Column  hAlign="Center" width="10em" >
                     <Text text="생성 시간" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                <Column  hAlign="Center" width="10em" >
                     <Text text="수정 시간" />
                 </Column>
             </columns>

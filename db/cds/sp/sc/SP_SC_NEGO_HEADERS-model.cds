@@ -18,6 +18,7 @@ entity Sc_Nego_Headers {
         operation_unit_code             : String(30) not null @title : '운영단위코드';
         reference_nego_header_id        : Integer64           @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64           @title : '기존협상헤더ID';
+        reference_nego_document_number  : Integer             @title : '참조협상문서번호';
         nego_document_round             : Integer             @title : '협상문서회차';
         nego_document_number            : String(50)          @title : '협상문서번호';
         nego_document_title             : String(300)         @title : '협상문서제목';
@@ -51,7 +52,7 @@ entity Sc_Nego_Headers {
         close_date_ext_enabled_hours    : Integer             @title : '마감일자연장가능시개수';
         close_date_ext_enabled_count    : Integer             @title : '마감일자연장가능횟수';
         actual_extension_count          : Integer             @title : '실제연장횟수';
-        note_content                    : String(4000)        @title : '노트내용';
+        note_content                    : LargeBinary(4000)   @title : '노트내용';
         award_type_code                 : String(100)         @title : '낙찰유형코드';
         target_amount_config_flag       : String(1)           @title : '목표금액설정여부';
         target_amount                   : Decimal(20, 2)      @title : '목표금액';

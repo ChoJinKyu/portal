@@ -41,6 +41,14 @@ sap.ui.define([
             Parent.prototype.setData.call(this, oParsed);
         },
 
+        setReady: function(bReady){
+            this.bReady = bReady;
+        },
+
+        isReady: function(){
+            return this.bReady;
+        }
+
         // setTransactionModel: function (oModel) {
         //     this._oTransactionModel = oModel;
         //     //this.addTransactionGroup("_load_multilanguage");

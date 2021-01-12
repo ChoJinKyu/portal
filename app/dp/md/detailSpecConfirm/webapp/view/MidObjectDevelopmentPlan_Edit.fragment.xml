@@ -38,6 +38,7 @@
                     <ColumnListItem>
                         <cells>
                             <Select   width="100%"
+                                        forceSelection="false"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/Code',
@@ -94,6 +95,7 @@
                     <ColumnListItem>
                         <cells>
                             <Select   width="100%"
+                                        forceSelection="false"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/Code',

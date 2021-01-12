@@ -139,7 +139,7 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            location.href = "../../../../ep/po/loiRequestMgt/webapp";    
+            location.href = "../../../../ep/po/loiRequestMgt/webapp";
 
             // this.getRouter().navTo("selectionPage", {
             //     //layout: oNextUIState.layout,
@@ -914,15 +914,18 @@ sap.ui.define([
                 return oToken.getKey();
             });
 
-            var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
-                requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
+            // var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
+            //     requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
+
+            var requestFromDate = this.byId("searchRequestDate").getValue().substring(0, 10).replaceAll(" ", ""),
+                requestToDate = this.byId("searchRequestDate").getValue().substring(13).replaceAll(" ", "");
 
             var sRequestDepartment = this.getView().byId("searchRequestDepartment").getValue(),
                 sRequestor = this.getView().byId("searchRequestor").getValue(),
                 sLoiPublishStatus = this.getView().byId("searchLoiPublishStatus").getSelectedKeys();
 
-            var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
-                requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
+            // var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
+            //     requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
 
             // var requestDate = this.getView().byId("searchRequestDate").getValue();   
 
@@ -931,11 +934,17 @@ sap.ui.define([
             // var requestFromDate = new Date(a.substring(0, 10));
             // var requestToDate = new Date(a.substring(11, 22)); 
 
-            var createFromDate = this.getView().byId("searchSystemCreateDate").getDateValue(),
-                createToDate = this.getView().byId("searchSystemCreateDate").getSecondDateValue();
+            // var createFromDate = this.getView().byId("searchSystemCreateDate").getDateValue(),
+            //     createToDate = this.getView().byId("searchSystemCreateDate").getSecondDateValue();
 
-            var publishFromDate = this.getView().byId("searchPublishDate").getDateValue(),
-                publishToDate = this.getView().byId("searchPublishDate").getSecondDateValue();
+            var createFromDate = this.byId("searchSystemCreateDate").getValue().substring(0, 10).replaceAll(" ", ""),
+                createToDate = this.byId("searchSystemCreateDate").getValue().substring(13).replaceAll(" ", "");
+
+            // var publishFromDate = this.getView().byId("searchPublishDate").getDateValue(),
+            //     publishToDate = this.getView().byId("searchPublishDate").getSecondDateValue();
+
+            var publishFromDate = this.byId("searchPublishDate").getValue().substring(0, 10).replaceAll(" ", ""),
+                publishToDate = this.byId("searchPublishDate").getValue().substring(13).replaceAll(" ", "");
 
             var sPurchasingDepartment = this.getView().byId("searchPurchasingDepartment").getValue(),
                 sBuyer = this.getView().byId("searchBuyer").getValue(),

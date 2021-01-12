@@ -74,6 +74,7 @@ service MoldItemSelectionService {
                 m.scrap_date,
                 m.acq_date,
                 m.acq_amount,
+                m.purchasing_amount,
                 m.use_department_code,
                 m.local_create_dtm,
                 m.local_update_dtm,
@@ -89,12 +90,12 @@ service MoldItemSelectionService {
                 '[' || m.production_supplier_code || '] ' || s2.supplier_local_name as  production_supplier_code_nm : String(240),
                 s2.supplier_local_name as production_supplier_local_name : String(240) ,
                 m.mold_progress_status_code ,
-                ps.drawing_agreement_date as drawing_consent_plan : String(240) , 
-        		rs.drawing_agreement_date as drawing_consent_result : String(240)  ,
-        		ps.first_production_date as production_plan : String(240) , 
-        		rs.first_production_date as production_result  : String(240) ,
-        		ps.production_complete_date as completion_plan : String(240) , 
-        		rs.production_complete_date as completion_result  : String(240) 
+                cast(ps.drawing_agreement_date as Date ) as drawing_consent_plan : Date , 
+        		cast(rs.drawing_agreement_date as Date ) as drawing_consent_result : Date ,
+        		cast(ps.first_production_date as Date ) as production_plan : Date , 
+        		cast(rs.first_production_date as Date ) as production_result  : Date ,
+                cast(ps.production_complete_date as Date ) as completion_plan : Date ,
+                cast(rs.production_complete_date as Date ) as completion_result  : Date 
         from moldMst.Md_Mst m 
         left join orgCodeLng.Org_Code_Lng as cur on m.company_code = cur.org_code 
                                     and cur.group_code = 'DP_MD_LOCAL_CURRENCY' 
@@ -179,6 +180,7 @@ service MoldItemSelectionService {
                 m.scrap_date,
                 m.acq_date,
                 m.acq_amount,
+                m.purchasing_amount,
                 m.use_department_code,
                 m.local_create_dtm,
                 m.local_update_dtm,
@@ -284,6 +286,7 @@ service MoldItemSelectionService {
                 m.scrap_date,
                 m.acq_date,
                 m.acq_amount,
+                m.purchasing_amount,
                 m.use_department_code,
                 m.local_create_dtm,
                 m.local_update_dtm,
@@ -388,6 +391,7 @@ service MoldItemSelectionService {
                 m.scrap_date,
                 m.acq_date,
                 m.acq_amount,
+                m.purchasing_amount,
                 m.use_department_code,
                 m.local_create_dtm,
                 m.local_update_dtm,
@@ -492,6 +496,7 @@ service MoldItemSelectionService {
                 m.scrap_date,
                 m.acq_date,
                 m.acq_amount,
+                m.purchasing_amount,
                 m.use_department_code,
                 m.local_create_dtm,
                 m.local_update_dtm,
@@ -507,12 +512,12 @@ service MoldItemSelectionService {
                 '[' || m.production_supplier_code || '] ' || s2.supplier_local_name as  production_supplier_code_nm : String(240),
                 s2.supplier_local_name as production_supplier_local_name : String(240) ,
                 m.mold_progress_status_code ,
-                ps.drawing_agreement_date as drawing_consent_plan : String(240) , 
-        		rs.drawing_agreement_date as drawing_consent_result : String(240)  ,
-        		ps.first_production_date as production_plan : String(240) , 
-        		rs.first_production_date as production_result  : String(240) ,
-        		ps.production_complete_date as completion_plan : String(240) , 
-        		rs.production_complete_date as completion_result  : String(240) 
+                cast(ps.drawing_agreement_date as Date ) as drawing_consent_plan : Date , 
+        		cast(rs.drawing_agreement_date as Date ) as drawing_consent_result : Date ,
+        		cast(ps.first_production_date as Date ) as production_plan : Date , 
+        		cast(rs.first_production_date as Date ) as production_result  : Date ,
+                cast(ps.production_complete_date as Date ) as completion_plan : Date ,
+                cast(rs.production_complete_date as Date ) as completion_result  : Date 
         from moldMst.Md_Mst m 
         left join orgCodeLng.Org_Code_Lng as cur on m.company_code = cur.org_code 
                                     and cur.group_code = 'DP_MD_LOCAL_CURRENCY' 
@@ -533,7 +538,7 @@ service MoldItemSelectionService {
                  select dtl.mold_id from 
                     approvalMst.Approval_Mst m2  
                     join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
-                    where m2.approval_type_code = 'E'
+                    where m2.approval_type_code = 'I'
             );
 
      view MoldItemSelect_A as
@@ -596,6 +601,7 @@ service MoldItemSelectionService {
                 m.scrap_date,
                 m.acq_date,
                 m.acq_amount,
+                m.purchasing_amount,
                 m.use_department_code,
                 m.local_create_dtm,
                 m.local_update_dtm,
@@ -637,7 +643,7 @@ service MoldItemSelectionService {
                  select dtl.mold_id from 
                     approvalMst.Approval_Mst m2  
                     join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
-                    where m2.approval_type_code = 'E'
+                    where m2.approval_type_code = 'A'
             );
 
 

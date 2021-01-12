@@ -49,7 +49,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Mold Structure" required="true"/>
-                <Select   width="100%"
+                <Select   width="100%" forceSelection="false"
                             selectedKey="{spec>/die_form}"
                             items="{
                                         path : 'util>/Code',
@@ -108,7 +108,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Size" required="true"/>
-                <Select   width="100%"
+                <Select   width="100%" forceSelection="false"
                             selectedKey="{spec>/mold_size}"
                             items="{
                                         path : 'util>/Code',

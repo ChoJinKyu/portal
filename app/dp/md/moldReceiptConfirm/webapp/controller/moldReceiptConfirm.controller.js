@@ -104,10 +104,10 @@ sap.ui.define([
             this.setDivision('LGEKR');
 
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
 
             /** Create Date */
             var today = new Date();
@@ -252,6 +252,10 @@ sap.ui.define([
          * @public
          */
         onPageSearchButtonPress : function () {
+
+            this.validator.validate( this.byId('pageSearchFormE'));
+            if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+
             var aTableSearchState = this._getSearchStates();
             this._applySearch(aTableSearchState);
         },
