@@ -44,7 +44,7 @@
                     <HBox>
                         <Table id="employeeSelectTable"       
                             growing="true"
-                            growingThreshold="3"
+                            growingThreshold="10"
                             class="sapFDynamicPageAlignContent" 
                             updateFinished="" 
                             selectionChange="vendorSelect" 
