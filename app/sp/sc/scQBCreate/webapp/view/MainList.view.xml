@@ -140,11 +140,11 @@
                                 </VBox>    
                                 <VBox visible="{= ${AAA>/flag} === 1 ? true : false }" class="sapUiSmallMarginBeginEnd rbgBG ">
                                     <VBox>
-                                        <!-- <Label text="Out Come" /> -->
-                                        <Label labelFor="rbg1" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                        <!-- <Label text="Outcome" /> -->
+                                        <Label labelFor="rbg1" text="Outcome"  class="sapMLabelNoText" design="Bold" />
                                         <RadioButtonGroup id="rbg1"   >
                                             <RadioButton id="RB1-1" text="BPA" class="rbgButton" />
-                                            <RadioButton id="RB1-2" text="Tenative Price" class="rbgButton" />
+                                            <RadioButton id="RB1-2" text="Tentative Price" class="rbgButton" />
                                             <RadioButton id="RB1-3" text="Supplier Development" class="rbgButton" />
                                             <RadioButton id="RB1-4" text="Investment PO" class="rbgButton" />
                                             <RadioButton id="RB1-5" text="Budget Price" class="rbgButton" />
@@ -219,11 +219,11 @@
                                 </VBox>
                                 <VBox visible="{= ${AAA>/flag} === 2 ? true : false }" class="sapUiSmallMarginBeginEnd rbgBG ">
                                     <VBox>
-                                        <!-- <Label text="Out Come" /> -->
-                                        <Label labelFor="rbg2" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                        <!-- <Label text="Outcome" /> -->
+                                        <Label labelFor="rbg2" text="Outcome"  class="sapMLabelNoText" design="Bold" />
                                         <RadioButtonGroup id="rbg2"  >
                                             <RadioButton id="RB2-1" text="BPA" class="rbgButton" />
-                                            <RadioButton id="RB2-2" text="Tenative Price" class="rbgButton" />
+                                            <RadioButton id="RB2-2" text="Tentative Price" class="rbgButton" />
                                             <RadioButton id="RB2-3" text="Supplier Development" class="rbgButton" />
                                             <RadioButton id="RB2-4" text="Investment PO" class="rbgButton"/>
                                             <RadioButton id="RB2-5" text="Budget Price" class="rbgButton"/>
@@ -311,11 +311,11 @@
                                 </VBox>
                                 <VBox visible="{= ${AAA>/flag} === 3 ? true : false }" class="sapUiSmallMarginBeginEnd  rbgBG">
                                     <VBox>
-                                        <!-- <Label text="Out Come" /> -->
-                                        <Label labelFor="rbg3" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                        <!-- <Label text="Outcome" /> -->
+                                        <Label labelFor="rbg3" text="Outcome"  class="sapMLabelNoText" design="Bold" />
                                         <RadioButtonGroup id="rbg3"  >
                                             <RadioButton id="RB3-1" text="BPA" class="rbgButton" />
-                                            <RadioButton id="RB3-2" text="Tenative Price" class="rbgButton" />
+                                            <RadioButton id="RB3-2" text="Tentative Price" class="rbgButton" />
                                             <RadioButton id="RB3-3" text="Supplier Development" class="rbgButton" />
                                             <RadioButton id="RB3-4" text="Investment PO" class="rbgButton" />
                                             <RadioButton id="RB3-5" text="Budget Price" class="rbgButton"/>
@@ -407,11 +407,11 @@
                                 </VBox>
                                 <VBox visible="{= ${AAA>/flag} === 4 ? true : false }" class="sapUiSmallMarginBeginEnd  rbgBG">
                                     <VBox>
-                                        <!-- <Label text="Out Come" /> -->
-                                        <Label labelFor="rbg4" text="Out Come"  class="sapMLabelNoText" design="Bold" />
+                                        <!-- <Label text="Outcome" /> -->
+                                        <Label labelFor="rbg4" text="Outcome"  class="sapMLabelNoText" design="Bold" />
                                         <RadioButtonGroup id="rbg4"  >
                                             <RadioButton id="RB4-1" text="BPA" class="rbgButton" />
-                                            <RadioButton id="RB4-2" text="Tenative Price"  class="rbgButton"/>
+                                            <RadioButton id="RB4-2" text="Tentative Price"  class="rbgButton"/>
                                             <RadioButton id="RB4-3" text="Supplier Development" class="rbgButton"/>
                                             <RadioButton id="RB4-4" text="Investment PO" class="rbgButton"/>
                                             <RadioButton id="RB4-5" text="Budget Price"  class="rbgButton"/>

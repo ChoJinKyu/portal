@@ -18,6 +18,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:t="sap.ui.table"
+    xmlns:u="sap.ui.unified"
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
@@ -242,6 +243,223 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
+
+        
+			<smartTable:SmartTable id="sTable1" entitySet="main>/NegoHeaders" smartFilterId="smartFilterBar" tableType="Table" 
+                            useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
+                            useTablePersonalisation="true" header="Line Items" showRowCount="true" 
+                            enableAutoBinding="true" tableBindingPath="{viewModel>/NegoHeaders}"
+                            class="sapUiResponsiveContentPadding"
+                            initiallyVisibleFields="tenant_id,nego_header_id"
+                            beforeRebindTable="beforeRebindTable"
+                            >
+				<!-- layout data used to make the table growing but the filter bar fixed -->
+				<smartTable:layoutData>
+					<FlexItemData growFactor="1" baseSize="0%"/>
+				</smartTable:layoutData>
+                    <t:Table id="testTable" rows="{viewModel>/NegoHeaders}" cellClick="tableCellClick">
+                        <t:columns>
+                            <t:Column width="10rem">
+                                <Label text="tenant_id" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>nego_document_number}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="4rem">
+                                <Label text="Rev." design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>nego_document_round}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="5rem">
+                                <Label text="Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>nego_progress_status_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="6rem" hAlign="End">
+                                <Label text="회신횟수" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>reply_times}" wrapping="false"  />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="6rem" hAlign="End">
+                                <Label text="협력사수" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>supplier_count}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="7rem">
+                                <Label text="Participation" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>supplier_participation_flag}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="6rem" hAlign="Center">
+                                <Label text="잔여시간" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>closing_date}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="18rem" hAlign="Center">
+                                <Label text="제목" design="Bold" />
+                                <t:template>
+                                    <Text text="{viewModel>nego_document_title}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="5rem" hAlign="End">
+                                <Label text="품목수" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>aa}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="10rem">
+                                <Label text="Negotiation Type"  design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>nego_type_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="8rem" hAlign="Center">
+                                <Label text="Quote Style" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>negotiation_style_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="8rem" hAlign="Center">
+                                <Label text="Bid Open Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>bidding_result_open_status_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="12rem" hAlign="Center">
+                                <Label text="Outcome" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>negotiation_output_class_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="10rem">
+                                <Label text="Req Submission No" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>request_submit_number}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="10rem">
+                                <Label text="Submission Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>request_submit_status_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="8rem" hAlign="Center">
+                                <Label text="Req Reapproval" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>request_reapprove_flag}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="10rem">
+                                <Label text="Part No" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>material_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="10rem">
+                                <Label text="Description" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>material_desc}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="8rem" hAlign="Center">
+                                <Label text="요청자" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c20}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="10rem" hAlign="Center">
+                                <Label text="요청 부서" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c21}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="12rem" hAlign="Center">
+                                <Label text="Award 유형" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c22}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="구매담당자" design="Bold" />
+                                <t:template>
+                                    <Text text="{c23}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="구매팀" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c24}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Open Date" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c25}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Close Date" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c26}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Extention Period" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c27}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Extention Times" design="Bold" />
+                                <t:template>
+                                    <Text text="{c28}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Actual Extension Times" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c29}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Requisition Flag" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c30}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Price Submission No" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c31}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Price Submission Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c32}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="생성 날짜" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c33}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="14rem" hAlign="Center">
+                                <Label text="Interface Source" design="Bold"/>
+                                <t:template>
+                                    <Text text="{c34}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                        </t:columns>
+                    </t:Table>
+			</smartTable:SmartTable>
             
 
             <!-- <VBox> -->
@@ -252,8 +470,59 @@
                 useTablePersonalisation="true" showTablePersonalisation="false" header="Negotiation Workbench List" showRowCount="true"
                 persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true"
                 demandPopin="true" class="sapUiResponsiveContentPadding"> -->
-                
-                <t:Table id="table1"
+                <!-- <smartTable:SmartTable id="aa" entitySet="NegoHeaders"
+                        smartFilterId="smartFilterBar" tableType="ResponsiveTable"
+                        useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="false"
+                        useTablePersonalisation="true" header="Line Items" showRowCount="true"
+                        enableAutoBinding="true"
+                        initiallyVisibleFields="tenant_id"
+                        demandPopin="true" class="sapUiResponsiveContentPadding"> -->
+                    <!-- <smartTable:customToolbar>
+                        <OverflowToolbar >
+                            <ToolbarSpacer/>
+                            <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                            <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        
+                           
+                            <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
+                                            buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
+                            <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="Template Download"/>           
+    
+                            <MenuButton buttonMode="Split" useDefaultActionOnly="true" 
+                                        icon="sap-icon://excel-attachment" defaultAction=".onExport">
+                                <menu>
+                                   
+                                </menu>
+                            </MenuButton>
+                        </OverflowToolbar>
+                    </smartTable:customToolbar> -->
+                    <!-- <t:Table id="testTable" rows="{viewModel>/NegoHeaders}">
+                        <t:columns>
+                            <t:Column width="10rem">
+                                <Label text="tenant_id" design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>tenant_id}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="4rem">
+                                <Label text="Rev." design="Bold"/>
+                                <t:template>
+                                    <Text text="{viewModel>nego_header_id}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="5rem">
+                                <Label text="Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{operation_unit_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                        </t:columns>
+                    </t:Table> -->
+                <!-- </smartTable:SmartTable> -->
+
+
+                <!-- <t:Table id="table1"
 				rows="{main>/list}"
 				selectionMode="MultiToggle"
 				visibleRowCount="14"
@@ -269,7 +538,7 @@
 						<Title text="Negotiation Workbench List (17)"/>
 						<ToolbarSpacer/>
                         <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true"  />
-                        <!-- <Button text="{I18N>/CREATE}" type="Transparent" press=".onMainTableCreate" enabled="true"  /> -->
+                        <Button text="{I18N>/CREATE}" type="Transparent" press=".onMainTableCreate" enabled="true"  />
                         <Button
                             icon="sap-icon://sort" type="Transparent"
                             tooltip="Sort"
@@ -492,7 +761,7 @@
 					</t:Column>
 					
 				</t:columns>
-			</t:Table>
+			</t:Table> -->
             <!-- </smartTable:SmartTable> -->
                 <!-- <t:table> -->
 
