@@ -69,7 +69,7 @@
 
                             </VBox>
                             <VBox>
-                                <Label text="요청일자" labelFor="searchRequestDateS" required="true"></Label>
+                                <Label text="요청일자" labelFor="searchRequestDateS"></Label>
                                     <DateRangeSelection id="searchRequestDateS" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />

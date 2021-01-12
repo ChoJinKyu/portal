@@ -17,6 +17,13 @@
 		},
         "dataSources": {
             "mainService": {
+                "uri": "srv-api/odata/v4/sp.negoHeadersV4Service/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            },
+            "tmService": {
                 "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
                 "settings": {
                     "odataVersion": "2.0"

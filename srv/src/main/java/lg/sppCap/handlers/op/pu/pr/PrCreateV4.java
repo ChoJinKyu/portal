@@ -140,6 +140,7 @@ public class PrCreateV4 implements EventHandler {
 		.append("PR_UNIT NVARCHAR(3),")
         .append("REQUESTOR_EMPNO NVARCHAR(30),")
         .append("REQUESTOR_NAME NVARCHAR(50),")
+        .append("DELIVERY_REQUEST_DATE DATE,")
         .append("BUYER_EMPNO NVARCHAR(30),")
         .append("PURCHASING_GROUP_CODE NVARCHAR(3),")
         .append("ESTIMATED_PRICE DECIMAL(34),")
@@ -147,6 +148,7 @@ public class PrCreateV4 implements EventHandler {
         .append("PRICE_UNIT NVARCHAR(3),")
         .append("PR_PROGRESS_STATUS_CODE NVARCHAR(30),")
         .append("REMARK NVARCHAR(3000),")
+        .append("SLOC_CODE NVARCHAR(3),")
         .append("UPDATE_USER_ID NVARCHAR(255)")
         .append(")"); 
 
@@ -154,7 +156,7 @@ public class PrCreateV4 implements EventHandler {
         String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_D";  
 
         String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_CREATE_SAVE_PROC ( ")
@@ -228,6 +230,7 @@ public class PrCreateV4 implements EventHandler {
                             v_statement_insertD.setObject(iRow++, v_inRow.getPrUnit());
                             v_statement_insertD.setObject(iRow++, v_inRow.getRequestorEmpno());
                             v_statement_insertD.setObject(iRow++, v_inRow.getRequestorName());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getDeliveryRequestDate());
                             v_statement_insertD.setObject(iRow++, v_inRow.getBuyerEmpno());
                             v_statement_insertD.setObject(iRow++, v_inRow.getPurchasingGroupCode());
                             v_statement_insertD.setObject(iRow++, v_inRow.getEstimatedPrice());
@@ -235,6 +238,7 @@ public class PrCreateV4 implements EventHandler {
                             v_statement_insertD.setObject(iRow++, v_inRow.getPriceUnit());
                             v_statement_insertD.setObject(iRow++, v_inRow.getPrProgressStatusCode());
                             v_statement_insertD.setObject(iRow++, v_inRow.getRemark());
+                            v_statement_insertD.setObject(iRow++, v_inRow.getSlocCode());
                             v_statement_insertD.setObject(iRow++, "A60264");
                             v_statement_insertD.addBatch();
                         }

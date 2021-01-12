@@ -41,7 +41,7 @@ entity Sc_Nego_Item_Prices {
         bidding_start_net_price_flag : String(1) default '''' not null  @title : '입찰시작단가디스플레이여부';
         bidding_target_net_price     : Decimal(28, 9)                   @title : '입찰목표단가';
         current_price                : Decimal(28, 9)                   @title : '현재가격';
-        note_content                 : String(4000)                     @title : '노트내용';
+        note_content                 : LargeBinary(4000)                @title : '노트내용';
         award_quantity               : Decimal(20, 3)                   @title : '낙찰수량';
         pr_number                    : String(50)                       @title : '구매요청번호';
         pr_item_number               : String(10)                       @title : '구매요청품목번호';

@@ -84,7 +84,7 @@ sap.ui.define([
                         path: 'org>/Org_Company',
                         filters: [
                             new Filter('tenant_id', FilterOperator.EQ, key)
-                        ],
+                        ].filter(f => f.oValue1 || f.oValue2),
                         template: new ListItem({
                             key: "{org>company_code}", text: "{org>company_name}", additionalText: "{org>company_code}"
                         })
@@ -97,7 +97,7 @@ sap.ui.define([
                         filters: [
                             new Filter('tenant_id', FilterOperator.EQ, key),
                             new Filter('group_code', FilterOperator.EQ, 'CM_ORG_TYPE_CODE'),
-                        ],
+                        ].filter(f => f.oValue1 || f.oValue2),
                         template: new Item({
                             key: "{util>code}", text: "{util>code} : {util>code_description}"
                         })
