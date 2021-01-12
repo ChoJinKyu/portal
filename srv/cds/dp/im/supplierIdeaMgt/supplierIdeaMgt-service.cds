@@ -19,6 +19,7 @@
 // 협력사제안관리
 using { dp as Idea } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA-model';
 using { dp as Performance } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_PERFORMANCE-model';
+using { dp as ideaMgtView } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_LIST_VIEW-model';
 // Supplier 
 using { sp as Supplier } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model.cds';
 // 공통코드
@@ -36,7 +37,77 @@ service SupplierIdeaMgtService {
     entity SupplierIdea as projection on Idea.Im_Supplier_Idea;
     entity SupplierPerform as projection on Performance.Im_Supplier_Idea_Performance;
  
-    @readonly
+    
+    view IdeaMgtView as select from ideaMgtView.Im_Supplier_Idea_List_View;
+    
+    view IdeaListView as 
+    select  key idea.tenant_id,
+            key idea.company_code,
+            key idea.idea_number,
+            idea.idea_title,
+            idea.idea_progress_status_code,
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = idea.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PROGRESS_STATUS'
+             and cd.code = idea.idea_progress_status_code
+             and cd.language_cd = 'KO')  as idea_progress_status_name : String(240),
+            idea.supplier_code,
+            ssm.supplier_local_name,
+            idea.idea_create_user_id,
+            '홍길동'   as idea_create_user_local_name : String(240),
+            idea.bizunit_code,
+            (select bizunit_name
+             from BizUnit.Org_Unit out 
+             where out.tenant_id = idea.tenant_id
+             and out.bizunit_code = idea.bizunit_code
+             ) as bizunit_ame : String(240) ,
+            idea.idea_product_group_code,
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = idea.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
+             and cd.code = idea.idea_product_group_code
+             and cd.language_cd = 'KO') as idea_product_group_name : String(240),
+            idea.idea_type_code,
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = idea.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_TYPE'
+             and cd.code = idea.idea_type_code
+             and cd.language_cd = 'KO')  as idea_type_name : String(240),
+            idea.idea_period_code,
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = idea.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PERIOD'
+             and cd.code = idea.idea_period_code
+             and cd.language_cd = 'KO') as idea_period_name : String(240),
+            idea.idea_manager_empno,
+            (select user_local_name
+            from Employee emp 
+            where emp.tenant_id = idea.tenant_id
+            and emp.employee_number = idea.idea_manager_empno) as idea_manager_local_name : String(240),
+            idea.idea_part_desc,
+            idea.current_proposal_contents,
+            idea.change_proposal_contents,
+            idea.idea_contents,
+            idea.attch_group_number,
+            idea.material_code,
+            idea.purchasing_uom_code,
+            idea.monthly_mtlmob_quantity,
+            idea.currency_code,
+            idea.vi_amount,
+            idea.monthly_purchasing_amount,
+            idea.annual_purchasing_amount,
+            idea.perform_contents
+    from IdeaMgtView as idea
+    inner join Supplier.Sm_Supplier_Mst  ssm 
+    on ssm.tenant_id = idea.tenant_id
+    and ssm.supplier_code = idea.supplier_code
+    ;
+    /* Caused by: org.apache.olingo.server.api.serializer.SerializerException: Non-nullable property not present!
+        Left outer Join  Error??
     view IdeaListView as
     select  key isi.tenant_id,
             key isi.company_code,
@@ -106,8 +177,8 @@ service SupplierIdeaMgtService {
     on isp.tenant_id = isi.tenant_id
     and isp.company_code = isi.company_code
     and isp.idea_number = isi.idea_number  
-  
     ;   
+    */
   
     view IdeaView as
     select  key isi.tenant_id,
