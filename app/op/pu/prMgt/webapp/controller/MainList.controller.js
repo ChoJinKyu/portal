@@ -136,7 +136,7 @@ sap.ui.define([
             //     }
             // }
             aItems.forEach(function(oItem){
-                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "DR" )
+                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "10" )
                 {
                 //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
                  aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
@@ -484,6 +484,7 @@ sap.ui.define([
             this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
+                company_code: oRecord.company_code,
                 pr_number: oRecord.pr_number
             });
 
@@ -538,7 +539,7 @@ sap.ui.define([
             var sDateTo = this.getView().byId("searchRequestDate").getSecondDateValue();
             var sPR_TYPE_CODE = this.getView().byId("searchPR_TYPE_CODE").getSelectedKeys();
             var sPR_TEMPLATE_NUMBER = this.getView().byId("searchPR_TEMPLATE_NUMBER").getSelectedKeys();
-            var sPrNumber = this.getView().byId("searchPrNumber").getSelectedKey();
+            var sPrNumber = this.getView().byId("searchPrNumber").getValue();
             var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
             var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
             var sRequestor = this.getView().byId("searchRequestorS").getValue();
@@ -597,7 +598,7 @@ sap.ui.define([
 
             if (sPrNumber) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("pr_number", FilterOperator.EQ, sPrNumber));
+                _tempFilters.push(new Filter("pr_number", FilterOperator.Contains, sPrNumber));
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,

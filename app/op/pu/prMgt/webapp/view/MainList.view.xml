@@ -163,7 +163,13 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/Pr_MstView}"                        
+                        items="{
+                                    path : 'list>/Pr_MstView',
+                                    sorter: {
+                                        path: 'pr_number',
+                                        descending: true
+                                    }
+                                }"                        
                         width="auto">
                         <!-- mode="MultiSelect"  -->
                     <headerToolbar>

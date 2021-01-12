@@ -16,7 +16,7 @@ sap.ui.define([
 		onBeforeRouteMatched: function(oEvent) {
 			var oModel = this.getOwnerComponent().getModel("fcl");
 
-			var sLayout = oEvent.getParameters().arguments.layout;
+            var sLayout = oEvent.getParameters().arguments.layout;
 
 			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
 			if (!sLayout) {
@@ -27,7 +27,32 @@ sap.ui.define([
 			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
 				oModel.setProperty("/layout", sLayout);
-			}
+            }
+ 
+            if (this.sCurrentRouteName === "mainPage") { // last viewed route was master
+                var oMainListView = this.oRouter.getView("op.pu.prMgt.view.MainList");
+                //var oMidViewObjectView = this.oRouter.getView("op.pu.prMgt.view.MidViewObject");
+                //var oMidCreateObjectView = this.oRouter.getView("op.pu.prMgt.view.MidCreateObject");
+                //this.getView().byId("fcl").removeBeginColumnPage(oMainListView);
+                //this.getView().byId("fcl").removeMidColumnPage(oMidViewObjectView);
+                
+            }
+        
+            if (this.sCurrentRouteName === "midView") { // last viewed route was master
+                var oMidViewObjectView = this.oRouter.getView("op.pu.prMgt.view.MidViewObject");
+                this.getView().byId("fcl").removeMidColumnPage(oMidViewObjectView);
+                //
+            }
+            if (this.sCurrentRouteName === "midCreate")
+            {
+                var oMidCreateObjectView = this.oRouter.getView("op.pu.prMgt.view.MidCreateObject");
+                this.getView().byId("fcl").removeMidColumnPage(oMidCreateObjectView);
+            }
+            if (this.sCurrentRouteName === "midModify")
+            {
+                var oMidModifyObjectView = this.oRouter.getView("op.pu.prMgt.view.MidModifyObject");
+                this.getView().byId("fcl").removeMidColumnPage(oMidModifyObjectView);
+            }
 		},
 
 		onColumnResize: function(oEvent) {
