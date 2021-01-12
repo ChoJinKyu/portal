@@ -18,12 +18,14 @@ sap.ui.define([
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
     "ext/lib/formatter/Formatter",
-	"./ProductActivityMgtPersoService"
+	"./ProductActivityMgtPersoService",
+    "sap/ui/model/FilterType"
 ],
     function (BaseController, Multilingual, Validator, DateFormatter, History
         , JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator
         , MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
         , Input, Item, ExcelUtil, Formatter, ProductActivityMgtPersoService
+        , FilterType
     ) {
         "use strict";
 
@@ -59,9 +61,26 @@ sap.ui.define([
                         intent: "#Template-display"
                     }, true);
                 }.bind(this));
+                this.setOrgFilter();                
+                this.byId("buttonMainCancelRow").setEnabled(false);
+                this.byId("buttonMainDeleteRow").setEnabled(false);
+                this.byId("buttonSaveProc").setEnabled(false);
                 
                 //this._doInitTablePerso();
             },
+
+            /**
+             * 세션에서 받은 tenant_id 로 필터 걸어주기
+             */
+            setOrgFilter: function () {
+                var oSelect, oBinding, aFilters;
+                oSelect = this.getView().byId('searchPdOperationOrg');
+                oBinding = oSelect.getBinding("items");
+                aFilters = [];
+                aFilters.push( new Filter("tenant_id", 'EQ', this.tenant_id) );
+                oBinding.filter(aFilters, FilterType.Application); 
+            },
+
 
             /**
              * @private
@@ -71,8 +90,7 @@ sap.ui.define([
                 this.getView().setModel(this.getOwnerComponent().getModel());
 
                 //접속자 법인 사업본부로 바꿔줘야함 로그인 세션이 공통에서 작업되면 작업해줘야 함
-                this.getView().byId("searchPdOperationOrg").setSelectedKeys(['L110010000']);
-
+                //this.getView().byId("searchPdOperationOrg").setSelectedKeys(['L110010000']);
             },
 
             onMainTablePersoButtonPressed: function (event) {
@@ -144,7 +162,7 @@ sap.ui.define([
                     iTotalItems = oEvent.getParameter("total");
                 sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("appTitle");
                 //console.log(sTitle+" ["+iTotalItems+"]");
-                this.byId("mainTableTitle").setText(sTitle+"["+iTotalItems+"]");
+                this.byId("mainTableTitle").setText(sTitle+"("+iTotalItems+")");
             
             },
 
@@ -199,6 +217,11 @@ sap.ui.define([
                                 oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
                                 oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
                                 this.onSearch();
+                                
+                                this.byId("buttonMainCancelRow").setEnabled(false);
+                                this.byId("buttonMainDeleteRow").setEnabled(false);
+                                this.byId("buttonSaveProc").setEnabled(false);
+                                this.byId("gTableExportButton").setEnabled(true);
                             }
                         }).bind(this)
                     })
@@ -210,6 +233,10 @@ sap.ui.define([
                     oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
+                    this.byId("buttonMainCancelRow").setEnabled(false);
+                    this.byId("buttonMainDeleteRow").setEnabled(false);
+                    this.byId("buttonSaveProc").setEnabled(false);
+                    this.byId("gTableExportButton").setEnabled(true);
                     this.onSearch();
                 }
             },
@@ -265,9 +292,9 @@ sap.ui.define([
                 }, "/PdProdActivityTemplate", 0);
 
                 this.rowIndex = 0;
-                //this.byId("buttonMainAddRow").setEnabled(false);
-                //this.byId("buttonMainEditRow").setEnabled(false); 
                 this.byId("buttonMainCancelRow").setEnabled(true);
+                this.byId("buttonMainDeleteRow").setEnabled(true);
+                this.byId("buttonSaveProc").setEnabled(true);
                 oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
                 oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
                 oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
@@ -284,10 +311,10 @@ sap.ui.define([
             
         
             onSave: function () {
+                var v_this = this;
                 var oModel = this.getModel("v4Proc");
                 var oModel2 = this.getView().getModel("list"); 
                 var oView = this.getView();
-                var v_this = this;
                 var oTable = this.byId("mainTable");
                 var oData = oModel2.oData;                
                 var inputData = {
@@ -296,79 +323,94 @@ sap.ui.define([
                     }
                 };
                 
-                if(this.validator.validate(this.byId("mainTable")) !== true) return;
-                var now = new Date();
-                var PdProdActivityTemplateType  = [];
-                for (var i = 0; i < oTable.getItems().length; i++) {
-                    if( oData.PdProdActivityTemplate[i]._row_state_ != null && oData.PdProdActivityTemplate[i]._row_state_ != "" ){
-                        var activeFlg = "false";
-                        if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
-                            activeFlg = "true";
-                        }else {
-                            activeFlg = "false";
-                        }
-                        var milestoneFlg = "false";
-                        if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
-                            milestoneFlg = "true";
-                        }else {
-                            milestoneFlg = "false";
-                        }
-                        var pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[2].getValue();
-                        if(oData.PdProdActivityTemplate[i]._row_state_  == "C"){
-                            pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue();
-                        }
-                        var seq = oData.PdProdActivityTemplate[i].sequence;
-                        if(oData.PdProdActivityTemplate[i]._row_state_ == "C"){
-                            seq ="1";
-                        }
-                        PdProdActivityTemplateType.push( 
-                           {
-                                tenant_id : oData.PdProdActivityTemplate[i].tenant_id,
-                                company_code : oData.PdProdActivityTemplate[i].company_code,
-                                org_type_code : oData.PdProdActivityTemplate[i].org_type_code,
-                                org_code : oData.PdProdActivityTemplate[i].org_code,
-                                product_activity_code : pacOri,
-                                develope_event_code : oData.PdProdActivityTemplate[i].develope_event_code,	
-                                sequence : oData.PdProdActivityTemplate[i].sequence,
-                                product_activity_name : oData.PdProdActivityTemplate[i].product_activity_name,	
-                                product_activity_english_name : oData.PdProdActivityTemplate[i].product_activity_english_name,
-                                milestone_flag : milestoneFlg,
-                                active_flag : activeFlg,
-                                update_user_id : this.loginUserId,
-                                system_update_dtm : now, 
-                                crud_type_code : oData.PdProdActivityTemplate[i]._row_state_,
-                                update_product_activity_code : oData.PdProdActivityTemplate[i].product_activity_code
-                        });
-                        inputData.inputData.pdProdActivityTemplateType = PdProdActivityTemplateType;
-                        var url = "dp/pd/productActivity/webapp/srv-api/odata/v4/dp.ProductActivityV4Service/PdProductActivitySaveProc";
-                    }
-                }
-                //console.log(inputData);
-                var v_this = this;
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-                    title: this.getModel("I18N").getText("/SAVE"),
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: (function (sButton) {
-                        $.ajax({
-                            url: url,
-                            type: "POST",
-                            //datatype: "json",
-                            //data: inputData,
-                            data: JSON.stringify(inputData),
-                            contentType: "application/json",
-                            success: function (data) {
-                                //console.log(data);
-                                v_this.onSearch();
-                                //var v_returnModel = oView.getModel("returnModel").getData();
-                            },
-                            error: function (e) {
-                                //console.log(e);
-                                v_this.onSearch();
-
+                if(this.validator.validate(this.byId("mainTable")) !== true){
+                    MessageBox.confirm(this.getModel("I18N").getText("/ECM01002"), {
+                        title: this.getModel("I18N").getText("/SAVE"),
+                        initialFocus: sap.m.MessageBox.Action.CANCEL,
+                        onClose: (function (sButton) {
+                        }).bind(this)
+                    });
+                }else{
+                    
+                    var now = new Date();
+                    var PdProdActivityTemplateType  = [];
+                    for (var i = 0; i < oTable.getItems().length; i++) {
+                        if( oData.PdProdActivityTemplate[i]._row_state_ != null && oData.PdProdActivityTemplate[i]._row_state_ != "" ){
+                            var activeFlg = "false";
+                            if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
+                                activeFlg = "true";
+                            }else {
+                                activeFlg = "false";
                             }
-                        });
-                    }).bind(this)
-                })
+                            var milestoneFlg = "false";
+                            if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
+                                milestoneFlg = "true";
+                            }else {
+                                milestoneFlg = "false";
+                            }
+                            var pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[2].getValue();
+                            if(oData.PdProdActivityTemplate[i]._row_state_  == "C"){
+                                pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue();
+                            }
+                            var seq = oData.PdProdActivityTemplate[i].sequence;
+                            if(oData.PdProdActivityTemplate[i]._row_state_ == "C"){
+                                seq ="1";
+                            }
+                            PdProdActivityTemplateType.push( 
+                            {
+                                    tenant_id : oData.PdProdActivityTemplate[i].tenant_id,
+                                    company_code : oData.PdProdActivityTemplate[i].company_code,
+                                    org_type_code : oData.PdProdActivityTemplate[i].org_type_code,
+                                    org_code : oData.PdProdActivityTemplate[i].org_code,
+                                    product_activity_code : pacOri,
+                                    develope_event_code : oData.PdProdActivityTemplate[i].develope_event_code,	
+                                    sequence : oData.PdProdActivityTemplate[i].sequence,
+                                    product_activity_name : oData.PdProdActivityTemplate[i].product_activity_name,	
+                                    product_activity_english_name : oData.PdProdActivityTemplate[i].product_activity_english_name,
+                                    milestone_flag : milestoneFlg,
+                                    active_flag : activeFlg,
+                                    update_user_id : this.loginUserId,
+                                    system_update_dtm : now, 
+                                    crud_type_code : oData.PdProdActivityTemplate[i]._row_state_,
+                                    update_product_activity_code : oData.PdProdActivityTemplate[i].product_activity_code
+                            });
+                            inputData.inputData.pdProdActivityTemplateType = PdProdActivityTemplateType;
+                            var url = "dp/pd/productActivity/webapp/srv-api/odata/v4/dp.ProductActivityV4Service/PdProductActivitySaveProc";
+                        }
+                    }
+                    //console.log(inputData);
+                    MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                        title: this.getModel("I18N").getText("/SAVE"),
+                        initialFocus: sap.m.MessageBox.Action.CANCEL,
+                        onClose: (function (sButton) {
+                            $.ajax({
+                                url: url,
+                                type: "POST",
+                                //datatype: "json",
+                                //data: inputData,
+                                data: JSON.stringify(inputData),
+                                contentType: "application/json",
+                                success: function (data) {
+                                    //console.log(data);
+                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    v_this.onSearch();
+                                    //var v_returnModel = oView.getModel("returnModel").getData();
+                                    
+                                    
+                                },
+                                error: function (e) {
+                                    //console.log(e);
+                                    v_this.onSearch();
+
+                                }
+                            });
+                        }).bind(this)
+                    });
+                    
+                    v_this.byId("buttonMainCancelRow").setEnabled(false);
+                    v_this.byId("buttonMainDeleteRow").setEnabled(false);
+                    v_this.byId("buttonSaveProc").setEnabled(false);
+                }
             },
 
 
@@ -472,6 +514,17 @@ sap.ui.define([
                             oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[2].setEnabled(true);
                         }
                     }
+                    this.byId("buttonMainCancelRow").setEnabled(true);
+                    this.byId("buttonMainDeleteRow").setEnabled(true);
+                    this.byId("buttonSaveProc").setEnabled(true);
+                    this.byId("gTableExportButton").setEnabled(false);
+                }else{
+                    this.byId("buttonMainCancelRow").setEnabled(false);
+                    this.byId("buttonMainDeleteRow").setEnabled(false);
+                    this.byId("buttonSaveProc").setEnabled(false);
+                    this.byId("gTableExportButton").setEnabled(true);
+                    
+
                 }
             },
             
