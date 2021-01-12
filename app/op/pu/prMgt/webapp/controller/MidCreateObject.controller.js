@@ -9,6 +9,7 @@ sap.ui.define([
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
     "sap/ui/core/Fragment",
     "sap/f/LayoutType",
     "sap/m/MessageBox",
@@ -18,8 +19,8 @@ sap.ui.define([
     ,"sap/ui/core/syncStyleClass" 
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
-], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
-            , LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
+], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Sorter
+            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
     
     "use strict";
     
@@ -82,13 +83,15 @@ sap.ui.define([
 		_onObjectMatched : function (oEvent) { 
             var oArgs = oEvent.getParameter("arguments");
             var sTenantId = oArgs.tenantId;
-            
+
             // 초기 데이터 설정
             if(sTenantId && sTenantId === "new") {
                 this._fnSetCreateData(oArgs);
             }else{
-                this._fnReadPrMaster(oArgs);
+                 this._fnReadPrMaster(oArgs);
+                 this._fnReadPrDetail(oArgs);
             }
+
 
             //this._createViewBindData(oArgs); 
 			//this._onLoadApprovalRow();
@@ -105,16 +108,14 @@ sap.ui.define([
             var that = this,
                 oView = this.getView(),
                 oServiceModel = this.getModel(),
-                oDetailModel = this.getModel('detailModel'),
                 oViewModel = this.getModel('viewModel');
-
-            var oDetailData = oDetailModel.getProperty("/");
+            var oPrMstData = oViewModel.getProperty("/PrMst");
 
             var aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("pr_type_code", FilterOperator.EQ, oDetailData.pr_type_code),
-                    new Filter("pr_type_code_2", FilterOperator.EQ, oDetailData.pr_type_code_2),
-                    new Filter("pr_type_code_3", FilterOperator.EQ, oDetailData.pr_type_code_3)
+                    new Filter("pr_type_code", FilterOperator.EQ, oPrMstData.pr_type_code),
+                    new Filter("pr_type_code_2", FilterOperator.EQ, oPrMstData.pr_type_code_2),
+                    new Filter("pr_type_code_3", FilterOperator.EQ, oPrMstData.pr_type_code_3)
                 ];
 
             oServiceModel.read("/Pr_TMapView", {
@@ -124,12 +125,12 @@ sap.ui.define([
 
                     // PR 템플릿 정보 세텅
                     oData.results.some(function(oPrTemplateData){
-                        if(oPrTemplateData.pr_template_number === oDetailData.pr_template_number){
-                            oDetailData.pr_template_name =  oPrTemplateData.pr_template_name;
-                            oDetailData.pr_type_name =  oPrTemplateData.pr_type_name;
-                            oDetailData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
-                            oDetailData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
-                            oDetailModel.setProperty("/",oDetailData);
+                        if(oPrTemplateData.pr_template_number === oPrMstData.pr_template_number){
+                            oPrMstData.pr_template_name =  oPrTemplateData.pr_template_name;
+                            oPrMstData.pr_type_name =  oPrTemplateData.pr_type_name;
+                            oPrMstData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
+                            oPrMstData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
+                            oViewModel.setProperty("/PrMst",oPrMstData);
                             return true;
                         }
                     });
@@ -161,7 +162,7 @@ sap.ui.define([
                 requestor_name: "김구매",
                 requestor_department_code: "10010",
                 requestor_department_name: "생산1팀",
-                request_date: new Date(),
+                request_date: oToday,
                 pr_create_status_code: "10",
                 pr_header_text: "테스트 구매요청",
                 approval_flag: false,
@@ -176,17 +177,23 @@ sap.ui.define([
                 pr_type_name: "",
                 pr_type_name_2: "",
                 pr_type_name_3: "",
-                pr_desc: "",
-                details: []
+                pr_desc: ""
             };
 
-            this.setModel(new JSONModel(oNewMasterData), "detailModel");
+            oViewModel.setProperty("/PrMst", oNewMasterData);
+            oViewModel.setProperty("/Pr_Dtl", []);
+
+            //this.setModel(new JSONModel(oNewMasterData), "detailModel");
         },
 
         _fnReadPrMaster : function(oArgs){
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id));
-            aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
+            // aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id));
+            // aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
+
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("pr_number", FilterOperator.EQ, "PR2101100046"));
+
 
             var aSorter = [];
             aSorter.push(new Sorter("pr_number", false));
@@ -197,8 +204,9 @@ sap.ui.define([
                 filters : aFilters,
                 sorters : aSorter,
                 success : function(data){
-                    oViewModel.setProperty("/PrMst", data.results);
-                    console.log(data.results);
+                    if(data.results.length > 0) {
+                         oViewModel.setProperty("/PrMst", data.results[0]);
+                    }
                     // oCodeMasterTable.setBusy(false);
                 },
                 error : function(data){
@@ -207,20 +215,55 @@ sap.ui.define([
             });
         },
 
+        _fnReadPrDetail : function(oArgs){
+            var aFilters = [];
+            // aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id));
+            // aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
+
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("pr_number", FilterOperator.EQ, "PR2101100046"));
+
+            
+            var aSorter = [];
+            aSorter.push(new Sorter("pr_number", false));
+
+            var oViewModel = this.getModel('viewModel');
+            var oServiceModel = this.getModel();
+            oServiceModel.read("/Pr_Dtl",{
+                filters : aFilters,
+                sorters : aSorter,
+                success : function(data){
+                    if(data.results.length > 0) {
+                        oViewModel.setProperty("/Pr_Dtl", data.results);
+                    } else {
+                        oViewModel.setProperty("/Pr_Dtl", []);
+                    }
+                    // oCodeMasterTable.setBusy(false);
+                },
+                error : function(data){
+                    MessageToast.show("Pr_Dtl read failed.");
+                }
+            });
+        },
+
         /**
          * 품목 라인 추가
          */
         onItemAddRow: function () {
-            var oDetailModel = this.getModel("detailModel"),
-                aDetails = oDetailModel.getProperty("/details"),
+            var oViewModel = this.getModel("viewModel"),
+                aDetails = oViewModel.getProperty("/Pr_Dtl"),
                 oToday = new Date();
 
-            var itemNumber = aDetails.length + 1;
-
+            // 품목번호
+            var prItemNumber = 1;
+            if(aDetails) {
+                prItemNumber = aDetails.length + 1
+            }
+            
             aDetails.push({tenant_id:"L2100", 
                         company_code: "LGCKR", 
                         pr_number: "",
-                        pr_item_number: itemNumber,
+                        pr_item_number: prItemNumber+"",
                         org_type_code: "XX", 
                         org_code: "", 
                         buyer_empno: "", 
@@ -240,7 +283,7 @@ sap.ui.define([
                         remark: "",
                         sloc_code: ""
                         });
-            oDetailModel.refresh();
+            oViewModel.refresh();
         },
 
         
@@ -285,33 +328,138 @@ sap.ui.define([
         _fnPrSave: function(){
             var oView = this.getView();
             var that = this;
-            var oDetailModel = this.getModel("detailModel");
-            var oData = $.extend(true, {}, oDetailModel.getData());
+            //var oDetailModel = this.getModel("detailModel");
+            //var oData = $.extend(true, {}, oDetailModel.getData());
+            
+            var oViewModel = this.getModel("viewModel");
+            var oViewData = $.extend(true, {}, oViewModel.getData());
+
 
             //대표품목명
-            var prDesc = "";
-            if(oData.details.length === 0){
-                prDesc = oData.details[0].pr_desc;
-            }else{
-                prDesc = oData.details[0].pr_desc + ' 외 ' + (oData.details.length-1) + "건";
+            var pr_desc = "";
+            var prDtlCnt = oViewData.Pr_Dtl.length;
+            if(prDtlCnt > 0){
+                if(prDtlCnt === 1){
+                    pr_desc = oViewData.Pr_Dtl[0].pr_desc;
+                }else{
+                    pr_desc = oViewData.Pr_Dtl[0].pr_desc + ' 외 ' + (prDtlCnt-1) + "건";
+                }
             }
-            oData.pr_desc = prDesc;
+            oViewData.PrMst.pr_desc = pr_desc;
+            
+            //품의내용
+            // var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            // oViewData.PrMst.approval_contents = approvalContents;
+
+            
+            // Master data
+            var oMaster = oViewData.PrMst;
+            var oMasterData = {
+                tenant_id: oMaster.tenant_id,
+                company_code: oMaster.company_code,
+                pr_number: oMaster.pr_number,
+                pr_type_code: oMaster.pr_type_code,
+                pr_type_code_2: oMaster.pr_type_code_2,
+                pr_type_code_3: oMaster.pr_type_code_3,
+                pr_template_number:oMaster.pr_template_number,
+                pr_create_system_code: "SPPCAP",
+                requestor_empno: oMaster.requestor_empno,
+                requestor_name: oMaster.requestor_name,
+                requestor_department_code: oMaster.requestor_department_code,
+                requestor_department_name: oMaster.requestor_department_name,
+                request_date: new Date(),
+                pr_create_status_code: oMaster.pr_create_status_code,
+                pr_header_text: oMaster.pr_header_text,
+                approval_flag: false,
+                approval_number:oMaster.approval_number,
+                approval_contents: oMaster.approval_contents,
+                erp_interface_flag: false,
+                erp_pr_type_code: oMaster.erp_pr_type_code,
+                erp_pr_number: oMaster.erp_pr_number,
+                local_create_dtm: oMaster.local_create_dtm,
+                local_update_dtm: oMaster.local_update_dtm,
+                pr_template_name: oMaster.pr_template_name,
+                pr_type_name: oMaster.pr_type_name,
+                pr_type_name_2: oMaster.pr_type_name_2,
+                pr_type_name_3: oMaster.pr_type_name_3,
+                pr_desc: oMaster.pr_desc,
+                details: []
+            };
+
+            // Detail data
+            var aDetails = [];
+            var aViewDataPrDtl = oViewData.Pr_Dtl;
+            if(aViewDataPrDtl.length > 0){
+               aViewDataPrDtl.forEach(function(item, idx){
+                   aDetails.push({
+                        tenant_id: item.tenant_id,
+                        company_code: item.company_code,
+                        pr_number: oMasterData.pr_number,
+                        pr_item_number: ++idx + "",
+                        org_type_code: item.org_type_code,
+                        org_code: item.org_code, 
+                        buyer_empno: item.buyer_empno,
+                        currency_code: item.currency_code,
+                        estimated_price: item.estimated_price, 
+                        material_code: item.material_code,
+                        material_group_code: item.material_group_code,
+                        pr_desc: item.pr_desc,                        
+                        pr_quantity: item.pr_quantity,
+                        pr_unit: item.pr_unit,
+                        requestor_empno: item.requestor_empno,
+                        requestor_name: item.requestor_name,
+                        delivery_request_date: item.delivery_request_date,
+                        purchasing_group_code: item.purchasing_group_code,
+                        price_unit: item.price_unit,
+                        pr_progress_status_code: item.pr_progress_status_code,
+                        remark: item.remark,
+                        sloc_code: item.sloc_code
+                        });
+                });
+            }
+
+            oMasterData.details = aDetails;
+
+
+            //대표품목명
+            // var pr_desc = "";
+            // var prDtlCnt = oViewData.Pr_Dtl.length;
+            // if(prDtlCnt === 0){
+            //     pr_desc = oViewData.Pr_Dtl[0].pr_desc;
+            // }else{
+            //     pr_desc = oViewData.Pr_Dtl[0].pr_desc + ' 외 ' + (prDtlCnt-1) + "건";
+            // }
+            // oViewData.pr_desc = pr_desc;
 
             //품의내용
-            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            oData.approval_contents = approvalContents;
+            //var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            //oViewData.PrMst.approval_contents = approvalContents;
 
             //Send data
-            var sendData = {}, masterDatas=[];
-            masterDatas.push(oData);
-            sendData.inputData = masterDatas;
+            // var oPrData = {};
+            // oPrData = oViewData.PrMst;
+            // oPrData.details = oViewData.Pr_Dtl;
 
+            // var sendData = {}, masterDatas=[];
+            // masterDatas.push(oPrData);
+            // sendData.inputData = masterDatas;
+
+
+            // 전송 데이터 세팅
+            var sendData = {}, aInputData=[];
+            aInputData.push(oMasterData);
+            sendData.inputData = aInputData;
+
+            // Call ajax
             that._fnCallAjax(
                 sendData,
                 "SavePrCreateProc",
                 function(result){
                     oView.setBusy(false);
-                    that._fnNavigationMainPage();
+                    if(result.value[0].return_code === "0000") {
+                        that._fnNavigationMainPage();
+                    }
+                    
                 }
             );
         },
@@ -360,7 +508,7 @@ sap.ui.define([
          */
         onNavigationBackPress: function () {
 
-            this._fnNavigationMainList();
+            this._fnNavigationMainPage();
 
 			// var sPreviousHash = History.getInstance().getPreviousHash();
 			// if (sPreviousHash !== undefined) {

@@ -37,10 +37,10 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="구매요청 번호 :"/>
                     <ObjectStatus
-                        text="{detailModel>/pr_number}"/>
+                        text="{viewModel>/PrMst/pr_number}"/>
                     <Label text="구매요청 생성일자 :"/>
                     <ObjectStatus
-                        text="{ path: 'detailModel>/local_update_dtm',
+                        text="{ path: 'viewModel>/PrMst/request_date',
                                 type: 'sap.ui.model.type.Date',
                                 formatOptions: {
                                 pattern: 'yyyy-MM-dd'
@@ -51,10 +51,10 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="구매요청 템플릿 :"/>
                     <ObjectStatus
-                        text="{detailModel>/pr_template_name}"/>
+                        text="{viewModel>/PrMst/pr_template_name}"/>
                     <Label text="구매요청 생성자 :"/>
                     <ObjectStatus
-                        text="{detailModel>/requestor_name}"/>
+                        text="{viewModel>/PrMst/requestor_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -104,7 +104,7 @@
                                     labelFor="input"
                                     required="true"/>
                                 <Input
-                                    value="{detailModel>/pr_header_text}"
+                                    value="{viewModel>/PrMst/pr_header_text}"
                                     visible="true"
                                     width="40em" 
                                     placeholder="필수"
@@ -136,7 +136,7 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="1"
                                 visibleRowCountMode="Auto"
-                                rows="{detailModel>/details}"
+                                rows="{viewModel>/Pr_Dtl}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
@@ -160,14 +160,14 @@
                                 <table:Column id="c_model" width="5em" hAlign="Center">
                                     <Label text="품목번호"/>
                                     <table:template>
-                                        <Text id="t_model" text="{detailModel>pr_item_number}"/>
+                                        <Text id="t_model" text="{viewModel>pr_item_number}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                     <Label text="조직코드" required="true"/>           
                                     <table:template>
                                         <Input
-                                            value="{detailModel>org_code}"
+                                            value="{viewModel>org_code}"
                                             showValueHelp="true"
                                             valueHelpRequest=".onOpenOrgcodeDialog" />
                                     </table:template>
@@ -176,7 +176,7 @@
                                     <Label text="자재코드" required="true"/>           
                                     <table:template>
                                         <Input
-                                            value="{detailModel>material_code}"
+                                            value="{viewModel>material_code}"
                                             showValueHelp="true"
                                             valueHelpRequest=".onOpenMaterialDialog" />
                                     </table:template>
@@ -184,50 +184,50 @@
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="자재그룹" required="true"/>           
                                     <table:template>
-                                        <Input value="{detailModel>material_group_code}"/>
+                                        <Input value="{viewModel>material_group_code}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_description" width="10em" hAlign="Center">
                                     <Label text="구매요청 품명" required="true"/>           
                                     <table:template>
-                                        <Input value="{detailModel>pr_desc}"/>
+                                        <Input value="{viewModel>pr_desc}"/>
                                     </table:template>
                                 </table:Column>       
                                 <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
                                     <Label text="요청수량" required="true"/>
                                     <table:template>
-                                        <Input maxLength="20" value="{detailModel>pr_quantity}"/>
+                                        <Input maxLength="20" value="{viewModel>pr_quantity}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
                                     <Label text="단위" required="true"/>           
                                     <table:template>
-                                        <Input maxLength="3" value="{detailModel>pr_unit}"/>
+                                        <Input maxLength="3" value="{viewModel>pr_unit}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column id="c_budetAmount" width="10em" hAlign="Center">
                                     <Label text="구매요청가격" required="true"/>           
                                     <table:template>
-                                        <Input maxLength="20" value="{detailModel>estimated_price}"/>
+                                        <Input maxLength="20" value="{viewModel>estimated_price}"/>
                                     </table:template>
                                 </table:Column>                               
                                 <table:Column id="c_currency" width="10em" hAlign="Center">
                                     <Label text="통화" required="true" labelFor="i_currency"/>           
                                     <table:template>
-                                        <Input id="i_currency" value="{detailModel>currency_code}"/>
+                                        <Input id="i_currency" value="{viewModel>currency_code}"/>
                                     </table:template>
                                 </table:Column>                                 
                                 <table:Column id="c_price_unit" width="10em" hAlign="Center">
                                     <Label text="가격단위" required="true" labelFor="i_price_unit"/>           
                                     <table:template>
-                                        <Input id="i_price_unit" value="{detailModel>price_unit}"/>
+                                        <Input id="i_price_unit" value="{viewModel>price_unit}"/>
                                     </table:template>
                                 </table:Column>                                   
                                 <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
                                     <Label text="구매담당자"/>           
                                     <table:template>
                                         <Input
-                                            value="{detailModel>buyer_empno}"
+                                            value="{viewModel>buyer_empno}"
                                             showValueHelp="true"
                                             valueHelpRequest=".onOpenMaterialDialog" />
                                     </table:template>
@@ -235,28 +235,34 @@
                                 <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
                                     <Label text="비고"/>
                                     <table:template>
-                                        <Input maxLength="2000" value="{detailModel>remark}" />
+                                        <Input maxLength="2000" value="{viewModel>remark}" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="구매그룹"/>
                                     <table:template>
-                                        <Input value="{detailModel>purchasing_group_code}"/>
+                                        <Input value="{viewModel>purchasing_group_code}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="저장위치"/>
                                     <table:template>
-                                        <Input value="{detailModel>sloc_code}" />
+                                        <Input value="{viewModel>sloc_code}" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_delivery_request_date" width="10em" hAlign="Center">
                                     <Label text="납품요청일"/>    
                                     <table:template>
-                                        <DatePicker id="i_delivery_request_date" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
-                                                    placeholder="Enter Date"
-                                                    class="sapUiSmallMarginBottom"
-                                                    value="{detailModel>delivery_request_date}" />
+                                        <DatePicker id="i_delivery_request_date"
+                                                visible="true"
+                                                value="{
+                                                    path:'viewModel>delivery_request_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        UTC: true,
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }"/>
                                     </table:template>
                                 </table:Column>
                             </table:columns>
