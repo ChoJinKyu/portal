@@ -26,6 +26,7 @@
             </OverflowToolbar>
         </headerToolbar>
         <columns>
+
         </columns>
         <items>
             <ColumnListItem>
@@ -33,6 +34,7 @@
             </ColumnListItem>
         </items>
     </Table>
+    <!--
     <Table id="tblEvents_edit"
             growing="true"
             growingThreshold="20"
@@ -54,6 +56,7 @@
             </ColumnListItem>
         </items>
     </Table>
+    -->
 </VBox>
 
 <!--판가/물동/원가-->

@@ -58,12 +58,34 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
+                                <Label
+                                    text="{I18N>/TYPE}: "
+                                    labelFor="search_Useflag">
+                                </Label>
+                                <SegmentedButton 
+                                    id="search_useflagS"
+                                    selectedKey="" 
+                                    width="100%">
+                                    <items>
+                                        <SegmentedButtonItem text="All" width="4em"/>
+                                        <SegmentedButtonItem text="Button" width="4em" key="BTN"/>
+                                        <SegmentedButtonItem text="Label" width="4em" key="LBL"/>
+                                        <SegmentedButtonItem text="Message" width="5em" key="MSG"/>
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
                                 <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordS"></Label>
                                 <Input id="searchKeywordS" placeholder="{I18N>/NCM02001}" change=".onPageSearchButtonPress"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
+                           
                         </form:content>
                     </form:SimpleForm>
                 </f:snappedContent>
@@ -106,12 +128,34 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
+                                <Label
+                                    text="{I18N>/TYPE}: "
+                                    labelFor="search_Useflag">
+                                </Label>
+                                <SegmentedButton 
+                                    id="search_useflagE"
+                                    selectedKey="" 
+                                    width="100%">
+                                    <items>
+                                        <SegmentedButtonItem text="All" width="4em"/>
+                                        <SegmentedButtonItem text="Button" width="4em" key="BTN"/>
+                                        <SegmentedButtonItem text="Label" width="4em" key="LBL"/>
+                                        <SegmentedButtonItem text="Message" width="5em" key="MSG"/>
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
                                 <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordE"></Label>
                                 <Input id="searchKeywordE" placeholder="{I18N>/NCM02001}"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
+                            
                         </form:content>
                     </form:SimpleForm>
                 </f:expandedContent>
@@ -236,61 +280,6 @@
 						</t:template>
                     </t:Column>
                 </t:columns>
-                <!-- <items>
-                    <ColumnListItem>
-                        <cells>
-                            <ObjectStatus icon="{
-                                path: 'list>_row_state_',
-                                formatter: '.formatter.toModelStateColumnIcon'
-                            }" />
-                            <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                    ]
-                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
-                                <items>
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </items>
-                            </ComboBox>
-                            <ComboBox selectedKey="{list>language_code}" width="100%" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                    ]
-                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
-                                <items>
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </items>
-                            </ComboBox>
-                            <Input value="{
-                                    path: 'list>message_code',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        maxLength: 30
-                                    }
-                                }" editable="{= ${list>_row_state_} === 'C' }" required="true"></Input>
-                            <Input value="{list>message_contents}" required="true" ></Input>
-                            <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
-                                    path: 'util>/CodeDetails',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        maxLength: 1000
-                                    },
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                    ]
-                                }">
-                                <items>
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </items>
-                            </ComboBox>
-                        </cells>
-                    </ColumnListItem>
-                </items> -->
             </t:Table>
         </f:content>
         <!-- DynamicPage Footer -->

@@ -81,6 +81,12 @@
           "bundleName": "pg.md.mdVpItemMapping.i18n.i18n"
         }
       },
+      "tblModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            },
       "util": {
         "dataSource": "commonUtilService",
         "preload": true,
@@ -137,6 +143,14 @@
           "viewName": "mdVpItemMapping",
           "viewLevel": 1,
           "title": "{i18n>mainListViewTitle}"
+        },
+        "availableItems": {
+          "viewName": "AvailableItems",
+          "viewId": "availableItems"
+        },
+        "selectedItems": {
+          "viewName": "SelectedItems",
+          "viewId": "selectedItems"
         }
       }
     }

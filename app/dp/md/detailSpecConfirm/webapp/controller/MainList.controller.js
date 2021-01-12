@@ -88,10 +88,10 @@ sap.ui.define([
             this.setDivision('LGEKR');
 
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
+            // this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
+            // this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
 
             /** Date */
             var today = new Date();
@@ -106,7 +106,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -205,16 +205,19 @@ sap.ui.define([
                 var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
 			}
-		},
-
-		/**
-		 * Event handler when pressed the item of table
+        },
+        
+        /**
+		 * Event handler when item press of table
 		 * @param {sap.ui.base.Event} oEvent
 		 * @public
 		 */
-		onMainTableItemPress: function(oEvent) {
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oEvent.getSource().getBindingContext("list").getPath(),
+        onItemPress: function(oEvent){
+
+            var oSelectedItem = oEvent.getParameter("listItem");
+
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+				sPath = oSelectedItem.getBindingContext("list").getPath(),
 				oRecord = this.getModel("list").getProperty(sPath);
 
 			this.getRouter().navTo("midPage", {
@@ -227,12 +230,12 @@ sap.ui.define([
                 this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
             }
 
-			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
+			oSelectedItem.setNavigated(true);
+			var oParent = oSelectedItem.getParent();
 			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
-		},
+			this.iIndex = oParent.indexOfItem(oSelectedItem);
+        },
+
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -388,14 +391,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
             }
 
             var filter = new Filter({
@@ -450,20 +453,20 @@ sap.ui.define([
             
             this.setValuHelpDialog(oEvent);
 
-            
-
             var aCols = this.oColModel.getData().cols;
-
             
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2600' );
                 
                 oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
                 oTable.setModel(this.oColModel, "columns");
 
                 if (oTable.bindRows) {
                     oTable.bindAggregation("rows", this.vhdPath);
+                    oTable.getBinding("rows").filter(_filter);
                 }
 
                 if (oTable.bindItems) {
@@ -474,6 +477,7 @@ sap.ui.define([
                             })
                         });
                     });
+                    oTable.getBinding("items").filter(_filter);
                 }
                 this._oValueHelpDialog.update();
 
@@ -536,7 +540,7 @@ sap.ui.define([
                 });
 
                 this.modelName = '';
-                this.vhdPath = '/PartNumbers';
+                this.vhdPath = "/PartNumbers";
                 this._oValueHelpDialog.setTitle('Part No');
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
@@ -600,7 +604,9 @@ sap.ui.define([
 			aFilters.push(new Filter({
 				filters: _tempFilters,
 				and: false
-			}));
+            }));
+            
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

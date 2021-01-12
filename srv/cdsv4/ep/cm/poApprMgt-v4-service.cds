@@ -10,8 +10,10 @@ service PoApprMgtV4Service {
         company_code : String;
         po_number : String;
         forex_declare_status_code : String;
-        declare_scheduled_date : Date;		
-		declare_date : Date;			
+        //declare_scheduled_date : Date;		
+		//declare_date : Date;
+        declare_scheduled_date : String;		
+		declare_date : String;			
 		attch_group_number : String;	
 		remark : String;	
         update_user_id : String;

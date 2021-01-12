@@ -58,7 +58,7 @@
                     sticky="HeaderToolbar,ColumnHeaders" 
                     inset="false" 
                     growing="true"
-                    growingThreshold="10"
+                    growingThreshold="100"
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onMainTableUpdateFinished"
                     items="{list>/SfFundingNotify}"

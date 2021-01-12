@@ -16,7 +16,8 @@ sap.ui.define([
 	"sap/m/Input",
     "sap/m/ComboBox",
     "ext/lib/util/Validator",
-    "ext/lib/formatter/Formatter"        
+    "ext/lib/formatter/Formatter",
+   "sap/ui/model/resource/ResourceModel"        
 ], function (
     BaseController, 
     History, 
@@ -35,15 +36,19 @@ sap.ui.define([
     Input, 
     ComboBox,
     Validator,
-    Formatter) {
+    Formatter,
+    ResourceModel,) {
     "use strict";
     
     var oTransactionManager;
     var that;
+    var generaloDataRst = {};
 	return BaseController.extend("pg.vp.vpMgt.controller.MidObjectDetail", {
 
         dateFormatter: DateFormatter,
         formatter: Formatter,
+
+
 
         validator: new Validator(),
 		/* =========================================================== */
@@ -57,7 +62,23 @@ sap.ui.define([
 		onInit : function () {
 			// Model used to manipulate controlstates. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
+            // between the busy indication for loading the view's meta data
+            var ReturnoData = {
+				data: {
+					return_code: "",
+                    return_msg: ""
+				}
+			};
+			var oModel = new JSONModel(ReturnoData);
+            this.setModel(oModel,"returnModel");
+
+            var i18nModel = new ResourceModel({
+            bundleName: "pg.vp.vpCallProcTest.i18n.i18n_en",
+            supportedLocales: [""],
+            fallbackLocale: ""
+            });
+            this.getView().setModel(i18nModel, "i18n");
+
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
@@ -228,26 +249,217 @@ sap.ui.define([
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function(){
-			var oView = this.getView(),
-				me = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
-							success: function(ok){
-								me._toShowMode();
-								oView.setBusy(false);
-								MessageToast.show("Success to save.");
-							}
-						});
-					};
-				}
-			});
+        onDetailSaveButtonPress: function(){
+			 MessageToast.show("Do 1st Proc!");
+
+             var oModel = this.getModel("vpMappingProc"),
+                oView = this.getView(),   
+                oBundle = this.getView().getModel("i18n").getResourceBundle(),                
+                sMsg,
+                v_returnModel,
+                urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
+
+            var inputInfo = {},
+                vpMstList = [],
+                vpSupplierList = [],
+                vpItemList = [],
+                vpManagerList = [];
+                
+                inputInfo = {
+                    inputData: {
+                        vpMst: [],
+                        vpSupplier: [],
+                        vpItem: [],
+                        vpManager: [],
+                        user_id: "testerId",
+                        user_no: "testerNo"
+                    }
+                };   
+            //_general_info Data add    
+            vpMstList.push({
+                tenant_id: generaloDataRst.tenant_id //auto set
+                ,company_code: generaloDataRst.company_code //auto set
+                ,org_type_code: generaloDataRst.org_type_code  //auto set
+                ,org_code: generaloDataRst.org_code  //auto set
+                ,vendor_pool_code: generaloDataRst.vendor_pool_code  //auto set
+                ,vendor_pool_local_name : this.getView().byId("general_vendor_pool_local_name").getValue()// view value set
+                ,vendor_pool_english_name : this.getView().byId("general_vendor_pool_english_name").getValue()//  view value set
+                ,repr_department_code: this.getView().byId("general_repr_department_code").getValue()   // view value set            
+                ,operation_unit_code : generaloDataRst.operation_unit_code  //auto set
+                ,inp_type_code : this.getView().byId("general_inp_type_code").getSelectedKey()//  view value set
+                ,mtlmob_base_code : this.getView().byId("general_plan_base").getSelectedKey()//  view value set
+                ,regular_evaluation_flag : this.getView().byId("general_regular_evaluation_flag").getState()//  view value set
+                ,industry_class_code : this.getView().byId("general_industry_class_code").getSelectedKey()//  view value set
+                ,sd_exception_flag : this.getView().byId("general_sd_exception_flag").getState()//  view value set
+                ,vendor_pool_apply_exception_flag : this.getView().byId("general_vendor_pool_apply_exception_flag").getState()//  view value set
+                ,maker_material_code_mngt_flag : this.getView().byId("general_maker_material_code_mngt_flag").getState()//  view value set
+                // ,domestic_net_price_diff_rate : this.getView().byId("general_domestic_net_price_diff_rate").getValue()// view value set
+                // ,dom_oversea_netprice_diff_rate : this.getView().byId("general_dom_oversea_netprice_diff_rate").getValue()// view value set
+                ,domestic_net_price_diff_rate : 10.0// view value set
+                ,dom_oversea_netprice_diff_rate : 10.0// view value set                
+                ,equipment_grade_code : this.getView().byId("general_equipment_grade_code").getSelectedKey()//  view value set
+                ,equipment_type_code : this.getView().byId("general_equipment_type_code").getSelectedKey()//   view value set
+                ,vendor_pool_use_flag : true//  default
+                ,vendor_pool_desc : this.getView().byId("general_vendor_pool_desc").getValue()//  view value set
+                ,vendor_pool_history_desc : null//생략가능
+                ,parent_vendor_pool_code : null//생략가능 
+                // ,leaf_flag : true  //drill_state leaf = true
+                // ,level_number : null  //hierarchy_level +1
+                // ,display_sequence : null // 생략가능 default null
+                // ,register_reason : "AAAAA" // 결재요청사유 생략
+                // ,approval_number : "AAAAA" // 결재요청번호 생략
+                ,crud_type_code : "U" // U
+
+              
+            });
+
+            // inputInfo.inputData.vpMst = vpMstList;     
+            
+            // !that.fnChkDupData(that.metListTbl, "matlist", "/VpMaterialMst", "material_code", materialCode)
+            // this.currentListObj = tblObj.getModel(modelName).getProperty(viewName);
+
+
+            //supplier list data
+            this.currnetSppObj = that.sppListTbl.getModel("suplist").getProperty("/VpSupplierDtlView")
+            console.log("currnetSppObj : " + this.currnetSppObj);
+
+            if (this.currnetSppObj.length > 0) {
+                for (var i = 0; i < this.currnetSppObj.length; i++) {
+                    vpSupplierList.push({
+                        tenant_id: this.currnetSppObj[i].tenant_id
+                        ,company_code: this.currnetSppObj[i].company_code
+                        ,org_type_code: this.currnetSppObj[i].org_type_code
+                        ,org_code: this.currnetSppObj[i].org_code
+                        ,vendor_pool_code: this.currnetSppObj[i].vendor_pool_code
+                        ,supplier_code: this.currnetSppObj[i].supplier_code
+                        //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
+                        //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
+                        ,supeval_control_flag: this.currnetSppObj[i].supeval_control_flag
+                        ,supeval_control_start_date: this.currnetSppObj[i].supeval_control_start_date
+                        ,supeval_control_end_date: this.currnetSppObj[i].supeval_control_end_date
+                        //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
+                        //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+                        //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
+                        ,supplier_rm_control_flag: this.currnetSppObj[i].supplier_rm_control_flag
+                        ,supplier_base_portion_rate: this.currnetSppObj[i].supplier_base_portion_rate
+                        ,vendor_pool_mapping_use_flag: this.currnetSppObj[i].vendor_pool_mapping_use_flag
+                        ,register_reason: this.currnetSppObj[i].register_reason
+                        ,approval_number: this.currnetSppObj[i].approval_number
+                        ,crud_type_code : this.currnetSppObj[i]._row_state_   
+                    })
+                }
+            }
+
+            //metrial list data
+            this.currnetMetObj = that.metListTbl.getModel("matlist").getProperty("/vpMaterialDtlView")
+            console.log("currnetMetObj : " + this.currnetMetObj);
+
+            if (this.currnetMetObj.length > 0) {
+                for (var i = 0; i < this.currnetMetObj.length; i++) {
+                    vpItemList.push({
+                            tenant_id: this.currnetMetObj[i].tenant_id
+                            , company_code: this.currnetMetObj[i].company_code
+                            , org_type_code: this.currnetMetObj[i].org_type_code
+                            , org_code: this.currnetMetObj[i].org_code
+                            , vendor_pool_code: this.currnetMetObj[i].vendor_pool_code
+                            , material_code: this.currnetMetObj[i].material_code
+                            , register_reason: this.currnetMetObj[i].register_reason
+                            , approval_number: this.currnetMetObj[i].approval_number
+                            , crud_type_code : this.currnetMetObj[i]._row_state_
+                    })
+                }
+            }
+
+            //manager list data
+            this.currnetManObj = that.mngListTbl.getModel("manlist").getProperty("/vpManagerDtlView")
+            console.log("currnetManObj : " + this.currnetManObj);
+
+            if (this.currnetManObj.length > 0) {
+                for (var i = 0; i < this.currnetManObj.length; i++) {
+                    vpManagerList.push({
+                            tenant_id: this.currnetManObj[i].tenant_id
+                            , company_code: this.currnetManObj[i].company_code
+                            , org_type_code: this.currnetManObj[i].org_type_code
+                            , org_code: this.currnetManObj[i].org_code
+                            , vendor_pool_code: this.currnetManObj[i].vendor_pool_code
+                            , material_code: this.currnetManObj[i].material_code
+                            , register_reason: this.currnetManObj[i].register_reason
+                            , approval_number: this.currnetManObj[i].approval_number
+                            , vendor_pool_person_empno: this.currnetManObj[i].vendor_pool_person_empno
+                            , vendor_pool_person_role_text: this.currnetManObj[i].vendor_pool_person_role_text
+                            //, approval_number: ''  //안보냄    
+                            //, register_reason: ''  //안보냄    
+                            , crud_type_code : this.currnetManObj[i].crud_type_code                                
+                    })
+                }
+            }
+            
+            inputInfo.inputData.vpMst = vpMstList;   
+            inputInfo.inputData.vpSupplier = vpSupplierList;   
+            inputInfo.inputData.vpItem = vpItemList;                   
+            inputInfo.inputData.vpManager = vpManagerList;
+
+            $.ajax({
+                url: urlInfo,
+                type: "POST",
+                //datatype: "json",
+                //data: input,
+                data: JSON.stringify(inputInfo),
+                contentType: "application/json",
+                success: function (data) {
+                    //MessageToast.show("Success 1st Proc!");
+                    console.log('data:', data);
+                    console.log('data:', data.value[0]);
+                    v_returnModel = oView.getModel("returnModel").getData().data;
+                    console.log('v_returnModel:', v_returnModel);
+                    v_returnModel.return_code = data.value[0].return_code;
+                    v_returnModel.return_msg = data.value[0].return_msg.substring(0, 8);
+                    oView.getModel("returnModel").updateBindings(true);
+
+                    //MessageToast.show(data.value[0].return_msg);
+                    console.log(data.value[0].return_msg.substring(0, 8));
+                    //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
+                    sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
+                    //MessageToast.show(sMsg);
+                    console.log(data.value[0].return_msg);
+                    alert(sMsg);
+                    MessageToast.show(sMsg);
+                },
+                error: function (e) {
+                    var eMessage = "callProcError",
+                        errorType,
+                        eMessageDetail;
+
+                    v_returnModel = oView.getModel("returnModel").getData().data;
+                    console.log('v_returnModel_e:', v_returnModel);
+                    v_returnModel.return_code = 'error';
+                    v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
+
+                    
+                    //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
+                    if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
+                        eMessage = "callProcError";
+                        eMessageDetail = "callProcError";
+                    }else{
+                        eMessage = e.responseJSON.error.message.substring(0, 8);
+                        eMessageDetail = e.responseJSON.error.message.substring(9);
+                        errorType = e.responseJSON.error.message.substring(0, 1);
+                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                        
+                        //MessageToast.show(eMessageDetail);
+                    }
+
+                    sMsg = oBundle.getText(eMessage);
+                    if(errorType === 'E'){
+                        alert(sMsg);                    
+                    }else{
+                        alert(eMessageDetail);                    
+                    }
+                    
+                    
+                    MessageToast.show(sMsg);                    
+                }
+            });
 
 		},
 		
@@ -316,8 +528,10 @@ sap.ui.define([
             this._metrialSearch(predicates3);
             this._managerSearch(predicates2);
 
-            this.sppListTbl = this.byId("sppListTbl"); 
-
+            // this.sppListTbl = this.byId("sppListTbl"); 
+            this.sppListTbl = this.byId("sppListTbl");
+            this.metListTbl = this.byId("metListTbl");
+            this.mngListTbl = this.byId("mngListTbl");
         },
 
         //행추가
@@ -367,7 +581,168 @@ sap.ui.define([
                     oView.setBusy(false);
                 }.bind(this)
             });
-        },        
+        },   
+
+        //=========================================//
+        //머트리얼 행추가/삭제/체인지 : start
+        //=========================================//
+        //행추가
+        materialAddRow: function () {
+            var oModel = this.getModel("matlist");
+            oModel.addRecord({"editYn": true}, 0);
+            this.validator.clearValueState(this.byId("metListTbl"));
+        },
+
+        //행삭제
+        materialDelRow: function (oEvent) {
+            var table = this.byId("metListTbl"),
+                model = this.getModel("matlist");
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
+        },
+
+        //팝업에서 값 내려왔거나 서제스쳔선택되어서 change이벤트가 발생되었을떼에 실행되는 함수
+        materialChg: function (oEvent) {
+            console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
+            console.log("oItemPath:" + oEvent.getSource().getParent().getRowBindingContext().sPath);
+            var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+
+            var materialCode = oEvent.oSource.getProperty("selectedKey");
+            var oView = this.getView();
+            oView.setBusy(true);
+            var oFilter = [];
+            oFilter.push(new Filter("material_code", FilterOperator.EQ, materialCode));
+            oFilter.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
+            oFilter.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
+            var oModel = this.getModel("mapping");
+            var sModel = this.getModel("matlist");
+            oModel.read("/VpMaterialMst", {
+                filters: oFilter,
+                success: function (oData) {
+                    if (!that.fnChkDupData(that.metListTbl, "matlist", "/vpMaterialDtlView", "material_code", materialCode)) {
+                        if (oData.results.length === 1) {
+                            var results = oData.results[0];
+                            sModel.setProperty(sPath + "/material_code", results.material_code);
+                            sModel.setProperty(sPath + "/material_desc", results.material_desc);
+                        } else {
+                        //
+                        }
+                    } else {
+                        alert("중복 값이 있습니다.");
+                        sModel.setProperty(sPath + "/material_code", "");
+                        sModel.setProperty(sPath + "/material_desc", "");
+                    }
+                    oView.setBusy(false);
+                }, error: function(e){
+                    console.log("error:" + e);
+                    oView.setBusy(false);
+                }.bind(this)
+            });
+        },   
+        //=========================================//
+        //머트리얼 행추가/삭제/체인지 : end
+        //=========================================//
+
+        //=========================================//
+        //매니저 행추가/삭제/체인지 : start
+        //=========================================//
+        //행추가
+        managerAddRow: function () {
+            var oModel = this.getModel("manlist");
+            oModel.addRecord({"editYn": true}, 0);
+            this.validator.clearValueState(this.byId("mngListTbl"));
+        },
+
+        //행삭제
+        managerDelRow: function (oEvent) {
+            var table = this.byId("mngListTbl"),
+                model = this.getModel("manlist");
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
+        },
+
+        //팝업에서 값 내려왔거나 서제스쳔선택되어서 change이벤트가 발생되었을떼에 실행되는 함수
+        managerChg: function (oEvent) {
+            console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
+            console.log("oItemPath:" + oEvent.getSource().getParent().getRowBindingContext().sPath);
+            var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+            
+
+            var empNo = oEvent.oSource.getProperty("selectedKey");
+            var oView = this.getView();
+            oView.setBusy(true);
+            var oFilter = [];
+            oFilter.push(new Filter("vendor_pool_person_empno", FilterOperator.EQ, "'" + empNo.toString() + "'"));
+            oFilter.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
+            var oModel = this.getModel("mapping");
+            var sModel = this.getModel("manlist");
+            oModel.read("/vpManagerDtlView", {
+                filters: oFilter,
+                success: function (oData) {
+                    if (!that.fnChkDupData(that.mngListTbl, "manlist", "/vpManagerDtlView", "vendor_pool_person_empno", empNo)) {
+                        if (oData.results.length === 1) {
+                            var results = oData.results[0];
+                            sModel.setProperty(sPath + "/user_local_name", results.user_local_name);
+                            sModel.setProperty(sPath + "/user_english_name", results.user_english_name);
+                            sModel.setProperty(sPath + "/job_title", results.job_title);
+                            sModel.setProperty(sPath + "/vendor_pool_person_role_text", results.vendor_pool_person_role_text);
+                            sModel.setProperty(sPath + "/department_local_name", results.department_local_name);
+                            sModel.setProperty(sPath + "/department_english_name", results.department_english_name);
+                            sModel.setProperty(sPath + "/user_status_code", results.user_status_code);
+                        } else {
+                            //
+                        }
+                    } else {
+                        alert("중복 값이 있습니다.");
+                        sModel.setProperty(sPath + "/user_local_name", "");
+                        sModel.setProperty(sPath + "/user_english_name", "");
+                        sModel.setProperty(sPath + "/job_title", "");
+                        sModel.setProperty(sPath + "/vendor_pool_person_role_text", "");
+                        sModel.setProperty(sPath + "/department_local_name", "");
+                        sModel.setProperty(sPath + "/department_english_name", "");
+                        sModel.setProperty(sPath + "/user_status_code", "");
+                    }
+
+                    oView.setBusy(false);
+                }, error: function(e){
+                    console.log("error:" + e);
+                    oView.setBusy(false);
+                }.bind(this)
+            });
+        },  
+        //=========================================//
+        //매니저 행추가/삭제/체인지 : end
+        //=========================================//
+
+        //중복체크 함수
+        //tblObj : 테이블 객체 ex)this.byId("테이블이름");
+        //modelName : 테이블에 셋팅된 모델 이름
+        //viewName : 모델에 set이름
+        //keyName : 비교하고자 하는 key 이름 또는 ID
+        //keyCode : 비교하고자 하는 코드
+        //ex) that.metListTbl.getModel('matlist').getProperty("/vpMaterialDtlView");
+        //return true or false default 'false'
+        fnChkDupData: function(tblObj, modelName, viewName, keyName, keyCode) {
+            //console.log("dupchk::::" + tblObj, modelName, viewName, keyName, keyCode);
+            var result = false;
+            this.currentListObj = tblObj.getModel(modelName).getProperty(viewName);
+            if (this.currentListObj.length > 0) {
+                for (var i = 0; i < this.currentListObj.length; i++) {
+                    console.log(keyCode, eval("this.currentListObj[i]." + keyName));
+                    if (keyCode === eval("this.currentListObj[i]." + keyName)) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            console.log("result:" + result);
+            return result;
+        },
+
+
+        //GeneralInfo 정보 셋팅 Routed Param aFilter
          _generalInfo: function(aFilter) {
             //alert(that.getView().byId("pop_operation_unit_name").getText());
             // var oView = this.getView("midDtlView");
@@ -389,25 +764,27 @@ sap.ui.define([
 				filters: aFilter,
 				success: function(oData){
                     oView.setBusy(false);
-                    var oDataRst = oData.results[0];
+                    // var oDataRst = oData.results[0];
+                    generaloDataRst = oData.results[0];
                     //sap.ui.getCore().byId("general_higher_level_path").setText(oDataRst.higher_level_path_name);
                     // that.getView().byId("general_higher_level_path").setText("234123rt234");
-                    that.getView().byId("general_higher_level_path").setText(oDataRst.higher_level_path_name);
-                    that.getView().byId("general_operation_unit_name").setText(oDataRst.operation_unit_name);
-                    that.getView().byId("general_vendor_pool_local_name").setValue(oDataRst.vendor_pool_local_name);
-                    that.getView().byId("general_vendor_pool_english_name").setValue(oDataRst.vendor_pool_english_name);
-                    that.getView().byId("general_vendor_pool_desc").setValue("vendor_pool_desc");
-                    that.getView().byId("general_repr_department_code").setValue(oDataRst.Department);
-                    that.getView().byId("general_industry_class_code").setSelectedKey(oDataRst.industry_class_code);
-                    that.getView().byId("general_inp_type_code").setSelectedKey(oDataRst.inp_type_code);
-                    that.getView().byId("general_plan_base").setSelectedKey(oDataRst.mtlmob_base_code);
-                    that.getView().byId("general_regular_evaluation_flag").setState(oDataRst.regular_evaluation_flag);
-                    that.getView().byId("general_sd_exception_flag").setState(oDataRst.sd_exception_flag);
-                    that.getView().byId("general_vendor_pool_apply_exception_flag").setState(oDataRst.vendor_pool_apply_exception_flag);
-                    that.getView().byId("general_equipment_grade_code").setSelectedKey(oDataRst.equipment_grade_code);
-                    that.getView().byId("general_equipment_type_code").setSelectedKey(oDataRst.equipment_type_code);
-                    that.getView().byId("general_dom_oversea_netprice_diff_rate").setValue(oDataRst.domestic_net_price_diff_rate);
-                    that.getView().byId("general_domestic_net_price_diff_rate").setValue(oDataRst.dom_oversea_netprice_diff_rate);
+                    that.getView().byId("general_higher_level_path").setText(generaloDataRst.higher_level_path_name);
+                    that.getView().byId("general_operation_unit_name").setText(generaloDataRst.operation_unit_name);
+                    that.getView().byId("general_vendor_pool_local_name").setValue(generaloDataRst.vendor_pool_local_name);
+                    that.getView().byId("general_vendor_pool_english_name").setValue(generaloDataRst.vendor_pool_english_name);
+                    that.getView().byId("general_vendor_pool_desc").setValue(generaloDataRst.vendor_pool_desc);
+                    that.getView().byId("general_repr_department_code").setValue(generaloDataRst.Department);
+                    that.getView().byId("general_industry_class_code").setSelectedKey(generaloDataRst.industry_class_code);
+                    that.getView().byId("general_inp_type_code").setSelectedKey(generaloDataRst.inp_type_code);
+                    that.getView().byId("general_plan_base").setSelectedKey(generaloDataRst.mtlmob_base_code);
+                    that.getView().byId("general_regular_evaluation_flag").setState(generaloDataRst.regular_evaluation_flag);
+                    that.getView().byId("general_maker_material_code_mngt_flag").setState(generaloDataRst.maker_material_code_mngt_flag);
+                    that.getView().byId("general_sd_exception_flag").setState(generaloDataRst.sd_exception_flag);
+                    that.getView().byId("general_vendor_pool_apply_exception_flag").setState(generaloDataRst.vendor_pool_apply_exception_flag);
+                    that.getView().byId("general_equipment_grade_code").setSelectedKey(generaloDataRst.equipment_grade_code);
+                    that.getView().byId("general_equipment_type_code").setSelectedKey(generaloDataRst.equipment_type_code);
+                    that.getView().byId("general_dom_oversea_netprice_diff_rate").setValue(generaloDataRst.domestic_net_price_diff_rate);
+                    that.getView().byId("general_domestic_net_price_diff_rate").setValue(generaloDataRst.dom_oversea_netprice_diff_rate);
 				}
 			});
         },

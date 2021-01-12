@@ -14,14 +14,14 @@
         ,c.mold_id
         ,c.mold_number
         ,a.requestor_empno
-        ,'['||i.english_employee_name||'] '||i.employee_name as requestor_name
+        ,'['||g.user_english_name||'] '||g.user_korean_name as requestor_name
         ,a.request_date
         ,a.approve_status_code
         ,h.code_name as approve_status
         ,a.approval_contents
         ,g.email_id
     from CM_APPROVAL_MST a
-    left join (select approval_number, max(mold_id) as mold_id from dp_mold_approval_dtl group by approval_number) b 
+    left join (select approval_number, max(mold_id) as mold_id from dp_md_approval_dtl group by approval_number) b 
         on a.approval_number = b.approval_number
     left join dp_md_mst c on b.mold_id = c.mold_id
     left join (select 
@@ -30,7 +30,8 @@
             where group_code='DP_MD_APPROVAL_TYPE' and LANGUAGE_CD='KO') d 
     on d.code = a.approval_type_code and d.tenant_id = a.tenant_id
     left join cm_org_company e on e.company_code = a.company_code
-    left join cm_pur_operation_org f on f.org_code = a.org_code and f.company_code=a.company_code and f.org_type_code='AU'
+    left join cm_pur_operation_org f on f.org_code = a.org_code and f.company_code=a.company_code
+    inner join cm_pur_org_type_mapping j on f.tenant_id = j.tenant_id and f.org_type_code = j.org_type_code and j.process_type_code='DP05' 
     left join cm_hr_employee g on g.employee_number = a.requestor_empno and g.tenant_id = a.tenant_id
     left join (select 
             code, code_name, tenant_id

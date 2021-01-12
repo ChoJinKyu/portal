@@ -8,14 +8,10 @@ sql security invoker
 
 as
 begin
-
-	declare var_commit		nvarchar(100) = 'commit';
-	declare var_rollback	nvarchar(100) = 'rollback';
-
 -- rollback message
 	declare exit handler for sqlexception
 		begin
-			exec (:var_rollback);
+			rollback;
 			o_table_message = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnmessage from dummy;
         end;
 -- delete table: master        
@@ -29,7 +25,7 @@ begin
     and scenario_number = :i_scenario_number
     ;
 -- delete table: company        
-    delete from pg_tm_master
+    delete from pg_tm_comp_code
     where tenant_id = :i_tenant_id
     and scenario_number = :i_scenario_number
     ;
@@ -43,8 +39,13 @@ begin
     where tenant_id = :i_tenant_id
     and scenario_number = :i_scenario_number
     ;
--- delete table:operation
+-- delete table: operation
     delete from pg_tm_operation_mode_code_lng
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: cycle
+    delete from pg_tm_cycle_code_lng
     where tenant_id = :i_tenant_id
     and scenario_number = :i_scenario_number
     ;
@@ -59,7 +60,7 @@ begin
     and scenario_number = :i_scenario_number
     ;
 -- commit message	
-	exec (:var_commit);
+	commit;
 	o_table_message =  select 'OK' as returncode, 'Success Saved!' as returnmessage from dummy;
 
 end

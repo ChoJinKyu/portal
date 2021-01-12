@@ -27,7 +27,7 @@
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'company_code'}
                                 }">
@@ -44,7 +44,7 @@
                                 <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'org_code'}
                                 }">
@@ -75,7 +75,7 @@
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'company_code'}
                                 }">
@@ -92,7 +92,7 @@
                                 <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'org_code'}
                                 }">
@@ -137,7 +137,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -155,7 +155,7 @@
                                     suggestionItems="{
                                         path: '/PartNumbers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'mold_number' }
                             }">
@@ -180,7 +180,7 @@
                                     suggestionItems="{
                                         path: 'dsc>/CreateUsers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'create_user_id' }
                             }">
@@ -216,9 +216,10 @@
                         growing="true"
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
+                        mode="SingleSelectMaster"
+                        itemPress="onItemPress"
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/MoldMasterSpec}"
-                        mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
@@ -269,7 +270,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                        <ColumnListItem type="Navigation" >
                             <cells>
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />

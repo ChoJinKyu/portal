@@ -6,13 +6,13 @@
     xmlns:table="sap.ui.table"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns:f="sap.f" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%"
         >
     
     <Dialog id="ceateVpCategory" class="sapUiSmallMargin" title="" contentWidth="100%" >
         <content>  
-<HBox>
+        <HBox>
             <VBox class="sapUiSmallMargin" width="40%" >
                 <form:SimpleForm
                     editable="true"
@@ -34,7 +34,7 @@
                         <!-- 팝업 영역 -->
                         <VBox>
                             <Label text="Operation ORG" labelFor="search_Operation_ORG" required="true"></Label>
-                            <ComboBox id="tpop_Operation_ORG" width="100%" selectedKey="BIZ00200" items="{
+                            <ComboBox id="tpop_Operation_ORG" width="100%" items="{
                                 path: '/VpOperationOrg',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -67,6 +67,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
+                            <Label text = " " design="Bold" width="0rem"/> 
                             <Button id="popTreeTableSearchButton"          text="Search"     press=".onDialogSearch"     type="Emphasized" />
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M4 S12" />
@@ -87,6 +88,7 @@
 	                            selectionBehavior="Row"                  
                                 enableColumnReordering="false"
                                 expandFirstLevel="true"
+                                
                                 rows="{
                                     path : 'tree>/VpPopupView',
                                     parameters : {
@@ -155,8 +157,7 @@
                                         <table:template>
                                             <Text text="{tree>operation_unit_code}" wrapping="false" />
                                         </table:template>
-                                    </table:Column>                                                                                                                                                    
-
+                                    </table:Column>
                             </table:columns>
                             </table:TreeTable>  
                             <layoutData>
@@ -225,7 +226,22 @@
                         <core:Title text="Detail Info" />                        
                         <VBox>
                             <Label text = "Department" design="Bold"/> 
-                                <Input id="pop_repr_department_code"></Input> 
+                                <lib-m:CodePicker id="pop_repr_department_code"
+                                placeholder="Enter a department name"
+                                keyField="department_id"
+                                textField="department_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                </lib-m:CodePicker>
+                                <!-- <Input id="pop_repr_department_code"></Input>  -->
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
@@ -248,9 +264,9 @@
                             </layoutData> 
                         </VBox> 
                         <VBox>
-                            <Label text = "Mtl. Attribute/Planning Base" design="Bold"/> 
+                            <Label text = "Mtl. Attribute/Planning Base" class="sapUiTinyMarginEnd" design="Bold"/> 
                                 <HBox>
-                                    <ComboBox   id="pop_inp_type_code"
+                                    <ComboBox   id="pop_inp_type_code" class="sapUiTinyMarginEnd"
                                                 items="{
                                                             path : 'util>/CodeDetails',
                                                             filters : [
@@ -285,7 +301,7 @@
                                     </layoutData>
                                 </Switch> 
                             <layoutData>
-                                <layout:GridData span="XL6 L2 M6 S12" />
+                                <layout:GridData span="XL1 L1 M1 S12" />
                             </layoutData> 
                         </VBox> 
                         <VBox>
@@ -296,7 +312,18 @@
                                     </layoutData>
                                 </Switch> 
                             <layoutData>
-                                <layout:GridData span="XL6 L2 M6 S12" />
+                                <layout:GridData span="XL1 L1 M1 S12" />
+                            </layoutData> 
+                        </VBox>                         
+                        <VBox>
+                            <Label text = "Maker P/N" design="Bold"/> 
+                                <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch> 
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S12" />
                             </layoutData> 
                         </VBox> 
                         <VBox>
@@ -307,7 +334,7 @@
                                     </layoutData>
                                 </Switch> 
                             <layoutData>
-                                <layout:GridData span="XL6 L2 M6 S12" />
+                                <layout:GridData span="XL1 L1 M1 S12" />
                             </layoutData> 
                         </VBox>                                                                       
                         <VBox>
@@ -350,15 +377,21 @@
                             </layoutData> 
                         </VBox>  
                         <VBox>
-                            <Label text = "Site Internal Rate(%)" design="Bold"/> 
-                                <Input id="pop_dom_oversea_netprice_diff_rate" type="type: 'sap.ui.model.type.Decimal'" ></Input> 
+                            <Label text = "Site Internal Rate" design="Bold"/> 
+                                <HBox>
+                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="type: 'sap.ui.model.type.Decimal'" ></Input> 
+                                    <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
+                                </HBox>                                
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox> 
                         <VBox>
-                            <Label text = "Site External Rate(%)" design="Bold"/> 
-                                <Input id="pop_domestic_net_price_diff_rate" type="type: 'sap.ui.model.type.Decimal'"  ></Input> 
+                            <Label text = "Site External Rate" design="Bold"/> 
+                                <HBox>
+                                    <Input id="pop_domestic_net_price_diff_rate" type="type: 'sap.ui.model.type.Decimal'"  ></Input> 
+                                    <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
+                                </HBox>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
@@ -370,7 +403,7 @@
         </content>
         <ToolbarSpacer/>
         <HBox justifyContent="End" >
-            <Button text="Cancel" type="Transparent" press=".createPopupClose"/>
+            <Button text="Cancel" type="Transparent" class="sapUiSmallMarginBeginEnd" press=".createPopupClose"/>
             <Button id= "pop_save_bt" text="Save" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleSave"/>
         </HBox>
     </Dialog>

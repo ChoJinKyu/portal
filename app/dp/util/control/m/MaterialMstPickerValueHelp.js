@@ -111,11 +111,6 @@ sap.ui.define([
                     ]
                 }),
                 columns: [
-                    // new Column({
-                    //     width: "5%",
-                    //     hAlign: "Center",
-                    //     header: new sap.m.CheckBox({selected: false})
-                    // }),
                     new Column({
                         width: "5%",
                         hAlign: "Center",
@@ -160,7 +155,6 @@ sap.ui.define([
                     template: new ColumnListItem({
                         type: "Active",
                         cells: [
-                            // new sap.m.CheckBox({selected: false}),
                             new sap.m.Button({
                                 icon:"sap-icon://unfavorite",
                                 type:"Transparent"

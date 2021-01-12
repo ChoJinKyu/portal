@@ -1,41 +1,48 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
+	"ext/lib/util/Multilingual",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
+	"jquery.sap.global",
+    "sap/ui/core/util/MockServer",
 	"./Utils"
 ],
-  function (BaseController, JSONModel, ManagedListModel, Utils) {
+  function (BaseController, Multilingual, JSONModel, ManagedListModel, jQuery, MockServer, Utils) {
     "use strict";
 
     return BaseController.extend("pg.md.mdVpItemMapping.controller.mdVpItemMapping", {
 
 		onInit: function () {
-			// set explored app's demo model on this sample
-			// this.oProductsModel = this.initSampleProductsModel(); //dataModelBinding
-            // this.getView().setModel(this.oProductsModel);
+			var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
+            this.getView().setModel(new JSONModel()); 
             
-            // 
-            // this.getView("availableItems").setModel(new ManagedListModel(), "list");
-		},
+            jQuery.ajax({
+                url: "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set", 
+                contentType: "application/json",
+                success: function(oData){ 
+                    this.getModel().setData(oData); 
+                }.bind(this)                        
+            });
+
+            // var oModel = this.getView().getModel();
+            // oModel.setSizeLimit(10);
+        },
 
 		onExit: function() {
-			this.oProductsModel.destroy();
+			this.oItemsModel.destroy();
 		},
 
-		initSampleProductsModel: function() {
-			// var oData = jQuery.sap.sjax({
-			// 	url: sap.ui.require.toUrl("sap/ui/demo/mock/products.json"),
-			// 	dataType: "json"
-			// }).data;
+		// initItemsModel: function() {
+		// 	var oData = jQuery.sap.sjax({
+        //         url: "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set", 
+		// 		contentType: "application/json"
+        //     }).data;
 
-            // oData.MdCategory.forEach(function(oProduct) {
-			// 	oProduct.Rank = Utils.ranking.Initial;
-			// }, this);
-
-			// var oModel = new JSONModel();
-			// oModel.setData(oData);
-			// return oModel;
-		},
+		// 	var oModel = new JSONModel();
+        //     oModel.setData(oData);
+		// 	return oModel;
+		// },
 
 		moveToAvailableItemsTable: function() {
 			this.byId("selectedItems").getController().moveToAvailableItemsTable();

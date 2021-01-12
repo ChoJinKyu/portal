@@ -9,7 +9,10 @@
     xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
-    <f:DynamicPage id="page" headerExpanded="{mainListView>/headerExpanded}" toggleHeaderOnTitleClick="true">
+    <f:DynamicPage
+        id="page"
+        headerExpanded="{mainListView>/headerExpanded}"
+        toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
             <f:DynamicPageTitle>
@@ -84,16 +87,18 @@
         <f:content>
             <Table
                 id="mainTable"
-                items="{list>/ActivityMapping}"
-                sticky="HeaderToolbar,ColumnHeaders" 
-                inset="false"
-                class="sapFDynamicPageAlignContent" 
+                items="{list>/ActivityMappingNameView}"
+                mode="MultiSelect"
+                noDataText="{I18N>/NCM01004}"
+                selectionChange=".onSelectionChange"
+                updateFinished=".onMainTableUpdateFinished"
+                sticky="HeaderToolbar,ColumnHeaders"
                 width="auto">
                 <headerToolbar>
-                    <OverflowToolbar>
-                        <Title text="Activity Mappting List ({=(${list>/ActivityMapping})?${list>/ActivityMapping}.length:0}) " level="H2"/>
+                    <OverflowToolbar class="sapFDynamicPageAlignContent">
+                        <Title id="mainTableTitle" text="Activity Mappting List ({=(${list>/ActivityMappingNameView})?${list>/ActivityMappingNameView}.length:0}) " level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="mainTableAddButton" text="Add Mapping" type="Transparent" press=".onMainTableAddButtonPress" />
+                        <Button id="mainTableAddButton" text="Add Mapping" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
                         <Button id="mainTableDelButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
                         <Button id="mainTableCancButton" text="Cancel" type="Transparent" press=".onMainTableCancButtonPress" />
                         <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
@@ -107,6 +112,7 @@
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
+                    <Column id="mainColumnstat" minScreenWidth="Tablet" hAlign="Center" width="1.5rem" />
                     <Column id="mainColumnBizUnit" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="사업본부" />
                     </Column>
@@ -133,19 +139,60 @@
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem press=".onMainTableItemPress">
+                    <ColumnListItem>
                         <cells>
-                            <Text text="{list>org_code}"/>
-                            <Text text="{list>product_activity_code}"/>
-                            <Text text="{list>product_activity_name}"/>
-                            <Text text="{list>activity_dependency_code}"/>
-                            <Text text="{list>activity_code}"/>
-                            <Text text="{list>activity_name}"/>
-                            <Text text="{
-									path: 'list>system_update_dtm',
-									formatter: '.dateFormatter.toUTCDateTimeString'
-								}"/>
-                            <Text text="{list>update_user_id}"/>
+                            <HBox>
+                                <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                <ObjectStatus icon="{
+                                    path: 'list>_row_state_',
+                                    formatter: '.formatter.toModelStateColumnIcon'
+                                }" />
+                            </HBox>
+                            <HBox>
+                                <Text text="{list>org_code}" visible="true" />
+                                <Input value="{list>org_code}" visible="false" />
+                            </HBox>
+                            <HBox>
+                                <Text text="{list>product_activity_code}" visible="true" />
+                                <Input value="{list>product_activity_code}" visible="false" />
+                            </HBox>
+                            <HBox>
+                                <Text text="{list>product_activity_name}" visible="true" />
+                                <SearchField value="{list>product_activity_name}" search=".onSearchProdecuActivity" visible="false" />
+                            </HBox>
+                            <HBox>
+                                <Text text="{list>activity_dependency_name}" visible="true" />
+                                <ComboBox  visible="false"
+                                    selectedKey="{list>activity_dependency_code}"
+                                    items="{
+                                    path: 'util>/Code',
+                                    filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_DEPENDENCY'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
+                                </ComboBox>
+                            </HBox>
+                            <HBox>
+                                <Text text="{list>activity_code}" visible="true" />
+                                <Input value="{list>activity_code}" visible="false" />
+                            </HBox>
+                            <HBox>
+                                <Text text="{list>activity_name}" visible="true" />
+                                <SearchField value="{list>activity_name}" search=".onSearchActivity" visible="false" />
+                            </HBox>
+                            <HBox>
+                                <Text text="{
+                                    path: 'list>local_update_dtm',
+                                    formatter: '.dateFormatter.toDateTimeString'
+                                }" visible="true" />
+                            </HBox>
+                            <HBox>
+                                <Text text="{list>update_user_id}" visible="true" />
+                            </HBox>
                         </cells>
                     </ColumnListItem>
                 </items>

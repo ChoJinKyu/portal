@@ -17,7 +17,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="LOI 발행현황" />
+                    <Title text="외화신고대상관리" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -53,16 +53,12 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="PO일자 : " labelFor="searchPoDate"/>
-                            <!-- <DatePicker
-                                id="searchRequestDate"
-                                visible="true"
-                                placeholder="Date"/>                             -->
-                            <DateRangeSelection id="searchPoDate" width="100%" placeholder="" />                                
-                            <layoutData>
-                                <layout:GridData span="XL3 L2 M6 S12" />
-                            </layoutData>
-                        </VBox>
+                                <Label text="PO일자" labelFor="searchPoDate"></Label>
+                                    <DateRangeSelection id="searchPoDate" width="100%" change="creationDateChange"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L2 M6 S12" />
+                                </layoutData>
+                            </VBox>
                         <VBox>
                             <Label text="담당부서 :" labelFor="searchPurchasingDepartmentName"></Label>
                             <!-- <Input id="searchPurchasingDepartmentName" placeholder=""></Input> -->
@@ -129,7 +125,7 @@
                         <VBox>
                             <Label text="관리대상여부 : "></Label>
                             <HBox>
-                                <CheckBox id="selectManagementTargetFlag" text="대상" checked="true"/>
+                                <CheckBox id="selectManagementTargetFlag" text="대상" selected="true"/>
                                 <Text text=" " class="sapUiTinyMarginEnd" />
                                 <CheckBox id="selectManagementTargetFlag2" text="비대상" />
                             </HBox>
@@ -140,7 +136,7 @@
                         <VBox>
                             <Label text="신고대상여부 : "></Label>
                             <HBox>
-                                <CheckBox id="selectDeclareTargetFlag" text="대상" />
+                                <CheckBox id="selectDeclareTargetFlag" text="대상" selected="true" />
                                 <Text text=" " class="sapUiTinyMarginEnd" />
                                 <CheckBox id="selectDeclareTargetFlag2" text="비대상" />
                             </HBox>
@@ -167,7 +163,7 @@
             rows="{
                 path: 'list>/ForexDeclarationView'                 
             }"
-            cellClick=".onCellClick"
+            cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
             columnResize="onColumnResize">
@@ -187,19 +183,13 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <!-- <t:Column width="0rem" hAlign="Center" visible="false">
-                <Label text="tenant_id"/>
-                <t:template>
-                    <Text text="{list>tenant_id}"/>
-                </t:template>
-                </t:Column> -->
                 <t:Column id="mainPoNumber" width="6rem">
                 <Label text="PO번호" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_number}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainPoName" width="5rem">
+                <t:Column id="mainPoName" width="10rem">
                 <Label text="PO명" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_name}"/>
@@ -235,7 +225,7 @@
                     <Text text="{list>supplier_name}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainPoDate" width="5rem">
+                <t:Column id="mainPoDate" width="6rem">
                 <Label text="PO일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -244,7 +234,7 @@
                             }"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="mainReceiptScheduledDate" width="5rem">
+                <t:Column id="mainReceiptScheduledDate" width="6rem">
                 <Label text="입고예정일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -253,7 +243,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainReceiptDate" width="5rem">
+                <t:Column id="mainReceiptDate" width="6rem">
                 <Label text="입고일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{

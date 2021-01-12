@@ -12,7 +12,7 @@ sap.ui.define([
 ], function (Parent, Dialog, Button, Text, Table, Column, ColumnListItem, Filter, FilterOperator, Sorter) {
     "use strict";
 
-    var CodePickerDialog = Parent.extend("ext.lib.control.m.CodePickerDialog", {
+    var CodePickerValueHelp = Parent.extend("ext.lib.control.m.CodePickerValueHelp", {
 
         metadata: {
             properties: {
@@ -115,5 +115,5 @@ sap.ui.define([
 
     });
 
-    return CodePickerDialog;
+    return CodePickerValueHelp;
 }, /* bExport= */ true);

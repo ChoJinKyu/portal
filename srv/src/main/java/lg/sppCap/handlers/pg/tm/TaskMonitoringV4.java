@@ -82,125 +82,125 @@ public class TaskMonitoringV4 implements EventHandler {
         // create temp table: local_temp_master
         StringBuffer v_sql_createTable_master = new StringBuffer();
 		v_sql_createTable_master.append("create local temporary column table #local_temp_master ( ");
-		v_sql_createTable_master.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_master.append("scenario_number : bigint, ");
-		v_sql_createTable_master.append("monitoring_type_code : nvarchar(30), ");
-		v_sql_createTable_master.append("activate_flag : boolean, ");
-		v_sql_createTable_master.append("monitoring_purpose : blob, ");
-		v_sql_createTable_master.append("scenario_desc : blob, ");
-		v_sql_createTable_master.append("source_system_desc : blob, ");
-		v_sql_createTable_master.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_master.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_master.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_master.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_master.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_master.append("system_update_dtm : timestamp ");
+		v_sql_createTable_master.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_master.append("scenario_number bigint, ");
+		v_sql_createTable_master.append("monitoring_type_code nvarchar(30), ");
+		v_sql_createTable_master.append("activate_flag boolean, ");
+		v_sql_createTable_master.append("monitoring_purpose blob, ");
+		v_sql_createTable_master.append("scenario_desc blob, ");
+		v_sql_createTable_master.append("source_system_desc blob, ");
+		v_sql_createTable_master.append("local_create_dtm timestamp, ");
+		v_sql_createTable_master.append("local_update_dtm timestamp, ");
+		v_sql_createTable_master.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_master.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_master.append("system_create_dtm timestamp, ");
+		v_sql_createTable_master.append("system_update_dtm timestamp ");
 		v_sql_createTable_master.append(")");
 		
 		// create temp table: local_temp_company
         StringBuffer v_sql_createTable_company = new StringBuffer();
 		v_sql_createTable_company.append("create local temporary column table #local_temp_company ( ");
-		v_sql_createTable_company.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_company.append("scenario_number : bigint, ");
-		v_sql_createTable_company.append("company_code : nvarchar(10), ");
-		v_sql_createTable_company.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_company.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_company.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_company.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_company.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_company.append("system_update_dtm : timestamp ");
+		v_sql_createTable_company.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_company.append("scenario_number bigint, ");
+		v_sql_createTable_company.append("company_code nvarchar(10), ");
+		v_sql_createTable_company.append("local_create_dtm timestamp, ");
+		v_sql_createTable_company.append("local_update_dtm timestamp, ");
+		v_sql_createTable_company.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_company.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_company.append("system_create_dtm timestamp, ");
+		v_sql_createTable_company.append("system_update_dtm timestamp ");
 		v_sql_createTable_company.append(")");
 
 		// create temp table: local_temp_bizunit
         StringBuffer v_sql_createTable_bizunit = new StringBuffer();
 		v_sql_createTable_bizunit.append("create local temporary column table #local_temp_bizunit ( ");
-		v_sql_createTable_bizunit.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_bizunit.append("scenario_number : bigint, ");
-		v_sql_createTable_bizunit.append("bizunit_code : nvarchar(10), ");
-		v_sql_createTable_bizunit.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_bizunit.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_bizunit.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_bizunit.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_bizunit.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_bizunit.append("system_update_dtm : timestamp ");
+		v_sql_createTable_bizunit.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_bizunit.append("scenario_number bigint, ");
+		v_sql_createTable_bizunit.append("bizunit_code nvarchar(10), ");
+		v_sql_createTable_bizunit.append("local_create_dtm timestamp, ");
+		v_sql_createTable_bizunit.append("local_update_dtm timestamp, ");
+		v_sql_createTable_bizunit.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_bizunit.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_bizunit.append("system_create_dtm timestamp, ");
+		v_sql_createTable_bizunit.append("system_update_dtm timestamp ");
 		v_sql_createTable_bizunit.append(")");
 
 		// create temp table: local_temp_manager
         StringBuffer v_sql_createTable_manager = new StringBuffer();
 		v_sql_createTable_manager.append("create local temporary column table #local_temp_manager ( ");
-		v_sql_createTable_manager.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_manager.append("scenario_number : bigint, ");
-		v_sql_createTable_manager.append("monitoring_manager_empno : nvarchar(30), ");
-		v_sql_createTable_manager.append("monitoring_super_authority_flag : boolean, ");
-		v_sql_createTable_manager.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_manager.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_manager.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_manager.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_manager.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_manager.append("system_update_dtm : timestamp ");
+		v_sql_createTable_manager.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_manager.append("scenario_number bigint, ");
+		v_sql_createTable_manager.append("monitoring_manager_empno nvarchar(30), ");
+		v_sql_createTable_manager.append("monitoring_super_authority_flag boolean, ");
+		v_sql_createTable_manager.append("local_create_dtm timestamp, ");
+		v_sql_createTable_manager.append("local_update_dtm timestamp, ");
+		v_sql_createTable_manager.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_manager.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_manager.append("system_create_dtm timestamp, ");
+		v_sql_createTable_manager.append("system_update_dtm timestamp ");
 		v_sql_createTable_manager.append(")");
 
 		// create temp table: local_temp_operation
         StringBuffer v_sql_createTable_operation = new StringBuffer();
 		v_sql_createTable_operation.append("create local temporary column table #local_temp_operation ( ");
-		v_sql_createTable_operation.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_operation.append("scenario_number : bigint, ");
-		v_sql_createTable_operation.append("monitoring_operation_mode_code : nvarchar(30), ");
-		v_sql_createTable_operation.append("language_code : nvarchar(10), ");
-		v_sql_createTable_operation.append("monitoring_operation_mode_name : nvarchar(240), ");
-		v_sql_createTable_operation.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_operation.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_operation.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_operation.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_operation.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_operation.append("system_update_dtm : timestamp ");
+		v_sql_createTable_operation.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_operation.append("scenario_number bigint, ");
+		v_sql_createTable_operation.append("monitoring_operation_mode_code nvarchar(30), ");
+		v_sql_createTable_operation.append("language_code nvarchar(10), ");
+		v_sql_createTable_operation.append("monitoring_operation_mode_name nvarchar(240), ");
+		v_sql_createTable_operation.append("local_create_dtm timestamp, ");
+		v_sql_createTable_operation.append("local_update_dtm timestamp, ");
+		v_sql_createTable_operation.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_operation.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_operation.append("system_create_dtm timestamp, ");
+		v_sql_createTable_operation.append("system_update_dtm timestamp ");
 		v_sql_createTable_operation.append(")");
 
 		// create temp table: local_temp_purchasingtype
         StringBuffer v_sql_createTable_purchasingtype = new StringBuffer();
 		v_sql_createTable_purchasingtype.append("create local temporary column table #local_temp_purchasingtype ( ");
-		v_sql_createTable_purchasingtype.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_purchasingtype.append("scenario_number : bigint, ");
-		v_sql_createTable_purchasingtype.append("monitoring_purchasing_type_code : nvarchar(30), ");
-		v_sql_createTable_purchasingtype.append("language_code : nvarchar(10), ");
-		v_sql_createTable_purchasingtype.append("monitoring_purchasing_type_name : nvarchar(240), ");
-		v_sql_createTable_purchasingtype.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_purchasingtype.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_purchasingtype.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_purchasingtype.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_purchasingtype.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_purchasingtype.append("system_update_dtm : timestamp ");
+		v_sql_createTable_purchasingtype.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_purchasingtype.append("scenario_number bigint, ");
+		v_sql_createTable_purchasingtype.append("monitoring_purchasing_type_code nvarchar(30), ");
+		v_sql_createTable_purchasingtype.append("language_code nvarchar(10), ");
+		v_sql_createTable_purchasingtype.append("monitoring_purchasing_type_name nvarchar(240), ");
+		v_sql_createTable_purchasingtype.append("local_create_dtm timestamp, ");
+		v_sql_createTable_purchasingtype.append("local_update_dtm timestamp, ");
+		v_sql_createTable_purchasingtype.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_purchasingtype.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_purchasingtype.append("system_create_dtm timestamp, ");
+		v_sql_createTable_purchasingtype.append("system_update_dtm timestamp ");
 		v_sql_createTable_purchasingtype.append(")");
 
 		// create temp table: local_temp_scenario
         StringBuffer v_sql_createTable_scenario = new StringBuffer();
 		v_sql_createTable_scenario.append("create local temporary column table #local_temp_scenario ( ");
-		v_sql_createTable_scenario.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_scenario.append("scenario_number : bigint, ");
-		v_sql_createTable_scenario.append("language_code : nvarchar(10), ");
-		v_sql_createTable_scenario.append("scenario_name : nvarchar(240), ");
-		v_sql_createTable_scenario.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_scenario.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_scenario.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_scenario.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_scenario.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_scenario.append("system_update_dtm : timestamp ");
+		v_sql_createTable_scenario.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_scenario.append("scenario_number bigint, ");
+		v_sql_createTable_scenario.append("language_code nvarchar(10), ");
+		v_sql_createTable_scenario.append("scenario_name nvarchar(240), ");
+		v_sql_createTable_scenario.append("local_create_dtm timestamp, ");
+		v_sql_createTable_scenario.append("local_update_dtm timestamp, ");
+		v_sql_createTable_scenario.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_scenario.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_scenario.append("system_create_dtm timestamp, ");
+		v_sql_createTable_scenario.append("system_update_dtm timestamp ");
 		v_sql_createTable_scenario.append(")");
 
 		// create temp table: local_temp_typecode
         StringBuffer v_sql_createTable_typecode = new StringBuffer();
 		v_sql_createTable_typecode.append("create local temporary column table #local_temp_typecode ( ");
-		v_sql_createTable_typecode.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable_typecode.append("scenario_number : bigint, ");
-		v_sql_createTable_typecode.append("monitoring_type_code : nvarchar(30), ");
-		v_sql_createTable_typecode.append("language_code : nvarchar(10), ");
-		v_sql_createTable_typecode.append("monitoring_type_name : nvarchar(240), ");
-		v_sql_createTable_typecode.append("local_create_dtm : timestamp, ");
-		v_sql_createTable_typecode.append("local_update_dtm : timestamp, ");
-		v_sql_createTable_typecode.append("create_user_id : nvarchar(255), ");
-		v_sql_createTable_typecode.append("update_user_id : nvarchar(255), ");
-		v_sql_createTable_typecode.append("system_create_dtm : timestamp, ");
-		v_sql_createTable_typecode.append("system_update_dtm : timestamp ");
+		v_sql_createTable_typecode.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_typecode.append("scenario_number bigint, ");
+		v_sql_createTable_typecode.append("monitoring_type_code nvarchar(30), ");
+		v_sql_createTable_typecode.append("language_code nvarchar(10), ");
+		v_sql_createTable_typecode.append("monitoring_type_name nvarchar(240), ");
+		v_sql_createTable_typecode.append("local_create_dtm timestamp, ");
+		v_sql_createTable_typecode.append("local_update_dtm timestamp, ");
+		v_sql_createTable_typecode.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_typecode.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_typecode.append("system_create_dtm timestamp, ");
+		v_sql_createTable_typecode.append("system_update_dtm timestamp ");
 		v_sql_createTable_typecode.append(")");
 /*********************************************************************************************************************/
         String v_sql_dropTableMaster =          "drop table #local_temp_master";
@@ -216,49 +216,40 @@ public class TaskMonitoringV4 implements EventHandler {
         StringBuffer v_sql_insertTable_master= new StringBuffer();
 		v_sql_insertTable_master.append("insert into #local_temp_master values ");
 		v_sql_insertTable_master.append("(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_master.append(")");
 
 		// insert table: company
         StringBuffer v_sql_insertTable_company= new StringBuffer();
 		v_sql_insertTable_company.append("insert into #local_temp_company values ");
 		v_sql_insertTable_company.append("(?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_company.append(")");
-
 		// insert table: bizunit
         StringBuffer v_sql_insertTable_bizunit= new StringBuffer();
 		v_sql_insertTable_bizunit.append("insert into #local_temp_bizunit values ");
 		v_sql_insertTable_bizunit.append("(?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_bizunit.append(")");
 
 		// insert table: manager
         StringBuffer v_sql_insertTable_manager= new StringBuffer();
 		v_sql_insertTable_manager.append("insert into #local_temp_manager values ");
 		v_sql_insertTable_manager.append("(?,?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_manager.append(")");
 
 		// insert table: operation
         StringBuffer v_sql_insertTable_operation= new StringBuffer();
 		v_sql_insertTable_operation.append("insert into #local_temp_operation values ");
 		v_sql_insertTable_operation.append("(?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_operation.append(")");
 		
 		// insert table: purchasingtype
         StringBuffer v_sql_insertTable_purchasingtype= new StringBuffer();
 		v_sql_insertTable_purchasingtype.append("insert into #local_temp_purchasingtype values ");
 		v_sql_insertTable_purchasingtype.append("(?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_purchasingtype.append(")");
 
 		// insert table: scenario
         StringBuffer v_sql_insertTable_scenario= new StringBuffer();
 		v_sql_insertTable_scenario.append("insert into #local_temp_scenario values ");
 		v_sql_insertTable_scenario.append("(?,?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_scenario.append(")");
 
 		// insert table: typecode
         StringBuffer v_sql_insertTable_typecode= new StringBuffer();
 		v_sql_insertTable_typecode.append("insert into #local_temp_typecode values ");
 		v_sql_insertTable_typecode.append("(?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_typecode.append(")");
 /*********************************************************************************************************************/
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -273,7 +264,7 @@ public class TaskMonitoringV4 implements EventHandler {
 		v_sql_callProc.append("i_table_scenario => #local_temp_scenario, ");
 		v_sql_callProc.append("i_table_type => #local_temp_typecode, ");
 		// append: out table => local temp table
-		v_sql_callProc.append("o_table_message => ?, ");
+		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
 		v_sql_callProc.append(")");
 /*********************************************************************************************************************/
@@ -525,7 +516,7 @@ public class TaskMonitoringV4 implements EventHandler {
     }
     // Execute Delete Task Monitoring Master Data Procedure
     @On(event = DeleteTaskMonitoringMasterProcContext.CDS_NAME)
-    public void onDeleteTaskMonitoringMasterProcContext(DeleteTaskMonitoringMasterProcContext context) {
+    public void onDeleteTaskMonitoringMasterProc(DeleteTaskMonitoringMasterProcContext context) {
 		
         // local temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "set transaction autocommit ddl off;";
@@ -533,8 +524,8 @@ public class TaskMonitoringV4 implements EventHandler {
 		// create temp table: local_temp
         StringBuffer v_sql_createTable = new StringBuffer();
 		v_sql_createTable.append("create local temporary column table #local_temp ( ");
-		v_sql_createTable.append("tenant_id : nvarchar(5), ");
-		v_sql_createTable.append("scenario_number : bigint, ");
+		v_sql_createTable.append("tenant_id nvarchar(5), ");
+		v_sql_createTable.append("scenario_number bigint ");
 		v_sql_createTable.append(")");
 /*********************************************************************************************************************/
 		String v_sql_dropTable = "drop table #local_temp";
@@ -543,16 +534,15 @@ public class TaskMonitoringV4 implements EventHandler {
         StringBuffer v_sql_inserTable= new StringBuffer();
 		v_sql_inserTable.append("insert into #local_temp values ");
 		v_sql_inserTable.append("(?,?)");
-		v_sql_inserTable.append(")");
 /*********************************************************************************************************************/
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
 		v_sql_callProc.append("call pg_tm_del_master_proc(");
 		// append: in table => local temp table
-		v_sql_callProc.append("i_tenant_id => #local_temp.tenant_id, ");
-		v_sql_callProc.append("i_scenario_number => #local_temp.scenario_number, ");
+		v_sql_callProc.append("i_tenant_id =>  (select tenant_id from #local_temp), ");
+		v_sql_callProc.append("i_scenario_number => (select scenario_number from #local_temp), ");
 		// append: out table => local temp table
-		v_sql_callProc.append("o_table_message => ?, ");
+		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
 		v_sql_callProc.append(")");
 /*********************************************************************************************************************/

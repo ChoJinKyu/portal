@@ -36,7 +36,7 @@ entity It_Txn_Material_Doc {
         accounting_document_input_date : Date                @title : '회계전표입력일자';
         material_code                  : String(40)          @title : '자재코드';
         plant_code                     : String(4)           @title : '플랜트코드';
-        sl_code                        : String(6)           @title : '저장위치코드';
+        sloc_code                      : String(30)          @title : '저장위치코드';
         batch_number                   : String(10)          @title : '배치번호';
         currency_code                  : String(3)           @title : '통화코드';
         document_purchasing_amount     : Decimal             @title : '전표구매금액';

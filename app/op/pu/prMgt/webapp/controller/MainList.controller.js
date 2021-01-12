@@ -110,6 +110,67 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
+        onPrDeletePress: function () {
+            var oTable = this.byId("mainTable"),
+                oModel = this.getModel("list"),
+                oView = this.getView(),
+                data ={},
+                //oSelected  = oTable.getSelectedItems(),
+                oSelected = [],
+                delPrData = [],
+                chkArr =[],
+                chkRow ="",
+                j=0,
+                checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs"),
+                aItems = oTable.getSelectedItems(),
+                aIndices = [];
+
+            var that = this;
+            console.log("checkBoxs ::::", checkBoxs);
+
+            //checkBoxs[0].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()
+            // for (var i = 0; i < checkBoxs.length; i++) {
+            //     if (checkBoxs[i].getSelected() === true )
+            //     {
+            //         aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
+            //     }
+            // }
+            aItems.forEach(function(oItem){
+                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "DR" )
+                {
+                //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+                 aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
+                }
+            });
+
+            console.log("delPrList >>>>", aIndices);
+
+            if (aIndices.length > 0) {
+                MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                       if (sButton === MessageBox.Action.OK) {
+                        aIndices = aIndices.sort(function(a, b){return b-a;});
+                        aIndices.forEach(function(nIndex){                            
+                            oModel.removeRecord(nIndex);
+                            //oModel.markRemoved(nIndex);
+                        });
+
+                        } else if (sButton === MessageBox.Action.CANCEL) { 
+
+                        };    
+                    }
+                });
+
+            } else {
+                MessageBox.error("선택된 임시저장 요청이 없습니다.");
+            }
+
+        },
+
+
+
         /**
          * @public
          * @see 리스트 체크박스 제어기능
@@ -415,7 +476,7 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-           
+          
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
@@ -426,8 +487,9 @@ sap.ui.define([
                 pr_number: oRecord.pr_number
             });
 
-            if (oNextUIState.layout === "TwoColumnsMidExpanded") {                
-                this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
+            if (oNextUIState.layout === "TwoColumnsMidExpanded") {   
+                this.getModel("mainListViewModel").setProperty("/headerExpanded", false);             
+                //this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 
             var oItem = oEvent.getSource();
@@ -478,8 +540,8 @@ sap.ui.define([
             var sPR_TEMPLATE_NUMBER = this.getView().byId("searchPR_TEMPLATE_NUMBER").getSelectedKeys();
             var sPrNumber = this.getView().byId("searchPrNumber").getSelectedKey();
             var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
-            var sDEPARTMENT_NAME = this.getView().byId("searchDEPARTMENT_NAME").getValue();
-            var sRequestor_name = this.getView().byId("searchRequestor_name").getValue();
+            var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
+            var sRequestor = this.getView().byId("searchRequestorS").getValue();
             var sPr_desc = this.getView().byId("searchPr_desc").getValue();
             var _tempFilters = [];
 
@@ -560,9 +622,9 @@ sap.ui.define([
             }
 
 
-            if (sDEPARTMENT_NAME) {
+            if (sDepartment) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("requestor_department_name", FilterOperator.EQ, sDEPARTMENT_NAME));
+                _tempFilters.push(new Filter("requestor_department_code", FilterOperator.EQ, sDepartment));
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,
@@ -571,9 +633,9 @@ sap.ui.define([
                 );
             }
 
-            if (sRequestor_name) {
+            if (sRequestor) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("requestor_name", FilterOperator.EQ, sRequestor_name));
+                _tempFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestor));
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,

@@ -214,7 +214,8 @@ sap.ui.define([
             //input = headers;
             //var url = oModel.sServiceUrl + "MdVpMappingItemMultiProc";
             //var url = "srv-api/odata/v4/xx.SampleMgrV4Service/MdVpMappingItemMultiProc";
-            var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.md.MdCategoryV4Service/MdVpMappingItemMultiProc"
+            //var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.md.MdCategoryV4Service/MdVpMappingItemMultiProc";
+            var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemMultiProc";
 							
 			// VendorPool Category Item Mapping array multi건 Procedure 호출
 			// Fiori Json Array 데이터 Ajax로 V4호출
@@ -228,9 +229,9 @@ sap.ui.define([
 			var param = {};
 			var items = [];
 
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C002", spmd_character_code:"T025", spmd_character_serial_no:25, vendor_pool_code:"VP201610260087"});
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C001", spmd_character_code:"T001", spmd_character_serial_no:1, vendor_pool_code:"VP201610260087"});
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C001", spmd_character_code:"T003", spmd_character_serial_no:3, vendor_pool_code:"VP201610260087"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C002", spmd_character_code:"T025", spmd_character_serial_no:25, vendor_pool_code:"VP201610260087"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C001", spmd_character_code:"T001", spmd_character_serial_no:1, vendor_pool_code:"VP201610260087"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C001", spmd_character_code:"T003", spmd_character_serial_no:3, vendor_pool_code:"VP201610260087"});
 
 			param.items = items; // param.items array변수명은 변경불가함 handler에서 사용하기 때문
 			$.ajax({
@@ -257,7 +258,8 @@ sap.ui.define([
             //input = headers;
             //var url = oModel.sServiceUrl + "SaveSampleHeaderMultiProc";
             //var url = "srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc";
-            var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.md.MdCategoryV4Service/MdVpMappingStatusMultiProc"
+            //var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.md.MdCategoryV4Service/MdVpMappingStatusMultiProc";
+            var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingStatusMultiProc";
                     
             // VendorPool Mapping 상태(신규/저장/확정)처리 array multi건 Procedure 호출
             // Fiori Json Array 데이터 Ajax로 V4호출

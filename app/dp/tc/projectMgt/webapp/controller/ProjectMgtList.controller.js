@@ -8,10 +8,11 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "sap/ui/core/Fragment"
+  "sap/ui/core/Fragment",
+  "sap/ui/core/Item"
 ],
   function (BaseController, JSONModel, ManagedListModel, Multilingual, DateFormatter, Filter, FilterOperator
-         , MessageToast, MessageBox, Fragment) {
+         , MessageToast, MessageBox, Fragment, Item) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectMgtList", {
@@ -21,7 +22,19 @@ sap.ui.define([
             let oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             //this.setModel(new JSONModel(), "listModel");
-            this.setModel(new JSONModel(), "filterModel");
+            var oFilterModel = {
+                company_code : {operator: 'EQ', value: ''},
+                project_code : {operator: 'CONTAINS', value: ''},
+                model_code: {operator: 'EQ', value: ''},
+                product_group_code : {operator: 'EQ', value: ''},
+                project_status_code : {operator: 'EQ', value: ''},
+                massprod_start_date : {operator: 'BT', start: null, end: null},
+                project_grade_code : {operator: 'EQ', value: ''},
+                project_develope_event_code : {operator: 'EQ', value: ''},
+                buyer_name : {operator: 'CONTAINS', value: ''}
+            };
+            
+            this.setModel(new JSONModel(oFilterModel), "filterModel");
             this.setModel(new JSONModel(), "updateModel");
 
             this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
@@ -32,17 +45,20 @@ sap.ui.define([
          */
         , onSearch: function () {
             
-            let oFilterModel = this.getModel("filterModel"),
-                oFilterModelData = oFilterModel.getData(),
-                aFilters = [], 
-                sRfaNo = oFilterModelData.rfa_no, 
-                oDateValue = oFilterModelData.dateValue,
-                oSecondDateValue = oFilterModelData.secondDateValue;
-            
-            //RFA No가 있는 경우
-            if( sRfaNo ) {
-                aFilters.push(new Filter("project_code", FilterOperator.Contains, sRfaNo));
-            }
+            var oFilterModel = this.getModel("filterModel"),
+                oFilterData = oFilterModel.getData(),
+                aFilters = [];
+            Object.keys(oFilterData).forEach(function(sKey) {
+                var oTemp = oFilterData[sKey];
+                if(oTemp.value || oTemp.start) {
+                    if(oTemp.operator === "EQ" || oTemp.operator === "CONTAINS") {
+                        aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.value));
+                    } else if(oTemp.operator === "BT") {
+                        aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.start, oTemp.end));
+                    }
+
+                }
+            });
 
             this._getProjectMgtList(aFilters);
         }
@@ -51,14 +67,16 @@ sap.ui.define([
          * Cell 클릭 후 상세화면으로 이동
          */
         , onCellClickPress: function() {
-            this._goDetailView();
+            //this._goLastesProjView();
         }
 
         /**
          * RowAction 클릭 후 상세화면으로 이동
          */
-        , onRowActionPress: function() {
-            this._goDetailView();
+        , onRowActionPress: function(oEvent) {
+            debugger;
+            var oContext = oEvent.getParameter("row").getBindingContext("listModel");
+            this._goLastesProjView(oContext);
         }
 
         /**
@@ -95,27 +113,22 @@ sap.ui.define([
         /**
          * 입력/수정하는 화면으로 이동
          */
-        , _goProgressView: function(oEvent) {
-            var iSelIdx = this._getSelectedIndex(this.getView().byId("mainTable"));
-            if(iSelIdx < 0) { return; }//skip
-
-            let oTable = this.getView().byId("mainTable");
-            let oContext = oTable.getContextByIndex(iSelIdx);
-            let oModel = oContext.getModel();
-            let oObj = oModel.getProperty(oContext.getPath());
-
+        , _goLastesProjView: function(oContext) {
+            if(!oContext) {
+                return;
+            }
             var oNavParam = {
-                tenant_id : oObj.tenant_id,
-                project_code : oObj.project_code,
-                model_code : oObj.model_code
+                tenant_id : oContext.getObject("tenant_id"),
+                project_code : oContext.getObject("project_code"),
+                model_code : oContext.getObject("model_code")
             };
-            this.getRouter().navTo("ProjectMgtDetail", oNavParam);
+            this.getRouter().navTo("ProjectInfo", oNavParam);
         }
         /**
          * 상세 페이지로 이동
          */
         , _goDetailView: function (oEvent) {
-            MessageToast.show("Go to Detail View", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
             var oNavParam = {
 
@@ -148,13 +161,13 @@ sap.ui.define([
             let oModel = this.getModel();
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
-            debugger;
             oModel.read("/ProjectView", {
                 filters : filtersParam,
                 success : function(data){
                     oView.setBusy(false);
 
                     oView.getModel("listModel").setData(data);
+                    oView.byId("mainTable").clearSelection();
                 },
                 error : function(data){
                     oView.setBusy(false);
@@ -188,30 +201,48 @@ sap.ui.define([
 
         , onLinkPress: function(oEvent) {
             //MessageToast.show("Go to Detail!", {at: "Center Center"});
-            this.getOwnerComponent().getRouter().navTo("ProjectMgtDetail");
+            this.getOwnerComponent().getRouter().navTo("ProjectInfo");
             return;
 
+        }
+
+        , _goProgressView: function(oEvent) {
+            MessageToast.show("준비중", {at: "Center Center"});
+            return;
         }
 
         /**
          * 견적재료비 생성 클릭
          */
         , onEstimateCreatePress: function() {
-            this._goProgressView();
+            var iSelIdx = this._getSelectedIndex(this.getView().byId("mainTable"));
+            if(iSelIdx < 0) { return; }//skip
+
+            let oTable = this.getView().byId("mainTable");
+            let oContext = oTable.getContextByIndex(iSelIdx);
+            let oModel = oContext.getModel();
+            let oObj = oModel.getProperty(oContext.getPath());
+
+            var oNavParam = {
+                tenant_id : oObj.tenant_id,
+                project_code : oObj.project_code,
+                model_code : oObj.model_code
+            };
+            this.getRouter().navTo("ProjectInfo", oNavParam);
         }
 
         , onGoalCreatePress: function() {
-            MessageToast.show("목표 재료비 생성", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
         }
 
         , onProgressMgtPress: function() {
-            MessageToast.show("진척 관리", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
         }
 
         , onAddModelPress: function() {
-            MessageToast.show("모델 추가", {at: "Center Center"});
+            MessageToast.show("준비중", {at: "Center Center"});
             return;
         }
 
@@ -220,7 +251,6 @@ sap.ui.define([
          * @param {event} oEvent
          */
         , onExcludeCalPress : function (oEvent) {
-            //debugger;
             var oView = this.getView();
             var oTable = oView.byId("mainTable");
             var nSelIdx = this._getSelectedIndex(oTable);
@@ -257,7 +287,6 @@ sap.ui.define([
 
         , onExcludeCalSavePress: function() {
             //MessageToast.show("Update Service", {at: "Center Center"});
-            debugger;
             var oApplyData = this.getModel("updateModel").getProperty("/");
             if(!oApplyData.mcst_excl_reason) {
                 MessageBox.alert("제외 사유를 입력하세요.", {at: "Center Center"});
@@ -281,7 +310,6 @@ sap.ui.define([
             var sCreatePath = oDataModel.createKey("/Project", oKey);
             oDataModel.update(sCreatePath, oProjectData, {
                 success: function(data){
-                    debugger;
                     MessageBox.show("적용되었습니다.", {at: "Center Center"});
                     this.onSearch();
                     this.byId("dialogExclusion").close();
@@ -294,6 +322,32 @@ sap.ui.define([
             
         }
 
+        , onChangeCompnay: function(oEvent){
+
+            //this.copyMultiSelected(oEvent);
+            debugger;
+            var oComboSnap = this.getView().byId("cbxSnapDivision");
+            var oComboExpand = this.getView().byId("cbxExpandDivision");
+
+            var sCompCode = oEvent.getSource().getSelectedItem().getKey();
+            var filter = new Filter({
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2600' )
+                                //,new Filter("company_code", FilterOperator.EQ, sCompCode )
+                            ],
+                            and: true
+                         });
+            var oBindingInfo = oComboSnap.getBindingInfo("items");
+            var bindInfo = {
+                    path: '/Division',
+                    filters: filter,
+                    template: oBindingInfo.template
+                };
+
+            oComboSnap.bindItems(bindInfo);
+            oComboExpand.bindItems(bindInfo);
+
+        }
 
         /**
          * @param {object} oODataModel OData 통신 모델

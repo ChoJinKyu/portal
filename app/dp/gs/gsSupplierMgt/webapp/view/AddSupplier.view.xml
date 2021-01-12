@@ -20,73 +20,17 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="글로벌 소싱 공급업체" wrapping="true" />
+					<Title text="{I18N>/GLOBAL} {I18N>/SOURCING} {I18N>/SUPPLIER}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="글로벌 소싱 공급업체" wrapping="true" />
+					<Title text="{I18N>/GLOBAL} {I18N>/SOURCING} {I18N>/SUPPLIER}" wrapping="true" />
 				</uxap:snappedHeading>
-				<uxap:expandedContent>
-					<!-- <FlexBox wrap="Wrap" visible="true">
-                        <VBox>
-                            <ObjectStatus
-                                title="소싱 공급업체"
-                                text="{SupplierGenView>/sourcing_supplier_nickname}"/>                       
-                            <ObjectStatus
-                                title="발굴일자"
-                                text="{
-                                    path:'SupplierGenView>/develop_date',
-                                    type:'sap.ui.model.odata.type.DateTime',
-                                    formatOptions: {
-                                        pattern: 'yyyy-MM-dd'
-                                    }
-                                }"/>
-                            <ObjectStatus
-                                title="발굴자"
-                                text="{SupplierGenView>/developer_empname}"/>
-                            <ObjectStatus
-                                title="최근변경일"
-                                text="{
-                                    path: 'SupplierGenView>/local_update_dtm',
-                                    formatter: '.dateFormatter.toUTCDateTimeString'
-                                }"/>                                     
-                            <layoutData>
-                                <layout:GridData span="XL4 L4 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                    </FlexBox> -->
+				<uxap:expandedContent>					
 				</uxap:expandedContent>
-				<uxap:snappedContent>
-					<!-- <FlexBox wrap="Wrap" visible="true">
-                        <VBox>
-                            <ObjectStatus
-                                title="소싱 공급업체"
-                                text="{SupplierGenView>/sourcing_supplier_nickname}"/>                       
-                            <ObjectStatus
-                                title="발굴일자"
-                                text="{
-                                    path:'SupplierGenView>/develop_date',
-                                    type:'sap.ui.model.odata.type.DateTime',
-                                    formatOptions: {
-                                        pattern: 'yyyy-MM-dd'
-                                    }
-                                }"/>
-                            <ObjectStatus
-                                title="발굴자"
-                                text="{SupplierGenView>/developer_empname}"/>
-                            <ObjectStatus
-                                title="최근변경일"
-                                text="{
-                                    path: 'SupplierGenView>/local_update_dtm',
-                                    formatter: '.dateFormatter.toUTCDateTimeString'
-                                }"/>                                     
-                            <layoutData>
-                                <layout:GridData span="XL4 L4 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                    </FlexBox> -->
+				<uxap:snappedContent>					
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="글로벌 소싱 공급업체" />
+					<Title text="{I18N>/GLOBAL} {I18N>/SOURCING} {I18N>/SUPPLIER}" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<!-- <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" /> -->
@@ -101,13 +45,13 @@
 		</uxap:headerTitle>
 
         <uxap:headerContent>			
-			<FlexBox wrap="Wrap" visible="true">
+			<!-- <FlexBox wrap="Wrap" visible="true">
 				<VBox>
                     <ObjectStatus
-                        title="소싱 공급업체"
-                        text="{SupplierGenView>/sourcing_supplier_nickname}"/>                       
+                        title="{I18N>/SOURCING_SUPPLIER_NICKNAME}"
+                        text="{SupplierGenView>/sourcing_supplier_nickname}"/>
                     <ObjectStatus
-                        title="발굴일자"
+                        title="{I18N>/DEVELOP_DATE}"
                         text="{
                             path:'SupplierGenView>/develop_date',
                             type:'sap.ui.model.odata.type.DateTime',
@@ -116,10 +60,10 @@
                             }
                         }"/>
                     <ObjectStatus
-                        title="발굴자"
+                        title="{I18N>/DEVELOPER_EMP}"
                         text="{SupplierGenView>/developer_empname}"/>
                     <ObjectStatus
-                        title="최근변경일"
+                        title="{I18N>/LATEST} {I18N>/CHANGE} {I18N>/DATE_TIME}"
                         text="{
                             path: 'SupplierGenView>/local_update_dtm',
                             formatter: '.dateFormatter.toUTCDateTimeString'
@@ -128,11 +72,60 @@
                         <layout:GridData span="XL4 L4 M6 S12" />
                     </layoutData>
                 </VBox>
+			</FlexBox> -->
+            <FlexBox wrap="Wrap" visible="true">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="{I18N>/SOURCING_SUPPLIER_NICKNAME} :"/>
+                        <Label text="{SupplierGenView>/sourcing_supplier_nickname}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+					</layout:HorizontalLayout>
+                    <layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="{I18N>/DEVELOP_DATE} :" />
+						<Label text="{
+                            path:'SupplierGenView>/develop_date',
+                            type:'sap.ui.model.odata.type.DateTime',
+                            formatOptions: {
+                                pattern: 'yyyy-MM-dd'
+                            }
+                        }" 
+                        class="sapUiTinyMarginBegin sapUiLargeMarginEnd" 
+                        design="Bold"/>
+					</layout:HorizontalLayout>
+                    <layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="{I18N>/DEVELOPER_EMP} :"/>
+                        <Label text="{SupplierGenView>/developer_empname}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+					</layout:HorizontalLayout>
+				</layout:VerticalLayout>
+
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="{I18N>/LATEST} {I18N>/CHANGE} {I18N>/DATE_TIME} :" class="sapUiLargeMarginBegin" />
+                        <Label text="{
+                            path: 'SupplierGenView>/local_update_dtm',
+                            formatter: '.dateFormatter.toUTCDateTimeString'
+                        }"  
+                        class="sapUiTinyMarginBegin"  
+                        design="Bold"/>
+					</layout:HorizontalLayout>					
+				</layout:VerticalLayout>
 			</FlexBox>
+            <!-- <layout:VerticalLayout>
+                <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="true">
+                        <Label text="{I18N>/SOURCING_SUPPLIER_NICKNAME} :"/>
+                        <Label text="{SupplierGenView>/sourcing_supplier_nickname}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="{I18N>/LATEST} {I18N>/CHANGE} {I18N>/DATE_TIME} :" class="sapUiLargeMarginBegin" />
+                        <Label text="{
+                            path: 'SupplierGenView>/local_update_dtm',
+                            formatter: '.dateFormatter.toUTCDateTimeString'
+                        }"  
+                        class="sapUiTinyMarginBegin"  
+                        design="Bold"/>  
+                </FlexBox>          
+            </layout:VerticalLayout> -->
 		</uxap:headerContent>       
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/DEFAULT}{I18N>/INFORMATION}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
@@ -140,7 +133,7 @@
 			</uxap:ObjectPageSection>
 
             <!-- 파일 첨부 -->
-			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="첨부파일">
+			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="{I18N>/Attachments}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm>
@@ -171,7 +164,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>					
 
-			<uxap:ObjectPageSection titleUppercase="false" title="재무현황">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/FINANCIAL}{I18N>/CURST}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="finTable" 
@@ -191,6 +184,11 @@
 									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
 									<ToolbarSeparator/>
+                                    <!-- <Button icon="sap-icon://action-settings" press=".onFinTablePersoButtonPressed" >
+                                        <layoutData>
+                                            <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                        </layoutData>
+                                    </Button> -->
 									<!-- <SearchField id="midTableSearchField" placeholder="UOM Name" width="10rem" search=".onMidTableFilterPress" /> -->
 									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
 								</OverflowToolbar>
@@ -200,37 +198,37 @@
 									<Text text="S" />
 								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Center" importance="High" width="8em">
-									<Text text="회계연도" />
+									<Text text="{I18N>/FISCAL_YEAR}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" width="8em">
-									<Text text="분기" />
+									<Text text="{I18N>/FISCAL_QUARTER}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Sales Revenue(매출액)" />
+									<Text text="{I18N>/SALES_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Operation Profit(영업이익)" />
+									<Text text="{I18N>/OPINCOM_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Asset(자산)" />
+									<Text text="{I18N>/ASSET_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Current Asset(유동자산)" />
+									<Text text="{I18N>/CURASSET_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Non-current Asset(비유동자산)" />
+									<Text text="{I18N>/NCA_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Liability(부채)" />
+									<Text text="{I18N>/LIABILITIES_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Current Liability(유동부채)" />
+									<Text text="{I18N>/CURLIABLITIES_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Non-current Liability(비유동부채)" />
+									<Text text="{I18N>/NCL_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Capitals(자본)" />
+									<Text text="{I18N>/EQUITY_CAPITAL}" />
 								</Column>								
 							</columns>
 							<items>
@@ -256,7 +254,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="주요매출처">
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/MAIN_SALES_SUPPLIER}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="salTable" 
@@ -285,19 +283,19 @@
 									<Text text="S" />
 								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Center" importance="High">
-									<Text text="거래년도" />
+									<Text text="{I18N>/TXN_YEAR}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="고객명(영문)" />
+									<Text text="{I18N>/CUSTOMER_ENGLISH_NAME}" />
 								</Column>                                
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="고객명(로컬)" />
+									<Text text="{I18N>/CUSTOMER_LOCAL_NAME}" />
 								</Column>                                
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="연간거래금액" />
+									<Text text="{I18N>/ANNUAL_TXN_AMOUNT}" />
 								</Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="매출비중(%)" />
+									<Text text="{I18N>/SALES_WEIGHT}" />
 								</Column>                                								
 							</columns>
 							<items>

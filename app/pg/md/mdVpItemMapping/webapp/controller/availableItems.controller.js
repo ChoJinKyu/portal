@@ -10,58 +10,44 @@ sap.ui.define([
     "use strict";
     
 	return BaseController.extend("pg.md.mdVpItemMapping.controller.availableItems", {
-        
-        
-        onInit: function () {
+       
+        onBeforeRendering : function(){
             
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-            this.getView().setModel(new ManagedListModel(), "list");
-            this.onSearch();
-        },
+            this.getModel("tblModel").setProperty("/table1",this.getView().byId("table").getId());
 
-      onSearch: function () {
-            // this.getView()
-            //     .setBusy(true)
-            //     .getModel("list")
-            //     .setTransactionModel(this.getView().getModel())
-            //     .read("/MdCategory", {
-            //         success: (function (oData) {
-            //         this.getView().setBusy(false);
-            //         }).bind(this)
-            //     });
+            // var oModel = this.getView().getModel();
+            // oModel.setSizeLimit(10);
         },
-
-        onDropAvailableProductsTable: function(oEvent) {
+        onDropAvailableItemsTable: function(oEvent) {
 			var oDraggedItem = oEvent.getParameter("draggedControl");
 			var oDraggedItemContext = oDraggedItem.getBindingContext();
 			if (!oDraggedItemContext) {
 				return;
 			}
 
-			// reset the rank property and update the model to refresh the bindings
-			var oAvailableTable = Utils.getAvailableProductsTable(this); //table
-			var oProductsModel = oAvailableTable.getModel("list");
-			oProductsModel.setProperty("Rank", Utils.ranking.Initial, oDraggedItemContext);
+            // reset the rank property and update the model to refresh the bindings
+			var oAvailableTable = Utils.getAvailableItemsTable(this); //table
+			var oItemsModel = oAvailableTable.getModel();
+			oItemsModel.setProperty("Rank", Utils.ranking.Initial, oDraggedItemContext);
 		},
 
-		moveToSelectedProductsTable: function() {
-			var oAvailableTable = Utils.getAvailableProductsTable(this);
+		moveToSelectedItemsTable: function() {
+			var oAvailableTable = Utils.getAvailableItemsTable(this);
 			Utils.getSelectedItemContext(oAvailableTable, function(oAvailableItemContext, iAvailableItemIndex) {
-				var oSelectedProductsTable = Utils.getSelectedProductsTable(this);
-				var oFirstItemOfSelectedProductsTable = oSelectedProductsTable.getItems()[0];
+				var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
+				var oFirstItemOfSelectedItemsTable = oSelectedItemsTable.getItems()[0];
 				var iNewRank = Utils.ranking.Default;
 
-				if (oFirstItemOfSelectedProductsTable) {
-					var oFirstContextOfSelectedProductsTable = oFirstItemOfSelectedProductsTable.getBindingContext();
-					iNewRank =  Utils.ranking.Before(oFirstContextOfSelectedProductsTable.getProperty("Rank"));
+				if (oFirstItemOfSelectedItemsTable) {
+					var oFirstContextOfSelectedItemsTable = oFirstItemOfSelectedItemsTable.getBindingContext();
+					iNewRank =  Utils.ranking.Before(oFirstContextOfSelectedItemsTable.getProperty("Rank"));
 				}
 
-				var oProductsModel = oAvailableTable.getModel("list");
-				oProductsModel.setProperty("Rank", iNewRank, oAvailableItemContext);
+				var oItemsModel = oAvailableTable.getModel();
+				oItemsModel.setProperty("Rank", iNewRank, oAvailableItemContext);
 
 				// select the inserted and previously selected item
-				oSelectedProductsTable.getItems()[0].setSelected(true);
+				oSelectedItemsTable.getItems()[0].setSelected(true);
 				var oPrevSelectedItem = oAvailableTable.getItems()[iAvailableItemIndex];
 				if (oPrevSelectedItem) {
 					oPrevSelectedItem.setSelected(true);
@@ -70,8 +56,15 @@ sap.ui.define([
 		},
 
 		onBeforeOpenContextMenu: function(oEvent) {
-			oEvent.getParameter("listItem").setSelected(true);
-		}
+			oEvent.getParameter("listItems").setSelected(true);
+        },
 
+        onTableFilterPress: function() {
+            var oView = this.getView(),
+				sValue = oView.byId("tableSearchField").getValue(),
+				oFilter = new Filter("spmd_character_code_name", FilterOperator.Contains, sValue);
+
+			oView.byId("table").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+        }
 	});
 });

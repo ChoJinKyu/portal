@@ -11,7 +11,9 @@
         xmlns:co="sap.suite.ui.commons" 
         xmlns:si="sap.suite.ui.commons.statusindicator" 
         xmlns:u="sap.ui.unified" 
-        xmlns:table="sap.ui.table" >
+        xmlns:table="sap.ui.table"
+          core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+         >
 
       		<table:Table id="psTable"
                 selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
@@ -33,7 +35,7 @@
                                 </table:template>
                             </table:Column>
                             <table:Column visible="false">
-                                <Label text="approval_number"/>
+                                <Label text="{path:'I18N>/APPROVAL_NUMBER', formatter:'I18NFormatter'}"/>
                                 <table:template>
                                     <Text text="{mdItemMaster>approval_number}"/>
                                 </table:template>
@@ -45,13 +47,13 @@
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <Label text="Mold No"/>
+                                <Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}" />
                                 <table:template>
                                     <Text text="{mdItemMaster>mold_number}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="5em" hAlign="Center">
-                                <Label text="Seq"/>
+                                <Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" />
                                 <table:template>
                                     <Text text="{mdItemMaster>mold_sequence}"/>
                                 </table:template>
@@ -64,8 +66,7 @@
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
                                 <VBox>
-                                    <Label text="Item"/>
-                                    <Label text="Type"/>
+                                     <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
                                 </VBox>
                                 <table:template>
                                     <Text text="{mdItemMaster>mold_item_type_code_nm}"/>
@@ -73,8 +74,7 @@
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
                                 <VBox>
-                                    <Label text="Book"/>
-                                    <Label text="Currency"/>
+                                    <Label text="{path:'I18N>/BOOK_CURRENCY', formatter:'I18NFormatter'}" />
                                 </VBox>
                                 <table:template>
                                     <Text text="{mdItemMaster>book_currency_code}"/>
@@ -82,16 +82,15 @@
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
                                 <VBox>
-                                    <Label text="Budget"/>
-                                    <Label text="Amount"/>
+                                  <Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
                                 </VBox>
                                 <table:template>
-                                    <Text text="{mdItemMaster>provisional_budget_amount}"/>
+                                    <Text text="{mdItemMaster>provisional_budget_amount}" textAlign="Right"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
                                 <VBox>
-                                    <Label text="Currency"/>
+                                    <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}" />
                                 </VBox>
                                 <table:template>
                                     <Text text="{mdItemMaster>currency_code}"/>
@@ -99,127 +98,127 @@
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
                                 <VBox>
-                                    <Label text="Target"/>
-                                    <Label text="Amount"/>
+                                    <!-- TARGET_AMOUNT -->
+                                    <Label text="{path:'I18N>/TARGET_AMOUNT', formatter:'I18NFormatter'}" />
                                 </VBox>
                                 <table:template>
-                                    <Text text="{mdItemMaster>target_amount}"/>
+                                    <VBox><Text text="{mdItemMaster>target_amount}" textAlign="Right"/></VBox>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier1"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="1"/>
+                                </HBox>
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_1}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier2"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;2"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_2}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier3"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;3"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_3}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier4"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;4"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_4}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier5"/>
-                                </VBox>
+                               <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;5"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_5}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier6"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;6"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_6}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier7"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;7"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_7}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier8"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;8"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_8}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier9"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;9"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_9}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier10"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;10"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_10}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier11"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;11"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_11}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
-                                <VBox>
-                                    <Label text="Mold"/>
-                                    <Label text="Supplier12"/>
-                                </VBox>
+                                <HBox>
+                                    <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" />
+                                    <Label text="&#09;12"/>
+                                </HBox>
                                 <!-- <Label text="Budget Amount"/> -->
                                 <table:template>
                                     <Text text="{mdItemMaster>supplier_code_nm_12}"/>

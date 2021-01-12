@@ -84,8 +84,8 @@ SELECT M.TENANT_ID,
        Supplier Master 정보
        -------------------*/
        S.SUPEVAL_CONTROL_FLAG,
-       S.SUPEVAL_CONTROL_START_DATE,
-       S.SUPEVAL_CONTROL_END_DATE,
+       TO_CHAR(TO_DATE(S.SUPEVAL_CONTROL_START_DATE), 'YYYY-MM-DD') AS SUPEVAL_CONTROL_START_DATE,
+       TO_CHAR(TO_DATE(S.SUPEVAL_CONTROL_END_DATE), 'YYYY-MM-DD') AS SUPEVAL_CONTROL_END_DATE,
        S.SUPPLIER_RM_CONTROL_FLAG,
        M.SD_EXCEPTION_FLAG,
        M.VENDOR_POOL_APPLY_EXCEPTION_FLAG,
@@ -131,6 +131,7 @@ AND    'leaf' = IFNULL((SELECT 'leaf'
 		       	       FROM   CM_ORG_CODE_LNG CD
 		       	       WHERE  CD.TENANT_ID = M.TENANT_ID
 		       	       AND    CD.GROUP_CODE = 'VP_VENDOR_POOL_MAX_LEVEL'
+                       AND    CD.ORG_CODE = M.ORG_CODE
 		       	       AND    CD.LANGUAGE_CD = 'EN'
 		       	       AND    CD.CODE = M.OPERATION_UNIT_CODE
 		       	       AND    CD.CODE_NAME = M.HIERARCHY_LEVEL), 'expanded') 

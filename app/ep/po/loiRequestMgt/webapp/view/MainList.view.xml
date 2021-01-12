@@ -69,7 +69,7 @@
 
                             </VBox>
                             <VBox>
-                                <Label text="요청일자" labelFor="searchRequestDateS" required="true"></Label>
+                                <Label text="요청일자" labelFor="searchRequestDateS"></Label>
                                     <DateRangeSelection id="searchRequestDateS" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
@@ -101,7 +101,7 @@
                                 <Label text="요청자" labelFor="searchRequestorS"></Label>
                                 <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
                                 <lib-m:CodePicker id="searchRequestorS"
-                                    placeholder="Enter a Employee name"
+                                    placeholder="Enter a employee name"
                                     keyField="employee_number"
                                     textField="user_local_name"
                                     suggestionItems="{
@@ -271,34 +271,34 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainLoiNumberColumn" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainLoiNumber" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="LOI번호" />
                         </Column>
-                        <Column id="mainRequestDepartmentCodeColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainRequestDepartmentCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="요청부서" />
                         </Column>
-                        <Column id="mainRequestorEmpnoColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainRequestorEmpno" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="요청자" />
                         </Column>
-                        <Column id="mainRequestDateColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainRequestDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="요청일자" />
                         </Column>
-                        <Column id="mainLoiRequestTitleColumn" minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader" width="300px">
+                        <Column id="mainLoiRequestTitle" minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader" width="300px">
                             <Text text="요청명" />
                         </Column>
-                        <Column id="mainLoiRequestStatusCodeColumn" minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader" width="100px">
+                        <Column id="mainLoiRequestStatusCode" minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader" width="100px">
                             <Text text="진행상태" />
                         </Column>
-                        <!-- <Column id="mainInvestmentReviewFlagColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <!-- <Column id="mainInvestmentReviewFlag" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="투자심의여부" />
                         </Column> -->
-                        <Column id="mainBuyerEmpnoColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainBuyerEmpno" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="구매담당자" /> 
                         </Column>
-                        <Column id="mainPublishDateColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainPublishDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="발행일자" /> 
                         </Column>
-                        <Column id="mainVendorPoolCodeColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainVendorPoolCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="협력사" /> 
                         </Column>
                     </columns>
@@ -315,7 +315,7 @@
                                 <ObjectIdentifier text="{list>loi_request_title}" />
                                 <ObjectIdentifier text="{list>loi_request_status_name}" />
                                 <!-- <ObjectIdentifier text="{list>investment_review_flag}" /> -->
-                                <ObjectIdentifier text="{list>buyer_empno}" />
+                                <ObjectIdentifier text="{list>buyer_name}" />
                                 <ObjectIdentifier text="{list>publish_date}" />
                                 <ObjectIdentifier text="{list>supplier_code}" />
                                 

@@ -10,11 +10,6 @@ BEGIN
 
     DECLARE  var_commit  NVARCHAR(100) := 'COMMIT';
 	DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
-    DECLARE V_COUNT INT := 0;    
-    DECLARE CURSOR l_cursor FOR
-        SELECT *
-        FROM :I_TABLE
-        ORDER BY TENANT_ID, COMPANY_CODE,  ORG_TYPE_CODE, ORG_CODE, PRODUCT_ACTIVITY_CODE;
 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
@@ -22,8 +17,7 @@ BEGIN
 		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 	END;
 
-/* 임시 Table에 전체 Data 추가 - 동작함 */
-
+/* 임시 Table에 전체 Data 추가 */
         INSERT INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE_TEMP
                ( TENANT_ID
                 ,COMPANY_CODE
@@ -59,26 +53,7 @@ BEGIN
           FROM :I_TABLE
     ;
 
-    SELECT COUNT(*)
-	INTO   V_COUNT
-    FROM   :I_TABLE;
-
-/*  삭제1: 일괄 Delete문에 동작하지 않아, 임시로 CURSOR로 Data삭제처리 - 동작안함 */
-	IF  V_COUNT  > 0 THEN
-    	FOR loop_cur AS l_cursor DO
-            IF loop_cur.CRUD_TYPE_CODE = 'D' THEN
-                DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
-                WHERE   PAT.TENANT_ID                = loop_cur.TENANT_ID
-                AND     PAT.COMPANY_CODE             = loop_cur.COMPANY_CODE
-                AND     PAT.ORG_TYPE_CODE            = loop_cur.ORG_TYPE_CODE
-                AND     PAT.ORG_CODE                 = loop_cur.ORG_CODE
-                AND     PAT.PRODUCT_ACTIVITY_CODE    = loop_cur.PRODUCT_ACTIVITY_CODE
-                ;
-            END IF;
-        END FOR;
-	END IF;
-
-/*  삭제2  - 동작안함 */
+/* 삭제2 */
     DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
      WHERE (PAT.TENANT_ID,PAT.COMPANY_CODE,PAT.ORG_TYPE_CODE,PAT.ORG_CODE,PAT.PRODUCT_ACTIVITY_CODE ) IN
         ( SELECT A.TENANT_ID, A.COMPANY_CODE, A.ORG_TYPE_CODE, A.ORG_CODE, A.PRODUCT_ACTIVITY_CODE
@@ -87,48 +62,27 @@ BEGIN
         )
     ;
 
-/*  삭제3  - 동작안함 */
+/*  CRUD_TYPE_CODE가 'U' 인 Data수정, 'C' 인 Data 생성 */
     MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
-        USING :I_TABLE 
-        ON ( PAT.TENANT_ID = :I_TABLE.TENANT_ID
-             AND PAT.COMPANY_CODE = :I_TABLE.COMPANY_CODE
-             AND PAT.ORG_TYPE_CODE = :I_TABLE.ORG_TYPE_CODE
-             AND PAT.ORG_CODE = :I_TABLE.ORG_CODE
-             AND PAT.PRODUCT_ACTIVITY_CODE = :I_TABLE.PRODUCT_ACTIVITY_CODE
-             AND :I_TABLE.CRUD_TYPE_CODE = 'D' )
-
-    WHEN MATCHED THEN
-        DELETE;
-
-/* 하드코딩 삭제  - 동작함 */
-DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
-                WHERE   PAT.TENANT_ID                = 'L1100'
-                AND     PAT.COMPANY_CODE             = '*'
-                AND     PAT.ORG_TYPE_CODE            = 'BU'
-                AND     PAT.ORG_CODE                 = 'L110010000'
-                AND     PAT.PRODUCT_ACTIVITY_CODE    = 'test11';
-
-/* Update, Insert  - 동작함 */
-    MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
-        USING :I_TABLE 
-        ON ( PAT.TENANT_ID = :I_TABLE.TENANT_ID
-             AND PAT.COMPANY_CODE = :I_TABLE.COMPANY_CODE
-             AND PAT.ORG_TYPE_CODE = :I_TABLE.ORG_TYPE_CODE
-             AND PAT.ORG_CODE = :I_TABLE.ORG_CODE
-             AND PAT.PRODUCT_ACTIVITY_CODE = :I_TABLE.PRODUCT_ACTIVITY_CODE
-             AND :I_TABLE.CRUD_TYPE_CODE <> 'D' )
+        USING ( SELECT * FROM :I_TABLE WHERE :I_TABLE.CRUD_TYPE_CODE IN ('C','U')  ) cu
+        ON ( PAT.TENANT_ID = cu.TENANT_ID
+             AND PAT.COMPANY_CODE = cu.COMPANY_CODE
+             AND PAT.ORG_TYPE_CODE = cu.ORG_TYPE_CODE
+             AND PAT.ORG_CODE = cu.ORG_CODE
+             AND PAT.PRODUCT_ACTIVITY_CODE = cu.PRODUCT_ACTIVITY_CODE
+            )
 
     WHEN MATCHED THEN
         UPDATE 
-        SET  PAT.PRODUCT_ACTIVITY_CODE = IFNULL(:I_TABLE.UPDATE_PRODUCT_ACTIVITY_CODE, PAT.PRODUCT_ACTIVITY_CODE)
-            ,PAT.DEVELOPE_EVENT_CODE = :I_TABLE.DEVELOPE_EVENT_CODE
-            ,PAT.SEQUENCE = :I_TABLE.SEQUENCE
-            ,PAT.PRODUCT_ACTIVITY_NAME = :I_TABLE.PRODUCT_ACTIVITY_NAME
-            ,PAT.PRODUCT_ACTIVITY_ENGLISH_NAME = :I_TABLE.PRODUCT_ACTIVITY_ENGLISH_NAME
-            ,PAT.MILESTONE_FLAG = :I_TABLE.MILESTONE_FLAG
-            ,PAT.ACTIVE_FLAG = :I_TABLE.ACTIVE_FLAG
+        SET  PAT.PRODUCT_ACTIVITY_CODE = IFNULL(cu.UPDATE_PRODUCT_ACTIVITY_CODE, PAT.PRODUCT_ACTIVITY_CODE)
+            ,PAT.DEVELOPE_EVENT_CODE = cu.DEVELOPE_EVENT_CODE
+            ,PAT.SEQUENCE = cu.SEQUENCE
+            ,PAT.PRODUCT_ACTIVITY_NAME = cu.PRODUCT_ACTIVITY_NAME
+            ,PAT.PRODUCT_ACTIVITY_ENGLISH_NAME = cu.PRODUCT_ACTIVITY_ENGLISH_NAME
+            ,PAT.MILESTONE_FLAG = cu.MILESTONE_FLAG
+            ,PAT.ACTIVE_FLAG = cu.ACTIVE_FLAG
             ,PAT.LOCAL_UPDATE_DTM = NOW()
-            ,PAT.UPDATE_USER_ID = :I_TABLE.UPDATE_USER_ID
+            ,PAT.UPDATE_USER_ID = cu.UPDATE_USER_ID
             ,PAT.SYSTEM_UPDATE_DTM = NOW()
 
     WHEN NOT MATCHED THEN
@@ -150,21 +104,21 @@ DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE PAT
                 ,SYSTEM_CREATE_DTM
                 ,SYSTEM_UPDATE_DTM
                )
-        VALUES ( :I_TABLE.TENANT_ID
-                ,:I_TABLE.COMPANY_CODE
-                ,:I_TABLE.ORG_TYPE_CODE
-                ,:I_TABLE.ORG_CODE
-                ,:I_TABLE.PRODUCT_ACTIVITY_CODE
-                ,:I_TABLE.DEVELOPE_EVENT_CODE
-                ,:I_TABLE.SEQUENCE
-                ,:I_TABLE.PRODUCT_ACTIVITY_NAME
-                ,:I_TABLE.PRODUCT_ACTIVITY_ENGLISH_NAME
-                ,:I_TABLE.MILESTONE_FLAG
-                ,:I_TABLE.ACTIVE_FLAG
+        VALUES ( cu.TENANT_ID
+                ,cu.COMPANY_CODE
+                ,cu.ORG_TYPE_CODE
+                ,cu.ORG_CODE
+                ,cu.PRODUCT_ACTIVITY_CODE
+                ,cu.DEVELOPE_EVENT_CODE
+                ,cu.SEQUENCE
+                ,cu.PRODUCT_ACTIVITY_NAME
+                ,cu.PRODUCT_ACTIVITY_ENGLISH_NAME
+                ,cu.MILESTONE_FLAG
+                ,cu.ACTIVE_FLAG
                 ,NOW()
                 ,NOW()
-                ,:I_TABLE.UPDATE_USER_ID
-                ,:I_TABLE.UPDATE_USER_ID
+                ,cu.UPDATE_USER_ID
+                ,cu.UPDATE_USER_ID
                 ,NOW()
                 ,NOW()
                )

@@ -103,7 +103,7 @@
 			},
 			"routes": [{
                     "name": "mainPage",
-                    "pattern": "mainObject",
+                    "pattern": "",
                     "target": ["mainObject"]
                 },{
                     "name": "createPage",

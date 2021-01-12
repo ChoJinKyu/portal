@@ -11,7 +11,9 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m" >
+    xmlns="sap.m" 
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+    >
 <Dialog id="budgetExecutionPreview" class="sapUiSmallMargin" title="Preview" contentWidth="100%" contentHeight="630px">
 	<uxap:ObjectPageLayout 
         height="600px"
@@ -47,7 +49,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
+					<OverflowToolbarButton   type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -55,19 +57,19 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus
-                        title="Report No"
+                  <ObjectStatus
+                        title="{I18N>/APPROVAL_NUMBER}"
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
-                        title="Requester"
+                        title="{I18N>/REQUESTOR}"
                         text="[{appMaster>/requestor_empno}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
-                        title="Request Date"
+                        title="{I18N>/REQUEST_DATE}"
                         text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
@@ -76,7 +78,7 @@
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
-                        <Title text="Process"/>
+                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox>
                         <sc:MicroProcessFlow>
@@ -109,7 +111,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections id="sections_bp">
-			<uxap:ObjectPageSection id="pageSectionMain_bp" titleUppercase="true" title="General Info">
+			<uxap:ObjectPageSection id="pageSectionMain_bp" titleUppercase="true" title="General Info" width="80%">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
@@ -161,7 +163,7 @@
 			        <form:content>
                 <VBox  height="6em">
 					<!-- Budget Type -->
-					<Label text="Budget Type" required="true"/>
+					<Label text="{path:'I18N>/BUDGET_TYPE', formatter:'I18NFormatter'}" required="true"/>
                      <!-- view Mode -->
                     <Text text="{mdCommon>/investment_ecst_type_code_nm}" />
 					<layoutData>
@@ -177,51 +179,89 @@
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Account Department" required="true"/>
+					<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
                     <!-- view Mode -->
-                    <Text text="{mdCommon>/accounting_department_code}" />
-
+                    <ComboBox 
+                              editable="false" 
+                              class="readonlyField"
+                              width="100%"  
+                              selectedKey="{mdCommon>/accounting_department_code}" 
+                              items="{}">
+						<core:Item key="{util>code}" text="{util>code_description}"/>
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Import Company"/>
+					<Label text="{path:'I18N>/IMPORT_COMPANY', formatter:'I18NFormatter'}"/>
                     <!-- view Mode -->
-                    <HBox>
-                        <Text text="[{mdCommon>/import_company_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?true:false}" /> 
-                        <Text text=" {mdCommon>/import_company_code_nm}" />
-                    </HBox>
+                  	<ComboBox  editable="false" 
+                              class="readonlyField"
+                              width="100%" 
+                              selectionChange=".onBCompanyChange"
+                              selectedKey="{mdCommon>/import_company_code}" 
+                              items="{
+                                   path: 'org>/Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                        ],
+                                        sorter: { path: 'company_code'}
+                              }">
+						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
 					<!-- projectcode  {I18N>/PROJECT_CODE}-->
-					<Label text="Project Code" required="true"/> 
+					<Label text="{I18N>/PROJECT_CODE}" required="true"/> 
                     <!-- view Mode -->
-                    <Text text="{mdCommon>/project_code}" />
-
+                    <ComboBox editable="false" 
+                              class="readonlyField"
+                              width="100%" 
+                             
+                              selectedKey="{mdCommon>/project_code}" 
+                              items="{}">
+						<core:Item key="{util>code}" text="{util>code_description}"/>
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Import Plant"/>
+					<Label text="{path:'I18N>/IMPORT_PLANT', formatter:'I18NFormatter'}" />
                      <!-- view Mode -->
-                    <HBox>
-                          <Text text="[{mdCommon>/import_company_org_code}]" visible="{=${mdCommon>/import_company_org_code}!==''?true:false}" />
-                          <Text text=" {mdCommon>/import_company_org_code_nm}" /> 
-                    </HBox>
+                   <ComboBox width="100%" 
+                              editable="false" 
+                              class="readonlyField"
+                              selectedKey="{mdCommon>/import_company_org_code}" 
+                              enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
+                              items="{
+                                  path: 'importPlant>/Pur_Operation_Org'
+                              }">
+						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
-
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/account_code_nm}" /> 
+                    <ComboBox editable="false" 
+                              class="readonlyField"  
+                              width="100%" 
+                              required="true"
+                              selectedKey="{mdCommon>/account_code}" 
+                              items="{ path : 'util>/Code',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
+                                        ]
+                                    }">
+						<core:Item key="{util>code}" text="{util>code_name}"/>
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -234,7 +274,7 @@
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Balanced Budget"/>
+					<Label text="{path:'I18N>/BALANCED_BUDGET', formatter:'I18NFormatter'}"/>
 					<HBox alignItems="End" justifyContent="End">
 						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
 						<ObjectStatus text="  KRW" state="Error"/>
@@ -244,7 +284,7 @@
 					</layoutData>
 				</VBox>
 				<VBox height="6em">
-					<Label text="Customer PO No"/>
+					<Label text="{path:'I18N>/CUSTOMER_PO_NO', formatter:'I18NFormatter'}"/>
                     <Text text="" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -252,11 +292,11 @@
 				</VBox>
 				<HBox>
 					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/AFFILIATE}"/>
+						<Label text="{I18N>/COMPANY}"/>
 						<ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
 					</VBox>
 					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/BUSINESS_DIVISION}"/>
+						<Label text="{I18N>/PLANT}"/>
 						<ObjectStatus text="[{plant>/plant_code}] {plant>/plant_name}" state="Error"/>
 					</VBox>
 				</HBox>
@@ -283,7 +323,7 @@
 							</table:template>
 						</table:Column>
 						<table:Column visible="false">
-							<Label text="approval_number"/>
+							<Label text="{path:'I18N>/APPROVAL_NUMBER', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Text text="{mdItemMaster>approval_number}"/>
 							</table:template>
@@ -295,13 +335,13 @@
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Mold No"/>
+							<Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text  text="{mdItemMaster>mold_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="5em" hAlign="Center">
-							<Label text="Seq"/>
+							<Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text  text="{mdItemMaster>mold_sequence}"/>
 							</table:template>
@@ -313,50 +353,81 @@
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Production Type"/>
+							<Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
-                                <Text text="{mdItemMaster>mold_production_type_code_nm}"/>
+                                <ComboBox editable="false"  
+                                        class="readonlyField" 
+                                        selectedKey="{mdItemMaster>mold_production_type_code}" 
+                                        items="{ path : 'util>/Code',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                        ]
+                                    }">
+									<core:Item key="{util>code}" text="{util>code_name}"/>
+								</ComboBox>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Item Type"/>
+							<Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
 							<table:template>
-                                 <Text text="{mdItemMaster>mold_item_type_code_nm}"/>
+								<ComboBox  editable="false" 
+                                        selectedKey="{mdItemMaster>mold_item_type_code}" 
+                                        class="readonlyField"
+                                        items="{ path : 'util>/Code',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                        ]
+                                    }">
+									<core:Item key="{util>code}" text="{util>code_name}"/>
+								</ComboBox>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="Book Currency"/>
+							<Label text="{path:'I18N>/BOOK_CURRENCY', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text text="{mdItemMaster>book_currency_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Budget Amount"/>
+							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
 							<table:template>
-                                <Text  text="{mdItemMaster>provisional_budget_amount}"/>
+                                <Text  text="{mdItemMaster>provisional_budget_amount}" textAlign="Right"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Asset Type"/>
+							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
-                                 <Text  text="{mdItemMaster>asset_type_code_nm}"/>
+                                <ComboBox 
+                                        editable="false" 
+                                        class="readonlyField"
+                                        selectedKey="{mdItemMaster>asset_type_code}" 
+                                        items="{ path : 'util>/Code',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
+                                        ]
+                                    }">
+									<core:Item key="{util>code}" text="{util>code_name}"/>
+								</ComboBox>
 							</table:template>
 						</table:Column>
 						<table:Column  width="15em" hAlign="Center">
-							<Label text="Family Part No"/>
+							<Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Text  text="{mdItemMaster>family_part_number_1}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Expected Sales Date"/>
+							<Label text="{path:'I18N>/EXPECTED_SALES_DATE', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<!-- 임시 컬럼명 -->
 								<DatePicker value="{mdItemMaster>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
-							<Label text="Expected Disposal Date"/>
+							<Label text="{path:'I18N>/EXPECTED_DISPOSAL_DATE', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<!-- 임시 컬럼명 -->
 								<DatePicker value="{mdItemMaster>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
@@ -441,7 +512,7 @@
                                 width="100%"
                                 items="{ path: '/RefererSearch',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                             ]
                                         }"
                                 editable="false">

@@ -1,90 +1,131 @@
 sap.ui.define([
-  "ext/lib/controller/BaseController"
-], function (BaseController) {
-  "use strict";
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
+	"sap/ui/core/UIComponent",
+    "sap/m/library",
+    "sap/ui/model/json/JSONModel"
+], function (BaseController, Multilingual, UIComponent, mobileLibrary, JSONModel) {
+    "use strict";
+    
+    // shortcut for sap.m.URLHelper
+	var URLHelper = mobileLibrary.URLHelper;
 
-  return BaseController.extend("ep.po.loiRequestMgt.controller.App", {
+	return BaseController.extend("ep.po.loiRequestMgt.controller.App", {
 
-    onInit: function () {
-      // apply content density mode to root view
-      this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-      this.oRouter = this.getOwnerComponent().getRouter();
-      this.oRouter.attachRouteMatched(this.onRouteMatched, this);
-      this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-    },
+		onInit : function () {
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+                
+			// apply content density mode to root view
+            this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+            
+            this.oRouter = this.getOwnerComponent().getRouter();
+			// this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+			this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+        },
 
-    onBeforeRouteMatched: function (oEvent) {
-      var oModel = this.getOwnerComponent().getModel("fcl");
+        onBeforeRendering : function(){
+            if(!this.getRouter().getHashChanger().getHash()){
+                var oNavParam = {
+                    layout: "OneColumn"
+                };
+                this.getRouter().navTo("master", oNavParam);
+            }
+        },
+        /**
+		 * Convenience method for accessing the router.
+		 * @public
+		 * @returns {sap.ui.core.routing.Router} the router for this component
+		 */
+		getRouter : function () {
+			return UIComponent.getRouterFor(this);
+		},
 
-      var sLayout = oEvent.getParameters().arguments.layout;
+		/**
+		 * Convenience method for getting the view model by name.
+		 * @public
+		 * @param {string} [sName] the model name
+		 * @returns {sap.ui.model.Model} the model instance
+		 */
+		getModel : function (sName) {
+			return this.getView().getModel(sName);
+		},
 
-      // If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
-      if (!sLayout) {
-        var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
-        sLayout = oNextUIState.layout;
-      }
+		/**
+		 * Convenience method for setting the view model.
+		 * @public
+		 * @param {sap.ui.model.Model} oModel the model instance
+		 * @param {string} sName the model name
+		 * @returns {sap.ui.mvc.View} the view instance
+		 */
+		setModel : function (oModel, sName) {
+			return this.getView().setModel(oModel, sName);
+        },
+        
+		/**
+		* Adds a history entry in the FLP page history
+		* @public
+		* @param {object} oEntry An entry object to add to the hierachy array as expected from the ShellUIService.setHierarchy method
+		* @param {boolean} bReset If true resets the history before the new entry is added
+		*/
+		addHistoryEntry: function() {
+			var aHistoryEntries = [];
 
-      // Update the layout of the FlexibleColumnLayout
-      if (sLayout) {
-        oModel.setProperty("/layout", sLayout);
-      }
-    },
+			return function(oEntry, bReset) {
+				if (bReset) {
+					aHistoryEntries = [];
+				}
 
-    onColumnResize: function (oEvent) {
-      // This event is ideal to call scrollToIndex function of the Table
-      var oMasterView = oEvent.getSource().getBeginColumnPages()[0];
-      // if (oMasterView.getController().iIndex) {
-      // 	var oTable = oMasterView.byId("productsTable");
-      // 	oTable.scrollToIndex(oMasterView.getController().iIndex);
-      // }
+			var bInHistory = aHistoryEntries.some(function(oHistoryEntry) {
+				return oHistoryEntry.intent === oEntry.intent;
+			});
 
-      var sLayout = this.getView().getModel("fcl").getProperty("/layout");
-      if (sLayout !== 'TwoColumnsMidExpanded') {
-        // var oTable = oMasterView.byId("productsTable");
-        // oTable.scrollToIndex(0);
-      }
+				if (!bInHistory) {
+					aHistoryEntries.push(oEntry);
+					this.getOwnerComponent().getService("ShellUIService").then(function(oService) {
+						oService.setHierarchy(aHistoryEntries);
+					});
+				}
+			};
+        },
 
-    },
+        onBeforeRouteMatched: function(oEvent) {
+			var oModel = this.getModel("fcl");
 
-    onRouteMatched: function (oEvent) {
-      var sRouteName = oEvent.getParameter("name"),
-        oArguments = oEvent.getParameter("arguments");
+			var sLayout = oEvent.getParameters().arguments.layout;
 
-      this._updateUIElements();
+			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
+			if (!sLayout) {
+				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
+				sLayout = oNextUIState.layout;
+			}
 
-      // Save the current route name
-      this.sCurrentRouteName = sRouteName;
-      this.sCurrentTenantId = oArguments.tenantId;
-      this.sCurrentControlOptionCode = oArguments.supplier;
-    },
+			// Update the layout of the FlexibleColumnLayout
+			if (sLayout) {
+				oModel.setProperty("/layout", sLayout);
+            }
 
-    onStateChanged: function (oEvent) {
-      var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
-        sLayout = oEvent.getParameter("layout");
+            var sName = oEvent.getParameters().name;
+            //console.log(sName);
+            
+            if(sName === "master" || sName === "detail"){
+                var oFcl = this.byId("fcl");
+                //oFcl.removeAllBeginColumnPages();
+            }
+		},
 
-      this._updateUIElements();
-      // Replace the URL with the new layout if a navigation arrow was used
-      if (bIsNavigationArrow) {
-        this.oRouter.navTo(this.sCurrentRouteName, {
-          layout: sLayout,
-          tenantId: this.sCurrentTenantId,
-          controlOptionCode: this.sCurrentControlOptionCode
-        }, true);
-      }
-    },
+		// Update the close/fullscreen buttons visibility
+		_updateUIElements: function () {
+			var oModel = this.getModel('fcl');
+			var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
+			oModel.setData(oUIState);
+		},
 
-    // Update the close/fullscreen buttons visibility
-    _updateUIElements: function () {
-      var oModel = this.getOwnerComponent().getModel("fcl");
-      var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
-      oModel.setData(oUIState);
-    },
-
-    onExit: function () {
-      this.oRouter.detachRouteMatched(this.onRouteMatched, this);
-      this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-    }
-
-  });
+		onExit: function () {
+			this.oRouter.detachRouteMatched(this.onRouteMatched, this);
+			this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+		}
+        
+	});
 
 });

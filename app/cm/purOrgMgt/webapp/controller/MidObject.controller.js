@@ -45,6 +45,105 @@ sap.ui.define([
      * @public
      */
     onInit: function () {
+        // 테넌트
+        this.getOwnerComponent().getModel("org")
+        .attachRequestCompleted((function(event){
+            var params = event.getParameters();
+            if (!params.url.includes("$count")) {
+                var entity = params.url.split("/")[0];
+                // 테넌트
+                if (entity.includes("Org_Tenant")) {
+                    setTimeout((function(){
+                        (!this.byId("searchTenantCombo").getFirstItem() || this.byId("searchTenantCombo").getFirstItem().getKey())
+                        &&
+                        this.byId("searchTenantCombo")
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(this.byId("searchTenantCombo").getFirstItem().getId());
+                    }).bind(this), 0);
+                }
+                // 회사
+                else if (entity.includes("Org_Company")) {
+                    setTimeout((function(){
+                        (!this.byId("searchCompanyCode").getFirstItem() || this.byId("searchCompanyCode").getFirstItem().getKey() != "*")
+                        &&
+                        this.byId("searchCompanyCode")
+                            .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(this.byId("searchCompanyCode").getFirstItem().getId());
+                    }).bind(this), 0);
+                }
+                // 구매조직
+                else if (entity.includes("Org_Purchasing")) {
+                    setTimeout((function(){
+                        (!this.byId("purchaseOrgCombo").getFirstItem() || this.byId("purchaseOrgCombo").getFirstItem().getKey())
+                        &&
+                        this.byId("purchaseOrgCombo")
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(this.byId("purchaseOrgCombo").getFirstItem().getId());
+                    }).bind(this), 0);
+                }
+                // 플랜트
+                else if (entity.includes("Org_Plant")) {
+                    setTimeout((function(){
+                        (!this.byId("plantCodeCombo").getFirstItem() || this.byId("plantCodeCombo").getFirstItem().getKey())
+                        &&
+                        this.byId("plantCodeCombo")
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(this.byId("plantCodeCombo").getFirstItem().getId());
+                    }).bind(this), 0);
+                }
+                // 사업본부
+                else if (entity.includes("Org_Unit")) {
+                    setTimeout((function(){
+                        (!this.byId("bizunitCodeCombo").getFirstItem() || this.byId("bizunitCodeCombo").getFirstItem().getKey())
+                        &&
+                        this.byId("bizunitCodeCombo")
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(this.byId("bizunitCodeCombo").getFirstItem().getId());
+                    }).bind(this), 0);
+                }
+                else if (entity.includes("Org_Division")) {
+                    setTimeout((function(){
+                        // 사업부
+                        if (!this.byId("bizdivisionCodeCombo").getFirstItem() || this.byId("bizdivisionCodeCombo").getFirstItem().getId() != "bizId") {
+                            this.byId("bizdivisionCodeCombo")
+                                .insertItem(new Item("bizId", { key: "", text: "선택하세요" }), 0)
+                                .setSelectedItemId(this.byId("bizdivisionCodeCombo").getFirstItem().getId());
+                        }
+
+                        // PLANT
+                        if (!this.byId("hqAuCodeCombo").getFirstItem() || this.byId("hqAuCodeCombo").getFirstItem().getId() != "hqAuId") {
+                            this.byId("hqAuCodeCombo")
+                                .insertItem(new Item("hqAuId", { key: "", text: "선택하세요" }), 0);
+                                //.setSelectedItemId(this.byId("hqAuCodeCombo").getFirstItem().getId());
+                            // 선택된 Key 값이 있는 경우
+                            if (this.byId("hqAuCodeCombo").getSelectedKey()) {
+                                this.byId("hqAuCodeCombo").setSelectedKey(this.byId("hqAuCodeCombo").getSelectedKey());
+                            }
+                            // 선택된 Key 값이 없는 경우
+                            else {
+                                this.byId("hqAuCodeCombo").setSelectedItemId(this.byId("hqAuCodeCombo").getFirstItem().getId());
+                            }
+                        }
+                    }).bind(this), 0);
+                }
+            }
+        }).bind(this));
+        // 조직유형
+        this.getOwnerComponent().getModel("util")
+        .attachRequestCompleted((function(event){
+            var params = event.getParameters();
+            if (!params.url.includes("$count")) {
+                var entity = params.url.split("/")[0];
+                if (entity.includes("Code")) {
+                    setTimeout((function(){
+                        this.byId("searchOrgTypeCombo")
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(this.byId("searchOrgTypeCombo").getFirstItem().getId());
+                    }).bind(this), 0);
+                }
+            }
+        }).bind(this));
 
       // MidObject
       this.getView().setModel(new JSONModel({
@@ -140,7 +239,7 @@ sap.ui.define([
                 path: 'org>/Org_Company',
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key)
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{org>company_code}", text: "{org>company_code} : {org>company_name}"
                 })
@@ -153,7 +252,7 @@ sap.ui.define([
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key),
                     new Filter('group_code', FilterOperator.EQ, 'CM_ORG_TYPE_CODE'),
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{util>code}", text: "{util>code} : {util>code_description}"
                 })
@@ -165,7 +264,7 @@ sap.ui.define([
                 path: 'org>/Org_Purchasing',
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key),
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{org>purchase_org_code}", text: "{org>purchase_org_code} : {org>purchase_org_name}"
                 })
@@ -177,7 +276,7 @@ sap.ui.define([
                 path: 'org>/Org_Unit',
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key),
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{org>bizunit_code}", text: "{org>bizunit_code} : {org>bizunit_name}"
                 })
@@ -194,7 +293,7 @@ sap.ui.define([
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, this["onSelectionChange"]["tenant_id"] || ""),
                     new Filter('company_code', FilterOperator.EQ, this["onSelectionChange"]["company_code"] || "")
-                ].filter(f => f.oValue1 || f.oValue2),
+                ].filter(f => (f.oValue1 && f.oValue1 != "*") || (f.oValue2 && f.oValue2 != "*")),
                 template: new Item({
                     key: "{org>plant_code}", text: "{org>plant_code} : {org>plant_name}"
                 })
@@ -219,15 +318,15 @@ sap.ui.define([
         // 사업부
         if (field == "bizdivision_code") {
             // 사업부에서 선택된 Item 데이터를 가져온다.
-            var path = event.getParameters().selectedItem.oBindingContexts.org.sPath;
-            var item = this.getModel("org").getProperty(path);
+            var path = key ? event.getParameters().selectedItem.oBindingContexts.org.sPath : "";
+            var item = this.getModel("org").getProperty(path) || {};
             // HQ/AU
             combo = this.byId("hqAuCodeCombo");
             combo.setSelectedKey((item["hq_au_flag"] ? item["bizdivision_code"] : ""));
             combo.bindItems({
                 path: 'org>/Org_Division',
                 filters: [
-                    new Filter('tenant_id', FilterOperator.EQ, this["onSelectionChange"]["tenant_id"]) || "",
+                    new Filter('tenant_id', FilterOperator.EQ, this["onSelectionChange"]["tenant_id"] || ""),
                     new Filter('bizunit_code', FilterOperator.EQ, this["onSelectionChange"]["bizunit_code"] || ""),
                     new Filter('hq_au_flag', FilterOperator.EQ, !item["hq_au_flag"])
                 ].filter(f => f.oValue1 || f.oValue2),

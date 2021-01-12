@@ -66,8 +66,8 @@ vpMstList.push({
     ,org_type_code: "BU"
     ,org_code: "BIZ00200"
     ,vendor_pool_code: "VP202011230TEST02"
-    ,vendor_pool_local_name : "TEST LOCAL 01-3"
-    ,vendor_pool_english_name : "TEST LOCAL EN 01-3"
+    ,vendor_pool_local_name : "TEST LOCAL 01-2"
+    ,vendor_pool_english_name : "TEST LOCAL EN 01-2"
     ,repr_department_code: "T111-1"                
     ,operation_unit_code : "RAW_MATERIAL-1"
     ,inp_type_code : "MBLMOB"
@@ -95,22 +95,23 @@ vpMstList.push({
 
 inputInfo.inputData.vpMst = vpMstList;            
 
+//supplier가 있는 경우 에러발생(있을 시 주석)
 /*
 vpSupplierList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST02"
-    , supplier_code: 'DE01091600'
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
+     tenant_id: "L2100"
+    ,company_code: "*"
+    ,org_type_code: "BU"
+    ,org_code: "BIZ00200"
+    ,vendor_pool_code: "VP202011230TEST02"
+    ,supplier_code: 'CN12341400'
+    //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
+    //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
     ,supeval_control_flag: false
     ,supeval_control_start_date: "20210104"
     ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
+    //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
+    //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+    //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  나중에
     ,supplier_rm_control_flag: false
     ,supplier_base_portion_rate: 0.0
     ,vendor_pool_mapping_use_flag: true
@@ -125,50 +126,27 @@ vpSupplierList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
-    , supplier_code: "CN12341400"
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
-    ,supeval_control_flag: false
-    ,supeval_control_start_date: "20210104"
-    ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
-    ,supplier_rm_control_flag: false
-    ,supplier_base_portion_rate: 0.0
-    ,vendor_pool_mapping_use_flag: true
-    ,register_reason: "AAA"
-    ,approval_number: "AAA"
-    ,crud_type_code : "R"
-});
-
-vpSupplierList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST02"
     , supplier_code: 'US02689500'
-    ,supeval_target_flag: false
-    ,supplier_op_plan_review_flag: false
+    //,supeval_target_flag: false     //??협의대상(화면의 어떤항목인지 모름)
+    //,supplier_op_plan_review_flag: false  //??협의대상(화면의 어떤항목인지 모름)
     ,supeval_control_flag: false
     ,supeval_control_start_date: "20210104"
     ,supeval_control_end_date: "20211229"
-    ,supeval_restrict_start_date: "20210104"
-    ,supeval_restrict_end_date: "20211229"
-    ,inp_code: "AAA"
+    //,supeval_restrict_start_date: "20210104"  //??협의대상(화면의 어떤항목인지 모름)
+    //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+    //,inp_code: "AAA"   //??협의대상(화면의 어떤항목인지 모름)
     ,supplier_rm_control_flag: false
     ,supplier_base_portion_rate: 0.0
     ,vendor_pool_mapping_use_flag: true
     ,register_reason: "AAA"
     ,approval_number: "AAA"
-    ,crud_type_code : "D"
+    ,crud_type_code : "C"
 });
 
 inputInfo.inputData.vpSupplier = vpSupplierList;  
 */
           
-//삭제
+//추가
 vpItemList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -176,7 +154,22 @@ vpItemList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0032'
-    , crud_type_code : "D"
+    , register_reason: '등록'
+    , approval_number: 'A2021010801'
+    , crud_type_code : "C"
+});
+
+//수정
+vpItemList.push({
+    tenant_id: "L2100"
+    , company_code: "*"
+    , org_type_code: "BU"
+    , org_code: "BIZ00200"
+    , vendor_pool_code: "VP202011230TEST02"
+    , material_code: 'TCMACR0014'
+    , register_reason: '등록'
+    , approval_number: 'A2021010801'
+    , crud_type_code : "U"
 });
 
 //삭제
@@ -187,24 +180,14 @@ vpItemList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , material_code: 'TCMACR0013'
-    , crud_type_code : "D"
-});
-
-
-//삭제
-vpItemList.push({
-    tenant_id: "L2100"
-    , company_code: "*"
-    , org_type_code: "BU"
-    , org_code: "BIZ00200"
-    , vendor_pool_code: "VP202011230TEST02"
-    , material_code: 'TCMACD0015'
+    , register_reason: '등록'
+    , approval_number: 'A2021010801'
     , crud_type_code : "D"
 });
 
 inputInfo.inputData.vpItem = vpItemList;            
 
-//삭제 
+//수정
 vpManagerList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -212,10 +195,13 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: "5452"
-    , crud_type_code : "D"
+    , vendor_pool_person_role_text: '구매담당자'
+    //, approval_number: ''  //안보냄    
+    //, register_reason: ''  //안보냄    
+    , crud_type_code : "U"
 });
 
-//삭제 
+//삭제
 vpManagerList.push({
     tenant_id: "L2100"
     , company_code: "*"
@@ -223,21 +209,27 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
     , vendor_pool_person_empno: '5460'
+    , vendor_pool_person_role_text: '구매담당자'
+    //, approval_number: ''  //안보냄    
+    //, register_reason: ''  //안보냄    
     , crud_type_code : "D"
 });
 
-//삭제 
+//등록
 vpManagerList.push({
     tenant_id: "L2100"
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP202011230TEST02"
-    , vendor_pool_person_empno: '5480'
-    , crud_type_code : "D"
+    , vendor_pool_person_empno: '5479'
+    , vendor_pool_person_role_text: '구매담당자'
+    //, approval_number: ''  //안보냄    
+    //, register_reason: ''  //안보냄    
+    , crud_type_code : "C"
 });
 
-inputInfo.inputData.vpManager = vpManagerList;     
+inputInfo.inputData.vpManager = vpManagerList;    
            
 
 /********************************************************************************

@@ -31,7 +31,7 @@
                             <ComboBox id="searchCompanyF" width="70%" selectedKey="" change="dialogChangeComp" items="{
                                 path: 'org>/Company',
                                 filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                 ],
                                 sorter: { path: 'company_code'}
                             }" required="true">
@@ -48,9 +48,7 @@
                             <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                    {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                    {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                 ]
                             }" required="true">
                                 <items>

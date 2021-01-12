@@ -9,3 +9,6 @@ using from './tm/pg_tm_index';
 
 //Market Intelligence
 using from './mi/pg_mi_index';
+
+//Indivisual Spend
+using from './is/pg_is_index';

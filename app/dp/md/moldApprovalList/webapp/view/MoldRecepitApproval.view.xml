@@ -50,7 +50,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -59,18 +59,18 @@
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="Report No"
+                        title="{I18N>/APPROVAL_NUMBER}"
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
-                        title="Requester"
+                        title="{I18N>/REQUESTOR}"
                         text="[{appMaster>/requestor_empno}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
-                        title="Request Date"
+                        title="{I18N>/REQUEST_DATE}"
                         text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
@@ -79,7 +79,7 @@
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
-                        <Title text="Process"/>
+                        <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox>
                         <sc:MicroProcessFlow>
@@ -125,11 +125,11 @@
                 <uxap:ObjectPageSubSection>
                     <HBox>
                         <VBox class="sapUiSmallMargin">
-                            <Label text="{I18N>/AFFILIATE}"/>
+                            <Label text="{I18N>/COMPANY}"/>
                             <ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
                         </VBox>
                         <VBox class="sapUiSmallMargin">
-                            <Label text="{I18N>/BUSINESS_DIVISION}"/>
+                            <Label text="{I18N>/PLANT}"/>
                             <ObjectStatus text="[{plant>/org_code}] {plant>/org_name}" state="Error"/>
                         </VBox>
                     </HBox>

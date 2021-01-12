@@ -30,8 +30,22 @@
                     "localUri": "localService/metadata.xml"
                 }
             },
+            "v4Proc": {
+                "uri": "srv-api/odata/v4/dp.ProjectMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            },
             "commonUtilService": {
                 "uri": "srv-api/odata/v2/cm.util.CommonService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "orgMgrService": {
+                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -96,6 +110,15 @@
                     "autoExpandSelect": true
                 }
             },
+            "v4Proc": {
+                "dataSource": "v4Proc",
+                "preload": false,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": false
+                }
+            },
             "util": {
                 "dataSource": "commonUtilService",
                 "preload": true,
@@ -104,6 +127,16 @@
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": false,
                     "useBatch": false
+                }
+            },
+            "org": {
+                "dataSource": "orgMgrService",
+                "preload": true,
+                "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": true,
+                "useBatch": true
                 }
             },
             "listModel": {
@@ -147,9 +180,9 @@
                     "target": "ProjectMgtList"
                 },
                 {
-                    "pattern": "ProjectMgtDetail/{tenant_id}/{project_code}/{model_code}",
-                    "name": "ProjectMgtDetail",
-                    "target": "ProjectMgtDetail"
+                    "pattern": "ProjectInfo/{tenant_id}/{project_code}/{model_code}",
+                    "name": "ProjectInfo",
+                    "target": "ProjectInfo"
                 }
             ],
             "targets": {
@@ -157,9 +190,9 @@
                     "viewId": "ProjectMgtList",
                     "viewName": "ProjectMgtList"
                 },
-                "ProjectMgtDetail": {
-                    "viewId": "ProjectMgtDetail",
-                    "viewName": "ProjectMgtDetail"
+                "ProjectInfo": {
+                    "viewId": "ProjectInfo",
+                    "viewName": "ProjectInfo"
                 }
             }
         }
