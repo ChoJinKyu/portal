@@ -84,7 +84,7 @@
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
                                                 {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
                                             ],
-                                            sorter: { path: 'purOrg>org_code'}
+                                            sorter: { path: 'org_code'}
                                         }"
                                         selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
@@ -181,7 +181,7 @@
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
                                                 {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
                                             ],
-                                            sorter: { path: 'purOrg>org_code'}
+                                            sorter: { path: 'org_code'}
                                         }"
                                         selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
@@ -233,12 +233,13 @@
                             <MultiComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                    ]
-                                                }"
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </MultiComboBox>
@@ -251,12 +252,13 @@
                             <MultiComboBox   id="searchProductionType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                                    ]
-                                                }"
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </MultiComboBox>
@@ -272,16 +274,17 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="E/D Type"></Label>
+                            <Label text="Export/Domestic Type"></Label>
                             <ComboBox   id="searchEDType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
-                                                    ]
-                                                }"
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
@@ -309,12 +312,12 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Mold No" labelFor="searchMoldNo"></Label>
-                            <Input id="searchMoldNo" 
+                            <Label text="Mold Part No" labelFor="searchPart"></Label>
+                            <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: '/MoldNumbers',
+                                        path: '/PartNumbers',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
@@ -369,7 +372,7 @@
                         <Label text=" "/>
                         <table:template>
                             <CheckBox id="chk" selected="{list>chk}" select=".setIdSelect"
-                            visible="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" />
+                            visible="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldCompanyColumn" width="5em" hAlign="Center">
@@ -384,13 +387,13 @@
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldModelColumn" width="15em" >
+                    <table:Column id="moldModelColumn" width="12em" >
                         <Label text="{I18N>/MODEL}" wrapping="true"/>
                         <table:template>
                             <Text id="model" text="{list>model}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldNoColumn" width="8em" hAlign="Center">
+                    <table:Column id="moldMoldNoColumn" width="12em" hAlign="Center">
                         <Label text="Mold No" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>
@@ -412,15 +415,16 @@
                         <Label text="{I18N>/STATUS}" wrapping="true"/>
                         <table:template>
                              <ComboBox   id="mold_progress_status_code"
-                                        selectedKey="{list>mold_progress_status_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
-                                                    ]
-                                                }"
-                            editable="false" class="readonlyField" width="100%" >
+                                selectedKey="{list>mold_progress_status_code}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                editable="false" class="readonlyField" width="100%" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -434,39 +438,42 @@
                     <table:Column id="moldFamilyFlagColumn" width="6em" hAlign="Center">
                         <Label text="Family Y/N" wrapping="true"/>
                         <table:template>
-                            <ComboBox id="family_flag" selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }" change="familyFlagChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                            <!--<ComboBox id="family_flag" selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }" change="familyFlagChange"
+                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="Y" text="Yes"/>
                                 <core:Item key="N" text="No"/>
-                            </ComboBox>
-                            <!--<ComboBox   id="family_flag"    
-                                        selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
-                                                    ]
-                                                }"
-                            selectionChange="familyFlagChange">
-                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>-->
+                            <ComboBox   id="family_flag"    
+                                selectedKey="{= ${list>family_flag} === 'Y' ? 'Y' : 'N' }"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
+                                change="familyFlagChange">
+                                <core:Item key="{util>code}" text="{util>code_name}" />
+                            </ComboBox>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldProductionTypeColumn" width="12em" hAlign="Center">
                         <Label text="Production Type" required="true" wrapping="true"/>
                         <table:template>
                             <ComboBox   id="mold_production_type_code"
-                                        selectedKey="{list>mold_production_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                                    ]
-                                                }"
-                            required="true" selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                                selectedKey="{list>mold_production_type_code}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                required="true" selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -475,16 +482,17 @@
                         <Label text="Item Type" required="true" wrapping="true"/>
                         <table:template>
                             <ComboBox   id="mold_item_type_code"
-                                        selectedKey="{list>mold_item_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                    ]
-                                                }"
-                            required="true" selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                                selectedKey="{list>mold_item_type_code}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                required="true" selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -493,17 +501,18 @@
                         <Label text="Mold Type" required="true" wrapping="true"/>
                         <table:template><!--{path : 'parent_code', operator : 'EQ', value1 : ${list>mold_item_type_code}}-->
                             <ComboBox   id="mold_type_code"
-                                        selectedKey="{list>mold_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
-                                                    ]
-                                                }"
-                            required="true" selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }"
-                            class="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? '' : 'readonlyField' }" >
+                                selectedKey="{list>mold_type_code}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                required="true" selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
+                                class="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? '' : 'readonlyField' }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -512,16 +521,17 @@
                         <Label text="Export/Domestic Type" required="true" wrapping="true"/>
                         <table:template>
                             <ComboBox   id="mold_location_type_code"
-                                        selectedKey="{list>mold_location_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
-                                                    ]
-                                                }"
-                            required="true" selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                                selectedKey="{list>mold_location_type_code}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                required="true" selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -530,16 +540,17 @@
                         <Label text="Mold Cost Analysis Type" wrapping="true"/>
                         <table:template>
                             <ComboBox   id="mold_cost_analysis_type_code"    
-                                        selectedKey="{list>mold_cost_analysis_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_COST_ANALYSIS_TYPE'}
-                                                    ]
-                                                }"
-                            selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                                selectedKey="{list>mold_cost_analysis_type_code}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_COST_ANALYSIS_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -562,16 +573,17 @@
                             <!--<Text id="mold_purchasing_type_code" text="{list>mold_purchasing_type_code}"/>-->
                             
                             <ComboBox   id="mold_purchasing_type_code"    
-                                        selectedKey="{list>mold_purchasing_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PURCHASE_TYPE'}
-                                                    ]
-                                                }"
-                            selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                                selectedKey="{list>mold_purchasing_type_code}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PURCHASE_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -580,16 +592,17 @@
                         <Label text="Mold Structure" required="true" wrapping="true"/>
                         <table:template>
                             <ComboBox   id="die_form"    
-                                        selectedKey="{list>die_form}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
-                                                    ]
-                                                }"
-                            selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                                selectedKey="{list>die_form}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -598,16 +611,17 @@
                         <Label text="Size" required="true" wrapping="true"/>
                         <table:template>
                             <ComboBox   id="mold_size"    
-                                        selectedKey="{list>mold_size}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
-                                                    ]
-                                                }"
-                            selectionChange="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
+                                selectedKey="{list>mold_size}"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                                selectionChange="inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -629,7 +643,7 @@
                         <table:template>
                             <!--<Text id="mold_developer_empno" text="{list>mold_developer_empno}" visible="{mode>/viewFlag}" />-->
                             <SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" search=".onMoldMstTableUserSearch" required="true"
-                                enabled="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" />
+                                enabled="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
                             <!--<Input id=""
                                 value="{list>mold_developer_empno}" 
                                 showValueHelp="true"
@@ -643,7 +657,7 @@
                         <Label text="Remark" wrapping="true"/>
                         <table:template>
                             <TextArea id="remark" value="{list>remark}" rows="2" width="100%" change="inputFieldChange"
-                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" />
+                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldProjectCodeColumn" width="15em">
@@ -661,31 +675,31 @@
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(1)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? ((${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(2)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
+                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(3)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
+                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(4)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
+                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(5)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
+                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                 </table:columns>

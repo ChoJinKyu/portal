@@ -276,42 +276,42 @@ sap.ui.define([
                     }
                 };   
             //_general_info Data add    
-            // vpMstList.push({
-            //     tenant_id: generaloDataRst.tenant_id //auto set
-            //     ,company_code: generaloDataRst.company_code //auto set
-            //     ,org_type_code: generaloDataRst.org_type_code  //auto set
-            //     ,org_code: generaloDataRst.org_code  //auto set
-            //     ,vendor_pool_code: generaloDataRst.vendor_pool_code  //auto set
-            //     ,vendor_pool_local_name : this.getView().byId("general_vendor_pool_local_name").getValue()// view value set
-            //     ,vendor_pool_english_name : this.getView().byId("general_vendor_pool_english_name").getValue()//  view value set
-            //     ,repr_department_code: this.getView().byId("general_repr_department_code").getValue()   // view value set            
-            //     ,operation_unit_code : generaloDataRst.operation_unit_code  //auto set
-            //     ,inp_type_code : this.getView().byId("general_inp_type_code").getSelectedKey()//  view value set
-            //     ,mtlmob_base_code : this.getView().byId("general_plan_base").getSelectedKey()//  view value set
-            //     ,regular_evaluation_flag : this.getView().byId("general_regular_evaluation_flag").getState()//  view value set
-            //     ,industry_class_code : this.getView().byId("general_industry_class_code").getSelectedKey()//  view value set
-            //     ,sd_exception_flag : this.getView().byId("general_sd_exception_flag").getState()//  view value set
-            //     ,vendor_pool_apply_exception_flag : this.getView().byId("general_vendor_pool_apply_exception_flag").getState()//  view value set
-            //     ,maker_material_code_mngt_flag : this.getView().byId("general_maker_material_code_mngt_flag").getState()//  view value set
-            //     // ,domestic_net_price_diff_rate : this.getView().byId("general_domestic_net_price_diff_rate").getValue()// view value set
-            //     // ,dom_oversea_netprice_diff_rate : this.getView().byId("general_dom_oversea_netprice_diff_rate").getValue()// view value set
-            //     ,domestic_net_price_diff_rate : 10.0// view value set
-            //     ,dom_oversea_netprice_diff_rate : 10.0// view value set                
-            //     ,equipment_grade_code : this.getView().byId("general_equipment_grade_code").getSelectedKey()//  view value set
-            //     ,equipment_type_code : this.getView().byId("general_equipment_type_code").getSelectedKey()//   view value set
-            //     ,vendor_pool_use_flag : true//  default
-            //     ,vendor_pool_desc : this.getView().byId("general_vendor_pool_desc").getValue()//  view value set
-            //     ,vendor_pool_history_desc : null//생략가능
-            //     ,parent_vendor_pool_code : null//생략가능 
-            //     // ,leaf_flag : true  //drill_state leaf = true
-            //     // ,level_number : null  //hierarchy_level +1
-            //     // ,display_sequence : null // 생략가능 default null
-            //     // ,register_reason : "AAAAA" // 결재요청사유 생략
-            //     // ,approval_number : "AAAAA" // 결재요청번호 생략
-            //     ,crud_type_code : "U" // U
+            vpMstList.push({
+                tenant_id: generaloDataRst.tenant_id //auto set
+                ,company_code: generaloDataRst.company_code //auto set
+                ,org_type_code: generaloDataRst.org_type_code  //auto set
+                ,org_code: generaloDataRst.org_code  //auto set
+                ,vendor_pool_code: generaloDataRst.vendor_pool_code  //auto set
+                ,vendor_pool_local_name : this.getView().byId("general_vendor_pool_local_name").getValue()// view value set
+                ,vendor_pool_english_name : this.getView().byId("general_vendor_pool_english_name").getValue()//  view value set
+                ,repr_department_code: this.getView().byId("general_repr_department_code").getValue()   // view value set            
+                ,operation_unit_code : generaloDataRst.operation_unit_code  //auto set
+                ,inp_type_code : this.getView().byId("general_inp_type_code").getSelectedKey()//  view value set
+                ,mtlmob_base_code : this.getView().byId("general_plan_base").getSelectedKey()//  view value set
+                ,regular_evaluation_flag : this.getView().byId("general_regular_evaluation_flag").getState()//  view value set
+                ,industry_class_code : this.getView().byId("general_industry_class_code").getSelectedKey()//  view value set
+                ,sd_exception_flag : this.getView().byId("general_sd_exception_flag").getState()//  view value set
+                ,vendor_pool_apply_exception_flag : this.getView().byId("general_vendor_pool_apply_exception_flag").getState()//  view value set
+                ,maker_material_code_mngt_flag : this.getView().byId("general_maker_material_code_mngt_flag").getState()//  view value set
+                // ,domestic_net_price_diff_rate : this.getView().byId("general_domestic_net_price_diff_rate").getValue()// view value set
+                // ,dom_oversea_netprice_diff_rate : this.getView().byId("general_dom_oversea_netprice_diff_rate").getValue()// view value set
+                ,domestic_net_price_diff_rate : 10.0// view value set
+                ,dom_oversea_netprice_diff_rate : 10.0// view value set                
+                ,equipment_grade_code : this.getView().byId("general_equipment_grade_code").getSelectedKey()//  view value set
+                ,equipment_type_code : this.getView().byId("general_equipment_type_code").getSelectedKey()//   view value set
+                ,vendor_pool_use_flag : true//  default
+                ,vendor_pool_desc : this.getView().byId("general_vendor_pool_desc").getValue()//  view value set
+                ,vendor_pool_history_desc : null//생략가능
+                ,parent_vendor_pool_code : null//생략가능 
+                // ,leaf_flag : true  //drill_state leaf = true
+                // ,level_number : null  //hierarchy_level +1
+                // ,display_sequence : null // 생략가능 default null
+                // ,register_reason : "AAAAA" // 결재요청사유 생략
+                // ,approval_number : "AAAAA" // 결재요청번호 생략
+                ,crud_type_code : "U" // U
 
               
-            // });
+            });
 
             // inputInfo.inputData.vpMst = vpMstList;     
             
@@ -319,145 +319,147 @@ sap.ui.define([
             // this.currentListObj = tblObj.getModel(modelName).getProperty(viewName);
 
 
-                //supplier list data
-                this.currnetSppObj = that.sppListTbl.getModel("suplist").getProperty("/VpSupplierDtlView")
-                console.log("currnetSppObj : " + this.currnetSppObj);
+            //supplier list data
+            this.currnetSppObj = that.sppListTbl.getModel("suplist").getProperty("/VpSupplierDtlView")
+            console.log("currnetSppObj : " + this.currnetSppObj);
 
-                // if (this.currnetSppObj.length > 0) {
-                //     for (var i = 0; i < this.currnetSppObj.length; i++) {
-                //         vpSupplierList.push({
-                //             tenant_id: this.currnetSppObj[i].tenant_id
-                //             ,company_code: this.currnetSppObj[i].company_code
-                //             ,org_type_code: this.currnetSppObj[i].org_type_code
-                //             ,org_code: this.currnetSppObj[i].org_code
-                //             ,vendor_pool_code: this.currnetSppObj[i].vendor_pool_code
-                //             ,supplier_code: this.currnetSppObj[i].supplier_code
-                //             //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
-                //             //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
-                //             ,supeval_control_flag: this.currnetSppObj[i].supeval_control_flag
-                //             ,supeval_control_start_date: this.currnetSppObj[i].supeval_control_start_date
-                //             ,supeval_control_end_date: this.currnetSppObj[i].supeval_control_end_date
-                //             //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
-                //             //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
-                //             //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
-                //             ,supplier_rm_control_flag: this.currnetSppObj[i].supplier_rm_control_flag
-                //             ,supplier_base_portion_rate: this.currnetSppObj[i].supplier_base_portion_rate
-                //             ,vendor_pool_mapping_use_flag: this.currnetSppObj[i].vendor_pool_mapping_use_flag
-                //             ,register_reason: this.currnetSppObj[i].register_reason
-                //             ,approval_number: this.currnetSppObj[i].approval_number
-                //             ,crud_type_code : this.currnetSppObj[i]._row_state_   
-                //         })
-                //     }
-                // }
+            if (this.currnetSppObj.length > 0) {
+                for (var i = 0; i < this.currnetSppObj.length; i++) {
+                    vpSupplierList.push({
+                        tenant_id: this.currnetSppObj[i].tenant_id
+                        ,company_code: this.currnetSppObj[i].company_code
+                        ,org_type_code: this.currnetSppObj[i].org_type_code
+                        ,org_code: this.currnetSppObj[i].org_code
+                        ,vendor_pool_code: this.currnetSppObj[i].vendor_pool_code
+                        ,supplier_code: this.currnetSppObj[i].supplier_code
+                        //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
+                        //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
+                        ,supeval_control_flag: this.currnetSppObj[i].supeval_control_flag
+                        ,supeval_control_start_date: this.currnetSppObj[i].supeval_control_start_date
+                        ,supeval_control_end_date: this.currnetSppObj[i].supeval_control_end_date
+                        //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
+                        //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+                        //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
+                        ,supplier_rm_control_flag: this.currnetSppObj[i].supplier_rm_control_flag
+                        ,supplier_base_portion_rate: this.currnetSppObj[i].supplier_base_portion_rate
+                        ,vendor_pool_mapping_use_flag: this.currnetSppObj[i].vendor_pool_mapping_use_flag
+                        ,register_reason: this.currnetSppObj[i].register_reason
+                        ,approval_number: this.currnetSppObj[i].approval_number
+                        ,crud_type_code : this.currnetSppObj[i]._row_state_   
+                    })
+                }
+            }
 
-                //metrial list data
-                this.currnetMetObj = that.metListTbl.getModel("matlist").getProperty("/vpMaterialDtlView")
-                console.log("currnetMetObj : " + this.currnetMetObj);
+            //metrial list data
+            this.currnetMetObj = that.metListTbl.getModel("matlist").getProperty("/vpMaterialDtlView")
+            console.log("currnetMetObj : " + this.currnetMetObj);
 
-                // if (this.currnetMetObj.length > 0) {
-                //     for (var i = 0; i < this.currnetMetObj.length; i++) {
-                //         vpItemList.push({
-                //                 tenant_id: this.currnetMetObj[i].tenant_id
-                //                 , company_code: this.currnetMetObj[i].company_code
-                //                 , org_type_code: this.currnetMetObj[i].org_type_code
-                //                 , org_code: this.currnetMetObj[i].org_code
-                //                 , vendor_pool_code: this.currnetMetObj[i].vendor_pool_code
-                //                 , material_code: this.currnetMetObj[i].material_code
-                //                 , register_reason: this.currnetMetObj[i].register_reason
-                //                 , approval_number: this.currnetMetObj[i].approval_number
-                //                 , crud_type_code : this.currnetMetObj[i]._row_state_
-                //         })
-                //     }
-                // }
+            if (this.currnetMetObj.length > 0) {
+                for (var i = 0; i < this.currnetMetObj.length; i++) {
+                    vpItemList.push({
+                            tenant_id: this.currnetMetObj[i].tenant_id
+                            , company_code: this.currnetMetObj[i].company_code
+                            , org_type_code: this.currnetMetObj[i].org_type_code
+                            , org_code: this.currnetMetObj[i].org_code
+                            , vendor_pool_code: this.currnetMetObj[i].vendor_pool_code
+                            , material_code: this.currnetMetObj[i].material_code
+                            , register_reason: this.currnetMetObj[i].register_reason
+                            , approval_number: this.currnetMetObj[i].approval_number
+                            , crud_type_code : this.currnetMetObj[i]._row_state_
+                    })
+                }
+            }
 
-                //manager list data
-                this.currnetManObj = that.mngListTbl.getModel("manlist").getProperty("/vpManagerDtlView")
-                console.log("currnetManObj : " + this.currnetManObj);
+            //manager list data
+            this.currnetManObj = that.mngListTbl.getModel("manlist").getProperty("/vpManagerDtlView")
+            console.log("currnetManObj : " + this.currnetManObj);
 
-                // if (this.currnetManObj.length > 0) {
-                //     for (var i = 0; i < this.currnetManObj.length; i++) {
-                //         vpManagerList.push({
-                //                 tenant_id: this.currnetManObj[i].tenant_id
-                //                 , company_code: this.currnetManObj[i].company_code
-                //                 , org_type_code: this.currnetManObj[i].org_type_code
-                //                 , org_code: this.currnetManObj[i].org_code
-                //                 , vendor_pool_code: this.currnetManObj[i].vendor_pool_code
-                //                 , material_code: this.currnetManObj[i].material_code
-                //                 , register_reason: this.currnetManObj[i].register_reason
-                //                 , approval_number: this.currnetManObj[i].approval_number
-                //                 , vendor_pool_person_empno: this.currnetManObj[i].vendor_pool_person_empno
-                //                 , vendor_pool_person_role_text: this.currnetManObj[i].vendor_pool_person_role_text
-                //                 //, approval_number: ''  //안보냄    
-                //                 //, register_reason: ''  //안보냄    
-                //                 , crud_type_code : this.currnetManObj[i].crud_type_code                                
-                //         })
-                //     }
-                // }
-                // inputInfo.inputData.vpMst = vpMstList;   
-                // inputInfo.inputData.vpSupplier = vpSupplierList;   
-                // inputInfo.inputData.vpItem = vpItemList;                   
-                // inputInfo.inputData.vpManager = vpManagerList;                   
-            // $.ajax({
-            //     url: urlInfo,
-            //     type: "POST",
-            //     //datatype: "json",
-            //     //data: input,
-            //     data: JSON.stringify(inputInfo),
-            //     contentType: "application/json",
-            //     success: function (data) {
-            //         //MessageToast.show("Success 1st Proc!");
-            //         console.log('data:', data);
-            //         console.log('data:', data.value[0]);
-            //         v_returnModel = oView.getModel("returnModel").getData().data;
-            //         console.log('v_returnModel:', v_returnModel);
-            //         v_returnModel.return_code = data.value[0].return_code;
-            //         v_returnModel.return_msg = data.value[0].return_msg.substring(0, 8);
-            //         oView.getModel("returnModel").updateBindings(true);
+            if (this.currnetManObj.length > 0) {
+                for (var i = 0; i < this.currnetManObj.length; i++) {
+                    vpManagerList.push({
+                            tenant_id: this.currnetManObj[i].tenant_id
+                            , company_code: this.currnetManObj[i].company_code
+                            , org_type_code: this.currnetManObj[i].org_type_code
+                            , org_code: this.currnetManObj[i].org_code
+                            , vendor_pool_code: this.currnetManObj[i].vendor_pool_code
+                            , material_code: this.currnetManObj[i].material_code
+                            , register_reason: this.currnetManObj[i].register_reason
+                            , approval_number: this.currnetManObj[i].approval_number
+                            , vendor_pool_person_empno: this.currnetManObj[i].vendor_pool_person_empno
+                            , vendor_pool_person_role_text: this.currnetManObj[i].vendor_pool_person_role_text
+                            //, approval_number: ''  //안보냄    
+                            //, register_reason: ''  //안보냄    
+                            , crud_type_code : this.currnetManObj[i].crud_type_code                                
+                    })
+                }
+            }
+            
+            inputInfo.inputData.vpMst = vpMstList;   
+            inputInfo.inputData.vpSupplier = vpSupplierList;   
+            inputInfo.inputData.vpItem = vpItemList;                   
+            inputInfo.inputData.vpManager = vpManagerList;
 
-            //         //MessageToast.show(data.value[0].return_msg);
-            //         console.log(data.value[0].return_msg.substring(0, 8));
-            //         //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
-            //         sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
-            //         //MessageToast.show(sMsg);
-            //         console.log(data.value[0].return_msg);
-            //         alert(sMsg);
-            //         MessageToast.show(sMsg);
-            //     },
-            //     error: function (e) {
-            //         var eMessage = "callProcError",
-            //             errorType,
-            //             eMessageDetail;
+            $.ajax({
+                url: urlInfo,
+                type: "POST",
+                //datatype: "json",
+                //data: input,
+                data: JSON.stringify(inputInfo),
+                contentType: "application/json",
+                success: function (data) {
+                    //MessageToast.show("Success 1st Proc!");
+                    console.log('data:', data);
+                    console.log('data:', data.value[0]);
+                    v_returnModel = oView.getModel("returnModel").getData().data;
+                    console.log('v_returnModel:', v_returnModel);
+                    v_returnModel.return_code = data.value[0].return_code;
+                    v_returnModel.return_msg = data.value[0].return_msg.substring(0, 8);
+                    oView.getModel("returnModel").updateBindings(true);
 
-            //         v_returnModel = oView.getModel("returnModel").getData().data;
-            //         console.log('v_returnModel_e:', v_returnModel);
-            //         v_returnModel.return_code = 'error';
-            //         v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
+                    //MessageToast.show(data.value[0].return_msg);
+                    console.log(data.value[0].return_msg.substring(0, 8));
+                    //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
+                    sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
+                    //MessageToast.show(sMsg);
+                    console.log(data.value[0].return_msg);
+                    alert(sMsg);
+                    MessageToast.show(sMsg);
+                },
+                error: function (e) {
+                    var eMessage = "callProcError",
+                        errorType,
+                        eMessageDetail;
+
+                    v_returnModel = oView.getModel("returnModel").getData().data;
+                    console.log('v_returnModel_e:', v_returnModel);
+                    v_returnModel.return_code = 'error';
+                    v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
 
                     
-            //         //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
-            //         if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
-            //             eMessage = "callProcError";
-            //             eMessageDetail = "callProcError";
-            //         }else{
-            //             eMessage = e.responseJSON.error.message.substring(0, 8);
-            //             eMessageDetail = e.responseJSON.error.message.substring(9);
-            //             errorType = e.responseJSON.error.message.substring(0, 1);
-            //             console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                    //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
+                    if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
+                        eMessage = "callProcError";
+                        eMessageDetail = "callProcError";
+                    }else{
+                        eMessage = e.responseJSON.error.message.substring(0, 8);
+                        eMessageDetail = e.responseJSON.error.message.substring(9);
+                        errorType = e.responseJSON.error.message.substring(0, 1);
+                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
                         
-            //             //MessageToast.show(eMessageDetail);
-            //         }
+                        //MessageToast.show(eMessageDetail);
+                    }
 
-            //         sMsg = oBundle.getText(eMessage);
-            //         if(errorType === 'E'){
-            //             alert(sMsg);                    
-            //         }else{
-            //             alert(eMessageDetail);                    
-            //         }
+                    sMsg = oBundle.getText(eMessage);
+                    if(errorType === 'E'){
+                        alert(sMsg);                    
+                    }else{
+                        alert(eMessageDetail);                    
+                    }
                     
                     
-            //         MessageToast.show(sMsg);                    
-            //     }
-            // });
+                    MessageToast.show(sMsg);                    
+                }
+            });
 
 		},
 		

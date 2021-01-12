@@ -59,7 +59,7 @@
                     <VBox>
                         <Label text="{I18N>/APPROVAL_NUMBER} " />
                         <!-- <Label text="Approval Number" /> -->
-                        <Input value="{filterModel>/approvalNumber}" />
+                        <Input value="{filterModel>/approvalNumber}" change=".onSearch" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
@@ -70,7 +70,7 @@
                     <VBox>
                         <Label text="{I18N>/APPROVAL_TITLE} " />
                         <!-- <Label text="Approval Title" /> -->
-                        <Input value="{filterModel>/approvalTitle}" />
+                        <Input value="{filterModel>/approvalTitle}" change=".onSearch" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
@@ -92,7 +92,7 @@
 
                     <!-- Request By 시작 -->
                     <VBox height="56px">
-                        <Label text="{I18N>/REQUEST_BY} "></Label>
+                        <Label text="{I18N>/REQUESTOR} "></Label>
                         <!-- <Label text="Request By"></Label> -->
                         <!-- <SearchField value="{filterModel>/requestBy}" /> -->
                         <lib-m:CodePicker id="searchEmployeePicker"
@@ -123,16 +123,11 @@
                         <!-- <Label text="Status"></Label> -->
                         <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                             <items>
-                                <SegmentedButtonItem text="All" key="" />
-                                <SegmentedButtonItem text="Draft" key="10" width="4.2rem" />
-                                <SegmentedButtonItem text="Requested" key="20" width="5.2rem" />
-                                <SegmentedButtonItem text="Approved" key="30" width="4.8rem" />
-                                <SegmentedButtonItem text="Rejected" key="40" width="4.5rem" />
-                                <!-- <SegmentedButtonItem text="{I18N>/ALL}" key="" />
-                                <SegmentedButtonItem text="{I18N>/DRAFT}" key="10" width="4.2rem" />
-                                <SegmentedButtonItem text="{I18N>/REQUESTED}" key="20" width="5.2rem" />
-                                <SegmentedButtonItem text="{I18N>/APPROVED}" key="30" width="4.8rem" />
-                                <SegmentedButtonItem text="{I18N>/REJECTED}" key="40" width="4.5rem" /> -->
+                                <SegmentedButtonItem text="{I18N>/ALL}" key="" />
+                                <SegmentedButtonItem text="{rootModel>/processList/0/code_name}" key="10" width="4.5rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="20" width="5.2rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="30" width="4.8rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="40" width="4.5rem" />
                             </items>
                         </SegmentedButton>
                         <layoutData>
@@ -222,7 +217,7 @@
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
-                    <Label text="{I18N>/REQUESTED_BY}" />
+                    <Label text="{I18N>/REQUESTOR}" />
                     <!-- <Label text="Requested By" /> -->
                     <t:template>
                         <Text text="{listModel>approval_requestor_empno_fk/user_local_name}" />

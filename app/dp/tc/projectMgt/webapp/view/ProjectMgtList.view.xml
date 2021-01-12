@@ -39,12 +39,13 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <ComboBox width="100%" selectedKey="{filterModel>/company_code/value}" items="{
-                                path: 'org>/Org_Company',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                ],
-                                sorter: { path: 'company_code'}
+                            <ComboBox width="100%" change="onChangeCompnay" selectedKey="{filterModel>/company_code/value}" 
+                                items="{
+                                    path: 'org>/Org_Company',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    sorter: { path: 'company_code'}
                             }">
                                 <items>
                                     <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
@@ -60,15 +61,18 @@
                                 </layoutData>
                             </Label>
                             <ComboBox
+                                id="cbxExpandDivision"
                                 width="100%"
                                 selectedKey="{filterModel>/divistion/value}"
                                 items="{
-                                    path: 'filterModel>/divistion_list',
+                                    path: '/Division',
                                     filters: [
-                                    ]
+                                        {path: 'tenant_id', operator: 'EQ', value1: '999'}
+                                    ],
+                                    sorter: { path: 'bizdivision_code'}
                                 }">
                                 <items>
-                                    <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
+                                    <core:Item key="{bizdivision_code}" text="{bizdivision_name}" />
                                 </items>
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
@@ -119,12 +123,13 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <ComboBox width="100%" selectedKey="{filterModel>/company_code}" items="{
-                                path: 'org>/Org_Company',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                ],
-                                sorter: { path: 'company_code'}
+                            <ComboBox width="100%" change="onChangeCompnay" selectedKey="{filterModel>/company_code}" 
+                                items="{
+                                    path: 'org>/Org_Company',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    sorter: { path: 'company_code'}
                             }">
                                 <items>
                                     <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
@@ -139,12 +144,24 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-
-                            <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" >
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L2 M2 S2" />
-                                    </layoutData>
-                            </MultiComboBox>
+                            <ComboBox
+                                id="cbxSnapDivision"
+                                width="100%"
+                                selectedKey="{filterModel>/divistion/value}"
+                                items="{
+                                    path: '/Division',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: '999'}
+                                    ],
+                                    sorter: { path: 'bizdivision_code'}
+                                }">
+                                <items>
+                                    <core:Item key="{bizdivision_code}" text="{bizdivision_name}" />
+                                </items>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M2 S2" />
+                                </layoutData>
+                            </ComboBox>
 
                             <Label text="프로젝트코드">
                                 <layoutData>

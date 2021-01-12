@@ -62,11 +62,6 @@
                                 <Label text="{I18N>/SPEC_DESC}" />                            
                             </header>
                         </Column>
-                        <Column hAlign="Center" width="6rem" >
-                            <header>
-                                <Label text="{I18N>/COMMONDIFY}"/>                            
-                            </header>
-                        </Column>    
                         <Column hAlign="Center" width="3rem" >
                             <header>
                                 <Label text="{I18N>/UOM}"/>                            
@@ -90,7 +85,6 @@
                                 <Text text="{dialogModel>material_code}"/>
                                 <Text text="{dialogModel>material_desc}"/>
                                 <Text text="{dialogModel>material_spec}"/>
-                                <Text text="{dialogModel>commodity_code}"/>
                                 <Text text="{dialogModel>base_uom_code}"/>
                                 <Text text="{dialogModel>uit}"/>
                                 <Text text="{dialogModel>item_status}"/>

@@ -54,6 +54,8 @@ sap.ui.define([
                 // 테넌트
                 if (entity.includes("Org_Tenant")) {
                     setTimeout((function(){
+                        (!this.byId("searchTenantCombo").getFirstItem() || this.byId("searchTenantCombo").getFirstItem().getKey())
+                        &&
                         this.byId("searchTenantCombo")
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
                             .setSelectedItemId(this.byId("searchTenantCombo").getFirstItem().getId());
@@ -62,6 +64,8 @@ sap.ui.define([
                 // 회사
                 else if (entity.includes("Org_Company")) {
                     setTimeout((function(){
+                        (!this.byId("searchCompanyCode").getFirstItem() || this.byId("searchCompanyCode").getFirstItem().getKey() != "*")
+                        &&
                         this.byId("searchCompanyCode")
                             .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
@@ -71,6 +75,8 @@ sap.ui.define([
                 // 구매조직
                 else if (entity.includes("Org_Purchasing")) {
                     setTimeout((function(){
+                        (!this.byId("purchaseOrgCombo").getFirstItem() || this.byId("purchaseOrgCombo").getFirstItem().getKey())
+                        &&
                         this.byId("purchaseOrgCombo")
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
                             .setSelectedItemId(this.byId("purchaseOrgCombo").getFirstItem().getId());
@@ -79,6 +85,8 @@ sap.ui.define([
                 // 플랜트
                 else if (entity.includes("Org_Plant")) {
                     setTimeout((function(){
+                        (!this.byId("plantCodeCombo").getFirstItem() || this.byId("plantCodeCombo").getFirstItem().getKey())
+                        &&
                         this.byId("plantCodeCombo")
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
                             .setSelectedItemId(this.byId("plantCodeCombo").getFirstItem().getId());
@@ -87,6 +95,8 @@ sap.ui.define([
                 // 사업본부
                 else if (entity.includes("Org_Unit")) {
                     setTimeout((function(){
+                        (!this.byId("bizunitCodeCombo").getFirstItem() || this.byId("bizunitCodeCombo").getFirstItem().getKey())
+                        &&
                         this.byId("bizunitCodeCombo")
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
                             .setSelectedItemId(this.byId("bizunitCodeCombo").getFirstItem().getId());
@@ -229,7 +239,7 @@ sap.ui.define([
                 path: 'org>/Org_Company',
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key)
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{org>company_code}", text: "{org>company_code} : {org>company_name}"
                 })
@@ -242,7 +252,7 @@ sap.ui.define([
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key),
                     new Filter('group_code', FilterOperator.EQ, 'CM_ORG_TYPE_CODE'),
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{util>code}", text: "{util>code} : {util>code_description}"
                 })
@@ -254,7 +264,7 @@ sap.ui.define([
                 path: 'org>/Org_Purchasing',
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key),
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{org>purchase_org_code}", text: "{org>purchase_org_code} : {org>purchase_org_name}"
                 })
@@ -266,7 +276,7 @@ sap.ui.define([
                 path: 'org>/Org_Unit',
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, key),
-                ],
+                ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({
                     key: "{org>bizunit_code}", text: "{org>bizunit_code} : {org>bizunit_name}"
                 })

@@ -1,5 +1,6 @@
 sap.ui.define([
     "sap/ui/core/Control",
+    "sap/ui/core/Renderer",
     "ext/lib/control/m/ValueHelpDialog",
     "ext/lib/core/service/ODataV2ServiceProvider",
 	"sap/ui/model/Filter",
@@ -10,7 +11,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input"
-], function (Parent, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
+], function (Parent, Renderer, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     //TODO : Localization (Title)
@@ -35,6 +36,8 @@ sap.ui.define([
             }
         },
 
+        renderer: Renderer,
+
         constructor: function () {
             Parent.apply(this, arguments);
             this.createDialog();
@@ -48,30 +51,9 @@ sap.ui.define([
                 multiSelection: this.getProperty("multiSelection"),
                 keyField: this.getProperty("keyField"),
                 textField: this.getProperty("textField"),
-                filters: [
-                    new VBox({
-                        items: [
-                            new Label({ text: "Keyword"}),
-                            this.oSearchKeyword
-                        ],
-                        layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                    })
-                ],
-                columns: [
-                    new Column({
-                        width: "75%",
-                        header: new Text({text: "Text"})
-                    }),
-                    new Column({
-                        width: "25%",
-                        hAlign: "Center",
-                        header: new Text({text: "Code"})
-                    })
-                ],
-                cells: [
-                    new Text({text: "{"+this.getProperty("textField")+"}"}),
-                    new Text({text: "{"+this.getProperty("keyField")+"}"})
-                ]
+                filters: this.createSearchFilters(),
+                columns: this.createTableColumns(),
+                cells: this.createTableCells()
             });
 
             this.oDialog.setTitle(this.getProperty("title"));
@@ -94,6 +76,39 @@ sap.ui.define([
             this.oDialog.attachEvent("cancel", function(oEvent){
                 this.fireEvent("cancel");
             }.bind(this));
+        },
+
+        createSearchFilters: function(){
+            return [
+                new VBox({
+                    items: [
+                        new Label({ text: "Keyword"}),
+                        this.oSearchKeyword
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                })
+            ];
+        },
+
+        createTableColumns: function(){
+            return [
+                new Column({
+                    width: "75%",
+                    header: new Text({text: "Text"})
+                }),
+                new Column({
+                    width: "25%",
+                    hAlign: "Center",
+                    header: new Text({text: "Code"})
+                })
+            ];
+        },
+
+        createTableCells: function(){
+            return [
+                new Text({text: "{"+this.getProperty("textField")+"}"}),
+                new Text({text: "{"+this.getProperty("keyField")+"}"})
+            ];
         },
 
         getTokens: function(){

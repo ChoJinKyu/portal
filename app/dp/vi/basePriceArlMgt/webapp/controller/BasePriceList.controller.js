@@ -31,7 +31,7 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlMgtRootModel");
+            var oBasePriceListRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
 
             this.setModel(new JSONModel(), "listModel");
@@ -105,7 +105,8 @@ sap.ui.define([
             oModel.read("/Base_Price_Arl_Master", {
                 filters : filtersParam,
                 urlParameters: {
-                    "$expand": "approval_status_code_fk,approval_requestor_empno_fk,approval_type_code_fk,tenant_id_fk"
+                    "$expand": "approval_status_code_fk,approval_requestor_empno_fk,approval_type_code_fk,tenant_id_fk",
+                    "$orderby": "approval_request_date,approval_number desc"
                 },
                 success : function(data){
                     oView.setBusy(false);
@@ -159,7 +160,7 @@ sap.ui.define([
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
-                var oBasePriceListRootModel = this.getModel("basePriceArlMgtRootModel");
+                var oBasePriceListRootModel = this.getModel("rootModel");
                 oBasePriceListRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
             }
 
