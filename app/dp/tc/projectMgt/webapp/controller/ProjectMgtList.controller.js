@@ -277,8 +277,15 @@ sap.ui.define([
             var oContext = oTable.getContextByIndex(nSelIdx);
             var sPath = oContext.getPath();
             var oData = oTable.getBinding().getModel().getProperty(sPath);
-            
-            this.getModel("updateModel").setData(oData);
+            var updateData = {
+                tenant_id : oData.tenant_id,
+                company_code : oData.company_code,
+                project_code : oData.project_code,
+                model_code : oData.model_code,
+                mcst_excl_flag : oData.mcst_excl_flag,
+                mcst_excl_reason : oData.mcst_excl_reason
+            };
+            this.getModel("updateModel").setData(updateData);
 
             var oButton = oEvent.getSource();
 			if (!this._oDialogTableSelect) {
@@ -325,6 +332,7 @@ sap.ui.define([
             }
             var oDataModel = this.getModel();
             var sCreatePath = oDataModel.createKey("/Project", oKey);
+
             oDataModel.update(sCreatePath, oProjectData, {
                 success: function(data){
                     MessageBox.show("적용되었습니다.", {at: "Center Center"});
@@ -409,6 +417,33 @@ sap.ui.define([
 
             return oSaveData;
         }
+
+        /**
+		 * deepcopy 하는 함수
+		 * @param {object} obj 복사할 data
+		 * @return {object} 복사된 data
+		**/
+		, fnDeepcopy: function(obj){
+			var copy;
+			if(Array.isArray(obj)){
+				copy = [];
+			} else {
+				copy = {};
+			}
+			if(typeof obj === "object" && obj !== null && !(obj instanceof Date)){
+				for(var attr in obj){
+					if(obj.hasOwnProperty(attr)){
+						if(attr === "__metadata"){
+							continue;
+						}
+						copy[attr] = this.fnDeepcopy({data:obj[attr]});
+					}
+				}
+			} else {
+				copy = obj;
+			}
+			return copy;
+		}
     
     });
   }
