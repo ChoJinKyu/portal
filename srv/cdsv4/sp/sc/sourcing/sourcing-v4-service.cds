@@ -7,15 +7,13 @@ using { sp.Sc_Tester00 as tester00, sp.Sc_Nego_Headers_Test01 as negoHeadersTest
 namespace sp; 
 @path : '/sp.sourcingV4Service'
 service SourcingV4Service {
-
-    /* 협상에 대한 헤더 정보(네고종류, 네고산출물, Award유형, 개설일자, 마감일자, 오리엔테이션정보 등)를 관리한다. */
-    entity NegoHeaders as projection on negoHeaders;
     
+    /* 협상에 대한 헤더 정보(네고종류, 네고산출물, Award유형, 개설일자, 마감일자, 오리엔테이션정보 등)를 관리한다. */
+    entity NegoHeaders @(title : '협상헤더정보')      as projection on negoHeaders;
     /* 협상을 요청하기 위한 아이템의 가격정보를 관리한다. */
-    entity NegoItemPrices as projection on negoItemPrices;
-
+    entity NegoItemPrices @(title : '협상아이템정보')  as projection on negoItemPrices;
     /* 협상을 요청하기 위한 아이템별 협력업체정보를 관리한다. */
-    entity NegoSuppliers as projection on negoSuppliers;
+    entity NegoSuppliers @(title : '협상아이템업체정보') as projection on negoSuppliers;
 
 
     // Test
