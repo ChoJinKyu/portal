@@ -72,7 +72,7 @@ sap.ui.define([
             combo.bindItems({
                 path: 'org>/organization',
                 filters: [
-                    new Filter('tenant_id', FilterOperator.EQ, this["onSelectionChange"][tenant_id] || "L2100"),
+                    new Filter('tenant_id', FilterOperator.EQ, "L2100"),
                     new Filter('type', FilterOperator.EQ, key)
                 ].filter(f => f.oValue1 || f.oValue2),
                 template: new Item({

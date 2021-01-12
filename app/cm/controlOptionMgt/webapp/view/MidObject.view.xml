@@ -201,8 +201,7 @@
 												items="{
 													path: 'org>/organization',
 													filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                        {path: 'type', operator: 'EQ', value1: 'AU'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                     ]
 												}">
 												<items>
