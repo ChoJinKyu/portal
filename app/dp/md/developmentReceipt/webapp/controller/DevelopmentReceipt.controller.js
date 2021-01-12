@@ -250,7 +250,7 @@ sap.ui.define([
         /**
          * @description employee 팝업에서 apply 버튼 누르기 
          */
-        onEmploySelectionApply: function () {
+        /*onEmploySelectionApply: function () {
             var oTable = this.byId("employeeSelectTable");
             var aItems = oTable.getSelectedItems();
             var that = this;
@@ -263,12 +263,12 @@ sap.ui.define([
             });
             this.onExitEmployee();
         },
-
+*/
 
         /**
          * @description Approval Row에 add 하기 
          */
-        _approvalRowAdd: function (obj) {
+        /*_approvalRowAdd: function (obj) {
             var oTable = this.byId("moldMstTable"),
                 oModel = this.getModel("list");
             var aItems = oTable.getRows();
@@ -289,7 +289,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "list"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함 
 
         },
-
+*/
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -303,73 +303,86 @@ sap.ui.define([
             this._applySearch(aTableSearchState);
         },
 
+        _checkStatus: function () {
+            var oModel = this.getModel("list"),
+                statusChk = false,
+                viewData = oModel.getData().MoldMstView;
+
+            for (var idx = 0; idx < viewData.length; idx++) {
+                if(viewData[idx].chk){
+                    var statusCode = viewData[idx].mold_progress_status_code;
+                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
+                        statusChk = true;
+                    }
+                }
+            }
+
+            return statusChk;
+        },
+
+        _checkFamilyPartNo: function () {
+            var oModel = this.getModel("list"),
+                viewData = oModel.getData().MoldMstView,
+                familyPartNoChk = false;
+
+            for (var idx = 0; idx < viewData.length; idx++) {
+                if(viewData[idx].chk){
+                    if(viewData[idx].family_flag === "Y"){
+                        var familyPartNumber1 = viewData[idx].family_part_number_1,
+                            familyPartNumber2 = viewData[idx].family_part_number_2,
+                            familyPartNumber3 = viewData[idx].family_part_number_3,
+                            familyPartNumber4 = viewData[idx].family_part_number_4,
+                            familyPartNumber5 = viewData[idx].family_part_number_5;
+
+                        if(familyPartNumber1 === null || familyPartNumber1 === ""){
+                            MessageToast.show( "Family Part Number 1부터 입력해 주세요." );
+                            return;
+                        }
+                        
+                        if(!(familyPartNumber3 === null || familyPartNumber3 === "")){
+                            if(familyPartNumber2 === null || familyPartNumber2 === ""){
+                                MessageToast.show("family part number 2부터 입력해 주세요");
+                                return;
+                            }
+                        }
+                        if(!(familyPartNumber4 === null || familyPartNumber4 === "")){
+                            if(familyPartNumber2 === null || familyPartNumber2 === ""){
+                                MessageToast.show("family part number 2부터 입력해 주세요");
+                                return;
+                            }
+                            if(familyPartNumber3 === null || familyPartNumber3 === ""){
+                                MessageToast.show("family part number 3부터 입력해 주세요");
+                                return;
+                            }
+                        }
+                        if(!(familyPartNumber5 === null || familyPartNumber5 === "")){
+                            if(familyPartNumber2 === null || familyPartNumber2 === ""){
+                                MessageToast.show("family part number 2부터 입력해 주세요");
+                                return;
+                            }
+                            if(familyPartNumber3 === null || familyPartNumber3 === ""){
+                                MessageToast.show("family part number 3부터 입력해 주세요");
+                                return;
+                            }
+                            if(familyPartNumber4 === null || familyPartNumber4 === ""){
+                                MessageToast.show("family part number 4부터 입력해 주세요");
+                                return;
+                            }
+                        }
+                        
+                    }//if(viewData[idx].family_flag === "Y")
+                }//if(viewData[idx].chk)
+            }//for
+            return true;
+        },
+
 		/**
-		 * Event handler for page edit button press
+		 * Event handler for page Bind button press
 		 * @public
 		 */
         onMoldMstTableBindButtonPress: function () {
-            /*var oTable = this.byId("moldMstTable"),
-                oModel = this.getModel(),
-                lModel = this.getModel("list"),
-                oView = this.getView(),
-                oSelected = oTable.getSelectedIndices(),
-                today = new Date(),
-                randomNo = Math.floor(Math.random() * 10000) * 10,
-                statusChk = false;
-
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    if (lModel.getData().MoldMstView[idx].mold_progress_status_code !== "DEV_REQ") {
-                        statusChk = true;
-                    }
-                });
-
-                if (statusChk) {
-                    MessageToast.show("Development Request 상태일 때만 Bind & Receipt 가능합니다.");
-                    return;
-                }
-
-                MessageBox.confirm("Bind & Receipt 하시겠습니까?", {
-                    title: "Comfirmation",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                var sEntity = lModel.getData().MoldMstView[idx].__entity;
-                                lModel.getData().MoldMstView[idx].mold_progress_status_code = "DEV_RCV";
-                                lModel.getData().MoldMstView[idx].set_id = lModel.getData().MoldMstView[idx].org_code + today.getFullYear() + randomNo;
-
-                                delete lModel.getData().MoldMstView[idx].__entity;
-                                oModel.update(sEntity, lModel.getData().MoldMstView[idx], {
-                                    groupId: "bindReceipt"
-                                });
-                            }.bind(this));
-
-                            oModel.submitChanges({
-                                groupId: "bindReceipt",
-                                success: function () {
-                                    oView.setBusy(false);
-                                    MessageToast.show("Success to Bind & Receipt.");
-                                    this.onPageSearchButtonPress();
-                                }.bind(this), error: function (oError) {
-                                    MessageToast.show("oError");
-                                    oView.setBusy(false);
-                                    MessageBox.error(oError.message);
-                                }
-                            });
-                        };
-                    }.bind(this)
-                });
-
-                oTable.clearSelection();
-
-            } else {
-                MessageBox.error("선택된 행이 없습니다.");
-            }*/
-
             var oModel = this.getModel("list"),
                 viewData = oModel.getData().MoldMstView,
-                statusChk = false,
                 orgChk = false,
                 orgCode = "",
                 v_this = this;
@@ -384,11 +397,6 @@ sap.ui.define([
                 if(viewData[idx].chk){
                     checkCnt++;
 
-                    var statusCode = viewData[idx].mold_progress_status_code;
-                    
-                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
-                        statusChk = true;
-                    }
                     if(checkCnt === 1){
                         orgCode = viewData[idx].org_code;
                     }else{
@@ -427,7 +435,7 @@ sap.ui.define([
             }
 
             if (checkCnt > 1) {
-                if(statusChk){
+                if(this._checkStatus()){
                     MessageToast.show( "Development Request, Receipt 상태일 때만 Bind & Receipt 가능합니다." );
                     return;
                 }
@@ -435,7 +443,9 @@ sap.ui.define([
                     MessageToast.show( "같은 플랜트일 때 Bind & Receipt 가능합니다." );
                     return;
                 }
-                            
+                           
+                if(!this._checkFamilyPartNo()) return;
+ 
                 MessageBox.confirm("Bind & Receipt 후엔 미접수 상태로 변경은 불가능합니다. Bind & Receipt 하시겠습니까?", {
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -468,63 +478,7 @@ sap.ui.define([
         },
 
         onMoldMstTableCancelButtonPress: function () {
-            /*var oTable = this.byId("moldMstTable"),
-                oModel = this.getModel(),
-                lModel = this.getModel("list"),
-                oView = this.getView(),
-                oSelected = oTable.getSelectedIndices(),
-                statusChk = false;
-
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    if (lModel.getData().MoldMstView[idx].mold_progress_status_code !== "DEV_RCV") {
-                        statusChk = true;
-                    }
-                });
-
-                if (statusChk) {
-                    MessageToast.show("Development Receive 상태일 때만 Cancel Bind 가능합니다.");
-                    return;
-                }
-
-                MessageBox.confirm("Cancel Bind 하시겠습니까?", {
-                    title: "Comfirmation",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                var sEntity = lModel.getData().MoldMstView[idx].__entity;
-                                lModel.getData().MoldMstView[idx].set_id = null;
-
-                                delete lModel.getData().MoldMstView[idx].__entity;
-                                oModel.update(sEntity, lModel.getData().MoldMstView[idx], {
-                                    groupId: "cancelBind"
-                                });
-                            }.bind(this));
-
-                            oModel.submitChanges({
-                                groupId: "cancelBind",
-                                success: function () {
-                                    oView.setBusy(false);
-                                    MessageToast.show("Success to Cancel Bind.");
-                                    this.onPageSearchButtonPress();
-                                }.bind(this), error: function (oError) {
-                                    MessageToast.show("oError");
-                                    oView.setBusy(false);
-                                    MessageBox.error(oError.message);
-                                }
-                            });
-                        };
-                    }.bind(this)
-                });
-
-                oTable.clearSelection();
-            } else {
-                MessageBox.error("선택된 행이 없습니다.");
-            }*/
-            
             var oModel = this.getModel("list"),
-                statusChk = false,
                 viewData = oModel.getData().MoldMstView,
                 v_this = this;
 
@@ -538,12 +492,6 @@ sap.ui.define([
                 if(viewData[idx].chk){
                     checkCnt++;
 
-                    var statusCode = viewData[idx].mold_progress_status_code;
-
-                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
-                        //statusChk = true;
-                    }
-                    
                     moldViews.push({
                         chk                         : viewData[idx].chk,
                         tenant_id                   : viewData[idx].tenant_id,
@@ -574,7 +522,7 @@ sap.ui.define([
             }
 
             if (checkCnt > 1) {
-                if(statusChk){
+                if(this._checkStatus()){
                     MessageToast.show( "Development Request, Receipt 상태일 때만 Cancel Bind 가능합니다." );
                     return;
                 }
@@ -602,8 +550,6 @@ sap.ui.define([
                     }.bind(this)
                 });
 
-                //oTable.clearSelection();
-            
             }else{
                 MessageBox.error("2개 이상 선택해 주세요.");
             }
@@ -617,24 +563,17 @@ sap.ui.define([
         onMoldMstTableDeleteButtonPress: function () {
             var oModel = this.getModel("list"),
                 oView = this.getView(),
-                statusChk = false,
                 viewData = oModel.getData().MoldMstView,
                 checkCnt = 0;
 
             for (var idx = 0; idx < viewData.length; idx++) {
                 if(viewData[idx].chk){
                     checkCnt++;
-
-                    var statusCode = viewData[idx].mold_progress_status_code;
-                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
-                        statusChk = true;
-                        //viewData[idx].chk = false;
-                    }
                 }
             }
 
             if (checkCnt > 0) {
-                if (statusChk) {
+                if (this._checkStatus()) {
                     MessageToast.show("Development Request, Receive 상태일 때만 삭제 가능합니다.");
                     return;
                 }
@@ -673,7 +612,6 @@ sap.ui.define([
         onMoldMstTableReceiptButtonPress: function () {
             var oModel = this.getModel("list"),
                 oView = this.getView(),
-                statusChk = false,
                 viewData = oModel.getData().MoldMstView;
 
             var checkCnt = 0;
@@ -682,21 +620,17 @@ sap.ui.define([
                 if(viewData[idx].chk){
                     //viewData[idx].update_type = "receipt";
                     checkCnt++;
-
-                    var statusCode = viewData[idx].mold_progress_status_code;
-                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
-                        statusChk = true;
-                        //viewData[idx].chk = false;
-                    }
                 }
             }
 
             if (checkCnt > 0) {
-                if(statusChk){
+                if(this._checkStatus()){
                     MessageToast.show( "Development Request, Receipt 상태일 때만 Receipt 가능합니다." );
                     return;
                 }
                             
+                if(!this._checkFamilyPartNo()) return;
+                
                 MessageBox.confirm("Receipt 후엔 미접수 상태로 변경은 불가능합니다. Receipt 하시겠습니까?", {
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -718,8 +652,6 @@ sap.ui.define([
                     }.bind(this)
                 });
 
-                //oTable.clearSelection();
-            
             }else{
                 MessageBox.error("선택된 행이 없습니다.");
             }
@@ -882,10 +814,18 @@ sap.ui.define([
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
         },
 
-        familyFlagChange: function (oEvent) {console.log(oEvent);
+        familyFlagChange: function (oEvent) {
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
             var sSelectedKey = oEvent.getSource().getSelectedKey();
-
+            console.log(sSelectedKey);
+            if (sSelectedKey === 'Y') {
+                oEvent.getSource().getParent().getCells()[25].setValue(null);
+                oEvent.getSource().getParent().getCells()[26].setValue(null);
+                oEvent.getSource().getParent().getCells()[27].setValue(null);
+                oEvent.getSource().getParent().getCells()[28].setValue(null);
+                oEvent.getSource().getParent().getCells()[29].setValue(null);
+            }
+/*
             if (sSelectedKey === 'Y') {
                 oEvent.getSource().getParent().getCells()[25].setEditable(true);
                 oEvent.getSource().getParent().getCells()[26].setEditable(true);
@@ -904,7 +844,7 @@ sap.ui.define([
                 oEvent.getSource().getParent().getCells()[27].setEditable(false);
                 oEvent.getSource().getParent().getCells()[28].setEditable(false);
                 oEvent.getSource().getParent().getCells()[29].setEditable(false);
-            }
+            }*/
         },
 
         getFormatDate: function (date) {

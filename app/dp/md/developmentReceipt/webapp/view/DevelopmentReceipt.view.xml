@@ -438,13 +438,13 @@
                     <table:Column id="moldFamilyFlagColumn" width="6em" hAlign="Center">
                         <Label text="Family Y/N" wrapping="true"/>
                         <table:template>
-                            <!--<ComboBox id="family_flag" selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }" change="familyFlagChange"
+                            <!--<ComboBox id="family_flag" selectedKey="{list>family_flag}" selectionChange="familyFlagChange"
                             editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="Y" text="Yes"/>
                                 <core:Item key="N" text="No"/>
                             </ComboBox>-->
                             <ComboBox   id="family_flag"    
-                                selectedKey="{= ${list>family_flag} === 'Y' ? 'Y' : 'N' }"
+                                selectedKey="{list>family_flag}"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -454,7 +454,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
-                                change="familyFlagChange">
+                                selectionChange="familyFlagChange">
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
