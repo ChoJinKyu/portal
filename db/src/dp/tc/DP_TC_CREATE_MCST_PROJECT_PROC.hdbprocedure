@@ -138,7 +138,7 @@ BEGIN
            AND mp.model_code = I_MODEL_CODE;
            
         --재료비 version_number
-        SELECT to_varchar(CURRENT_TIMESTAMP, 'YYYY-MM-DD') || '-' || LPAD (v_full_sequence, 3, '0')
+        SELECT to_varchar(CURRENT_TIMESTAMP, 'YYYYMMDD') || '-' || LPAD (v_full_sequence, 3, '0')
           INTO v_new_ver_num
           FROM dummy;
     END;
