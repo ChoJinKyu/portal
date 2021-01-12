@@ -84,7 +84,7 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <Input value="{filterModel>/project_code/value}" >
+                            <Input value="{filterModel>/project_code/value}" submit="onSearch">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
@@ -168,7 +168,7 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <Input value="{filterModel>/project_code/value}" >
+                            <Input value="{filterModel>/project_code/value}" submit="onSearch">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
@@ -179,7 +179,7 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <SearchField value="{filterModel>/model_code/value}" >
+                            <SearchField value="{filterModel>/model_code/value}" submit="onSearch">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
@@ -316,11 +316,29 @@
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
-                        <SearchField value="{filterModel>/buyer_name/value}" >
+                        <SearchField value="{filterModel>/buyer_name/value}" submit="onSearch">
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </SearchField>
+                        <!--
+                        <lib-m:CodePicker id="searchEmployeePicker"
+                            placeholder="Enter a Employee name"
+                            value="{filterModel>/requestBy}"
+                            keyField="employee_number"
+                            textField="user_local_name"
+                            suggestionItems="{
+                                path: '/',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ],
+                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                entityName: 'Employee'
+                            }">
+                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                        </lib-m:CodePicker>
+                        -->
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
