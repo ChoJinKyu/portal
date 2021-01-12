@@ -126,7 +126,7 @@
                     "target": ["createObject"]
                 },{
                     "name": "detailPage",
-                    "pattern": "detailObject/{type},{outcome}",
+                    "pattern": "detailObject/{type},{outcome},{header_id}",
                     "target": ["detailObject"]
                 },{
                     "name": "detailPage2",

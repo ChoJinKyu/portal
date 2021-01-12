@@ -16,11 +16,53 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceProgressStatusMgtRootModel");
-            sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+            var oRootModel = this.getOwnerComponent().getModel("rootModel");
+            sTenantId = oRootModel.getProperty("/tenantId");
+
+            var oFilterData = {tenantId: sTenantId,
+                                type: "1",
+                                type_list:[{code:"1", text:"개발구매"}]};
 
             this.setModel(new JSONModel(), "listModel");
-            this.setModel(new JSONModel({tenantId: sTenantId}), "filterModel");
+            this.setModel(new JSONModel(oFilterData), "filterModel");
+
+            // Plant 데이터 조회 시작
+            var oPurOrgModel = this.getOwnerComponent().getModel("purOrg");
+            var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            oPurOrgModel.read("/Pur_Operation_Org", {
+                filters : aPurOrgFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        var aResults = data.results;
+                        var aCompoany = [];
+                        var oPurOrg = {};
+
+                        for( var i=0; i<aResults.length; i++ ) {
+                            var oResult = aResults[i];
+                            if( -1===aCompoany.indexOf(oResult.company_code) ) {
+                                aCompoany.push(oResult.company_code);
+                                oPurOrg[oResult.company_code] = [];
+                            }
+
+                            oPurOrg[oResult.company_code].push({org_code: oResult.org_code, org_name: oResult.org_name});
+                        }
+
+                        oFilterData.purOrg = oPurOrg;
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+            // Plant 데이터 조회 끝
+
+            switch (sTenantId) {
+                case "L2100" :
+                    oRootModel.setProperty("/switchColumnVisible", true);
+                    break;
+                default :
+                    oRootModel.setProperty("/switchColumnVisible", false);
+            }
 
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
@@ -126,6 +168,17 @@ sap.ui.define([
         _getPreZero: function (iDataParam) {
             return (iDataParam<10 ? "0"+iDataParam : iDataParam);
         },
+        
+        /**
+         * compnay 변경 시 플랜트 리스트 변경
+         */
+        onChangeCompany: function (oEvent) {
+            var oFilterModel = this.getModel("filterModel");
+            var oCodeModel = this.getModel("codeModel");
+            
+            oFilterModel.setProperty("/selectedPurOrg", oFilterModel.getProperty("/purOrg/"+oFilterModel.getProperty("/company")));
+            oFilterModel.setProperty("/org_code", "");
+        },
 
         /**
          * 상세 페이지로 이동
@@ -136,8 +189,8 @@ sap.ui.define([
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
-                var oBasePriceListRootModel = this.getModel("basePriceProgressStatusMgtRootModel");
-                oBasePriceListRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
+                var oRootModel = this.getModel("rootModel");
+                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
             }
 
             this.getRouter().navTo("basePriceDetail");

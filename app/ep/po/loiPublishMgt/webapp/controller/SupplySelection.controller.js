@@ -277,7 +277,7 @@ sap.ui.define([
                                 //console.log("#########Success#####", data.value[0].savedkey);
                                 oView.setBusy(false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-                                var sObjectPath = "/LOISupplySelectionView(tenant_id='" + that._sTenantId + "',company_code='" + that._sCompanyCode + "',loi_selection_number='" + data.value[0].savedkey + "')";
+                                var sObjectPath = "/LOISupplySelectionView(tenant_id='" + tenantId + "',company_code='" + companyCode + "',loi_selection_number='" + data.value[0].savedkey + "')";
                                 var oMasterModel = that.getModel("master");
                                 oView.setBusy(true);
                                 oMasterModel.setTransactionModel(that.getModel());

@@ -165,7 +165,7 @@
                                             <Text text="{tree>drill_state}" wrapping="false" />
                                         </table:template>
                                     </table:Column>
-                                    <table:Column label="Vendor Pool" width="8rem">
+                                    <table:Column label="Vendor Pool" width="0rem">
                                         <table:template>
                                             <Text text="{tree>vendor_pool_code}" wrapping="false" />
                                         </table:template>

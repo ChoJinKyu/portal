@@ -72,7 +72,7 @@ controllerName="pg.tm.tmMonitoring.controller.Detail">
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ]}" 
                                          sticky="HeaderToolbar,InfoToolbar,ColumnHeaders" mode="MultiSelect" class="sapUiSmallMarginTop"
-                                         selectionChange="onSelectionChange"> 
+                                         > 
                                         <headerToolbar>
                                             <OverflowToolbar>
                                                 <content>
@@ -112,7 +112,7 @@ controllerName="pg.tm.tmMonitoring.controller.Detail">
 			<Button text="{I18N>/CANCEL}" press=".onPressManagerDialogClose"/>
 	    </beginButton>
         <endButton>
-        <Button text="{I18N>/SAVE}" id="managerSaveBtn" type="Emphasized" press=".onPressManagerDialogSave" visible="false"/>
+        <Button text="{I18N>/SAVE}" id="managerSaveBtn" type="Emphasized" press=".onPressManagerDialogSave" />
         </endButton>
 	</Dialog>
 </core:FragmentDefinition>
