@@ -412,10 +412,10 @@ sap.ui.define([
                     supplierCode = orderItems[0].supplier_code,
                     currencyCode = orderItems[0].currency_code;
                 for(var idx = 1; idx < orderItems.length; idx++){
-                    if(accountCode !== orderItems[idx].account_code){
+                    /*if(accountCode !== orderItems[idx].account_code){
                         MessageToast.show("계정코드가 같지 않습니다.");
                         return;
-                    }
+                    }*/
                     if(supplierCode !== orderItems[idx].supplier_code){
                         MessageToast.show("업체가 같지 않습니다.");
                         return;
