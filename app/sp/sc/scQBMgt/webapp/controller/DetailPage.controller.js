@@ -122,6 +122,7 @@ sap.ui.define([
                 console.log("_onRouteMatched ");
                 
                 this._type = e.getParameter("arguments").type;
+                this._header_id = e.getParameter("arguments").header_id;
 
                 // this.getView().byId("objectPageSection").getSelectedSubSection();
                 console.log(this.getView().byId("objectPageSection").getSelectedSubSection());
@@ -135,7 +136,7 @@ sap.ui.define([
                 // &$select=*,Items
                 // &$expand=Items
                 // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?$filter=tenant_id eq 'L2100' and nego_document_number eq '1-1'";
-                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '1-1'";
+                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._header_id + "'";
                 $.ajax({
                     url: url,
                     type: "GET",
