@@ -236,9 +236,12 @@ sap.ui.define([
                         });
                     } 
                     this.pDialog.then(function(oDialog) {
+                        oDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
                         oDialog.open();
                         this.onAfterDialog();
                     }.bind(this));
+
+                    
 
                     // this.byId("tpop_Operation_ORG").setSelectedKey(s_Operation_ORG_S);
                     // this.byId("tpop_operation_unit_code").setSelectedKey(s_Operation_UNIT_S);
@@ -268,6 +271,7 @@ sap.ui.define([
                         });
                     } 
                     this.pDialog.then(function(oDialog) {
+                        oDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
                         oDialog.open();
                         this.onAfterDialog();
                     }.bind(this));
@@ -357,11 +361,10 @@ sap.ui.define([
         onDialogCreatelower: function (){
 
             btType = "l";
-
             if (this.byId("tpop_Operation_ORG").getSelectedKey() && 
             this.byId("tpop_Operation_ORG").getSelectedKey().length > 0 &&
              this.byId("tpop_operation_unit_code").getSelectedKey() && 
-             this.byId("tpop_operation_unit_code").getSelectedKey().length > 0){
+             this.byId("tpop_operation_unit_code").getSelectedKey().length > 0 && this.byId("treeTable").getSelectedIndices().length > 0){
 
                 if(pop_h_lv == "0"){
                     pop_target_level = "1";
@@ -377,6 +380,7 @@ sap.ui.define([
                 {
                     this.byId("pop_higher_level_path").setText(pop_lv);
                     this.byId("pop_operation_unit_name").setText(pop_org);
+                    this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     
                     //화면 LAYOUT
                     this.byId("pop_save_bt").setVisible(true);
@@ -397,6 +401,9 @@ sap.ui.define([
                     this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);
                 }
                 else{
+                    this.byId("pop_higher_level_path").setText(pop_lv);
+                    this.byId("pop_operation_unit_name").setText(pop_org);
+                    this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     //화면 LAYOUT
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
@@ -415,7 +422,9 @@ sap.ui.define([
                     this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
                     this.byId("pop_domestic_net_price_diff_rate").setEnabled(false);
                 }
-             }    
+             }else{
+                MessageToast.show("필수값과 Vendor Pool를 입력하세요 ");
+            }    
         },
 
         onDialogCreateSame: function (){
@@ -427,7 +436,8 @@ sap.ui.define([
             if (this.byId("tpop_Operation_ORG").getSelectedKey() && 
             this.byId("tpop_Operation_ORG").getSelectedKey().length > 0 &&
              this.byId("tpop_operation_unit_code").getSelectedKey() && 
-             this.byId("tpop_operation_unit_code").getSelectedKey().length > 0){
+             this.byId("tpop_operation_unit_code").getSelectedKey().length > 0 && 
+             this.byId("treeTable").getSelectedIndices().length > 0){
 
                 // if(pop_h_lv === "0")
                 // {
@@ -440,6 +450,7 @@ sap.ui.define([
                 {
                     this.byId("pop_higher_level_path").setText(pop_h_path);
                     this.byId("pop_operation_unit_name").setText(pop_org);
+                    this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     //화면 LAYOUT
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
@@ -461,6 +472,7 @@ sap.ui.define([
                 }else{
                     this.byId("pop_higher_level_path").setText(pop_h_path);
                     this.byId("pop_operation_unit_name").setText(pop_org);
+                    this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     //화면 LAYOUT
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
@@ -483,116 +495,121 @@ sap.ui.define([
             
             // this.getView().byId("pop_vendor_pool_local_name").setValue("");
 
+            }else{
+                MessageToast.show("필수값과 Vendor Pool를 입력하세요 ");
             }
         },
 
         onDialogDel: function (){
 
+            if(this.byId("treeTable").getSelectedIndices().length > 0)
+            {
 
+                var oModel = this.getModel("vpMappingProc"),
+                oView = this.getView(),   
+                oBundle = this.getView().getModel("i18n").getResourceBundle(),                
+                sMsg,
+                v_returnModel,
+                urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
 
-            var oModel = this.getModel("vpMappingProc"),
-            oView = this.getView(),   
-            oBundle = this.getView().getModel("i18n").getResourceBundle(),                
-            sMsg,
-            v_returnModel,
-            urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
-
-            var inputInfo = {},
-                vpMstList = []
-                
-                inputInfo = {
-                    inputData: {
-                        vpMst: [],
-                        vpSupplier: [],
-                        vpItem: [],
-                        vpManager: [],
-                        user_id: "testerId",
-                        user_no: "testerNo"
-                    }
-                };
-    
-
-            // if(){
-
-            // }    
-
-            vpMstList.push({
-                
-                tenant_id: pop_t_id //auto set
-                ,company_code: pop_com_cd //auto set
-                ,org_type_code: pop_orgtype  //auto set
-                ,org_code: pop_org  //auto set
-                ,vendor_pool_code: pop_vp_cd  //auto set
-                ,crud_type_code : "D" // 삭제
-                ,leaf_flag : (pop_d_state == "leaf") ? true : false
-            
-            });
-
-            inputInfo.inputData.vpMst = vpMstList; 
-            
-            $.ajax({
-                url: urlInfo,
-                type: "POST",
-                //datatype: "json",
-                //data: input,
-                data: JSON.stringify(inputInfo),
-                contentType: "application/json",
-                success: function (data) {
-                    //MessageToast.show("Success 1st Proc!");
-                    console.log('data:', data);
-                    console.log('data:', data.value[0]);
-                    v_returnModel = oView.getModel("returnModel").getData().data;
-                    console.log('v_returnModel:', v_returnModel);
-                    v_returnModel.return_code = data.value[0].return_code;
-                    v_returnModel.return_msg = data.value[0].return_msg.substring(0, 8);
-                    oView.getModel("returnModel").updateBindings(true);
-
-                    //MessageToast.show(data.value[0].return_msg);
-                    console.log(data.value[0].return_msg.substring(0, 8));
-                    //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
-                    sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
-                    //MessageToast.show(sMsg);
-                    console.log(data.value[0].return_msg);
-                    // alert(sMsg);
-                    MessageToast.show(sMsg);
-                    that.onDialogSearch();
-                },
-                error: function (e) {
-                    var eMessage = "callProcError",
-                        errorType,
-                        eMessageDetail;
-
-                    v_returnModel = oView.getModel("returnModel").getData().data;
-                    console.log('v_returnModel_e:', v_returnModel);
-                    v_returnModel.return_code = 'error';
-                    v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
-
+                var inputInfo = {},
+                    vpMstList = []
                     
-                    //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
-                    if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
-                        eMessage = "callProcError";
-                        eMessageDetail = "callProcError";
-                    }else{
-                        eMessage = e.responseJSON.error.message.substring(0, 8);
-                        eMessageDetail = e.responseJSON.error.message.substring(9);
-                        errorType = e.responseJSON.error.message.substring(0, 1);
-                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                    inputInfo = {
+                        inputData: {
+                            vpMst: [],
+                            vpSupplier: [],
+                            vpItem: [],
+                            vpManager: [],
+                            user_id: "testerId",
+                            user_no: "testerNo"
+                        }
+                    };
+        
+
+                // if(){
+
+                // }    
+
+                vpMstList.push({
+                    
+                    tenant_id: pop_t_id //auto set
+                    ,company_code: pop_com_cd //auto set
+                    ,org_type_code: pop_orgtype  //auto set
+                    ,org_code: pop_org  //auto set
+                    ,vendor_pool_code: pop_vp_cd  //auto set
+                    ,crud_type_code : "D" // 삭제
+                    ,leaf_flag : (pop_d_state == "leaf") ? true : false
+                
+                });
+
+                inputInfo.inputData.vpMst = vpMstList; 
+                
+                $.ajax({
+                    url: urlInfo,
+                    type: "POST",
+                    //datatype: "json",
+                    //data: input,
+                    data: JSON.stringify(inputInfo),
+                    contentType: "application/json",
+                    success: function (data) {
+                        //MessageToast.show("Success 1st Proc!");
+                        console.log('data:', data);
+                        console.log('data:', data.value[0]);
+                        v_returnModel = oView.getModel("returnModel").getData().data;
+                        console.log('v_returnModel:', v_returnModel);
+                        v_returnModel.return_code = data.value[0].return_code;
+                        v_returnModel.return_msg = data.value[0].return_msg.substring(0, 8);
+                        oView.getModel("returnModel").updateBindings(true);
+
+                        //MessageToast.show(data.value[0].return_msg);
+                        console.log(data.value[0].return_msg.substring(0, 8));
+                        //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
+                        sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
+                        //MessageToast.show(sMsg);
+                        console.log(data.value[0].return_msg);
+                        // alert(sMsg);
+                        MessageToast.show(sMsg);
+                        that.onDialogSearch();
+                    },
+                    error: function (e) {
+                        var eMessage = "callProcError",
+                            errorType,
+                            eMessageDetail;
+
+                        v_returnModel = oView.getModel("returnModel").getData().data;
+                        console.log('v_returnModel_e:', v_returnModel);
+                        v_returnModel.return_code = 'error';
+                        v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
+
                         
-                        //MessageToast.show(eMessageDetail);
-                    }
+                        //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
+                        if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
+                            eMessage = "callProcError";
+                            eMessageDetail = "callProcError";
+                        }else{
+                            eMessage = e.responseJSON.error.message.substring(0, 8);
+                            eMessageDetail = e.responseJSON.error.message.substring(9);
+                            errorType = e.responseJSON.error.message.substring(0, 1);
+                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                            
+                            //MessageToast.show(eMessageDetail);
+                        }
 
-                    sMsg = oBundle.getText(eMessage);
-                    if(errorType === 'E'){
-                        alert(sMsg);                    
-                    }else{
-                        alert(eMessageDetail);                    
+                        sMsg = oBundle.getText(eMessage);
+                        if(errorType === 'E'){
+                            alert(sMsg);                    
+                        }else{
+                            alert(eMessageDetail);                    
+                        }
+                        
+                        
+                        MessageToast.show(sMsg);                    
                     }
-                    
-                    
-                    MessageToast.show(sMsg);                    
-                }
-            });
-
+                });
+            }else{
+                MessageToast.show("삭제대상 Vendor Pool를 선택 하세요. ");
+            }
             
         },
         
@@ -650,6 +667,7 @@ sap.ui.define([
 
             this.getView().byId("pop_higher_level_path").setText("");
             this.getView().byId("pop_operation_unit_name").setText("");
+            this.getView().byId("pop_operation_unit_name1").setText("");
             this.getView().byId("pop_vendor_pool_local_name").setValue("");
             this.getView().byId("pop_vendor_pool_english_name").setValue("");
             this.getView().byId("pop_vendor_pool_desc").setValue("");
@@ -1024,6 +1042,13 @@ sap.ui.define([
                     and: false
                 }));
             }
+            if (!!this.byId("search_Operation_ORG_E").getSelectedKey()) {
+                    treeVendor.push(new Filter("org_code", FilterOperator.Contains, this.byId("search_Operation_ORG_E").getSelectedKey()));
+                }
+            if (!!this.byId("search_Operation_UNIT_E").getSelectedKey()) {
+                    treeVendor.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("search_Operation_UNIT_E").getSelectedKey()));
+                }  
+
 
             this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
                 this.getView().setBusy(true);
@@ -1449,14 +1474,22 @@ sap.ui.define([
             else if(sSurffix ==="E")
             {
 
+                var s_VPN =this.getView().byId("search_Vp_Name").getValue();
+
+
                 var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
                 var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 var s_Dept = this.getView().byId("search_Dept").getSelectedKey();
                 var s_Man = this.getView().byId("search_Man").getSelectedKey();
+
                 var s_VPC = this.getView().byId("search_Vp_Code").getValue();
                 var s_Sup = this.getView().byId("search_Sup").getSelectedKey();
                 var s_SupT = this.getView().byId("search_Sup_Type").getSelectedKey();
 
+                if(s_VPN == "")
+                {
+                    s_VPC = "";
+                }
                 // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
