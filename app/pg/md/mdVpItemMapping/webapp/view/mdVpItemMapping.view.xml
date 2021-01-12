@@ -30,15 +30,15 @@
             <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <Label text="VP Level 1" design="Bold"/>
-                    <Text text="Circuit"/>   
+                    <Text text="Panel"/>   
                 </layout:VerticalLayout>      
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <Label text="VP Level 2" design="Bold"/>
-                    <Text text="PCB"/>
+                    <Text text="Gas"/>
                 </layout:VerticalLayout>     
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <Label text="VP Level 3" design="Bold"/>
-                    <Text text="Circuit"/>       
+                    <Text text="GAS_He (VP201610260087)"/>       
                 </layout:VerticalLayout>
             </FlexBox> 
             <HBox renderType="Bare">

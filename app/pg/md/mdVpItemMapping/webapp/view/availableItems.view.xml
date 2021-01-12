@@ -5,22 +5,78 @@
 	xmlns:layout="sap.ui.layout" 
 	xmlns="sap.m"
 	xmlns:f="sap.f"
+	xmlns:t="sap.ui.table"
 	xmlns:core="sap.ui.core"
-	xmlns:form="sap.ui.layout.form"
+	xmlns:form="sap.uilayout.form"
 	xmlns:mvc="sap.ui.core.mvc"
     height="100%">
-	<Table
+
+        <t:Table id="table"
+            selectionMode="Single"
+            rows="{tblModel>/left}"
+            visibleRowCount="15"
+            width="100%">
+            <t:extension>
+            <!-- <contextMenu>
+                <Menu>
+                    <MenuItem text="Move to Selected Items" press="moveToSelectedItemsTable" />
+                </Menu>
+            </contextMenu> -->
+                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                    <Title text="SPMD Character List" />
+                    <ToolbarSpacer/> 
+                    <SearchField id="tableSearchField" width="15rem" search=".onTableFilterPress" />	
+                </OverflowToolbar>
+            </t:extension>
+            <t:columns>
+                <t:Column hAlign="Center" width="10rem">
+                    <Label text="범주코드" textAlign="Center" />
+                    <t:template>
+                        <Text text="{tblModel>spmd_category_code}"/>
+                    </t:template>
+                </t:Column>
+                <t:Column>
+                    <Label text="범주명" textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{tblModel>spmd_category_code_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="10rem">
+                    <Label text="특성코드" textAlign="Center" />
+                    <t:template>
+                        <Text text="{tblModel>spmd_character_code}"/>
+                    </t:template>
+                </t:Column>
+                <t:Column>
+                    <Label text="특성코드명" textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{tblModel>spmd_character_code_name}" />
+                    </t:template>
+                </t:Column>
+            </t:columns>
+            <t:dragDropConfig>
+                <dnd:DragInfo
+                    groupName="available2selected"
+                    sourceAggregation="rows"
+                    dragStart="onDragStart"  />
+                <dnd:DropInfo
+                    groupName="selected2available"
+                    drop="onDropAvailableItemsTable" />
+            </t:dragDropConfig>
+        </t:Table>
+	<!-- <Table
 		id="table"
 		mode="SingleSelectMaster"
         showRowCount="true" 
-		growing="true"
+        growing="true"
 		growingThreshold="15"
         sticky="HeaderToolbar,ColumnHeaders" 
 		beforeOpenContextMenu="onBeforeOpenContextMenu"
+        class="sapFDynamicPageAlignContent"
 		items="{
 			path: '/value'
 		}"
-        width="auto">
+        width="100%">
 		<contextMenu>
 			<Menu>
 				<MenuItem text="Move to Selected Items" press="moveToSelectedItemsTable" />
@@ -44,7 +100,7 @@
 				<Text text="특성코드" />
 			</Column>
 			<Column>
-				<Text text="특성명" />
+				<Text text="특성코드명" />
 			</Column>
 		</columns>
 		<dragDropConfig>
@@ -65,5 +121,5 @@
 				</cells>
 			</ColumnListItem>
 		</items>
-	</Table>
+	</Table> -->
 </mvc:View>

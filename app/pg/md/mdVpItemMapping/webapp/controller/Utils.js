@@ -35,22 +35,35 @@ sap.ui.define([
 		},
 
 		getSelectedItemContext: function(oTable, fnCallback) {
-            var aSelectedItems = oTable.getSelectedItems();
-			var oSelectedItem = aSelectedItems[0];
-            console.log(oSelectedItem);
+			var iSelectedIndex = oTable.getSelectedIndex();
 
-			if (!oSelectedItem) {
+			if (iSelectedIndex === -1) {
 				MessageToast.show("Please select a row!");
 				return;
 			}
 
-			var oSelectedContext = oSelectedItem.getBindingContext();
+			var oSelectedContext = oTable.getContextByIndex(iSelectedIndex);
 			if (oSelectedContext && fnCallback) {
-				var iSelectedIndex = oTable.indexOfItem(oSelectedItem);
-				fnCallback(oSelectedContext, iSelectedIndex, oTable);
+				fnCallback.call(this, oSelectedContext, iSelectedIndex, oTable);
 			}
 
 			return oSelectedContext;
+            // var aSelectedItems = oTable.getSelectedItems();
+			// var oSelectedItem = aSelectedItems[0];
+            // console.log(oSelectedItem);
+
+			// if (!oSelectedItem) {
+			// 	MessageToast.show("Please select a row!");
+			// 	return;
+			// }
+
+			// var oSelectedContext = oSelectedItem.getBindingContext();
+			// if (oSelectedContext && fnCallback) {
+			// 	var iSelectedIndex = oTable.indexOfItem(oSelectedItem);
+			// 	fnCallback(oSelectedContext, iSelectedIndex, oTable);
+			// }
+
+			// return oSelectedContext;
 		}
 
 	};
