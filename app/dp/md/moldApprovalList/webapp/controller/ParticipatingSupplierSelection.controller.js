@@ -422,6 +422,7 @@ sap.ui.define([
 
         // 임시저장 
         onPageDraftButtonPress : function () { 
+            
             var status = this.getModel("appMaster").getProperty("/approve_status_code");
             if(!(status === undefined || status === "DR")){
                 MessageToast.show( "Draft 상태 또는 신규일 때만 임시저장이 가능합니다." );
@@ -435,11 +436,57 @@ sap.ui.define([
 
             this.approval_type_code = "E";
             var bModel = this.getModel("mdItemMaster");
+            var status = this.getModel("appMaster").getProperty("/approve_status_code");
+            var appNum = this.getModel("appMaster").getProperty("/approval_number");
+            console.log("bModel ::::", bModel.getData().ParticipatingSupplier);
+            console.log("statust ::::", status);
+            console.log("appNum ::::", appNum);
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             this.quotation_data = [];
             var qtnArr = [];
             var that = this;
+
+            if(that.validator.validate(that.byId("generalInfoLayout") ) !== true){
+                MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+            if(that.validator.validate(that.byId("account") ) !== true){
+                MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+            if(!(appNum === undefined) ){
+                if(bModel.getData().ParticipatingSupplier == undefined || bModel.getData().ParticipatingSupplier.length == 0){
+                    MessageToast.show("item 을 하나 이상 추가하세요.");
+                    return;
+                }
+            }
+            if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
+                var amount_err = 0;
+                var supplier_err = 0;
+                bModel.getData().ParticipatingSupplier.forEach(function(item){
+                    if(item.target_amount > item.provisional_budget_amount){
+                        amount_err = amount_err+1;
+                    }
+                    if(item.supplier_code_1 == null){
+                        supplier_err = amount_err+1;
+                    }
+                });
+                if(amount_err > 0){
+                    MessageToast.show("목표가가 투자예산 금액을 초과하였습니다.");
+                    return;
+                }
+                if(supplier_err > 0){
+                    MessageToast.show("협력사를 하나 이상 추가하세요.");
+                    return;
+                }
+
+            }
+            if(that.validator.validate(that.byId("psTable")) !== true){
+                MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
             if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
 
                 bModel.getData().ParticipatingSupplier.forEach(function(item){
