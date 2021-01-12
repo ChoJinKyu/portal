@@ -1,13 +1,13 @@
 PROCEDURE DP_TC_UPDATE_MCST_BASE_EXRATE_PROC (IN I_TENANT_ID NVARCHAR(5)
-                                          ,IN I_PROJECT_CODE NVARCHAR(30)
-                                          ,IN I_MODEL_CODE NVARCHAR(40) 
-                                          ,IN I_VERSION_NUMBER NVARCHAR(30)
-                                          ,IN I_ADDITION_TYPE_CODE NVARCHAR(30)
-                                          ,IN I_PERIOD_CODE NVARCHAR(30)
-                                          ,IN I_ADDITION_TYPE_VALUE NVARCHAR(10)
-                                          ,IN I_USER_ID NVARCHAR(255)
-                                          ,OUT O_RETURN_CODE NVARCHAR(10)
-                                          ,OUT O_RETURN_MSG NVARCHAR(3000)
+                                             ,IN I_PROJECT_CODE NVARCHAR(30)
+                                             ,IN I_MODEL_CODE NVARCHAR(40) 
+                                             ,IN I_VERSION_NUMBER NVARCHAR(30)
+                                             ,IN I_CURRENCY_CODE NVARCHAR(3)
+                                             ,IN I_PERIOD_CODE NVARCHAR(30)
+                                             ,IN I_EXRATE DECIMAL
+                                             ,IN I_USER_ID NVARCHAR(255)
+                                             ,OUT O_RETURN_CODE NVARCHAR(10)
+                                             ,OUT O_RETURN_MSG NVARCHAR(3000)
 
 )
 LANGUAGE SQLSCRIPT
