@@ -53,6 +53,7 @@ sap.ui.define([
 
             //this.setModel(new JSONModel(), "viewModel");
 
+
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
             this.setModel(new JSONModel(), "viewModel");       
@@ -61,6 +62,7 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
 
             this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
+            this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
             
             
             //this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
@@ -83,6 +85,12 @@ sap.ui.define([
 		_onObjectMatched : function (oEvent) { 
             var oArgs = oEvent.getParameter("arguments");
             var sTenantId = oArgs.tenantId;
+            var sPrNumber = "";
+            if(oArgs.pr_number){
+                sPrNumber = oArgs.pr_number;
+            } else {
+                sPrNumber = "NEW";
+            }            
 
             // 초기 데이터 설정
             if(sTenantId && sTenantId === "new") {
@@ -97,9 +105,7 @@ sap.ui.define([
 			//this._onLoadApprovalRow();
             //this.oSF = this.getView().byId("searchField");
 
-            // 템플릿 리스트 조회
-            this._fnGetPrTemplateList();
-
+            
             // 텍스트 에디터
             this.setRichEditor();
         },
@@ -112,7 +118,7 @@ sap.ui.define([
             var oPrMstData = oViewModel.getProperty("/PrMst");
 
             var aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                    new Filter("tenant_id", FilterOperator.EQ, oPrMstData.tenant_id),
                     new Filter("pr_type_code", FilterOperator.EQ, oPrMstData.pr_type_code),
                     new Filter("pr_type_code_2", FilterOperator.EQ, oPrMstData.pr_type_code_2),
                     new Filter("pr_type_code_3", FilterOperator.EQ, oPrMstData.pr_type_code_3)
@@ -183,16 +189,16 @@ sap.ui.define([
             oViewModel.setProperty("/PrMst", oNewMasterData);
             oViewModel.setProperty("/Pr_Dtl", []);
 
-            //this.setModel(new JSONModel(oNewMasterData), "detailModel");
+            // 템플릿 리스트 조회
+            this._fnGetPrTemplateList();
         },
 
         _fnReadPrMaster : function(oArgs){
+            var that = this;
             var aFilters = [];
-            // aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id));
-            // aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
-
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
-            aFilters.push(new Filter("pr_number", FilterOperator.EQ, "PR2101100046"));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenantId));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, oArgs.company_code));
+            aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
 
 
             var aSorter = [];
@@ -206,8 +212,10 @@ sap.ui.define([
                 success : function(data){
                     if(data.results.length > 0) {
                          oViewModel.setProperty("/PrMst", data.results[0]);
+
+                         // 템플릿 리스트 조회
+                        that._fnGetPrTemplateList();
                     }
-                    // oCodeMasterTable.setBusy(false);
                 },
                 error : function(data){
                     MessageToast.show("Pr_MstView read failed.");
@@ -216,14 +224,12 @@ sap.ui.define([
         },
 
         _fnReadPrDetail : function(oArgs){
+             var that = this;
             var aFilters = [];
-            // aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id));
-            // aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
-
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
-            aFilters.push(new Filter("pr_number", FilterOperator.EQ, "PR2101100046"));
-
-            
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenantId));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, oArgs.company_code));
+            aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
+ 
             var aSorter = [];
             aSorter.push(new Sorter("pr_number", false));
 
@@ -346,7 +352,7 @@ sap.ui.define([
                 }
             }
             oViewData.PrMst.pr_desc = pr_desc;
-            
+
             //품의내용
             // var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
             // oViewData.PrMst.approval_contents = approvalContents;
