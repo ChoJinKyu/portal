@@ -327,10 +327,10 @@ sap.ui.define([
                     
                 var vIndex = e.getParameters().rowIndex;
                 var oRow = this.getView().byId("mainTable").getModel("viewModel").oData.NegoHeaders[vIndex];
-                if(oRow.nego_type_code == null){
-                    var nego_type = " ";
-                }
-                this.getOwnerComponent().getRouter().navTo("detailPage", { type : nego_type , outcome : oRow.negotiation_output_class_code, header_id: String(oRow.nego_header_id)  } );
+                // if(oRow.nego_type_code == null){
+                //     var nego_type = " ";
+                // }
+                this.getOwnerComponent().getRouter().navTo("detailPage", { type : oRow.nego_type_code , outcome : oRow.negotiation_output_class_code, header_id: String(oRow.nego_header_id)  } );
                 // this.getOwnerComponent().getRouter().navTo("detailPage", { type : "" , outcome : "", } );
                 // }else{
                 //     this.getOwnerComponent().getRouter().navTo("detailPage2", { type : "0" , outcome : "0" } );
