@@ -59,7 +59,7 @@
                             <VBox>
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyS" required="true"></Label>
                                 <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey=""
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true"
                                                 items="{
                                                     path: 'org>/Org_Company',
                                                     filters: [
@@ -78,7 +78,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
-                                <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" 
+                                <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" required="true"
                                                 items="{
                                                     path: '/Divisions',
                                                     filters: [
@@ -155,7 +155,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey=""
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true"
                                                 items="{
                                                     path: 'org>/Org_Company',
                                                     filters: [
@@ -174,7 +174,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
+                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" required="true"
                                                 items="{
                                                     path: '/Divisions',
                                                     filters: [
@@ -309,7 +309,7 @@
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: '/MoldNumbers',
+                                        path: '/PartNumbers',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
