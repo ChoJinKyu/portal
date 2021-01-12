@@ -105,32 +105,7 @@ sap.ui.define([
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
-		/**
-		 * Event handler for Enter Full Screen Button pressed
-		 * @public
-		 */
-        // onPageEnterFullScreenButtonPress: function () {
-        //     var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-        //     this.getRouter().navTo("mainObject", {
-        //         layout: sNextLayout,
-        //         tenantId: this._sTenantId,
-        //         fundingNotifyNumber: this._sFundingNotifyNumber
-        //         // fundingNotifyNumber: oRecord.funding_notify_number
-        //     });
-        // },
-        
-		/**
-		 * Event handler for Exit Full Screen Button pressed
-		 * @public
-		 */
-        // onPageExitFullScreenButtonPressonPageExitFullScreenButtonPress: function () {
-        //     var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-        //     this.getRouter().navTo("mainObject", {
-        //         layout: sNextLayout,
-        //         tenantId: this._sTenantId,
-        //         fundingNotifyNumber: this._sFundingNotifyNumber
-        //     });
-        // },
+		
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
@@ -421,31 +396,7 @@ sap.ui.define([
             this.byId("pageSaveButton").setEnabled(false);
             oMidObjectView.setProperty("/editMode", false);
         },
-
-        // _oFragments: {},
-        // _oFragments: {},
-        // _showFormFragment: function (sFragmentName) {
-        //     var oPageSubSection = this.byId("pageSubSection1");
-        //     this._loadFragment(sFragmentName, function (oFragment) {
-        //         oPageSubSection.removeAllBlocks();
-        //         oPageSubSection.addBlock(oFragment);
-        //     })
-        // },        _loadFragment: function (sFragmentName, oHandler) {
-        //     if (!this._oFragments[sFragmentName]) {
-        //         Fragment.load({
-        //             id: this.getView().getId(),
-        //             name: "sp.fundingNotify.view." + sFragmentName,
-        //             controller: this
-        //         }).then(function (oFragment) {
-        //             this._oFragments[sFragmentName] = oFragment;
-        //             if (oHandler) oHandler(oFragment);
-        //             this.onRichTextEditorRendering(sFragmentName);
-        //         }.bind(this));
-        //     } else {
-        //         if (oHandler) oHandler(this._oFragments[sFragmentName]);
-        //     }
-        //     
-
+        
          /**
          * UTC 기준 DATE를 반환합니다.
          * @private
