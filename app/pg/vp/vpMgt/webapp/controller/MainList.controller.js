@@ -75,7 +75,9 @@ sap.ui.define([
     var pop_com_cd = "";
     var pop_orgtype = "";
     var pop_o_unitcode = "";
-    // var pop_vp_cd = "";
+    var pop_d_state;
+    // var pop_vp_
+    var pop_vp_cd = "";
     var pop_p_vp_cd = "";
     var pop_hierarchy_level = "";
     var pop_target_level = "";
@@ -116,6 +118,15 @@ sap.ui.define([
             supportedLocales: [""],
             fallbackLocale: ""
             });
+
+            var ReturnoData = {
+				data: {
+					return_code: "",
+                    return_msg: ""
+				}
+			};
+			var oModel = new JSONModel(ReturnoData);
+            this.setModel(oModel,"returnModel");
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
@@ -495,14 +506,19 @@ sap.ui.define([
                 };
     
 
+            // if(){
+
+            // }    
+
             vpMstList.push({
                 
                 tenant_id: pop_t_id //auto set
                 ,company_code: pop_com_cd //auto set
                 ,org_type_code: pop_orgtype  //auto set
                 ,org_code: pop_org  //auto set
-                ,vendor_pool_code: pop_p_vp_cd  //auto set
+                ,vendor_pool_code: pop_vp_cd  //auto set
                 ,crud_type_code : "D" // 삭제
+                ,leaf_flag : (pop_d_state == "leaf") ? true : false
             
             });
 
@@ -531,8 +547,9 @@ sap.ui.define([
                     sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
                     //MessageToast.show(sMsg);
                     console.log(data.value[0].return_msg);
-                    alert(sMsg);
+                    // alert(sMsg);
                     MessageToast.show(sMsg);
+                    this.onDialogSearch();
                 },
                 error: function (e) {
                     var eMessage = "callProcError",
@@ -573,24 +590,28 @@ sap.ui.define([
             
         },
         
-        onCheck: function (oEvent){
+        onCheck: function (event){
             // debugger;
 
             //선택된 Tree Table Index
-            var oTable = this.byId("treeTable");
-            var aIndices = oTable.getSelectedIndices();
+            // var oTable = this.byId("treeTable");
+            // var aIndices = oTable.getSelectedIndices();
             //선택된 Tree Table Value 
-            var p_vendor_pool_local_name = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[0].mProperties.text
-            var p_higher_level_path = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text            
-            var p_level_path = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[2].mProperties.text
-            var p_org_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[3].mProperties.text            
-            var p_hierarchy_level = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[4].mProperties.text            
-            var p_tenant_id = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[5].mProperties.text
-            var p_company_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[6].mProperties.text            
-            var p_org_type_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[7].mProperties.text            
-            var p_parent_vendor_pool_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[8].mProperties.text   
-            var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[9].mProperties.text   
-            // var p_hierarchy_level = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[10].mProperties.text   
+            // var p_vendor_pool_local_name = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[0].mProperties.text
+            // var p_higher_level_path = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text            
+            // var p_level_path = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[2].mProperties.text
+            // var p_org_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[3].mProperties.text            
+            // var p_hierarchy_level = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[4].mProperties.text            
+            // var p_tenant_id = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[5].mProperties.text
+            // var p_company_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[6].mProperties.text            
+            // var p_org_type_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[7].mProperties.text            
+            // var p_parent_vendor_pool_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[8].mProperties.text   
+            // var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[9].mProperties.text   
+            // var p_d_state = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[10].mProperties.text  
+            // var p_vp_cd = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[11].mProperties.text  
+
+            var row = this.getView().getModel("tree").getObject(event.getParameters().rowContext.sPath);
+
             // alert("p_vendor_pool_local_name : " + p_vendor_pool_local_name  + 
             // "   p_higher_level_path : " + p_higher_level_path + 
             // "   p_level_path : " + p_level_path + 
@@ -598,16 +619,18 @@ sap.ui.define([
             // "   p_operation_unit_code : " + p_operation_unit_code);
             
             //Tree Table 선택된 값을 변수에 선언하여 후에 Create Action 활용
-            pop_h_lv = p_hierarchy_level;
-            pop_h_path = p_higher_level_path;
-            pop_lv = p_level_path;
-            pop_org = p_org_code;
-            pop_t_id = p_tenant_id;
-            pop_com_cd = p_company_code;
-            pop_orgtype = p_org_type_code;
-            pop_p_vp_cd = p_parent_vendor_pool_code;
-            pop_o_unitcode = p_operation_unit_code;
-            pop_hierarchy_level= p_hierarchy_level;
+            pop_h_lv = row.hierarchy_level;
+            pop_h_path = row.higher_level_path;
+            pop_lv = row.level;
+            pop_org = row.org_code;
+            pop_t_id = row.tenant_id;
+            pop_com_cd = row.company_code;
+            pop_orgtype = row.org_type_code;
+            pop_p_vp_cd = row.parent_vendor_pool_code;
+            pop_o_unitcode = row.operation_unit_code;
+            // pop_hierarchy_level= row.;
+            pop_d_state  = row.drill_state;
+            pop_vp_cd = row.vendor_pool_code;
             console.log(this.getModel("util"));
 
         },                 
@@ -653,6 +676,7 @@ sap.ui.define([
             var svendor_pool_local_name = this.getView().byId("pop_vendor_pool_local_name").getValue().trim();
             var svendor_pool_english_name = this.getView().byId("pop_vendor_pool_english_name").getValue().trim();
             var svendor_pool_desc = this.getView().byId("pop_vendor_pool_desc").getValue().trim();
+            
             if(pop_target_level === "2")
             {
                 var srepr_department_code = this.getView().byId("pop_repr_department_code").getSelectedKey().trim();
@@ -668,7 +692,6 @@ sap.ui.define([
                 var sdom_oversea_netprice_diff_rate = this.getView().byId("pop_dom_oversea_netprice_diff_rate").getValue().trim();
                 var	sdomestic_net_price_diff_rate = this.getView().byId("pop_domestic_net_price_diff_rate").getValue().trim();                        
             }
-
             // alert(" stenant_id  " + stenant_id +
             // "  scompany_code  " + scompany_code +
             // "  sorg_type_code  " + sorg_type_code +

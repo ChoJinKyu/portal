@@ -119,7 +119,7 @@ sap.ui.define([
                 layout: oNextUIState.layout, 
                 company_code: "*",
                 org_type_code: "BU",
-                org_code: "BIZ00200",
+                org_code: this.getView().byId("searchChain").setSelectedItem().getSelectedKey(),//org_code: "BIZ00200",
                 spmd_category_code: "new",
                 spmd_category_sort_sequence: ctgrSeq
             });

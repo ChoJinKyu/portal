@@ -325,7 +325,9 @@ public class ProjectMgtServiceV4 implements EventHandler {
             while (v_rs.next()){
                 TcProcOutType v_row = TcProcOutType.create();
                 v_row.setReturnCode(v_rs.getString("return_code"));
-                v_row.setReturnMsg(v_rs.getString("return_msg"));                
+                v_row.setReturnMsg(v_rs.getString("return_msg"));
+                log.info("--------> return_code :: ", v_rs.getString("return_code"));
+                log.info("--------> return_mgs :: ", v_rs.getString("return_msg"));
                 context.setResult(v_row);
             }
 

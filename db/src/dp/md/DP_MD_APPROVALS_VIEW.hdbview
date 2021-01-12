@@ -39,4 +39,11 @@
             where group_code='CM_APPROVE_STATUS' and LANGUAGE_CD='KO') h 
     on h.code = a.approve_status_code and h.tenant_id = a.tenant_id
     left join cm_user i on g.employee_number = i.employee_number and i.tenant_id = a.tenant_id
-    order by a.approval_number asc;
+    inner join 
+    	(select t1.code, t1.sort_no, t1.group_code, t2.language_cd, t1.tenant_id from cm_code_dtl t1 join cm_code_lng t2 on 
+    		t1.tenant_id = t2.tenant_id and t1.code = t2.code and t1.group_code=t2.group_code
+    		where t2.group_code='DP_MD_APPROVAL_TYPE' 
+    		and t2.language_cd='KO'
+    	) k 
+    on a.approval_type_code=k.code and k.tenant_id = a.tenant_id
+    order by k.sort_no asc;

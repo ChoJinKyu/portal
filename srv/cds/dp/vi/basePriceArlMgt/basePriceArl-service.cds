@@ -22,42 +22,42 @@ service BasePriceArlService {
     @readonly
     entity Base_Price_Arl_Config as
         select from controlDtl m {
-            tenant_id,
-            control_option_level_val,
-            case
-                when
-                    control_option_level_val =  'COMPANY_EDITABLE_FLAG'
-                    and control_option_val   is null
-                then
-                    'N'
-                when
-                    control_option_level_val =  'SUPPLY_DISPLAY_FLAG'
-                    and control_option_val   is null
-                then
-                    'N'
-                when
-                    control_option_level_val =  'PURORG_DISPLAY_NM'
-                    and control_option_val   is null
-                then
-                    'Pur Org'
-                when
-                    control_option_level_val =  'MARKETCODE0_DISPLAY_FLAG'
-                    and control_option_val   is null
-                then
-                    'N'
-                when
-                    control_option_level_val =  'MARKETCODE1_DISPLAY_FLAG'
-                    and control_option_val   is null
-                then
-                    'N'
-                when
-                    control_option_level_val =  'MARKETCODE2_DISPLAY_FLAG'
-                    and control_option_val   is null
-                then
-                    'N'
-                else
-                    control_option_val
-            end as control_option_val : String(100)
+            key tenant_id,
+            key control_option_level_val,
+                case
+                    when
+                        control_option_level_val =  'COMPANY_EDITABLE_FLAG'
+                        and control_option_val   is null
+                    then
+                        'N'
+                    when
+                        control_option_level_val =  'SUPPLY_DISPLAY_FLAG'
+                        and control_option_val   is null
+                    then
+                        'N'
+                    when
+                        control_option_level_val =  'PURORG_DISPLAY_NM'
+                        and control_option_val   is null
+                    then
+                        'Pur Org'
+                    when
+                        control_option_level_val =  'MARKETCODE0_DISPLAY_FLAG'
+                        and control_option_val   is null
+                    then
+                        'N'
+                    when
+                        control_option_level_val =  'MARKETCODE1_DISPLAY_FLAG'
+                        and control_option_val   is null
+                    then
+                        'N'
+                    when
+                        control_option_level_val =  'MARKETCODE2_DISPLAY_FLAG'
+                        and control_option_val   is null
+                    then
+                        'N'
+                    else
+                        control_option_val
+                end as control_option_val : String(100)
         }
         where
                 control_option_code       =       'DP_VI_BASE_PRICE_ARL_DISPLAY'
@@ -104,16 +104,16 @@ service BasePriceArlService {
             on  m.tenant_id     = o.tenant_id
             and m.material_code = o.material_code
         {
-            m.tenant_id,
-            m.material_code,
-            m.material_type_code,
-            m.material_desc,
-            ifnull(
-                m.material_spec, ''
-            ) as material_spec : String(1000),
-            m.base_uom_code,
-            m.purchasing_uom_code,
-            o.material_status_code
+            key m.tenant_id,
+            key m.material_code,
+                m.material_type_code,
+                m.material_desc,
+                ifnull(
+                    m.material_spec, ''
+                ) as material_spec : String(1000),
+                m.base_uom_code,
+                m.purchasing_uom_code,
+                o.material_status_code
         };
 
 // @readonly

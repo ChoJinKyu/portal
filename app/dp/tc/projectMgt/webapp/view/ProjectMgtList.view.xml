@@ -18,7 +18,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Project Management" />
+                    <Title text="프로젝트 관리" />
                 </f:heading>
 
                 <f:expandedContent>
@@ -34,7 +34,7 @@
                             adjustLabelSpan="false">
                         <form:content>
 
-                            <Label text="회사">
+                            <Label text="회사" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -55,7 +55,7 @@
                                 </layoutData>
                             </ComboBox>
 
-                            <Label text="사업부">
+                            <Label text="사업부" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -63,7 +63,7 @@
                             <ComboBox
                                 id="cbxExpandDivision"
                                 width="100%"
-                                selectedKey="{filterModel>/divistion/value}"
+                                selectedKey="{filterModel>/bizdivision_code/value}"
                                 items="{
                                     path: '/Division',
                                     filters: [
@@ -118,12 +118,12 @@
                             adjustLabelSpan="false">
                         <form:content>
                             <!--Search line 2-->
-                            <Label text="회사">
+                            <Label text="회사" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <ComboBox width="100%" change="onChangeCompnay" selectedKey="{filterModel>/company_code}" 
+                            <ComboBox width="100%" change="onChangeCompnay" selectedKey="{filterModel>/company_code/value}" 
                                 items="{
                                     path: 'org>/Org_Company',
                                     filters: [
@@ -139,7 +139,7 @@
                                 </layoutData>
                             </ComboBox>
                             
-                            <Label text="사업부">
+                            <Label text="사업부" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -147,7 +147,7 @@
                             <ComboBox
                                 id="cbxSnapDivision"
                                 width="100%"
-                                selectedKey="{filterModel>/divistion/value}"
+                                selectedKey="{filterModel>/bizdivision_code/value}"
                                 items="{
                                     path: '/Division',
                                     filters: [
@@ -190,7 +190,7 @@
                 </f:snappedContent>
 
                 <f:actions>
-                    <Button text="Search" type="Emphasized" press=".onSearch"/> 
+                    <Button text="조회" type="Emphasized" press=".onSearch"/> 
                     <!-- <Button text="Search2" type="Emphasized" press=".onSearch2"/> -->
                 </f:actions>
 
@@ -223,7 +223,8 @@
                                 path: 'util>/Code',
                                 filters: [
                                     {path: 'group_code', operator: 'EQ', value1: 'DC_TC_PRODUCT_GROUP_CODE'}
-                                ]
+                                ],
+                                sorter: { path: 'sort_no'}
                             }">
                             <items>
                             <core:Item key="{util>code}" text="{util>code_name}" />
@@ -243,8 +244,9 @@
                             items="{
                                 path: 'util>/Code',
                                 filters: [
-                                    {path: 'group_code', operator: 'EQ', value1: 'DP_TC_MCST_STATUS_CODE'}
-                                ]
+                                    {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_STATUS_CODE'}
+                                ],
+                                sorter: { path: 'sort_no'}
                             }">
                             <items>
                                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -277,7 +279,8 @@
                                 path: 'util>/Code',
                                 filters: [
                                     {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_GRADE_CODE'}
-                                ]
+                                ],
+                                sorter: { path: 'sort_no'}
                             }">
                             <items>
                                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -298,7 +301,8 @@
                                 path: 'util>/Code',
                                 filters: [
                                     {path: 'group_code', operator: 'EQ', value1: 'DP_TC_DEVELOP_EVENT_CODE'}
-                                ]
+                                ],
+                                sorter: { path: 'sort_no'}
                             }">
                             <items>
                             <core:Item key="{util>code}" text="{util>code_name}" />
@@ -335,31 +339,31 @@
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
                         <!-- <Title text="{I18n>/PART_NO_LIST}" level="H2"/> -->
-                        <Title text="Project List ({= ${listModel>/results}.length})" level="H2"/>
+                        <Title text="프로젝트 관리 목록 ({= ${listModel>/results}.length})" level="H2"/>
                         <ToolbarSpacer />
-                        <Button text="견적 재료비 생성" type="Emphasized" press=".onEstimateCreatePress" />
-                        <Button text="목표 재료비 생성" type="Emphasized" press=".onGoalCreatePress" />
+                        <Button text="견적 재료비" type="Emphasized" press=".onEstimateCreatePress" />
+                        <Button text="목표 재료비" type="Emphasized" press=".onGoalCreatePress" />
                         <Button text="예상 재료비" type="Emphasized" press=".onProgressMgtPress" />
                         <ToolbarSeparator/>
                         <Button text="모델 추가" type="Transparent" press=".onAddModelPress" />
                         <Button text="산출 제외" type="Transparent" press=".onExcludeCalPress" />
                         <ToolbarSeparator/>
-                        <Button icon="sap-icon://excel-attachment"/>
+                        <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
                     </OverflowToolbar>
                 </t:extension>
                 <t:columns>
-                    <t:Column hAlign="Left" width="10rem">
+                    <t:Column hAlign="Left" width="8rem">
                         <!-- <Label text="{I18n>/DIV}" textAlign="Center" /> -->
                         <Label text="회사" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{listModel>company_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="10rem">
+                    <t:Column hAlign="Begin" width="10rem">
                         <!-- <Label text="{I18n>/DIV}" textAlign="Center" /> -->
                         <Label text="사업부" />
                         <t:template>
-                            <Text text="{listModel>bizdivision_code}" />
+                            <Text text="{listModel>bizdivision_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="10rem">
@@ -369,7 +373,7 @@
                             <Text text="{listModel>product_group_text}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left" width="16rem">
+                    <t:Column hAlign="Left" width="12rem">
                         <!-- <Label text="{I18n>/DESCRIPTION}" textAlign="Center" /> -->
                         <Label text="고객사" textAlign="Center" width="100%" />
                         <t:template>
@@ -399,7 +403,15 @@
                             <Text text="{listModel>project_name}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left"  width="15rem">
+                    <t:Column hAlign="Center"  width="12rem">
+                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
+                        <Label text="견적프로젝트코드" />
+                        <t:template>
+                            <!--<Text text="{listModel>project_code}" />-->
+                            <Text text="{listModel>quotation_project_code}" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center"  width="15rem">
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
                         <Label text="대표모델코드" textAlign="Center" width="100%" />
                         <t:template>
