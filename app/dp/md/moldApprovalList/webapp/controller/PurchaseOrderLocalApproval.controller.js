@@ -74,38 +74,31 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "purOrderItem");
             this.getView().setModel(new ManagedModel(), "payment");
             
-            var schFilter = [];
+            var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number),
+                             new Filter("tenant_id", FilterOperator.EQ, 'L2600')];
             
-            if (this.approval_number === "New") {
-                
-            } else {
-                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
-                ];
-                
-                var oModel = this.getModel('payment'),
-                    poAmount = 0,
-                    currencyCode = "";
-                this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
-                    var splitPayTypeCode = null;
-                    if (oData.results.length > 0) {
-                        oData.results.forEach(function (item) {
-                            poAmount = poAmount + Number(item.purchasing_amount);
-                        });
-                        splitPayTypeCode = oData.results[0].split_pay_type_code;
-                        currencyCode = oData.results[0].currency_code;
-                        oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
-                        oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
-                        oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
-                        oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
-                    }
+            var oModel = this.getModel('payment'),
+                poAmount = 0,
+                currencyCode = "";
+            this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
+                var splitPayTypeCode = null;
+                if (oData.results.length > 0) {
+                    oData.results.forEach(function (item) {
+                        poAmount = poAmount + Number(item.purchasing_amount);
+                    });
+                    splitPayTypeCode = oData.results[0].split_pay_type_code;
+                    currencyCode = oData.results[0].currency_code;
+                    oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
+                    oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
+                    oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
+                    oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
+                }
 
-                    oModel.setProperty("/purchasing_amount", poAmount);
-                    oModel.setProperty("/currency_code", currencyCode);
-                    oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
-                    
-                }.bind(this));
-            }
+                oModel.setProperty("/purchasing_amount", poAmount);
+                oModel.setProperty("/currency_code", currencyCode);
+                oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
+                
+            }.bind(this));
         },
 
         _bindViewPurchaseOrder: function (sObjectPath, sModel, aFilter, callback) {
@@ -230,7 +223,7 @@ sap.ui.define([
 
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
-                    removePoAmt = oModel.getData().PurchaseOrderItems[idx].purchasing_amount;
+                    removePoAmt = removePoAmt + oModel.getData().PurchaseOrderItems[idx].purchasing_amount;
                     oModel.removeRecord(idx);
                 });
 
@@ -241,6 +234,9 @@ sap.ui.define([
 
             var poAmount = Number(pModel.getProperty("/purchasing_amount")) - Number(removePoAmt);
             pModel.setProperty("/purchasing_amount", poAmount);
+            if(oModel.getData().PurchaseOrderItems.length == 0){
+                pModel.setProperty("/currency_code", "");
+            }
         },
 
         onChangePayment: function (oEvent) {

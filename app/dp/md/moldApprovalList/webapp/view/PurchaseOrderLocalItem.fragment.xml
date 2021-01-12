@@ -47,13 +47,13 @@
                         </OverflowToolbar>
                     </table:extension>                             
                     <table:columns>
-                        <table:Column id="moldModelColumn" width="15em" >
+                        <table:Column id="moldModelColumn" width="12em" >
                             <Label text="Model"/>
                             <table:template>
                                 <Text id="model" text="{purOrderItem>model}"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="moldPartNoColumn" width="8em" hAlign="Center">
+                        <table:Column id="moldPartNoColumn" width="12em" hAlign="Center">
                             <Label text="Mold No"/>
                             <table:template>
                                 <Text id="mold_number" text="{purOrderItem>mold_number}"/>
