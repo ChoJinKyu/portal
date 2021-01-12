@@ -47,7 +47,7 @@
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
-                                    selectionFinish="handleSelectionFinishDiv">
+                                    selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -64,7 +64,7 @@
                                 </layoutData>
                             </VBox>
                              <VBox>
-                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS" required="true"></Label>
+                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS"></Label>
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" selectedKey="" items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -94,7 +94,7 @@
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'company_code'}
-                                    }">
+                                    }" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -111,7 +111,7 @@
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
-                                    selectionFinish="handleSelectionFinishDiv">
+                                    selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -128,7 +128,7 @@
                                 </layoutData>
                             </VBox>
                              <VBox>
-                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE" required="true"></Label>
+                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE"></Label>
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" selectedKey="" items="{
                                             path : 'util>/Code',
                                             filters : [
