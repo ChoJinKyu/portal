@@ -83,8 +83,6 @@ sap.ui.define([
             this.enableMessagePopover();
             //this.onAfterRendering();
 
-            console.log("onIn");
-
         },
 
         /* =========================================================== */
@@ -129,6 +127,8 @@ sap.ui.define([
 		onPageNavBackButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
+
+            console.log("object call------------------>");
             // this._setScreen(sNextLayout);
             // this._setModelEditCancelMode();
 
@@ -306,7 +306,7 @@ sap.ui.define([
             var delfalg = "";
 
             console.log(" 111::: ");
-            console.log("oMasterModel.getData()=", detail.getData());
+            console.log("detail.getData()=", detail.getData());
             console.log(" detail.getChanges().length::: " , detail.getChanges().length);
             console.log(" LOIRequestDetailView::: " , detail.getData()["LOIRequestDetailView"]);
 
@@ -408,9 +408,9 @@ sap.ui.define([
                                 console.log("---------data ssss-------", JSON.stringify(data));
 
                                 that._setItemSequence(supInput,data);
-                                if (detail.getChanges().length > 0) {
+                                //if (detail.getChanges().length > 0) {
                                     that.onReload(data);
-                                }
+                                //}
 
                                 view.setBusy(false);
                                 that._toShowMode();
@@ -428,11 +428,17 @@ sap.ui.define([
 
         onReload: function(data) {
 
+            var view = this.getView(),
+            master = view.getModel("master"),
+                detail = view.getModel("details");
+
+             console.log("---------onReload ssss-------", JSON.stringify(data));
+
             var oView = this.getView();
             this.getModel("midObjectView").setProperty("/isAddedMode", false);
-                this._bindView("/LOIRequestListView(tenant_id='" + data.savedReqDetails[0].tenant_id + "',company_code='" + data.savedReqDetails[0].company_code + "',loi_write_number='" + data.savedReqDetails[0].loi_write_number + "')");
+                this._bindView("/LOIRequestListView(tenant_id='" + master.getData()["tenant_id"] + "',company_code='" + master.getData()["company_code"] + "',loi_write_number='" + master.getData()["loi_write_number"] + "')");
                 oView.setBusy(true);
-
+            if (detail.getChanges().length > 0) {
                 var oDetailsModel = this.getModel('details');
                     oDetailsModel.setTransactionModel(this.getModel());
                     oDetailsModel.read("/LOIRequestDetailView", {
@@ -451,6 +457,7 @@ sap.ui.define([
                         }
 
                     });
+                }
 
                 this._toShowMode();
         },
@@ -496,7 +503,7 @@ sap.ui.define([
                 } else {
                     console.log("cancel.....");
                     this.onPageNavBackButtonPress.call(this);
-                    this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                    //this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 }
             }
         },
@@ -592,12 +599,12 @@ sap.ui.define([
             
             var details = [];
             var suppliers = [];
-            var supplierCodeArray = [];
-            var loiItemNum_val = '';
-            var loiWriteNum_val = '';
-            var delNum = 0;
-            var afterDelCnt = 0;
-            var delfalg = "";
+            // var supplierCodeArray = [];
+            // var loiItemNum_val = '';
+            // var loiWriteNum_val = '';
+            // var delNum = 0;
+            // var afterDelCnt = 0;
+            // var delfalg = "";
 
             console.log("---------before ssss-------", JSON.stringify(data));
             console.log("---------before ssss-------",data.savedReqDetails.length );
@@ -639,7 +646,7 @@ sap.ui.define([
 
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SupplierMulEntityProc";
 
-
+            oView.setBusy(true);
             $.ajax({
                 url: url,
                 type: "POST",
@@ -658,6 +665,7 @@ sap.ui.define([
                     // oView.getModel("returnModel").updateBindings(true);
                     // v_this.onSearch();
                     // v_this.onSearchDetail();
+                    oView.setBusy(false);
 
                 },
                 error: function (e) {
@@ -854,9 +862,10 @@ sap.ui.define([
         _toEditMode: function () {
             this.getModel("midObjectView").setProperty("/isEditMode", true);
             this._showFormFragment('MidObject_Edit');
-            var oMasterModel = this.getModel("master");
+             var oView = this.getView(),
+                oMasterModel = this.getModel("master");
            
-            console.log("statusCode----->" ,oMasterModel.getData());
+            console.log("statusCode----->" ,oMasterModel);
             var statusCode = oMasterModel.getData().loi_request_status_code;
             console.log("statusCode1111----->" ,statusCode);
             this.byId("page").setSelectedSection("pageSectionMain");
@@ -890,10 +899,21 @@ sap.ui.define([
         _toShowMode: function () {
             this.getModel("midObjectView").setProperty("/isEditMode", false);
             this._showFormFragment('MidObject_Show');
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master");
+           
+            console.log("statusCode----->" ,oMasterModel.getData().loi_request_status_name);
+            var statusCode = oMasterModel.getData().loi_request_status_code;
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
-            this.byId("pageEditButton").setVisible(true);
-            this.byId("pageDeleteButton").setVisible(true);
+            if (statusCode === "121040") {
+                this.byId("pageEditButton").setVisible(false);
+                this.byId("pageDeleteButton").setVisible(false);
+            }else{
+                this.byId("pageEditButton").setVisible(true);
+                this.byId("pageDeleteButton").setVisible(true);
+            }
+
             this.byId("pageEditButton").setEnabled(true);
             this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);

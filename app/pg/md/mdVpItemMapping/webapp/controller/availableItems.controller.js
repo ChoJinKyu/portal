@@ -4,8 +4,9 @@ sap.ui.define([
 	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+	"jquery.sap.global",
 	"./Utils"
-], function (BaseController, Multilingual, ManagedListModel, Filter, FilterOperator, Utils) {
+], function (BaseController, Multilingual, ManagedListModel, Filter, FilterOperator, jQuery, Utils) {
     
     "use strict";
     
@@ -16,8 +17,25 @@ sap.ui.define([
             this.getModel("tblModel").setProperty("/table1",this.getView().byId("table").getId());
 
             // var oModel = this.getView().getModel();
-            // oModel.setSizeLimit(10);
+            // oModel.setSizeLimit(20);
+
         },
+
+        // 데이터 셋팅된 후 시점을 찾으려면 앞에서 success 부분에서 해야하ㅏㄴ?
+        // onAfterRendering : function(){
+        //     debugger;
+        //     var rows = Utils.getAvailableItemsTable(this).getRows();
+        //     for(var i=0; i<rows.length; i++){
+        //         var row = rows[i];
+        //         // if(row.getCells()[0].getText() == this._category_code){
+        //             var sId = row.getId();
+        //             $("#"+sId).css("background-color", "green");
+                    
+            
+        //         // }
+        //     }
+        // },
+
         onDropAvailableItemsTable: function(oEvent) {
 			var oDraggedItem = oEvent.getParameter("draggedControl");
 			var oDraggedItemContext = oDraggedItem.getBindingContext();
