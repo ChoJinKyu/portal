@@ -262,7 +262,8 @@
                 threshold="10"
                 enableColumnFreeze="true"
                 rowSelectionChange="rowSelection"
-				ariaLabelledBy="title">
+                enableGrouping="true"
+				ariaLabelledBy="title"> 
 				<t:extension>
 					<OverflowToolbar>
 						<Title text="Negotiation Workbench List (17)"/>

@@ -155,7 +155,7 @@
                             class="sapUiDemoFlexBoxSizeAdjustments">
                             <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
                                             columnsM="2"
-                                            columnsL="2"
+                                            columnsL="3"
                                             columnsXL="3">
 
                                 <Label  text="Negotiation No"  class="sapMLabelNoText"/>
@@ -181,26 +181,30 @@
 
                                 <VBox width="100%">
                                     <HBox  width="100%" alignItems="Center" alignContent="Center" class="sapUiSmallMarginBottom">
-                                        <VBox width="50%">
-                                            <Label  text="Bid Style" 
-                                            class="sapMLabelNoText"/>
-                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="">
-                                                <RadioButton id="RB1-1" text="Round Bidding(Sealed)" />
-                                                <RadioButton id="RB1-2" text="Reserve Auction(Open)" />
-                                            </RadioButtonGroup>
-                                        </VBox>
-                                        <VBox width="50%">
-                                            <Label  text="Incoterms" 
-                                                    class="sapMLabelNoText"/>
-                                            <ComboBox width="70%" />
-                                        </VBox>
+                                        <HBox  width="50%" height="100%" alignItems="Center" class="sapUiMediumMarginEnd" >
+                                            <VBox  class="sapUiSmallMarginEnd" width="100%">
+                                                <Label  text="Bid Style" 
+                                                class="sapMLabelNoText"/>
+                                                <RadioButtonGroup id="rbg1" columns="2"  selectedIndex="0" class="">
+                                                    <RadioButton id="RB1-1" text="Round Bidding(Sealed)" />
+                                                    <RadioButton id="RB1-2" text="Reserve Auction(Open)" />
+                                                </RadioButtonGroup>
+                                            </VBox>
+                                        </HBox>
+                                        <HBox  width="50%" height="100%" alignItems="Center" class="sapUiSmallMarginEnd" >
+                                            <VBox  class="sapUiMediumMarginEnd" width="100%" >
+                                                <Label  text="Incoterms" 
+                                                        class="sapMLabelNoText"/>
+                                                <ComboBox width="70%" />
+                                            </VBox>
+                                        </HBox>
                                     </HBox>
         
                                     <HBox  width="100%" >
-                                        <HBox  width="50%" height="100%" alignItems="Center" >
+                                        <HBox  width="50%" height="100%" alignItems="Center" class="sapUiSmallMarginEnd" >
                                             <VBox  class="sapUiSmallMarginEnd">
                                                 <Label text="Period" width="100px"  required="true" class="sapMLabelNoText"/>
-                                                <CheckBox text="Immediately" select="selectImmediately"/>
+                                                <CheckBox text="Immediately" select="selectImmediately" selected="true"/>
                                             </VBox>
                                             <VBox>
                                                 <Label text=""  class="sapMLabelNoText"/>
@@ -217,78 +221,38 @@
                                         </HBox>
 
                                         <HBox  width="50%" height="100%" alignItems="Center" >
-                                            <VBox> 
-                                                <HBox alignContent="Center" alignItems="Center" width="100%" class="sapUiSmallMarginEnd">
-                                                    <VBox width="100px">
-                                                        <Label text="Max Round Count" width="120px"  required="true" class="sapMLabelNoText"/>
-                                                        <Input value="3" width="100%" />
-                                                    </VBox>
-                                                    <VBox>
-                                                        <Label text=""  class="sapMLabelNoText"/>
-                                                        <CheckBox class=""/>
-                                                    </VBox>
-                                                    <VBox>
-                                                        <Label text=""  class="sapMLabelNoText"/>
-                                                        <Text text="Auto Round" class="sapUiTinyMarginEnd"/>
-                                                    </VBox>
-                                                    <VBox>
-                                                        <Label text=""  class="sapMLabelNoText"/>
-                                                        <Text text="Minute" class="sapUiTinyMarginEnd"/>
-                                                    </VBox>
-                                                    <VBox>
-                                                        <Label text=""  class="sapMLabelNoText"/>
-                                                        <Input value="5" width="100px" />
-                                                    </VBox>
-
-
-
-                                                        <!-- <HBox>
-                                                        
-                                                        <Text text="Auto Round" class="sapUiTinyMarginEnd"/>
-                                                        <Text text="Minute" class="sapUiTinyMarginBegin"/>
-                                                        </HBox> -->
-                                                    
-                                                    <!-- <CheckBox class="sapUiTinyMarginEnd"/>
-                                                    <VBox>
-                                                        <Text text="Auto Round" class="sapUiTinyMarginEnd"/>
-                                                    </VBox>
-                                                    <Input value="5" width="50px"/>
-                                                    <VBox>
-                                                        <Text text="Minute" class="sapUiTinyMarginBegin"/>
-                                                    </VBox> -->
-                                                    <!-- <VBox class="sapUiMediumMarginBegin">
-                                                        <Text text="Previous Round" class="sapUiTinyMarginBegin"/>
-                                                    </VBox> -->
-                                                    <VBox class=" sapUiLargeMarginBegin">
-                                                        <Label text="Previous Round" class="sapMLabelNoText"/>
-                                                        <SegmentedButton id="prSegmentButton"  selectedKey="true"
-                                                                            class="sapUiSmallMarginEnd" >
-                                                            <items>
-                                                                <SegmentedButtonItem key="true" text="Yes"/>
-                                                                <SegmentedButtonItem key="false" text="No" />
-                                                            </items>
-                                                        </SegmentedButton>   
-                                                    </VBox>
-                                                </HBox>
-                                            </VBox>
-                                            
-                                            <!-- <HBox alignContent="Center" alignItems="Center" width="auto" class="sapUiSmallMarginEnd">
-                                                <Text text="Previous Round"/>
-                                            </HBox> -->
-
-                                            
-                                            
-                                            
-
-                                            <!-- <Label  text="Extension Period" width="130px" class="sapMLabelNoText "/> 
-                                            <Input id="inputEP" value="" type="Number"  class="sapUiTinyMarginEnd"/>
-                                            <Label  text="Hr"  class="sapUiSmallMarginBegin" />
-
-                                            <ToolbarSpacer width="3rem"/> 
-                                            <Label  text="Extension Count" width="130px"  class="sapMLabelNoText "/> 
-                                            <Input id="inputEC" value="" type="Number"  class="sapUiTinyMarginEnd"/>
-                                            <Label  text="Times"  class="sapUiSmallMarginBegin"/>   -->
-                                            
+                                            <HBox alignContent="Center" alignItems="Center" width="100%" class="sapUiSmallMarginEnd">
+                                                <VBox width="100px">
+                                                    <Label text="Max Round Count" width="120px"  required="true" class="sapMLabelNoText"/>
+                                                    <Input value="3" width="100%" />
+                                                </VBox>
+                                                <VBox>
+                                                    <Label text=""  class="sapMLabelNoText"/>
+                                                    <CheckBox class=""/>
+                                                </VBox>
+                                                <VBox>
+                                                    <Label text=""  class="sapMLabelNoText"/>
+                                                    <Text text="Auto Round" class="sapUiTinyMarginEnd"/>
+                                                </VBox>
+                                                <VBox>
+                                                    <Label text=""  class="sapMLabelNoText"/>
+                                                    <Text text="Minute" class="sapUiTinyMarginEnd"/>
+                                                </VBox>
+                                                <VBox>
+                                                    <Label text=""  class="sapMLabelNoText"/>
+                                                    <Input value="5" width="100px" />
+                                                </VBox>
+                                                <VBox class=" sapUiLargeMarginBegin">
+                                                    <Label text="Previous Round" class="sapMLabelNoText"/>
+                                                    <SegmentedButton id="prSegmentButton"  selectedKey="true"
+                                                                        class="sapUiSmallMarginEnd" >
+                                                        <items>
+                                                            <SegmentedButtonItem key="true" text="Yes"/>
+                                                            <SegmentedButtonItem key="false" text="No" />
+                                                        </items>
+                                                    </SegmentedButton>   
+                                                </VBox>
+                                            </HBox>
                                         </HBox>
                                         
                                     </HBox>
@@ -405,18 +369,18 @@
                                     >
                                     <form:content>
                                         <VBox width="100%">
-                                            <HBox width="100%" class="sapUiTinyMarginTop"  >
+                                            <HBox width="100%" class="sapUiSmallMarginBottom"  >
                                                 <VBox width="25%">
                                                     <Label  text="Award Type" 
                                                             class="sapMLabelNoText"/> 
-                                                    <ComboBox width="90%" placeholder="Target Price Setup"> 
+                                                    <ComboBox width="90%" placeholder="Target Price Setup" class=" "> 
                                                         <core:Item key="1" text="Target Price Setup" />
                                                     </ComboBox > 
                                                     <layoutData>
                                                         <layout:GridData span="XL3 L4 M6 S12"/>
                                                     </layoutData>
                                                 </VBox>
-                                                <VBox width="25%" class="" alignItems="Center" alignContent="Center" justifyContent="Center" >
+                                                <VBox width="25%" class=" "   >
                                                     <Label  text="Target Price Setup " 
                                                             class="sapMLabelNoText"/>
                                                     <!-- <RadioButtonGroup id="rbg2" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd" >
@@ -424,10 +388,10 @@
                                                         <RadioButton id="RB2-2" text="No" />
                                                     </RadioButtonGroup> -->
                                                     <SegmentedButton   selectedKey="true"
-                                                                        class="" >
-                                                        <items>
-                                                            <SegmentedButtonItem key="true" text="Yes" width="4rem"/>
-                                                            <SegmentedButtonItem key="false" text="No" width="4rem"/>
+                                                                        class=" " >
+                                                        <items class=" " >
+                                                            <SegmentedButtonItem key="true" text="Yes" width="auto"   class=" "/>
+                                                            <SegmentedButtonItem key="false" text="No" width="auto"  class=" "/>
                                                         </items>
                                                     </SegmentedButton>   
                                                     <layoutData>
@@ -437,14 +401,14 @@
                                                 <VBox width="25%">
                                                     <Label  text="Target Total Amount" 
                                                             class="sapMLabelNoText"/> 
-                                                    <Input width="90%" /> 
+                                                    <Input width="90%" class=" "/> 
                                                     <layoutData>
                                                         <layout:GridData span="XL3 L4 M6 S12"/>
                                                     </layoutData>
                                                 </VBox>
                                             </HBox>
 
-                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                            <HBox width="100%" class="sapUiSmallMarginBottom">
                                                 <VBox width="25%">
                                                     <Label  text="Selection of Suppliers" 
                                                             class="sapMLabelNoText"/> 
@@ -455,7 +419,7 @@
                                                         <layout:GridData span="XL3 L4 M6 S12"/>
                                                     </layoutData>
                                                 </VBox>
-                                                <VBox width="25%" class="" alignItems="Center" alignContent="Center" justifyContent="Center">
+                                                <VBox width="25%" class=" "  >
                                                     <Label  text="Participative" 
                                                             class="sapMLabelNoText"/>
                                                     <!-- <RadioButtonGroup id="rbg3" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd"  >
@@ -463,17 +427,17 @@
                                                         <RadioButton id="RB3-2" text="No" />
                                                     </RadioButtonGroup> -->
                                                     <SegmentedButton   selectedKey="true"
-                                                                        class="" >
+                                                                        class=" " >
                                                         <items>
-                                                            <SegmentedButtonItem key="true" text="Yes" width="4rem"/>
-                                                            <SegmentedButtonItem key="false" text="No" width="4rem" />
+                                                            <SegmentedButtonItem key="true" text="Yes"  />
+                                                            <SegmentedButtonItem key="false" text="No"   />
                                                         </items>
                                                     </SegmentedButton>   
                                                     <layoutData>
                                                         <layout:GridData span="XL2 L4 M6 S12"/>
                                                     </layoutData>
                                                 </VBox>
-                                                <VBox width="25%">
+                                                <VBox width="25%" class=" ">
                                                     <Label  text="Partial Quotation" 
                                                             class="sapMLabelNoText"/> 
                                                     <!-- <RadioButtonGroup id="rbg4" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd" >
@@ -481,10 +445,10 @@
                                                         <RadioButton id="RB4-2" text="No" />
                                                     </RadioButtonGroup> -->
                                                     <SegmentedButton   selectedKey="true"
-                                                                        class="" >
+                                                                        class=" " >
                                                         <items>
-                                                            <SegmentedButtonItem key="true" text="Yes" width="4rem"/>
-                                                            <SegmentedButtonItem key="false" text="No"  width="4rem"/>
+                                                            <SegmentedButtonItem key="true" text="Yes" />
+                                                            <SegmentedButtonItem key="false" text="No" />
                                                         </items>
                                                     </SegmentedButton>   
                                                     <layoutData>
@@ -493,59 +457,56 @@
                                                 </VBox>
                                             </HBox>
 
-                                            <HBox width="100%" class="sapUiTinyMarginTop">
-                                                <VBox width="25%">
-                                                    <Label  text="On-site presentation" 
-                                                            class="sapMLabelNoText"/>
-                                                    <!-- <RadioButtonGroup id="rbg5" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd" >
-                                                        <RadioButton id="RB5-1" text="Yes" />
-                                                        <RadioButton id="RB5-2" text="No" />
-                                                    </RadioButtonGroup>  -->
-                                                    <SegmentedButton  selectedKey="true"
-                                                                        class="" >
-                                                        <items>
-                                                            <SegmentedButtonItem key="true" text="Yes" width="4rem"/>
-                                                            <SegmentedButtonItem key="false" text="No"  width="4rem"/>
-                                                        </items>
-                                                    </SegmentedButton>   
-                                                    <layoutData>
-                                                        <layout:GridData span="XL3 L4 M6 S12"/>
-                                                    </layoutData>
-                                                </VBox>
+                                            <HBox width="100%" class="sapUiSmallMarginBottom  " >
+                                                
                                                 <VBox width="25%" class="">
                                                     <Label  text="On-site presentation Date" 
                                                             class="sapMLabelNoText"/>
                                                     <DateTimePicker
                                                         placeholder="YY/MM/DD, tt:mm" width="90%"
                                                         change="handleChange"
-                                                        class=""/> 
+                                                        class=" "/> 
                                                     <layoutData>
                                                         <layout:GridData span="XL2 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                                <VBox width="25%" >
+                                                    <Label  text="On-site presentation" 
+                                                            class="sapMLabelNoText"/>
+                                                    <SegmentedButton  selectedKey="true"
+                                                                        class=" " >
+                                                        <items>
+                                                            <SegmentedButtonItem key="true" text="Yes" />
+                                                            <SegmentedButtonItem key="false" text="No"  />
+                                                        </items>
+                                                    </SegmentedButton>   
+                                                    <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
                                                     </layoutData>
                                                 </VBox>
                                                 
                                             </HBox>
 
-                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                            <HBox width="100%" class="sapUiSmallMarginBottom">
                                                 <VBox width="50%">
                                                     <Label  text="On-site presentation Place" 
                                                             class="sapMLabelNoText"/>
-                                                    <Input width="95%" />
+                                                    <Input width="95%" class=" "/>
                                                 </VBox>
                                                 
                                             </HBox>
 
-                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                            <HBox width="100%" class="">
                                                 <VBox width="25%">
                                                     <Label  text="Supplier Manager" 
                                                             class="sapMLabelNoText"/>
-                                                    <Input placeholder="사용자 이름" width="90%" showValueHelp="true" />
+                                                    <Input placeholder="사용자 이름" width="90%" showValueHelp="true" class=" " />
                                                 </VBox>
                                                 <!-- <VBox width="15%" /> -->
                                                 <VBox width="25%">
                                                     <Label  text="Phone No" 
                                                             class="sapMLabelNoText"/>
-                                                    <Input width="90%"/>
+                                                    <Input width="90%" class=" " id="aa"/>
                                                 </VBox>
                                             </HBox>
                                         </VBox>
@@ -563,11 +524,12 @@
                         <Panel id="panel_Content" expandable="true" expanded="true" headerText="Line Content">
                             <t:Table id="table1"
                                 rows="{/list}"
+                                cellClick="mTableOnCellClick"
                                 selectionMode="MultiToggle"
                                 ariaLabelledBy="title">
                                 <t:extension>
                                     <OverflowToolbar>
-                                        <Button  text="일괄 Supplier 추가" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                        <Button  text="일괄 Supplier 추가" type="Transparent" press=".onSupplierAllButton"  />
                                         <Button  text="Exclude Supplier From Vender Pool" type="Transparent" press=".onMidTableDeleteButtonPress" />
                                         <ToolbarSpacer/>
                                         
@@ -608,7 +570,7 @@
                                         <Label text="Suppliers" />
                                         <t:template>
                                             <Button 
-                                                icon="sap-icon://account" press="press">
+                                                icon="sap-icon://account" press="onSupplierButtonPress" >
                                             </Button>
                                         </t:template>
                                     </t:Column>
@@ -633,7 +595,7 @@
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="Line Type"  required="true" />
                                         <t:template>
-                                            <Input showValueHelp="true" ></Input>
+                                            <Input id="abc" showValueHelp="true" valueHelpRequest="."></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem"  hAlign="Center">
@@ -687,7 +649,7 @@
                                     <t:Column width="11rem" hAlign="Center">
                                         <Label text="Specific Supplier" />
                                         <t:template>
-                                            <Input showValueHelp="true" ></Input>
+                                            <Input valueHelpRequest=".onSupplierPress" value="0" showValueHelp="true" valueHelpOnly="true" type="Number" ></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem" hAlign="Center">
@@ -958,9 +920,12 @@
                                 </Panel>
                                 <Panel id="panel_Specific" expandable="true" expanded="true" headerText="Specific Supplier">
                                     <Table 
+                                        id="table_spacific"
                                         sticky="HeaderToolbar,ColumnHeaders" 
                                         inset="false" 
-                                        class="sapFDynamicPageAlignContent"     
+                                        
+                                        class="sapFDynamicPageAlignContent"   
+                                        items="{ path: '/slist' }"
                                         mode="None"
                                         width="auto">
                                         <headerToolbar>
@@ -996,16 +961,16 @@
                                             </Column>
                                         </columns>
                                         <items>
-                                            <ColumnListItem type="Inactive" >
+                                            <ColumnListItem id="columnListItem_spacific" type="Inactive" >
                                                 <cells>
-                                                    <Text text=""/>
-                                                    <Text text=""/>
-                                                    <Text text=""/>
-                                                    <Text text=""/>
-                                                    <Text text=""/>
-                                                    <Text text=""/>
-                                                    <Text text=""/>
-                                                    <Text text=""/>
+                                                    <Text text="{key}"/>
+                                                    <Text text="{col1}"/>
+                                                    <Text text="{col2}"/>
+                                                    <Text text="{col3}"/>
+                                                    <Text text="{col4}"/>
+                                                    <Text text="{col5}"/>
+                                                    <Text text="{col6}"/>
+                                                    <Text text="{col7}"/>
                                                 </cells>
                                             </ColumnListItem>
                                         </items>
