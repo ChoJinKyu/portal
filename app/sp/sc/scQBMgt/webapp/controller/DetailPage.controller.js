@@ -348,7 +348,7 @@ sap.ui.define([
                     
                     var bLength = this.getView().byId("table1").getRows()[this._oIndex].getCells()[13].getValue();
                     bLength = parseInt(bLength);
-                    this.getView().byId("table1").getRows()[this._oIndex].getCells()[13].setValue(pToken.length + bLength);
+                    this.getView().byId("table1").getRows()[this._oIndex].getCells()[13].setValue(pToken.length );
 
                     // this.supplierSelection.onValueHelpSuppAfterClose();
 
