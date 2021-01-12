@@ -13,7 +13,8 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "ext/lib/util/Validator"
-], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator) {
+], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+                Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator) {
      "use strict";
     
     var oTransactionManager;
@@ -136,14 +137,31 @@ sap.ui.define([
                     }
                 });
 
+                oServiceModel.read("/Pr_Dtl",{
+                    filters : aFilters,
+                    success : function(data){
+                        //oDetailModel.setProperty(data.results[0], "detailModel"); 
+                        oDetailModel.setProperty("/dtl" , data.results);    
+                        //oCodeMasterTable.setBusy(false);
+                    },
+                    error : function(data){
+                        //oCodeMasterTable.setBusy(false);
+                    }
+                });
+
+
+
+
+            // this._bindView("/Pr_Mst", "mst", aFilters, function(oData){
+            //      oDetailModel.setProperty("/dtl" , oData); 
+            // });
+
 
             // this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
             //     self._toShowMode();
             // });
            
-            // this._bindView("/Pr_Mst", "mst", aFilters, function(oData){
-            //      oMstViewModel.setProperty("/CodeMasters", data.results);
-            // });
+           
             
             //oTransactionManager.setServiceModel(this.getModel());
 

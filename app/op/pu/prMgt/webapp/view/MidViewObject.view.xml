@@ -136,24 +136,17 @@
                     <uxap:ObjectPageSubSection>
                         <!-- Participating Supplier Table -->
                         <table:Table id="pritemTable"
-                                selectionMode="MultiToggle"
+                                selectionMode="None"
                                 fixedColumnCount="1"
                                 visibleRowCountMode="Auto"
-                                rows="{detailModel>/details}"
+                                rows="{detailModel>/dtl}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="{I18N>/ITEM} (0)" level="H2"/>
+                                    <Title text="{I18N>/ITEM} ({= ${detailModel>/dtl}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" >
-                                    	<customData>
-                                            <core:CustomData key="multi" value="true" />
-                                        </customData>
-                                    </Button>
-                                    <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" />
-                                    <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" />
-                                    <Button id="btnItemDelete"   type="Transparent" text="Delete"  press=".onItemDeleteRow" />
+                                    
                                     <Button icon="sap-icon://group-2" />
                                     <Button icon="sap-icon://action-settings" />
                                 </OverflowToolbar>
@@ -167,90 +160,81 @@
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
-                                    <Label text="조직코드" required="true"/>           
+                                    <Label text="조직코드" />           
                                     <table:template>
-                                        <Input
-                                            value="{detailModel>org_code}"
-                                            showValueHelp="true"
-                                            valueHelpRequest=".onOpenOrgcodeDialog" />
+                                        <Text text="{detailModel>org_code}" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
-                                    <Label text="자재코드" required="true"/>           
+                                    <Label text="자재코드" />           
                                     <table:template>
-                                        <Input
-                                            value="{detailModel>material_code}"
-                                            showValueHelp="true"
-                                            valueHelpRequest=".onOpenMaterialDialog" />
+                                        <Text  text="{detailModel>material_code}" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
-                                    <Label text="자재그룹" required="true"/>           
+                                    <Label text="자재그룹" />           
                                     <table:template>
-                                        <Input value="{detailModel>material_group_code}"/>
+                                        <Text text="{detailModel>material_group_code}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_description" width="10em" hAlign="Center">
-                                    <Label text="구매요청 품명" required="true"/>           
+                                    <Label text="구매요청 품명" />           
                                     <table:template>
-                                        <Input value="{detailModel>pr_desc}"/>
+                                        <Text text="{detailModel>pr_desc}"/>
                                     </table:template>
                                 </table:Column>       
                                 <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
-                                    <Label text="요청수량" required="true"/>
+                                    <Label text="요청수량"/>
                                     <table:template>
-                                        <Input value="{detailModel>pr_quantity}"/>
+                                        <Text text="{detailModel>pr_quantity}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
-                                    <Label text="단위" required="true"/>           
+                                    <Label text="단위" />           
                                     <table:template>
-                                        <Input value="{detailModel>pr_unit}"/>
+                                        <Text text="{detailModel>pr_unit}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column id="c_budetAmount" width="10em" hAlign="Center">
-                                    <Label text="구매요청가격" required="true"/>           
+                                    <Label text="구매요청가격" />           
                                     <table:template>
-                                        <Input value="{detailModel>estimated_price}"/>
+                                        <Text text="{detailModel>estimated_price}"/>
                                     </table:template>
                                 </table:Column>                               
                                 <table:Column id="c_currency" width="10em" hAlign="Center">
-                                    <Label text="통화" required="true"/>           
+                                    <Label text="통화" />           
                                     <table:template>
-                                        <Input id="currency" value="{detailModel>currency_code}"/>
+                                        <Text id="currency" text="{detailModel>currency_code}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
                                     <Label text="구매담당자"/>           
                                     <table:template>
-                                        <Input
-                                            value="{detailModel>buyer_empno}"
-                                            showValueHelp="true"
-                                            valueHelpRequest=".onOpenMaterialDialog" />
+                                        <Text text="{detailModel>buyer_empno}"/>
                                     </table:template>
                                 </table:Column> 
                                 <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
                                     <Label text="규격"/>    
                                     <table:template>
-                                        <Input value="{detailModel>price_unit}"/>
+                                        <Text text="{detailModel>price_unit}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
                                     <Label text="비고"/>
                                     <table:template>
-                                        <Input value="{detailModel>remark}"/>
+                                        <Text text="{detailModel>remark}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="구매그룹"/>           
                                     <table:template>
-                                        <Input value="{detailModel>purchasing_group_code}"/>
+                                        <Text text="{detailModel>purchasing_group_code}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="저장위치"/>           
                                     <table:template>
-                                        <Input value=""/>
+                                        <Text text=""/>
                                     </table:template>
                                 </table:Column>                              
                             </table:columns>
