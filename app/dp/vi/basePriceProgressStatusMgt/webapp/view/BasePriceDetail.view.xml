@@ -157,7 +157,9 @@
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
                                             <t:template>
                                                 <!-- <Text text="{detailModel>company_code}" /> -->
-                                                <ComboBox width="100%" selectedKey="{detailModel>company_code}" 
+                                                <ComboBox width="100%" 
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                                                    selectedKey="{detailModel>company_code}" 
                                                     items="{
                                                     path: 'org>/Company',
                                                         filters: [
@@ -178,7 +180,8 @@
                                             <Label text="{I18N>/PLANT}" textAlign="Center" />
                                             <t:template>
                                                 <!-- <Text text="{detailModel>org_code}" /> -->
-                                                <ComboBox width="100%" 
+                                                <ComboBox width="100%"
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     selectedKey="{detailModel>org_code}" 
                                                     items="{detailModel>purOrg}">
                                                     <items>

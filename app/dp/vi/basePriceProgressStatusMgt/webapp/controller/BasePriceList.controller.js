@@ -77,12 +77,24 @@ sap.ui.define([
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],
+                sCompanyCode = oFilterModelData.company_code,
+                sOrgCode = oFilterModelData.org_code,
                 sStatus = oFilterModelData.status,
                 sMaterialCode = oFilterModelData.materialCode,
                 sApprovalNumber = oFilterModelData.approvalNumber,
-                oRequestBy = oFilterModelData.requestBy,
+                sRequestBy = oFilterModelData.requestBy,
                 oDateValue = oFilterModelData.dateValue,
                 oSecondDateValue = oFilterModelData.secondDateValue;
+
+            // Company Code가 있는 경우
+            if( sCompanyCode ) {
+                aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+            }
+
+            // Org Code가 있는 경우
+            if( sOrgCode ) {
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrgCode));
+            }
 
             // Status가 있는 경우
             if( sStatus ) {
@@ -104,9 +116,16 @@ sap.ui.define([
                 aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, oDateValue, oSecondDateValue));
             }
 
+
             // Request By가 있는 경우
-            if( oRequestBy ) {
-                aFilters.push(new Filter("create_user_id", FilterOperator.EQ, oRequestBy));
+            if( sRequestBy ) {
+                if( -1<sRequestBy.indexOf(")") ) {
+                    var iStart = sRequestBy.indexOf("(");
+                    var iLast = sRequestBy.indexOf(")");
+                    sRequestBy = sRequestBy.substring(iStart+1, iLast);
+                }
+
+                aFilters.push(new Filter("approval_number_fk/approval_requestor_empno", FilterOperator.EQ, sRequestBy));
             }
 
             this._getBasePriceList(aFilters);
@@ -176,7 +195,7 @@ sap.ui.define([
             var oFilterModel = this.getModel("filterModel");
             var oCodeModel = this.getModel("codeModel");
             
-            oFilterModel.setProperty("/selectedPurOrg", oFilterModel.getProperty("/purOrg/"+oFilterModel.getProperty("/company")));
+            oFilterModel.setProperty("/selectedPurOrg", oFilterModel.getProperty("/purOrg/"+oFilterModel.getProperty("/company_code")));
             oFilterModel.setProperty("/org_code", "");
         },
 
@@ -247,12 +266,8 @@ sap.ui.define([
                     filters : aFilters,
                     success: function(data) {
                         if( data ) {
-                            if( 1 === data.results.length ) {
-                                oSearchField.setValue(data.results[0].material_code);
-                            }else {
-                                this.onOpenDialog(sQuery);
-                                this.getModel("dialogModel").setProperty("/materialCode", data.results);
-                            }
+                            this.onOpenDialog(sQuery);
+                            this.getModel("dialogModel").setProperty("/materialCode", data.results);
                         }
                     }.bind(this),
                     error: function(data){

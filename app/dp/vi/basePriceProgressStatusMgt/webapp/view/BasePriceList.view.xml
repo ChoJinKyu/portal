@@ -57,7 +57,7 @@
                         <VBox>
                             <Label text="{I18N>/COMPANY}"></Label>
                             <ComboBox width="100%" 
-                                selectedKey="{filterModel>/company}" 
+                                selectedKey="{filterModel>/company_code}" 
                                 items="{
                                     path: 'org>/Company',
                                     filters: [
@@ -105,7 +105,7 @@
                         <!-- Approval Number 시작 -->
                         <VBox>
                             <Label text="{I18N>/APPROVAL_NUMBER}"></Label>
-                            <Input value="{filterModel>/approvalNumber}" />
+                            <Input value="{filterModel>/approvalNumber}" change=".onSearch" />
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
