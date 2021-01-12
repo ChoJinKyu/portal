@@ -31,4 +31,4 @@ service PartActivityService {
     entity pdPartCategoryView as projection on PartCategoryView.Pd_Part_Category_View ;
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
     entity pdActivityStdDayView as projection on activityStdDayView.Pd_Activity_Standard_Day_View;
-}
+} 
