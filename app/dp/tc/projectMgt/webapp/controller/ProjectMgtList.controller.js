@@ -24,21 +24,20 @@ sap.ui.define([
             //this.setModel(new JSONModel(), "listModel");
             var oFilterModel = {
                 company_code : {operator: 'EQ', value: ''},
-                bizdivision_code : {operator: 'EQ', value: ''},
-                project_code : {operator: 'Contains', value: ''},
-                model_code: {operator: 'Contains', value: ''},
+                project_code : {operator: 'CONTAINS', value: ''},
+                model_code: {operator: 'EQ', value: ''},
                 product_group_code : {operator: 'EQ', value: ''},
                 project_status_code : {operator: 'EQ', value: ''},
                 massprod_start_date : {operator: 'BT', start: null, end: null},
                 project_grade_code : {operator: 'EQ', value: ''},
                 project_develope_event_code : {operator: 'EQ', value: ''},
-                buyer_name : {operator: 'Contains', value: ''}
+                buyer_name : {operator: 'CONTAINS', value: ''}
             };
             
             this.setModel(new JSONModel(oFilterModel), "filterModel");
             this.setModel(new JSONModel(), "updateModel");
 
-            //this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
+            this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
         }
 
         /**
@@ -49,36 +48,19 @@ sap.ui.define([
             var oFilterModel = this.getModel("filterModel"),
                 oFilterData = oFilterModel.getData(),
                 aFilters = [];
-
-            if(!oFilterData.company_code.value) {
-                MessageToast.show("회사는 필수 조회조건 입니다.", {at: "Center Center"});
-                return;
-            }
-            //filterModel>/divistion/value
-            if(!oFilterData.bizdivision_code.value) {
-                MessageToast.show("사업부는 필수 조회조건 입니다.", {at: "Center Center"});
-                return;
-            }
-
             Object.keys(oFilterData).forEach(function(sKey) {
                 var oTemp = oFilterData[sKey];
                 if(oTemp.value || oTemp.start) {
-                    if(oTemp.operator === "EQ" || oTemp.operator === "Contains") {
+                    if(oTemp.operator === "EQ" || oTemp.operator === "CONTAINS") {
                         aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.value));
                     } else if(oTemp.operator === "BT") {
-                        //aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.start, oTemp.end));
-                        aFilters.push(new Filter(sKey, FilterOperator.BT, oTemp.start, this._getNowDayAndTimes(true, oTemp.end)));
+                        aFilters.push(new Filter(sKey, FilterOperator[oTemp.operator], oTemp.start, oTemp.end));
                     }
 
                 }
-            }.bind(this));
+            });
 
             this._getProjectMgtList(aFilters);
-        }
-        
-        ,onExcelExportPress: function() {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
         }
 
         /**
@@ -92,6 +74,7 @@ sap.ui.define([
          * RowAction 클릭 후 상세화면으로 이동
          */
         , onRowActionPress: function(oEvent) {
+            debugger;
             var oContext = oEvent.getParameter("row").getBindingContext("listModel");
             this._goLastesProjView(oContext);
         }
@@ -109,7 +92,7 @@ sap.ui.define([
                 iSeconds = oDate.getSeconds();
 
             let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
-            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds);
+            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds) + "Z";
 
             if( bTimesParam ) {
                 sReturnValue += sTimes;
@@ -228,35 +211,160 @@ sap.ui.define([
             return;
         }
 
+        /********************************************************************************** */
+        /* 견적 재료비 생성, 목표 재료비 생성, 진척 관리 Dialog 창 Action  (Starat)             */
+        /********************************************************************************** */
+
         /**
          * 견적재료비 생성 클릭
+         * @param {event} oEvent
          */
-        , onEstimateCreatePress: function() {
-            var iSelIdx = this._getSelectedIndex(this.getView().byId("mainTable"));
-            if(iSelIdx < 0) { return; }//skip
+        , onEstimateCreatePress: function (oEvent) {
+            this.onGoalCreatePress(oEvent);
+        }
 
-            let oTable = this.getView().byId("mainTable");
-            let oContext = oTable.getContextByIndex(iSelIdx);
+        /**
+         * 예상 재료비 작성 Dialog 오픈 
+         * @param {event} oEvent
+         */
+        , onProgressMgtPress: function (oEvent) {
+            //MessageToast.show("준비중", { at: "Center Center" });
+            //return;
+            this.onGoalCreatePress(oEvent);
+        }
+
+        /**
+         * 목표재료비 작성 Dialog 오픈
+         * @param {event} oEvent
+         */
+        , onGoalCreatePress: function (oEvent) {
+            debugger;
+            var oView = this.getView();
+            var oTable = oView.byId("mainTable");
+            var nSelIdx = this._getSelectedIndex(oTable);
+
+            if (nSelIdx < 0) { return; }//skip
+
+            var oButton = oEvent.getSource();
+            if (!this._oDialogTableSelect) {
+                this._oDialogTableSelect = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.tc.projectMgt.view.DetailPopup",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }
+            this._oDialogTableSelect.then(function (oDialog) {
+                oDialog.open();
+                this.onGetDialogData();
+
+            }.bind(this));
+
+        }
+        /** 
+         *  목표재료비 Dialog 창 데이터 추출  
+         */
+        , onGetDialogData: function (oEvent) {
+            var oView = this.getView("detailPopupTable");
+            //var oModel = this.getModel();
+            var oModel = this.getModel("detailListModel");   //manifest에 등록한 모델을 가져오면 해당 서비스를 사용할수 있다.
+            var oTable = oView.byId("mainTable");
+            var nSelIdx = this._getSelectedIndex(oTable);
+            var oContext = oTable.getContextByIndex(nSelIdx);
+            var sPath = oContext.getPath();
+            var oData = oTable.getBinding().getModel().getProperty(sPath);
+
+            var aFilters = [];
+            
+            if (aFilters) {
+                //aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oData.tenant_id));
+                //aFilters.push(new Filter("project_code", FilterOperator.EQ, oData.project_code));
+                //aFilters.push(new Filter("model_code", FilterOperator.EQ, oData.model_code));
+            }
+
+            oView.setBusy(true);
+            oModel.read("/McstProject", {  
+                filters: aFilters,
+                urlParameters: {
+                    "$expand": "mcst_status_text,mcst_text"
+                },
+                success: function (data) {
+                    oView.setBusy(false);
+
+                    if (data) {
+                        oView.getModel("popupListModel").setData(data);
+                    }
+                }.bind(this),
+                error: function (data) {
+                    oView.setBusy(false);
+                    console.log('error', data);
+                }
+            });
+        }
+
+        /**
+         * Dialog Close
+         */
+        , onClose: function (oEvent) {
+            this._oDialogTableSelect.then(function (oDialog) {
+                oDialog.close();
+            });
+        }
+
+        /**
+        * Dialog Copy
+        */
+        , onCopy: function (oEvent) {
+            MessageToast.show("복사 준비중 ");
+        }
+
+        /**
+        * Dialog Create
+        */
+        , onDialogCreate: function (oEvent) {
+            this._goCreateView();
+        }
+
+        /**
+         * Dialog창 테이블 Index값 세팅 
+         */
+        , onSelectDialogChange: function (oEvent) {
+            debugger;
+            var oTable = this.getView().byId("detailPopupTable"),
+                iSelectedIndex = oEvent.getSource().getSelectedIndex();
+
+            oTable.setSelectedIndex(iSelectedIndex);
+        }
+
+        /**
+         * Dialog(견적재료비 생성, 목표 재료비 생성, 진척관리) > Create(작성) > 입력/수정하는 화면으로 이동
+         */
+        , _goCreateView: function (oEvent) {
+            debugger;
+            //var iSelIdx = this._getSelectedIndex(this.getView().byId("detailPopupTable"));
+
+            //if (iSelIdx < 0) { return; }//skip
+            var index = 0;
+            let oTable = this.getView().byId("detailPopupTable");
+            let oContext = oTable.getContextByIndex(index);
             let oModel = oContext.getModel();
             let oObj = oModel.getProperty(oContext.getPath());
 
             var oNavParam = {
-                tenant_id : oObj.tenant_id,
-                project_code : oObj.project_code,
-                model_code : oObj.model_code
+                tenant_id: oObj.tenant_id,
+                project_code: oObj.project_code,
+                model_code: oObj.model_code
             };
-            this.getRouter().navTo("ProjectInfo", oNavParam);
+
+            this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
+            //this.getRouter().navTo("ProjectInfo", oNavParam);
         }
 
-        , onGoalCreatePress: function() {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-        }
-
-        , onProgressMgtPress: function() {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-        }
+        /********************************************************************************** */
+        /* 견적 재료비 생성, 목표 재료비 생성, 진척 관리 Dialog 창 Action  (End)               */
+        /********************************************************************************** */          
 
         , onAddModelPress: function() {
             MessageToast.show("준비중", {at: "Center Center"});
@@ -277,15 +385,8 @@ sap.ui.define([
             var oContext = oTable.getContextByIndex(nSelIdx);
             var sPath = oContext.getPath();
             var oData = oTable.getBinding().getModel().getProperty(sPath);
-            var updateData = {
-                tenant_id : oData.tenant_id,
-                company_code : oData.company_code,
-                project_code : oData.project_code,
-                model_code : oData.model_code,
-                mcst_excl_flag : oData.mcst_excl_flag,
-                mcst_excl_reason : oData.mcst_excl_reason
-            };
-            this.getModel("updateModel").setData(updateData);
+            
+            this.getModel("updateModel").setData(oData);
 
             var oButton = oEvent.getSource();
 			if (!this._oDialogTableSelect) {
@@ -332,7 +433,6 @@ sap.ui.define([
             }
             var oDataModel = this.getModel();
             var sCreatePath = oDataModel.createKey("/Project", oKey);
-
             oDataModel.update(sCreatePath, oProjectData, {
                 success: function(data){
                     MessageBox.show("적용되었습니다.", {at: "Center Center"});
@@ -350,13 +450,14 @@ sap.ui.define([
         , onChangeCompnay: function(oEvent){
 
             //this.copyMultiSelected(oEvent);
+            debugger;
             var oComboSnap = this.getView().byId("cbxSnapDivision");
             var oComboExpand = this.getView().byId("cbxExpandDivision");
 
             var sCompCode = oEvent.getSource().getSelectedItem().getKey();
             var filter = new Filter({
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L2100' )
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2600' )
                                 //,new Filter("company_code", FilterOperator.EQ, sCompCode )
                             ],
                             and: true
@@ -417,33 +518,6 @@ sap.ui.define([
 
             return oSaveData;
         }
-
-        /**
-		 * deepcopy 하는 함수
-		 * @param {object} obj 복사할 data
-		 * @return {object} 복사된 data
-		**/
-		, fnDeepcopy: function(obj){
-			var copy;
-			if(Array.isArray(obj)){
-				copy = [];
-			} else {
-				copy = {};
-			}
-			if(typeof obj === "object" && obj !== null && !(obj instanceof Date)){
-				for(var attr in obj){
-					if(obj.hasOwnProperty(attr)){
-						if(attr === "__metadata"){
-							continue;
-						}
-						copy[attr] = this.fnDeepcopy({data:obj[attr]});
-					}
-				}
-			} else {
-				copy = obj;
-			}
-			return copy;
-		}
     
     });
   }
