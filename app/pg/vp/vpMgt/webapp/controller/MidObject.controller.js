@@ -44,7 +44,7 @@ sap.ui.define([
     var pTempType = "";
     var oTransactionManager;
     var that;
-	return BaseController.extend("vp.vpMgt.controller.MidObject", {
+	return BaseController.extend("pg.vp.vpMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
         
@@ -231,7 +231,7 @@ sap.ui.define([
             // };
             // this.getRouter().navTo("midPage", oNavParam); 
 			// if (this.currentRouteName === "MainList") { // last viewed route was master
-			// 	var oMasterView = this.oRouter.getView("vp.vpMgt.view.MainList");
+			// 	var oMasterView = this.oRouter.getView("pg.vp.vpMgt.view.MainList");
 			// 	this.getView().byId("fcl").removeBeginColumnPage(oMasterView);
 			// }
 
@@ -304,11 +304,11 @@ sap.ui.define([
             this._sTempType = oArgs.temptype;
             
 
-            // alert("_sTenantId : " + this._sTenantId + 
-            //       "_sVendorPool : " + this._sVendorPool + 
-            //       "_sOrgCode : " + this._sOrgCode + 
-            //       "_sOperationUnitCode : " + this._sOperationUnitCode +
-            //       "_sTempType : " + this._sTempType );
+            alert("_sTenantId : " + this._sTenantId + 
+                  "_sVendorPool : " + this._sVendorPool + 
+                  "_sOrgCode : " + this._sOrgCode + 
+                  "_sOperationUnitCode : " + this._sOperationUnitCode +
+                  "_sTempType : " + this._sTempType );
 
 
             var predicates = [];
@@ -323,7 +323,14 @@ sap.ui.define([
                     predicates.push(new Filter("operation_unit_code", FilterOperator.EQ, this._sOperationUnitCode));
                 }         
             if (!!this._sVendorPool) {
-                    predicates.push(new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool));
+
+                
+                    predicates.push(new Filter({
+                        path:'keyword',
+                        filters:[
+                            new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool),
+                        ]
+                        }));
                 }                        
 
                 // predicates.push(new Filter("language_cd", FilterOperator.EQ, "EN"));
@@ -469,7 +476,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "vp.vpMgt.view." + sFragmentName,
+					name: "pg.vp.vpMgt.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

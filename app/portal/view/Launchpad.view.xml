@@ -71,6 +71,11 @@
 					</tnt:NavigationList>
 				</tnt:fixedItem>
             </tnt:SideNavigation>
+            <!-- <m:Tree
+                id="Tree"
+                items="{path: '/menus'}">
+                <m:StandardTreeItem title="{menu_name}"/>
+            </m:Tree> -->
         </tnt:sideContent>
         <!-- <tnt:sideContent>
             <tnt:SideNavigation id="sideNavigation" selectedKey="subItem3">

@@ -1,0 +1,633 @@
+<mvc:View controllerName="dp.tc.projectMgt.controller.blocks.project.BlockGeneralInfo"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:layout="sap.ui.layout"
+  xmlns:tnt="sap.tnt"
+  class="sapUiSizeCompact"
+  displayBlock="true"
+  height="100%">
+  <VBox>
+    <form:SimpleForm 
+            editable="true" 
+            visible="{detailModel>/mode/readMode}"
+            layout="ResponsiveGridLayout">
+        <form:content>
+            <!--form line 1-->
+            <Label text="프로젝트코드">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="프로젝트명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="제품군">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/product_group_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="이벤트">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_develope_event_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <!--form line 2-->
+            <Label text="대표모델코드">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/model_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="대표모델명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/model_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="자사생산지">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/production_company_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="견적프로젝트코드">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/quotation_project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <!--form line 3-->
+            <Label text="상태">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_status_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="생성일자">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{
+                            path: 'detailModel>/project_create_date',
+                            formatter: '.dateFormatter.toUTCDateString'
+                        }">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="등급">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_grade_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/customer_local_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>            
+
+            <!--form line 4-->
+            <Label text="프로젝트리더">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_leader_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="재료비총괄">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/buyer_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="마케팅">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/marketing_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="기획">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/planning_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <!--form line 5-->
+            <Label text="최종고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/last_customer_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="최종고객사모델명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/customer_model_desc}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="수율(재료비)">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/mcst_yield_rate}%">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="자재명세서">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/bom_type_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+        </form:content>
+    </form:SimpleForm>
+    <form:SimpleForm 
+            editable="true" 
+            visible="{detailModel>/mode/editMode}"
+            layout="ResponsiveGridLayout">
+        <form:content>
+            <!--form line 1-->
+            <Label text="프로젝트코드">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="프로젝트명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/project_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="제품군">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <!--<Input value="{detailModel>/product_group_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>-->
+            <ComboBox
+                width="100%"
+                selectedKey="{detailModel>/product_group_code}"
+                change=".onChangeComboBox"
+                items="{
+                    path: 'util>/Code',
+                    filters: [
+                        {path: 'group_code', operator: 'EQ', value1: 'DC_TC_PRODUCT_GROUP_CODE'}
+                    ],
+                    sorter: { path: 'sort_no'}
+                }">
+                <items>
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </items>
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </ComboBox>
+
+            <Label text="이벤트">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <!--<Input value="{detailModel>/project_develope_event_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>-->
+            <ComboBox
+                width="100%"
+                selectedKey="{detailModel>/project_develope_event_code}"
+                items="{
+                    path: 'util>/Code',
+                    filters: [
+                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_DEVELOP_EVENT_CODE'}
+                    ],
+                    sorter: { path: 'sort_no'}
+                }">
+                <items>
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </items>
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </ComboBox>
+
+            <!--form line 2-->
+            <Label text="대표모델코드">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/model_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="대표모델명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Text text="{detailModel>/model_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Text>
+
+            <Label text="자사생산지">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/production_company_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="견적프로젝트코드">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/quotation_project_code}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <!--form line 3-->
+            <Label text="상태">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
+                </layoutData>
+            </Label>
+            <ComboBox
+                width="100%"
+                selectedKey="{detailModel>/project_status_code}"
+                items="{
+                    path: 'util>/Code',
+                    filters: [
+                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_STATUS_CODE'}
+                    ],
+                    sorter: { path: 'sort_no'}
+                }">
+                <items>
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </items>
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </ComboBox>            
+
+            <Label text="생성일자">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <!--<Input value="{
+                            path: 'detailModel>/project_create_date',
+                            formatter: '.dateFormatter.toUTCDateString'
+                        }">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>-->
+            <DatePicker
+                id="DP4"
+                value="{path:'detailModel>/project_create_date', type:'sap.ui.model.type.Date', formatOptions: { style: 'medium', strictParsing: true}}"
+                class="sapUiSmallMarginBottom">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </DatePicker>
+
+            <Label text="등급">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <!--<Input value="{detailModel>/project_grade_text}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>-->
+            <ComboBox
+                width="100%"
+                selectedKey="{detailModel>/project_grade_code}"
+                items="{
+                    path: 'util>/Code',
+                    filters: [
+                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_GRADE_CODE'}
+                    ],
+                    sorter: { path: 'sort_no'}
+                }">
+                <items>
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </items>
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </ComboBox>
+
+            <Label text="고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/customer_local_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>            
+
+            <!--form line 4-->
+            <Label text="프로젝트리더">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/project_leader_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="개발구매">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/buyer_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="마케팅">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/marketing_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="기획">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/planning_person_info}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <!--form line 5-->
+            <Label text="최종고객사">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/last_customer_name}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="최종고객사모델명">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <Input value="{detailModel>/customer_model_desc}">
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </Input>
+
+            <Label text="수율(재료비)">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <HBox>
+                <Input value="{detailModel>/mcst_yield_rate}" width="95%"/>
+                <Text text="%" width="100%" class="sapUiLargeMarginEnd"/>
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </HBox>
+
+            <Label text="자재명세서">
+                <layoutData>
+                    <layout:GridData span="XL1 L1 M3 S12" />
+                </layoutData>
+            </Label>
+            <ComboBox
+                width="100%"
+                selectedKey="{detailModel>/bom_type_code}"
+                items="{
+                    path: 'util>/Code',
+                    filters: [
+                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_BOM_TYPE_CODE'}
+                    ],
+                    sorter: { path: 'sort_no'}
+                }">
+                <items>
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </items>
+                <layoutData>
+                    <layout:GridData span="XL2 L2 M3 S12" />
+                </layoutData>
+            </ComboBox>
+        </form:content>
+    </form:SimpleForm>
+</VBox>
+
+<VBox>
+    <Table id="tblSimilModel"
+            visible="{detailModel>/mode/readMode}"
+            growing="true"
+            growingThreshold="20"
+            class="sapFDynamicPageAlignContent"
+            mode="None"
+            width="auto"
+            items="{detailModel>/similar_model/results}"
+            >
+        <headerToolbar>
+            <OverflowToolbar>
+                <Label text="유사 모델"/>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                <Text text="모델코드" />
+            </Column>
+            <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                <Text text="모델명" />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{detailModel>similar_model_code}" />
+                    <Text text="{detailModel>code_desc}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+    <Table id="tblSimilModel_edit"
+            visible="{detailModel>/mode/editMode}"
+            growing="true"
+            growingThreshold="20"
+            class="sapFDynamicPageAlignContent"
+            mode="None"
+            width="auto"
+            items="{detailModel>/similar_model/results}"
+            >
+        <headerToolbar>
+            <OverflowToolbar>
+                <Label text="유사 모델"/>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                <Text text="모델코드" />
+            </Column>
+            <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                <Text text="모델명" />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Input value="{detailModel>similar_model_code}" />
+                    <Input value="{detailModel>code_desc}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</VBox>
+</mvc:View>

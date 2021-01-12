@@ -24,7 +24,6 @@
                 <!-- <Button icon="sap-icon://message-popup" text="123123" type="Emphasized" press=".onMessageButtonPress" /> -->
                 <ToolbarSpacer />
 				<Button text="SAPUI5 API" type="Transparent" press=".onSAPUI5APIButtonPress" />
-				<Button text="Thanks" type="Emphasized" press=".onThanksButtonPress"/>
             </OverflowToolbar>
         </footer>
     </Page>

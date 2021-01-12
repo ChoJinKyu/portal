@@ -8,18 +8,16 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
-    "ext/lib/util/Validator"
-], function (BaseController, Multilingual, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
+    "ext/lib/util/Validator",
+    "sap/ui/core/Fragment"
+], function (BaseController, Multilingual, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator, Fragment) {
     "use strict";
     return BaseController.extend("pg.mi.miBom.controller.MidObject", {
-
-
         validator: new Validator(),
-
 		formatter: (function(){
 			return {
 				toYesNo: function(oData){
-					return oData === true ? "YES" : "NO"
+					return oData === true ? "YES" : "NO";
 				},
 			}
         })(),
@@ -32,6 +30,7 @@ sap.ui.define([
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 
         },
+
         dataPath : "resources",
         _m : {  //수정대상 등록된 필터값들은 삭제한다. 
             page : "page",
@@ -114,19 +113,21 @@ sap.ui.define([
             controlMode : {
                 Dev : "Dev",
                 Qa : "QA",
-                Prd : "PRD",
+                Prd : "PRD"
 
             }            
         },
+
         _imsiData : {
             vendor : "KR01818401",
             vendor_name: "한국유나이티드제약(주)",
-            material_code : "1000005",
-            material_desc : "OLEIC ACID",
+            material_code : "1000164",
+            material_desc : "ANTIMONY TRIOXIDE (SB2O3) WHITE 99.5%",
             supplier_code : "KR01818401",
             supplier_local_name : "한국유나이티드제약(주)",
             supplier_english_name : "korea"
         },
+
         _sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
             user : {
                 id : "Admin",
@@ -176,7 +177,7 @@ sap.ui.define([
                     create_user_id: this._sso.user.id,
                     update_user_id: this._sso.user.id,
                     system_create_dtm : new Date(),
-                    number:0                    
+                    number:1                    
                 });
 
                 
@@ -217,6 +218,8 @@ sap.ui.define([
             sap.ui.getCore().attachValidationSuccess(function (oEvent) {
                 oEvent.getParameter("element").setValueState(ValueState.None);
             });
+
+            //this.byId("label").attachBrowserEvent("click", showValueHelp);
 
             //header title hide
             $(".sapMBarPH sapMBarContainer").hide(); 
@@ -327,7 +330,7 @@ sap.ui.define([
          */        
         _isNull: function (p_val) {
             if (!p_val || p_val == "" || p_val == null) {
-                return true
+                return true;
             } else {
                 return false;
             }
@@ -417,18 +420,25 @@ sap.ui.define([
             var that = this;    
             _oUiData.setProperty("/radioButtonGroup", that.getView().byId("radioButtonGroup").getSelectedIndex());
 
-			// create value help dialog
-			if (!this._valueHelpMaterialDialog) {
-                that._valueHelpMaterialDialog = sap.ui.xmlfragment(
-                    that._m.fragementId.materialDialog, 
-                    that._m.fragementPath.materialDialog,this
-                );
-                that.getView().addDependent(that._valueHelpMaterialDialog);
-            }                
-            
-            //기존 검색 데이타 초기화
+            var oView = that.getView();   
+
+			if (!that._valueHelpMaterialDialog) {
+
+                that._valueHelpMaterialDialog = Fragment.load({
+                    id: that._m.fragementId.materialDialog,
+                    name: that._m.fragementPath.materialDialog,
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }               
+
             that.setModelNullAndUpdateBindings(materialTable);
-			that._openValueHelpMaterialDialog();
+
+            that._valueHelpMaterialDialog.then(function(oDialog) {
+				oDialog.open();
+            });
 		},
 
         /**
@@ -441,19 +451,6 @@ sap.ui.define([
             // open value help dialog filtered by the input value
             //기존 모델 초기화 
             that.setArrayModelNullAndUpdateBindings("materialTable");
-
-			if (!that._valueHelpMaterialDialog) {
-
-                that._valueHelpMaterialDialog = sap.ui.xmlfragment(
-                    that._m.fragementId.materialDialog, 
-                    that._m.fragementPath.materialDialog,this
-                );
-              
-                that.getView().addDependent(that._valueHelpMaterialDialog);
-
-            }  
-            
-            that._valueHelpMaterialDialog.open();
 		},
 
         /**
@@ -476,8 +473,8 @@ sap.ui.define([
                 oCcomboBox_supplierView= that._findFragmentControlId(that._m.fragementId.materialDialog, "comboBox_supplierView"),
                 comboBox_materialView=oComboBox_materIalView.getSelectedKey(),
                 comboBox_supplierView=oCcomboBox_supplierView.getSelectedKey(),
-                input_material_desc=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_material_desc").getValue(),
-                input_supplier_local_name=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
+                input_material_desc=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_material_desc").getValue().toUpperCase(),
+                input_supplier_local_name=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_supplier_local_name").getValue().toUpperCase();
                 //input_hidden_supplier_english_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
         
              var sFilters = [
@@ -509,7 +506,7 @@ sap.ui.define([
                             materialTable.oData[i].vendor = that._imsiData.vendor;
                             materialTable.oData[i].vendor_name = that._imsiData.vendor_name;
                             materialTable.oData[i].supplier_code = that._imsiData.supplier_code;
-                            materialTable.oData[i].supplier_local_name = that._imsiData.supplier_code;
+                            materialTable.oData[i].supplier_local_name = that._imsiData.supplier_local_name;
                         }
                         that.getOwnerComponent().setModel(materialTable, "materialTable");                                         
                     }
@@ -564,22 +561,37 @@ sap.ui.define([
             var obj = oEvent.getSource().oParent.oParent.getBindingContextPath(),
                 that = this,
                 midList = that.getModel("midList");
-                that._selectedIndex = parseInt(obj.substring(1));
+
+            that._selectedIndex = parseInt(obj.substring(1));
+
+            var oView = that.getView();   
 
 			if (!that._valueHelpReqmQuantityUnit) {
 
-                that._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
-                    that._m.fragementId.reqmQuantityUnit, 
-                    that._m.fragementPath.reqmQuantityUnit,this
-                );
-                that.getView().addDependent(that._valueHelpReqmQuantityUnit);
+                that._valueHelpReqmQuantityUnit = Fragment.load({
+                    id: that._m.fragementId.reqmQuantityUnit,
+                    name: that._m.fragementPath.reqmQuantityUnit,
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+
             }   
-            that._openValueHelpReqmQuantityUnit();
+            // that._openValueHelpReqmQuantityUnit();
+            var unitOfMeasureView = that.getModel("unitOfMeasureView");
+            that.setModelNullAndUpdateBindings(unitOfMeasureView);
+
+            that._valueHelpReqmQuantityUnit.then(function(oDialog) {
+                oDialog.open();
+                var uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
+                uom_name.setValue(midList.oData[that._selectedIndex].reqm_quantity_unit);     
+                 that.onUomNameSearch();             
+            });
             
-            
-            var uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
-            uom_name.setValue(midList.oData[that._selectedIndex].reqm_quantity_unit);            
-            that.onUomNameSearch();
+  
+
+           
          },
 
         /**
@@ -592,7 +604,7 @@ sap.ui.define([
                 that = this,
                 oModel = that.getOwnerComponent().getModel(),
                 oUnitOfMeasureView = that.getModel("unitOfMeasureView"),                
-                searchField_uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue(),
+                searchField_uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue().toUpperCase(),
                 reqmTable= that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable");             
                 
             var andFilter = [
@@ -633,24 +645,24 @@ sap.ui.define([
             var unitOfMeasureView = that.getModel("unitOfMeasureView");
          
             that.setModelNullAndUpdateBindings(unitOfMeasureView);
-			if (!that._valueHelpReqmQuantityUnit) {
 
-                that._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
-                    that._m.fragementId.reqmQuantityUnit, 
-                    that._m.fragementPath.reqmQuantityUnit,this
-                );
-                that.getView().addDependent(that._valueHelpReqmQuantityUnit);
-            }    
+            that._valueHelpReqmQuantityUnit.then(function(oDialog) {
+                oDialog.open();
+            });
 
-			that._valueHelpReqmQuantityUnit.open();
 		},
 
         /**
          * 소요량 단위 close
          */
-        closeValueHelpReqmQuantityUnit : function(evt){
+        _closeValueHelpReqmQuantityUnit : function(evt){
             var that = this;
-			that._valueHelpReqmQuantityUnit.close();
+            that._valueHelpReqmQuantityUnit.then(function(oDialog) {
+                oDialog.close();
+                //oDialog.destroy();
+            });             
+
+			//that._valueHelpReqmQuantityUnit.close(); 
         },
 
         /**
@@ -679,7 +691,7 @@ sap.ui.define([
 
             midList.oData[that._selectedIndex].reqm_quantity_unit = uom_code;
             midList.refresh(true);
-            that.closeValueHelpReqmQuantityUnit();
+            that._closeValueHelpReqmQuantityUnit();
 		},
 		/**
 		 * Event handler for Enter Full Screen Button pressed
@@ -922,8 +934,9 @@ sap.ui.define([
         _initialControlValue : function(){
             console.log("_initialControlValue");
             var that = this;
-
-            that.getView().byId("input_base_quantity").setValue("");
+            //that._fragmentDistory();
+            
+            that.getView().byId("input_base_quantity").setValue("1");
             that.getView().byId("input_processing_cost").setValue("");
             that.getView().byId("input_hidden_material_code").setValue("");
             that.getView().byId("input_hidden_material_desc").setValue("");
@@ -993,15 +1006,20 @@ sap.ui.define([
                 oArgs = oEvent.getParameter("arguments"),
                 oModel = this.getOwnerComponent().getModel();
 
-                that._m.mi_bom_id = this._fnGuid();
+                //처음 생성부터 this.getView().getId() 하면 더 간단함.
+                 that._m.fragementId.materialDialog = this.getView().getId();
+                 that._m.fragementId.materialDetail  = this.getView().getId();      
+                 that._m.fragementId.reqmQuantityUnit = this.getView().getId();  
+
                 that._m.filter.tenant_id = oArgs.tenant_id;
                 that._m.filter.material_code = oArgs.material_code;
                 that._m.filter.supplier_code = oArgs.supplier_code;
-                that._m.filter.mi_bom_id = oArgs.mi_bom_id
+                that._m.filter.mi_bom_id = oArgs.mi_bom_id;
     
             if (that._m.filter.material_code == "new") {
                 console.log("=============== new item ===============");
                 var oModel = that.getModel("midList");   
+
                 if(oModel){
                     oModel.setData(null);     
                     oModel.updateBindings(true);
@@ -1100,13 +1118,6 @@ sap.ui.define([
                 that._selectedIndex = parseInt(obj.substring(1)); 
 
                 that.onMaterialDetail(true);
-
-            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
-            searchField_material_code.setValue(midList.oData[that._selectedIndex].mi_material_code);            
-            
-            that.onMaterialSearch();
-    
-
         },
 
         /**
@@ -1117,23 +1128,50 @@ sap.ui.define([
             console.log("call funtion onMaterialDetail");
             var that = this;
             var oUi = that.getModel("oUi");
+            var oView = that.getView();   
+            var midList =this.getModel("midList");
+
 			if (!that._valueHelpMaterialDetail) {
-                that._valueHelpMaterialDetail = sap.ui.xmlfragment(that._m.fragementId.materialDetail, that._m.fragementPath.materialDetail, this);
-                that.getView().addDependent(that._valueHelpMaterialDetail);
+
+                that._valueHelpMaterialDetail = Fragment.load({
+                    id: that._m.fragementId.materialDetail,
+                    name: that._m.fragementPath.materialDetail,
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
             }          
 
-            that._openValueHelpMaterialDetail();
+            var arrayModel = [               
+                        "mIMaterialCostInformationView",
+                        "mIMatListView"
+                    ];
+          
+            that.setArrayModelNullAndUpdateBindings(arrayModel);
 
-            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
-            var searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name");
+            that._valueHelpMaterialDetail.then(function(oDialog) {
 
-            oUi.setProperty("/changeItem", bflag);
+                oDialog.open();
 
-            if(!bflag){
-                searchField_material_code.setValue("");
-                searchField_category_name.setValue("");
-            }
-                                          
+                var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+                var searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name");
+
+                oUi.setProperty("/changeItem", bflag);
+
+                if(bflag){
+                    var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+                    searchField_material_code.setValue(midList.oData[that._selectedIndex].mi_material_code);            
+                    
+                    that.onMaterialSearch();
+                }
+
+                if(!bflag){
+                    searchField_material_code.setValue("");
+                    searchField_category_name.setValue("");
+                }                
+            });            
+
         },
 
         /**
@@ -1150,7 +1188,10 @@ sap.ui.define([
             ];
           
             that.setArrayModelNullAndUpdateBindings(arrayModel);
-            that._valueHelpMaterialDetail.open();
+            that._valueHelpMaterialDetail.then(function(oDialog) {
+                oDialog.open();
+            });
+            //that._valueHelpMaterialDetail.open();
         },
        
         /**
@@ -1160,7 +1201,7 @@ sap.ui.define([
         _onExit: function () {
             var that = this;
             that._setInit();
-            that._fragmentDistory();           
+                       
 
         },
 
@@ -1178,6 +1219,7 @@ sap.ui.define([
             // }
 
         },
+
         _handleCreateSuccess: function (oData) {
             console.log("_handleCreateSuccess");
             var that = this;
@@ -1214,8 +1256,8 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
-                searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code").getValue(),
-                searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name").getValue(),
+                searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code").getValue().toUpperCase(),
+                searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name").getValue().toUpperCase(),
                 oTable = that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");
                 
            
@@ -1271,7 +1313,6 @@ sap.ui.define([
             that._setSelectedRightTableItem();
         },
           
-
         _setSelectedRightTableItem : function (){
             console.log("_setSelectedRightTableItem");
             var that = this;
@@ -1430,7 +1471,7 @@ sap.ui.define([
                    //}         
                 },
                 error: function(data){
-                    console.log('error',data)
+                    console.log('error',data);
                 },
             });
          
@@ -1604,7 +1645,13 @@ sap.ui.define([
          */
         onMaterialDialog_close : function (){
             var that = this;
-            that._valueHelpMaterialDialog.close();
+            that._valueHelpMaterialDialog.then(function(oDialog) {
+                oDialog.close();
+                //song Fragment destory (팝업창 소거하지 않을경우 페이지 이동하더래도 남아 있는 컨트롤 객체로 에러 방지)
+                //oDialog.destroy();
+            });                    
+           // that.getView().byId("materialDialog").close();
+           // that._valueHelpMaterialDialog.close();
         },
         /**     
          * 시황재재 선택 및 가격정보 선택 페이지 close
@@ -1612,7 +1659,11 @@ sap.ui.define([
          */
         onMaterialDetailClose : function() {
             var that = this;
-            that._valueHelpMaterialDetail.close();
+            that._valueHelpMaterialDetail.then(function(oDialog) {
+                oDialog.close();
+                //oDialog.destroy();
+            }); 
+            //that.byId("materialDetail").close();
         },
         
         /**
@@ -1721,25 +1772,32 @@ sap.ui.define([
                 return;
             }
             that._setBusy(true);
+
             var _deleteItemOdata = _deleteItem.getProperty("/delData");
+            
+            function fnUndefined(t){
+                if (t === undefined) return true;
+                else return false;
+            }
+
             for(var i=0;i<oSelected.length;i++){
 
                 var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
-                //수정
                 if(oModel.oData[idx].itemMode == that._m.itemMode.read){
                     _deleteItemOdata.push(oModel.oData[idx]);
-                    //_deleteItem.setProperty("/delData", _deleteItemOdata);
-                }             
+                }
             }
 
-            for(var i=0;i<oSelected.length;i++){
+            _deleteItem.setProperty("/delData", _deleteItemOdata);
 
-                var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
-                oModel.oData.splice(idx, 1);              
+            for ( var i = oSelected.length - 1; i >= 0; i--) {
+
+                if(!fnUndefined(oSelected[i])){
+                    var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));                    
+                    oModel.oData.splice(idx, 1); 
+                }
             }
-
-            //_deleteItem.setProperty("/oData", _deleteItemOdata);
-            
+                      
             that._setBusy(false);
             oTable.removeSelections();
             oTable.getBinding("items").refresh();
@@ -1762,7 +1820,7 @@ sap.ui.define([
                 title: title,
                 actions: [MessageBox.Action.OK],
                 styleClass: "sapUiSizeCompact",
-                onClose: closeEvent,
+                onClose: closeEvent
             });
         },
 
@@ -1820,6 +1878,18 @@ sap.ui.define([
             that.validator.clearValueState(that.byId("midTable"));
         },
         
+        _guidFragmentId : function(){
+
+            function guid() {
+                function s4() {
+                    return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+                }
+                return s4() + s4();
+            };
+
+            return guid();
+              
+        },
 
         /**
          * 필수값 체크
@@ -1834,6 +1904,13 @@ sap.ui.define([
             var oTable = that.getView().byId("midTable");
 
             var tableCoutnt = 0;
+
+            if(oTable.getItems().length<1){
+                 that._showMessageToast(that.getModel("I18N").getText("/EPG00013")); 
+                bValueCheckFlag  =false;                              
+                return false;
+            }
+
             for (var idx = 0; idx < oTable.getItems().length; idx++) {
                 
                 var items = oTable.getItems()[idx];
@@ -1865,7 +1942,7 @@ sap.ui.define([
             }
             if(tableCoutnt<1){
 
-                that._showMessageToast("필수 입력 내용과 시황자재를 추가 하셔야 합니다.");
+                that._showMessageToast(that.getModel("I18N").getText("/NPG00024"));
                 bValueCheckFlag = false;
             } 
 
@@ -1911,8 +1988,8 @@ sap.ui.define([
              }
              else if(bCopyFlag){
 
-                MessageBox.confirm("복사 하시겠습니까?", {
-                    title : "복사 확인",
+                MessageBox.confirm(that.getModel("I18N").getText("/NPG00025"), {
+                    title : that.getModel("I18N").getText("/NPG00026"),
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
@@ -1956,23 +2033,21 @@ sap.ui.define([
                 updateItem = 0, 
                 createItem = 0,
                 copyBomId = "" ,
+                createBomId = "",
                 deleteItem = 0;
                 //that._setBusy(true);
 
-
-
-            if(bCopyFlag){
-                copyBomId = that._fnGuid();
+            if(bCreateFlag==true || bCopyFlag ==true){
+                createBomId = that._fnGuid();
             }
+
 
             var _headerCount = 0;
             for(var i=0;i<midList.oData.length;i++){
-
                 
                 if((typeof midList.oData[i].use_flag)=='string'){
                     midList.oData[i].use_flag = midList.oData[i].use_flag ==="true" ?  true: false;
                 }
-                
 
                 //Crate , Copy
                 if(bCreateFlag==true || bCopyFlag ==true){
@@ -1982,12 +2057,8 @@ sap.ui.define([
                     midList.oData[i].base_quantity = that.byId("input_base_quantity").getValue(),
                     midList.oData[i].processing_cost = that.byId("input_processing_cost").getValue(),
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();
-                  
-                    if(bCopyFlag){
-                        
-                        midList.oData[i].mi_bom_id =  copyBomId;
-                    }
-
+                    midList.oData[i].mi_bom_id =  createBomId;
+ 
                     if(_headerCount==0){
                         if(that._fnCreateEntryHeader(oModel, midList.oData[i])){
                             createHeader++;
@@ -2069,7 +2140,9 @@ sap.ui.define([
                     console.log("======================= setUseBatch =========================");
                     that._setUseBatch();
                 } 
-            }      
+            }    
+            var _deleteItem = that.getModel("_deleteItem");
+            _deleteItem.setProperty("/delData",[]);  
         },
 
         readChecklistEntity: function(oDeleteInfoOdata) {
@@ -2159,9 +2232,9 @@ sap.ui.define([
                     });
                 }
 
-                setTimeout(oModel.refresh(true), 500);
-                setTimeout(that._fnSetReadMode(), 500);
-                setTimeout(that._onExit(), 500);
+                setTimeout(oModel.refresh(true), 1000);
+                setTimeout(that._fnSetReadMode(), 1000);
+                setTimeout(that._onExit(), 1000);
                
                 that._setBusy(false);   
         },
@@ -2288,13 +2361,13 @@ sap.ui.define([
                 material_code : oData.material_code,
                 supplier_code : oData.supplier_code,
                 mi_bom_id : oData.mi_bom_id
-            }
+            };
 
             var updateHeaderParameters = {
                 "pcst_currency_unit": oData.pcst_currency_unit,
                 "local_update_dtm": new Date(),
                 "update_user_id": that._sso.user.id
-            }            
+            };            
 
             try{
                 var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
@@ -2328,7 +2401,7 @@ sap.ui.define([
                 "termsdelv": oData.termsdelv,
                 "use_flag" : oData.use_flag,
                 "local_update_dtm" : new Date()
-            }
+            };
 
             try{
                 var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
@@ -2370,7 +2443,7 @@ sap.ui.define([
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
                 mi_material_code : oData.mi_material_code 
-            }
+            };
 
             try{
                 var sDeletePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
@@ -2555,7 +2628,7 @@ sap.ui.define([
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
+                        setTimeout(that._onExit(),500);
                         that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
@@ -2565,7 +2638,7 @@ sap.ui.define([
         
         _handleUpdateError: function (oError) {
             var that = this;
-            var mTitle = that.getModel("I18N").getText("/UPDATE") + " " + thithats.getModel("I18N").getText("/FAILURE");
+            var mTitle = that.getModel("I18N").getText("/UPDATE") + " " + that.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
                 mTitle,
                 that.getModel("I18N").getText("/EPG00002"),
@@ -2576,14 +2649,14 @@ sap.ui.define([
 
         _handleCopySuccess: function (oData) {
             var that = this;
-            MessageBox.show("복사 성공 하였습니다.", {
+            MessageBox.show(that.getModel("I18N").getText("/COPY_SUCCESS"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: "복사 성공",
+                title: that.getModel("I18N").getText("/NPG00026"),
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
+                        setTimeout(that._onExit(),500);
                         that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
@@ -2594,9 +2667,8 @@ sap.ui.define([
         _handleCopyError: function (oError) {
             var that = this;
             this._showMessageBox(
-                "복사 실패",
-                "복사 실패 하였습니다.",
-                that._m.messageType.Error,
+                that.getModel("I18N").getText("/COPY") + " " + that.getModel("I18N").getText("/FAILURE"),
+                that.getModel("I18N").getText("/COPY_FAILURE"),
                 function(){return;}
             );
         },
@@ -2616,7 +2688,7 @@ sap.ui.define([
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
+                        setTimeout(that._onExit(),500);
                         that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
@@ -2649,7 +2721,16 @@ sap.ui.define([
             var val = _oInput.getValue();
             val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val);
-        }
+        },
+
+        onExit: function() {
+            var that = this;
+            that._fragmentDistory();            
+            // if (this.dialogFrafment) {
+            //     this.dialogFrafment.destroy(true);
+            // }
+
+        }       
            
     });
 });

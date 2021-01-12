@@ -99,13 +99,13 @@ sap.ui.define([
         _doInitSearch: function () {
             this.getView().setModel(this.getOwnerComponent().getModel());
 
-            this.setDivision('LGEKR');
+            this.setDivision('LGESL');//LGEKR
 
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchDivisionS").setSelectedKeys(['CCZ', 'DHZ', 'PGZ']);
-            this.getView().byId("searchDivisionE").setSelectedKeys(['CCZ', 'DHZ', 'PGZ']);
+            this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
+            this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
+            this.getView().byId("searchDivisionS").setSelectedKeys(['A040']);//CCZ', 'DHZ', 'PGZ
+            this.getView().byId("searchDivisionE").setSelectedKeys(['A040']);
 
             /** Create Date */
             var today = new Date();
@@ -117,10 +117,27 @@ sap.ui.define([
         },
 
         setDivision: function (companyCode) {
-
+/*
             var filter = new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU'),
+                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                ],
+                and: true
+            });
+
+            var bindItemInfo = {
+                path: 'purOrg>/Pur_Operation_Org',
+                filters: filter,
+                template: new Item({
+                    key: "{purOrg>org_code}", text: "[{purOrg>org_code}] {purOrg>org_name}"
+                })
+            };
+*/
+            var filter = new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
                 and: true
@@ -133,7 +150,6 @@ sap.ui.define([
                     key: "{org_code}", text: "[{org_code}] {org_name}"
                 })
             };
-
             this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
             this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
         },
@@ -623,7 +639,7 @@ sap.ui.define([
                     return;
                 }
 
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", checkCnt, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                MessageBox.confirm("삭제하시겠습니까?", {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}") this.getModel("I18N").getText("/NCM0104", checkCnt, "삭제")
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
@@ -664,7 +680,7 @@ sap.ui.define([
 
             for (var idx = 0; idx < viewData.length; idx++) {
                 if(viewData[idx].chk){
-                    viewData[idx].update_type = "receipt";
+                    //viewData[idx].update_type = "receipt";
                     checkCnt++;
 
                     var statusCode = viewData[idx].mold_progress_status_code;
@@ -866,7 +882,8 @@ sap.ui.define([
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
         },
 
-        familyFlagChange: function (oEvent) {
+        familyFlagChange: function (oEvent) {console.log(oEvent);
+            oEvent.getSource().getParent().getCells()[0].setSelected(true);
             var sSelectedKey = oEvent.getSource().getSelectedKey();
 
             if (sSelectedKey === 'Y') {
@@ -876,6 +893,12 @@ sap.ui.define([
                 oEvent.getSource().getParent().getCells()[28].setEditable(true);
                 oEvent.getSource().getParent().getCells()[29].setEditable(true);
             } else {
+                oEvent.getSource().getParent().getCells()[25].setValue(null);
+                oEvent.getSource().getParent().getCells()[26].setValue(null);
+                oEvent.getSource().getParent().getCells()[27].setValue(null);
+                oEvent.getSource().getParent().getCells()[28].setValue(null);
+                oEvent.getSource().getParent().getCells()[29].setValue(null);
+                
                 oEvent.getSource().getParent().getCells()[25].setEditable(false);
                 oEvent.getSource().getParent().getCells()[26].setEditable(false);
                 oEvent.getSource().getParent().getCells()[27].setEditable(false);
@@ -946,7 +969,7 @@ sap.ui.define([
                 eDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
-                moldNo = this.getView().byId("searchMoldNo").getValue(),
+                moldNo = this.getView().byId("searchPart").getValue(),
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 
             var aTableSearchState = [];
@@ -1060,19 +1083,23 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
                     }));
                 });
             } else {
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+                divisionFilters.push(
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                );
             }
 
             var filter = new Filter({
                 filters: divisionFilters,
-                and: false
+                and: params.selectedItems.length == 1 ? true : false
             });
 
             this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
@@ -1114,20 +1141,19 @@ sap.ui.define([
 
             this.setValuHelpDialog(oEvent);
 
-
-
             var aCols = this.oColModel.getData().cols;
-
 
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, "L2600");
 
                 oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
                 oTable.setModel(this.oColModel, "columns");
 
                 if (oTable.bindRows) {
                     oTable.bindAggregation("rows", this.vhdPath);
+                    oTable.getBinding("rows").filter(_filter);
                 }
 
                 if (oTable.bindItems) {
@@ -1138,6 +1164,7 @@ sap.ui.define([
                             })
                         });
                     });
+                     oTable.getBinding("items").filter(_filter);
                 }
                 this._oValueHelpDialog.update();
 
@@ -1156,9 +1183,9 @@ sap.ui.define([
 
         },
 
-        setValuHelpDialog: function (oEvent) {
+        setValuHelpDialog: function(oEvent){
 
-            if (oEvent.getSource().sId.indexOf("searchModel") > -1) {
+            if(oEvent.getSource().sId.indexOf("searchModel") > -1){
                 //model
                 this._oInputModel = this.getView().byId("searchModel");
 
@@ -1173,19 +1200,19 @@ sap.ui.define([
 
                 this.modelName = '';
                 this.vhdPath = '/Models';
-
+                
                 this._oValueHelpDialog.setTitle('Model');
                 this._oValueHelpDialog.setKey('model');
                 this._oValueHelpDialog.setDescriptionKey('model');
 
-            } else if (oEvent.getSource().sId.indexOf("searchMoldNo") > -1) {
+            }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
                 //part
-                this._oInputModel = this.getView().byId("searchMoldNo");
+                this._oInputModel = this.getView().byId("searchPart");
 
                 this.oColModel = new JSONModel({
                     "cols": [
                         {
-                            "label": "Mold No",
+                            "label": "Part No",
                             "template": "mold_number"
                         },
                         {
@@ -1200,12 +1227,12 @@ sap.ui.define([
                 });
 
                 this.modelName = '';
-                this.vhdPath = '/MoldNumbers';
-                this._oValueHelpDialog.setTitle('Mold No');
+                this.vhdPath = "/PartNumbers";
+                this._oValueHelpDialog.setTitle('Part No');
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
 
-            } else if (oEvent.getSource().sId.indexOf("searchRequester") > -1) {
+            }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){
 
                 this._oInputModel = this.getView().byId("searchRequester");
 
@@ -1245,70 +1272,72 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
+			
+			var	aSelectionSet = oEvent.getParameter("selectionSet");
+			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
+				if (oControl.getValue()) {
+					aResult.push(new Filter({
+						path: oControl.getName(),
+						operator: FilterOperator.Contains,
+						value1: oControl.getValue()
+					}));
+				}
 
-            var aSelectionSet = oEvent.getParameter("selectionSet");
-            var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
-                if (oControl.getValue()) {
-                    aResult.push(new Filter({
-                        path: oControl.getName(),
-                        operator: FilterOperator.Contains,
-                        value1: oControl.getValue()
-                    }));
-                }
-
-                return aResult;
+				return aResult;
             }, []);
-
+            
             var _tempFilters = this.getFiltersFilterBar();
 
-            aFilters.push(new Filter({
-                filters: _tempFilters,
-                and: false
+			aFilters.push(new Filter({
+				filters: _tempFilters,
+				and: false
             }));
+            
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
 
-            this._filterTable(new Filter({
-                filters: aFilters,
-                and: true
-            }));
+			this._filterTable(new Filter({
+				filters: aFilters,
+				and: true
+			}));
         },
 
-        getFiltersFilterBar: function () {
+        getFiltersFilterBar: function(){
 
             var sSearchQuery = this._oBasicSearchField.getValue();
             var _tempFilters = [];
 
-            if (this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1) {
+            if(this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
                 // /Models
-                _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sSearchQuery.toLowerCase().replace("'", "''") + "'"));
+                _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sSearchQuery.toLowerCase().replace("'","''")+"'"));
 
-            } else if (this._oValueHelpDialog.oRows.sPath.indexOf('/MoldNumbers') > -1) {
-                //MoldNumbers
-                _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-            } else if (this._oValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1) {
-                _tempFilters.push(new Filter({ path: "tolower(create_user_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(create_user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
+                //PartNumbers
+                _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1){
+                _tempFilters.push(new Filter({ path: "tolower(create_user_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(create_user_id)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
             }
 
             return _tempFilters;
         },
-
+        
         _filterTable: function (oFilter) {
-            var oValueHelpDialog = this._oValueHelpDialog;
+			var oValueHelpDialog = this._oValueHelpDialog;
 
-            oValueHelpDialog.getTableAsync().then(function (oTable) {
-                if (oTable.bindRows) {
-                    oTable.getBinding("rows").filter(oFilter);
-                }
+			oValueHelpDialog.getTableAsync().then(function (oTable) {
+				if (oTable.bindRows) {
+					oTable.getBinding("rows").filter(oFilter);
+				}
 
-                if (oTable.bindItems) {
-                    oTable.getBinding("items").filter(oFilter);
-                }
+				if (oTable.bindItems) {
+					oTable.getBinding("items").filter(oFilter);
+				}
 
-                oValueHelpDialog.update();
-            });
-        },
+				oValueHelpDialog.update();
+			});
+		},
 
         _doInitTablePerso: function () {
             // init and activate controller

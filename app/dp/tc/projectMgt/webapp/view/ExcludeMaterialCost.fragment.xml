@@ -1,0 +1,67 @@
+<!-- 
+   description : 재료비 산출 제외  버튼 클릭
+-->
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogExclusion" class="sapUiSmallMargin" title="재료비 산출 제외" contentWidth="35%" >
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm
+                editable="false"
+                maxContainerCols="4"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="3"
+                labelSpanL="3"
+                labelSpanM="3"
+                labelSpanS="3"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"     
+                singleContainerFullSize="false" >                    
+                    <form:content >
+                            <Label text = "프로젝트코드">
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M2 S2" />
+                                </layoutData>
+                            </Label>
+                            <Text text = "{updateModel>/project_code}" width="100%">
+                                <layoutData>
+                                    <layout:GridData span="XL4 L4 M4 S4" />
+                                </layoutData>
+                            </Text>
+                            <Label text = "개발구매담당자">
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M3 S3" />
+                                </layoutData>
+                            </Label>
+                            <Text text = "{updateModel>/buyer_name}" width="100%">
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M3 S3" />
+                                </layoutData>
+                            </Text>
+                            <Label text = "제외사유" width="100%">
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M2 S2" lineBreak="true"/>
+                                </layoutData> 
+                            </Label>
+                            <TextArea value="{updateModel>/mcst_excl_reason}" width="100%" rows="5">
+                                <layoutData>
+                                    <layout:GridData span="XL12 L12 M12 S12" />
+                                </layoutData> 
+                            </TextArea>
+                       </form:content>
+                  </form:SimpleForm>
+            </VBox>       
+      
+        <ToolbarSpacer/>
+        <HBox alignItems="End" justifyContent="End" >
+            <Button text="닫기" class="sapUiSmallMarginEnd" press=".onExcludeCalExit"/>
+            <Button text="저장" class="sapUiSmallMarginEnd" type="Emphasized" press=".onExcludeCalSavePress"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

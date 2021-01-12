@@ -71,6 +71,9 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "master");
             this.setModel(new ManagedListModel(), "details");
 
+
+            //console.log("onInit ()----------------->" , this.getModel("master").getModel());
+
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("details"));
@@ -127,9 +130,12 @@ sap.ui.define([
 		onPageNavBackButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
-            
-            //this._setScreen(sNextLayout);
-            //this._setModelEditCancelMode();
+
+            console.log("object call------------------>");
+            // this._setScreen(sNextLayout);
+            // this._setModelEditCancelMode();
+
+
         },
 
         _setScreen: function (screen){
@@ -180,7 +186,7 @@ sap.ui.define([
        
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/DeleteLoiMulEntityProc";   
 
-			MessageBox.confirm("Are you sure to delete this control option and details?", {
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -196,7 +202,7 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
                                 oView.setBusy(false);
                                 that.onPageNavBackButtonPress.call(that);
-                                MessageToast.show("Success to delete.");
+                                MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
                             },
                             error: function(e){
                                 console.log("error====", e);
@@ -223,115 +229,119 @@ sap.ui.define([
             // '121020'	'결재진행중'
             // '121030'	'결재반려'
             // '121040'	'요청완료'
-
             var statusCode = "121010";
-            if(flag == "R") {
-                statusCode = "121040";
-            }else if(flag == "B") {
+            if (flag == "R") {
                 statusCode = "121020";
-            }else {
+            } else if (flag == "B") {
+                statusCode = "121040";
+            } else {
                 statusCode = "121010";
             }
-
-
 
             console.log(">>> detail", detail.getData());
 
             // Validation
-            if (!master.getData()["loi_request_title"]) {
-                MessageBox.alert("요청명을 입력하세요");
-                return;
-            }
-            if (!master.getData()["loi_publish_purpose_desc"]) {
-                MessageBox.alert("목적을 입력하세요");
-                return;
-            }
+            // if (!master.getData()["loi_request_title"]) {
+            //     MessageBox.alert("요청명을 입력하세요");
+            //     return;
+            // }
+            // if (!master.getData()["loi_publish_purpose_desc"]) {
+            //     MessageBox.alert("목적을 입력하세요");
+            //     return;
+            // }
 
-            if (master.getData()["_state_"] != "U") {
-                if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-                    MessageBox.alert("변경사항이 없습니다.");
-                    return;
-                }
-            }
+             if (flag != "R" && flag != "B" && master.getData()["_state_"] != "U") {
+                 if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+                     MessageBox.alert("변경사항이 없습니다.");
+                     return;
+                 }
+             }
 
 
             var input = {
-                inputData : {
-                    savedHeaders : [],
-                    savedReqDetails : [] 
+                inputData: {
+                    savedHeaders: [],
+                    savedReqDetails: []
                 }
             };
 
+            var supInput = {};
+            var inputData = {};
+
             console.log(" _state_::: " + master.getData()["_state_"]);
-            console.log(" master --- >  getData::: " , this.getModel("master").getData());
-            
+            console.log(" master --- >  getData::: ", this.getModel("master").getData());
+
             var headers = [];
             var loiNumber_val = "";
 
-            if(master.getData()["_state_"] == "C"){
+            if (master.getData()["_state_"] == "C") {
                 loiNumber_val = "new";
-            }else{
-                loiNumber_val = master.getData()["loi_number"]; 
+            } else {
+                loiNumber_val = master.getData()["loi_number"];
             }
 
             //if (master.getData()["_state_"] == "C" || master.getData()["_state_"] == "U") {
-                headers.push({
-                    tenant_id: 'L2100',
-                    company_code: 'C100',
-                    loi_write_number: this._sLoiWriteNumber,
-                    loi_number: loiNumber_val,
-                    loi_request_title: master.getData()["loi_request_title"],
-                    loi_publish_purpose_desc: master.getData()["loi_publish_purpose_desc"],
-                    special_note: master.getData()["special_note"],
-                    requestor_empno: '5450',
-                    request_department_code: '58665481',
-                    //request_date: new Date()
-                    loi_request_status_code : statusCode
-                });
-
+            headers.push({
+                tenant_id: 'L2100',
+                company_code: 'C100',
+                loi_write_number: this._sLoiWriteNumber,
+                loi_number: loiNumber_val,
+                loi_request_title: master.getData()["loi_request_title"],
+                loi_publish_purpose_desc: master.getData()["loi_publish_purpose_desc"],
+                special_note: master.getData()["special_note"],
+                requestor_empno: '10655',
+                request_department_code: '58366944',
+                //request_date: new Date()
+                loi_request_status_code: statusCode
+            });
             //}
 
             console.log(" headers::: " , headers);
-            console.log("detail _state_::: " + detail.getChanges().length);
-
             input.inputData.savedHeaders = headers;
 
-            
             var details = [];
             var suppliers = [];
             var supplierCodeArray = [];
             var loiItemNum_val = '';
+            var loiWriteNum_val = '';
             var delNum = 0;
-            var detailLen = detail.getData()["LOIRequestDetailView"].length;
-
             var afterDelCnt = 0;
             var delfalg = "";
 
+            console.log(" 111::: ");
+            console.log("detail.getData()=", detail.getData());
+            console.log(" detail.getChanges().length::: " , detail.getChanges().length);
+            console.log(" LOIRequestDetailView::: " , detail.getData()["LOIRequestDetailView"]);
+
             if (detail.getChanges().length > 0) {
+                
                 detail.getData()["LOIRequestDetailView"].map(r => {
-                    
+
                     console.log("detail _row_state_::: " + r["_row_state_"]);
-                    if(r["_row_state_"] == "C"){
+                    if (r["_row_state_"] == "C") {
                         loiItemNum_val = "new";
-                    }else{
-                        loiItemNum_val = r["loi_item_number"]; 
+                        loiWriteNum_val = "new";
+                    } else {
+                        loiItemNum_val = r["loi_item_number"];
+                        loiWriteNum_val = r["loi_write_number"];
                     }
 
-                     if(r["_row_state_"] == "D"){
-                         delfalg = "D";
-                     }
-                    //  else{
-                    //      delfalg = "U";
-                    //  }
+                    if (r["_row_state_"] == "D") {
+                        delfalg = "D";
+                    }else{
+                        delfalg = r["_row_state_"];
+                    }
 
-                    
+                    console.log("1111 loiWriteNum_val :: ", loiWriteNum_val);
+                    console.log("1111 request_amount :: ", r["request_amount"]);
 
                     details.push({
                         tenant_id: 'L2100',
                         company_code: 'C100',
-                        loi_write_number: r["loi_write_number"],//this._sLoiWriteNumber,
+                        loi_write_number: loiWriteNum_val,//this._sLoiWriteNumber,
                         loi_item_number: loiItemNum_val,
-                        item_sequence: String(r["item_sequence"] - (afterDelCnt*10)),
+                        item_sequence: String(r["item_sequence"] - (afterDelCnt * 10)),
+                        plant_code: r["plant_code"],
                         ep_item_code: r["ep_item_code"],
                         item_desc: r["item_desc"],
                         unit: r["unit"],
@@ -340,70 +350,55 @@ sap.ui.define([
                         request_amount: r["request_amount"],
                         supplier_code: r["supplier_code"],
                         buyer_empno: r["buyer_empno"],
+                        purchasing_department_code : "50008948",
                         remark: r["remark"],
-                        row_state : delfalg
+                        row_state: delfalg
                     });
                     //return r;
 
-                    if(r["_row_state_"] == "D"){
-                         delNum = delNum + 1;
-                         afterDelCnt++;
-                        
-                     }
+                    if (r["_row_state_"] == "D") {
+                        delNum = delNum + 1;
+                        afterDelCnt++;
+                    }
 
-                     delfalg = "";
-                    
-                    
+                    delfalg = "";
 
-            //console.log("---------befor _row_state_-------" , r["_row_state_"]);
-  //              console.log("---------befor suppliers-------" , r["supplier_code"]);
+                    console.log("2222 loiWriteNum_val :: ", loiWriteNum_val);
 
-            //     if (r["_row_state_"] !== undefined) {
-            //     if(r["_row_state_"] === "C" || r["_row_state_"] === "U"){
-            //         console.log("---------in _row_state_-------" , r["_row_state_"]);
-            //         if(r["supplier_code"] !== ''){
-            //             var supplierCode = r["supplier_code"];
-            //             supplierCodeArray = supplierCode.split(",");
-        
-            //             //List<String> salesTeamList = new ArrayList<>();
-            //             for (var i = 0; i < supplierCodeArray.length; i++) {
+                    if (detail.getChanges().length > 0) {
+                        if (r["supplier_code"] !== '' && r["supplier_code"] != null && r["supplier_code"] !== undefined) {
+                            var supplierCode = r["supplier_code"];
+                            supplierCodeArray = supplierCode.split(",");
+                            console.log("supplierCodeArray :: " , supplierCodeArray);
 
-            //                 suppliers.push({
-            //                     tenant_id: '1000',
-            //                     company_code: 'C100',
-            //                     loi_write_number: this._sLoiWriteNumber,
-            //                     loi_item_number: loiItemNum_val,
-            //                     supplier_code: supplierCodeArray[i]
-            //                 });
-            //             }
-
-            //         }
-            //     }
-            // }
-
-
+                            for (var i = 0; i < supplierCodeArray.length; i++) {
+                                suppliers.push({
+                                    tenant_id: 'L2100',
+                                    company_code: 'C100',
+                                    loi_write_number: loiWriteNum_val,
+                                    loi_item_number: loiItemNum_val,
+                                    supplier_code: supplierCodeArray[i]
+                                });
+                            }
+                            console.log("suppliers :: " , suppliers);
+                        }
+                    }
                 })
 
-                console.log("---------details-------" , details);
-                // console.log("---------delNum-------" , delNum);
-                // console.log("---------detailLen-------" , detailLen);
-                // console.log("---------del-------" , String(+detailLen - delNum));
-                //console.log("---------suppliers-------" , suppliers);
+                console.log("details :: ", details);
 
                 input.inputData.savedReqDetails = details;
-                //input.inputData.savedSuppliers = suppliers;
-
+                supInput.inputData = suppliers;
             }
 
-            if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
 
-            //var url = "ep/po/webapp/srv-api/odata/v4/ep.SampleMgrV4Service/SaveLoiRequestMultiEntitylProc"
-            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";  
+            if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
 
-            //MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
-            MessageBox.confirm("Are you sure ?", {
-                title : this.getModel("I18N").getText("/SAVE"),
-                initialFocus : MessageBox.Action.CANCEL,
+            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";
+
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                title: this.getModel("I18N").getText("/SAVE"),
+                initialFocus: MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
 
@@ -411,28 +406,65 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data : JSON.stringify(input),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
-                            success: function(data){
-                                console.log("---------data ssss-------" ,JSON.stringify(data));
+                            success: function (data) {
+                                console.log("---------data ssss-------", JSON.stringify(data));
+                                console.log("---------data ssss-------", JSON.stringify(data.savedHeaders));
+                                console.log("---------data ssss-------", JSON.stringify(data.savedReqDetails));
 
-
-
-                                //that._setModelEditCancelMode();
-                                //that._setItemSequence(); //itemsequence 
-                                if (detail.getChanges().length > 0) {
-                                     that.onReload(data);
-                                }
+                                that._setItemSequence(supInput,data);
+                                //if (detail.getChanges().length > 0) {
+                                    that.onReload(data);
+                                //}
 
                                 view.setBusy(false);
-								that._toShowMode();
-                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                //MessageToast.show(that.getModel("I18N").getText("/NCM0005"));   
-                                MessageToast.show("Success to save.");                           
-                                //that._toShowMode();
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+
+                                // var sObjectPath = "/LOIPublishView(tenant_id='" + that._sTenantId + "',company_code='" + that._sCompanyCode + "',loi_publish_number='" + data.value[0].savedkey + "')";
+                                // var oMasterModel = that.getModel("master");
+                                // oView.setBusy(true);
+                                // oMasterModel.setTransactionModel(that.getModel());
+                                // oMasterModel.read(sObjectPath, {
+                                //     success: function (oData) {
+                                //         oView.setBusy(false);
+                                //         oView.getModel("master").updateBindings(true);
+                                //     }
+                                // });
+
+// console.log("onRoad ^^^^^^^^^^^^^^^^^^^ " , data.savedReqDetails.length);
+// console.log("onRoad ^^^^^^^^^^^^^^^^^^^ " , data.savedReqDetails);
+//                                 this._bindView("/LOIRequestListView(tenant_id='" + data.savedHeaders.tenant_id + "',company_code='" + data.savedHeaders.company_code + "',loi_write_number='" + data.savedHeaders.loi_write_number + "')");
+//                                 view.setBusy(true);
+//                                 if (data.savedReqDetails.length > 0) {
+//                                     var oDetailsModel = this.getModel('details');
+//                                         oDetailsModel.setTransactionModel(this.getModel());
+//                                         oDetailsModel.read("/LOIRequestDetailView", {
+//                                             filters: [
+//                                                 new Filter("tenant_id", FilterOperator.EQ, data.savedReqDetails[0].tenant_id),
+//                                                     new Filter("company_code", FilterOperator.EQ, data.savedReqDetails[0].company_code),
+//                                                     new Filter("loi_write_number", FilterOperator.EQ, data.savedReqDetails[0].loi_write_number)
+//                                             ],
+//                                             sorters: [
+//                                                 new Sorter("item_sequence", false)
+//                                             ],
+
+//                                             success: function(oData){
+//                                                 console.log(" LOIRequestDetailView ::: " , oData);
+//                                                 view.setBusy(false);
+//                                                 view.getModel("master").updateBindings(true);
+//                                             }
+
+//                                         });
+//                                 }
+
+
+//                                 that._toShowMode();
+
+
                             },
-                            error: function(e){
-                                
+                            error: function (e) {
+
                             }
                         });
                     };
@@ -443,11 +475,25 @@ sap.ui.define([
 
         onReload: function(data) {
 
+            var view = this.getView(),
+            master = view.getModel("master"),
+                detail = view.getModel("details");
+
+            var that = this;
+
+             console.log("---------onReload ssss-------", JSON.stringify(data));
+             console.log("---------this._sTenantId ssss-------", this._sTenantId);
+            console.log("---------this.company_code ssss-------", this._sCompanyCode);
+            console.log("---------this.loi_write_number ssss-------", this._sLoiWriteNumber);
+
             var oView = this.getView();
             this.getModel("midObjectView").setProperty("/isAddedMode", false);
-                this._bindView("/LOIRequestListView(tenant_id='" + data.savedReqDetails[0].tenant_id + "',company_code='" + data.savedReqDetails[0].company_code + "',loi_write_number='" + data.savedReqDetails[0].loi_write_number + "')");
+                //this._bindView("/LOIRequestListView(tenant_id='" + master.getData()["tenant_id"] + "',company_code='" + master.getData()["company_code"] + "',loi_write_number='" + master.getData()["loi_write_number"] + "')");
+                this._bindView("/LOIRequestListView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',loi_write_number='" + this._sLoiWriteNumber + "')")
                 oView.setBusy(true);
-
+                
+            //if (data.savedReqDetails.length > 0) {
+            if (detail.getChanges().length > 0) {
                 var oDetailsModel = this.getModel('details');
                     oDetailsModel.setTransactionModel(this.getModel());
                     oDetailsModel.read("/LOIRequestDetailView", {
@@ -463,41 +509,58 @@ sap.ui.define([
                         success: function(oData){
                             console.log(" LOIRequestDetailView ::: " , oData);
                             oView.setBusy(false);
+                            oView.getModel("details").updateBindings(true);
                         }
 
                     });
+                }
 
-                this._toShowMode();
+                //this._toShowMode();
         },
 
-        onPageCancelEditButtonPress: function () {
+        // onPageCancelEditButtonPress: function () {
             
-            console.log("this._sTenantId--------------->" + this._sTenantId);
-            console.log("this._sCompanyCode--------------->" + this._sCompanyCode);
-            console.log("this._sLoiWriteNumber--------------->" + this._sLoiWriteNumber);
+        //     console.log("this._sTenantId--------------->" + this._sTenantId);
+        //     console.log("this._sCompanyCode--------------->" + this._sCompanyCode);
+        //     console.log("this._sLoiWriteNumber--------------->" + this._sLoiWriteNumber);
 
 
+        //     if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
+        //         this.onPageNavBackButtonPress.call(this);
+        //     } else {
+        //         this._toShowMode();
+        //         // ljh - 재조회
+        //         this.getModel("details")
+        //         .setTransactionModel(this.getModel())
+        //         .read("/LOIRequestDetailView", {
+        //             filters: [
+        //             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+        //             new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
+        //             new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber)
+        //             ],
+        //             sorters: [
+        //                 new Sorter("item_sequence", false)
+        //             ],
+        //             success: function (oData) {
+
+
+        //             }
+        //         });
+        //     }
+        // },
+
+        onPageCancelEditButtonPress: function () {
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
                 this.onPageNavBackButtonPress.call(this);
             } else {
-                this._toShowMode();
-                // ljh - 재조회
-                this.getModel("details")
-                .setTransactionModel(this.getModel())
-                .read("/LOIRequestDetailView", {
-                    filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                    new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                    new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber)
-                    ],
-                    sorters: [
-                        new Sorter("item_sequence", false)
-                    ],
-                    success: function (oData) {
-
-
-                    }
-                });
+                if (this.getModel("midObjectView").getProperty("/isEditMode") == true) {
+                    this.validator.clearValueState(this.byId("page"));
+                    this._toShowMode();
+                } else {
+                    console.log("cancel.....");
+                    this.onPageNavBackButtonPress.call(this);
+                    //this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                }
             }
         },
 
@@ -576,17 +639,95 @@ sap.ui.define([
         },
 
         
-        //코딩중
-        _setItemSequence: function() {
+        _setItemSequence: function (supInput_,data) {
+            var oModel = this.getModel("v4Proc");
+            var oView = this.getView();
+            var v_this = this;
+
             var view = this.getView(),
                 master = view.getModel("master"),
                 detail = view.getModel("details"),
                 oModel = this.getModel("v4Proc"),
                 that = this;
 
+            var supInput = {};
+            var inputData = {};
+            
+            var details = [];
+            var suppliers = [];
+            // var supplierCodeArray = [];
+            // var loiItemNum_val = '';
+            // var loiWriteNum_val = '';
+            // var delNum = 0;
+            // var afterDelCnt = 0;
+            // var delfalg = "";
 
-            console.log(">>> detail", detail.getData());
-            console.log("len ----> " , detail.getData()["LOIRequestDetailView"].length);
+            console.log("---------before ssss-------", JSON.stringify(data));
+            console.log("---------before ssss-------",data.savedReqDetails.length );
+
+                    if (detail.getChanges().length > 0 && data.savedReqDetails.length > 0 && supInput_.inputData.length > 0) {
+                        // if (r["supplier_code"] !== '' && r["supplier_code"] != null && r["supplier_code"] !== undefined) {
+                        //     var supplierCode = r["supplier_code"];
+                        //     supplierCodeArray = supplierCode.split(",");
+                        //     console.log("supplierCodeArray :: " , supplierCodeArray);
+                         var supplierCode_val = "";
+                         var supplierCodeArray_val = [];
+                         for(var k = 0; k < data.savedReqDetails.length; k++) {
+                             supplierCode_val = data.savedReqDetails[k].supplier_code;
+                             console.log("supplierCode_val :: " , supplierCode_val);
+                             if(supplierCode_val != null){
+                                supplierCodeArray_val = supplierCode_val.split(",");  
+
+                                for (var i = 0; i < supplierCodeArray_val.length; i++) {
+                                    suppliers.push({
+                                        tenant_id: data.savedReqDetails[k].tenant_id,
+                                        company_code: data.savedReqDetails[k].company_code,
+                                        loi_write_number: data.savedReqDetails[k].loi_write_number,
+                                        loi_item_number: data.savedReqDetails[k].loi_item_number,
+                                        supplier_code: supplierCodeArray_val[i],
+                                        row_state : data.savedReqDetails[k].row_state
+                                    });
+
+                                }
+                            }
+
+                            console.log("suppliers :: " , suppliers);
+                        }
+                    }
+
+                    supInput.inputData = suppliers;
+
+
+            console.log(">>> after supInput", supInput);
+
+            var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SupplierMulEntityProc";
+
+            oView.setBusy(true);
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                //data: input,
+                data: JSON.stringify(supInput),
+                contentType: "application/json",
+                success: function (data) {
+
+                    //console.log(">>> _setItemSequence............. data", data);
+
+                    console.log("---------_setItemSequence-------", JSON.stringify(data));
+                    // var v_returnModel = oView.getModel("returnModel").getData();
+                    // v_returnModel.headerList = data.savedHeaders;
+                    // v_returnModel.detailList = data.savedDetails;
+                    // oView.getModel("returnModel").updateBindings(true);
+                    // v_this.onSearch();
+                    // v_this.onSearchDetail();
+                    oView.setBusy(false);
+
+                },
+                error: function (e) {
+
+                }
+            });
 
 
         },
@@ -625,6 +766,7 @@ sap.ui.define([
             this._sCompanyCode = oArgs.companyCode;
             this._sLoiWriteNumber = oArgs.loiWriteNumber;
 
+
             console.log("oArgs.tenantId" + oArgs.tenantId);
             console.log("oArgs.companyCode" + oArgs.companyCode);
 
@@ -640,14 +782,17 @@ sap.ui.define([
                     "loi_write_number": "",
                     "loi_number": "",
                     "loi_request_title": "",
-                    "loi_request_status_code": "",
+                    "loi_request_status_code": "121010",
+                    "loi_request_status_name": "작성중",
                     "loi_publish_purpose_desc": "",
                     "investment_review_flag": false,
                     "special_note": "",
                     "attch_group_number": "",
                     "approval_number": "",
                     "requestor_empno": "5450",
+                    "requestor_name": "**운",
                     "request_department_code": "58665481",
+                    "request_department_name": "IT소재.품질1.양산품질2팀(1P)",
                     "request_date": new Date(),
                     "org_type_code": "",
                     "org_code": "",
@@ -696,12 +841,34 @@ sap.ui.define([
                 // }, "/LOIRequestDetailView");
                 //this._toCreateMode();
 
+
+                
+
                 this._toEditMode();
             }
             else {
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);
+                var that = this;
+                
+                // this._bindView("/LOIRequestListView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',loi_write_number='" + this._sLoiWriteNumber + "')").then(function(){
+                //     oView.setBusy(true);
+                //     that._toShowMode();               
+                // });
+                
+
+
                 this._bindView("/LOIRequestListView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',loi_write_number='" + this._sLoiWriteNumber + "')");
                 oView.setBusy(true);
+                
+
+
+
+
+
+
+                console.log("this._sTenantId" + this._sTenantId);
+                console.log("this._sCompanyCode" + this._sCompanyCode);
+                console.log("this._sLoiWriteNumber" + this._sLoiWriteNumber);
 
                 var oDetailsModel = this.getModel('details');
                     oDetailsModel.setTransactionModel(this.getModel());
@@ -718,11 +885,12 @@ sap.ui.define([
                         success: function(oData){
                             console.log(" LOIRequestDetailView ::: " , oData);
                             oView.setBusy(false);
+                            that._toShowMode();
                         }
 
                     });
-
-                this._toShowMode();
+                    //that._toShowMode();
+                
             }
 
             oTransactionManager.setServiceModel(this.getModel());
@@ -734,6 +902,51 @@ sap.ui.define([
          * @param {string} sObjectPath path to the object to be bound
          * @private
          */
+
+        //  var promise = jQuery.Deferred();
+                        		
+        //         oModel.update(uPath, uArray, { "groupId":"batchUpdateGroup"},{
+        //             async: false,
+        //             method: "POST",
+        //             success: function(data){	
+        //                 promise.resolve(data);	
+        //             }.bind(that),						
+        //             error: function(data){						
+        //                 promise.reject(data);	
+        //             }						
+                        
+        //         });
+        //         return promise;
+
+                
+        // _bindView: function (sObjectPath) {
+        //     var promise = jQuery.Deferred();
+
+        //     var oView = this.getView(),
+        //         oMasterModel = this.getModel("master");
+        //     oView.setBusy(true);
+        //     oMasterModel.setTransactionModel(this.getModel());
+        //     oMasterModel.read(sObjectPath, {
+        //         success: function (oData) {
+        //             oView.setBusy(false);
+
+        //             console.log("master ----> " ,oData);
+        //             oView.getModel("master").updateBindings(true);
+        //         console.log("promise --------------------------->" ,oData.loi_request_status_code);
+ 
+
+        //              promise.resolve(oData);
+        //         }.bind(this),						
+        //         error: function(oData){						
+        //             promise.reject(oData);	
+        //         }	
+
+        //     });
+
+        //     return promise;
+        // },
+
+
         _bindView: function (sObjectPath) {
             var oView = this.getView(),
                 oMasterModel = this.getModel("master");
@@ -742,6 +955,8 @@ sap.ui.define([
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
                     oView.setBusy(false);
+                    oView.getModel("master").updateBindings(true);
+                    console.log("master ----> " ,oData);
                 }
 
             });
@@ -761,32 +976,105 @@ sap.ui.define([
             this._setKeyMidTable("Create");
         },
 
-        _toEditMode: function () {
-            var FALSE = false;
-            this._showFormFragment('MidObject_Edit');
-            this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("pageEditButton").setEnabled(FALSE);
-            this.byId("pageDeleteButton").setEnabled(FALSE);
-            this.byId("pageNavBackButton").setEnabled(FALSE);
-            this.byId("pageSaveButton").setEnabled(!FALSE);
+        // '121010'	'작성중'
+        // '121020'	'결재진행중'
+        // '121030'	'결재반려'
+        // '121040'	'요청완료'
+           
 
-            this.byId("midTableAddButton").setEnabled(!FALSE);
-            this.byId("midTableDeleteButton").setEnabled(!FALSE);
+        _toEditMode: function () {
+            this.getModel("midObjectView").setProperty("/isEditMode", true);
+             
+            this._showFormFragment('MidObject_Edit');
+             var oView = this.getView(),
+                oMasterModel = this.getModel("master");
+           
+            console.log("statusCode----->" ,oMasterModel);
+            var statusCode = oMasterModel.getData().loi_request_status_code;
+            console.log("statusCode1111----->" ,statusCode);
+            this.byId("page").setSelectedSection("pageSectionMain");
+            this.byId("page").setProperty("showFooter", true);
+
+            this.byId("pageEditButton").setVisible(false);
+            this.byId("pageDeleteButton").setVisible(false);
+            this.byId("pageNavBackButton").setEnabled(false);
+            this.byId("pageSaveButton").setVisible(true);
+            this.byId("pageByPassButton").setVisible(true);
+            this.byId("pageRequestButton").setVisible(true);  
+
+            if (statusCode === "121010" || statusCode === "121030") {
+                this.byId("pageSaveButton").setEnabled(true);
+            } else {
+                this.byId("pageSaveButton").setEnabled(false);
+            }
+            if (statusCode === "121040") {
+                this.byId("pageByPassButton").setEnabled(false);
+            } else {
+                this.byId("pageByPassButton").setEnabled(true);
+            }
+            if (statusCode === "121020" || statusCode === "121040") {
+                this.byId("pageRequestButton").setEnabled(false);
+            } else {
+                this.byId("pageRequestButton").setEnabled(true);
+            }
+            this.byId("pageCancelButton").setEnabled(true);
+
+            this.byId("midTableAddButton").setEnabled(true);
+            this.byId("midTableDeleteButton").setEnabled(true);
             //this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
             //this._bindMidTable(this.oEditableTemplate, "Edit");
         },
 
         _toShowMode: function () {
-            var TRUE = true;
+            this.getModel("midObjectView").setProperty("/isEditMode", false);
+         this.getModel("midObjectView").setProperty("/isShowMode", true);
             this._showFormFragment('MidObject_Show');
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master");
+           
+            console.log("statusCode----->" ,oMasterModel.getData().loi_request_status_name);
+            var statusCode = oMasterModel.getData().loi_request_status_code;
             this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("pageEditButton").setEnabled(TRUE);
-            this.byId("pageDeleteButton").setEnabled(TRUE);
-            this.byId("pageNavBackButton").setEnabled(TRUE);
-            this.byId("pageSaveButton").setEnabled(!TRUE);
+            // this.byId("page").setProperty("showFooter", true);
+            // if (statusCode === "121040") {
+            //     this.byId("pageEditButton").setVisible(false);
+            //     this.byId("pageDeleteButton").setVisible(false);
+            // }else{
+            //     this.byId("pageEditButton").setVisible(true);
+            //     this.byId("pageDeleteButton").setVisible(true);
+            // }
 
-            this.byId("midTableAddButton").setEnabled(!TRUE);
-            this.byId("midTableDeleteButton").setEnabled(!TRUE);
+            // this.byId("pageEditButton").setEnabled(true);
+            // this.byId("pageDeleteButton").setEnabled(true);
+            // this.byId("pageNavBackButton").setEnabled(true);
+            // this.byId("pageSaveButton").setEnabled(false);
+            // this.byId("pageByPassButton").setEnabled(false);
+            // this.byId("pageRequestButton").setEnabled(false);
+
+            if(statusCode == "121040") {
+                this.byId("page").setProperty("showFooter", false);
+            }else {
+                this.byId("page").setProperty("showFooter", true);
+            }
+            //this.byId("pageEditButton").setVisible(true);
+            // if (statusCode === "122040" || statusCode === "122060") {
+            //     this.byId("pageEditButton").setVisible(false);
+            //     this.byId("pageDeleteButton").setVisible(false);
+            // } else {
+            this.byId("pageEditButton").setVisible(true);
+            this.byId("pageDeleteButton").setVisible(true)
+            //}
+            //this.byId("pageDeleteButton").setEnabled(true);
+            this.byId("pageNavBackButton").setEnabled(true);
+            
+            this.byId("pageSaveButton").setVisible(false);
+            this.byId("pageByPassButton").setVisible(false);
+            this.byId("pageRequestButton").setVisible(false);
+
+            this.byId("pageCancelButton").setEnabled(true);
+
+            this.byId("midTableAddButton").setEnabled(false);
+            this.byId("midTableDeleteButton").setEnabled(false);
             //this.byId("midTable").setMode(sap.m.ListMode.None);
             //this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
         },

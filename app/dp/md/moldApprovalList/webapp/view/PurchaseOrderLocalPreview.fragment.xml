@@ -47,7 +47,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -138,18 +138,12 @@
                     <uxap:ObjectPageSubSection>
                         <HBox>
                             <VBox class="sapUiSmallMargin">
-                                <Label text="{I18N>/AFFILIATE}" />
-                                <ObjectStatus
-                                    text="[{company>/company_code}] {company>/company_name}" 
-                                    state="Error"
-                                    />
+                                <Label text="{I18N>/COMPANY}"/>
+                                <ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
                             </VBox>
                             <VBox class="sapUiSmallMargin">
-                                <Label text="{I18N>/BUSINESS_DIVISION}" />
-                                <ObjectStatus
-                                    text="[{plant>/org_code}] {plant>/org_name}" 
-                                    state="Error"
-                                    />
+                                <Label text="{I18N>/PLANT}"/>
+                                <ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
                             </VBox>
                         </HBox>
 					</uxap:ObjectPageSubSection>
@@ -167,13 +161,13 @@
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
-                                <table:Column width="15em" >
+                                <table:Column width="12em" >
                                     <Label text="Model"/>
                                     <table:template>
                                         <Text text="{purOrderItem>model}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="8em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center">
                                     <Label text="Mold No"/>
                                     <table:template>
                                         <Text text="{purOrderItem>mold_number}"/>
@@ -201,7 +195,7 @@
                                                     items="{
                                                                 path : 'util>/Code',
                                                                 filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                                 ]
                                                             }"
@@ -280,7 +274,7 @@
                                                     items="{
                                                                 path : 'util>/Code',
                                                                 filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                                 ]
                                                             }"
@@ -408,7 +402,7 @@
                             <Column  minScreenWidth="Tablet" hAlign="Center" width="10em" >
                                 <Text text="Type" />
                             </Column>
-                            <Column  minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="25em" >
                                 <Text text="Name/Dept" />
                             </Column>
                             <Column  minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -444,9 +438,10 @@
                             selectionChange="handleSelectionChangeReferer"
                             selectionFinish="handleSelectionFinishReferer"
                             width="100%"
+                            selectedKeys="{refererMultiCB>/refer}"
                             items="{ path: '/RefererSearch',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
                             editable="false">

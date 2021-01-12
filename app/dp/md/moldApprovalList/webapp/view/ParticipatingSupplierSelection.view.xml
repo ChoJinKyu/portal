@@ -40,13 +40,9 @@
 				<uxap:snappedTitleOnMobile>
 				</uxap:snappedTitleOnMobile>
 
-				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
-				</uxap:actions>
-
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -116,25 +112,9 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
+            <uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier Selection">
 				<uxap:subSections>
-                    <uxap:ObjectPageSubSection>
-                        <HBox>
-                            <VBox class="sapUiSmallMargin">
-                                <Label text="{I18N>/AFFILIATE}" />
-                                <ObjectStatus
-                                    text="[{company>/company_code}] {company>/company_name}" 
-                                    state="Error"
-                                    />
-                            </VBox>
-                            <VBox class="sapUiSmallMargin">
-                                <Label text="{I18N>/BUSINESS_DIVISION}" />
-                                <ObjectStatus text="[{plant>/org_code}] {plant>/org_name}" state="Error"/>
-                            </VBox>
-                        </HBox>
-					</uxap:ObjectPageSubSection>
-                    <uxap:ObjectPageSubSection id="participatingSupplierSelectionTableFragment">
-                        
+                    <uxap:ObjectPageSubSection id="pageItemSection" >
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -157,13 +137,14 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
+                <Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{= ${appMaster>/approve_status_code} === 'AR' ||${appMaster>/approve_status_code}==='AP' ?false:${mode>/viewFlag} }"/>                
 				<Button type="Transparent" text="Cancel"    press=".onPageCancelEditButtonPress" visible="{mode>/editFlag}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
-				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{mode>/editFlag}" />
-                <Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?${mode>/viewFlag}:false }" />
+				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress" />
                 <!-- 입찰대상 협력사 취소품의 가는 버튼 -->
 				<Button type="Emphasized"  text="Cancellation Req"   press=".onPageCancellationButtonPress" visible="{= ${appMaster>/approve_status_code} === 'AP'?true:false }"/>
-				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>
+                <Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" visible="{= ${appMaster>/approve_status_code} === 'AR'?${mode>/viewFlag}:false }" />
+				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress" visible="{=${appMaster>/approve_status_code}==='AR'||${appMaster>/approve_status_code}==='AP'?false:true}"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

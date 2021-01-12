@@ -7,13 +7,14 @@ sap.ui.define([
 
   var ManagedModel = JSONModel.extend("ext.lib.model.ManagedModel", {
 
-    setData: function (oData, sEntity, bMerge) {
-      var sPath = this._transactionPath;
+    setData: function (oData, sPath, bMerge) {
+      var sPath = sPath || this._transactionPath;
       oData = oData || {};
       if (oData.__metadata && oData.__metadata.uri) {
-        oData.__entity = oData.__metadata.uri.substring(oData.__metadata.uri.indexOf(sPath));
-      } else if (!!sEntity) {
-        oData.__entity = sEntity;
+        var sEntity = oData.__metadata.type.substring(oData.__metadata.type.lastIndexOf(".") +1);
+        oData.__entity = oData.__metadata.uri.substring(oData.__metadata.uri.indexOf("/"+sEntity));
+      } else if (!!sPath) {
+        oData.__entity = sPath;
         oData[STATE_COL] = "C";
       }
       JSONModel.prototype.setData.call(this, oData, bMerge);
@@ -43,7 +44,7 @@ sap.ui.define([
       this._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
         success: function (oData) {
           that._transactionPath = sPath;
-          that.setData(oData, false);
+          that.setData(oData, sPath, false);
           if (successHandler)
             successHandler.apply(that._oTransactionModel, arguments);
         }

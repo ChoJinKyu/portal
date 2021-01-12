@@ -41,24 +41,29 @@
                                             <form:fields>
                                                 <VBox>
                                                     <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                                                    <!-- items="{mSearch>/tenant/items}" -->
                                                     <ComboBox
                                                         id="searchTenantCombo"
+                                                        showSecondaryValues="true"
+                                                        required="true"
+                                                        selectionChange=".onSelectionChange($event, 'tenant_id')"
                                                         width="100%"
-                                                        items="{
+                                                        items="{ 
                                                             path: 'org>/Org_Tenant',
                                                             filters: [
                                                             ]
                                                         }"
                                                     >
                                                     <items>
-                                                        <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                                        <core:ListItem key="{org>tenant_id}" text="{org>tenant_name}" additionalText="{org>tenant_id}"/>
                                                     </items>
                                                     </ComboBox>
                                                 </VBox>
                                                 <VBox>
                                                     <Label text = "회사" labelFor="searchCompanyCode"/> 
                                                     <ComboBox 
-                                                        id="searchCompanyCode"  
+                                                        id="searchCompanyCode"
+                                                        showSecondaryValues="true"
                                                         items="{
                                                             path: 'org>/Org_Company',
                                                             filters: [
@@ -66,7 +71,7 @@
                                                         }"
                                                     >
                                                         <items>
-                                                            <core:Item key="{org>company_code}"  text="{org>company_code} : {org>company_name}"/>
+                                                            <core:ListItem key="{org>company_code}" text="{org>company_name}" additionalText="{org>company_code}"/>
                                                         </items>
                                                     </ComboBox>
 
@@ -128,7 +133,7 @@
                     >
                         <headerToolbar>
                             <OverflowToolbar>
-                                <Title text="구매 관리 ({= ${list>/}.length || 0})" level="H2"/>
+                                <Title text="구매 관리 ({= ${list>/Pur_Operation_Org}.length || 0})" level="H2"/>
                                 <ToolbarSpacer/>
                                 <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onAdd" />
                                 <ToolbarSeparator/>

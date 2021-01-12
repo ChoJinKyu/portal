@@ -129,10 +129,6 @@ sap.ui.define([
             });
         },
 
-        onMainSendMailButtonPress: function(){
-            alert("준비중");
-        },
-
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -229,11 +225,12 @@ sap.ui.define([
                 sEndDate = this.byId("searchDateS").getValue().substring(13);
             
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
-                aSearchFilters.push(new Filter({
-                    filters: [
-                        new Filter("funding_notify_title", FilterOperator.EQ, sTitle)
-                    ]
-                }));
+                aSearchFilters.push(new Filter("tolower(funding_notify_title)", FilterOperator.Contains, "'"+sTitle.toLowerCase().replace("'","''")+"'"));
+                // aSearchFilters.push(new Filter({
+                //     filters: [
+                //         new Filter("funding_notify_title", FilterOperator.Contains, sTitle)
+                //     ]
+                // }));
 
                 //aSearchFilters.push(new Filter())
             };

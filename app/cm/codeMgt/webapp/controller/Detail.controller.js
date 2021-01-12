@@ -78,10 +78,6 @@ sap.ui.define([
             oContModel.setProperty("/detail/createMode", bCreate);
             oContModel.setProperty("/detail/editMode", bEdit);
 
-            console.log('bRead',bRead)
-            console.log('bCreate',bCreate)
-            console.log('bEdit',bEdit)
-            console.log('oContModel',oContModel.getData())
         },
 
         onEditPress : function(){
@@ -199,7 +195,7 @@ sap.ui.define([
             
             var oViewModel = this.getModel("viewModel");
             var oParam = oViewModel.getProperty("/detail");
-
+            
             var oModel = this.getModel();
             oModel.create("/CodeMasters", oParam, {
                 success: function(data){
@@ -216,6 +212,12 @@ sap.ui.define([
         _fnUpdateCodeMaster : function(){
             var oViewModel = this.getModel("viewModel");
             var oParam = oViewModel.getProperty("/detail");
+
+            if(oParam.chain_name){
+                delete oParam.chain_name;
+            };
+            oParam.use_flag = (oParam.use_flag === "true")?true:false;
+
             var oKey = {
                 tenant_id : oParam.tenant_id,
                 group_code : oParam.group_code

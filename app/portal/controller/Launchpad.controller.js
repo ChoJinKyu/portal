@@ -41,7 +41,12 @@ sap.ui.define([
                 this.getView().setBusy(true);
                 this.treeListModel
                     .read("/Menu_haa", {
-                        filters: [new Filter("language_code", FilterOperator.EQ, "KO")],
+                        filters: [
+                            new Filter("language_code", FilterOperator.EQ, "KO"),
+                            new Filter("menu_display_flag", FilterOperator.EQ, true),
+                            new Filter("use_flag", FilterOperator.EQ, true),
+
+                        ],
                         sorters: [new Sorter("hierarchy_rank")]
                     })
                     // 성공시

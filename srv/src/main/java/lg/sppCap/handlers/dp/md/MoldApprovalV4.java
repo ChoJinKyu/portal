@@ -5,11 +5,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Stream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -198,7 +201,7 @@ public class MoldApprovalV4 implements EventHandler {
                 ApprovalMasters master =  ApprovalMasters.create();  
                 master.setTenantId(aMaster.getTenantId());
                 master.setApprovalNumber(approvalNumer_create);
-                master.setOrgTypeCode("AU");
+                master.setOrgTypeCode(aMaster.getOrgTypeCode());
                 master.setCompanyCode(aMaster.getCompanyCode());
                 master.setOrgCode(aMaster.getOrgCode());
                 master.setChainCode(aMaster.getChainCode());
@@ -393,6 +396,10 @@ public class MoldApprovalV4 implements EventHandler {
                             statement.executeUpdate();
                         }
                         
+                    }else if(row.getApprovalTypeCode().equals("A")){ // 취소 품의 
+                         String sql4="DELETE FROM DP_MD_QUOTATION WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                            statement = conn.prepareStatement(sql4);
+                            statement.executeUpdate();
                     }
 
                     

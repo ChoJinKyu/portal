@@ -4,9 +4,10 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/m/MessageBox",
+    "sap/f/LayoutType",
+    "sap/m/MessageBox",    
     "sap/m/MessageToast"
-], function (BaseController, Multilingual,  JSONModel,    Filter, FilterOperator, MessageBox, MessageToast) {
+], function (BaseController, Multilingual,  JSONModel,    Filter, FilterOperator, LayoutType, MessageBox,  MessageToast) {
 	"use strict";
 
 	return BaseController.extend("pg.mi.miBom.controller.MainList", {
@@ -178,7 +179,7 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");         
 
-            var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();   
+            var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue().toUpperCase();   
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
 
 	 
@@ -452,20 +453,30 @@ sap.ui.define([
                 oPath,
                 that = this;
 
-            var oSelected = this._mainTable.getSelectedContexts();   
+            var oSelected = that._mainTable.getSelectedContexts();   
             if (oSelected.length > 0) { 
-				var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/CONFIRM");
+                var mTitle = that.getModel("I18N").getText("/DELETE") + " " + that.getModel("I18N").getText("/CONFIRM");
+                
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
-                    title: mTitle,                                    
-                    onClose: this._deleteAction.bind(this),                                    
+                    title: mTitle,
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: that._deleteAction.bind(this),                                    
                     actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
-                    textDirection: sap.ui.core.TextDirection.Inherit    
+                    textDirection: sap.ui.core.TextDirection.Inherit  
                 });
 
+
             }
+
             console.groupEnd();
         },
 
+		_handleClose: function () {
+            var sLayout = LayoutType.OneColumn;
+            // var oFclModel = this.getModel("fcl");
+            // oFclModel.setProperty("/layout", sLayout);
+            this.getRouter().navTo("mainPage", {layout: sLayout});
+        },
         /**
          * mainTable Delete Action
          * @param {sap.m.MessageBox.Action} oAction 
@@ -595,7 +606,8 @@ sap.ui.define([
 							);   
 
 							setTimeout(that._setUseBatch(), 1000);
-							setTimeout(dataRefresh, 1000);
+                            setTimeout(dataRefresh, 1000);
+                            that._handleClose();
 						}
 					};	
 					

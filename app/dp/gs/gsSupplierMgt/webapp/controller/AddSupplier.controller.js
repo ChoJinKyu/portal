@@ -7,7 +7,10 @@ sap.ui.define([
 	"ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
     "sap/f/LayoutType",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
+    "sap/m/TablePersoController",
+	"./FinListPersoService",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -16,13 +19,14 @@ sap.ui.define([
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
-	"sap/m/Input",
+    "sap/m/Input",
+    "sap/m/DatePicker",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus"
-], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, LayoutType, DateFormatter, 
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
+], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, LayoutType, DateFormatter, NumberFormatter,
+	TablePersoController, FinListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	ColumnListItem, ObjectIdentifier, Text, Input, DatePicker, ComboBox, Item, ObjectStatus) {
 		
 	"use strict";
 
@@ -31,6 +35,8 @@ sap.ui.define([
 	return BaseController.extend("dp.gs.gsSupplierMgt.controller.AddSupplier", {
 
         dateFormatter: DateFormatter,
+
+        numberFormatter: NumberFormatter,
         
         validator: new Validator(),
 
@@ -64,7 +70,8 @@ sap.ui.define([
 			this.getRouter().getRoute("suppliePage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "addSupplierView");
 			
-			this.setModel(new ManagedModel(), "SupplierGen");
+            this.setModel(new ManagedModel(), "SupplierGenView");
+            this.setModel(new ManagedModel(), "SupplierGen");
             this.setModel(new ManagedListModel(), "SupplierFin");
             this.setModel(new ManagedListModel(), "SupplierSal");
 
@@ -77,6 +84,7 @@ sap.ui.define([
 
             this._initTableTemplates();
             this.enableMessagePopover();
+            // this._doInitTablePerso();
         }, 
 
         formattericon: function(sState){
@@ -247,6 +255,7 @@ sap.ui.define([
                 oMasterModel = this.getModel("SupplierGen"),
                 oDetailsModel = this.getModel("SupplierFin"),
                 oDetailsModel2 = this.getModel("SupplierSal"),
+                email = this.getView().byId("eidtEmail").getValue(),
                 that = this;
 
             if (this._sTenantId !== "new"){
@@ -260,6 +269,12 @@ sap.ui.define([
             if(this.validator.validate(this.byId("finTable")) !== true) return;
             if(this.validator.validate(this.byId("salTable")) !== true) return;
 
+            var chkEmail = this.CheckEmail(email);
+            if(!chkEmail){
+                MessageBox.alert("이메일 형식이 잘못되었습니다.");
+                return false;
+            }
+
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -269,10 +284,10 @@ sap.ui.define([
 						oView.setBusy(true);
 						oTransactionManager.submit({						
 							success: function(ok){
-								// that._toShowMode();
+								that._toShowMode();
                                 oView.setBusy(false);
                                 // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                // that._fnMasterSearch();
+                                that._fnMasterSearch();
 								MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 							}
 						});
@@ -281,7 +296,23 @@ sap.ui.define([
             });
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("finTable"));
-		},
+            this.validator.clearValueState(this.byId("salTable"));
+        },
+        
+        CheckEmail: function (str) {                                                 
+
+            var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+
+            if(!reg_email.test(str)) {                            
+
+                return false;         
+
+            }else {                       
+
+                return true;         
+
+            }
+        },
 		
 		
 		/**
@@ -289,7 +320,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-            this.onPageNavBackButtonPress();
+            // this.onPageNavBackButtonPress();
 			// if(this.getModel("addSupplierView").getProperty("/isAddedMode") == true){
 			// 	this.onPageNavBackButtonPress.call(this);
 			// }else{
@@ -320,29 +351,41 @@ sap.ui.define([
             // this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             // this.validator.clearValueState(this.byId("midTable"));
             var oView = this.getView();
-            var sTenantId = this._sMode;
-            if (sTenantId === "edit"){
+            var sMode = this._sMode;
+            if (sMode === "edit"){
                 this.onPageNavBackButtonPress();
-            }else if (sTenantId !== "edit"){
+            }else if (sMode !== "edit"){
                 
-                this.getModel("midObjectView").setProperty("/isAddedMode", false);                
-                this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
+                // this.getModel("midObjectView").setProperty("/isAddedMode", false);
+                this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
 				oView.setBusy(true);
-				var oDetailsModel = this.getModel("details");
-				oDetailsModel.setTransactionModel(this.getModel());				
-                oDetailsModel.read("/UomClassLng", {
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
-					],
-					success: function(oData){
-						oView.setBusy(false);
-					}
-				});
+                var oDetailsModel = this.getModel("SupplierFin");
+                var oDetailsModel2 = this.getModel("SupplierSal");
+                oDetailsModel.setTransactionModel(this.getModel());
+                oDetailsModel2.setTransactionModel(this.getModel());
+                oDetailsModel.read("/SupplierFin", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                        new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                    ],
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
+                oDetailsModel2.read("/SupplierSal", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                        new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                    ],
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
                 this._toShowMode();
             }
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
-            this.validator.clearValueState(this.byId("midTable"));
+            this.validator.clearValueState(this.byId("finTable"));
+            this.validator.clearValueState(this.byId("salTable"));
         },
 
 		/* =========================================================== */
@@ -428,18 +471,20 @@ sap.ui.define([
             // this.getModel("addSupplierView").setProperty("/isAddedMode", false);
 
             this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
-            oView.setBusy(true);
+            
             var oDetailsModel = this.getModel("SupplierFin");
             var oDetailsModel2 = this.getModel("SupplierSal");
+            var oDetailsModel3 = this.getModel("SupplierGenView");
             oDetailsModel.setTransactionModel(this.getModel());
             oDetailsModel2.setTransactionModel(this.getModel());
+            oDetailsModel3.setTransactionModel(this.getModel());
             oDetailsModel.read("/SupplierFin", {
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                     new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
                 ],
                 success: function(oData){
-                    oView.setBusy(false);
+                    
                 }
             });
             oDetailsModel2.read("/SupplierSal", {
@@ -448,7 +493,12 @@ sap.ui.define([
                     new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
                 ],
                 success: function(oData){
-                    oView.setBusy(false);
+                   
+                }
+            });            
+            oDetailsModel3.read("/SupplierGenView(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
+                success: function (oData) {
+                    
                 }
             });
 
@@ -463,6 +513,22 @@ sap.ui.define([
             var sThisViewId = this.getView().getId();
             var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");
             oFcl.to(sThisViewId);
+
+            //ScrollTop
+            this.byId("suppliePage").setSelectedSection("pageSectionMain");
+            var oObjectPageLayout = this.getView().byId("suppliePage");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+            
+        },
+
+        onFinTablePersoButtonPressed: function(oEvent){
+			this._oTPC.openDialog();
+		},
+        
+        onFinTablePersoRefresh : function() {
+			FinListPersoService.resetPersData();
+			this._oTPC.refresh();
 		},
 
 		/**
@@ -486,7 +552,7 @@ sap.ui.define([
 		_toEditMode: function(){
 			var FALSE = false;
             this._showFormFragment('AddSupplier_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
 			// this.byId("pageDeleteButton").setEnabled(FALSE);
@@ -509,7 +575,7 @@ sap.ui.define([
 		_toShowMode: function(){
 			var TRUE = true;
 			this._showFormFragment('AddSupplier_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
 			// this.byId("pageDeleteButton").setEnabled(TRUE);
@@ -542,7 +608,10 @@ sap.ui.define([
 						text: "{SupplierFin>fiscal_quarter}"
                     }),
                     new Text({
-						text: "{SupplierFin>sales_amount}"
+                        text: {
+                            path: 'SupplierFin>sales_amount',
+                            formatter: '.numberFormatter.toNumberString'
+                        }
                     }),
                     new Text({
 						text: "{SupplierFin>opincom_amount}"
@@ -596,137 +665,116 @@ sap.ui.define([
 				type: sap.m.ListType.Inactive
 			});
 
-            var oLanguageCode = new ComboBox({
-                    selectedKey: "{SupplierFin>language_code}",
+            var oQuarter = new ComboBox({
+                    selectedKey: "{SupplierFin>fiscal_quarter}",
+                    editable: "{= ${SupplierFin>_row_state_} === 'C' }",
                     required : true
                 });
-                // oLanguageCode.bindItems({
-                //     path: 'util>/Code',
-                //     filters: [
-                //         new Filter("tenant_id", FilterOperator.EQ, 'L2600'),                        
-                //         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
-                //     ],
-                //     template: new Item({
-                //         key: "{util>code}",
-                //         text: "{util>code_name}"
-                //     })
-                // });
+                oQuarter.bindItems({
+                    path: 'util>/Code',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
+                        new Filter("group_code", FilterOperator.EQ, 'DP_GS_DATE_QUARTER')
+                    ],
+                    template: new Item({
+                        key: "{util>code}",
+                        text: "{util>code_name}"
+                    })
+                });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
                         icon:{ path:'SupplierFin>_row_state_', formatter: this.formattericon
                                 }                              
-                    }),
-                    // oLanguageCode,
-                    new Input({
-                        value: {
-                            path: 'SupplierFin>fiscal_year',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        },
-                        required : true
-                    }),
-                    new Input({
-                        value: {
-                            path: 'SupplierFin>fiscal_quarter',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        },
-                        required : true
-                    }),
+                    }),                    
+                    new DatePicker({
+                        value: "{SupplierFin>fiscal_year}",
+                        valueFormat: "yyyy",
+                        displayFormat: "yyyy",
+                        editable: "{= ${SupplierFin>_row_state_} === 'C' }",
+                        required: true
+                    }),                    
+                    oQuarter,                                        
                     new Input({
                         value: {
                             path: 'SupplierFin>sales_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>opincom_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>asset_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>curasset_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>nca_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>liabilities_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>curliablities_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>ncl_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>equity_capital',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     })
 				]
             });
@@ -738,24 +786,22 @@ sap.ui.define([
                                 }                              
                     }),
                     // oLanguageCode,
-                    new Input({
-                        value: {
-                            path: 'SupplierSal>txn_year',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        },
-                        required : true
-                    }),
+                    new DatePicker({
+                        value: "{SupplierSal>txn_year}",
+                        valueFormat: "yyyy",
+                        displayFormat: "yyyy",
+                        editable: "{= ${SupplierSal>_row_state_} === 'C' }",
+                        required: true
+                    }),                    
                     new Input({
                         value: {
                             path: 'SupplierSal>customer_english_name',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 240
                             }
                         },
+                        editable: "{= ${SupplierSal>_row_state_} === 'C' }",
                         required : true
                     }),
                     new Input({
@@ -763,30 +809,27 @@ sap.ui.define([
                             path: 'SupplierSal>customer_local_name',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 240
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierSal>annual_txn_amount',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     }),
                     new Input({
                         value: {
                             path: 'SupplierSal>sales_weight',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 30
+                                maxLength: 100
                             }
-                        },
-                        required : true
+                        }
                     })
 				]
             });
@@ -832,20 +875,30 @@ sap.ui.define([
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
         },
-        
-        onMidTableFilterPress: function() {
-            this._MidTableApplyFilter();
-        },
 
-        _MidTableApplyFilter: function() {
-
-            var oView = this.getView(),
-				sValue = oView.byId("midTableSearchField").getValue(),
-				oFilter = new Filter("uom_name", FilterOperator.Contains, sValue);
-
-			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
-
+        _doInitTablePerso: function(){
+			// init and activate controller
+			this._oTPC = new TablePersoController({
+				table: this.byId("finTable"),
+				componentName: "gsSupplierMgt",
+				persoService: FinListPersoService,
+				hasGrouping: true
+			}).activate();
         }
+        
+        // onMidTableFilterPress: function() {
+        //     this._MidTableApplyFilter();
+        // },
+
+        // _MidTableApplyFilter: function() {
+
+        //     var oView = this.getView(),
+		// 		sValue = oView.byId("midTableSearchField").getValue(),
+		// 		oFilter = new Filter("uom_name", FilterOperator.Contains, sValue);
+
+		// 	oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        // }
 
 	});
 });

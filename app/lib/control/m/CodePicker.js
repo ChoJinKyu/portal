@@ -7,7 +7,7 @@ sap.ui.define([
     "./CodePickerValueHelp"
 ], function (Parent, Renderer, ODataV2ServiceProvider, ListItem, JSONModel, CodePickerValueHelp) {
     "use strict";
-
+    
     var CodePicker = Parent.extend("ext.lib.control.m.CodePicker", {
         
         renderer: Renderer,
@@ -26,22 +26,18 @@ sap.ui.define([
 				valueHelp: {type: "ext.lib.control.m.CodePickerValueHelp", multiple: false, bindable : "bindable"}
             }
         },
-
-        init: function () {
-            Parent.prototype.init.call(this);
+        
+        constructor: function () {
+            Parent.apply(this, arguments);
             this.setModel(new JSONModel());
             this.attachValueHelpRequest(this._onValueHelpRequest);
-        },
-
-        onAfterRendering: function(){
+            
             if(!this.oValueHelp){
-                this.oValueHelp = this.getValueHelp() || new CodePickerValueHelp({
-                    contentWidth: "500px",
-                });
+                this.oValueHelp = this.getValueHelp() || new CodePickerValueHelp({});
+                this.oValueHelp.setModel(this.getModel());
                 this.oValueHelp.setProperty("keyField", this.getProperty("keyField"));
                 this.oValueHelp.setProperty("textField", this.getProperty("textField"));
-                this.oValueHelp.setModel(this.getModel());
-                this.oValueHelp.attachEvent("ok", this.onValueHelpOkPress.bind(this));
+                this.oValueHelp.attachEvent("apply", this.onApply.bind(this));
             }
         },
         
@@ -82,7 +78,7 @@ sap.ui.define([
             this.oValueHelp.open();
         },
 
-        onValueHelpOkPress: function(oEvent){
+        onApply: function(oEvent){
             var oData = oEvent.getParameter("data");
             this.setSelectedKey(oData[this.getProperty("keyField")]);
         }

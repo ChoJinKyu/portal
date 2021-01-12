@@ -7,7 +7,7 @@ sap.ui.define([
 ], function (jQuery, UIComponent, JSONModel, HashChanger, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
-	return UIComponent.extend("op.pu.PrMgt.Component", {
+	return UIComponent.extend("op.pu.prMgt.Component", {
 
 		metadata : {
 			manifest: "json"

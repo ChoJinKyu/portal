@@ -1,29 +1,19 @@
-/**
- * * * *
- *
- * 1. namespace
- *
- * - 모듈코드 소문자로 작성
- * - 소모듈 존재시 대모듈.소모듈 로 작성
- *
- * 2. entity
- *
- * - 대문자로 작성
- * - 테이블명 생성을 고려하여 '\_' 추가
- *
- * 3. 컬럼(속성)
- *
- * - 소문자로 작성
- *
- * 4. .hdbview, .hdbfunction 등으로 이미 생성된 DB Object 사용시 entity 위에
- *    @cds.persistence.exists 명시
- * 5. namespace : pg
- * 6. entity : It_Txn_Invoice_Doc
- * 7. entity description : 송장전표 업무용 (SAC)
- * 8. history -. 2020.12.29 : 이기현
- *
- * * * *
- */
+/************************************************
+  1. namespace
+  - 모듈코드 소문자로 작성
+  - 소모듈 존재시 대모듈.소모듈 로 작성
+  2. entity
+  - 대문자로 작성
+  - 테이블명 생성을 고려하여 '_' 추가
+  3. 컬럼(속성)
+  - 소문자로 작성
+  4. .hdbview, .hdbfunction 등으로 이미 생성된 DB Object 사용시 entity 위에 @cds.persistence.exists 명시    
+  5. namespace : pg
+  6. entity : It_Txn_Invoice_Doc
+  7. entity description : 송장전표 업무용 (SAC)
+  8. history
+  -. 2020.12.29 : 이기현
+*************************************************/
 
 namespace pg;
 
@@ -45,7 +35,7 @@ entity It_Txn_Invoice_Doc {
         document_posting_date          : Date                @title : '전표전기일자';
         accounting_document_input_date : Date                @title : '회계전표입력일자';
         currency_code                  : String(3)           @title : '통화코드';
-        exchange_rate                  : Decimal(9, 5)       @title : '환율';
+        exchange_rate                  : Decimal(20, 10)     @title : '환율';
         pay_idays                      : Decimal(5, 0)       @title : '지급기산일수';
         maturity_calc_date             : Date                @title : '만기계산일자';
         material_code                  : String(40)          @title : '자재코드';
@@ -55,13 +45,13 @@ entity It_Txn_Invoice_Doc {
         gl_account_code                : String(30)          @title : 'GL계정코드';
         accounting_document_number     : String(50)          @title : '회계전표번호';
         accounting_document_year       : String(4)           @title : '회계전표연도';
-        accounting_document_item       : String(10)          @title : '회계전표품목';
         clearing_date                  : Date                @title : '반제일자';
         document_amount                : Decimal             @title : '전표금액';
         accounting_maturity_calc_date  : Date                @title : '회계만기계산일자';
         accounting_payterms_code       : String(30)          @title : '회계지불조건코드';
         accounting_pay_idays           : Decimal(5, 0)       @title : '회계지급기산일수';
         accounting_pay_method          : String(4)           @title : '회계지급방법';
+        prctr_code                     : String(15)          @title : '손익센터코드';
 }
 
 extend It_Txn_Invoice_Doc with util.Managed;

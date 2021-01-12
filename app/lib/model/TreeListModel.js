@@ -9,8 +9,14 @@ sap.ui.define([
 
     var TreeListModel = JSONModel.extend("ext.lib.model.TreeListModel", {
 
-        constructor: function (model) {
+        constructor: function (model, config) {
             this.model = model;
+            this.config = config || {};
+        },
+
+        setConfig: function(config) {
+            this.config = config;
+            return this;
         },
 
         convToJsonTree: function (oData) {
@@ -115,7 +121,8 @@ sap.ui.define([
                 }
                 return t;
             }, JSON.parse(JSON.stringify(tree)));
-            return tree;
+
+            return this.config.returnType == "Array" ? [ tree, oData ] : tree;
         },
 
         read: function (path, parameters) {
@@ -129,7 +136,9 @@ sap.ui.define([
                 // filter
                 var filters = parameters.filters;
                 // 검색조건 및 결과가 없는 경우 종료
-                if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
+                if (filters.filter(function(f) { return f.sPath === 'keyword' }).length <= 0
+                    ||
+                    !oData || !(oData.results) || oData.results.length <= 0) {
                     return that.convToJsonTree(oData);
                 }
                 // Hierachy 관련 node_id만을 필터링한다.

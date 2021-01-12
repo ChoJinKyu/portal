@@ -24,8 +24,8 @@
           "localUri": "localService/metadata.xml"
         }
       },
-      "materialCodeService": {
-        "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
+      "commonService": {
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
@@ -39,7 +39,28 @@
           "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
-      }
+      },
+      "orgMgtService": {
+            "uri": "srv-api/odata/v2/cm.util.OrgService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
+        },
+        "orgCodeMgtService": {
+            "uri": "srv-api/odata/v2/cm.OrgCodeMgtService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
+        },
+        "purOrgMgtService": {
+            "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
+        }
     }
   },
   "sap.cloud": {
@@ -99,8 +120,8 @@
           "useBatch": true
         }
       },
-      "materialCodeODataModel": {
-        "dataSource": "materialCodeService",
+      "commonODataModel": {
+        "dataSource": "commonService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -118,7 +139,37 @@
           "refreshAfterChange": false,
           "useBatch": true
         }
-      }
+      },
+      "org": {
+            "dataSource": "orgMgtService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": true,
+                "useBatch": true
+            }
+        },
+        "orgCode": {
+            "dataSource": "orgCodeMgtService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": true,
+                "useBatch": true
+            }
+        },
+        "purOrg": {
+            "dataSource": "purOrgMgtService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        }
     },
     "resources": {
       "css": [

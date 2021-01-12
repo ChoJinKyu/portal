@@ -21,12 +21,12 @@ using util from '../../cm/util/util-model';
 
 
 entity It_Mst_Payment_Terms {
-    key tenant_id          : String(5) not null  @title : '테넌트ID';
-    key company_code       : String(10) not null @title : '회사코드';
-    key org_type_code      : String(30) not null @title : '조직유형코드';
-    key org_code           : String(10) not null @title : '조직코드';
-    key payment_terms_code : String(6) not null  @title : '지불조건코드';
-        payment_terms_desc : String(75)          @title : '지불조건내역';
+    key tenant_id     : String(5) not null  @title : '테넌트ID';
+    key company_code  : String(10) not null @title : '회사코드';
+    key org_type_code : String(30) not null @title : '조직유형코드';
+    key org_code      : String(10) not null @title : '조직코드';
+    key payterms_code : String(30) not null @title : '지불조건코드';
+        payterms_name : String(240)         @title : '지불조건내역';
 }
 
 extend It_Mst_Payment_Terms with util.Managed;

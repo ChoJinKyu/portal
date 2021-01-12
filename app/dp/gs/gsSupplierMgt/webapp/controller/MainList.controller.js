@@ -180,6 +180,35 @@ sap.ui.define([
 			// store index of the item clicked, which can be used later in the columnResize event
 			this.iIndex = oParent.indexOfItem(oItem);
         },
+
+        onEditSupplierPress: function(oEvent) {
+			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+			// 	sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            //     oRecord = this.getModel("list").getProperty(sPath);	
+
+            var oItem= this.byId("mainTable").getSelectedItem();
+
+            if(oItem == null){
+                MessageBox.alert("수정할 공급업체를 선택해 주세요.");
+                return false;
+            }
+
+            var oEntry = oItem.getBindingContext("list").getObject();           
+            
+            this.getRouter().navTo("suppliePage", {
+				layout: LayoutType.OneColumn,
+				tenantId: oEntry.tenant_id,
+                ssn: oEntry.sourcing_supplier_nickname,
+                mode: "show"
+			});
+            
+        },
+
+        onEditEvaluationPress: function(oEvent) {
+
+			MessageBox.alert("준비중입니다.");
+            
+        },
         
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
@@ -243,47 +272,72 @@ sap.ui.define([
                 that = this;
             var tenantId = "L2100";           
             
-            // var ssn = this.getView().byId("ssn").getValue();   
-            var ssn = "ZKH"  
+            var ssn = this.getView().byId("ssn").getValue(); 
+            var email = this.getView().byId("email").getValue();  
+            // var ssn = "ZKH"  
             
-            // if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;       
-            this.byId("dialogAddSupplier").close();
-            this.getRouter().navTo("suppliePage", {
-				layout: LayoutType.OneColumn,
-				tenantId: tenantId,
-                ssn: ssn,
-                mode: "edit"
-			});
-
-			// MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-			// 	title : this.getModel("I18N").getText("/SAVE"),
-			// 	initialFocus : sap.m.MessageBox.Action.CANCEL,
-			// 	onClose : function(sButton) {
-			// 		if (sButton === MessageBox.Action.OK) {
-			// 			oView.setBusy(true);
-			// 			oTransactionManager.submit({						
-			// 				success: function(ok){
-			// 					// that._toShowMode();
-            //                     oView.setBusy(false);
-            //                     // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-            //                     MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-            //                         that.byId("dialogAddSupplier").close();
-            //                         // that.byId("pageSearchButton").firePress();
-            //                         // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-            //                         that.getRouter().navTo("suppliePage", {
-            //                             layout: LayoutType.OneColumn,
-            //                             tenantId: tenantId,
-            //                             ssn: ssn,
-            //                             mode: "edit"
-            //                         });
-			// 				}
-			// 			});
-			// 		};
-			// 	}
+            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;       
+            // this.byId("dialogAddSupplier").close();
+            // this.getRouter().navTo("suppliePage", {
+			// 	layout: LayoutType.OneColumn,
+			// 	tenantId: tenantId,
+            //     ssn: ssn,
+            //     mode: "edit"
             // });
+            
+            var chkEmail = this.CheckEmail(email);
+            if(!chkEmail){
+                MessageBox.alert("이메일 형식이 잘못되었습니다.");
+                return false;
+            }
+
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+				title : this.getModel("I18N").getText("/SAVE"),
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						oView.setBusy(true);
+						oTransactionManager.submit({						
+							success: function(ok){								
+                                oView.setBusy(false);
+                                // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                    that.byId("dialogAddSupplier").close();
+                                    that.byId("pageSearchButton").firePress();
+                                    // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+                                    that.getRouter().navTo("suppliePage", {
+                                        layout: LayoutType.OneColumn,
+                                        tenantId: tenantId,
+                                        ssn: ssn,
+                                        mode: "edit"
+                                    });
+							}
+						});
+					};
+				}
+            });
             this.validator.clearValueState(this.byId("dialogAddSupplier"));            
             
-        },        
+        },     
+        
+        onDupChk: function () {            
+            MessageBox.alert("준비중입니다.");
+        },
+
+        CheckEmail: function (str) {                                                 
+
+            var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+
+            if(!reg_email.test(str)) {                            
+
+                return false;         
+
+            }else {                       
+
+                return true;         
+
+            }
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -337,21 +391,21 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-        },
-        
-        onMainTableFilterPress: function() {
-            this._MainTableApplyFilter();
-        },
-
-        _MainTableApplyFilter: function() {
-
-            var oView = this.getView(),
-				sValue = oView.byId("mainTableSearchField").getValue(),
-				oFilter = new Filter("uom_code", FilterOperator.Contains, sValue);
-
-			oView.byId("mainTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
-
         }
+        
+        // onMainTableFilterPress: function() {
+        //     this._MainTableApplyFilter();
+        // },
+
+        // _MainTableApplyFilter: function() {
+
+        //     var oView = this.getView(),
+		// 		sValue = oView.byId("mainTableSearchField").getValue(),
+		// 		oFilter = new Filter("uom_code", FilterOperator.Contains, sValue);
+
+		// 	oView.byId("mainTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        // }
 
 
 	});

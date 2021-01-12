@@ -11,6 +11,7 @@ entity Md_Mst_View {
         mold_sequence                   : String(100) not null  @title:'금형순번';
     key mold_id                         : String(100) not null  @title:'금형ID';
         mold_progress_status_code       : String(30)            @title:'금형진행상태코드';
+        set_progress_status             : String(30)            @title:'setID진행상태코드';
         spec_name                       : String(500)           @title:'규격명';
         model                           : String(100)           @title:'모델';
         asset_number                    : String(100)           @title:'자산번호';
@@ -81,4 +82,5 @@ entity Md_Mst_View {
         mold_size                       : String(10)	        @title:'금형크기';
         local_create_dtm                : DateTime    not null  @title: '로컬등록시간';
         update_type                     : String(15)            @title: '화면에서 click한 Button';
+        family_flag                     : String(1)             @title: '가족부품번호입력여부';
 }

@@ -1,6 +1,8 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Item",
+    "sap/ui/core/ListItem",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     'sap/ui/core/Fragment',
@@ -11,24 +13,96 @@ sap.ui.define([
 	/**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-    function (Controller, JSONModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
+    function (Controller, JSONModel, Item, ListItem, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
         "use strict";
 
         return Controller.extend("cm.purOrgMgt.controller.purOrgMgt", {
             onInit: function () {
-            //   var that = this;
-            //   this.getOwnerComponent().getModel("org")
-            //     .attachRequestCompleted(function(event){
-            //         var params = event.getParameters();
-            //         if (!params.url.includes("$count")) {
-            //             var entity = params.url.split("/")[0];
-            //             if (entity.includes("Org_Company")) {
-            //                 console.log(">>>> this", that);
-            //             }
-            //         }
-            //     });
-                // this.getView().setModel(new JSONModel({
-                // }), "search");
+                // 테넌트
+                this.getOwnerComponent().getModel("org")
+                .attachRequestCompleted((function(event){
+                    var params = event.getParameters();
+                    if (!params.url.includes("$count")) {
+                        var entity = params.url.split("/")[0];
+                        if (entity.includes("Org_Tenant")) {
+                            setTimeout((function(){
+                                (!this.byId("searchTenantCombo").getFirstItem() || this.byId("searchTenantCombo").getFirstItem().getKey())
+                                &&
+                                this.byId("searchTenantCombo")
+                                    .insertItem(new Item({ key: "", text: "전체" }), 0)
+                                    .setSelectedItemId(this.byId("searchTenantCombo").getFirstItem().getId());
+                            }).bind(this), 0);
+                        }
+                    }
+                }).bind(this));
+                // 회사
+                this.getOwnerComponent().getModel("org")
+                .attachRequestCompleted((function(event){
+                    var params = event.getParameters();
+                    if (!params.url.includes("$count")) {
+                        var entity = params.url.split("/")[0];
+                        if (entity.includes("Org_Company")) {
+                            setTimeout((function(){
+                                (!this.byId("searchCompanyCode").getFirstItem() || this.byId("searchCompanyCode").getFirstItem().getKey() != "*")
+                                &&
+                                this.byId("searchCompanyCode")
+                                    .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
+                                    .setSelectedItemId(this.byId("searchCompanyCode").getFirstItem().getId());
+                            }).bind(this), 0);
+                        }
+                    }
+                }).bind(this));
+                // 조직유형
+                this.getOwnerComponent().getModel("util")
+                .attachRequestCompleted((function(event){
+                    var params = event.getParameters();
+                    if (!params.url.includes("$count")) {
+                        var entity = params.url.split("/")[0];
+                        if (entity.includes("Code")) {
+                            setTimeout((function(){
+                                (!this.byId("searchOrgTypeCombo").getFirstItem() || this.byId("searchOrgTypeCombo").getFirstItem().getKey())
+                                &&
+                                this.byId("searchOrgTypeCombo")
+                                    .insertItem(new Item({ key: "", text: "전체" }), 0)
+                                    .setSelectedItemId(this.byId("searchOrgTypeCombo").getFirstItem().getId());
+                            }).bind(this), 0);
+                        }
+                    }
+                }).bind(this));
+            },
+            // Data
+            onSelectionChange: function() {
+                var [event, field] = arguments;
+                var combo, key = event.getSource().getSelectedKey();
+                this["onSelectionChange"][field] = key;
+                // 테넌트
+                if (field == "tenant_id") {
+                    // 회사코드
+                    combo = this.byId("searchCompanyCode");
+                    combo.setSelectedKey(); 
+                    combo.bindItems({
+                        path: 'org>/Org_Company',
+                        filters: [
+                            new Filter('tenant_id', FilterOperator.EQ, key)
+                        ].filter(f => f.oValue1 || f.oValue2),
+                        template: new ListItem({
+                            key: "{org>company_code}", text: "{org>company_name}", additionalText: "{org>company_code}"
+                        })
+                    });
+                    // 조직유형
+                    combo = this.byId("searchOrgTypeCombo");
+                    combo.setSelectedKey(); 
+                    combo.bindItems({
+                        path: 'util>/Code',
+                        filters: [
+                            new Filter('tenant_id', FilterOperator.EQ, key),
+                            new Filter('group_code', FilterOperator.EQ, 'CM_ORG_TYPE_CODE'),
+                        ].filter(f => f.oValue1 || f.oValue2),
+                        template: new Item({
+                            key: "{util>code}", text: "{util>code} : {util>code_description}"
+                        })
+                    });
+                }
             },
             onSelect: function (event) {
                 // event 객체를 통해 레코드(ROW)를 가져온다.
@@ -58,27 +132,21 @@ sap.ui.define([
                 });
             },
             onSearch: function () {
-                // Filter
-                var predicates = [];
-                if (!!this.byId("searchTenantCombo").getSelectedKey()) {
-                    predicates.push(new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey()));
-                }
-                if (!!this.byId("searchCompanyCode").getSelectedKey()) {
-                    predicates.push(new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCode").getSelectedKey()));
-                }
-                if (!!this.byId("searchOrgTypeCombo").getSelectedKey()) {
-                    predicates.push(new Filter("org_type_code", FilterOperator.EQ, this.byId("searchOrgTypeCombo").getSelectedKey()));
-                }
-                if (!!this.byId("searchUseFlag").getSelectedKey()) {
-                    predicates.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseFlag").getSelectedKey()));
-                }
                 // Call Service
                 (function(){
                     var oDeferred = new $.Deferred();
                     this.getView()
                         .setBusy(true)
                         .getModel().read("/Pur_Operation_Org", $.extend({
-                        filters: predicates
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey() || ""),
+                            new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCode").getSelectedKey() || ""),
+                            new Filter("org_type_code", FilterOperator.EQ, this.byId("searchOrgTypeCombo").getSelectedKey() || ""),
+                            new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseFlag").getSelectedKey() || ""),
+                        ].filter(
+                            f => f.oValue1 || (typeof f.oValue1 == "boolean") || (typeof f.oValue2 == "number") || 
+                                 f.oValue2 || (typeof f.oValue2 == "boolean") || (typeof f.oValue2 == "number")
+                        ),
                     }, {
                         success: oDeferred.resolve,
                         error: oDeferred.reject
@@ -100,7 +168,6 @@ sap.ui.define([
                 }).bind(this));
             },
             onMstUpdateFinished: function (oEvent) {
-                console.log("########## onMstUpdateFinished - Start");
             }
         });
     }

@@ -10,6 +10,7 @@ entity Se_Quantitative_Item {
   key qttive_item_code               : String(15) not null @title: '정량항목코드' ;	
       qttive_item_name               : String(240)         @title: '정량항목명' ;	
       qttive_item_uom_code           : String(30)          @title: '정량항목측정단위코드' ;	
-      qttive_item_measure_mode_code  : String(50)          @title: '정량항목측정방식' ;	
+      qttive_item_measure_mode_code  : String(50)          @title: '정량항목측정방식' ;
+      qttive_item_desc               : String(1000)        @title: '정량항목설명' ;
 }	
 extend Se_Quantitative_Item with util.Managed;	

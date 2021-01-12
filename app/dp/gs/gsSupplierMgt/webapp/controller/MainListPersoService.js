@@ -4,33 +4,27 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "gsSupplierMgt-mainList-mainColumnUOM",
+                id: "gsSupplierMgt-mainList-mainColumnNN",
                 order: 0,
-                text: "UOM",
+                text: "소싱공급업체별칭",
                 visible: true
             },
             {
-                id: "gsSupplierMgt-mainList-mainColumnUN",
+                id: "gsSupplierMgt-mainList-mainColumnMail",
                 order: 1,
-                text: "Commercial Code",
+                text: "이메일주소",
                 visible: false
             },            
             {
-                id: "gsSupplierMgt-mainList-mainColumnBU",
+                id: "gsSupplierMgt-mainList-mainColumnDate",
                 order: 2,
-                text: "Base Unit",
+                text: "발굴일자",
                 visible: true
             },
             {
-                id: "gsSupplierMgt-mainList-mainColumnClass",
+                id: "gsSupplierMgt-mainList-mainColumnEmp",
                 order: 3,
-                text: "Class",
-                visible: true
-            },            
-            {
-                id: "gsSupplierMgt-mainList-mainColumnDD",
-                order: 4,
-                text: "Disable Date",
+                text: "발굴자사번",
                 visible: true
             }
         ];
@@ -78,8 +72,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "UOM") {
-                        return "UOM (Important!)";
+                    if (oColumn.getHeader().getText() === "소싱공급업체별칭") {
+                        return "소싱공급업체별칭 (Important!)";
                     }
                 }
                 return null;
@@ -87,7 +81,7 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnUOM") != -1) {
+                if (sId.indexOf("mainColumnNN") != -1) {
                     return "Columns of Key";
                 }
                 return "Others";

@@ -1,4 +1,4 @@
-package lg.sppCap.handlers.dp;
+package lg.sppCap.handlers.dp.pd;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -71,6 +71,7 @@ public class ProductActivityV4 implements EventHandler {
         v_sql_createTable.append("CRUD_TYPE_CODE NVARCHAR(1),");
         v_sql_createTable.append("UPDATE_PRODUCT_ACTIVITY_CODE NVARCHAR(40) )");
 
+        String v_sql_insertTable2 = "INSERT INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE_TEMP VALUES (?, ?, ?, ?, ?,    ?, ?, ?, ?, ?,   ?, ?, current_date, ?, ?)";
         String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP VALUES (?, ?, ?, ?, ?,    ?, ?, ?, ?, ?,   ?, ?, current_date, ?, ?)";
         String v_sql_callProc = "CALL DP_PD_PRODUCT_ACTIVITY_SAVE_PROC(I_TABLE => #LOCAL_TEMP, O_MSG => ?)";
         Collection<OutType> v_result = new ArrayList<>();

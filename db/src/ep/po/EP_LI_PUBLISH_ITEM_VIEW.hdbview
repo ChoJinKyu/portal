@@ -7,13 +7,17 @@ select
     mst.loi_number,
     dtl.item_sequence,
     mst.requestor_empno,
-    mst.requestor_empno as requestor_name,
+    -- mst.requestor_empno as requestor_name,
+    (select cm_get_emp_name_func(dtl.tenant_id, mst.requestor_empno) from dummy) as requestor_name,
     mst.request_department_code,
-    mst.request_department_code as request_department_name,
+    -- mst.request_department_code as request_department_name,
+    (select cm_get_dept_name_func(dtl.tenant_id, mst.request_department_code) from dummy) as request_department_name,
     coalesce(dtl.buyer_empno, '') as buyer_empno,
-    coalesce(dtl.buyer_empno, '') as buyer_name,
+    -- coalesce(dtl.buyer_empno, '') as buyer_name,
+    (select cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) from dummy) as buyer_name, 
     coalesce(dtl.purchasing_department_code, '') as purchasing_department_code,
-    coalesce(dtl.purchasing_department_code, '') as purchasing_department_name,
+    -- coalesce(dtl.purchasing_department_code, '') as purchasing_department_name,
+    (select cm_get_dept_name_func(dtl.tenant_id, dtl.purchasing_department_code) from dummy) as purchasing_department_name,
     mst.loi_request_title,
     dtl.item_desc,
     coalesce(dtl.quotation_number, 0) as quotation_number,
@@ -26,17 +30,28 @@ select
     dtl.request_amount,
     coalesce(dtl.currency_code, '') as currency_code,
     dtl.loi_selection_number,
-    coalesce(sel.loi_selection_status_code, '') as loi_selection_status_code,
-    (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_SELECTION_STATUS', sel.loi_selection_status_code, 'KO') from dummy) as loi_selection_status_name,
-    -- ''  as loi_selection_status_name,
+    (case
+        when coalesce(dtl.loi_selection_number, '') = '' and dtl.quotation_number is not null
+        then '122020'
+        else coalesce(sel.loi_selection_status_code, '')
+    end) as loi_selection_status_code,
+    (case
+        when coalesce(dtl.loi_selection_number, '') = '' and dtl.quotation_number is not null
+        then 'RFQ완료'
+        else (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_SELECTION_STATUS', sel.loi_selection_status_code, 'KO') from dummy)
+    end) as loi_selection_status_name,    
     dtl.loi_publish_number,
     coalesce(pub.loi_publish_status_code, '') as loi_publish_status_code,
-    (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_PUBLISH_STATUS', pub.loi_publish_status_code, 'KO') from dummy) as loi_publish_status_name,
+    (select cm_get_code_name_func(dtl.tenant_id, 'EP_LOI_PUBLISH_STATUS', pub.loi_publish_status_code, 'KO') from dummy) as loi_publish_status_name,
     -- '' as loi_publish_status_name,
     '' as po_status_code,
     mst.request_date,
+    sel.supplier_selection_date,
     coalesce(dtl.supplier_opinion, '') as supplier_opinion,
     coalesce(dtl.remark, '') as remark,
+    coalesce(dtl.plant_code, '') as plant_code,
+    coalesce(pl.plant_name, '') as plant_name,
+    coalesce(dtl.spec_desc, '') as spec_desc,
     dtl.local_create_dtm,
     dtl.local_update_dtm,
     dtl.create_user_id,
@@ -56,5 +71,8 @@ select
     on dtl.tenant_id = sel.tenant_id 
     and dtl.company_code = sel.company_code
     and dtl.loi_selection_number = sel.loi_selection_number
-    where mst.loi_request_status_code = '121040'
-    ;
+    left outer join cm_org_plant as pl
+    on dtl.tenant_id = pl.tenant_id 
+    -- and dtl.company_code = pl.company_code 
+    and dtl.plant_code = pl.plant_code
+    where mst.loi_request_status_code = '121040';

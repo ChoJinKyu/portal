@@ -25,9 +25,9 @@ entity It_Mst_St_Loc {
     key company_code  : String(10) not null @title : '회사코드';
     key org_type_code : String(30) not null @title : '조직유형코드';
     key org_code      : String(10) not null @title : '조직코드';
-    key plant_code    : String(6) not null  @title : '플랜트코드';
-    key sl_code       : String(6) not null  @title : '저장위치코드';
-        sl_name       : String(24)          @title : '저장위치명';
+    key plant_code    : String(4) not null  @title : '플랜트코드';
+    key sloc_code     : String(30) not null @title : '저장위치코드';
+        sloc_name     : String(30)          @title : '저장위치명';
 }
 
 extend It_Mst_St_Loc with util.Managed;

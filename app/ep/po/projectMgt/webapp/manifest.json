@@ -82,7 +82,7 @@
           "bundleName": "ep.po.projectMgt.i18n.i18n"
         }
       },
-      "util": {
+      "common": {
         "dataSource": "commonUtilService",
         "preload": true,
         "settings": {

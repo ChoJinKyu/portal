@@ -26,13 +26,15 @@
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
                 <heading>
-                    <m:Title text="Code Detail" wrapping="true" class="sapUiSmallMarginEnd"/>
+                    <m:HBox alignItems="End">
+                        <m:OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press="handleClose"  tooltip="Close column"/>
+                        <m:Title text="Code Detail" wrapping="true" class="sapUiSmallMarginEnd" />
+                    </m:HBox>
                 </heading>
 
                 <navigationActions>
                     <m:OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" press="handleFullScreen" tooltip="Enter Full Screen Mode" visible="{contModel>/detailDetail/visibleFullScreenBtn}"/>
                     <m:OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen" press="handleExitFullScreen" tooltip="Exit Full Screen Mode" visible="{= !${contModel>/detailDetail/visibleFullScreenBtn}}"/>
-                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press="handleClose"  tooltip="Close column"/>
                 </navigationActions>
 
             </ObjectPageDynamicHeaderTitle>
@@ -158,7 +160,10 @@
                                             type="Number"
                                             id="sort_no"
                                             visible="{contModel>/detailDetail/editMode}"
-                                            value="{viewModel>/detailDetail/sort_no}">
+                                            value="{
+                                                path:'viewModel>/detailDetail/sort_no',
+                                                type: 'sap.ui.model.type.Integer'
+                                            }">
                                         </m:Input>
                                         <m:layoutData>
                                             <layout:GridData
@@ -279,7 +284,7 @@
                                             <m:HBox>
                                                 <m:Text
                                                     visible="{contModel>/detailDetail/readMode}"
-                                                    text="{languages>language_cd}" />
+                                                    text="{languages>language_name}" />
                                                 <m:ComboBox
                                                     visible="{contModel>/detailDetail/editMode}"
                                                     showSecondaryValues= "true"
@@ -288,9 +293,9 @@
                                                     items="{viewModel>/languageList}">
                                                     <m:items>
                                                         <core:ListItem 
-                                                            key="{util>code}" 
-                                                            text="{util>code_description}" 
-                                                            additionalText="{util>code}"/>
+                                                            key="{viewModel>code}" 
+                                                            text="{viewModel>code_description}" 
+                                                            additionalText="{viewModel>code}"/>
                                                     </m:items>
                                                 </m:ComboBox>
                                             </m:HBox>
@@ -298,11 +303,13 @@
                                                 direction="Column">
                                                 <m:Text
                                                     visible="{contModel>/detailDetail/readMode}"
-                                                    text="{languages>code_name}" />
+                                                    text="{languages>code_name}" 
+                                                    tooltip="{languages>code_name}"/>
                                                 <m:Input
                                                     visible="{contModel>/detailDetail/editMode}"
                                                     maxLength="{= parseInt(${/#CodeLanguages/code_name/@maxLength})}"
-                                                    value="{languages>code_name}" />
+                                                    value="{languages>code_name}"
+                                                    tooltip="{languages>code_name}" />
                                             </m:HBox>
                                         </m:cells>
                                     </m:ColumnListItem>

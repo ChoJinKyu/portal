@@ -99,14 +99,15 @@ sap.ui.define([
             onListItemPress : function(oEvent){
                 var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
                 
+                //var oContModel = this.getModel("contModel");
+                //oContModel.setProperty("/detail", {"readMode" : true, "createMode" : false, "editMode" : false, "footer" : true});
+
                 var oViewModel = this.getModel('viewModel');
                 var sPath = oEvent.getSource().getBindingContextPath();
                 var oTargetData = oViewModel.getProperty(sPath);
 
                 oViewModel.setProperty("/detail", $.extend(true, {}, oTargetData));
                 oViewModel.setProperty("/detailClone", $.extend(true, {}, oTargetData));
-
-                //ControlUtil.scrollToIndexOneColumnMTable(oEvent.getSource());
 
                 var oNavParam = {
                     //layout: oNextUIState.layout,

@@ -12,16 +12,82 @@
     font-size: 1.2rem;
 }
 
+.mInput{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.tText {
+    text-align: left !important;
+    padding-bottom: 0 !important;
+    min-height: 2.4rem !important;
+    font-size: 1.0em !important;
+}
+
+.dText {
+    padding: 0 !important;
+    margin: 0 0 1.2rem 0 !important;
+    font-size: 0.85em !important;
+    font-weight: normal !important;
+    /* height: 2.4rem !important; */
+    min-height: 0.85rem !important;
+    /* display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px; */
+}
+
 .sText {
     font-weight: bold;
 }
 
 .pinkBG {
-    background-color: rgb(252, 221, 233);
+    /* background-color: rgb(252, 221, 233); */
+    background-color: #fff;
+}
+
+.leftM {
+    margin-left: 0.4rem !important;
+}
+
+.topM {
+    margin-top: 0.4rem !important;
+}
+
+.rbgButton {
+    height: 2.0rem !important;
+}
+
+.imageC {
+    size: 2.2rem !important;
+    color : #333333;
+}
+
+.imageP {
+    size : 1.6rem !important;
+    color : #cccccc;
+}
+
+
+
+
+
+.rbgBG {
+    padding: 1.5rem !important;
+    margin-left: 0.4rem !important;
+    border-top: 1px solid #a6a6a6 !important;
+    width: 100% !important;
+    background: #f2f2f2 !important;
+}
+
+.lhText {
+    line-height: 1.0rem !important;
+    font-size: 0.8rem !important;
 }
 
 .darkgrayBG {
-    background-color: darkgray;
+    background-color: #f2f2f2;
 }
 
 .whiteBG {
@@ -43,13 +109,8 @@
 
 .mouseP:active {
     /* background-color: rgb(252, 221, 233); */
-    background-color:  black;
+    background-color:  #f2f2f2;
     
 }
 
 
-
-;
-
-/* <div id="__xmlview0--aaaa" data-sap-ui="__xmlview0--aaaa" class="sapUiSimpleForm"><div id="__xmlview0--aaaa--Form" data-sap-ui="__xmlview0--aaaa--Form" data-sap-ui-customfastnavgroup="true" role="form" class="sapUiForm sapUiFormLblColon sapUiFormM sapUiFormEdit sapUiFormEdit-CTX"><div id="__xmlview0--aaaa--Layout" data-sap-ui="__xmlview0--aaaa--Layout" class="sapUiFormResGrid sapUiFormBackgrTranslucent"><div id="__container4--Grid" data-sap-ui="__container4--Grid" class="sapUiRespGrid sapUiRespGridHSpace0 sapUiRespGridVSpace0 sapUiFormResGridCont sapUiRespGridOverflowHidden sapUiRespGridMedia-Std-Desktop"><div class="sapUiRespGridSpanXL3 sapUiRespGridSpanL4 sapUiRespGridSpanM6 sapUiRespGridSpanS12"><div id="__vbox16" data-sap-ui="__vbox16" class="sapMFlexBox sapMVBox sapMFlexBoxJustifyStart sapMFlexBoxAlignItemsStretch sapMFlexBoxWrapNoWrap sapMFlexBoxAlignContentStretch sapMFlexBoxBGTransparent" style="width: 100%;"><div id="__data103" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><span id="__label30" data-sap-ui="__label30" aria-label="Award Type" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMLabelNoText" style="text-align: left;"><span id="__label30-text" class="sapMLabelTextWrapper"><bdi id="__label30-bdi">Award Type</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__data104" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><div id="__box7" data-sap-ui="__box7" class="sapMInputBase sapMInputBaseHeightMargin sapMComboBoxBase sapMComboBox sapMInputBaseHasEndIcons" style="max-width: 100%; width: 90%;"><div id="__box7-content" class="sapMInputBaseContentWrapper" style="width: 100%;"><input id="__box7-inner" placeholder="Target Price Setup" value="" role="combobox" aria-haspopup="listbox" aria-autocomplete="both" aria-expanded="false" autocomplete="off" autocorrect="off" autocapitalize="off" type="text" class="sapMInputBaseInner sapMComboBoxInner"><div tabindex="-1" class="sapMInputBaseIconContainer"><span id="__box7-arrow" data-sap-ui="__box7-arrow" role="button" aria-label="선택 옵션" data-sap-ui-icon-content="" class="sapUiIcon sapUiIconMirrorInRTL sapUiIconPointer sapMInputBaseIcon" style="font-family: 'SAP\2dicons';"></span></div></div></div></div></div></div><div class="sapUiRespGridSpanXL2 sapUiRespGridSpanL4 sapUiRespGridSpanM6 sapUiRespGridSpanS12"><div id="__vbox17" data-sap-ui="__vbox17" class="sapMFlexBox sapMVBox sapMFlexBoxJustifyStart sapMFlexBoxAlignItemsStretch sapMFlexBoxWrapNoWrap sapMFlexBoxAlignContentStretch sapMFlexBoxBGTransparent" style="width: 100%;"><div id="__data105" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><span id="__label31" data-sap-ui="__label31" aria-label="Bid Style" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMLabelNoText" style="text-align: left;"><span id="__label31-text" class="sapMLabelTextWrapper"><bdi id="__label31-bdi">Bid Style</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__data106" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><div id="__xmlview0--rbg2" data-sap-ui="__xmlview0--rbg2" role="radiogroup" class="sapMRbG sapMRbG1Row sapUiMediumMarginBottom" style="width: 100%;" tabindex="-1"><div id="__xmlview0--RB2-1" data-sap-ui="__xmlview0--RB2-1" role="radio" aria-checked="true" aria-labelledby="__xmlview0--RB2-1-label" tabindex="0" class="sapMRb sapMRbSel sapMRbHasLabel"><div class="sapMRbB sapMRbHoverable"><svg xmlns="http://www.w3.org/2000/svg" version="1.0" role="presentation" class="sapMRbSvg"><circle id="__xmlview0--RB2-1-Button" stroke="black" r="50%" stroke-width="2" fill="none" class="sapMRbBOut"></circle><circle r="22%" stroke-width="10" class="sapMRbBInn"></circle></svg><input id="__xmlview0--RB2-1-RB" type="radio" tabindex="-1" name="__xmlview0--rbg2" checked="checked"></div><span id="__xmlview0--RB2-1-label" data-sap-ui="__xmlview0--RB2-1-label" aria-label="Yes" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMRbBLabel" style="text-align: left;"><span id="__xmlview0--RB2-1-label-text" class="sapMLabelTextWrapper"><bdi id="__xmlview0--RB2-1-label-bdi">Yes</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__xmlview0--RB2-2" data-sap-ui="__xmlview0--RB2-2" role="radio" aria-checked="false" aria-labelledby="__xmlview0--RB2-2-label" tabindex="-1" class="sapMRb sapMRbHasLabel"><div class="sapMRbB sapMRbHoverable"><svg xmlns="http://www.w3.org/2000/svg" version="1.0" role="presentation" class="sapMRbSvg"><circle id="__xmlview0--RB2-2-Button" stroke="black" r="50%" stroke-width="2" fill="none" class="sapMRbBOut"></circle><circle r="22%" stroke-width="10" class="sapMRbBInn"></circle></svg><input id="__xmlview0--RB2-2-RB" type="radio" tabindex="-1" name="__xmlview0--rbg2"></div><span id="__xmlview0--RB2-2-label" data-sap-ui="__xmlview0--RB2-2-label" aria-label="No" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMRbBLabel" style="text-align: left;"><span id="__xmlview0--RB2-2-label-text" class="sapMLabelTextWrapper"><bdi id="__xmlview0--RB2-2-label-bdi">No</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div></div></div></div></div><div class="sapUiRespGridSpanXL3 sapUiRespGridSpanL4 sapUiRespGridSpanM6 sapUiRespGridSpanS12"><div id="__vbox18" data-sap-ui="__vbox18" class="sapMFlexBox sapMVBox sapMFlexBoxJustifyStart sapMFlexBoxAlignItemsStretch sapMFlexBoxWrapNoWrap sapMFlexBoxAlignContentStretch sapMFlexBoxBGTransparent" style="width: 100%;"><div id="__data107" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><span id="__label32" data-sap-ui="__label32" aria-label="Target Total Amount" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMLabelNoText" style="text-align: left;"><span id="__label32-text" class="sapMLabelTextWrapper"><bdi id="__label32-bdi">Target Total Amount</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__data108" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><div id="__input9" data-sap-ui="__input9" class="sapMInputBase sapMInputBaseHeightMargin sapMInput" style="width: 100%;"><div id="__input9-content" class="sapMInputBaseContentWrapper" style="width: 100%;"><input id="__input9-inner" value="" type="text" autocomplete="off" class="sapMInputBaseInner"></div></div></div></div></div></div></div></div></div>
-<div id="__data102" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><div id="__xmlview0--aaaa" data-sap-ui="__xmlview0--aaaa" class="sapUiSimpleForm"><div id="__xmlview0--aaaa--Form" data-sap-ui="__xmlview0--aaaa--Form" data-sap-ui-customfastnavgroup="true" role="form" class="sapUiForm sapUiFormLblColon sapUiFormM sapUiFormEdit sapUiFormEdit-CTX"><div id="__xmlview0--aaaa--Layout" data-sap-ui="__xmlview0--aaaa--Layout" class="sapUiFormResGrid sapUiFormBackgrTranslucent"><div id="__container4--Grid" data-sap-ui="__container4--Grid" class="sapUiRespGrid sapUiRespGridHSpace0 sapUiRespGridVSpace0 sapUiFormResGridCont sapUiRespGridOverflowHidden sapUiRespGridMedia-Std-Desktop"><div class="sapUiRespGridSpanXL3 sapUiRespGridSpanL4 sapUiRespGridSpanM6 sapUiRespGridSpanS12"><div id="__vbox16" data-sap-ui="__vbox16" class="sapMFlexBox sapMVBox sapMFlexBoxJustifyStart sapMFlexBoxAlignItemsStretch sapMFlexBoxWrapNoWrap sapMFlexBoxAlignContentStretch sapMFlexBoxBGTransparent" style="width: 100%;"><div id="__data103" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><span id="__label30" data-sap-ui="__label30" aria-label="Award Type" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMLabelNoText" style="text-align: left;"><span id="__label30-text" class="sapMLabelTextWrapper"><bdi id="__label30-bdi">Award Type</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__data104" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><div id="__box7" data-sap-ui="__box7" class="sapMInputBase sapMInputBaseHeightMargin sapMComboBoxBase sapMComboBox sapMInputBaseHasEndIcons" style="max-width: 100%; width: 90%;"><div id="__box7-content" class="sapMInputBaseContentWrapper" style="width: 100%;"><input id="__box7-inner" placeholder="Target Price Setup" value="" role="combobox" aria-haspopup="listbox" aria-autocomplete="both" aria-expanded="false" autocomplete="off" autocorrect="off" autocapitalize="off" type="text" class="sapMInputBaseInner sapMComboBoxInner"><div tabindex="-1" class="sapMInputBaseIconContainer"><span id="__box7-arrow" data-sap-ui="__box7-arrow" role="button" aria-label="선택 옵션" data-sap-ui-icon-content="" class="sapUiIcon sapUiIconMirrorInRTL sapUiIconPointer sapMInputBaseIcon" style="font-family: 'SAP\2dicons';"></span></div></div></div></div></div></div><div class="sapUiRespGridSpanXL2 sapUiRespGridSpanL4 sapUiRespGridSpanM6 sapUiRespGridSpanS12"><div id="__vbox17" data-sap-ui="__vbox17" class="sapMFlexBox sapMVBox sapMFlexBoxJustifyStart sapMFlexBoxAlignItemsStretch sapMFlexBoxWrapNoWrap sapMFlexBoxAlignContentStretch sapMFlexBoxBGTransparent" style="width: 100%;"><div id="__data105" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><span id="__label31" data-sap-ui="__label31" aria-label="Bid Style" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMLabelNoText" style="text-align: left;"><span id="__label31-text" class="sapMLabelTextWrapper"><bdi id="__label31-bdi">Bid Style</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__data106" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><div id="__xmlview0--rbg2" data-sap-ui="__xmlview0--rbg2" role="radiogroup" class="sapMRbG sapMRbG1Row sapUiMediumMarginBottom" style="width: 100%;" tabindex="-1"><div id="__xmlview0--RB2-1" data-sap-ui="__xmlview0--RB2-1" role="radio" aria-checked="true" aria-labelledby="__xmlview0--RB2-1-label" tabindex="0" class="sapMRb sapMRbSel sapMRbHasLabel"><div class="sapMRbB sapMRbHoverable"><svg xmlns="http://www.w3.org/2000/svg" version="1.0" role="presentation" class="sapMRbSvg"><circle id="__xmlview0--RB2-1-Button" stroke="black" r="50%" stroke-width="2" fill="none" class="sapMRbBOut"></circle><circle r="22%" stroke-width="10" class="sapMRbBInn"></circle></svg><input id="__xmlview0--RB2-1-RB" type="radio" tabindex="-1" name="__xmlview0--rbg2" checked="checked"></div><span id="__xmlview0--RB2-1-label" data-sap-ui="__xmlview0--RB2-1-label" aria-label="Yes" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMRbBLabel" style="text-align: left;"><span id="__xmlview0--RB2-1-label-text" class="sapMLabelTextWrapper"><bdi id="__xmlview0--RB2-1-label-bdi">Yes</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__xmlview0--RB2-2" data-sap-ui="__xmlview0--RB2-2" role="radio" aria-checked="false" aria-labelledby="__xmlview0--RB2-2-label" tabindex="-1" class="sapMRb sapMRbHasLabel"><div class="sapMRbB sapMRbHoverable"><svg xmlns="http://www.w3.org/2000/svg" version="1.0" role="presentation" class="sapMRbSvg"><circle id="__xmlview0--RB2-2-Button" stroke="black" r="50%" stroke-width="2" fill="none" class="sapMRbBOut"></circle><circle r="22%" stroke-width="10" class="sapMRbBInn"></circle></svg><input id="__xmlview0--RB2-2-RB" type="radio" tabindex="-1" name="__xmlview0--rbg2"></div><span id="__xmlview0--RB2-2-label" data-sap-ui="__xmlview0--RB2-2-label" aria-label="No" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMRbBLabel" style="text-align: left;"><span id="__xmlview0--RB2-2-label-text" class="sapMLabelTextWrapper"><bdi id="__xmlview0--RB2-2-label-bdi">No</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div></div></div></div></div><div class="sapUiRespGridSpanXL3 sapUiRespGridSpanL4 sapUiRespGridSpanM6 sapUiRespGridSpanS12"><div id="__vbox18" data-sap-ui="__vbox18" class="sapMFlexBox sapMVBox sapMFlexBoxJustifyStart sapMFlexBoxAlignItemsStretch sapMFlexBoxWrapNoWrap sapMFlexBoxAlignContentStretch sapMFlexBoxBGTransparent" style="width: 100%;"><div id="__data107" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><span id="__label32" data-sap-ui="__label32" aria-label="Target Total Amount" class="sapMLabel sapUiSelectable sapMLabelMaxWidth sapMLabelNoText" style="text-align: left;"><span id="__label32-text" class="sapMLabelTextWrapper"><bdi id="__label32-bdi">Target Total Amount</bdi></span><span class="sapMLabelColonAndRequired"></span></span></div><div id="__data108" class="sapMFlexItemAlignAuto sapMFlexBoxBGTransparent sapMFlexItem" style="order: 0; flex-grow: 0; flex-shrink: 1; flex-basis: auto; min-height: auto; min-width: auto;"><div id="__input9" data-sap-ui="__input9" class="sapMInputBase sapMInputBaseHeightMargin sapMInput" style="width: 100%;"><div id="__input9-content" class="sapMInputBaseContentWrapper" style="width: 100%;"><input id="__input9-inner" value="" type="text" autocomplete="off" class="sapMInputBaseInner"></div></div></div></div></div></div></div></div></div></div> */

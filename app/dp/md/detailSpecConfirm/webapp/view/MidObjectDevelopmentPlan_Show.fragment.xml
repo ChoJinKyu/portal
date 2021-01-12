@@ -38,11 +38,12 @@
                     <ColumnListItem>
                         <cells>
                             <Select   width="100%"
+                                        forceSelection="false"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/Code',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
                                                     ]
                                                 }"
@@ -95,11 +96,12 @@
                     <ColumnListItem>
                         <cells>
                             <Select   width="100%"
+                                        forceSelection="false"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/Code',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
                                                     ]
                                                 }"

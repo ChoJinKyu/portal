@@ -6,6 +6,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.m"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -27,7 +28,7 @@
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'company_code'}
                                 }">
@@ -44,7 +45,7 @@
                                 <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'org_code'}
                                 }">
@@ -75,7 +76,7 @@
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'company_code'}
                                 }">
@@ -92,7 +93,7 @@
                                 <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
                                     sorter: { path: 'org_code'}
                                 }">
@@ -137,7 +138,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -148,14 +149,14 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Part No" labelFor="searchPart"></Label>
+                            <Label text="{path:'I18N>/MOLD_PART_NUMBER', formatter:'I18NFormatter'}" labelFor="searchPart"></Label>
                             <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
                                         path: '/PartNumbers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'mold_number' }
                             }">
@@ -166,7 +167,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Family Part No" labelFor="searchFamilyPart"></Label>
+                            <Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" labelFor="searchFamilyPart"></Label>
                             <Input id="searchFamilyPart" placeholder="Input data"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -196,11 +197,12 @@
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         growing="true"
+                        mode="SingleSelectMaster"
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
+                        itemPress="onItemPress"
                         items="{list>/MoldMasterSpec}"
-                        mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
@@ -226,7 +228,7 @@
                             <Text text="{I18N>/MODEL}" />
                         </Column>
                         <Column>
-                            <Text text="Mold Part No" />
+                            <Text text="{path:'I18N>/MOLD_PART_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column>
                             <Text text="Mold Seq" />
@@ -247,11 +249,12 @@
                             <Text text="{I18N>/DATE}" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="false">
-                            <Text text="Family Part No" />
+                            <Text text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                        <!-- <ColumnListItem type="Navigation" press=".onMainTableItemPress"> -->
+                        <ColumnListItem type="Navigation" >
                             <cells>
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />

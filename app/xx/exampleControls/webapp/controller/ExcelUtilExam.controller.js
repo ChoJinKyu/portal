@@ -35,13 +35,28 @@ sap.ui.define([
 
             var oTable = this.byId(sTableId);
             var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
-            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
-            var oData = oTable.getModel().getProperty("/Message");
+            var oData = oTable.getModel().getProperty("/Message");//binded Data
+
+            //CM_CHAIN_CD code list
+            var aCtxtChainCode = Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
+            var aChainCode = aCtxtChainCode.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getModel().getProperty("/"+sCtxt));
+
+            //CM_LANG_CODE code List
+            var aCtxtLang = Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
+            var aLangCode = aCtxtLang.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_LANG_CODE')").getModel().getProperty("/"+sCtxt));
+
+            //optional object param
+            //aListItem - 코드목록, sBindName - Table 칼럼에 바인딩한 property, sKeyName - 코드목록의 key, sTextName - 코드목록의 text
+            var oOption = [
+                {aListItem : aChainCode, sBindName : "chain_code", sKeyName : "code", sTextName : "code_name"},
+                {aListItem : aLangCode, sBindName : "language_code", sKeyName : "code", sTextName : "code_name"}
+            ];// code data는 복수개일 수 있으므로 배열로 전달.
+
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
                 data: oData
-            });
+            }, oOption);
         },
 
         onImportChange: function (_oEvent) {
@@ -66,8 +81,23 @@ sap.ui.define([
                             var aKeys = Object.keys(oRow),
                                 newObj = {};
                             aCols.forEach(function (oCol, idx) {
-                                debugger;
-                                var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
+                                //debugger;
+                                //var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
+                                var sLabel = "";
+                                if(typeof oCol.getLabel === "function") {
+                                    if(typeof oCol.getLabel().getText === "function") {
+                                        sLabel = oCol.getLabel().getText();
+                                    } else if(typeof oCol.getLabel().getItems === "function") {
+                                        $.each(oCol.getLabel().getItems(), function(idx2, oItem) {
+                                            if(oItem.getText()) {
+                                                sLabel = oItem.getText();
+                                                return false;
+                                            }
+                                        });   
+                                    }
+                                    
+                                }
+
                                 var sName = oCol.data("bindName") || "";
                                 var iKeyIdx = aKeys.indexOf(sLabel);
                                 if (iKeyIdx > -1 && sName) {
@@ -125,7 +155,9 @@ sap.ui.define([
                         "system_update_dtm": "/Date(1606974351000)/",
                         "price": "2500000",
                         "currency_code": "KRW",
-                        "use_flag": "true"
+                        "use_flag": "true",
+                        "name": "Portable DVD player",
+                        "product_id": "HT-2001"
                     },
                     {
                         "__metadata": {
@@ -147,7 +179,9 @@ sap.ui.define([
                         "system_update_dtm": "/Date(1606974351000)/",
                         "price": "500000",
                         "currency_code": "KRW",
-                        "use_flag": "false"
+                        "use_flag": "false",
+                        "name": "Widescreen Portable DVD Player w MP3",
+                        "product_id": "HT-2000"
                     },
                     {
                         "__metadata": {
@@ -169,7 +203,9 @@ sap.ui.define([
                         "system_update_dtm": "/Date(1606974351000)/",
                         "price": "70000000",
                         "currency_code": "KRW",
-                        "use_flag": true
+                        "use_flag": true,
+                        "name": "Astro Laptop 1516",
+                        "product_id": "HT-1251"
                     },
                     {
                         "__metadata": {
@@ -191,7 +227,9 @@ sap.ui.define([
                         "system_update_dtm": "/Date(1606748516000)/",
                         "price": "3300000000",
                         "currency_code": "KRW",
-                        "use_flag": true
+                        "use_flag": true,
+                        "name": "Astro Phone 6",
+                        "product_id": "HT-1252"
                     },
                     {
                         "__metadata": {
@@ -213,7 +251,9 @@ sap.ui.define([
                         "system_update_dtm": "/Date(1606748516000)/",
                         "price": "88000000",
                         "currency_code": "KRW",
-                        "use_flag": true
+                        "use_flag": true,
+                        "name": "Audio/Video Cable Kit",
+                        "product_id": "HT-2026"
                     },
                     {
                         "__metadata": {
@@ -235,7 +275,9 @@ sap.ui.define([
                         "system_update_dtm": "/Date(1606974351000)/",
                         "price": "0",
                         "currency_code": "KRW",
-                        "use_flag": true
+                        "use_flag": true,
+                        "name": "Beam Breaker B-1",
+                        "product_id": "HT-6100"
                     },
                     {
                         "__metadata": {
@@ -257,7 +299,9 @@ sap.ui.define([
                         "system_update_dtm": "/Date(1606974351000)/",
                         "price": "4300000",
                         "currency_code": "KRW",
-                        "use_flag": true
+                        "use_flag": true,
+                        "name": "Beam Breaker B-2",
+                        "product_id": "HT-6101"
                     }]
             }), "rModelList");
         }, _loadGridTableData: function () {

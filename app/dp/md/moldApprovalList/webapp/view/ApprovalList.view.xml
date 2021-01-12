@@ -25,12 +25,12 @@
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyS" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
-                                        path: 'org>/Company',
+                                       path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'company_code'}
-                                    }">
+                                    }" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -44,12 +44,10 @@
                                 <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
-                                    selectionFinish="handleSelectionFinishDiv">
+                                    selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -66,14 +64,14 @@
                                 </layoutData>
                             </VBox>
                              <VBox>
-                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS" required="true"></Label>
+                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS"></Label>
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" selectedKey="" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
-                                            sorter: { path: 'code'}
+                                            sorter: { path: 'util>sort_no'}
                                         }"
                                         selectionFinish="handleSelectionFinishDiv">
                                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -93,10 +91,10 @@
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'company_code'}
-                                    }">
+                                    }" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -105,17 +103,15 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox> 
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantE" required="true"></Label>
                                 <MultiComboBox id="searchPlantE" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ]
                                     }"
-                                    selectionFinish="handleSelectionFinishDiv">
+                                    selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -132,14 +128,14 @@
                                 </layoutData>
                             </VBox>
                              <VBox>
-                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE" required="true"></Label>
+                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE"></Label>
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" selectedKey="" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
-                                            sorter: { path: 'code'}
+                                            sorter: { path: 'util>sort_no'}
                                         }"
                                         selectionFinish="handleSelectionFinishDiv">
                                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -173,7 +169,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -191,7 +187,7 @@
                                     suggestionItems="{
                                         path: '/PartNumbers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
                                         sorter: { path: 'mold_number' }
                             }">
@@ -216,11 +212,11 @@
                                     suggestionItems="{
                                         path: '/Requestors',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                         ],
-                                        sorter: { path: 'user_id' }
+                                        sorter: { path: 'email_id' }
                             }">
-                            <core:Item key="{user_id}" text="{user_id}" />
+                            <core:Item key="{email_id}" text="{email_id}" />
                                 
                             </Input>
                            
@@ -327,6 +323,12 @@
                         <Column visible="false" id="mainColumnEmail"  >
                             <!-- <Text text="Status" /> -->
                         </Column>
+                        <Column visible="false" id="mainColumnModel"  >
+                            <!-- <Text text="Status" /> -->
+                        </Column>
+                        <Column visible="false" id="mainColumnMoldNumber"  >
+                            <!-- <Text text="Status" /> -->
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
@@ -344,6 +346,8 @@
                                 <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <Text text="{list>approve_status}" />
                                 <Text text="{list>email_id}" />
+                                <Text text="{list>model}" />
+                                <Text text="{list>mold_number}" />
                                 <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
                                 
 

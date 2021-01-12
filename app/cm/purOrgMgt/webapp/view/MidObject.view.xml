@@ -93,6 +93,7 @@
                                 <ComboBox
                                     width="100%"
                                     id="searchTenantCombo"
+                                    selectionChange=".onSelectionChange($event, 'tenant_id')"
                                     enabled="{= ${midObjectView>/mode} === 'C'}"
                                     selectedKey="{master>/tenant_id}"
                                     items="{
@@ -114,7 +115,8 @@
                                 <Label text = "회사" labelFor="searchCompanyCode" required="true"/> 
                                 <ComboBox 
                                     width="100%"
-                                    id="searchCompanyCode"  
+                                    id="searchCompanyCode"
+                                    selectionChange=".onSelectionChange($event, 'company_code')"
                                     enabled="{= ${midObjectView>/mode} === 'C'}"
                                     selectedKey="{master>/company_code}"
                                     items="{
@@ -122,13 +124,6 @@
                                         filters: []
                                     }"
                                 >
-                                <!-- <ComboBox 
-                                    width="100%"
-                                    id="searchCompanyCode"  
-                                    enabled="{= ${midObjectView>/mode} === 'C'}"
-                                    selectedKey="{master>/company_code}"
-                                    items="{company>/items}"
-                                > -->
                                     <items>
                                         <core:Item key="{org>company_code}"  text="{org>company_code} : {org>company_name}"/>
                                     </items>
@@ -144,6 +139,7 @@
                                     width="100%"
                                     id="searchOrgTypeCombo"
                                     enabled="{= ${midObjectView>/mode} === 'C'}"
+                                    selectionChange=".onSelectionChange($event, 'org_type_code')"
                                     selectedKey="{master>/org_type_code}"
                                     items="{
                                         path: 'util>/Code',
@@ -193,6 +189,7 @@
                                     width="100%"
                                     id="purchaseOrgCombo"
                                     selectedKey="{master>/purchase_org_code}"
+                                    selectionChange=".onSelectionChange($event, 'purchase_org_code')"
                                     enabled="{= ${midObjectView>/mode} !== 'R'}"
                                     items="{
                                         path: 'org>/Org_Purchasing',
@@ -215,6 +212,7 @@
                                     width="100%"
                                     id="plantCodeCombo"
                                     selectedKey="{master>/plant_code}"
+                                    selectionChange=".onSelectionChange($event, 'plant_code')"
                                     enabled="{= ${midObjectView>/mode} !== 'R'}"
                                     items="{
                                         path: 'org>/Org_Plant',
@@ -260,6 +258,7 @@
                                     width="100%"
                                     id="bizunitCodeCombo"
                                     selectedKey="{master>/bizunit_code}"
+                                    selectionChange=".onSelectionChange($event, 'bizunit_code')"
                                     enabled="{= ${midObjectView>/mode} !== 'R'}"
                                     items="{
                                         path: 'org>/Org_Unit',
@@ -282,6 +281,7 @@
                                     width="100%"
                                     id="bizdivisionCodeCombo"
                                     selectedKey="{master>/bizdivision_code}"
+                                    selectionChange=".onSelectionChange($event, 'bizdivision_code')"
                                     enabled="{= ${midObjectView>/mode} !== 'R'}"
                                     items="{
                                         path: 'org>/Org_Division',
@@ -303,17 +303,15 @@
                                     width="100%"
                                     id="hqAuCodeCombo"
                                     selectedKey="{master>/hq_au_code}"
+                                    selectionChange=".onSelectionChange($event, 'hq_au_code')"
                                     enabled="{= ${midObjectView>/mode} !== 'R'}"
                                     items="{
-                                        path: 'util>/Code',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
-                                        ]
+                                        path: 'org>/Org_Division',
+                                        filters: []
                                     }"
                                 >
                                     <items>
-                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                        <core:Item key="{org>bizdivision_code}" text="{org>bizdivision_code}: {org>bizdivision_name}" />
                                     </items>
                                 </ComboBox>
                                 <layoutData>

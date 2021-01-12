@@ -70,40 +70,34 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage: function () {
-
             this.getView().setModel(new ManagedListModel(), "purOrderItem");
             this.getView().setModel(new ManagedModel(), "payment");
             
-            var schFilter = [];
+            var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number),
+                             new Filter("tenant_id", FilterOperator.EQ, 'L2600')];
             
-            if (this.approval_number === "New") {
-                
-            } else {
-                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                ];
-                
-                var oModel = this.getModel('payment'),
-                    poAmount = 0;
-                this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
-                    var splitPayTypeCode = null;
-                    if (oData.results.length > 0) {
-                        oData.results.forEach(function (item) {
-                            poAmount = poAmount + Number(item.purchasing_amount);
-                        });
-                        splitPayTypeCode = oData.results[0].split_pay_type_code;
-                        oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
-                        oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
-                        oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
-                        oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
-                        oModel.setProperty("/purchasing_amount", poAmount);
-                        oModel.setProperty("/currency_code", oData.results[0].currency_code);
-                    }
+            var oModel = this.getModel('payment'),
+                poAmount = 0,
+                currencyCode = "";
+            this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
+                var splitPayTypeCode = null;
+                if (oData.results.length > 0) {
+                    oData.results.forEach(function (item) {
+                        poAmount = poAmount + Number(item.purchasing_amount);
+                    });
+                    splitPayTypeCode = oData.results[0].split_pay_type_code;
+                    currencyCode = oData.results[0].currency_code;
+                    oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
+                    oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
+                    oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
+                    oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
+                }
 
-                    oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
-                    
-                }.bind(this));
-            }
+                oModel.setProperty("/purchasing_amount", poAmount);
+                oModel.setProperty("/currency_code", currencyCode);
+                oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
+                
+            }.bind(this));
         },
 
         _bindViewPurchaseOrder: function (sObjectPath, sModel, aFilter, callback) {
@@ -128,19 +122,19 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval: function(){
-            this.byId("advanced").removeStyleClass("readonlyField");
-            this.byId("part").removeStyleClass("readonlyField");
-            this.byId("residual").removeStyleClass("readonlyField");
+            this.getView().byId("advanced").removeStyleClass("readonlyField");
+            this.getView().byId("part").removeStyleClass("readonlyField");
+            this.getView().byId("residual").removeStyleClass("readonlyField");
 
-            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
+            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
 		},
 
 		_toShowModeEachApproval: function(){
-            this.byId("advanced").addStyleClass("readonlyField");
-            this.byId("part").addStyleClass("readonlyField");
-            this.byId("residual").addStyleClass("readonlyField");
+            this.getView().byId("advanced").addStyleClass("readonlyField");
+            this.getView().byId("part").addStyleClass("readonlyField");
+            this.getView().byId("residual").addStyleClass("readonlyField");
             
-            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
+            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
 		},
 
         /**
@@ -150,17 +144,18 @@ sap.ui.define([
             var oModel = this.getModel("purOrderItem");
 
             var mIdArr = [];
-            if (oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length > 0) {
-                oModel.oData.ApprovalDetails.forEach(function (item) {
+            if (oModel.oData.PurchaseOrderItems != undefined && oModel.oData.PurchaseOrderItems.length > 0) {
+                oModel.oData.PurchaseOrderItems.forEach(function (item) {
                     mIdArr.push(item.mold_id);
                 });
             }
 
             var oArgs = {
-                company_code: this.company_code,
-                org_code: this.plant_code,
-                mold_progress_status_code: 'DTL_CNF',
-                mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
+                approval_type_code          : "V",
+                company_code                : this.company_code,
+                org_code                    : this.plant_code,
+                mold_progress_status_code   : ['DTL_CNF'],
+                mold_id_arr                 : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
@@ -195,13 +190,17 @@ sap.ui.define([
                 "supplier_code": data.supplier_code,
                 "target_amount": data.target_amount,
                 "mold_production_type_code": data.mold_production_type_code,
-                "family_part_number_1": data.family_part_number_1
-            }, "/ApprovalDetails", 0);
+                "family_part_number_1": data.family_part_number_1,
+                "account_code": data.account_code
+            }, "/PurchaseOrderItems", 0);
             //this.validator.clearValueState(this.byId("poItemTable"));
 
             var pModel = this.getModel('payment'),
-                poAmount = Number(pModel.getProperty("/purchasing_amount")) + Number(data.purchasing_amount);
+                poAmount = Number(pModel.getData().purchasing_amount) + Number(data.purchasing_amount);
             pModel.setProperty("/purchasing_amount", poAmount);
+            if(pModel.getProperty("/currency_code") === ""){
+                pModel.setProperty("/currency_code", data.currency_code);
+            }
         },
 
         /**
@@ -224,7 +223,7 @@ sap.ui.define([
 
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
-                    removePoAmt = oModel.getData().PurchaseOrderItems[idx].purchasing_amount;
+                    removePoAmt = removePoAmt + oModel.getData().PurchaseOrderItems[idx].purchasing_amount;
                     oModel.removeRecord(idx);
                 });
 
@@ -235,6 +234,9 @@ sap.ui.define([
 
             var poAmount = Number(pModel.getProperty("/purchasing_amount")) - Number(removePoAmt);
             pModel.setProperty("/purchasing_amount", poAmount);
+            if(oModel.getData().PurchaseOrderItems.length == 0){
+                pModel.setProperty("/currency_code", "");
+            }
         },
 
         onChangePayment: function (oEvent) {
@@ -318,9 +320,18 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            var ap = this.getModel("approver").getData().Approvers;
-            for(var i = 0 ; i < ap.length -1 ; i++){
-                this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+            if(this.getModel("approver").getData().Approvers != undefined){ 
+                var ap = this.getModel("approver").getData().Approvers;
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+                for(var i = 0 ; i < len ; i++){
+                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                }
             }
             
             if (!this._oDialogPrev) {
@@ -364,14 +375,15 @@ sap.ui.define([
         },
 
         onPageRequestButtonPress : function () {
-            var oModel = this.getModel("purOrderItem");
-
-            if(this.getModel("appMaster").getProperty("/approve_status_code") !== "DR"){
+            var oModel = this.getModel("purOrderItem"),
+                status = this.getModel("appMaster").getProperty("/approve_status_code");
+                
+            if(!(status === undefined || status === "DR")){
                 MessageToast.show( "Draft 상태 또는 신규일 때만 Request 가능합니다." );
                 return;
             }
             
-            if(oModel.getData().PurchaseOrderItems == undefined || oModel.getData().PurchaseOrderItems.length == 0){
+            if(oModel.getData().PurchaseOrderItems.length === 0){
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;
             }
@@ -385,11 +397,8 @@ sap.ui.define([
                 return;
             }
 
-            this.approval_type_code = "V";
-
-            this.getModel("appMaster").setProperty("/approve_status_code", approveStatusCode);
-
             var oModel = this.getModel("purOrderItem"),
+                orderItems = oModel.getData().PurchaseOrderItems,
                 pModel = this.getModel("payment"),
                 split_pay_type_code = pModel.getData().split_pay_type_code,
                 prepay_rate =  pModel.getData().prepay_rate,
@@ -398,9 +407,26 @@ sap.ui.define([
                 purchasing_amount =  pModel.getData().purchasing_amount,
                 total = Number(prepay_rate) + Number(progresspay_rate) + Number(rpay_rate);
 
-            this.approvalDetails_data = [] ;
-            this.moldMaster_data = [] ;
-            
+            if(orderItems.length > 1){
+                var accountCode = orderItems[0].account_code,
+                    supplierCode = orderItems[0].supplier_code,
+                    currencyCode = orderItems[0].currency_code;
+                for(var idx = 1; idx < orderItems.length; idx++){
+                    if(accountCode !== orderItems[idx].account_code){
+                        MessageToast.show("계정코드가 같지 않습니다.");
+                        return;
+                    }
+                    if(supplierCode !== orderItems[idx].supplier_code){
+                        MessageToast.show("업체가 같지 않습니다.");
+                        return;
+                    }
+                    if(currencyCode !== orderItems[idx].currency_code){
+                        MessageToast.show("통화가 같지 않습니다.");
+                        return;
+                    }
+                }
+            }
+
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
                     if(prepay_rate >= total){
@@ -440,8 +466,15 @@ sap.ui.define([
                 rpay_rate =  null;
             }
 
-            if(oModel.getData().PurchaseOrderItems != undefined && oModel.getData().PurchaseOrderItems.length > 0){
-                oModel.getData().PurchaseOrderItems.forEach(function(item){
+            this.approval_type_code = "V";
+
+            this.getModel("appMaster").setProperty("/approve_status_code", approveStatusCode);
+
+            this.approvalDetails_data = [];
+            this.moldMaster_data = [];
+            
+            if(orderItems != undefined && orderItems.length > 0){
+                orderItems.forEach(function(item){
                     this.approvalDetails_data.push({
                         tenant_id : this.tenant_id, 
                         approval_number : this.approval_number, 

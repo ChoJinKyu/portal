@@ -11,14 +11,20 @@ entity Li_Request_Detail_View {
         loi_item_number            : String(50) not null @title : 'LOI품목번호';
         loi_number                 : String(50) not null @title : 'LOI번호';
         item_sequence              : Decimal not null    @title : '품목순번';
+        plant_code                 : String(10)          @title : '플랜트코드';
+        plant_name                 : String(10)          @title : '플랜트';
         ep_item_code               : String(50)          @title : '설비공사용품목코드';
         item_desc                  : String(200)         @title : '품명';
         unit                       : String(3)           @title : '단위';
         request_quantity           : Decimal             @title : '요청수량';
         currency_code              : String(15)          @title : '통화코드';
+        currency_name              : String(15)          @title : '통화';
         request_amount             : Decimal             @title : '요청금액';
-        supplier_code              : String(15)          @title : '공급업체코드';
+        supplier_code              : String(100)         @title : '공급업체코드';
+        supplier_name              : String(100)         @title : '공급업체';
         buyer_empno                : String(30)          @title : '구매자사번';
+        buyer_name                 : String(30)          @title : '구매자이름';
+        purchasing_department_code : String(50)          @title : '구매부서코드';
         remark                     : String(3000)        @title : '비고';
 }
 

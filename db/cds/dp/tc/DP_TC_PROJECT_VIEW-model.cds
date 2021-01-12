@@ -61,6 +61,7 @@ entity TC_Project_View {
         target_status_code          : String(30)          @title : '목표재료비상태코드';
         forecast_status_name        : String(30)          @title : '예상재료비상태명';
         forecast_status_code        : String(30)          @title : '예상재료비상태코드';
+        bizdivision_text            : String(100)         @title : '사업부명';
 
         events                      : Composition of many Project_Event.Tc_Project_Event
                                           on  events.tenant_id    = tenant_id
@@ -82,7 +83,7 @@ entity TC_Project_View {
                                           on  mtlmob.tenant_id          = tenant_id
                                           and mtlmob.project_code       = project_code
                                           and mtlmob.model_code         = model_code
-                                          and mtlmob.addition_type_code = 'MTLLMOB'; //물동
+                                          and mtlmob.addition_type_code = 'MTLMOB'; //물동
 
         sales_price                 : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
                                           on  sales_price.tenant_id          = tenant_id

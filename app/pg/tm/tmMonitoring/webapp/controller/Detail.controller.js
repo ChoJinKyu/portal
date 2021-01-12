@@ -22,12 +22,13 @@ sap.ui.define([
     Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel) {
     "use strict";
 
-    var oTransactionManager;
 
+    var i18nModel; //i18n 모델
     return BaseController.extend("pg.tm.tmMonitoring.controller.Detail", {
 
         formatter: Formatter,
         validator: new Validator(),
+
         //수정
         onInit: function () {
             //DetailView Model
@@ -49,34 +50,36 @@ sap.ui.define([
             //주기 text
             // @ts-ignore
             this.cycleText = new sap.m.Text({
-                text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
-                templateShareable: true
+                text: "{=${monitoring_cycle_name}.replaceAll(';', ', ')}",
             });
 
             //담당자
             this.managerText = new sap.m.Text({
-                text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
-                templateShareable: true
+                text: "{=${monitoring_cycle_name}.replaceAll(';', ', ')}",
             });
 
             //주기 multicombobox
             // @ts-ignore
             this.cycle_multibox = new sap.m.MultiComboBox({
+                width: "100%",
                 selectedKeys: "{=${monitoring_cycle_code}.split(';')}",
                 placeholder: "{I18N>/CYCLE}",
                 items: {
                     path: '/TaskMonitoringCycleCodeView',
                     // @ts-ignore
-                    template: new sap.ui.core.Item({
+                    template: new sap.ui.core.ListItem({
                         key: "{code}",
                         text: "{code_name}"
-                    }),
-                    templateShareable: true
+                    })
                 }
             });
 
+           
+            // I18N 모델 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+            i18nModel = this.getModel("I18N");
+
 
         },
 
@@ -129,9 +132,9 @@ sap.ui.define([
                         this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
                         this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
                         this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
-                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description': this.PurposeFormattedText);
-                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText  === null ? 'No Description': this.ScenarioDescFormattedText);
-                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description': this.ReSourceSystemFormattedText);
+                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
+                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
+                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
                     }.bind(this),
                     error: function () {
                         this.byId("PurposeFormattedText").setHtmlText("No Description");
@@ -143,17 +146,21 @@ sap.ui.define([
             }
 
         },
-
+        //remove
         removeRichTextEditorValue: function () {
             this.byId("reMonitoringPurpose").setValue(null);
             this.byId("reMonitoringScenario").setValue(null);
             this.byId("reSourceSystemDetail").setValue(null);
+
+
         },
 
         removeFormattedTextValue: function () {
-            this.byId("PurposeFormattedText").setHtmlText(null);
-            this.byId("ScenarioDescFormattedText").setHtmlText(null);
-            this.byId("ReSourceSystemFormattedText").setHtmlText(null);
+            this.byId("PurposeFormattedText").setHtmlText("");
+            this.byId("ScenarioDescFormattedText").setHtmlText("");
+            this.byId("ReSourceSystemFormattedText").setHtmlText("");
+
+
         },
 
 
@@ -205,7 +212,7 @@ sap.ui.define([
         // @ts-ignore
         onSignalListDelete: function (oEvent) {
             var oTable = this.getView().byId("signalList"); //signal 테이블
-            MessageBox.confirm("삭제하시겠습니까?", {
+            MessageBox.confirm(i18nModel.getText("/NCM00003"), {
                 actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                 emphasizedAction: MessageBox.Action.OK,
                 onClose: function (sAction) {
@@ -239,8 +246,8 @@ sap.ui.define([
             var oModel = this.getView().getModel();
             oModel.setDeferredGroups(["DeleteGroup"]);
             var language_code = ["KO", "EN"];
-            MessageBox.confirm("삭제 하시 겠습니까?", {
-                title: "Monitor Item Delete",
+            MessageBox.confirm(i18nModel.getText("/NCM00003"), {
+                title: i18nModel.getText("/CONFIRM"),
                 // @ts-ignore
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
@@ -340,13 +347,13 @@ sap.ui.define([
                             groupId: "DeleteGroup",
                             async: false,
                             success: function (oData, oResponse) {
-                                sap.m.MessageToast.show("Delete Success");
+                                sap.m.MessageToast.show(i18nModel.getText("/NCM01002"));
                                 that.getRouter().navTo("main", {}, true);
                                 //refresh
                                 oModel.refresh(true);
                             },
                             error: function (cc, vv) {
-                                sap.m.MessageToast.show("Delete Failed");
+                                sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                             }
                         });
 
@@ -501,13 +508,31 @@ sap.ui.define([
 
         onChangeAuthorityFlag: function (oEvent) {
             oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
-
         },
         /**
         * 시나리오 저장 기능
         * @public
         */
-        onSave: function () {
+        onPressSaveBtn: function () {
+            var that = this;
+            MessageBox.confirm(i18nModel.getText("/NCM00001"), {
+                actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                emphasizedAction: MessageBox.Action.OK,
+                onClose: function (sAction) {
+                    if (sAction === MessageBox.Action.OK) {
+                        that._SaveScenario();
+                        //법인, 사업본부 아이템 remove
+                        // that.removeFormattedTextValue();
+                        // that.removeRichTextEditorValue();
+
+
+                    }
+
+                }
+            });
+
+        },
+        _SaveScenario: function () {
             var oModel = this.getView().getModel();
             var that = this;
             var language_code = ["KO", "EN"];
@@ -515,7 +540,7 @@ sap.ui.define([
             oModel.setDeferredGroups(["CreateGroup", "UpdateGroup"]);
             //필수입력항목 검사
             if (this.validator.validate(sap.ui.getCore().byId("simpleform_edit")) !== true) {
-                MessageToast.show("필수입력 항목을 입력해주십시오.");
+                MessageToast.show(i18nModel.getText("/ECM01002"));
                 return;
             }
             //richTextEditor
@@ -789,7 +814,7 @@ sap.ui.define([
                     groupId: "CreateGroup",
                     async: false,
                     success: function (oData, oResponse) {
-                        sap.m.MessageToast.show("Save Success");
+                        sap.m.MessageToast.show(i18nModel.getText("/NCM01001"));
                         that.getRouter().navTo("main", {}, true);
                         //refresh
                         oModel.refresh(true);
@@ -797,7 +822,7 @@ sap.ui.define([
 
                     },
                     error: function (cc, vv) {
-                        sap.m.MessageToast.show("Save Failed");
+                        sap.m.MessageToast.show(i18nModel.getText("/EPG00003"));
                     }
                 });
 
@@ -923,14 +948,14 @@ sap.ui.define([
                     groupId: "UpdateGroup",
                     success: function () {
                         console.log("update success");
-                        sap.m.MessageToast.show("Save Success");
+                        sap.m.MessageToast.show(i18nModel.getText("/NPG00008"));
                         that.getRouter().navTo("main", {}, true);
                         //refresh
                         oModel.refresh(true);
 
                     }, error: function () {
                         console.log("update failed");
-                        sap.m.MessageToast.show("Save Failed");
+                        sap.m.MessageToast.show(i18nModel.getText("/EPG00002"));
                     }
                 });
                 console.log(masterUpdateObj);
@@ -945,7 +970,6 @@ sap.ui.define([
             // return window.btoa(value);
             return btoa(unescape(encodeURIComponent(value)))
         },
-
 
         /**
         * 메인화면으로 이동
@@ -964,7 +988,7 @@ sap.ui.define([
                 }
 
             } else {
-                MessageBox.confirm("작성을 취소하시겠습니까?", {
+                MessageBox.confirm(i18nModel.getText("/NPG00013"), {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                     emphasizedAction: MessageBox.Action.OK,
                     onClose: function (sAction) {
@@ -977,8 +1001,9 @@ sap.ui.define([
                                 that.getRouter().navTo("main", {}, true);
                             }
                             //법인, 사업본부 아이템 remove
-
-
+                            that.removeFormattedTextValue();
+                            that.removeRichTextEditorValue();
+                            that.getView().getModel().refresh(true);
                         }
 
                     }
@@ -986,7 +1011,8 @@ sap.ui.define([
 
             }
 
-            this.getView().getModel().refresh(true);
+
+
 
 
         },
@@ -1140,8 +1166,11 @@ sap.ui.define([
             var managerId = [];
             var managerNames = [];
             managers.forEach(function (manager) {
-                managerId.push(manager.getAggregation("cells")[1].getProperty("text"));
-                managerNames.push(manager.getAggregation("cells")[2].getProperty("text"));
+                if (manager.getAggregation("cells")[0].getProperty("text") !== "D") {
+                    managerId.push(manager.getAggregation("cells")[1].getProperty("text"));
+                    managerNames.push(manager.getAggregation("cells")[2].getProperty("text"));
+                }
+
             });
 
             var items = oTable.getSelectedItems();
@@ -1182,8 +1211,7 @@ sap.ui.define([
                                 items: [segmentItemYes, segmentItemNo],
                                 selectedKey: "No"
                             })
-                        ],
-                        templateShareable: true
+                        ]
 
                     });
 
@@ -1218,7 +1246,7 @@ sap.ui.define([
             // managerValue = managerValue.split(',');
             var that = this;
             var managerDeleteNM = [];
-            MessageBox.confirm("삭제하시겠습니까?", {
+            MessageBox.confirm(i18nModel.getText("/NCM00003"), {
                 actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                 emphasizedAction: MessageBox.Action.OK,
                 onClose: function (sAction) {
@@ -1376,11 +1404,10 @@ sap.ui.define([
                     })
                 ],
                 // @ts-ignore
-                type: sap.m.ListType.Inactive,
-                templateShareable: true
+                type: sap.m.ListType.Inactive
             });
 
-            this.oEditableTemplate = new ColumnListItem("signalListItem", {
+            this.oEditableTemplate = new ColumnListItem({
                 cells: [
                     new sap.m.Text({
                         text: ""
@@ -1398,7 +1425,10 @@ sap.ui.define([
                             })
                         },
                         selectionChange: function (oEvent) {
-                            oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getText();
+                            if (status !== "C") {
+                                oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            }
                             if (oEvent.getSource().getSelectedKey() === "TKMTINC002") {
                                 oEvent.getSource().getParent().getAggregation("cells")[6].setSelectedKey("%");
                             } else if (oEvent.getSource().getSelectedKey() === "TKMTINC001") {
@@ -1487,7 +1517,7 @@ sap.ui.define([
                         // required: true
                     }),
                 ]
-                , templateShareable: true
+
             });
 
 
@@ -1524,8 +1554,7 @@ sap.ui.define([
                     })
                 ],
                 // @ts-ignore
-                type: sap.m.ListType.Inactive,
-                templateShareable: true
+                type: sap.m.ListType.Inactive
             });
 
             //담당자 테이블 (Edit)
@@ -1568,8 +1597,7 @@ sap.ui.define([
                             }
                         }
                     })
-                ],
-                templateShareable: true
+                ]
             });
         },
 
@@ -1639,9 +1667,6 @@ sap.ui.define([
             var btn = this.byId("managerTableBtn");
             btn.setIcon(hbox.getVisible() === false ? "sap-icon://expand-all" : "sap-icon://collapse-all");
         }
-
-
-
 
     });
 });

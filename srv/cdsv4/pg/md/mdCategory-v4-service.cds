@@ -6,6 +6,8 @@ using { pg as partNoItemValue } from '../../../../db/cds/pg/md/PG_MD_MATERIAL_IT
 using { pg as vpItemMapping } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING-model';
 using { pg as vpItemMappingAttr } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING_ATTR-model';
 using { pg as vpItemMappingView } from '../../../../db/cds/pg/md/PG_MD_VP_MAPPING_ITEM_VIEW-model';
+using { pg as newCateCodeView } from '../../../../db/cds/pg/md/PG_MD_CATEGORY_CODE_VIEW-model';
+using { pg as newItemCodeView } from '../../../../db/cds/pg/md/PG_MD_CHARACTER_CODE_VIEW-model';
 
 namespace pg;
 
@@ -13,6 +15,15 @@ namespace pg;
 //@cds.query.limit.max: 100
 @path : '/pg.MdCategoryV4Service'
 service MdCategoryV4Service {
+
+        // Category범주코드 생성 DB Object로 생성된 View를 model-cds로 entity를 생성하는 경우
+    view MdNewCategoryCode(tenant_id: String, company_code: String, org_type_code: String, org_code: String) as 
+            select from newCateCodeView.Md_Category_Code_View(tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code);
+
+    // CategoryItem특성코드 생성 DB Object로 생성된 View를 model-cds로 entity를 생성하는 경우
+    view MdNewCategoryItemCode(tenant_id: String, company_code: String, org_type_code: String, org_code: String) as 
+            select from newItemCodeView.Md_Character_Code_View(tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code);
+
 
     // DB Object로 생성된 View를 조회 하는 경우 (model-cds가 존재해야함)
     //@cds.query.limit.default: 10
@@ -143,7 +154,65 @@ service MdCategoryV4Service {
 								)
 		;
 
-    // Item특성 목록 Parameter View V4호출
+
+    // VP3별 Item특성 Mapping Right 진행 목록 Parameter View V4호출
+    // URL : /pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set
+    /*********************************
+    {"language_code":"EN"}
+    *********************************/
+    view MdVpMappingItemIngView( language_code:String ) as
+        select 
+			key civma.tenant_id
+			, key civma.company_code
+			, key civma.org_type_code
+			, key civma.org_code
+            , key civma.vendor_pool_code
+            , key civma.spmd_category_code
+            , key civma.spmd_character_code
+            , mst.spmd_category_sort_sequence
+            , mst.rgb_cell_clolor_code
+            , mst.rgb_font_color_code
+            , mst.spmd_category_code_name
+            , mst.spmd_character_code_name
+            , mst.spmd_character_desc
+			, mst.spmd_character_sort_seq
+			, mst.spmd_character_serial_no
+			, civma.local_create_dtm
+			, civma.local_update_dtm
+			, civma.create_user_id
+			, civma.update_user_id
+			, civma.system_create_dtm
+			, civma.system_update_dtm
+        from vpItemMappingAttr.Md_Vp_Item_Mapping_Attr as civma
+        join (
+                select 
+                    tenant_id
+                    , company_code
+                    , org_type_code
+                    , org_code
+                    , spmd_category_code
+                    , spmd_category_code_name
+                    , spmd_category_sort_sequence
+                    , rgb_cell_clolor_code
+                    , rgb_font_color_code
+                    , spmd_character_code
+                    , spmd_character_code_name
+                    , spmd_character_desc
+                    , spmd_character_sort_seq
+                    , spmd_character_serial_no
+                    , language_code
+                from MdItemListConditionView(language_code: :language_code) 
+        ) as mst on (
+                    mst.tenant_id = civma.tenant_id
+                    and mst.company_code = civma.company_code
+                    and mst.org_type_code = civma.org_type_code
+                    and mst.org_code = civma.org_code
+                    and mst.spmd_category_code = civma.spmd_category_code
+                    and mst.spmd_character_code = civma.spmd_character_code
+        )
+        ;
+
+    // 전체 Item특성 Mapping Left 목록 Parameter View V4호출
     // URL : /pg.MdCategoryV4Service/MdItemListConditionView(language_code='EN')/Set
     /*********************************
     {"language_code":"EN"}
@@ -156,7 +225,11 @@ service MdCategoryV4Service {
 			, key citm.org_code
 			, key citm.spmd_category_code
 			, key citm.spmd_character_code
+            , null as vendor_pool_code : String(20)
 			, cid.spmd_category_code_name
+            , cid.spmd_category_sort_sequence
+            , cid.rgb_cell_clolor_code
+            , cid.rgb_font_color_code
 			, citm.spmd_character_sort_seq
 			, citm.spmd_character_serial_no
             , ifnull(citml.language_code, :language_code) as language_code : String(4)
@@ -184,6 +257,9 @@ service MdCategoryV4Service {
 								, cid.org_type_code
 								, cid.org_code
 								, cid.spmd_category_code
+                                , cid.rgb_cell_clolor_code
+                                , cid.rgb_font_color_code
+                                , cid.spmd_category_sort_sequence
 								, ifnull(cidl.spmd_category_code_name, cid.spmd_category_code_name) as spmd_category_code_name : String(50)
 							from cateId.Md_Category_Id as cid
 									left outer join cateIdLng.Md_Category_Id_Lng as cidl on (cid.tenant_id = cidl.tenant_id

@@ -43,21 +43,48 @@ service SupplierIdeaMgtService {
             key isi.idea_number,
             isi.idea_title,
             isi.idea_progress_status_code,
-            cd3.code_name as idea_progress_status_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PROGRESS_STATUS'
+             and cd.code = isi.idea_progress_status_code
+             and cd.language_cd = 'KO')  as idea_progress_status_name : String(240),
             isi.supplier_code,
             ssm.supplier_local_name,
             isi.idea_create_user_id,
             '홍길동'   as idea_create_user_local_name : String(240),
             isi.bizunit_code,
-            out.bizunit_name,
+            (select bizunit_name
+             from BizUnit.Org_Unit out 
+             where out.tenant_id = isi.tenant_id
+             and out.bizunit_code = isi.bizunit_code
+             ) as bizunit_ame : String(240) ,
             isi.idea_product_group_code,
-            cd2.code_name as idea_product_group_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
+             and cd.code = isi.idea_product_group_code
+             and cd.language_cd = 'KO') as idea_product_group_name : String(240),
             isi.idea_type_code,
-            cd1.code_name  as idea_type_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_TYPE'
+             and cd.code = isi.idea_type_code
+             and cd.language_cd = 'KO')  as idea_type_name : String(240),
             isi.idea_period_code,
-            cd4.code_name as idea_period_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PERIOD'
+             and cd.code = isi.idea_period_code
+             and cd.language_cd = 'KO') as idea_period_name : String(240),
             isi.idea_manager_empno,
-            emp.user_local_name as idea_manager_local_name : String(240),
+            (select user_local_name
+            from Employee emp 
+            where emp.tenant_id = isi.tenant_id
+            and emp.employee_number = isi.idea_manager_empno) as idea_manager_local_name : String(240),
             isi.idea_part_desc,
             isi.current_proposal_contents,
             isi.change_proposal_contents,
@@ -74,37 +101,11 @@ service SupplierIdeaMgtService {
     from Idea.Im_Supplier_Idea   isi 
     inner join Supplier.Sm_Supplier_Mst  ssm 
     on ssm.tenant_id = isi.tenant_id
-    and ssm.supplier_code = isi.supplier_code
-    inner join Employee emp 
-    on emp.tenant_id = isi.tenant_id
-    and emp.employee_number = isi.idea_manager_empno
-    left outer join Performance.Im_Supplier_Idea_Performance isp 
+    left join Performance.Im_Supplier_Idea_Performance isp 
     on isp.tenant_id = isi.tenant_id
     and isp.company_code = isi.company_code
     and isp.idea_number = isi.idea_number  
-    left outer join BizUnit.Org_Unit out 
-    on out.tenant_id = isi.tenant_id
-    and out.bizunit_code = isi.bizunit_code
-    left outer join Code.Code_View cd1
-    on cd1.tenant_id = isi.tenant_id
-    and cd1.group_code = 'DP_IM_IDEA_TYPE'
-    and cd1.code = isi.idea_type_code
-    and cd1.language_cd = 'KO'
-    left outer join Code.Code_View cd2
-    on cd1.tenant_id = isi.tenant_id
-    and cd1.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
-    and cd1.code = isi.idea_product_group_code
-    and cd1.language_cd = 'KO'
-    left outer join Code.Code_View cd3
-    on cd1.tenant_id = isi.tenant_id
-    and cd1.group_code = 'DP_IM_IDEA_PROGRESS_STATUS'
-    and cd1.code = isi.idea_progress_status_code
-    and cd1.language_cd = 'KO'
-    left outer join Code.Code_View cd4
-    on cd1.tenant_id = isi.tenant_id
-    and cd1.group_code = 'DP_IM_IDEA_PERIOD'
-    and cd1.code = isi.idea_period_code
-    and cd1.language_cd = 'KO'
+  
     ;   
   
     view IdeaView as
@@ -112,35 +113,55 @@ service SupplierIdeaMgtService {
             key isi.company_code,
             key isi.idea_number,
             isi.idea_title,
+            isi.idea_date,
             isi.idea_progress_status_code,
-            cd3.code_name as idea_progress_status_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PROGRESS_STATUS'
+             and cd.code = isi.idea_progress_status_code
+             and cd.language_cd = 'KO') as idea_progress_status_name : String(240),
             isi.supplier_code,
             ssm.supplier_local_name,
             isi.idea_create_user_id,
             '홍길동'   as idea_create_user_local_name : String(240),
             isi.bizunit_code,
-            out.bizunit_name,
+            (select bizunit_name
+             from BizUnit.Org_Unit out 
+             where out.tenant_id = isi.tenant_id
+             and out.bizunit_code = isi.bizunit_code
+             ) as bizunit_ame : String(240) ,
             isi.idea_product_group_code,
-            cd2.code_name as idea_product_group_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
+             and cd.code = isi.idea_product_group_code
+             and cd.language_cd = 'KO') as idea_product_group_name : String(240),
             isi.idea_type_code,
-            cd1.code_name  as idea_type_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_TYPE'
+             and cd.code = isi.idea_type_code
+             and cd.language_cd = 'KO')  as idea_type_name : String(240),
             isi.idea_period_code,
-            cd4.code_name as idea_period_name : String(240),
+            (select cd.code_name 
+             from Code.Code_View cd
+             where cd.tenant_id = isi.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PERIOD'
+             and cd.code = isi.idea_period_code
+             and cd.language_cd = 'KO') as idea_period_name : String(240),
             isi.idea_manager_empno,
-            emp.user_local_name as idea_manager_local_name : String(240),
+            (select user_local_name
+            from Employee emp 
+            where emp.tenant_id = isi.tenant_id
+            and emp.employee_number = isi.idea_manager_empno) as idea_manager_local_name : String(240),
             isi.idea_part_desc,
             isi.current_proposal_contents,
             isi.change_proposal_contents,
             isi.idea_contents,
-            isi.attch_group_number,
-            isp.material_code,
-            isp.purchasing_uom_code,
-            isp.monthly_mtlmob_quantity,
-            isp.currency_code,
-            isp.vi_amount,
-            isp.monthly_purchasing_amount,
-            isp.annual_purchasing_amount,
-            isp.perform_contents
+            isi.attch_group_number
         from Idea.Im_Supplier_Idea   isi 
         inner join Supplier.Sm_Supplier_Mst  ssm 
         on ssm.tenant_id = isi.tenant_id
@@ -148,32 +169,5 @@ service SupplierIdeaMgtService {
         inner join Employee emp 
         on emp.tenant_id = isi.tenant_id
         and emp.employee_number = isi.idea_manager_empno
-        left outer join Performance.Im_Supplier_Idea_Performance isp 
-        on isp.tenant_id = isi.tenant_id
-        and isp.company_code = isi.company_code
-        and isp.idea_number = isi.idea_number  
-        left outer join BizUnit.Org_Unit out 
-        on out.tenant_id = isi.tenant_id
-        and out.bizunit_code = isi.bizunit_code
-        left outer join Code.Code_View cd1
-        on cd1.tenant_id = isi.tenant_id
-        and cd1.group_code = 'DP_IM_IDEA_TYPE'
-        and cd1.code = isi.idea_type_code
-        and cd1.language_cd = 'KO'
-        left outer join Code.Code_View cd2
-        on cd1.tenant_id = isi.tenant_id
-        and cd1.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
-        and cd1.code = isi.idea_product_group_code
-        and cd1.language_cd = 'KO'
-        left outer join Code.Code_View cd3
-        on cd1.tenant_id = isi.tenant_id
-        and cd1.group_code = 'DP_IM_IDEA_PROGRESS_STATUS'
-        and cd1.code = isi.idea_progress_status_code
-        and cd1.language_cd = 'KO'
-        left outer join Code.Code_View cd4
-        on cd1.tenant_id = isi.tenant_id
-        and cd1.group_code = 'DP_IM_IDEA_PERIOD'
-        and cd1.code = isi.idea_period_code
-        and cd1.language_cd = 'KO'
-    ;   
+        ;
 }

@@ -20,7 +20,7 @@ sap.ui.define([
 
     var toggleButtonId = "";
 
-    return BaseController.extend("op.pu.PrMgt.controller.MainList", {
+    return BaseController.extend("op.pu.prMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
         validator: new Validator(),
@@ -47,7 +47,7 @@ sap.ui.define([
             oMultilingual.attachEvent("ready", function (oEvent) {
                 var oi18nModel = oEvent.getParameter("model");
                 this.addHistoryEntry({
-                    title: oi18nModel.getText("/prMgt"),   //제어옵션관리
+                    title: oi18nModel.getText("/prMgt"),   //구매..
                     icon: "sap-icon://table-view",
                     intent: "#Template-display"
                 }, true);
@@ -110,6 +110,87 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
+        onPrDeletePress: function () {
+            var oTable = this.byId("mainTable"),
+                oModel = this.getModel("list"),
+                oView = this.getView(),
+                data ={},
+                //oSelected  = oTable.getSelectedItems(),
+                oSelected = [],
+                delPrData = [],
+                chkArr =[],
+                chkRow ="",
+                j=0,
+                checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs"),
+                aItems = oTable.getSelectedItems(),
+                aIndices = [];
+
+            var that = this;
+            console.log("checkBoxs ::::", checkBoxs);
+
+            //checkBoxs[0].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()
+            // for (var i = 0; i < checkBoxs.length; i++) {
+            //     if (checkBoxs[i].getSelected() === true )
+            //     {
+            //         aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
+            //     }
+            // }
+            aItems.forEach(function(oItem){
+                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "DR" )
+                {
+                //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+                 aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
+                }
+            });
+
+            console.log("delPrList >>>>", aIndices);
+
+            if (aIndices.length > 0) {
+                MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                       if (sButton === MessageBox.Action.OK) {
+                        aIndices = aIndices.sort(function(a, b){return b-a;});
+                        aIndices.forEach(function(nIndex){                            
+                            oModel.removeRecord(nIndex);
+                            //oModel.markRemoved(nIndex);
+                        });
+
+                        } else if (sButton === MessageBox.Action.CANCEL) { 
+
+                        };    
+                    }
+                });
+
+            } else {
+                MessageBox.error("선택된 임시저장 요청이 없습니다.");
+            }
+
+        },
+
+
+
+        /**
+         * @public
+         * @see 리스트 체크박스 제어기능
+         */
+        onColumnChecBox: function (oEvent) {
+            var groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
+            var isChecked = oEvent.getSource().mProperties.selected;
+
+            if (isChecked) {
+                for (var i = 0; i < groupId.length; i++) {
+                    groupId[i].setSelected(true);
+
+                }
+            } else {
+                for (var i = 0; i < groupId.length; i++) {
+                    groupId[i].setSelected(false);
+                }
+            }
+        },
+
 
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
@@ -146,7 +227,7 @@ sap.ui.define([
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
                     id: oView.getId(),
-                    name: "op.pu.PrMgt.view.TemplateSelection",
+                    name: "op.pu.prMgt.view.TemplateSelection",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -395,18 +476,20 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0),
+          
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
-                controlOptionCode: oRecord.control_option_code
+                pr_number: oRecord.pr_number
             });
 
-            if (oNextUIState.layout === "TwoColumnsMidExpanded") {
-                this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
+            if (oNextUIState.layout === "TwoColumnsMidExpanded") {   
+                this.getModel("mainListViewModel").setProperty("/headerExpanded", false);             
+                //this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 
             var oItem = oEvent.getSource();
@@ -449,44 +532,140 @@ sap.ui.define([
 
         _getSearchStates: function () {
 
-            var sBsart = this.getView().byId("searchBsart").getSelectedKeys();
-            // var sChain = this.getView().byId("searchChain").getSelectedKey(),
-            // 	sKeyword = this.getView().byId("searchKeyword").getValue(),
-            // 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
-            var aSearchFilters = [];
-            for (var j = 0; j < sBsart.length; j++) {
-                aSearchFilters.push(new Filter("control_option_name", FilterOperator.Contains, sBsart[j]));
+            var aSearchFilters = [];     
+
+            var sDateFrom = this.getView().byId("searchRequestDate").getDateValue();
+            var sDateTo = this.getView().byId("searchRequestDate").getSecondDateValue();
+            var sPR_TYPE_CODE = this.getView().byId("searchPR_TYPE_CODE").getSelectedKeys();
+            var sPR_TEMPLATE_NUMBER = this.getView().byId("searchPR_TEMPLATE_NUMBER").getSelectedKeys();
+            var sPrNumber = this.getView().byId("searchPrNumber").getSelectedKey();
+            var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
+            var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
+            var sRequestor = this.getView().byId("searchRequestorS").getValue();
+            var sPr_desc = this.getView().byId("searchPr_desc").getValue();
+            var _tempFilters = [];
+
+            if (sDateFrom || sDateTo) {
+                _tempFilters = [];    
+                _tempFilters.push(
+                    new Filter({
+                        path: "request_date",
+                        operator: FilterOperator.BT,
+                        value1: this.getFormatDate(sDateFrom),
+                        value2: this.getFormatDate(sDateTo)
+                    })
+                );               
+                 //_tempFilters.push(new Filter("request_date", FilterOperator.BT, "2020-01-01", "2021-01-31"));
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+            
+            if (sPR_TYPE_CODE.length > 0) {
+                _tempFilters = [];
+
+                sPR_TYPE_CODE.forEach(function (item, idx, arr) {
+                    _tempFilters.push(new Filter("pr_type_code", FilterOperator.EQ, item));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
             }
 
-            // if (sBsart && sBsart.length > 0) {
-            // 	aSearchFilters.push(new Filter("BSART", FilterOperator.Contains, sBsart));
-            // }
-            // if (sKeyword && sKeyword.length > 0) {
-            // 	aSearchFilters.push(new Filter({
-            // 		filters: [
-            // 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-            // 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-            // 		],
-            // 		and: false
-            // 	}));
-            // }
-            // if(sUsage != "all"){
-            // 	switch (sUsage) {
-            // 		case "site":
-            // 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 		case "company":
-            // 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 		case "org":
-            // 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 		case "user":
-            // 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-            // 		break;
-            // 	}
-            // }
+            if (sPR_TEMPLATE_NUMBER.length > 0) {
+                _tempFilters = [];
+
+                sPR_TEMPLATE_NUMBER.forEach(function (item, idx, arr) {
+                    _tempFilters.push(new Filter("pr_template_number", FilterOperator.EQ, item));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if (sPrNumber) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("pr_number", FilterOperator.EQ, sPrNumber));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+           
+            if (sPr_create_status.length > 0) {
+                _tempFilters = [];
+
+                sPr_create_status.forEach(function (item, idx, arr) {
+                    _tempFilters.push(new Filter("pr_create_status_code", FilterOperator.EQ, item));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+
+            if (sDepartment) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("requestor_department_code", FilterOperator.EQ, sDepartment));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if (sRequestor) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestor));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if (sPr_desc) {
+                _tempFilters = [];
+                _tempFilters.push(new Filter("pr_desc", FilterOperator.Contains, sPr_desc));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+
+            
+            
             return aSearchFilters;
+        },
+        getFormatDate: function (date) {
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         },
 
         _doInitTablePerso: function () {

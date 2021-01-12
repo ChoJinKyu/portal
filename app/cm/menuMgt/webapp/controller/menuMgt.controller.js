@@ -75,6 +75,7 @@ sap.ui.define([
                 }
                 if (!!this.byId("searchKeyword").getValue()) {
                     predicates.push(new Filter({
+                        path: 'keyword', 
                         filters: [
                             new Filter("menu_code", FilterOperator.Contains, this.byId("searchKeyword").getValue()),
                             new Filter("menu_name", FilterOperator.Contains, this.byId("searchKeyword").getValue())
@@ -83,7 +84,7 @@ sap.ui.define([
                     }));
                 }
                 //predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
-                this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
+                this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel(), { returnType: "Array" });
                 this.getView().setBusy(true);
                 this.treeListModel
                     .read("/Menu_haa", {
@@ -94,7 +95,8 @@ sap.ui.define([
                     .then((function (jNodes) {
                         this.getView().setModel(new JSONModel({
                             "Menu_haa": {
-                                "nodes": jNodes
+                                "nodes": jNodes[0],
+                                "list": jNodes[1]
                             }
                         }), "tree");
                     }).bind(this))

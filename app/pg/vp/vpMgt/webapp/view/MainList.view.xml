@@ -1,4 +1,4 @@
-<mvc:View controllerName="vp.vpMgt.controller.MainList"
+<mvc:View controllerName="pg.vp.vpMgt.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -35,7 +35,7 @@
 
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_S" width="10rem" selectedKey="BIZ00200" items="{
+                                    <ComboBox id="search_Operation_ORG_S" width="10rem" items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -51,7 +51,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation UINT" labelFor="search_Operation_UNIT_S" required="true"></Label>
+                                    <Label text="Operation Uint" labelFor="search_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_S" width="10rem"
                                             items="{
                                                         path : 'util>/CodeDetails',
@@ -77,7 +77,7 @@
 
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_E" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_E" width="10rem" selectedKey="BIZ00200"  items="{
+                                    <ComboBox id="search_Operation_ORG_E" width="10rem"  items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -93,7 +93,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation UINT" labelFor="search_Operation_UNIT_E" required="true"></Label>
+                                    <Label text="Operation Uint" labelFor="search_Operation_UNIT_E" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_E" width="10rem"
                                             items="{
                                                         path : 'util>/CodeDetails',
@@ -170,22 +170,48 @@
                                 </layoutData>                                
                             </VBox>
                             <VBox>
-                                <Label text="Vendor Pool" labelFor="search_Vp_Code"></Label>
+                                <Label text= "Vendor Pool" labelFor="search_Vp_Name"></Label>
                                 <HBox>
-                                    <ComboBox id="search_Vp_lvc" selectedKey=""  width="8em">
+                                    <SearchField id="search_Vp_Name"
+                                                search=".onDialogTreeCreate" 
+
+                                                />
+                                    <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
+                                </HBox>
+                                <!-- <Label text="Vendor Pool" labelFor="search_Vp_Code"></Label>
+                                <HBox>
+                                    <ComboBox id="search_Vp_lvc" selectedKey="" change=".onDialogTreeCreate"  width="8em">
                                         <core:Item key="0" text="1Level"/>
                                         <core:Item key="1" text="2Level"/>                                                            
                                         <core:Item key="2" text="3Level"/>
                                     </ComboBox>  
                                     <Input id="search_Vp_Code" placeholder="Input data"></Input>
-                                </HBox>
+                                </HBox> -->
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>                        
                             <VBox>
                                 <Label text="Supplier" labelFor="search_Sup"></Label>
-                                <Input id="search_Sup" placeholder="Input data"></Input>
+
+                                <lib-m:CodePicker id="search_Sup"
+                                    placeholder="Enter a department name"
+                                    keyField="supplier_code"
+                                    textField="supplier_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                        entityName: 'VpSupplierMstView'
+                                    }"  >
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
+                                        keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
+                                </lib-m:CodePicker>
+
+                                <!-- <Input id="search_Sup" placeholder="Input data"></Input> -->
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -194,8 +220,8 @@
                                 <Label text="Supplier Type" labelFor="search_Sup_Type"></Label>
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
-                                        <core:Item key="A" text="평가"/>
-                                        <core:Item key="B" text="잠재"/>                                                            
+                                        <core:Item key="Potential" text="Potential"/>
+                                        <core:Item key="Formal" text="Formal"/>                                                            
                                     </ComboBox>  
                                 <layoutData>
                                     <layout:GridData
@@ -219,12 +245,13 @@
                             {path: 'language_cd', operator: 'EQ', value1: 'KO'}
                             ]
                         }"
-                        cellClick=".onCellClick"
-                        rowSelectionChange=".onCheck"                    
+
+                    
                         enableColumnReordering="false"
                         filter="filterPrice"
                         visibleRowCountMode="Auto"
                         >
+                        <!-- cellClick=".onCellClick" -->
                         <!-- visibleRowCountMode="Auto"> -->
                     <table:extension>
                         <OverflowToolbar>
@@ -232,10 +259,10 @@
                             <ToolbarSpacer/>
                             <Button id="mainTableCreateButton"          type="Emphasized" text="Create Level"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
                             <!-- Add the Personalization button -->
-                            <Button id="mainTableEditButton"            type="Emphasized" text="Info.Edit"        press=".onMainTableEditButtonPress"     enabled="{mode>/viewFlag}" />
-                            <Button id="mainTableChangeListButton"      type="Emphasized" text="Change List"      press=".onMainTableChangeListButtonPress"   enabled="{mode>/viewFlag}" />
-                            <Button id="mainTableCombineButton"         type="Emphasized" text="Combine/Move"     press=".onMainTableCombineButtonPress"   enabled="{mode>/viewFlag}" />
-                            <Button id="mainTableSplitButton"           type="Emphasized" text="Split"            press=".onMainTableSplitButtonPress"  enabled="{mode>/viewFlag}" />
+                            <Button id="mainTableEditButton"             text="Info.Edit"        press=".onMainTableEditButtonPress"     enabled="false" />
+                            <Button id="mainTableChangeListButton"       text="Change List"      press=".onMainTableChangeListButtonPress"   enabled="false" />
+                            <Button id="mainTableCombineButton"          text="Combine/Move"     press=".onMainTableCombineButtonPress"   enabled="false" />
+                            <Button id="mainTableSplitButton"            text="Split"            press=".onMainTableSplitButtonPress"  enabled="false" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                                 <layoutData>
@@ -282,6 +309,12 @@
                                 </table:template>
                             </table:Column>
 
+                            <table:Column label="Maker P/N Flag" width="8rem" hAlign="Center">
+                                <table:template>
+                                    <Text text="{= !!${list>maker_material_code_mngt_flag} ? 'Y' : 'N'}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
                             <table:Column label="Supplier Quantity" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_quantity}" wrapping="false" />
@@ -318,18 +351,28 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Maker Flag" width="8rem" hAlign="Center">
+                            <!-- <table:Column label="Maker Flag" width="8rem" hAlign="Center">
                                 <table:template>
-                                    <Text text="{= !!${list>maker_flag} ? 'Y' : 'N'}" wrapping="false" />
+                                    <Text text="{list>maker_flag}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                                         
                             <table:Column label="Supplier Flag" width="8rem"  hAlign="Center">
                                 <table:template>
-                                    <Text text="{= !!${list>supplier_flag} ? 'Y' : 'N'}" wrapping="false" />
+                                    <Text text="{list>supplier_flag}" wrapping="false" />
+                                </table:template>
+                            </table:Column> -->
+                            <table:Column label="Maker Flag" width="8rem" hAlign="Center">
+                                <table:template>
+                                    <Text text="{path : 'list>maker_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-
+                                        
+                            <table:Column label="Supplier Flag" width="8rem"  hAlign="Center">
+                                <table:template>
+                                    <Text text="{path : 'list>supplier_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
                             <table:Column label="Status" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false"  />

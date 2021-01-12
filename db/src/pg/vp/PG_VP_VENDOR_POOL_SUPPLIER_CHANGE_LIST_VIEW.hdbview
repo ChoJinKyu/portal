@@ -72,6 +72,7 @@ FROM   (SELECT M.TENANT_ID,
 				       	        FROM   CM_ORG_CODE_LNG CD
 				       	        WHERE  CD.TENANT_ID = M.TENANT_ID
 				       	        AND    CD.GROUP_CODE = 'VP_VENDOR_POOL_MAX_LEVEL'
+                                AND    CD.ORG_CODE = M.ORG_CODE
 				       	        AND    CD.LANGUAGE_CD = 'EN'
 				       	        AND    CD.CODE = M.OPERATION_UNIT_CODE
 				       	        AND    CD.CODE_NAME = M.HIERARCHY_LEVEL), 'expanded')

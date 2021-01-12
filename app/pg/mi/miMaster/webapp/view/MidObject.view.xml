@@ -8,7 +8,7 @@
     xmlns:core="sap.ui.core"
     height="100%">
     <App>
-        <Page id="page" title="시황자재 Master" showHeader="false">
+        <Page id="page" title="{I18N>/MIMASTER_TITLE}" showHeader="false">
             <content>
                 <uxap:ObjectPageLayout                    
                     toggleHeaderOnTitleClick="true"
@@ -23,7 +23,7 @@
                     <uxap:headerTitle>
                         <uxap:ObjectPageDynamicHeaderTitle>
                             <uxap:expandedHeading>
-                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                                <Title text="{I18N>/MIMASTER_TITLE}" wrapping="true"/>
                             </uxap:expandedHeading>
 
                             <uxap:navigationActions>
@@ -59,14 +59,14 @@
                         <uxap:ObjectPageSection
                             id="pageSectionMain"
                             titleUppercase="false"
-                            title="{i18n>appTitle}">
+                            title="{I18N>/MIMASTER_TITLE}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection ></uxap:ObjectPageSubSection>
                             </uxap:subSections>
                         </uxap:ObjectPageSection>
                     </uxap:sections>
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Material Property">
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/MATERIAL_PROPERTY}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>   
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        

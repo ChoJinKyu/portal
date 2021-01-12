@@ -1,0 +1,67 @@
+procedure pg_tm_del_master_proc (
+    in  i_tenant_id         nvarchar(5),
+    in  i_scenario_number   bigint,
+    out o_table_message     pg_tm_proc_out_type
+)
+language sqlscript
+sql security invoker
+
+as
+begin
+-- rollback message
+	declare exit handler for sqlexception
+		begin
+			rollback;
+			o_table_message = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnmessage from dummy;
+        end;
+-- delete table: master        
+    delete from pg_tm_master
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: scenario        
+    delete from pg_tm_scenario_number_lng
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: company        
+    delete from pg_tm_comp_code
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: bizunit
+    delete from pg_tm_bizunit_code
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: manager
+    delete from pg_tm_manager_dtl
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: operation
+    delete from pg_tm_operation_mode_code_lng
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: cycle
+    delete from pg_tm_cycle_code_lng
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: purchasing type
+    delete from pg_tm_purchasing_type_code_lng
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- delete table: type
+    delete from pg_tm_type_code_lng
+    where tenant_id = :i_tenant_id
+    and scenario_number = :i_scenario_number
+    ;
+-- commit message	
+	commit;
+	o_table_message =  select 'OK' as returncode, 'Success Saved!' as returnmessage from dummy;
+
+end
+;

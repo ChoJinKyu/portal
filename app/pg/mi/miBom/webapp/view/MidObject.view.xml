@@ -9,7 +9,7 @@
     height="100%">
     <App>
         <Page id="page" 
-        title="자재별 시황자재 BOM 등록" 
+        title="{I18N>/MIMATERIAL_BOM_TITLE}" 
         showHeader="false"
         busy="{oUi>/busy}">
             <content>
@@ -26,7 +26,7 @@
                     <uxap:headerTitle>
                         <uxap:ObjectPageDynamicHeaderTitle>
                             <uxap:expandedHeading>
-                                <Title text="자재별 시황자재 BOM 등록" wrapping="true"/>
+                                <Title text="{I18N>/MIMATERIAL_BOM_TITLE} {I18N>/REGISTER}" wrapping="true"/>
                             </uxap:expandedHeading>
 
                             <uxap:navigationActions>
@@ -50,7 +50,7 @@
                                     <Label text="{I18N>/UPDATE_USER_ID} :"/>
                                     <Label text="{oUiData>/update_user_id}"  
                                     class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Update Date :"/>
+                                    <Label text="{I18N>/LOCAL_CHANGE_DTM} :"/>
                                     <Label text="{
                                         path: 'oUiData>/system_update_dtm',
                                         type: 'sap.ui.model.type.Date',
@@ -75,7 +75,7 @@
                                                  visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}" 
                                                  class="sapUiTinyMarginBottom">        
                                             <RadioButtonGroup id="radioButtonGroup" columns="3" width="100%" selectedIndex="0">
-                                                <RadioButton id="radioButtonType01" text="자재명/{I18N>/CODE}" />
+                                                <RadioButton id="radioButtonType01" text="{I18N>/MATERIAL_NAME}/{I18N>/CODE}" />
                                                 <RadioButton id="radioButtonType02" text="{I18N>/SUPPLIER}/{I18N>/CODE}" />
                                             </RadioButtonGroup>  
                                         </FlexBox>
@@ -91,6 +91,7 @@
                                                 class="sapUiSmallMarginBottom"                                                    
                                                 showValueHelp="true" 
                                                 enabled = "true"
+                                                valueHelpOnly="true"
                                                 placeholder="{I18N>/OPTION}"
                                                 valueHelpRequest=".handleValueHelpMaterial"
                                                 value="{
@@ -112,7 +113,7 @@
                                         </FlexBox>                                          
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                                <Label  text="기준수량:" 
+                                                <Label  text="{I18N>/BASE_QUANTITY}:" 
                                                         required="{oUi>/createMode}"
                                                         class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}"
@@ -167,7 +168,7 @@
                                             </layout:VerticalLayout>                                          
                                             <layout:VerticalLayout class="sapUiLargeMarginBegin sapUiLargeMarginBottom" >
                                           
-                                                <Label  text="가공비통화:"                                                        
+                                                <Label  text="{I18N>/PCST_CURRENCY_CODE}:"                                                        
                                                         class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/pcst_currency_unit}" 
                                                         design="Bold"    
@@ -207,13 +208,14 @@
                         </uxap:ObjectPageSection>
                     </uxap:sections>
                     <uxap:sections>
-                        <uxap:ObjectPageSection title="시황자재 List"  >
+                        <uxap:ObjectPageSection title="{I18N>/MI_MATERIAL} {I18N>/LIST}"  >
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
                                          <Table
                                             id="midTable" 
-                                            items="{midList>/}"
+                                            items="{path: 'midList>/',
+                                                    templateShareable: true}"
                                             mode="{= ${oUi>/readMode}?'None':'MultiSelect'}"
                                             width="100%">
                                             <headerToolbar>
@@ -267,12 +269,12 @@
                                                 </Column>
                                                 <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량 단위"/>
+                                                        <Label text="{I18N>/REQM_QUANTITY_UNIT}"/>
                                                     </header>
                                                 </Column>                                                
                                                 <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량"/>
+                                                        <Label text="{I18N>/REQM_QUANTITY}"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center">
@@ -287,7 +289,7 @@
                                                 </Column>
                                                 <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="수량단위"/>
+                                                        <Label text="{I18N>/QUANTITY_UNIT}"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center">
@@ -321,9 +323,10 @@
                                                             <Input value="{midList>reqm_quantity_unit}" 
                                                                 visible="{=!${oUi>/readMode}}"
                                                                 required="{=!${oUi>/readMode}}"
-                                                                submit=".onReqmQuantityUnit" 
-                                                                valueHelpRequest=".onReqmQuantityUnit" 
+                                                                submit=".onReqmQuantityUnit"                                          
+                                                                valueHelpRequest=".onReqmQuantityUnit"                                                                 
                                                                 showValueHelp="true"
+                                                                valueHelpOnly="true"
                                                                 width="90px"/> 
                                                             <Text   text="{midList>reqm_quantity_unit}"
                                                                     visible="{oUi>/readMode}"/>                                                          
@@ -347,7 +350,8 @@
                                                             <ComboBox   placeholder="{I18N>/OPTION}"
                                                                         visible="{=!${oUi>/readMode}}" 
                                                                         required="{=!${oUi>/readMode}}"
-                                                                        items ="{/UseYNView}"        
+                                                                        items ="{/UseYNView}"
+                                                                        forceSelection="false"
                                                                         selectedKey="{midList>use_flag}">  
                                                                 <items> 
                                                                     <core:ListItem key="{code}" text="{code_name}"/>

@@ -1,9 +1,16 @@
 sap.ui.define([
 	"./Empty.controller",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
-	"sap/m/MessageToast"
-], function (Controller, JSONModel, MessageBox, MessageToast) {
+	"sap/m/MessageToast",
+	"ext/lib/control/m/CodeValueHelp",
+    "cm/util/control/CodePopUp",
+    "cm/util/control/ui/EmployeeDialog",
+	"sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
+], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, CodePopUp, EmployeeDialog,
+        Filter, FilterOperator, Sorter) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -21,10 +28,11 @@ sap.ui.define([
                 }
             ]), "list");
 
+            this.cmCodePopUp = new CodePopUp();
+
         },
 
         onCheckButtonPress: function(){
-            debugger;
             var sPickerCode = this.byId("searchCodePicker").getSelectedKey();
             var sPickerCodeText = this.byId("searchCodePicker").getValue();
             var sPickerTimezone = this.byId("searchTimezonePicker").getSelectedKey();
@@ -56,7 +64,79 @@ sap.ui.define([
 
         onTableTestButtonPress: function(){
             MessageBox.show(JSON.stringify(this.getModel("list").getData()));
-        }
+        },
+        
+        onPressCodePopUp: function() {
+            this.cmCodePopUp.attachEvent("ok", this.onCodePopUpPress.bind(this));
+            this.cmCodePopUp.setSerachFieldCode("D");
+            this.cmCodePopUp.open();
+        },
+
+        onCodePopUpPress: function(oEvent){
+            var oData = oEvent.getParameter("data");
+            this.byId("cmCodePopUpTenet_id").setText(oData.tenant_id);
+            this.byId("cmCodePopUpCode").setText(oData.code);
+            this.byId("cmCodePopUpCode_Description").setText(oData.code_description);
+            this.byId("cmCodePopUpCode_Name").setText(oData.code_name);
+            this.byId("cmCodePopUpGroup_Code").setText(oData.group_code);
+        },
+
+        onCodeDialogPress: function(){
+            this.byId("employeeDialog").open();
+        },
+
+        onCodeDialogPressApply: function(oEvent){
+            this.byId("searchCodeFromValueHelp").setValue(oEvent.getParameter("item").user_local_name);
+        },
+
+        onCodeMultiDialogPress: function(){
+            if(!this.oSearchMultiCodeDialog){
+                this.oSearchMultiCodeDialog = new CodeValueHelp({
+                    title: "Choose Chains",
+                    multiSelection: true,
+                    contentWidth: "30em",
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("group_code", FilterOperator.EQ, "CM_CHAIN_CD")
+                        ],
+                        sorters: [
+                            new Sorter("sort_no", true)
+                        ],
+                        serviceName: "cm.util.CommonService",
+                        entityName: "Code"
+                    }
+                });
+                this.oSearchMultiCodeDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiCodeFromValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oSearchMultiCodeDialog.open();
+
+            var aTokens = this.byId("searchMultiCodeFromValueHelp").getTokens();
+            this.oSearchMultiCodeDialog.setTokens(aTokens);
+        },
+
+        onEmployeeMultiDialogPress: function(){
+            if(!this.oSearchMultiEmployeeDialog){
+                this.oSearchMultiEmployeeDialog = new EmployeeDialog({
+                    title: "Choose Employee",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oSearchMultiEmployeeDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiEmployeeFromDialog").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oSearchMultiEmployeeDialog.open();
+
+            var aTokens = this.byId("searchMultiEmployeeFromDialog").getTokens();
+            this.oSearchMultiEmployeeDialog.setTokens(aTokens);
+        },
 
 	});
 });

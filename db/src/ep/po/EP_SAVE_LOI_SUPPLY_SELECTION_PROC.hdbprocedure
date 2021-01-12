@@ -18,7 +18,7 @@ PROCEDURE EP_SAVE_LOI_SUPPLY_SELECTION_PROC (
                         LOI_WRITE_NUMBER NVARCHAR(50), 
                         LOI_ITEM_NUMBER NVARCHAR(50)
     ),
-    OUT O_RTN_MSG NVARCHAR(3000)
+    OUT O_TABLE_MESSAGE EP_PO_PROC_OUT_TYPE
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
@@ -41,7 +41,8 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
-        O_RTN_MSG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
+        -- O_RTN_MSG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
+        O_TABLE_MESSAGE = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnMessage, '' as savedKey from dummy;
 	END;         
 
     IF (COALESCE(:I_LOI_SELECTION_NUMBER,'') = '') THEN
@@ -56,8 +57,8 @@ BEGIN
             , SPECIAL_NOTE
             -- , ATTCH_GROUP_NUMBER 
             , APPROVAL_NUMBER 
-            -- , BUYER_EMPNO 
-            -- , PURCHASING_DEPARTMENT_CODE 
+            , BUYER_EMPNO 
+            , PURCHASING_DEPARTMENT_CODE 
             , SUPPLIER_SELECTION_DATE
             , REMARK 
             -- , ORG_TYPE_CODE
@@ -72,14 +73,14 @@ BEGIN
         VALUES (
             :I_TENANT_ID
             , :I_COMPANY_CODE 
-            , EP_LOI_SELECTION_NUMBER_SEQ.NEXTVAL
+            , LPAD(EP_LOI_SELECTION_NUMBER_SEQ.NEXTVAL, 12, '122000000001') 
             , :I_LOI_SELECTION_TITLE 
-            , '122030'  
+            , :I_LOI_SELECTION_STATUS_CODE  
             , :I_SPECIAL_NOTE
             -- , :I_ATTCH_GROUP_NUMBER 
             , '1234' 
-            -- , :I_BUYER_EMPNO 
-            -- , :I_PURCHASING_DEPARTMENT_CODE E 
+            , '9586'
+            , '50008948'
             , CURRENT_TIMESTAMP
             , :I_REMARK 
             -- , :I_ORG_TYPE_CODE
@@ -92,7 +93,7 @@ BEGIN
             , CURRENT_TIMESTAMP
         );
 
-        SELECT MAX(CAST(LOI_SELECTION_NUMBER AS INTEGER)) 
+        SELECT MAX(CAST(LOI_SELECTION_NUMBER AS DECIMAL)) 
         INTO   R_LOI_SELECTION_NUMBER 
         FROM   EP_LI_SUPPLIER_SELECTION
         WHERE TENANT_ID = :I_TENANT_ID
@@ -137,6 +138,7 @@ BEGIN
     END FOR;
 
 	COMMIT;
-	O_RTN_MSG := 'SUCCESS';	
+	-- O_RTN_MSG := 'SUCCESS';	
+    o_table_message =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, R_LOI_SELECTION_NUMBER as savedKey from dummy;
 
 END

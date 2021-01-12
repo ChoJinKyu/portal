@@ -23,7 +23,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="시황자재 Master"/>
+                    <Title text="{I18N>/MIMASTER_TITLE}"/>
                 </f:heading>
                 <f:snappedContent></f:snappedContent>
                 <f:expandedContent></f:expandedContent>
@@ -134,7 +134,7 @@
                     editable="true"                    
                     persistencyKey="SmartTableAnalytical_Explored"
                     enableAutoBinding="true"                     
-                    class="sapUiResponsiveContentPadding"
+                    class="sapUiResponsiveContentPadding"                    
                     demandPopin="true"
                     initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code,system_update_dtm"
                     >
@@ -163,7 +163,12 @@
                     </smartTable:customToolbar>
                             <Table id="mainTable" 
                                    mode="MultiSelect"
-                                   sticky="HeaderToolbar,ColumnHeaders">
+                                   growingScrollToLoad="true"
+                                   growing="true"
+                                   sticky="ColumnHeaders,HeaderToolbar"
+                                   growingThreshold="50"
+                                   inset="false"   
+                                   >
                                  <columns>  
                                        <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
                                         <customData>
@@ -204,7 +209,7 @@
                                              <Text visible="false" text="{I18N>/CATEGORY_CODE}"></Text>                                                                             
                                         </Column>
 
-                                        <Column width="0px">
+                                        <Column visible="false" width="0px">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "tenant_id", "leadingProperty": "tenant_id", "columnIndex": -101}'/>
@@ -212,9 +217,9 @@
                                              <Text visible="false" text="{I18N>/TENANT_ID}"></Text>                                                                             
                                         </Column>
 
-                                        <Column >
+                                        <Column visible="false" width="0px">
                                           <customData>
-                                        <core:CustomData key="p13nData"
+                                        <core:CustomData  key="p13nData"
                                         value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
                                         </customData>
                                              <Text text="system_update_dtm"></Text>                                                                             
@@ -228,7 +233,7 @@
                                              <Text textAlign="Center" text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
                                              <Text visible="false"  text="{category_code}"></Text>
                                              <Text visible="false"  text="{tenant_id}"></Text>
-                                             <Text text="{system_update_dtm}"></Text>
+                                             <Text visible="false" text="{system_update_dtm}"></Text>
                                         </ColumnListItem>
                                     </items> 
                                 </Table>

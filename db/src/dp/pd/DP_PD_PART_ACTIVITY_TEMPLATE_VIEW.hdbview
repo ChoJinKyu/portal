@@ -9,10 +9,14 @@ SELECT pat.hierarchy_rank,              /*현재node의 순번(sibling order by�
       pat.activity_code,				
       pat.parent_activity_code,				
       pat.develope_event_code,          /* develope_event 명 Function 변경 */
+      de.code_name as develope_event_name,
       pat.sequence,
       pat.actual_role_code,             /* actual_role 명 Function 변경 */
+      rg.code_name as actual_role_name,
       pat.activity_complete_type_code,  /* activity_complete_type 명 Function 변경 */
+      ac.code_name as activity_complete_type_name,
       pat.job_type_code,                /* job_type 명 Function 변경 */
+      jt.code_name as job_type_name,
       pat.attachment_mandatory_flag,
       pat.approve_mandatory_flag,
       pat.activity_name,
@@ -46,6 +50,26 @@ SELECT pat.hierarchy_rank,              /*현재node의 순번(sibling order by�
 				        FROM dp_pd_part_activity_template
 				    )
 				    START WHERE parent_activity_code = 'T'
-            ) pat				
+            ) pat
+				    left join (select 
+				            code, code_name, tenant_id
+				            from CM_CODE_LNG 
+				            where group_code='DP_DEVELOPE_EVENT_CODE' and LANGUAGE_CD='KO') de
+				    on de.code = pat.develope_event_code and de.tenant_id = pat.tenant_id
+				    left join (select 
+				            code, code_name, tenant_id
+				            from CM_CODE_LNG 
+				            where group_code='DP_ROLE_GROUP' and LANGUAGE_CD='KO') rg
+				    on rg.code = pat.actual_role_code and rg.tenant_id = pat.tenant_id				            
+				    left join (select 
+				            code, code_name, tenant_id
+				            from CM_CODE_LNG 
+				            where group_code='DP_ACTIVITY_COMPLETE_TYPE' and LANGUAGE_CD='KO') ac
+				    on ac.code = pat.activity_complete_type_code and ac.tenant_id = pat.tenant_id				            
+				    left join (select 
+				            code, code_name, tenant_id
+				            from CM_CODE_LNG 
+				            where group_code='DP_JOB_TYPE' and LANGUAGE_CD='KO') jt
+				    on jt.code = pat.job_type_code and jt.tenant_id = pat.tenant_id				            		            				            
 ORDER BY pat.HIERARCHY_RANK
 ;

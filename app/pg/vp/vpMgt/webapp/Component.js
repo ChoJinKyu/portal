@@ -11,7 +11,7 @@ sap.ui.define([
 
     var LayoutType = library.LayoutType;
 
-	return UIComponent.extend("vp.vpMgt.Component", {
+	return UIComponent.extend("pg.vp.vpMgt.Component", {
 
 		metadata : {
 			manifest: "json"

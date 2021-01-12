@@ -47,7 +47,7 @@ sap.ui.define([
             this.setModel(new JSONModel(), "mainListViewModel");
 
 
-            // this.setModel(oViewModel, "mainListView");
+             //this.setModel(oViewModel, "mainListView");
 
             // // Add the mainList page to the flp routing history
             // this.addHistoryEntry({
@@ -56,20 +56,24 @@ sap.ui.define([
             //     intent: "#Template-display"
             // }, true);
 
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            console.log("1.11 -------------------->");
 
+            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             /** Date */
             var today = new Date();
 
-            this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            //this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            //this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            //this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            //this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             
         },
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
         },
+
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -96,7 +100,7 @@ sap.ui.define([
             } else {
                 sTitle = this.getResourceBundle().getText("mainListTableTitle");
             }
-            this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
+            this.getModel("mainListViewModel").setProperty("/mainListTableTitle", sTitle);
         },
 
 		/**
@@ -146,6 +150,9 @@ sap.ui.define([
                 // refresh the list binding.
                 this.onRefresh();
             } else {
+                //this.validator.validate( this.byId('pageSearchFormE'));
+                //if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+                
                 var aSearchFilters = this._getSearchStates();
                 this._applySearch(aSearchFilters);
             }
@@ -161,6 +168,8 @@ sap.ui.define([
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
+                console.log("sPath ---------------------->" ,sPath);
+
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
@@ -168,9 +177,9 @@ sap.ui.define([
                 loiWriteNumber: oRecord.loi_write_number
             });
 
-            if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
-            }
+             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
+                 this.getView().getModel('mainListViewModel').setProperty("/headerExpandFlag", false);
+             }
 
             var oItem = oEvent.getSource();
             oItem.setNavigated(true);
@@ -190,7 +199,14 @@ sap.ui.define([
 		 * @private
 		 */
         _onRoutedThisPage: function () {
-            this.getModel("mainListView").setProperty("/headerExpanded", true);
+            console.log("_onRoutedThisPage main");
+            //this.getModel("mainListView").setProperty("/headerExpanded", true);
+            //this.byId("pageSearchButton").firePress();
+
+            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+
+            var aSearchFilters = this._getSearchStates();
+            this._applySearch(aSearchFilters);
         },
 
 		/**
@@ -207,7 +223,8 @@ sap.ui.define([
             oModel.read("/LOIRequestListView", {
                 filters: aSearchFilters,
                 sorters: [
-                    new Sorter("loi_number", false)
+                    new Sorter("request_date", true),
+                    new Sorter("loi_number", true)
                 ],
                 success: function (oData) {
                     oView.setBusy(false);
@@ -220,16 +237,29 @@ sap.ui.define([
 
         _getSearchStates: function () {
             //var sKeyword, 
-            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
+
+
+             var oFilterModel = this.getModel("list"),
+                oFilterModelData = oFilterModel.getData();
+
+
+                
 
             var loiNumberTokens = this.getView().byId("searchLoiNumberS").getTokens();
             var sLoiNumber = loiNumberTokens.map(function (oToken) {
                 return oToken.getKey();
             });
             
-            var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
-                requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue(),
-                status = this.getView().byId("searchStatusS").getSelectedKey();
+            var requestFromDate = this.getView().byId("searchRequestDateS").getDateValue(),
+                requestToDate = this.getView().byId("searchRequestDateS").getSecondDateValue(),
+                status = this.getView().byId("searchStatus").getSelectedKey();
+            // var oDateValue = oFilterModelData.dateValue,
+            //     oSecondDateValue = oFilterModelData.secondDateValue;
+
+            var sRequestDepartment = this.getView().byId("searchRequestDepartmentS").getValue(),
+                sRequestor = this.getView().byId("searchRequestorS").getValue();
+
 
             var aSearchFilters = [];
 
@@ -248,29 +278,46 @@ sap.ui.define([
                 );
             }
 
-            if (requestFromDate === null) {
-                MessageToast.show("Request Date를 입력해 주세요");
-                return false;
-            } 
+            console.log("--------------- requestFromDate-------" ,requestFromDate );
+            console.log("--------------- requestToDate -----------------" ,requestToDate );
+
+            // if (requestFromDate === null) {
+            //     MessageToast.show("Request Date를 입력해 주세요");
+            //     return false;
+            // } 
+
             if (requestFromDate && requestToDate) {
-                //aSearchFilters.push(new Filter("request_date", FilterOperator.BT, requestFromDate, requestToDate));
+                aSearchFilters.push(new Filter("request_date", FilterOperator.BT, this.getFormatDate(requestFromDate), this.getFormatDate(requestToDate)));
+            }
+
+            // if (sRequestDepartment && sRequestDepartment.length > 0) {
+            //     aSearchFilters.push(new Filter("request_department_code", FilterOperator.EQ, sLoiNumber));
+            // }
+            // if (sRequestor && sRequestor.length > 0) {
+            //     aSearchFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sLoiNumber));
+            // }
+
+            if(sRequestDepartment && sRequestDepartment.length > 0){
+                aSearchFilters.push(new Filter("tolower(request_department_code)", FilterOperator.Contains, "'"+sRequestDepartment.toLowerCase()+"'"));
+            }
+            if(sRequestor && sRequestor.length > 0){
+                aSearchFilters.push(new Filter("tolower(requestor_empno)", FilterOperator.Contains, "'"+sRequestor.toLowerCase()+"'"));
             }
 
             if (status) {
-                aSearchFilters.push(new Filter("loi_request_status_name", FilterOperator.EQ, status));
+                aSearchFilters.push(new Filter("loi_request_status_code", FilterOperator.EQ, status));
             }
 
 
             console.log("aSearchFilters -----> " , aSearchFilters);
-            console.log("this.getView() -----> ", this.getView());
             return aSearchFilters;
         },
 
 
         onStatusSelectionChange: function (oEvent) {
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-                seSurffix = sSurffix === "E" ? "S" : "E",
-                oSearchStatus = this.getView().byId("searchStatus" + seSurffix);
+            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+            //    seSurffix = sSurffix === "E" ? "S" : "E",
+            var oSearchStatus = this.getView().byId("searchStatus");
 
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
         },
@@ -294,20 +341,26 @@ sap.ui.define([
             var sFrom = oEvent.getParameter("from");
             var sTo = oEvent.getParameter("to");
 
-            this.getView().byId("searchCreationDateS").setDateValue(sFrom);
-            this.getView().byId("searchCreationDateS").setSecondDateValue(sTo);
+            this.getView().byId("searchRequestDateS").setDateValue(sFrom);
+            this.getView().byId("searchRequestDateS").setSecondDateValue(sTo);
         },
 
 
 
-        // getFormatDate: function (date) {
-        //     var year = date.getFullYear();              //yyyy
-        //     var month = (1 + date.getMonth());          //M
-        //     month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
-        //     var day = date.getDate();                   //d
-        //     day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
-        //     return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
-        // }
+
+        getFormatDate : function (date) {
+
+            if(!date){
+                return '';
+            }
+
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        }
 
     });
 });

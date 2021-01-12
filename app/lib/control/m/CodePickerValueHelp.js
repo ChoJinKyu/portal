@@ -12,7 +12,7 @@ sap.ui.define([
 ], function (Parent, Dialog, Button, Text, Table, Column, ColumnListItem, Filter, FilterOperator, Sorter) {
     "use strict";
 
-    var CodePickerDialog = Parent.extend("ext.lib.control.m.CodePickerDialog", {
+    var CodePickerValueHelp = Parent.extend("ext.lib.control.m.CodePickerValueHelp", {
 
         metadata: {
             properties: {
@@ -25,7 +25,7 @@ sap.ui.define([
                 textField: { type: "string", group: "Misc", defaultValue: "code_name" }
             },
             events: {
-                ok: {},
+                apply: {},
                 cancel: {}
             }
         },
@@ -44,7 +44,7 @@ sap.ui.define([
 
         onItemPress: function(oEvent){
             var oData = this.getModel().getProperty(oEvent.getSource().getBindingContextPath());
-            this.fireEvent("ok", {data: oData});
+            this.fireEvent("apply", {data: oData});
             this.oDialog.close();
         },
 
@@ -115,5 +115,5 @@ sap.ui.define([
 
     });
 
-    return CodePickerDialog;
+    return CodePickerValueHelp;
 }, /* bExport= */ true);

@@ -5,15 +5,18 @@ sap.ui.define([
         "sap/m/MessageBox",
         "ext/lib/util/Multilingual",
         "sap/ui/model/json/JSONModel", 
+        "../controller/SupplierSelection"
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSONModel) {
+	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSONModel,SupplierSelection) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBMgt.controller.DetailPage", {
+
+            supplierSelection :  new SupplierSelection(),
             
 			onInit: function () {
                 
@@ -63,61 +66,35 @@ sap.ui.define([
                         }
                     ],
                     "propInfo": {
-                        outCome: "etc"
+                        outCome: "etc",
+                        isEditMode: false
                     }
                 };
 
                 // var oModel = new JSONModel(temp.list);
-                this.getView().setModel( new JSONModel(temp) );
+                this.getView().setModel( new JSONModel(temp) , "list");
                 this.getView().setModel( new JSONModel(temp.propInfo), "propInfo");
 
-                var that = this,
-                sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
-                    '<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
-                    'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ' +
-                    '<p style="margin: 0in 0in 11.25pt; text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><img style="float: left; padding-right: 1em;" src="http://monliban.org/images/1473838236_274706_l_srgb_s_gl_465881_large.jpg" width="304" height="181">' +
-                    '<span style="font-size: 10.5pt; font-family: sans-serif; color: #0070c0;">Phasellus imperdiet metus est, in luctus erat fringilla ut. In commodo magna justo, sit amet ultrices ipsum egestas quis.</span><span style="font-size: 10.5pt; font-family: sans-serif; color: black;"> ' +
-                    'Nullam ac mauris felis. Sed tempor odio diam, nec ullamcorper lacus laoreet vitae. <strong>Aenean quam libero</strong>, varius eu ex eu, aliquet fermentum orci. Donec eget ante sed enim pretium tempus. <strong><em>Aliquam semper neque eu aliquam dictum</em></strong>. ' +
-                    'Nulla in convallis diam. Fusce molestie risus nec posuere ullamcorper. Fusce ut sodales tortor. <u>Morbi eget odio a augue viverra semper.</u></span></p>' +
-                    '<p style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">Fusce dapibus sodales ornare. ' +
-                    'Nullam ac mauris felis. Sed tempor odio diam, nec ullamcorper lacus laoreet vitae. Aenean quam libero, varius eu ex eu, aliquet fermentum orci. Donec eget ante sed enim pretium tempus. Nullam laoreet metus ac enim placerat, nec tempor arcu finibus. ' +
-                    'Curabitur nec pretium odio, sed auctor felis. Nam eu neque faucibus, pharetra purus id, congue elit. Phasellus neque lectus, gravida at cursus at, pretium eu lorem. </span></p>' +
-                    '<ul>' +
-                    '<li style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">Nulla non elit hendrerit, auctor arcu sit amet, tempor nisl.</span></li>' +
-                    '<li style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">Morbi sed libero pulvinar, maximus orci et, hendrerit orci.</span></li>' +
-                    '<li style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">Phasellus sodales enim nec sapien commodo mattis.</span></li>' +
-                    '<li style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">Integer laoreet eros placerat pharetra euismod.</span></li>' +
-                    '</ul>' +
-                    '<p style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #c00000;">Ut vitae commodo ante. Morbi nibh dolor, ullamcorper sed interdum id, molestie vel libero. ' +
-                    'Proin volutpat dui eget ipsum scelerisque, a ullamcorper ipsum mattis. Cras sed elit sit amet diam convallis vehicula vitae ut nisl. Ut ornare dui ligula, id euismod lectus eleifend at. Nulla facilisi. In pharetra lectus et augue consequat vestibulum.</span></p>' +
-                    '<ol>' +
-                    '<li style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">Proin id eros vel libero maximus dignissim ac et velit.</span></li>' +
-                    '<li style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">In non odio pharetra, dapibus augue quis, laoreet felis.</span></li>' +
-                    '</ol>' +
-                    '<p style="font-size: 10pt; font-family: Calibri, sans-serif;"><span style="font-family: sans-serif; color: #353535;">Donec a consectetur libero. Donec ut massa justo. Duis euismod varius odio in rhoncus. Nullam sagittis enim vel massa tempor, ' +
-                    'ut malesuada libero mollis. Vivamus dictum diam diam, quis rhoncus ex congue vel.</span></p>' +
-                    '<p style="text-align: center; font-size: 10pt; font-family: Calibri, sans-serif;" align="center"><em><span style="font-family: sans-serif; color: #a6a6a6;">"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."</span></em></p>' +
-                    '<p style="text-align: right; font-size: 10pt; font-family: Calibri, sans-serif;" align="right"><span style="font-family: sans-serif; color: #353535;">-</span> <strong><span style="font-family: sans-serif; color: #353535;">Sed in lacus dolor.</span></strong></p>';
+                // var that = this;
 
-        
-                
-                // var oRichTextEditor = new RTE("myRTE", {
-				// 		editorType: EditorType.TinyMCE4,
-				// 		width: "100%",
-				// 		height: "600px",
-				// 		customToolbar: true,
-				// 		showGroupFont: true,
-				// 		showGroupLink: true,
-				// 		showGroupInsert: true,
-				// 		value: sHtmlValue,
-				// 		ready: function () {
-				// 			this.addButtonGroup("styleselect").addButtonGroup("table");
-				// 		}
-				// 	});
-
-				// that.getView().byId("reMonitoringPurpose").setValue(sHtmlValue);
+                this.viewModel = new JSONModel({
+                    NegoHeaders : {}
+                });
+                this.getView().setModel(this.viewModel, "viewModel");
+                this.getView().setModel(  new JSONModel(this.viewModel.NegoHeaders), "NegoHeaders");
                 
             },
+            
+            onAfterRendering: function () {
+
+                
+            
+            },
+
+
+
+
+
             onNavBack: function(e){
                 this.getOwnerComponent().getRouter().navTo("mainPage", {} );
             },
@@ -135,11 +112,11 @@ sap.ui.define([
 
                 this.getView().byId("panel_Header").setExpanded(true);
                 this.getView().byId("panel_Control").setExpanded(true);
-                this.getView().byId("panel_Content").setExpanded(true);
-                this.getView().byId("panel_SuppliersContent").setExpanded(true);
-                this.getView().byId("panel_Evaluation").setExpanded(true);
-                this.getView().byId("panel_Potential").setExpanded(true);
-                this.getView().byId("panel_Specific").setExpanded(true);
+                this.getView().byId("panel_Line").setExpanded(true);
+                // this.getView().byId("panel_SuppliersContent").setExpanded(true);
+                // this.getView().byId("panel_Evaluation").setExpanded(true);
+                // this.getView().byId("panel_Potential").setExpanded(true);
+                // this.getView().byId("panel_Specific").setExpanded(true);
 
                
                 console.log("_onRouteMatched ");
@@ -148,20 +125,144 @@ sap.ui.define([
 
                 // this.getView().byId("objectPageSection").getSelectedSubSection();
                 console.log(this.getView().byId("objectPageSection").getSelectedSubSection());
+
+
+                var that = this;
+                var oView = this.getView();
+                // var url = "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/MasterFunc('A')/Set"
+                //(tenant_id='L2100',nego_header_id=1)?
+                // &$format=json
+                // &$select=*,Items
+                // &$expand=Items
+                // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?$filter=tenant_id eq 'L2100' and nego_document_number eq '1-1'";
+                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '1-1'";
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(data){
+                        // debugger;
+                        var v_viewHeaderModel = oView.getModel("viewModel").getData();
+                        v_viewHeaderModel = data.value[0];
+
+                        oView.getModel("NegoHeaders").setData(data.value[0]);
+
+                        oView.getModel("viewModel").updateBindings(true);      
+                        // oView.setModel(v_this.viewModel.NegoHeaders, "NegoHeaders");
+
+                        // oView.getModel("viewModel").refresh();
+                        
+                        // oView.byId("inputNegotiationNo").setValue(data.value[0].nego_document_number);
+
+                        // this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
+                        // this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
+                        // this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
+                        // this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
+                        // this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
+                        // this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
+
+                        // var oVerticalLayout = oView.byId('vLayout');
+                        // oVerticalLayout.bindElement("viewModel>/NegoHeaders");
+                        console.log(oView.getModel("viewModel").getData());
+                        console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
+                        console.log(data.value[0]);
+
+                        that.setDataBinding(data.value[0]);
+                    },
+                    error: function(e){
+                        
+                    }
+                });
                 
                 
             },
-            onPageEditButtonPress: function() {
 
-                // //input 필드에 값 채우기
-                // var items = this.getView().byId("midTable").getItems();
+            setDataBinding: function (oObject) {
+                if( oObject !== null ) {
+                    console.log( "-- setDataBinding " );
+                    console.log( oObject );
+                    // actual_extension_count: null
+                    // approval_flag: null
+                    // award_date: null
+                    // award_progress_status_code: null
+                    // award_supplier_count: null
+                    // award_supplier_option_mtd_cd: null
+                    // award_type_code: null
+                    // bidding_auto_closing_hour_cnt: null
+                    // bidding_info_buyer_open_date: null
+                    // bidding_info_pur_contact_empno: null
+                    // bidding_info_supp_contact_empno: null
+                    // bidding_info_supplier_open_date: null
+                    // bidding_progress_hour_count: null
+                    // bidding_result_open_status_code: null
+                    // buyer_department_code: null
+                    // buyer_empno: null
+                    // by_step_bidding_flag: null
+                    // cancel_date: null
+                    // change_reason_desc: null
+                    // close_date_ext_enabled_count: null
+                    // close_date_ext_enabled_hours: null
+                    // closing_date: null
+                    // conversion_type_code: null
+                    // create_user_id: "997F8D5A04E2433AA7341CADC74AF683_AWX430GNEBLXD7TDI8FA9J58I_DT"
+                    // evaluation_closing_date: null
+                    // file_group_code: null
+                    // immediate_apply_flag: null
+                    // interface_source_code: null
+                    // last_bid_af_auto_close_hours: null
+                    // local_create_dtm: "2021-01-11T19:29:17Z"
+                    // local_update_dtm: "2021-01-11T19:36:35Z"
+                    // nego_document_desc: null
+                    // nego_document_number: "1-1"
+                    // nego_document_round: 1
+                    // nego_document_title: null
+                    // nego_header_id: 1
+                    // nego_progress_status_code: null
+                    // nego_round_largest_times: null
+                    // nego_type_code: null
+                    // negotiation_output_class_code: null
+                    // negotiation_style_code: null
+                    // next_round_auto_creation_flag: null
+                    // note_content: null
+                    // open_date: null
+                    // operation_unit_code: ""
+                    // orientation_contact_phone_no: null
+                    // orientation_execution_flag: null
+                    // orientation_location_desc: null
+                    // orientation_start_date: null
+                    // ot_contact_employee_no: null
+                    // partial_allow_flag: null
+                    // prcd_validation_target_flag: null
+                    // previous_nego_header_id: 0
+                    // price_condition_code: null
+                    // purchasing_ord_portion_rate_val: null
+                    // purchasing_order_type_code: null
+                    // reference_closing_date: null
+                    // reference_info: null
+                    // reference_nego_header_id: 1
+                    // reply_times: null
+                    // request_reapprove_flag: null
+                    // request_submit_number: null
+                    // request_submit_status_code: null
+                    // round_bidding_flag: null
+                    // ship_to_location_code: null
+                    // submit_date: null
+                    // suffix_flag: null
+                    // supplier_count: null
+                    // supplier_participation_flag: null
+                    // system_create_dtm: "2021-01-11T08:56:22Z"
+                    // system_update_dtm: "2021-01-11T10:36:35Z"
+                    // target_amount: null
+                    // target_amount_config_flag: null
+                    // tenant_id: "L2100"
+                    // update_user_id: "anonymous"
+                    // usage_code: null
+                    
 
-                // for(var i=0; i<items.length; i++){
-                //     var item = items[i];
-                //     var value = item.getCells()[1].getText();
-                //     item.getCells()[2].setValue(value);
-                // } 
+
+                }
             },
+
             _update : function(uPath, uArray){
                 
                 var oModel = that.getView().getModel();
@@ -181,6 +282,14 @@ sap.ui.define([
                 });
                 return promise;
             },
+            onPageCancelButtonPress: function() {
+                this.getView().getModel("propInfo").setProperty("/isEditMode", false );
+                // this.onNavBack();
+            },
+            onPageEditButtonPress: function() {
+                this.getView().getModel("propInfo").setProperty("/isEditMode", true );
+                
+            },
             onPageSaveButtonPress: function() {
                 
             },
@@ -189,9 +298,6 @@ sap.ui.define([
                 
             },
 
-            onPageCancelButtonPress: function() {
-                
-            },
             onPageNavBackButtonPress: function () {
             //     var items = this.getView().byId("midTable").getItems();
             //     for(var i=0; i<items.length; i++){
@@ -215,6 +321,15 @@ sap.ui.define([
             //     // this.getRouter().navTo("mainPage", {layout: sNextLayout});
             // }
 
+            },
+            onSupplierPress: function(e){
+                // debugger;
+                this._oIndex = e.oSource.getParent().getIndex();
+                
+                this.supplierSelection.showSupplierSelection(this, e, "L1100", "", true);
+                
+
+                
             }
 		});
 	});

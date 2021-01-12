@@ -1,0 +1,346 @@
+
+@bookshop = http://localhost:8080
+
+# Local PC : cds serve all --with-mocks --in-memory?
+@serviceUrl = http://localhost:4004
+# Local PC : mvn spring-boot:run : v2
+@serviceUrl = http://localhost:8080/odata/v2
+# Local PC : mvn spring-boot:run : v4
+@serviceUrl = http://localhost:8080/odata/v4
+# Cloud Container Service : sppCap
+@serviceUrl = https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap
+# Cloud Container Service : sppCap
+@serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+
+# @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
+# Uncomment this when running a separate reviews service
+# Odata v2 service
+@reviews-service = {{serviceUrl}}/sp.negoHeadersService
+# Odata v4 service
+@reviews-service = {{serviceUrl}}/sp.negoHeadersV4Service
+
+### Need a Cookie for credential not in local
+# https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
+@cookie = JTENANTSESSIONID_services=5fZp7Tlz85JCf51p0PLyDiYoWX3fugTkSnF61L2Fb%2BU%3D
+# https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap/
+@cookie = workspaces-ws-bhnz4_WSR_SESSIONID=Suul34z22XoXRlxYluU9QksQxt8qigb2ta2/lfMddWFIULR6WT0dlXHk360aRnC26I8LsXkRuewqAPbJIwQ22A==
+
+# @cookie = 
+
+### Test
+GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
+Cookie: {{cookie}}
+
+#################################################
+#
+#   NegoHeaders Service
+#
+
+### Multi Select
+GET {{reviews-service}}/NegoHeaders
+Cookie: {{cookie}}
+
+### Single Select
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=3)
+Cookie: {{cookie}}
+
+### INSERT 
+# https://cap.cloud.sap/docs/java/query-api#upsert
+POST {{reviews-service}}/NegoHeaders
+Cookie: {{cookie}}
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 3,
+    "operation_unit_code": "",
+    "reference_nego_header_id": 0,
+    "previous_nego_header_id": 0,
+    "nego_document_round": 3,
+    "nego_document_number": "1-3",
+    "nego_document_title": "",
+    "nego_document_desc": "",
+    "nego_progress_status_code": "",
+    "award_progress_status_code": "",
+    "award_date": null,
+    "nego_type_code": "",
+    "purchasing_order_type_code": "",
+    "negotiation_output_class_code": "",
+    "buyer_empno": "",
+    "buyer_department_code": "",
+    "ship_to_location_code": 0,
+    "submit_date": null,
+    "immediate_apply_flag": "",
+    "open_date": null,
+    "closing_date": null,
+    "reference_closing_date": null,
+    "cancel_date": null,
+    "negotiation_style_code": "",
+    "by_step_bidding_flag": "",
+    "round_bidding_flag": "",
+    "nego_round_largest_times": 0,
+    "next_round_auto_creation_flag": "",
+    "bidding_progress_hour_count": 0,
+    "price_condition_code": "",
+    "bidding_auto_closing_hour_cnt": 0,
+    "last_bid_af_auto_close_hours": 0,
+    "close_date_ext_enabled_hours": 0,
+    "close_date_ext_enabled_count": 0,
+    "actual_extension_count": 0,
+    "note_content": "",
+    "award_type_code": "",
+    "target_amount_config_flag": "",
+    "target_amount": 0.00,
+    "award_supplier_option_mtd_cd": "",
+    "award_supplier_count": 0,
+    "purchasing_ord_portion_rate_val": "",
+    "supplier_participation_flag": "",
+    "partial_allow_flag": "",
+    "orientation_execution_flag": "",
+    "ot_contact_employee_no": "",
+    "orientation_contact_phone_no": "",
+    "orientation_start_date": null,
+    "orientation_location_desc": "",
+    "interface_source_code": "",
+    "reference_info": "",
+    "bidding_result_open_status_code": "",
+    "bidding_info_buyer_open_date": null,
+    "bidding_info_supplier_open_date": null,
+    "bidding_info_pur_contact_empno": "",
+    "bidding_info_supp_contact_empno": "",
+    "evaluation_closing_date": null,
+    "conversion_type_code": "",
+    "file_group_code": "",
+    "change_reason_desc": "",
+    "prcd_validation_target_flag": "",
+    "approval_flag": "",
+    "suffix_flag": "",
+    "usage_code": "",
+    "local_create_dtm": "2021-01-11T08:56:22Z",
+    "local_update_dtm": "2021-01-11T08:56:22Z",
+    "create_user_id": "997F8D5A04E2433AA7341CADC74AF683_AWX430GNEBLXD7TDI8FA9J58I_DT",
+    "update_user_id": "997F8D5A04E2433AA7341CADC74AF683_AWX430GNEBLXD7TDI8FA9J58I_DT",
+    "system_create_dtm": "2021-01-11T08:56:22Z",
+    "system_update_dtm": "2021-01-11T08:56:22Z"
+}
+
+### Single Update
+PUT {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 1,
+    "operation_unit_code": "",
+    "reference_nego_header_id": 1,
+    "previous_nego_header_id": 0,
+    "nego_document_round": 1,
+    "nego_document_number": "1-1",
+    "local_create_dtm": "2021-01-11T19:29:17Z",
+    "local_update_dtm": "2021-01-11T19:29:17Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-11T10:29:17Z",
+    "system_update_dtm": "2021-01-11T10:29:17Z"
+}
+
+### Single Update
+PUT {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=2)
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 2,
+    "operation_unit_code": "",
+    "reference_nego_header_id": 1,
+    "previous_nego_header_id": 1,
+    "nego_document_round": 2,
+    "nego_document_number": "1-2",
+    "local_create_dtm": "2021-01-11T19:29:17Z",
+    "local_update_dtm": "2021-01-11T19:29:17Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-11T10:29:17Z",
+    "system_update_dtm": "2021-01-11T10:29:17Z"
+}
+
+### Single Update
+PUT {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=3)
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 3,
+    "operation_unit_code": "",
+    "reference_nego_header_id": 1,
+    "previous_nego_header_id": 2,
+    "nego_document_round": 3,
+    "nego_document_number": "1-3",
+    "local_create_dtm": "2021-01-11T19:29:17Z",
+    "local_update_dtm": "2021-01-11T19:29:17Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-11T10:29:17Z",
+    "system_update_dtm": "2021-01-11T10:29:17Z"
+}
+
+### Single Select
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)
+### Single Select
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=2)
+### Single Select
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=3)
+
+
+#################################################
+#
+#   NegoItemPrices Service
+#
+GET {{reviews-service}}/NegoItemPrices
+
+### Insert Single
+POST {{reviews-service}}/NegoItemPrices
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 1,
+    "nego_item_number": "00001",
+    "operation_org_code": "",
+    "operation_unit_code": "",
+    # "line_type_code": "",
+    # "inventory_item_code": "",
+    "item_type_code": "",
+    "local_create_dtm": "2021-01-11T19:29:17Z",
+    "local_update_dtm": "2021-01-11T19:29:17Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-11T10:29:17Z",
+    "system_update_dtm": "2021-01-11T10:29:17Z"
+}
+
+
+#################################################
+#
+#   NegoSuppliers Service
+#
+GET {{reviews-service}}/NegoSuppliers?
+&$select=*
+&$top=3
+
+### Insert Single
+POST {{reviews-service}}/NegoSuppliers
+Content-Type: application/json
+
+{
+    "tenant_id": "L2100",
+    "nego_header_id": 1,
+    "nego_item_number": "00001",
+    "item_supplier_sequence": "00001",
+    "local_create_dtm": "2021-01-11T19:29:17Z",
+    "local_update_dtm": "2021-01-11T19:29:17Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-11T10:29:17Z",
+    "system_update_dtm": "2021-01-11T10:29:17Z"
+}
+
+
+#################################################
+#   NegoHeaders Service
+#   NegoItemPrices Service
+#   NegoSuppliers Service
+
+### Single NegoHeaders
+GET {{reviews-service}}/NegoHeaders?$format=json&$top=1
+### Single NegoHeaders/NegoItemPrices
+GET {{reviews-service}}/NegoItemPrices?$format=json&$top=1
+### Single NegoHeaders/NegoItemPrices
+GET {{reviews-service}}/NegoSuppliers?$format=json&$top=1
+### Complex NegoHeaders + NegoItemPrices
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)?
+&$format=json
+&$select=*,Items
+&$expand=Items
+### Complex NegoHeaders + NegoItemPrices Aster V4 Only
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items?
+&$format=json
+&$select=*
+&$expand=*
+### Complex NegoItemPrices + NegoHeaders
+GET {{reviews-service}}/NegoItemPrices(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')?
+&$format=json
+&$expand=Header
+### Complex NegoItemPrices + NegoHeaders
+GET {{reviews-service}}/NegoItemPrices?
+&$format=json
+&$select=*,Header
+&$expand=Header
+### Complex 
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items?
+&$format=json
+&$select=*
+&$expand=Suppliers
+### Complex 
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')/Suppliers?
+&$format=json
+&$select=*
+&$expand=Item,Item/Header
+### Complex # V4 Only
+GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=1)/Items(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')/Suppliers?
+&$format=json
+&$select=*
+&$expand=Item($expand=Header)
+
+
+
+
+
+
+
+
+
+<!--   
+#################################################
+#
+#   Bookshop Services
+#
+
+GET {{bookshop}}/browse/Books/201/reviews?
+&$select=rating,date,title
+&$top=3
+
+###
+
+GET {{bookshop}}/browse/Books(201)?
+&$select=ID,title,rating
+&$expand=reviews
+
+
+
+#################################################
+#
+#   Orders Service, incl. draft choreography
+#
+@newOrderID = e939604c-ab83-4d4f-bdb6-95fe30b3773e
+
+GET {{bookshop}}/orders/Orders
+
+
+
+### Create order, still inactive
+POST {{bookshop}}/orders/Orders
+Content-Type: application/json
+
+{"ID": "{{newOrderID}}"}
+
+### Get inactive order.  We have to specify `IsActiveEntity`.
+GET {{bookshop}}/orders/Orders(ID={{newOrderID}},IsActiveEntity=false)
+
+### Activate order using `.../<servicename>.draftActivate`
+POST {{bookshop}}/orders/Orders(ID={{newOrderID}},IsActiveEntity=false)/OrdersService.draftActivate
+Content-Type: application/json
+
+### Get active order
+GET {{bookshop}}/orders/Orders(ID={{newOrderID}},IsActiveEntity=true)
+>

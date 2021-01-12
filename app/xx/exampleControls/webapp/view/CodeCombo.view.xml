@@ -5,9 +5,16 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:cm-ui="cm.util.control.ui"
     height="100%">
 
-    <Page id="page" title="Code Combo" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" 
+        title="Code Combo" 
+        titleLevel="H2" 
+        class="sapUiContentPadding" 
+        showNavButton="true" 
+        navButtonPress=".onNavigationBackPress"
+		floatingFooter="true">
         <content>
             <VBox>
 
@@ -261,6 +268,13 @@
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
                         </VBox>
+
+                        <VBox>
+                            
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
                         <!-- <VBox>
                             <Label text="MultiCoboBox (Employee): "></Label>
                             <MultiComboBox id="searchMultiComboEmployee" width="100%"
@@ -291,7 +305,7 @@
                         </VBox> -->
 
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
-                            <Button text="Check" type="Emphasized" press=".onCheckButtonPress"/>
+                            <Button text="Check" type="Transparent" press=".onCheckButtonPress"/>
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>
@@ -310,7 +324,7 @@
                         <OverflowToolbar>
                             <Title text="Test on table" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button text="Test" type="Emphasized" press=".onTableTestButtonPress" />
+                            <Button text="Test" type="Transparent" press=".onTableTestButtonPress" />
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
@@ -367,8 +381,76 @@
                         </ColumnListItem>
                     </items>
                 </Table>
-
+                
+                                
+                <OverflowToolbar class="sapUiMediumMarginTop">
+                    <Label text="Cm Code PopUp"></Label>
+                    <Button text="CodePopUp" press=".onPressCodePopUp"/>
+                    <ToolbarSpacer width="40px"/>
+                    <Text id="cmCodePopUp" text="123321"/>
+                    <Label text="cmCodePopUpTenet_id : "></Label>
+                    <Label id="cmCodePopUpTenet_id"></Label>
+                    <Label text="cmCodePopUpCode : "></Label>
+                    <Label id="cmCodePopUpCode" ></Label>
+                    <Label text="cmCodePopUpCode_Description : "></Label>
+                    <Label id="cmCodePopUpCode_Description"></Label>
+                    <Label text="cmCodePopUpCode_Name : "></Label>
+                    <Label id="cmCodePopUpCode_Name"></Label>
+                    <Label text="cmCodePopUpGroup_Code : "></Label>
+                    <Label id="cmCodePopUpGroup_Code"></Label>
+		        </OverflowToolbar>
             </VBox>
+            
+            <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" class="searchBox"
+            adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+            <form:content>
+                <VBox>
+                    <Label text="Country (m.CodeValueHelp): " labelFor="searchCodeFromValueHelp"></Label>
+                    <Input id="searchCodeFromValueHelp"
+                        placeholder="Choose a code from the ValueHelp"
+                        showValueHelp="true" valueHelpRequest=".onCodeDialogPress">
+                    </Input>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M5 S10" />
+                    </layoutData>
+                </VBox>
+                <VBox>
+                    <Label text="Chain (m.CodeValueHelp): " labelFor="searchMultiCodeFromValueHelp"></Label>
+                    <MultiInput id="searchMultiCodeFromValueHelp"
+                        placeholder="Choose codes from the ValueHelp"
+                        showValueHelp="true" valueHelpRequest=".onCodeMultiDialogPress">
+                    </MultiInput>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M5 S10" />
+                    </layoutData>
+                </VBox>
+                <VBox>
+                    <Label text="Employee (cm.util.control.ui.EmployeeDialog): " labelFor="searchMultiEmployeeFromDialog"></Label>
+                    <MultiInput id="searchMultiEmployeeFromDialog"
+                        placeholder="Choose codes from the ValueHelp"
+                        showValueHelp="true" valueHelpRequest=".onEmployeeMultiDialogPress">
+                    </MultiInput>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M5 S10" />
+                    </layoutData>
+                </VBox>
+            </form:content>
+            </form:SimpleForm>
         </content>
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button type="Transparent" text="Open Code Dialog" press=".onCodeDialogPress"/>
+			</OverflowToolbar>
+		</footer>
+        <cm-ui:EmployeeDialog id="employeeDialog" 
+            title="직원 검색"
+            items="{
+                filters: [
+                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                ]
+            }"
+            apply=".onCodeDialogPressApply"
+        />
     </Page>
 </mvc:View>

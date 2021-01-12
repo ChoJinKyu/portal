@@ -25,13 +25,13 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="자재별 시황자재 BOM"/>
+                    <Title text="{I18N>/MIMATERIAL_BOM_TITLE}"/>
                 </f:heading>
                 <f:snappedContent></f:snappedContent>
                 <f:expandedContent></f:expandedContent>
-                <f:navigationActions>
+                <!-- <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent"/>
-                </f:navigationActions>
+                </f:navigationActions> -->
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
@@ -77,6 +77,7 @@
 
         <!-- DynamicPage Content -->
         <f:content>
+          <ScrollContainer  width="100%" horizontal="true" vertical="true" focusable="true">
                 <smartTable:SmartTable
                     width="100%"
                     height="100%"
@@ -93,7 +94,7 @@
                     useVariantManagement="false"
                     useTablePersonalisation="true"
                     showTablePersonalisation="false"
-                    header="자재별 시황자재 BOM List"
+                    header="{I18N>/MIMATERIAL_BOM_TITLE} List"
                     showRowCount="true"
                     editTogglable="false"
                     persistencyKey="SmartTablePKey"                    
@@ -124,9 +125,14 @@
                                 press=".onMainTableColumns"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
+                  
                             <Table id="mainTable" 
                             mode="MultiSelect" 
-                            sticky="HeaderToolbar,ColumnHeaders"
+                            growingScrollToLoad="true"
+                            growing="true"
+                            sticky="ColumnHeaders,HeaderToolbar"
+                            growingThreshold="50"
+                            inset="false"   
                             >
                                  <columns>  
                                        <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
@@ -166,7 +172,7 @@
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
                                         </customData>
-                                             <Text text="기준수량"></Text>
+                                             <Text text="{I18N>/BASE_QUANTITY}"></Text>
                                         </Column>
 
                                         <Column minScreenWidth ="" demandPopin="false" importance="High">
@@ -182,7 +188,7 @@
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 7}'/>
                                         </customData>
-                                             <Text text="가공비통화"></Text>
+                                             <Text text="{I18N>/PCST_CURRENCY_UNIT}"></Text>
                                         </Column>     
 
                                         <Column visible="false">
@@ -217,8 +223,9 @@
                                         </ColumnListItem>
                                     </items>
                                 </Table>
+                          
                 </smartTable:SmartTable>
-        
+              </ScrollContainer>
         </f:content>
         <!-- DynamicPage Footer -->
         

@@ -142,8 +142,20 @@ sap.ui.define([
             // });
             debugger;
 
+        },
+
+        concat: function(aDatas){
+            var aResults = [];
+            aDatas.forEach(function(oData){
+                if(oData && oData.d && oData.d.results)
+                    aResults = aResults.concat(oData.d.results);
+                else if(oData.results)
+                    aResults = aResults.concat(oData.results);
+            });
+            return aResults;
         }
 
     });
+
     return ODataXhrService;
 });

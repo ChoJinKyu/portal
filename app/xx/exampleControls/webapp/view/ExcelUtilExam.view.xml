@@ -37,8 +37,13 @@
                     <Column minScreenWidth="Tablet" hAlign="Center" width="40px">
                         <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                     </Column>
+                    <Column width="10em">
+                        <Text text="Product" />
+                    </Column>
                     <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em">
+                        <VBox>
                         <Text text="Chain" />
+                        </VBox>
                         <!--specify customData for Excel Imporing-->
                         <customData>
                             <core:CustomData key="bindName" value="chain_code" />
@@ -88,26 +93,29 @@
                                 path: 'rModelList>_row_state_',
                                 formatter: '.formatter.toModelStateColumnIcon'
                             }" />
+                            <ObjectIdentifier
+                                title="{rModelList>name}"
+                                text="{rModelList>product_id}"/>
                             <ComboBox selectedKey="{rModelList>chain_code}" width="100%" items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
-                                }" editable="{= ${rModelList>_row_state_} === 'C' }" required="true">
+                                }" required="true">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code_name}" />
                                 </items>
                             </ComboBox>
                             <ComboBox selectedKey="{rModelList>language_code}" width="100%" items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                     ]
-                                }" editable="{= ${rModelList>_row_state_} === 'C' }" required="true">
+                                }" required="true">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code_name}" />
                                 </items>
                             </ComboBox>
                             <Input textAlign="End" value="{
@@ -116,10 +124,10 @@
                                     constraints: {
                                         maxLength: 30
                                     }
-                                }" editable="{= ${rModelList>_row_state_} === 'C' }" required="true"></Input>
+                                }" required="true"></Input>
                             <Text text="{rModelList>message_contents}" width="100%" />
                             <Select forceSelection="false" selectedKey="{rModelList>message_type_code}" autoAdjustWidth="true" items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 1000
@@ -129,7 +137,7 @@
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
                                     ]
                                 }">
-                                <core:Item key="{common>code}" text="{common>code_description}" />
+                                <core:Item key="{common>code}" text="{common>code_name}" />
                             </Select>
                             <ObjectNumber number="{
                                     parts:[
@@ -169,14 +177,14 @@
                         <Label text="Chain" />
                         <table:template>
                             <ComboBox selectedKey="{gModelList>chain_code}" width="100%" items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }" editable="{= ${gModelList>_row_state_} === 'C' }" required="true">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code_name}" />
                                 </items>
                             </ComboBox>
                         </table:template>
@@ -188,14 +196,14 @@
                         <Label text="Language" />
                         <table:template>
                             <ComboBox selectedKey="{gModelList>language_code}" width="100%" items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                     ]
                                 }" editable="{= ${gModelList>_row_state_} === 'C' }" required="true">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code_name}" />
                                 </items>
                             </ComboBox>
                         </table:template>
@@ -231,7 +239,7 @@
                         <Label text="Type" />
                         <table:template>
                             <ComboBox selectedKey="{gModelList>message_type_code}" width="100%" items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 1000
@@ -242,7 +250,7 @@
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code_name}" />
                                 </items>
                             </ComboBox>
                         </table:template>

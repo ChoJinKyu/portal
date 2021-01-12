@@ -5,9 +5,10 @@ sap.ui.define([
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/ui/core/Fragment",
-  "sap/m/MessageBox"
+  "sap/m/MessageBox",
+  "ext/lib/util/ExcelUtil"
 ],
-  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox) {
+  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, ExcelUtil) {
     "use strict";
 
     var sSelectedPath, sTenantId, oDialogInfo;
@@ -30,11 +31,13 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlRootModel");
+            var oBasePriceListRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
 
             this.setModel(new JSONModel(), "listModel");
-            this.setModel(new JSONModel({tenantId: sTenantId}), "filterModel");
+            this.setModel(new JSONModel({tenantId: sTenantId,
+                                        type: "1",
+                                        type_list:[{code:"1", text:"개발구매"}]}), "filterModel");
 
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
@@ -51,7 +54,8 @@ sap.ui.define([
                 aFilters = [],
                 sStatus = oFilterModelData.status,
                 sApprovalNumber = oFilterModelData.approvalNumber,
-                oRequestBy = oFilterModelData.requestBy,
+                sApprovalTitle = oFilterModelData.approvalTitle,
+                sRequestBy = oFilterModelData.requestBy,
                 oDateValue = oFilterModelData.dateValue,
                 oSecondDateValue = oFilterModelData.secondDateValue;
 
@@ -62,17 +66,28 @@ sap.ui.define([
 
             // Approval Number가 있는 경우
             if( sApprovalNumber ) {
-                aFilters.push(new Filter("approval_number", FilterOperator.EQ, sApprovalNumber));
+                aFilters.push(new Filter("approval_number", FilterOperator.Contains, sApprovalNumber));
             }
 
+            // Approval Title이 있는 경우
+            if( sApprovalTitle ) {
+                aFilters.push(new Filter("approval_title", FilterOperator.Contains, sApprovalTitle));
+            }
+            
             // Request Date가 있는 경우
             if( oDateValue ) {
                 aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, oDateValue, oSecondDateValue));
             }
 
             // Request By가 있는 경우
-            if( oRequestBy ) {
-                aFilters.push(new Filter("create_user_id", FilterOperator.EQ, oRequestBy));
+            if( sRequestBy ) {
+                if( -1<sRequestBy.indexOf(")") ) {
+                    var iStart = sRequestBy.indexOf("(");
+                    var iLast = sRequestBy.indexOf(")");
+                    sRequestBy = sRequestBy.substring(iStart+1, iLast);
+                }
+
+                aFilters.push(new Filter("approval_requestor_empno", FilterOperator.EQ, sRequestBy));
             }
 
             this._getBasePriceList(aFilters);
@@ -90,7 +105,8 @@ sap.ui.define([
             oModel.read("/Base_Price_Arl_Master", {
                 filters : filtersParam,
                 urlParameters: {
-                    "$expand": "approval_status_code_fk,approval_requestor_empno_fk,approval_type_code_fk,tenant_id_fk"
+                    "$expand": "approval_status_code_fk,approval_requestor_empno_fk,approval_type_code_fk,tenant_id_fk",
+                    "$orderby": "approval_request_date,approval_number desc"
                 },
                 success : function(data){
                     oView.setBusy(false);
@@ -144,11 +160,33 @@ sap.ui.define([
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
-                var oBasePriceListRootModel = this.getModel("basePriceArlRootModel");
+                var oBasePriceListRootModel = this.getModel("rootModel");
                 oBasePriceListRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
             }
 
             this.getRouter().navTo("basePriceDetail");
+        },
+
+        /**
+         * 
+         * Excel Download 
+         */
+        
+        onExcelExport: function (oEvent) {
+            var sTableId = oEvent.getSource().getParent().getParent().getId();
+            if ( !sTableId ) { 
+                return; 
+            }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "BACE PRICE APPROVAL LIST";
+            var oList = oTable.getModel("listModel").getProperty("/results");
+
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oList
+            });
         },
 
                 /**

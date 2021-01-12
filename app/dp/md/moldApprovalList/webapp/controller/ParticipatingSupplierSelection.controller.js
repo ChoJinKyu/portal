@@ -62,8 +62,6 @@ sap.ui.define([
             
             this.setModel(oViewModel, "participatingSupplierSelectionView");//change
             this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
-            this.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
             
         },
 
@@ -75,32 +73,32 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage : function () {
+            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
+            this.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
   
             console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
             var schFilter2 = [];
    
             if (this.approval_number == "New") {
-                this._participatingEditFragment();
+
             } else {
-                this._participatingViewFragment();
+                
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                ];
-
-                // schFilter2 = [
-                //     new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
-                //     new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
-                //     new Filter("language_cd", FilterOperator.EQ, 'KO' ),
-                //     new Filter("org_code", FilterOperator.EQ, this.org_code)
-                // ]; 
-
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                ];            
+                schFilter2 = [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
+                        new Filter("language_cd", FilterOperator.EQ, 'KO' )
+                ]; 
+                this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                        console.log("OrgCodeLanguages >>>>>>", oData);
+                });
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
-                // this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
-                //     console.log("OrgCodeLanguages >>>>>>", oData);
-                // });
+               
             }  
         },
 
@@ -139,7 +137,7 @@ sap.ui.define([
                 console.log(oSelected);
                 
             if (oSelected.length > 0) {
-                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.org_code, function(data){
+                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.plant_code, function(data){
                     if(data.length > 0) {
                         supplierData=[];
                         for(var i=0; i<data.length; i++){
@@ -164,6 +162,18 @@ sap.ui.define([
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?null:supplierData[9].key);
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?null:supplierData[10].key);
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?null:supplierData[11].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_1 = (supplierData[0] == undefined ?null:supplierData[0].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_2 = (supplierData[1] == undefined ?null:supplierData[1].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_3 = (supplierData[2] == undefined ?null:supplierData[2].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_4 = (supplierData[3] == undefined ?null:supplierData[3].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_5 = (supplierData[4] == undefined ?null:supplierData[4].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_6 = (supplierData[5] == undefined ?null:supplierData[5].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_7 = (supplierData[6] == undefined ?null:supplierData[6].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_8 = (supplierData[7] == undefined ?null:supplierData[7].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_9 = (supplierData[8] == undefined ?null:supplierData[8].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_10 = (supplierData[9] == undefined ?null:supplierData[9].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_11 = (supplierData[10] == undefined ?null:supplierData[10].text);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_nm_12 = (supplierData[11] == undefined ?null:supplierData[11].text);
                             psModel.getData().ParticipatingSupplier[idx].sequence_1 = (supplierData[0] == undefined ?null:"1");
                             psModel.getData().ParticipatingSupplier[idx].sequence_2 = (supplierData[1] == undefined ?null:"2");
                             psModel.getData().ParticipatingSupplier[idx].sequence_3 = (supplierData[2] == undefined ?null:"3");
@@ -193,7 +203,6 @@ sap.ui.define([
          * ,     , oArges : company_code , org_code (필수)
 		 */
         onPsAddPress: function (oEvent) {
-            console.log("oEvent>>>>");
             var oModel = this.getModel("mdItemMaster");
 
             console.log(" mdItemMaster >>>> ", oModel);
@@ -208,9 +217,10 @@ sap.ui.define([
             console.log(" this.getModel " , this.getModel('appMaster'));
 
             var oArgs = {
-               company_code: this.company_code ,
+                approval_type_code: "E",
+                company_code: this.company_code ,
                 org_code: this.plant_code,
-                //mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : ['DEV_RCV', 'BUD_APP'] ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
@@ -237,20 +247,20 @@ sap.ui.define([
             ;
             var schFilter2 = [];
             schFilter2 = [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
                     new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
                     new Filter("language_cd", FilterOperator.EQ, 'KO' ),
                     new Filter("org_code", FilterOperator.EQ, data.company_code)
             ]; 
             this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
                     console.log("OrgCodeLanguages >>>>>>", oData);
-            });
+            }); 
             console.log(data);
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.approval_number;
             oModel.addRecord({
                 "approval_number": approval_number,
-                "tenant_id": "L1100",
+                "tenant_id": "L2600",
                 "mold_id": String(data.mold_id),
                 "model": data.model,
                 "mold_number": data.mold_number,
@@ -264,7 +274,11 @@ sap.ui.define([
                 "target_amount": data.target_amount,
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
-            }, "/ParticipatingSupplier", 0);
+            }, "/ParticipatingSupplier", 0); 
+
+            if(oModel.getProperty("/entityName") == undefined){ // 신규시 entityName 없어서 행삭제를 못하고 있음 
+                oModel.setProperty("/entityName","ParticipatingSupplier");
+            }
         },
 
     
@@ -285,6 +299,9 @@ sap.ui.define([
                 , detailModel = this.getModel("mdItemMaster")
                 , oSelected = psTable.getSelectedIndices();
             ;
+
+            console.log(" detailModel >>> " , detailModel);
+
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
                     detailModel.removeRecord(idx)
@@ -297,44 +314,48 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         } ,
-
-        // onPageEditButtonPress: function () {
-        //     this._participatingEditFragment();
-        //     this._editMode();
-        // },
         
         onPageCancelButtonPress: function () {
-            this._participatingViewFragment();
             this._viewMode();
         },
 
-        _toEditModeEachApproval : function(){ this._participatingEditFragment() } ,
-        _toShowModeEachApproval : function(){ this._participatingViewFragment() } ,
-
-        _participatingEditFragment : function(){
-            console.log("_participatingEditFragment");
-            var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("ParticipatingSupplierSelectionTableEdit", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
-        _participatingViewFragment : function(){
-             console.log("_participatingEditFragment");
-             var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
-            oPageSection.removeAllBlocks();
-            this._loadFragment("ParticipatingSupplierSelectionTableView", function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this));
-        },
+        _toEditModeEachApproval : function(){             
+            var oRows = this.byId("psTable").getRows();
+            oRows.forEach(function(oCell, idx){
+               oCell.mAggregations.cells.forEach(function(item, jdx){ 
+                    if(jdx == 7 || jdx == 8){
+                         item.removeStyleClass("readonlyField");
+                    }
+                });
+            });
+         },
+        _toShowModeEachApproval : function(){ 
+            var oRows = this.byId("psTable").getRows();
+            oRows.forEach(function(oCell, idx){
+               oCell.mAggregations.cells.forEach(function(item, jdx){ 
+                    if(jdx == 7 || jdx == 8){
+                         item.addStyleClass("readonlyField");
+                    }
+                });
+            });
+            // this.byId("currency").addStyleClass("readonlyField");
+            // this.byId("target_amount").addStyleClass("readonlyField");
+         } ,
 
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-        //    this.getModel("approverPreview").setData(this.getModel("approver").getData());
             if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
+                var len = 0; 
+
+                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                    len = ap.length;
+                }else{
+                    len =  ap.length -1;
+                }
+               
+                for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
@@ -382,22 +403,90 @@ sap.ui.define([
             console.log();
         },
 
+         // 승인요청 
+        onPageRequestButtonPress : function (){
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR"); 
+            this._sumbitDataSettingAndSend();
+        },
+         // 승인요청취소  
+        onPageRequestCancelButtonPress : function (){
+            if(this.getModel("appMaster").getProperty("/approve_status_code") !== "AR"){
+                MessageToast.show( "Request 상태일 때만 Request Cancel 가능합니다." );
+                return;
+            }else{
+                this.getModel("appMaster").setProperty("/approve_status_code", "DR"); 
+                this._sumbitDataSettingAndSend();
+
+            }
+        },
+
+        // 임시저장 
         onPageDraftButtonPress : function () { 
-            /**
-             * 'DR'
-            'AR'
-            'IA'
-            'AP'
-            'RJ' */ 
+            
+            var status = this.getModel("appMaster").getProperty("/approve_status_code");
+            if(!(status === undefined || status === "DR")){
+                MessageToast.show( "Draft 상태 또는 신규일 때만 임시저장이 가능합니다." );
+                return;
+            }
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
+            this._sumbitDataSettingAndSend();
+        },
+
+        _sumbitDataSettingAndSend : function () { 
 
             this.approval_type_code = "E";
             var bModel = this.getModel("mdItemMaster");
+            var status = this.getModel("appMaster").getProperty("/approve_status_code");
+            var appNum = this.getModel("appMaster").getProperty("/approval_number");
+            console.log("bModel ::::", bModel.getData().ParticipatingSupplier);
+            console.log("statust ::::", status);
+            console.log("appNum ::::", appNum);
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             this.quotation_data = [];
             var qtnArr = [];
             var that = this;
+
+            if(that.validator.validate(that.byId("generalInfoLayout") ) !== true){
+                MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+            if(that.validator.validate(that.byId("account") ) !== true){
+                MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+            if(!(appNum === undefined) ){
+                if(bModel.getData().ParticipatingSupplier == undefined || bModel.getData().ParticipatingSupplier.length == 0){
+                    MessageToast.show("item 을 하나 이상 추가하세요.");
+                    return;
+                }
+            }
+            if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
+                var amount_err = 0;
+                var supplier_err = 0;
+                bModel.getData().ParticipatingSupplier.forEach(function(item){
+                    if(item.target_amount > item.provisional_budget_amount){
+                        amount_err = amount_err+1;
+                    }
+                    if(item.supplier_code_1 == null){
+                        supplier_err = amount_err+1;
+                    }
+                });
+                if(amount_err > 0){
+                    MessageToast.show("목표가가 투자예산 금액을 초과하였습니다.");
+                    return;
+                }
+                if(supplier_err > 0){
+                    MessageToast.show("협력사를 하나 이상 추가하세요.");
+                    return;
+                }
+
+            }
+            if(that.validator.validate(that.byId("psTable")) !== true){
+                MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
             if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
 
                 bModel.getData().ParticipatingSupplier.forEach(function(item){

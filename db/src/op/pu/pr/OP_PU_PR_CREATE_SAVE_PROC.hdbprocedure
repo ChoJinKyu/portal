@@ -1,0 +1,285 @@
+/* PR 신규생성 */
+PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
+        IN I_TENANT_ID NVARCHAR(5),        
+        IN I_COMPANY_CODE NVARCHAR(10),
+        IN I_PR_NUMBER NVARCHAR(50), 
+        IN I_M_TABLE TABLE( TENANT_ID NVARCHAR(5), 
+							COMPANY_CODE NVARCHAR(10), 
+							PR_NUMBER NVARCHAR(50), 
+							PR_TYPE_CODE NVARCHAR(30), 
+							PR_TYPE_CODE_2 NVARCHAR(30), 
+							PR_TYPE_CODE_3 NVARCHAR(30), 
+							PR_TEMPLATE_NUMBER NVARCHAR(10), 
+							PR_CREATE_SYSTEM_CODE NVARCHAR(30),
+                            PR_DESC NVARCHAR(100),
+                            REQUESTOR_EMPNO NVARCHAR(30),
+                            REQUESTOR_NAME NVARCHAR(50),
+                            REQUESTOR_DEPARTMENT_CODE NVARCHAR(50),
+                            REQUESTOR_DEPARTMENT_NAME NVARCHAR(240),
+                            PR_HEADER_TEXT NVARCHAR(200),
+                            APPROVAL_CONTENTS NCLOB,
+							UPDATE_USER_ID NVARCHAR(255)
+        ),
+        IN I_D_TABLE TABLE( TENANT_ID NVARCHAR(5), 
+							COMPANY_CODE NVARCHAR(10), 
+							PR_NUMBER NVARCHAR(50), 
+							PR_ITEM_NUMBER NVARCHAR(10), 
+							ORG_TYPE_CODE NVARCHAR(2), 
+							ORG_CODE NVARCHAR(10), 
+							MATERIAL_CODE NVARCHAR(40), 
+							MATERIAL_GROUP_CODE NVARCHAR(10),
+							PR_DESC NVARCHAR(100),
+							PR_QUANTITY NVARCHAR(34),
+							PR_UNIT NVARCHAR(3),
+                            REQUESTOR_EMPNO NVARCHAR(30),
+                            REQUESTOR_NAME NVARCHAR(50),
+                            DELIVERY_REQUEST_DATE DATE, 
+                            BUYER_EMPNO NVARCHAR(30),
+                            PURCHASING_GROUP_CODE NVARCHAR(3),
+                            ESTIMATED_PRICE DECIMAL(34),
+                            CURRENCY_CODE NVARCHAR(3),
+                            PRICE_UNIT NVARCHAR(3),
+                            PR_PROGRESS_STATUS_CODE NVARCHAR(30),
+                            REMARK NVARCHAR(3000),
+                            SLOC_CODE NVARCHAR(3),
+							UPDATE_USER_ID NVARCHAR(255)
+        ),
+        OUT O_RTN_MSG TABLE( RETURN_CODE NVARCHAR(4),
+						    RETURN_MSG NVARCHAR(4000)
+        )
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+AS
+BEGIN
+	DECLARE V_SQL_EXEC_STR NVARCHAR(4000);
+	DECLARE V_PR_NUMBER NVARCHAR(50);
+	DECLARE V_PR_NUMBER_SEQNO BIGINT;
+
+    /* 상세자료 cursor */
+    DECLARE CURSOR curDtlList FOR
+        SELECT 	TENANT_ID  ,
+				COMPANY_CODE,
+				PR_NUMBER ,
+				PR_ITEM_NUMBER ,
+				ORG_TYPE_CODE ,
+				ORG_CODE ,
+				MATERIAL_CODE,
+				MATERIAL_GROUP_CODE,
+				PR_DESC,
+				PR_QUANTITY,
+				PR_UNIT,
+                REQUESTOR_EMPNO ,
+                REQUESTOR_NAME ,
+                DELIVERY_REQUEST_DATE,
+                BUYER_EMPNO ,
+                PURCHASING_GROUP_CODE,
+                ESTIMATED_PRICE ,
+                CURRENCY_CODE ,
+                PRICE_UNIT ,
+                PR_PROGRESS_STATUS_CODE ,
+                REMARK ,
+                SLOC_CODE, 
+				UPDATE_USER_ID 
+        FROM :I_D_TABLE DTL
+        ;
+
+    /* SQL Error 처리 */
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		O_RTN_MSG = SELECT ::SQL_ERROR_CODE RETURN_CODE, ::SQL_ERROR_MESSAGE RETURN_MSG FROM DUMMY;
+	END;
+
+	
+	/* 구매요청번호 채번 */
+    IF (:I_PR_NUMBER IS NULL OR :I_PR_NUMBER = '' OR :I_PR_NUMBER = 'NEW') THEN
+        SELECT 'PR' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(XX_SAMPLE_MASTER_ID_SEQ.NEXTVAL, 4, '0') 
+        INTO V_PR_NUMBER
+        FROM DUMMY;
+    ELSE
+        V_PR_NUMBER = :I_PR_NUMBER;
+    END IF;
+
+
+    /* 구매요청 마스터 등록 */
+	S_TABLE_MST =
+			SELECT
+					M.TENANT_ID,
+					M.COMPANY_CODE,
+					M.PR_NUMBER,
+					M.PR_TYPE_CODE,
+					M.PR_TYPE_CODE_2,
+					M.PR_TYPE_CODE_3,
+					M.PR_TEMPLATE_NUMBER,
+					M.PR_CREATE_SYSTEM_CODE,
+                    M.PR_DESC,
+                    M.REQUESTOR_EMPNO ,
+                    M.REQUESTOR_NAME ,
+                    M.REQUESTOR_DEPARTMENT_CODE ,
+                    M.REQUESTOR_DEPARTMENT_NAME ,
+                    M.PR_HEADER_TEXT ,
+                    M.APPROVAL_CONTENTS,
+					M.UPDATE_USER_ID
+			FROM	:I_M_TABLE M
+			;
+
+
+	MERGE INTO	OP_PU_PR_MST	AS T_MST
+		USING	:S_TABLE_MST	AS S_MST
+		ON		T_MST.TENANT_ID		= S_MST.TENANT_ID
+		AND		T_MST.COMPANY_CODE	= S_MST.COMPANY_CODE
+		AND		T_MST.PR_NUMBER		= S_MST.PR_NUMBER
+	WHEN MATCHED THEN
+		UPDATE SET
+			T_MST.PR_TYPE_CODE			= S_MST.PR_TYPE_CODE,
+			T_MST.PR_TYPE_CODE_2		= S_MST.PR_TYPE_CODE_2,
+			T_MST.PR_TYPE_CODE_3		= S_MST.PR_TYPE_CODE_3,
+			T_MST.PR_TEMPLATE_NUMBER	= S_MST.PR_TEMPLATE_NUMBER,
+			T_MST.PR_CREATE_SYSTEM_CODE	= S_MST.PR_CREATE_SYSTEM_CODE,
+			T_MST.LOCAL_UPDATE_DTM		= CURRENT_TIMESTAMP,
+			T_MST.UPDATE_USER_ID		= S_MST.UPDATE_USER_ID,
+			T_MST.SYSTEM_UPDATE_DTM		= CURRENT_TIMESTAMP
+	WHEN NOT MATCHED THEN
+		INSERT
+		(
+			TENANT_ID,
+			COMPANY_CODE,
+			PR_NUMBER,
+			PR_TYPE_CODE,
+			PR_TYPE_CODE_2,
+			PR_TYPE_CODE_3,
+			PR_TEMPLATE_NUMBER,
+			PR_CREATE_SYSTEM_CODE,
+            REQUEST_DATE,
+            PR_CREATE_STATUS_CODE,
+            PR_DESC,
+            REQUESTOR_EMPNO ,
+            REQUESTOR_NAME ,
+            REQUESTOR_DEPARTMENT_CODE ,
+            REQUESTOR_DEPARTMENT_NAME ,
+            PR_HEADER_TEXT ,
+            APPROVAL_FLAG,
+            ERP_INTERFACE_FLAG,
+            APPROVAL_CONTENTS,
+			LOCAL_CREATE_DTM,
+			LOCAL_UPDATE_DTM,
+			CREATE_USER_ID,
+			UPDATE_USER_ID,
+			SYSTEM_CREATE_DTM,
+			SYSTEM_UPDATE_DTM
+		)
+		VALUES
+		(
+            S_MST.TENANT_ID,
+            S_MST.COMPANY_CODE,
+            V_PR_NUMBER,
+            S_MST.PR_TYPE_CODE,
+            S_MST.PR_TYPE_CODE_2,
+            S_MST.PR_TYPE_CODE_3,
+            S_MST.PR_TEMPLATE_NUMBER,
+            S_MST.PR_CREATE_SYSTEM_CODE,
+            CURRENT_TIMESTAMP,
+            '10',
+            S_MST.PR_DESC,
+            S_MST.REQUESTOR_EMPNO ,
+            S_MST.REQUESTOR_NAME ,
+            S_MST.REQUESTOR_DEPARTMENT_CODE ,
+            S_MST.REQUESTOR_DEPARTMENT_NAME ,
+            S_MST.PR_HEADER_TEXT ,
+            FALSE,
+            FALSE,
+            S_MST.APPROVAL_CONTENTS,
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			S_MST.UPDATE_USER_ID,
+			S_MST.UPDATE_USER_ID,
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	;	
+
+    --=================================================
+	-- 구매요청 Detail 
+    --=================================================
+
+	/* - 품목 삭제 후 등록 처리 */
+	DELETE FROM OP_PU_PR_DTL
+	WHERE 	TENANT_ID 		= :I_TENANT_ID
+	AND		COMPANY_CODE	= :I_COMPANY_CODE
+	AND		PR_NUMBER		= :I_PR_NUMBER
+	;
+	
+    /* Cursor 실행 */
+	FOR curDtl AS curDtlList DO
+		INSERT INTO OP_PU_PR_DTL (
+			TENANT_ID  ,
+			COMPANY_CODE,
+			PR_NUMBER ,
+			PR_ITEM_NUMBER ,
+			ORG_TYPE_CODE ,
+			ORG_CODE ,
+			MATERIAL_CODE,
+			MATERIAL_GROUP_CODE,
+			PR_DESC,
+			PR_QUANTITY,
+			PR_UNIT,
+            REQUESTOR_EMPNO ,
+            REQUESTOR_NAME ,
+            REQUEST_DATE,
+            DELIVERY_REQUEST_DATE,
+            BUYER_EMPNO ,
+            PURCHASING_GROUP_CODE,
+            ESTIMATED_PRICE ,
+            CURRENCY_CODE ,
+            PRICE_UNIT ,
+            PR_PROGRESS_STATUS_CODE ,
+            REMARK ,
+            SLOC_CODE,
+            DELETE_FLAG,
+            CLOSING_FLAG,
+            LOCAL_CREATE_DTM,
+            LOCAL_UPDATE_DTM,
+            CREATE_USER_ID,
+            UPDATE_USER_ID,
+            SYSTEM_CREATE_DTM,
+            SYSTEM_UPDATE_DTM
+		) VALUES (
+			curDtl.TENANT_ID , 
+			curDtl.COMPANY_CODE,
+			:V_PR_NUMBER ,
+			curDtl.PR_ITEM_NUMBER,
+			curDtl.ORG_TYPE_CODE ,
+			curDtl.ORG_CODE ,
+			curDtl.MATERIAL_CODE,
+			curDtl.MATERIAL_GROUP_CODE,
+			curDtl.PR_DESC,
+			curDtl.PR_QUANTITY,
+			curDtl.PR_UNIT,
+            curDtl.REQUESTOR_EMPNO,
+            curDtl.REQUESTOR_NAME,
+            CURRENT_TIMESTAMP,
+            curDtl.DELIVERY_REQUEST_DATE,
+            curDtl.BUYER_EMPNO,
+            curDtl.PURCHASING_GROUP_CODE,
+            curDtl.ESTIMATED_PRICE ,
+            curDtl.CURRENCY_CODE ,
+            curDtl.PRICE_UNIT ,
+            curDtl.PR_PROGRESS_STATUS_CODE ,
+            curDtl.REMARK ,
+            curDtl.SLOC_CODE,
+            FALSE ,
+            FALSE ,       
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP,
+            curDtl.UPDATE_USER_ID,
+            curDtl.UPDATE_USER_ID,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+		);	
+	END FOR;
+        
+
+	--COMMIT;
+    O_RTN_MSG = SELECT '0000' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
+END;

@@ -47,7 +47,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
+					<OverflowToolbarButton  icon="sap-icon://decline"  type="Transparent" text="back" tooltip="back to the list" press=".onPrvClosePress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -55,19 +55,19 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus
-                        title="Report No"
+                   <ObjectStatus
+                        title="{I18N>/APPROVAL_NUMBER}"
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
-                        title="Requester"
+                        title="{I18N>/REQUESTOR}"
                         text="[{appMaster>/requestor_empno}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
-                        title="Request Date"
+                        title="{I18N>/REQUEST_DATE}"
                         text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
@@ -76,7 +76,7 @@
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
-                        <Title text="Process"/>
+                        <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox>
                         <sc:MicroProcessFlow>
@@ -109,7 +109,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections id="sections_bp">
-			<uxap:ObjectPageSection id="pageSectionMain_bp" titleUppercase="true" title="General Info">
+			<uxap:ObjectPageSection id="pageSectionMain_bp" titleUppercase="true" title="General Info" width="80%">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
@@ -145,11 +145,11 @@
                     <uxap:ObjectPageSubSection>
                     	<HBox>
                         <VBox class="sapUiSmallMargin">
-                            <Label text="{I18N>/AFFILIATE}"/>
+                            <Label text="{I18N>/COMPANY}"/>
                             <ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
                         </VBox>
                         <VBox class="sapUiSmallMargin">
-                            <Label text="{I18N>/BUSINESS_DIVISION}"/>
+                            <Label text="{I18N>/PLANT}"/>
                             <ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
                         </VBox>
                         </HBox>
@@ -232,7 +232,7 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-								<Text text="{mdRecepit>provisional_budget_amount}"/>
+								<Text text="{mdRecepit>provisional_budget_amount}" textAlign="Right"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="15em" hAlign="Center">
@@ -375,7 +375,7 @@
                                 width="100%"
                                 items="{ path: '/RefererSearch',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                             ]
                                         }"
                                 editable="false">

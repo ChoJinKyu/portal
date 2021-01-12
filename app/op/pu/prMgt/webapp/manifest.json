@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "op.pu.PrMgt",
+    "id": "op.pu.prMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/op.pu.PrMgtService/",
+        "uri": "srv-api/odata/v2/op.pu.prMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -64,7 +64,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "op.pu.PrMgt.view.App",
+      "viewName": "op.pu.prMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -86,7 +86,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "op.pu.PrMgt.i18n.i18n"
+          "bundleName": "op.pu.prMgt.i18n.i18n"
         }
       },
       "util": {
@@ -162,7 +162,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "op.pu.PrMgt.view",
+        "viewPath": "op.pu.prMgt.view",
         "controlId": "fcl",
 				"transition": "slide",
         "bypassed": {
@@ -189,6 +189,14 @@
               ]
           },
           {
+              "pattern": "midCreate/{layout}/{tenantId}/{pr_number}",
+              "name": "midView",
+              "target": [
+                  "mainObject",
+                  "midViewObject"
+              ]
+          },
+          {
               "pattern": "midCreate/{layout}/{tenantId}/{pr_type_code}/{pr_type_code_2}/{pr_type_code_3}/{pr_template_number}",
               "name": "midCreate",
               "target": [
@@ -205,6 +213,10 @@
           },
           "midObject": {
               "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "midViewObject": {
+              "viewName": "MidCreateObject",
               "controlAggregation": "midColumnPages"
           },
           "midCreateObject": {

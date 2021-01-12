@@ -32,6 +32,7 @@ using {dp as Mcst_Project_Event} from './DP_TC_MCST_PROJECT_EVENT-model';
 using {dp as Mcst_Project_Similar_Model} from './DP_TC_MCST_PROJECT_SIMILAR_MODEL-model';
 using {dp as Mcst_Project_Base_Exrate} from './DP_TC_MCST_PROJECT_BASE_EXRATE-model';
 using {dp as Mcst_Project_Addition_Info} from './DP_TC_MCST_PROJECT_ADDITION_INFO-model';
+using {cm as Code_Dtl} from '../../cm/CM_CODE_DTL-model';
 
 entity Tc_Mcst_Project {
     key tenant_id               : String(5) not null  @title : '테넌트ID';
@@ -98,7 +99,7 @@ entity Tc_Mcst_Project {
                                       and mcst_mtlmob.project_code       = project_code
                                       and mcst_mtlmob.model_code         = model_code
                                       and mcst_mtlmob.version_number     = version_number
-                                      and mcst_mtlmob.addition_type_code = 'MTLLMOB'; //물동
+                                      and mcst_mtlmob.addition_type_code = 'MTLMOB'; //물동
 
         mcst_sales_price        : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_sales_price.tenant_id          = tenant_id
@@ -120,6 +121,36 @@ entity Tc_Mcst_Project {
                                       and mcst_sgna.model_code         = model_code
                                       and mcst_sgna.version_number     = version_number
                                       and mcst_sgna.addition_type_code = 'SGNA'; //판관비
+
+        product_group_text      : Association to Code_Dtl.Code_Dtl
+                                      on  product_group_text.tenant_id  = tenant_id
+                                      and product_group_text.group_code = 'DC_TC_PRODUCT_GROUP_CODE'
+                                      and product_group_text.code       = product_group_code; //제품군명
+
+        project_grade_text      : Association to Code_Dtl.Code_Dtl
+                                      on  project_grade_text.tenant_id  = tenant_id
+                                      and project_grade_text.group_code = 'DP_TC_PROJECT_GRADE_CODE'
+                                      and project_grade_text.code       = project_grade_code; //프로젝트등급명
+
+        bom_type_text           : Association to Code_Dtl.Code_Dtl
+                                      on  bom_type_text.tenant_id  = tenant_id
+                                      and bom_type_text.group_code = 'DP_TC_BOM_TYPE_CODE'
+                                      and bom_type_text.code       = bom_type_code; //자재명세서유형명
+
+        project_status_text     : Association to Code_Dtl.Code_Dtl
+                                      on  project_status_text.tenant_id  = tenant_id
+                                      and project_status_text.group_code = 'DP_TC_PROJECT_STATUS_CODE'
+                                      and project_status_text.code       = project_status_code; //프로젝트상태명
+
+        mcst_text               : Association to Code_Dtl.Code_Dtl
+                                      on  mcst_text.tenant_id  = tenant_id
+                                      and mcst_text.group_code = 'DP_TC_MCST_CODE'
+                                      and mcst_text.code       = mcst_code; //재료비구분명
+
+        mcst_status_text        : Association to Code_Dtl.Code_Dtl
+                                      on  mcst_status_text.tenant_id  = tenant_id
+                                      and mcst_status_text.group_code = 'DP_TC_MCST_STATUS_CODE'
+                                      and mcst_status_text.code       = mcst_status_code; //재료비상태명
 }
 
 extend Tc_Mcst_Project with util.Managed;

@@ -37,8 +37,8 @@ entity Vp_Vendor_Pool_Search_View {
   maker_flag: Boolean @title: '공급유형(Maker)';
   supplier_status_name: String(240) @title: '거래상태';
   supeval_control_flag: Boolean @title: '평가통제';
-  supeval_control_start_date: String(8) @title: '평가통제시작';
-  supeval_control_end_date: String(8) @title: '평가통제종료';
+  supeval_control_start_date: String(10) @title: '평가통제시작';
+  supeval_control_end_date: String(10) @title: '평가통제종료';
   temp_type: String(1) @title: '공급업체변경여부(Y/N)';
   supplier_rm_control_flag: Boolean @title: 'RM통제';
   sd_exception_flag: Boolean @title: 'SD예외';

@@ -52,19 +52,30 @@
                         </VBox>
                         <VBox>
                             <Label text="프로젝트명:" labelFor="searchKeyword"></Label>
-                            <Input id="searchKeyword" placeholder="Search"></Input>
+                            <Input id="searchKeyword" placeholder="Search" submit="onPageSearchButtonPress"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="구매유형:" labelFor="searchUsageSegmentButton"></Label>
-                            <SegmentedButton id="searchUsageSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
+                            <!-- <SegmentedButton id="searchUsageSegmentButton" items="{
+                                                path: 'common>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'EP_PURCHASING_TYPE'}
+                                                ],
+                                                sorter: { path: 'code'}
+                                            }" class="sapUiSmallMarginBottom" width="100%"> -->
+                            <SegmentedButton id="searchUsageSegmentButton" class="sapUiSmallMarginBottom" width="100%">                                            
                                 <items>
                                     <SegmentedButtonItem text="All" key="all" width="4.1rem" />
                                     <SegmentedButtonItem text="설비" key="E" width="5rem" />
                                     <SegmentedButtonItem text="공사" key="C" width="5rem" />
                                 </items>
+                                <!-- <items>
+                                    <SegmentedButtonItem width="6em" key="{common>code}" text="{common>code_name}" />
+                                </items>                                                         -->
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M12 S12" />
@@ -83,14 +94,20 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/ProjectView}"
+                        items="{
+                            path: 'list>/ProjectView',
+                            sorter: { 
+                                path: 'system_create_dtm',
+                                descending: true 
+                            }                   
+                        }"                        
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="Project {= ${list>/ProjectView}.length > 0 ? '(' + ${list>/ProjectView}.length + ')' : ''}" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="mainTableAddButton" text="Create" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -157,7 +174,7 @@
                                 <ObjectIdentifier text="{list>bizdivision_name}"/>
                                 <ObjectIdentifier text="{list>project_name}"/>
                                 <ObjectIdentifier text="{list>plant_name}"/>
-                                <ObjectIdentifier text="{list>ep_purchasing_type_code}"/>
+                                <ObjectIdentifier text="{list>ep_purchasing_type_name}"/>
                                 <ObjectIdentifier text="{list>create_user_id}"/>
                                 <ObjectIdentifier text="{
                                         path: 'list>system_create_dtm',

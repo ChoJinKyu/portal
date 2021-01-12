@@ -49,9 +49,9 @@ annotate VI_Base_Price_Arl_Mst with {
     tenant_id                @title : '테넌트ID'  @description    : '테넌트ID(CM_ORG_TENANT, TENANT_ID)';
     approval_number          @title : '품의번호'  @description     : '품의번호';
     approval_title           @title : '품의제목'  @description     : '품의제목';
-    approval_type_code       @title : '품의유형코드'  @description   : '공통코드(CM_CODE_DTL, DP_DC_APPROVAL_TYPE_CODE) : 10(개발기준단가품의)';
-    new_change_code          @title : '신규변경코드'  @description   : '공통코드(CM_CODE_DTL, DP_DC_NEW_CHANGE_CODE) : 10(신규), 20(변경)';
-    approval_status_code     @title : '품의상태코드'  @description   : '공통코드(CM_CODE_DTL, DP_DC_APPROVAL_STATUS_CODE) : 10(작성중), 20(결재진행중), 30(승인), 40(반려)';
+    approval_type_code       @title : '품의유형코드'  @description   : '공통코드(CM_CODE_DTL, DP_VI_APPROVAL_TYPE_CODE) : 10(개발기준단가품의)';
+    new_change_code          @title : '신규변경코드'  @description   : '공통코드(CM_CODE_DTL, DP_VI_NEW_CHANGE_CODE) : 10(신규), 20(변경)';
+    approval_status_code     @title : '품의상태코드'  @description   : '공통코드(CM_CODE_DTL, DP_VI_APPROVAL_STATUS_CODE) : 10(작성중), 20(결재진행중), 30(승인), 40(반려)';
     approval_request_desc    @title : '승인요청설명'  @description   : '승인요청설명';
     approval_requestor_empno @title : '승인요청자사번'  @description  : '승인요청자사번(CM_HR_EMPLOYEE, EMPLOYEE_NUMBER)';
     approval_request_date    @title : '승인요청일자'  @description   : '승인요청일자';
