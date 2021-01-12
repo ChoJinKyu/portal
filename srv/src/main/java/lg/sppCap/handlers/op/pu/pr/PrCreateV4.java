@@ -230,7 +230,7 @@ public class PrCreateV4 implements EventHandler {
                             v_statement_insertD.setObject(iRow++, v_inRow.getPrUnit());
                             v_statement_insertD.setObject(iRow++, v_inRow.getRequestorEmpno());
                             v_statement_insertD.setObject(iRow++, v_inRow.getRequestorName());
-                            v_statement_insertD.setObject(iRow++, v_inRow.getDeliveryRequestDate());
+                            v_statement_insertD.setObject(iRow++, (v_inRow.getDeliveryRequestDate()).substring(0, 10) );
                             v_statement_insertD.setObject(iRow++, v_inRow.getBuyerEmpno());
                             v_statement_insertD.setObject(iRow++, v_inRow.getPurchasingGroupCode());
                             v_statement_insertD.setObject(iRow++, v_inRow.getEstimatedPrice());
