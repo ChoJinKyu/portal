@@ -18,8 +18,8 @@ sap.ui.define([
 			Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
                 // reset the rank property and update the model to refresh the bindings
                 var oItemsModel = oSelectedItemsTable.getModel();
-				oItemsModel.setProperty("Rank", Utils.ranking.Initial, oSelectedItemContext);
-
+                oItemsModel.setProperty("Rank", Utils.ranking.Initial, oSelectedItemContext);
+                
 				// select the previously selected position
 				var aItemsOfSelectedItemsTable = oSelectedItemsTable.getItems();
 				var oPrevItem = aItemsOfSelectedItemsTable[Math.min(iSelectedItemIndex, aItemsOfSelectedItemsTable.length - 1)];
