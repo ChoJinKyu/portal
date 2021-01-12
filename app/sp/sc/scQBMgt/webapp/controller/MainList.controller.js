@@ -5,12 +5,13 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "ext/lib/util/Multilingual",
+    "sap/ui/model/odata/v2/ODataModel",
     "sap/ui/model/json/JSONModel"
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, fioriLibrary, Filter, FilterOperator, MessageBox, Multilingual, JSON) {
+	function (Controller, fioriLibrary, Filter, FilterOperator, MessageBox, Multilingual,ODataModel, JSON) {
         "use strict";
         var oMaster;
         var oModels;
@@ -24,14 +25,125 @@ sap.ui.define([
         
 
 		return Controller.extend("sp.sc.scQBMgt.controller.MainList", {
+            
 			onInit: function () {
-
-                console.log("onInit");
-
                 
+                console.log("onInit");
                 // I18N 모델 SET
                 var oMultilingual = new Multilingual();
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
+
+                this.viewModel = new JSON({
+                    NegoHeaders : []
+                });
+                this.getView().setModel(this.viewModel, "viewModel");
+
+                var oView = this.getView();
+                // oModel = this.getModel("viewModel");
+                
+                // oView.setBusy(true);
+                // oModel.setTransactionModel(this.getModel());
+                // oModel.read("/NegoHeaders", {
+                //     // filters: aTableSearchState,
+                //     // sorters: [
+                //     // 	new Sorter("chain_code"),
+                //     // 	new Sorter("message_code"),
+                //     //     new Sorter("language_code", true)
+                //     // ],
+                //     success: function(oData){
+                //         // this.validator.clearValueState(this.byId("mainTable"));
+                //         // this.byId("mainTable").clearSelection();
+                //         oView.setBusy(false);
+                //     }.bind(this)
+                // });
+
+
+                // var tempData = {
+                //     NegoHeaders : [  ] 
+                // };
+
+                // var oJSONModel = new JSON();
+                // oJSONModel.setData(tempData);
+
+                // var oView = this.getView();
+                // oView.setModel(oJSONModel) ;
+                
+                // , "viewModel" );
+                // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?$filter=tenant_id eq 'L2100' and nego_document_number eq '1-1'";
+                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders";
+                var that = this;
+                var sTable = this.getView().byId("sTable1");
+                async function _read(){
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        async: false,
+                        contentType: "application/json",
+                        success: function(data){
+                            console.log("data : ", data.value);
+                            var v_viewHeaderModel = oView.getModel("viewModel").getData();
+                            v_viewHeaderModel.NegoHeaders = data.value;
+                            oView.getModel("viewModel").updateBindings(true);
+                            return data;
+                        },
+                        error: function(e){
+                            
+                        }
+                    }, this);
+
+                };
+                async function _read2(){
+                    var aaa = await _read();
+                    return aaa
+                };
+                var a = _read2();
+                a.then(function(data){
+                    
+                }, this);
+                sTable.rebindTable();
+                // $.ajax({
+                //     url: url,
+                //     type: "GET",
+                //     contentType: "application/json",
+                //     success: function(data){
+                //         // debugger;
+                //         // var viewM = oView.getModel();
+                //         // // viewM.oData.NegoHeaders = data.value[0];
+                //         console.log("data : ", data.value);
+                //         // console.log("model : ", viewM);
+                //         // var v_viewHeaderModel = oView.getModel("viewModel").getData();
+                //         // // var v_viewHeaderModel = oView.getModel().oData.NegoHeaders;
+                //         // v_viewHeaderModel = data.value;
+                //         // oView.getModel().refresh(true);
+                //         // // oView.byId("testTable").setModel("viewModel");
+                //         // oView.getModel("viewModel").updateBindings(true);   
+                        
+                //         // debugger;
+                //         var v_viewHeaderModel = oView.getModel("viewModel").getData();
+                //         v_viewHeaderModel.NegoHeaders = data.value;
+                //         oView.getModel("viewModel").updateBindings(true);
+                //         debugger;
+                        
+                        
+
+                        
+                        
+
+                //         // oView.byId("inputNegotiationNo").setValue(data.value[0].nego_document_number);
+                //         // debugger;
+                //         // var oVerticalLayout = oView.byId('vLayout');
+                //         // oVerticalLayout.bindElement("viewModel>/NegoHeaders");
+                //     },
+                //     error: function(e){
+                        
+                //     }
+                // }, this);
+
+
+                
+
+
+                
                 
                 // var oView = this.getView();
                 // oMultilingual = new Multilingual();
@@ -76,77 +188,93 @@ sap.ui.define([
                 // //     this._table.addItem(temp);
                 // // }
                 
-                var json = new JSON();
-                var a = {
-                    "c1" : "2426536-1",
-                    "c2" : "1",
-                    "c3" : "Closed",
-                    "c4" : "Not Awarded",
-                    "c5" : "1",
-                    "c6" : "1",
-                    "c7" : "",
-                    "c8" : "",
-                    "c9" : "[개발PO]액트 FPC 6850L",
-                    "c10" : "1",
-                    "c11" : "RFQ",
-                    "c12" : "Sealed",
-                    "c13" : "Locked",
-                    "c14" : "BPA",
-                    "c15" : "2373145",
-                    "c16" : "Completed",
-                    "c17" : "N",
-                    "c18" : "6850L-2345A",
-                    "c19" : "FPC**LA119UQI-SL"
-                };
-                var b = {
-                    "c1" : "3426536-1",
-                    "c2" : "1",
-                    "c3" : "Closed",
-                    "c4" : "Not Awarded",
-                    "c5" : "1",
-                    "c6" : "1",
-                    "c7" : "",
-                    "c8" : "",
-                    "c9" : "[개발PO]액트 FPC 6850L",
-                    "c10" : "1",
-                    "c11" : "2-steps bidding",
-                    "c12" : "Sealed",
-                    "c13" : "Locked",
-                    "c14" : "Subsidiary Dev Unit Price",
-                    "c15" : "2373145",
-                    "c16" : "Completed",
-                    "c17" : "N",
-                    "c18" : "6850L-2345A",
-                    "c19" : "FPC**LA119UQI-SL"
-                };
-                // var data = { "list" : [ { "ProductName" : "2426536-1" } ]  };
-                var data = { "list" : [ a, b, a, a, a, a, a, a, a, a, a, a, a, a, a, a] };
-                json.setData( data );
-                this.getView().byId("table1").setModel(json).bindRows("/list");
+                // var json = new JSON();
+                // var a = {
+                //     "c1" : "2426536-1",
+                //     "c2" : "1",
+                //     "c3" : "Closed",
+                //     "c4" : "Not Awarded",
+                //     "c5" : "1",
+                //     "c6" : "1",
+                //     "c7" : "",
+                //     "c8" : "",
+                //     "c9" : "[개발PO]액트 FPC 6850L",
+                //     "c10" : "1",
+                //     "c11" : "RFQ",
+                //     "c12" : "Sealed",
+                //     "c13" : "Locked",
+                //     "c14" : "BPA",
+                //     "c15" : "2373145",
+                //     "c16" : "Completed",
+                //     "c17" : "N",
+                //     "c18" : "6850L-2345A",
+                //     "c19" : "FPC**LA119UQI-SL"
+                // };
+                // var b = {
+                //     "c1" : "3426536-1",
+                //     "c2" : "1",
+                //     "c3" : "Closed",
+                //     "c4" : "Not Awarded",
+                //     "c5" : "1",
+                //     "c6" : "1",
+                //     "c7" : "",
+                //     "c8" : "",
+                //     "c9" : "[개발PO]액트 FPC 6850L",
+                //     "c10" : "1",
+                //     "c11" : "2-steps bidding",
+                //     "c12" : "Sealed",
+                //     "c13" : "Locked",
+                //     "c14" : "Subsidiary Dev Unit Price",
+                //     "c15" : "2373145",
+                //     "c16" : "Completed",
+                //     "c17" : "N",
+                //     "c18" : "6850L-2345A",
+                //     "c19" : "FPC**LA119UQI-SL"
+                // };
+                // // var data = { "list" : [ { "ProductName" : "2426536-1" } ]  };
+                // var data = { "list" : [ a, b, a, a, a, a, a, a, a, a, a, a, a, a, a, a] };
+                // json.setData( data );
+                // this.getView().byId("table1").setModel(json).bindRows("/list");
 
-                var json2 = new JSON();
-                var data2 = { "status" : [ { key : "1", text : "1st Action" },
-                                            { key : "2", text : "1st Colse" },
-                                            { key : "3", text : "Active" },
-                                            { key : "4", text : "Bidding Plan Created" },
-                                            { key : "5", text : "Cancelled" },
-                                            { key : "6", text : "Colosed" },
-                                            { key : "7", text : "Walting for Active" }
+                // var json2 = new JSON();
+                // var data2 = { "status" : [ { key : "1", text : "1st Action" },
+                //                             { key : "2", text : "1st Colse" },
+                //                             { key : "3", text : "Active" },
+                //                             { key : "4", text : "Bidding Plan Created" },
+                //                             { key : "5", text : "Cancelled" },
+                //                             { key : "6", text : "Colosed" },
+                //                             { key : "7", text : "Walting for Active" }
 
-                    ] };
-                json2.setData(data2);
-                this.getView().setModel(json2, "BBB");
+                //     ] };
+                // json2.setData(data2);
+                // this.getView().setModel(json2, "BBB");
 
-                // var oText = new sap.m.Text({ text : "Check All"});
-                // oText.addStyleClass("sText");
+                // // var oText = new sap.m.Text({ text : "Check All"});
+                // // oText.addStyleClass("sText");
                 
-                var addItem = new sap.ui.core.Item({ key: "all", text: "Check All"  });
+                // var addItem = new sap.ui.core.Item({ key: "all", text: "Check All"  });
 
-                // addItem.addStyleClass("sText");
+                // // addItem.addStyleClass("sText");
 
 
-                this.getView().byId("multiStatus").insertItem( addItem , 0);
+                // this.getView().byId("multiStatus").insertItem( addItem , 0);
 
+            },
+            beforeRebindTable:function(e){
+                
+                var sTable = this.getView().byId("sTable1");
+                
+            },
+            onBeforeExport: function (oEvt) {
+                var mExcelSettings = oEvt.getParameter("exportSettings");
+                // GW export
+                if (mExcelSettings.url) {
+                    return;
+                }
+                // For UI5 Client Export --> The settings contains sap.ui.export.SpreadSheet relevant settings that be used to modify the output of excel
+
+                // Disable Worker as Mockserver is used in Demokit sample --> Do not use this for real applications!
+                mExcelSettings.worker = false;
             },
             multiSelection: function(e){
                 var oKey = e.getParameters().changedItem.getKey();
@@ -194,13 +322,43 @@ sap.ui.define([
 
             },
             tableCellClick: function(e){
+                
+                // if(vIndex == 0 ){
+                    
                 var vIndex = e.getParameters().rowIndex;
-                if(vIndex == 0 ){
-                    this.getOwnerComponent().getRouter().navTo("detailPage", { type : "0" , outcome : "0"  } );
-                }else{
-                    this.getOwnerComponent().getRouter().navTo("detailPage2", { type : "0" , outcome : "0" } );
-                }
+                var oRow = this.getView().byId("mainTable").getModel("viewModel").oData.NegoHeaders[vIndex];
+                // if(oRow.nego_type_code == null){
+                //     var nego_type = " ";
+                // }
+                this.getOwnerComponent().getRouter().navTo("detailPage", { type : oRow.nego_type_code , outcome : oRow.negotiation_output_class_code, header_id: oRow.nego_document_number  } );
+                // this.getOwnerComponent().getRouter().navTo("detailPage", { type : "" , outcome : "", } );
+                // }else{
+                //     this.getOwnerComponent().getRouter().navTo("detailPage2", { type : "0" , outcome : "0" } );
+                // }
 
+            },
+            _getSmartTable: function () {
+                if (!this._oSmartTable) {
+                    this._oSmartTable = this.getView().byId("sTable1");
+                }
+                return this._oSmartTable;
+            },
+            onSort: function () {
+                alert("준비중입니다.");
+                return;
+                var oSmartTable = this._getSmartTable();
+                if (oSmartTable) {
+                    oSmartTable.openPersonalisationDialog("Sort");
+                }
+            },
+
+            onFilter: function () {
+                alert("준비중입니다.");
+                return;
+                var oSmartTable = this._getSmartTable();
+                if (oSmartTable) {
+                    oSmartTable.openPersonalisationDialog("Filter");
+                }
             },
             ManagerTablePress: function(e){
                 var selectValue = e.getParameters().listItem.getCells()[0].getText();

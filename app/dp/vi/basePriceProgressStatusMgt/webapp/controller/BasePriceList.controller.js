@@ -16,11 +16,53 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceProgressStatusMgtRootModel");
-            sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+            var oRootModel = this.getOwnerComponent().getModel("rootModel");
+            sTenantId = oRootModel.getProperty("/tenantId");
+
+            var oFilterData = {tenantId: sTenantId,
+                                type: "1",
+                                type_list:[{code:"1", text:"개발구매"}]};
 
             this.setModel(new JSONModel(), "listModel");
-            this.setModel(new JSONModel({tenantId: sTenantId}), "filterModel");
+            this.setModel(new JSONModel(oFilterData), "filterModel");
+
+            // Plant 데이터 조회 시작
+            var oPurOrgModel = this.getOwnerComponent().getModel("purOrg");
+            var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            oPurOrgModel.read("/Pur_Operation_Org", {
+                filters : aPurOrgFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        var aResults = data.results;
+                        var aCompoany = [];
+                        var oPurOrg = {};
+
+                        for( var i=0; i<aResults.length; i++ ) {
+                            var oResult = aResults[i];
+                            if( -1===aCompoany.indexOf(oResult.company_code) ) {
+                                aCompoany.push(oResult.company_code);
+                                oPurOrg[oResult.company_code] = [];
+                            }
+
+                            oPurOrg[oResult.company_code].push({org_code: oResult.org_code, org_name: oResult.org_name});
+                        }
+
+                        oFilterData.purOrg = oPurOrg;
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+            // Plant 데이터 조회 끝
+
+            switch (sTenantId) {
+                case "L2100" :
+                    oRootModel.setProperty("/switchColumnVisible", true);
+                    break;
+                default :
+                    oRootModel.setProperty("/switchColumnVisible", false);
+            }
 
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
@@ -35,12 +77,24 @@ sap.ui.define([
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],
+                sCompanyCode = oFilterModelData.company_code,
+                sOrgCode = oFilterModelData.org_code,
                 sStatus = oFilterModelData.status,
                 sMaterialCode = oFilterModelData.materialCode,
                 sApprovalNumber = oFilterModelData.approvalNumber,
-                oRequestBy = oFilterModelData.requestBy,
+                sRequestBy = oFilterModelData.requestBy,
                 oDateValue = oFilterModelData.dateValue,
                 oSecondDateValue = oFilterModelData.secondDateValue;
+
+            // Company Code가 있는 경우
+            if( sCompanyCode ) {
+                aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+            }
+
+            // Org Code가 있는 경우
+            if( sOrgCode ) {
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrgCode));
+            }
 
             // Status가 있는 경우
             if( sStatus ) {
@@ -62,9 +116,16 @@ sap.ui.define([
                 aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, oDateValue, oSecondDateValue));
             }
 
+
             // Request By가 있는 경우
-            if( oRequestBy ) {
-                aFilters.push(new Filter("create_user_id", FilterOperator.EQ, oRequestBy));
+            if( sRequestBy ) {
+                if( -1<sRequestBy.indexOf(")") ) {
+                    var iStart = sRequestBy.indexOf("(");
+                    var iLast = sRequestBy.indexOf(")");
+                    sRequestBy = sRequestBy.substring(iStart+1, iLast);
+                }
+
+                aFilters.push(new Filter("approval_number_fk/approval_requestor_empno", FilterOperator.EQ, sRequestBy));
             }
 
             this._getBasePriceList(aFilters);
@@ -126,6 +187,17 @@ sap.ui.define([
         _getPreZero: function (iDataParam) {
             return (iDataParam<10 ? "0"+iDataParam : iDataParam);
         },
+        
+        /**
+         * compnay 변경 시 플랜트 리스트 변경
+         */
+        onChangeCompany: function (oEvent) {
+            var oFilterModel = this.getModel("filterModel");
+            var oCodeModel = this.getModel("codeModel");
+            
+            oFilterModel.setProperty("/selectedPurOrg", oFilterModel.getProperty("/purOrg/"+oFilterModel.getProperty("/company_code")));
+            oFilterModel.setProperty("/org_code", "");
+        },
 
         /**
          * 상세 페이지로 이동
@@ -136,8 +208,8 @@ sap.ui.define([
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
-                var oBasePriceListRootModel = this.getModel("basePriceProgressStatusMgtRootModel");
-                oBasePriceListRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
+                var oRootModel = this.getModel("rootModel");
+                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
             }
 
             this.getRouter().navTo("basePriceDetail");
@@ -194,12 +266,8 @@ sap.ui.define([
                     filters : aFilters,
                     success: function(data) {
                         if( data ) {
-                            if( 1 === data.results.length ) {
-                                oSearchField.setValue(data.results[0].material_code);
-                            }else {
-                                this.onOpenDialog(sQuery);
-                                this.getModel("dialogModel").setProperty("/materialCode", data.results);
-                            }
+                            this.onOpenDialog(sQuery);
+                            this.getModel("dialogModel").setProperty("/materialCode", data.results);
                         }
                     }.bind(this),
                     error: function(data){

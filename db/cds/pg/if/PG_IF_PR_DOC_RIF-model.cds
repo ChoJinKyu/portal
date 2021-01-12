@@ -24,8 +24,8 @@ entity If_Pr_Doc_Rif {
     key tenant_id : String(5) not null  @title : '테넌트ID';
     key banfn     : String(15) not null @title : '구매요청번호';
     key bnfpo     : String(5) not null  @title : '구매요청품목번호';
-        ebeln     : String(15) not null @title : 'PO번호';
-        ebelp     : String(5) not null  @title : 'PO품목번호';
+        ebeln     : String(15)          @title : 'PO번호';
+        ebelp     : String(5)           @title : 'PO품목번호';
         loekz     : String(2)           @title : '삭제여부';
         matnr     : String(27)          @title : '자재코드';
         txz01     : String(60)          @title : 'PR내역';

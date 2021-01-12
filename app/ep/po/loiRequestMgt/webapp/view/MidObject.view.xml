@@ -208,7 +208,7 @@
 
                                 <ColumnListItem press=".onMidTableItemPress">
 									<cells>
-										<Text text="{details>_row_state_}"/>
+                                        <Text text="{details>_row_state_}"  />
                                         <Text text="{details>item_sequence}"/>
                                         <!-- <Input value="{details>item_sequence}"/> -->
                                         <!-- <Input value="{details>tenant_id}"/> -->
@@ -216,6 +216,7 @@
                                             placeholder="Enter a plant name"
                                             keyField="plant_code"
                                             textField="plant_name"
+                                            editable="{midObjectView>/isEditMode}"
                                             suggestionItems="{
                                                 path: '/',
                                                 filters: [
@@ -252,13 +253,13 @@
 
 
                                         </lib-m:CodePicker>
-                                        <Input value="{details>ep_item_code}"/>
-                                        <Input value="{details>item_desc}"/>
-                                        <Input value="{details>unit}"/>
-                                        <Input value="{details>request_quantity}"/>
-                                        <!-- <Input value="{details>currency_code}"/> -->
+                                        <Input value="{details>ep_item_code}" editable="{midObjectView>/isEditMode}"/>
+                                        <Input value="{details>item_desc}" editable="{midObjectView>/isEditMode}"/>
+                                        <Input value="{details>unit}" editable="{midObjectView>/isEditMode}"/>
+                                        <Input value="{details>request_quantity}" editable="{midObjectView>/isEditMode}"/>
+                                        <Input value="{details>currency_code}" editable="{midObjectView>/isEditMode}"/>
 
-                                        <ComboBox
+                                        <!-- <ComboBox
                                         id="midLevelCombo"
                                         width="100%"
                                         selectedKey="{details>currency_code}"   
@@ -271,19 +272,20 @@
                                         <items>
                                             <core:Item key="{details>currency_code}" text="{currency_code}" />
                                         </items>
-                                        </ComboBox>
-                                        <Input value="{details>request_amount}"/>
+                                        </ComboBox> -->
+                                        <Input value="{details>request_amount}" editable="{midObjectView>/isEditMode}"/>
 
                                          <!-- <Input value="{
                                             path: 'details>request_amount',
                                             formatter: '.numberFormatter.toNumberString'
                                         }"/> -->
-                                        <Input value="{details>supplier_code}"/>
+                                        <Input value="{details>supplier_code}" editable="{midObjectView>/isEditMode}"/>
                                         <!-- <Input value="{details>buyer_name}"/> -->
                                         <lib-m:CodePicker id="searchRequestorS"
                                             placeholder="Enter a Employee name"
                                             keyField="employee_number"
                                             textField="user_local_name"
+                                            editable="{midObjectView>/isEditMode}"
                                             suggestionItems="{
                                                 path: '/',
                                                 filters: [
@@ -296,9 +298,11 @@
                                             <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
                                                 keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
                                         </lib-m:CodePicker>
-                                        <Input value="{details>remark}"/>
+                                        <Input value="{details>remark}" editable="{midObjectView>/isEditMode}"/>
 									</cells>
 								</ColumnListItem>
+
+                                
 							</items>
 						</Table>
 					</uxap:ObjectPageSubSection>

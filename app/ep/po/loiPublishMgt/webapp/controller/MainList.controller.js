@@ -89,8 +89,8 @@ sap.ui.define([
 
             // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchBuyer").setValue("(9586) **민");
-            this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
+            //this.getView().byId("searchBuyer").setValue("(9586) **민");
+            //this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
         },
 
         onRenderedFirst: function () {
@@ -479,7 +479,7 @@ sap.ui.define([
             var loiNumberArr = [];
 
             if (oSelected.length > 0) {
-                oSelected.forEach(function (chkIdx, index) {
+                oSelected.some(function (chkIdx, index) {
 
                     /*
                         향후 견적테이블이 생성되면 1번로직 주석 2번 로직 주석해제
@@ -496,7 +496,7 @@ sap.ui.define([
                     if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number != 0) {
                         MessageToast.show("이미 견적이 완료된건이 있습니다.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
 
                     /*
@@ -514,7 +514,7 @@ sap.ui.define([
                     if (index > 0 && !loiNumberArr.includes(loiNumber)) {
                         MessageToast.show("LOI번호가 동일하지 않습니다.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
                     loiNumberArr.push(oModel.getData().LOIPublishItemView[chkIdx].loi_number);
 
@@ -640,7 +640,7 @@ sap.ui.define([
             var quotationNumberrArr = [];
 
             if (oSelected.length > 0) {
-                oSelected.forEach(function (chkIdx, index) {
+                oSelected.some(function (chkIdx, index) {
                     console.log("aaaaaaaaaa=", oModel.getData().LOIPublishItemView[chkIdx].loi_number);
                     console.log("oSelected.length=", oSelected.length);
                     console.log("chkIdx=", chkIdx);
@@ -661,7 +661,7 @@ sap.ui.define([
                     if (sLoiSelectionNumber) {
                         MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 업체선정진행상태 항목을 클릭해 주세요.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
 
                     /*
@@ -675,7 +675,7 @@ sap.ui.define([
                     if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
                         MessageToast.show("견적번호가 없습니다.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
 
                     //견적번호 동일한지 체크
@@ -684,7 +684,7 @@ sap.ui.define([
                     if (index > 0 && !quotationNumberrArr.includes(quotationNumber)) {
                         MessageToast.show("견적번호가 동일하지 않습니다.");
                         canSelect = false;
-                        return false;
+                        return true;
                     }
                     quotationNumberrArr.push(oModel.getData().LOIPublishItemView[chkIdx].quotation_number);
 
@@ -1011,6 +1011,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 sLoiPublishStatus.forEach(function (item, idx, arr) {
+                    //console.log("loi_publish_status_code=", item);
                     _tempFilters.push(new Filter("loi_publish_status_code", FilterOperator.EQ, item));
                 });
 
@@ -1035,10 +1036,10 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("buyer_empno", FilterOperator.EQ, sBuyer));
             }
 
-            if (sLoiPublishStatus.length > 0) {
+            if (sLoiPoStatus.length > 0) {
                 var _tempFilters = [];
 
-                sLoiPublishStatus.forEach(function (item, idx, arr) {
+                sLoiPoStatus.forEach(function (item, idx, arr) {
                     _tempFilters.push(new Filter("po_status_code", FilterOperator.EQ, item));
                 });
 

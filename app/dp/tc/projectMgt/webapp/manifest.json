@@ -37,6 +37,13 @@
                     "odataVersion": "4.0"
                 }
             },
+            "v4ProcMcst": {
+                "uri": "srv-api/odata/v4/dp.McstProjectMgtV4Service/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            },
             "commonUtilService": {
                 "uri": "srv-api/odata/v2/cm.util.CommonService/",
                 "type": "OData",
@@ -46,6 +53,13 @@
             },
             "orgMgrService": {
                 "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }, 
+            "McstProjectMgtService" : {
+                "uri": "srv-api/odata/v2/dp.McstProjectMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -119,6 +133,15 @@
                     "autoExpandSelect": false
                 }
             },
+            "v4ProcMcst": {
+                "dataSource": "v4ProcMcst",
+                "preload": false,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": false
+                }
+            },
             "util": {
                 "dataSource": "commonUtilService",
                 "preload": true,
@@ -146,6 +169,22 @@
                 }
             },
             "detailModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            },
+            "detailListModel": {
+                "dataSource": "McstProjectMgtService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "groupId": "$direct",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true
+                }
+            },
+            "popupListModel": {
                 "type": "sap.ui.model.json.JSONModel",
                 "settings": {
                     "defaultBindingMode": "TwoWay"
@@ -183,6 +222,11 @@
                     "pattern": "ProjectInfo/{tenant_id}/{project_code}/{model_code}",
                     "name": "ProjectInfo",
                     "target": "ProjectInfo"
+                },
+                {
+                    "pattern": "McstProjectMgtDetail/{tenant_id}/{project_code}/{model_code}",
+                    "name": "McstProjectMgtDetail",
+                    "target": "McstProjectMgtDetail"
                 }
             ],
             "targets": {
@@ -193,6 +237,10 @@
                 "ProjectInfo": {
                     "viewId": "ProjectInfo",
                     "viewName": "ProjectInfo"
+                },
+                "McstProjectMgtDetail": {
+                    "viewId": "McstProjectMgtDetail",
+                    "viewName": "McstProjectMgtDetail"
                 }
             }
         }

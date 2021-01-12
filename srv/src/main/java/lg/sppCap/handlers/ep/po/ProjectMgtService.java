@@ -45,13 +45,14 @@ public class ProjectMgtService implements EventHandler {
         String max_project_number = "";
         String v_sql = "SELECT IFNULL(MAX(CAST(REPLACE(EP_PROJECT_NUMBER, 'P' , '') as INTEGER)), 0) + 1 AS MAX_PROJECT_NUMBER FROM EP_PO_PROJECT";
 
-        ResultSet v_rs = null;          
+        ResultSet v_rs = null; 
+        Connection conn = null;         
 
         try {
 
             String project_number = "";
 
-            Connection conn = jdbc.getDataSource().getConnection();
+            conn = jdbc.getDataSource().getConnection();
 
             // Local Temp Table 생성
             PreparedStatement v_statement = conn.prepareStatement(v_sql);
@@ -68,6 +69,8 @@ public class ProjectMgtService implements EventHandler {
 
 		} catch (Exception e) { 
 			e.printStackTrace();
+        } finally {
+            //if(conn != null) conn.close();    
         }
 
 

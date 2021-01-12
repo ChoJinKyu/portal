@@ -257,8 +257,7 @@ sap.ui.define([
             var oUiModel = this.getView().getModel("mode");
             oUiModel.setProperty("/editFlag", true);
             oUiModel.setProperty("/viewFlag", false);
-            //this.byId("titleInput").removeStyleClass("readonlyField");
-
+            this._toButtonStatus();
             this._toEditModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
         },
 
@@ -268,10 +267,84 @@ sap.ui.define([
             var oUiModel = this.getView().getModel("mode");
             oUiModel.setProperty("/editFlag", false);
             oUiModel.setProperty("/viewFlag", true);
-            //this.byId("titleInput").addStyleClass("readonlyField");
-
+            this._toButtonStatus();
             this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
         },
+
+       _toButtonStatus : function(){ 
+            /**
+             * 'DR'	'임시저장'	'L1100'
+            'AR'	'결재요청'	'L1100'
+            'IA'	'결재중'	'L1100'
+            'AP'	'결재완료'	'L1100'
+            */
+            var oUiModel = this.getView().getModel("mode"); 
+            var oModel = this.getModel("appMaster");
+            if(oUiModel.getData().editFlag){
+                 if(oModel.getData().approve_status_code == 'DR'){ // 임시저장 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", true);
+                    oUiModel.setProperty("/btnDraftFlag", true);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", true);
+                }else if(oModel.getData().approve_status_code == 'AR'){ // 결재완료 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", true);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'IA'){ // 결재중 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'AP'){ // 결재완료
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else{ // new 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", true);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", true);
+                }
+            }else{
+               if(oModel.getData().approve_status_code == 'DR'){ // 임시저장 
+                    oUiModel.setProperty("/btnEditFlag", true);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", true);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", true);
+                }else if(oModel.getData().approve_status_code == 'AR'){ // 결재완료 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", true);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'IA'){ // 결재중 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'AP'){ // 결재완료
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else{ // new 
+                   // view 모드인데 new 일순 없음 
+                }  
+            }
+
+
+       } ,
+
 
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
@@ -322,8 +395,10 @@ sap.ui.define([
 
                     console.log(" oData >>> ", oData); 
                     this.firstStatusCode = oData.approve_status_code; // 저장하시겠습니까? 하고 취소 눌렀을 경우 다시 되돌리기 위해서 처리 
-                    //this.oRichTextEditor.setValue(oData.approval_contents);
+                    this._toButtonStatus();
                 }.bind(this));
+            }else{
+                 this._toButtonStatus();
             }
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
 
@@ -941,16 +1016,19 @@ sap.ui.define([
 
             var aprArr = [];
             if (apr.Approvers != undefined && apr.Approvers.length > 0) {
-                apr.Approvers.forEach(function (item) {
-                    aprArr.push({
-                        tenant_id: that.tenant_id
-                        , approval_number: that.approval_number
-                        , approve_comment: item.approve_comment
-                        , approve_sequence: item.approve_sequence
-                        , approve_status_code: item.approve_status_code
-                        , approver_type_code: item.approver_type_code
-                        , approver_empno: item.approver_empno
-                    });
+                apr.Approvers.forEach(function (item) { 
+                    if(item.approver_empno != "" && item.approver_empno != undefined){
+                        aprArr.push({
+                            tenant_id: that.tenant_id
+                            , approval_number: that.approval_number
+                            , approve_comment: item.approve_comment
+                            , approve_sequence: item.approve_sequence
+                            , approve_status_code: item.approve_status_code
+                            , approver_type_code: item.approver_type_code
+                            , approver_empno: item.approver_empno
+                        });
+                    }
+                    
                 });
             }
 
@@ -984,37 +1062,52 @@ sap.ui.define([
             console.log("data>>>> ", data);
 
             var msg = this.getModel("I18N").getText("/NCM00001") ;
-
-            if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){
+            var isOk = false;
+            if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
+                isOk = true;
                 msg = "요청 취소 하시겠습니까?";
             }else if(this.getModel('appMaster').getProperty("/approve_status_code") == "AR"){
-                msg = "결제 요청 하시겠습니까?";
+
+                if(aprArr.length == 0){ 
+                    isOk = false;
+                     msg = "Approval Line 을 추가해 주세요.";   
+                }else{
+                    isOk = true;
+                    msg = "결제 요청 하시겠습니까?";
+                }
+            }else{
+                isOk = true;
             }
 
+            if(isOk){
 
-            var oView = this.getView();
-            var that = this;
-             MessageBox.confirm(msg, {
-                title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) { 
-                        this.firstStatusCode = that.getModel('appMaster').getProperty("/approve_status_code");
-                        oView.setBusy(true);
-                        that.callAjax(data, "saveMoldApproval"
-                            , function(result){
-                                oView.setBusy(false);
-                                MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
-                            if (result.resultCode > -1) {
-                                that.onLoadThisPage(result);
-                            }
-                        });
-                    }else{
-                         // this.firstStatusCode   
-                         that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
-                    };
-                }
-            });
+                var oView = this.getView();
+                var that = this;
+                MessageBox.confirm(msg, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) { 
+                            this.firstStatusCode = that.getModel('appMaster').getProperty("/approve_status_code");
+                            oView.setBusy(true);
+                            that.callAjax(data, "saveMoldApproval"
+                                , function(result){
+                                    oView.setBusy(false);
+                                    MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                                if (result.resultCode > -1) {
+                                    that.onLoadThisPage(result);
+                                }
+                            });
+                        }else{
+                            // this.firstStatusCode   
+                            that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
+                        };
+                    }
+                });
+            }else{
+                MessageToast.show(msg);
+                that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
+            }
         },
 
         callAjax: function (data, fn , callback) {

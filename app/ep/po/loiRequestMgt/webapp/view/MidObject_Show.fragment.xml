@@ -35,7 +35,7 @@
                 </VBox>      
 
                 <VBox id="idEditLayoutShow">
-                    <Label text="* 특기사항 :" />
+                    <Label text=" 특기사항 :" />
                     <richtexteditor:RichTextEditor
                         editorType="TinyMCE4"
                         width="100%"

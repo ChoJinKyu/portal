@@ -107,7 +107,8 @@ sap.ui.define([
                 }.bind(this),
                 error: function(e){
                     console.log("error", e);
-                    //debugger;
+                    let eMessage = JSON.parse(e.responseText).error.message;
+                    MessageBox.show("저장 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
                 }
             });
         }

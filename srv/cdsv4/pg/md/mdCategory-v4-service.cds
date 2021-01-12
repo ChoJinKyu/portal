@@ -225,7 +225,6 @@ service MdCategoryV4Service {
 			, key citm.org_code
 			, key citm.spmd_category_code
 			, key citm.spmd_character_code
-            , null as vendor_pool_code : String(20)
 			, cid.spmd_category_code_name
             , cid.spmd_category_sort_sequence
             , cid.rgb_cell_clolor_code

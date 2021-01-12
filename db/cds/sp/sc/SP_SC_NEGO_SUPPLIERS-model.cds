@@ -26,12 +26,14 @@ entity Sc_Nego_Suppliers {
         include_flag                     : String(1)           @title : '포함여부';
         nego_target_include_reason_desc  : String(1000)        @title : '협상대상포함사유설명';
         special_flag                     : String(1)           @title : '특별여부';
+        only_maker_flat                  : String(1)           @title : 'Only Maker Flag';
+        contact                          : String(30)          @title : 'Contact';
         confirm_date                     : Date                @title : '확인일자';
         confirm_user_id                  : String(40)          @title : '확인사용자ID';
         primary_pass_flag                : String(1)           @title : '1차통과여부';
         participation_type_code          : String(10)          @title : '참여유형코드';
         reply_date                       : Date                @title : '회신일자';
-        note_content                     : LargeBinary(4000)   @title : '노트내용';
+        note_content                     : String(4000)        @title : '노트내용';
         file_group_number                : String(100)         @title : '파일그룹번호';
         s_c_s_user_id                    : String(50)          @title : 'SCS사용자ID';
         penalty_flag                     : String(1)           @title : '벌금여부';

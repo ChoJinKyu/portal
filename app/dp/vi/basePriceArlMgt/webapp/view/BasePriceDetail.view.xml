@@ -9,6 +9,7 @@
     xmlns:lib-m="ext.lib.m"
     xmlns:t="sap.ui.table"
     xmlns:co="sap.suite.ui.commons"
+    xmlns:rte="sap.ui.richtexteditor"
     height="100%">
 
     <uxap:ObjectPageLayout
@@ -36,7 +37,7 @@
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
                     <!-- <ObjectStatus title="Approval Number" text="{detailModel>/approval_number}"/> -->
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/update_user_id}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/approval_requestor_empno}"/>
                     <!-- <ObjectStatus title="Requester" text="{detailModel>/update_user_id}"/> -->
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
                     <!-- <ObjectStatus title="Request Date" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/> -->
@@ -107,8 +108,17 @@
                                 <VBox>
                                     <Label text="{I18N>/DESCRIPTION}" required="true"/>
                                     <!-- Text Editor 시작 -->
-                                    <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
-                                    </layout:VerticalLayout>
+                                    <!-- <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                    </layout:VerticalLayout> -->
+                                    <rte:RichTextEditor 
+                                        width="100%" 
+                                        height="200px" 
+                                        value="{detailModel>/approval_request_desc}" 
+                                        customToolbar="true" 
+                                        showGroupFont="true" 
+                                        showGroupLink="true" 
+                                        showGroupInsert="true"
+                                        editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
                                     <!-- Text Editor 끝 -->
                                 </VBox>
                             </VBox>
@@ -120,7 +130,6 @@
 
             <!-- Material Code 시작 -->
             <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/BASE_PRICE_LIST}({codeModel>/detailsLength})">
-            <!-- <uxap:ObjectPageSection titleUppercase="false" title="Base Price List({codeModel>/detailsLength})"> -->
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -135,7 +144,7 @@
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
-                                            <Button text="{I18N>/UPLOAD}" type="Transparent" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
+                                            <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
                                             <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
                                             <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}" />
                                             <!-- <Button icon="sap-icon://excel-attachment" />
@@ -144,29 +153,52 @@
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
-                                        <t:Column hAlign="Center" width="6rem">
+                                        <!-- <t:Column hAlign="Center" width="6rem"> -->
+                                        <t:Column hAlign="Center" width="18rem">
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
-                                            <!-- <Label text="Company" textAlign="Center" /> -->
                                             <t:template>
-                                                <Text text="{detailModel>company_code}" />
+                                                <!-- <Text text="{detailModel>company_code}" /> -->
+                                                <ComboBox width="100%" 
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                                                    selectedKey="{detailModel>company_code}" 
+                                                    items="{
+                                                    path: 'org>/Company',
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                        ],
+                                                        sorter: { path: 'company_code'}
+                                                    }"
+                                                    change=".onChangeCompany">
+                                                    <items>
+                                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                                    </items>
+                                                </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="6rem">
+                                        <!-- <t:Column hAlign="Center" width="6rem"> -->
+                                        <t:Column hAlign="Center" width="18rem">
                                             <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" /> -->
                                             <Label text="{I18N>/PLANT}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{detailModel>org_code}" />
+                                                <!-- <Text text="{detailModel>org_code}" /> -->
+                                                <ComboBox width="100%"
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                                                    selectedKey="{detailModel>org_code}" 
+                                                    items="{detailModel>purOrg}">
+                                                    <items>
+                                                        <core:Item key="{detailModel>org_code}" text="[{detailModel>org_code}]{detailModel>org_name}" />
+                                                    </items>
+                                                </ComboBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="10rem">
                                             <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%" />
-                                            <!-- <Label text="Material Code" textAlign="Center" width="100%" /> -->
                                             <t:template>
                                                 <Input
                                                     value="{detailModel>material_code}"
                                                     editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     showValueHelp="true"
-                                                    valueHelpRequest=".onGetDialogData" >
+                                                    valueHelpRequest=".onGetMaterialCodeDialogData" >
                                                     <customData>
                                                         <core:CustomData key="dialog" value="materialCode"  />
                                                     </customData>
@@ -188,7 +220,7 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="12rem">
-                                            <Label text="{I18N>/BASIS}" textAlign="Center" />
+                                            <Label text="{I18N>/BASIS}" textAlign="Center" width="100%" />
                                             <!-- <Label text="Basis" textAlign="Center" width="100%" /> -->
                                             <t:template>
                                                 <Select
@@ -201,7 +233,7 @@
                                                 </Select>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="2" width="7rem" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
+                                        <t:Column headerSpan="2" width="7rem" visible="{codeModel>/switchColumnVisible}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/CODE}" textAlign="Center" width="100%" />
@@ -212,7 +244,7 @@
                                                 <Text text="{detailModel>supplier_code}" textAlign="Center" width="100%" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
+                                        <t:Column width="10rem" visible="{codeModel>/switchColumnVisible}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/NAME}" textAlign="Center" width="100%" />
@@ -223,14 +255,49 @@
                                                     value="{detailModel>supplier_local_name}"
                                                     editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     showValueHelp="true"
-                                                    valueHelpRequest=".onGetDialogData" >
+                                                    valueHelpRequest=".onGetSupplierDialogData" >
                                                     <customData>
                                                         <core:CustomData key="dialog" value="supplier"  />
                                                     </customData>
                                                 </Input>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="3" width="10rem">
+                                        <t:Column width="10rem" visible="{codeModel>/switchColumnVisible}">
+                                            <t:multiLabels>
+                                            <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
+                                            </t:multiLabels>
+                                            <t:template>
+                                                <Text text="{
+                                                    path: 'detailModel>base_date',
+                                                    formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column width="10rem" visible="{codeModel>/switchColumnVisible}">
+                                            <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
+                                            <t:template>
+                                                <Input 
+                                                    value="{
+                                                            path:'detailModel>prices/0/new_base_price'
+                                                            }" 
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                                                    textAlign="End"
+                                                    type="Number" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column width="6rem" visible="{codeModel>/switchColumnVisible}">
+                                            <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
+                                            <t:template>
+                                                <ComboBox
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                                                    items="{codeModel>/currency}"
+                                                    selectedKey="{detailModel>prices/0/new_base_price_currency_code}">
+                                                    <items>
+                                                        <core:Item key="{codeModel>currency_code}" text="{codeModel>currency_code}" />
+                                                    </items>
+                                                </ComboBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column headerSpan="3" width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -243,7 +310,7 @@
                                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem">
+                                        <t:Column width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -253,15 +320,14 @@
                                             <t:template>
                                                 <Input 
                                                     value="{
-                                                            path:'detailModel>prices/0/new_base_price',
-                                                            formatter:'.onNumberComma'
+                                                            path:'detailModel>prices/0/new_base_price'
                                                             }" 
                                                     editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     textAlign="End"
                                                     type="Number" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="6rem">
+                                        <t:Column width="6rem" visible="{= !${codeModel>/switchColumnVisible}}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
@@ -279,7 +345,7 @@
                                                 </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="3" width="10rem">
+                                        <t:Column headerSpan="3" width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -292,7 +358,7 @@
                                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                                             </t:template>
                                             </t:Column>
-                                        <t:Column width="10rem">
+                                        <t:Column width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -307,7 +373,7 @@
                                                     type="Number" />
                                             </t:template>
                                             </t:Column>
-                                        <t:Column width="6rem" >
+                                        <t:Column width="6rem" visible="{= !${codeModel>/switchColumnVisible}}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
@@ -355,7 +421,7 @@
                                                     editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     visible="{= ${detailModel>base_price_ground_code} === '30' ? true : false }"
                                                     showValueHelp="true"
-                                                    valueHelpRequest=".onGetDialogData" >
+                                                    valueHelpRequest=".onDeveloping" >
                                                     <customData>
                                                         <core:CustomData key="dialog" value="familyMaterialCode"  />
                                                     </customData>
@@ -401,7 +467,6 @@
 
             <!-- Attachment 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ATTACHMENT}">
-			<!-- <uxap:ObjectPageSection titleUppercase="false" title="Attachment"> -->
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -430,7 +495,6 @@
 
             <!-- Report Line 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/APPROVAL_LINE}">
-			<!-- <uxap:ObjectPageSection titleUppercase="false" title="Approval Line"> -->
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -518,7 +582,7 @@
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"
                     visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
-                    press=".onChangeDeveloper" />
+                    press=".onDeveloping" />
 				<Button
                     text="{I18N>/DRAFT}" 
                     visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
@@ -531,7 +595,7 @@
                     text="{I18N>/CANCEL}" press=".onBack" /> -->
                 <Button
                     text="{I18N>/DELETE}" 
-                    visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
+                    visible="{= ${detailModel>/approval_status_code} === '10' &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
                     press=".onDelete" />
                 <Button
                     type="Emphasized"

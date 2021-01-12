@@ -23,7 +23,7 @@ using util from '../../cm/util/util-model';
 entity If_Ztimimg08_Rif {
     key tenant_id : String(5) not null @title : '테넌트ID';
     key zfcdty    : String(5) not null @title : '코드구분';
-    key zfcd      : String(5)          @title : '관리코드';
+    key zfcd      : String(5) not null @title : '관리코드';
         zfcdnm    : String(105)        @title : '코드명';
 }
 

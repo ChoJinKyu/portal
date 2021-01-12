@@ -258,7 +258,8 @@ sap.ui.define([
 
         },
 
-        createPopupClose: function (oEvent) {            
+        createPopupClose: function (oEvent) {
+            this.validator.clearValueState(this.byId("dialogAddSupplier"));            
             this.byId("dialogAddSupplier").close();
         },
 
@@ -322,6 +323,21 @@ sap.ui.define([
         
         onDupChk: function () {            
             MessageBox.alert("준비중입니다.");
+            // var url = "dp/gs/sourcingSupplierMgt/webapp/srv-api/odata/v4/dp.GsSupplierMgtV4Service/GsCheckSupplierUniqueFunc(I_TENANT_ID='L2100',I_SUPPLIER_NICKNAME='ZKH')/Set";
+
+            // $.ajax({
+            //         url: url,
+            //         type: "GET",
+            //         contentType: "application/json",
+            //         success: function(data){
+                        
+
+                                               
+            //         },
+            //         error: function(e){
+                        
+            //         }
+            // });
         },
 
         CheckEmail: function (str) {                                                 

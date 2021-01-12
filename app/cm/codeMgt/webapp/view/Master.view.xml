@@ -13,7 +13,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                        <Title text="{I18N>/CODE_MANAGEMENT}"/>
+                    <Title text="{I18N>/CODE_MANAGEMENT}"/>
                 </f:heading>
             </f:DynamicPageTitle>
         </f:title>
@@ -156,15 +156,22 @@
                 <columns>
                     <Column
                         width="8em"
+                        hAlign="Center"
                         minScreenWidth="Tablet"
                         demandPopin="true">
                         <Text text="{I18N>/TENANT_ID}" />
                     </Column>
                     <Column
-                        width="7em"
+                        width="6em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
                         <Text text="{I18N>/CHAIN_CODE}" />
+                    </Column>
+                    <Column
+                        width="10em"
+                        minScreenWidth="Tablet"
+                        demandPopin="true">
+                        <Text text="{I18N>/CHAIN}" />
                     </Column>
                     <Column
                         width="18em">
@@ -192,23 +199,11 @@
                         <cells>
                             <Text text="{viewModel>tenant_id}" />
                             <Text text="{viewModel>chain_code}" />
+                            <Text text="{viewModel>chain_name}" />
                             <Text text="{viewModel>group_code}" />
                             <Text text="{viewModel>group_name}" />
                             <Text text="{viewModel>group_description}" />
-                            <HBox>
-                                <tnt:InfoLabel 
-                                    text="True" 
-                                    visible="{viewModel>use_flag}"
-                                    renderMode="Narrow" 
-                                    colorScheme="7" 
-                                    displayOnly= "true" />
-                                <tnt:InfoLabel 
-                                    text="False" 
-                                    visible="{= !${viewModel>use_flag}}"
-                                    renderMode="Narrow" 
-                                    colorScheme="5" 
-                                    displayOnly= "true" />
-                            </HBox>
+                            <Text text="{= ${viewModel>use_flag}?'Yes':'No'}" />
                         </cells>
                     </ColumnListItem>
                 </items>

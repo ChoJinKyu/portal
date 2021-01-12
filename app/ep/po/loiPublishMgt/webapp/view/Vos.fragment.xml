@@ -8,7 +8,7 @@
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm id="VosForm" editable="false" >
                 <Toolbar>
-                    <Title id="Title1" text="VOS"/>
+                    <Title text="VOS"/>
                 </Toolbar>            
                 <Label text="VOS"/>
                 <TextArea id="saveSupplierOpinion" value="{

@@ -25,7 +25,7 @@ sap.ui.define([
                 textField: { type: "string", group: "Misc", defaultValue: "code_name" }
             },
             events: {
-                ok: {},
+                apply: {},
                 cancel: {}
             }
         },
@@ -44,7 +44,7 @@ sap.ui.define([
 
         onItemPress: function(oEvent){
             var oData = this.getModel().getProperty(oEvent.getSource().getBindingContextPath());
-            this.fireEvent("ok", {data: oData});
+            this.fireEvent("apply", {data: oData});
             this.oDialog.close();
         },
 

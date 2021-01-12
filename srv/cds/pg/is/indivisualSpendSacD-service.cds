@@ -10,6 +10,7 @@ using {cm.Org_Division as OrgDivision} from '../../../../db/cds/cm/CM_ORG_DIVISI
 using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/CM_CODE_MST-model';              // CodeMst(공통마스터코드)
 using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/CM_CODE_DTL-model';              // CodeDtl(공통코드상세)
 using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/CM_CODE_LNG-model';              // CodeLng(공통코드언어)
+using {cm.Country_View as CountryView} from '../../../../db/cds/cm/CM_COUNTRY_VIEW-model';  // CountryView(국가/원산지)
 
 //DP MM
 using {dp.Mm_Material_Mst as MaterialMst} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';          // Material Mst(자재일반)
@@ -20,6 +21,15 @@ using {pg.Vp_Vendor_Pool_Item_Dtl as VendorPoolItemDtl} from '../../../../db/cds
 
 // SP SM
 using {sp.Sm_Supplier_Mst as SupplierMst} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';     // Supplier Mst(공급업체 Mst)
+
+//PG IT
+using {pg.It_Mst_Pur_Group as PurGroupMst} from '../../../../db/cds/pg/it/PG_IT_MST_PUR_GROUP-model';              // PRUCHASING GROUP Mst(구매그룹)
+using {pg.It_Mst_Profit_Center as PctrMst} from '../../../../db/cds/pg/it/PG_IT_MST_PROFIT_CENTER-model';          // PROFIT CENTER Mst(손익센터)
+using {pg.It_Mst_Payment_Terms as PayTermMst} from '../../../../db/cds/pg/it/PG_IT_MST_PAYMENT_TERMS-model';       // PAYMENT TERMS Mst(지급조건)
+using {pg.It_Mst_Wbs as WbsMst} from '../../../../db/cds/pg/it/PG_IT_MST_WBS-model';                               // WBS Mst(프로젝트)
+using {pg.It_Mst_Cost_Center as CctrMst} from '../../../../db/cds/pg/it/PG_IT_MST_COST_CENTER-model';              // COST CENTER Mst(코스트센터)
+using {pg.It_Mst_Item_Category as ItemCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_ITEM_CATEGORY-model';  // ITEM CATEGORY Mst(품목범주)
+using {pg.It_Mst_Aa_Category as AaCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_AA_CATEGORY-model';        // AA CATEGORY Mst(계정범주)
 
 namespace pg;
 
@@ -265,6 +275,78 @@ service individualSpendSacDService {
                ,replace(fmytr_name, char(10), '')              as  FMYTR_NAME : String
                ,credit_evaluation_interface_code  as  CREDIT_EVAL_IF_NO : String
         from  SupplierMst
-    ;
+        ;
+
+    // Purchasing Group Mst View: 구매그룹
+    view PgPurGroupView @(title : '구매그룹 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||purchasing_group_code  as  ID : String
+               ,purchasing_group_code_name           as  Description
+               ,purchasing_group_code                as  PURCHASING_GROUP_CODE
+        from  PurGroupMst
+        ;
+
+    // Profit Center Mst View: 손익센터
+    view PgPctrMstView @(title : '손익센터 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||prctr_code  as  ID : String
+               ,prctr_name           as  Description
+               ,prctr_code           as  PRCTR_CODE
+        from  PctrMst
+        ;
+
+    // Payment Terms Mst View: 지불조건
+    view PgPayTermsMstView @(title : '지불조건 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||payterms_code  as  ID : String
+               ,payterms_name           as  Description
+               ,payterms_code           as  PAYMENT_TERMS_CODE
+        from  PayTermMst
+        ;
+
+    // WBS Mst View: 프로젝트
+    view PgWbsMstView @(title : '프로젝트 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||project_code  as  ID : String
+               ,project_name           as  Description
+               ,project_code           as  PROJECT_CODE
+        from  WbsMst
+        ;
+
+    // Cost Center Mst View: 코스트센터
+    view PgCctrMstView @(title : '코스트센터 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||cctr_code  as  ID : String
+               ,cctr_code_name      as  Description
+               ,cctr_code           as  PRCTR_CODE
+        from  CctrMst
+        ;
+
+    // IS Origin Code View: 원산지코드
+    view IsOriginvCodeView @(title : '원산지코드 View') as
+        select
+            key tenant_id||'_'||country_code  as  ID : String
+               ,country_name          as  Description
+               ,country_code          as  COUNTRY_CODE
+        from  CountryView
+        ;
+
+    // ITEM CATEGORY Mst View: 품목범주
+    view PgItemCategoryMstView @(title : '품목범주 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||po_item_category_code  as  ID : String
+               ,po_item_category_name  as  Description
+               ,po_item_category_code  as  PO_ITEM_CATEGORY_CODE
+        from  ItemCategoryMst
+        ;
+
+    // AA CATEGORY Mst View: 계정범주
+    view PgAaCategoryMstView @(title : '계정범주 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||account_assign_category_code  as  ID : String
+               ,account_assign_category_name  as  Description
+               ,account_assign_category_code  as  ACCOUNT_ASSIGN_CATEGORY_CODE
+        from  AaCategoryMst
+        ;
 
 }

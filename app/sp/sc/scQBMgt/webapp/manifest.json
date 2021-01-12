@@ -17,14 +17,15 @@
 		},
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v4/sp.negoHeadersV4Service/",
+                "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "4.0"
+                    "odataVersion": "2.0"
                 }
             },
-            "tmService": {
-                "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
+            "main": {
+                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
+                "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
@@ -87,6 +88,13 @@
                     "odataVersion": "2.0"
                 },
                 "dataSource": "mainService"
+            },
+            "main": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "odataVersion": "2.0"
+                },
+                "dataSource": "main"
             }
 		},
 		"resources": {
@@ -95,7 +103,8 @@
 			}]
 		},
         "resourceRoots": {
-            "ext.lib": "../../../../lib"
+            "ext.lib": "../../../../lib",
+            "dp.util": "../../../../dp/md/util"
         },
 		"routing": {
 			"config": {
@@ -117,7 +126,7 @@
                     "target": ["createObject"]
                 },{
                     "name": "detailPage",
-                    "pattern": "detailObject/{type},{outcome}",
+                    "pattern": "detailObject/{type},{outcome},{header_id}",
                     "target": ["detailObject"]
                 },{
                     "name": "detailPage2",

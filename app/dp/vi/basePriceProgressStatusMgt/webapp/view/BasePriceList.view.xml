@@ -6,6 +6,7 @@
   xmlns:form="sap.ui.layout.form"
   xmlns:t="sap.ui.table"
   xmlns:layout="sap.ui.layout"
+  xmlns:tnt="sap.tnt"
   xmlns:lib-m="ext.lib.control.m"
   displayBlock="true"
   height="100%">
@@ -52,27 +53,44 @@
                         </VBox>
                         <!-- Type 끝 -->
 
-                        <!-- Division 시작 -->
+                        <!-- Company 시작 -->
                         <VBox>
-                            <!-- <Label text="{I18N>/BUSINESS_DIVISION}"></Label> -->
-                            <Label text="Pur Org"></Label>
-                            <ComboBox
-                                width="100%"
-                                selectedKey="{filterModel>/divistion}"
+                            <Label text="{I18N>/COMPANY}"></Label>
+                            <ComboBox width="100%" 
+                                selectedKey="{filterModel>/company_code}" 
                                 items="{
-                                path: 'filterModel>/divistion_list',
-                                filters: [
-                                ]
-                                }">
+                                    path: 'org>/Company',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    sorter: { path: 'company_code'}
+                                }"
+                                change=".onChangeCompany">
                                 <items>
-                                <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <!-- Division 끝 -->
+                        <!-- Company 끝 -->
+
+                        <!-- Plant 시작 -->
+                        <VBox>
+                            <Label text="{I18N>/PLANT}"></Label>
+                             <ComboBox width="100%" 
+                                selectedKey="{filterModel>/org_code}" 
+                                items="{filterModel>/selectedPurOrg}">
+                                <items>
+                                    <core:Item key="{filterModel>org_code}" text="[{filterModel>org_code}]{filterModel>org_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L4 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <!-- Plant 끝 -->
 
                         <!-- Material Code 시작 -->
                         <VBox>
@@ -87,7 +105,7 @@
                         <!-- Approval Number 시작 -->
                         <VBox>
                             <Label text="{I18N>/APPROVAL_NUMBER}"></Label>
-                            <Input value="{filterModel>/approvalNumber}" />
+                            <Input value="{filterModel>/approvalNumber}" change=".onSearch" />
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -108,8 +126,23 @@
 
                         <!-- Requset By 시작 -->
                         <VBox height="56px">
-                            <Label text="{I18N>/REQUEST_BY}"></Label>
-                            <SearchField value="{filterModel>/requestBy}" />
+                            <Label text="{I18N>/REQUESTOR}"></Label>
+                            <lib-m:CodePicker id="searchEmployeePicker"
+                                placeholder="Enter a Employee name"
+                                value="{filterModel>/requestBy}"
+                                keyField="employee_number"
+                                textField="user_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Employee'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -131,11 +164,11 @@
                             <Label text="{I18N>/STATUS}"></Label>
                             <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                 <items>
-                                    <SegmentedButtonItem text="All" key="" />
-                                    <SegmentedButtonItem text="Draft" key="10" width="4.2rem" />
-                                    <SegmentedButtonItem text="Requested" key="20" width="5.2rem" />
-                                    <SegmentedButtonItem text="Approved" key="30" width="4.8rem" />
-                                    <SegmentedButtonItem text="Rejected" key="40" width="4.5rem" />
+                                    <SegmentedButtonItem text="{I18N>/ALL}" key="" />
+                                    <SegmentedButtonItem text="{rootModel>/processList/0/code_name}" key="10" width="4.7rem" />
+                                    <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="20" width="5.2rem" />
+                                    <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="30" width="4.8rem" />
+                                    <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="40" width="4.5rem" />
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -187,15 +220,14 @@
                             <!-- <Text text="{listModel>approval_number}" /> -->
                         </t:template>
                     </t:Column>
-                    <t:Column width="10rem">
+                    <t:Column width="18rem">
                         <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>company_code_fk/company_name}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="6rem">
-                        <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" /> -->
-                        <Label text="Pur Org"></Label>
+                        <Label text="{I18N>/PLANT}" textAlign="Center" />
                         <t:template>
                             <Text text="{listModel>org_code}" />
                         </t:template>
@@ -224,7 +256,45 @@
                             <Text text="{listModel>approval_number_fk/approval_status_code}" textAlign="Right" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column headerSpan="3" width="7rem">
+                    <t:Column headerSpan="2" width="7rem" visible="{rootModel>/switchColumnVisible}">
+                        <t:multiLabels>
+                            <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/CODE}" textAlign="Center" width="100%" />
+                        </t:multiLabels>
+                        <t:template>
+                            <Text text="{listModel>supplier_code}" textAlign="Center" width="100%" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column width="10rem" visible="{rootModel>/switchColumnVisible}">
+                        <t:multiLabels>
+                            <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/NAME}" textAlign="Center" width="100%" />
+                        </t:multiLabels>
+                        <t:template>
+                            <Text text="{listModel>supplier_local_name}" textAlign="Center" width="100%" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column width="7rem" visible="{rootModel>/switchColumnVisible}">
+                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
+                        <t:template>
+                            <Text text="{
+                                    path: 'listModel>base_date',
+                                    formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                        </t:template>
+                        </t:Column>
+                    <t:Column width="10rem" visible="{rootModel>/switchColumnVisible}">
+                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
+                        <t:template>
+                            <Text text="{listModel>prices/results/0/new_base_price}" textAlign="Right" width="100%" />
+                        </t:template>
+                        </t:Column>
+                    <t:Column width="6rem" visible="{rootModel>/switchColumnVisible}">
+                        <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
+                        <t:template>
+                            <Text text="{listModel>prices/results/0/new_base_price_currency_code}" textAlign="Center" width="100%" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column headerSpan="3" width="7rem" visible="{= !${rootModel>/switchColumnVisible}}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -235,7 +305,7 @@
                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="10rem">
+                    <t:Column width="10rem" visible="{= !${rootModel>/switchColumnVisible}}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -244,7 +314,7 @@
                             <Text text="{listModel>prices/results/0/new_base_price}" textAlign="Right" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="6rem" >
+                    <t:Column width="6rem" visible="{= !${rootModel>/switchColumnVisible}}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
@@ -253,7 +323,7 @@
                             <Text text="{listModel>prices/results/0/new_base_price_currency_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column headerSpan="3" width="7rem">
+                    <t:Column headerSpan="3" width="7rem" visible="{= !${rootModel>/switchColumnVisible}}">
                         <t:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -264,7 +334,7 @@
                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="10rem">
+                    <t:Column width="10rem" visible="{= !${rootModel>/switchColumnVisible}}">
                         <t:multiLabels>
                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -273,7 +343,7 @@
                             <Text text="{listModel>prices/results/1/new_base_price}" textAlign="Right" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="6rem" >
+                    <t:Column width="6rem" visible="{= !${rootModel>/switchColumnVisible}}">
                         <t:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
@@ -335,9 +405,9 @@
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="8rem">
-                        <Label text="{I18N>/REQUESTED_BY}" />
+                        <Label text="{I18N>/REQUESTOR}" />
                         <t:template>
-                            <Text text="{listModel>create_user_id}" />
+                            <Text text="{listModel>approval_number_fk/approval_request_empno_fk}" />
                         </t:template>
                     </t:Column>
                     <!-- <t:Column hAlign="Center"  width="2rem">

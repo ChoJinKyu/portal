@@ -211,35 +211,160 @@ sap.ui.define([
             return;
         }
 
+        /********************************************************************************** */
+        /* 견적 재료비 생성, 목표 재료비 생성, 진척 관리 Dialog 창 Action  (Starat)             */
+        /********************************************************************************** */
+
         /**
          * 견적재료비 생성 클릭
+         * @param {event} oEvent
          */
-        , onEstimateCreatePress: function() {
-            var iSelIdx = this._getSelectedIndex(this.getView().byId("mainTable"));
-            if(iSelIdx < 0) { return; }//skip
+        , onEstimateCreatePress: function (oEvent) {
+            this.onGoalCreatePress(oEvent);
+        }
 
-            let oTable = this.getView().byId("mainTable");
-            let oContext = oTable.getContextByIndex(iSelIdx);
+        /**
+         * 예상 재료비 작성 Dialog 오픈 
+         * @param {event} oEvent
+         */
+        , onProgressMgtPress: function (oEvent) {
+            //MessageToast.show("준비중", { at: "Center Center" });
+            //return;
+            this.onGoalCreatePress(oEvent);
+        }
+
+        /**
+         * 목표재료비 작성 Dialog 오픈
+         * @param {event} oEvent
+         */
+        , onGoalCreatePress: function (oEvent) {
+            debugger;
+            var oView = this.getView();
+            var oTable = oView.byId("mainTable");
+            var nSelIdx = this._getSelectedIndex(oTable);
+
+            if (nSelIdx < 0) { return; }//skip
+
+            var oButton = oEvent.getSource();
+            if (!this._oDialogTableSelect) {
+                this._oDialogTableSelect = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.tc.projectMgt.view.DetailPopup",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }
+            this._oDialogTableSelect.then(function (oDialog) {
+                oDialog.open();
+                this.onGetDialogData();
+
+            }.bind(this));
+
+        }
+        /** 
+         *  목표재료비 Dialog 창 데이터 추출  
+         */
+        , onGetDialogData: function (oEvent) {
+            var oView = this.getView("detailPopupTable");
+            //var oModel = this.getModel();
+            var oModel = this.getModel("detailListModel");   //manifest에 등록한 모델을 가져오면 해당 서비스를 사용할수 있다.
+            var oTable = oView.byId("mainTable");
+            var nSelIdx = this._getSelectedIndex(oTable);
+            var oContext = oTable.getContextByIndex(nSelIdx);
+            var sPath = oContext.getPath();
+            var oData = oTable.getBinding().getModel().getProperty(sPath);
+
+            var aFilters = [];
+            
+            if (aFilters) {
+                //aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oData.tenant_id));
+                //aFilters.push(new Filter("project_code", FilterOperator.EQ, oData.project_code));
+                //aFilters.push(new Filter("model_code", FilterOperator.EQ, oData.model_code));
+            }
+
+            oView.setBusy(true);
+            oModel.read("/McstProject", {  
+                filters: aFilters,
+                urlParameters: {
+                    "$expand": "mcst_status_text,mcst_text"
+                },
+                success: function (data) {
+                    oView.setBusy(false);
+
+                    if (data) {
+                        oView.getModel("popupListModel").setData(data);
+                    }
+                }.bind(this),
+                error: function (data) {
+                    oView.setBusy(false);
+                    console.log('error', data);
+                }
+            });
+        }
+
+        /**
+         * Dialog Close
+         */
+        , onClose: function (oEvent) {
+            this._oDialogTableSelect.then(function (oDialog) {
+                oDialog.close();
+            });
+        }
+
+        /**
+        * Dialog Copy
+        */
+        , onCopy: function (oEvent) {
+            MessageToast.show("복사 준비중 ");
+        }
+
+        /**
+        * Dialog Create
+        */
+        , onDialogCreate: function (oEvent) {
+            this._goCreateView();
+        }
+
+        /**
+         * Dialog창 테이블 Index값 세팅 
+         */
+        , onSelectDialogChange: function (oEvent) {
+            debugger;
+            var oTable = this.getView().byId("detailPopupTable"),
+                iSelectedIndex = oEvent.getSource().getSelectedIndex();
+
+            oTable.setSelectedIndex(iSelectedIndex);
+        }
+
+        /**
+         * Dialog(견적재료비 생성, 목표 재료비 생성, 진척관리) > Create(작성) > 입력/수정하는 화면으로 이동
+         */
+        , _goCreateView: function (oEvent) {
+            debugger;
+            //var iSelIdx = this._getSelectedIndex(this.getView().byId("detailPopupTable"));
+
+            //if (iSelIdx < 0) { return; }//skip
+            var index = 0;
+            let oTable = this.getView().byId("detailPopupTable");
+            let oContext = oTable.getContextByIndex(index);
             let oModel = oContext.getModel();
             let oObj = oModel.getProperty(oContext.getPath());
 
             var oNavParam = {
-                tenant_id : oObj.tenant_id,
-                project_code : oObj.project_code,
-                model_code : oObj.model_code
+                tenant_id: oObj.tenant_id,
+                project_code: oObj.project_code,
+                model_code: oObj.model_code
             };
-            this.getRouter().navTo("ProjectInfo", oNavParam);
+
+            this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
+            //this.getRouter().navTo("ProjectInfo", oNavParam);
         }
 
-        , onGoalCreatePress: function() {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-        }
-
-        , onProgressMgtPress: function() {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-        }
+        /********************************************************************************** */
+        /* 견적 재료비 생성, 목표 재료비 생성, 진척 관리 Dialog 창 Action  (End)               */
+        /********************************************************************************** */          
 
         , onAddModelPress: function() {
             MessageToast.show("준비중", {at: "Center Center"});

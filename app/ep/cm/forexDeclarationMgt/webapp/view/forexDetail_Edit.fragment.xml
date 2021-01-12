@@ -82,8 +82,7 @@
                         </VBox>
                         <VBox>
                             <Label text = "입고예정일자 : "/> 
-                             <!-- <Text id="receiptScheduledDate" text="{path: 'receiptScheduledDate', formatter: '.dateFormatter.toDateString'}"/> -->
-                              <Text id="receiptScheduledDate" text="{path: 'receiptScheduledDate', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
+                             <Text id="receiptScheduledDate"  width="100%"/>
                              <layoutData>
                                 <layout:GridData span="XL6 L12 M6 S6" />
                             </layoutData> 

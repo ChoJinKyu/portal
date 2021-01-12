@@ -202,6 +202,12 @@
                                 <Text id="rpay_rate" text="{purOrderItem>rpay_rate}" />
                             </table:template>
                         </table:Column>
+                        <table:Column width="12em" hAlign="Center" visible="false">
+                            <Label text="Account Code"/>
+                            <table:template>
+                                <Text id="account_code" text="{purOrderItem>account_code}" />
+                            </table:template>
+                        </table:Column>
                     </table:columns>
                 </table:Table>
 			</form:content>

@@ -226,7 +226,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{=${detailModel>/mcst_yield_rate} || 0}%">
+            <Text text="{detailModel>/mcst_yield_rate}%">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -290,7 +290,8 @@
                     path: 'util>/Code',
                     filters: [
                         {path: 'group_code', operator: 'EQ', value1: 'DC_TC_PRODUCT_GROUP_CODE'}
-                    ]
+                    ],
+                    sorter: { path: 'sort_no'}
                 }">
                 <items>
                     <core:Item key="{util>code}" text="{util>code_name}" />
@@ -317,7 +318,8 @@
                     path: 'util>/Code',
                     filters: [
                         {path: 'group_code', operator: 'EQ', value1: 'DP_TC_DEVELOP_EVENT_CODE'}
-                    ]
+                    ],
+                    sorter: { path: 'sort_no'}
                 }">
                 <items>
                     <core:Item key="{util>code}" text="{util>code_name}" />
@@ -384,8 +386,9 @@
                 items="{
                     path: 'util>/Code',
                     filters: [
-                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_MCST_STATUS_CODE'}
-                    ]
+                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_STATUS_CODE'}
+                    ],
+                    sorter: { path: 'sort_no'}
                 }">
                 <items>
                     <core:Item key="{util>code}" text="{util>code_name}" />
@@ -434,7 +437,8 @@
                     path: 'util>/Code',
                     filters: [
                         {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_GRADE_CODE'}
-                    ]
+                    ],
+                    sorter: { path: 'sort_no'}
                 }">
                 <items>
                     <core:Item key="{util>code}" text="{util>code_name}" />
@@ -529,7 +533,7 @@
                 </layoutData>
             </Label>
             <HBox>
-                <Input value="{=${detailModel>/mcst_yield_rate} || 0}" width="95%"/>
+                <Input value="{detailModel>/mcst_yield_rate}" width="95%"/>
                 <Text text="%" width="100%" class="sapUiLargeMarginEnd"/>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
@@ -548,7 +552,8 @@
                     path: 'util>/Code',
                     filters: [
                         {path: 'group_code', operator: 'EQ', value1: 'DP_TC_BOM_TYPE_CODE'}
-                    ]
+                    ],
+                    sorter: { path: 'sort_no'}
                 }">
                 <items>
                     <core:Item key="{util>code}" text="{util>code_name}" />
