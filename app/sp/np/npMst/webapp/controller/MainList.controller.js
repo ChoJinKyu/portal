@@ -113,7 +113,7 @@ sap.ui.define([
 
             getToday: function (dateObj) {
                 var date = new Date();
-                if (dateObj === null) {
+                if (dateObj === undefined) {
                     date = new Date();
                 } else {
                     date = dateObj;
@@ -122,7 +122,7 @@ sap.ui.define([
                 var month = ("0" + (1 + date.getMonth())).slice(-2);
                 var day = ("0" + date.getDate()).slice(-2);
 
-                return year + "-" + month + "-" + day;
+                return year + "." + month + "." + day;
             },
 
             formatDate: function (date) {
