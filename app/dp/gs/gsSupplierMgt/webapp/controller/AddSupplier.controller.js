@@ -697,84 +697,57 @@ sap.ui.define([
                     oQuarter,                                        
                     new Input({
                         value: {
-                            path: 'SupplierFin>sales_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>sales_amount'
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>opincom_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>opincom_amount'
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>asset_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>asset_amount'
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>curasset_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>curasset_amount'
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>nca_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>nca_amount'
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>liabilities_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>liabilities_amount'
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>curliablities_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>curliablities_amount'
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>ncl_amount',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>ncl_amount'                            
+                        },
+                        type: "Number"
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierFin>equity_capital',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 100
-                            }
-                        }
+                            path: 'SupplierFin>equity_capital'                           
+                        },
+                        type: "Number"
                     })
 				]
             });
