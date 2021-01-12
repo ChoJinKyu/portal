@@ -994,9 +994,14 @@ sap.ui.define([
             console.log("statusCode1111----->" ,statusCode);
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
+
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
             this.byId("pageNavBackButton").setEnabled(false);
+            this.byId("pageSaveButton").setVisible(true);
+            this.byId("pageByPassButton").setVisible(true);
+            this.byId("pageRequestButton").setVisible(true);  
+
             if (statusCode === "121010" || statusCode === "121030") {
                 this.byId("pageSaveButton").setEnabled(true);
             } else {
@@ -1030,21 +1035,43 @@ sap.ui.define([
             console.log("statusCode----->" ,oMasterModel.getData().loi_request_status_name);
             var statusCode = oMasterModel.getData().loi_request_status_code;
             this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("page").setProperty("showFooter", true);
-            if (statusCode === "121040") {
-                this.byId("pageEditButton").setVisible(false);
-                this.byId("pageDeleteButton").setVisible(false);
-            }else{
-                this.byId("pageEditButton").setVisible(true);
-                this.byId("pageDeleteButton").setVisible(true);
-            }
+            // this.byId("page").setProperty("showFooter", true);
+            // if (statusCode === "121040") {
+            //     this.byId("pageEditButton").setVisible(false);
+            //     this.byId("pageDeleteButton").setVisible(false);
+            // }else{
+            //     this.byId("pageEditButton").setVisible(true);
+            //     this.byId("pageDeleteButton").setVisible(true);
+            // }
 
-            this.byId("pageEditButton").setEnabled(true);
-            this.byId("pageDeleteButton").setEnabled(true);
+            // this.byId("pageEditButton").setEnabled(true);
+            // this.byId("pageDeleteButton").setEnabled(true);
+            // this.byId("pageNavBackButton").setEnabled(true);
+            // this.byId("pageSaveButton").setEnabled(false);
+            // this.byId("pageByPassButton").setEnabled(false);
+            // this.byId("pageRequestButton").setEnabled(false);
+
+            if(statusCode == "121040") {
+                this.byId("page").setProperty("showFooter", false);
+            }else {
+                this.byId("page").setProperty("showFooter", true);
+            }
+            //this.byId("pageEditButton").setVisible(true);
+            // if (statusCode === "122040" || statusCode === "122060") {
+            //     this.byId("pageEditButton").setVisible(false);
+            //     this.byId("pageDeleteButton").setVisible(false);
+            // } else {
+            this.byId("pageEditButton").setVisible(true);
+            this.byId("pageDeleteButton").setVisible(true)
+            //}
+            //this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageByPassButton").setEnabled(false);
-            this.byId("pageRequestButton").setEnabled(false);
+            
+            this.byId("pageSaveButton").setVisible(false);
+            this.byId("pageByPassButton").setVisible(false);
+            this.byId("pageRequestButton").setVisible(false);
+
+            this.byId("pageCancelButton").setEnabled(true);
 
             this.byId("midTableAddButton").setEnabled(false);
             this.byId("midTableDeleteButton").setEnabled(false);
