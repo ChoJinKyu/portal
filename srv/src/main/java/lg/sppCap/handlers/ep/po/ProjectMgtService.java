@@ -51,6 +51,7 @@ public class ProjectMgtService implements EventHandler {
 
             String project_number = "";
 
+            // 이 부분 사용하면 안됨
             //Connection conn = jdbc.getDataSource().getConnection();
 
             // Local Temp Table 생성
@@ -59,6 +60,7 @@ public class ProjectMgtService implements EventHandler {
 
             //if(v_rs.next()) project_number = String.valueOf(v_rs.getInt("MAX_PROJECT_NUMBER"));
 
+            // 검색조건 없음, String type으로 바로 return
             project_number = jdbc.queryForObject(v_sql, null, String.class);
 
             while(project_number.length() < 6) {
