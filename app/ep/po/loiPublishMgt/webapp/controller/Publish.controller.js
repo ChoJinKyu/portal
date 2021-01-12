@@ -108,7 +108,7 @@ sap.ui.define([
         //         loiNumber: this._sLoiNumber
         //     });
         // },
-        
+
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
@@ -292,11 +292,12 @@ sap.ui.define([
                                     success: function (oData) {
                                         oView.setBusy(false);
                                         oView.getModel("master").updateBindings(true);
+                                        that._toShowMode();
                                     }
                                 });
-                                that._toShowMode();
-                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 
+                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+
                                 // if (flag == "D") {
                                 //     that._toEditMode();
                                 // } else {
@@ -519,7 +520,7 @@ sap.ui.define([
                         // }
                     }
                 });
-                
+
             }
 
             //oTransactionManager.setServiceModel(this.getModel());
@@ -535,6 +536,9 @@ sap.ui.define([
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
             this.byId("pageNavBackButton").setEnabled(false);
+            this.byId("pageSaveButton").setVisible(true);
+            this.byId("pageByPassButton").setVisible(true);
+            this.byId("pageRequestButton").setVisible(true);
             if (statusCode === "123010" || statusCode === "123030") {
                 this.byId("pageSaveButton").setEnabled(true);
             } else {
@@ -567,12 +571,12 @@ sap.ui.define([
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             this._showFormFragment('Publish_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
-            if(statusCode == "123040") {
+            if (statusCode == "123040") {
                 this.byId("page").setProperty("showFooter", false);
-            }else {
+            } else {
                 this.byId("page").setProperty("showFooter", true);
             }
-            
+
             //this.byId("pageEditButton").setVisible(true);
             // if (statusCode === "122040" || statusCode === "122060") {
             //     this.byId("pageEditButton").setVisible(false);
@@ -583,7 +587,7 @@ sap.ui.define([
             //}
             //this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);
-            
+
             this.byId("pageSaveButton").setVisible(false);
             this.byId("pageByPassButton").setVisible(false);
             this.byId("pageRequestButton").setVisible(false);

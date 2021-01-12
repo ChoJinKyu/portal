@@ -285,9 +285,10 @@ sap.ui.define([
                                     success: function (oData) {
                                         oView.setBusy(false);
                                         oView.getModel("master").updateBindings(true);
+                                        that._toShowMode();
                                     }
                                 });
-                                that._toShowMode();
+                                
                                 //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 
                                 // if (flag == "D") {
@@ -526,6 +527,9 @@ sap.ui.define([
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
             this.byId("pageNavBackButton").setEnabled(false);
+            this.byId("pageSaveButton").setVisible(true);
+            this.byId("pageByPassButton").setVisible(true);
+            this.byId("pageRequestButton").setVisible(true);            
             if (statusCode === "122030" || statusCode === "122050") {
                 this.byId("pageSaveButton").setEnabled(true);
             } else {
@@ -555,6 +559,7 @@ sap.ui.define([
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
             var statusCode = oMasterModel.getData().loi_selection_status_code;
+            console.log("statusCode=", statusCode);
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             // this._showFormFragment('MidObject_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");

@@ -110,9 +110,21 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
-                    <form:SimpleForm id="midObjectForm" editable="true">                    
+                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
                             <Label  text="* 품의명" 
+                                    required="{midObjectViewModel>/isEditMode}"
+                                    design="Bold" 
+                                    class="sapUiSmallMarginBottom" />
+                            <Input value="{
+                                path: 'master>/loi_selection_title',
+                                type: 'sap.ui.model.type.String',
+                                constraints: {
+                                    maxLength: 50
+                                }
+                            }" class="sapMLabelNoText" required="{midObjectViewModel>/isEditMode}" width="98%" editable="{midObjectViewModel>/isEditMode}"/>
+                   
+                            <!-- <Label  text="* 품의명" 
                                     required="true"
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{midObjectViewModel>/isEditMode}"/>
@@ -123,7 +135,7 @@
                                     maxLength: 50
                                 }
                             }" class="sapMLabelNoText" required="true" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
-                            <!-- <Label  text="* 품의명" 
+                            <Label  text="* 품의명" 
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
                             <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/> -->
