@@ -89,8 +89,8 @@ sap.ui.define([
 
             // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchBuyer").setValue("(9586) **민");
-            this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
+            //this.getView().byId("searchBuyer").setValue("(9586) **민");
+            //this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
         },
 
         onRenderedFirst: function () {
