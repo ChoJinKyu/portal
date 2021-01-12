@@ -30,15 +30,15 @@
                                                 <Label text="{I18N>/TYPE_NAME}" />
                                                 <Text text="{monitoring_type_name}"/>
                                                 <Label text="{I18N>/PURCHASING_TYPE_NAME}" />
-                                                <Text text="{=${monitoring_purchasing_type_name}.replaceAll(';',',')}"/>
+                                                <Text text="{=${monitoring_purchasing_type_name}.replaceAll(';',', ')}"/>
                                                 <Label text="{I18N>/SCENARIO}" />
                                                 <Text text="{scenario_name}"/>
                                                 <Label text="{I18N>/TENANT_NAME}" />
                                                 <Text text="{tenant_name}"/>
                                                 <Label text="{I18N>/COMPANY}"/>
-                                                <Text text="{=${company_name}.replaceAll(';',',')}"/>
+                                                <Text text="{=${company_name}.replaceAll(';',', ')}"/>
                                                 <Label text="{I18N>/BUSINESS_UNIT}" />
-                                                <Text text="{=${bizunit_name}.replaceAll(';',',')}"/>
+                                                <Text text="{=${bizunit_name}.replaceAll(';',', ')}"/>
                                         </f:content>
                                     </f:SimpleForm>
                             </VBox>

@@ -28,7 +28,7 @@ sap.ui.define([
 
         formatter: Formatter,
         validator: new Validator(),
-        
+
         //수정
         onInit: function () {
             //DetailView Model
@@ -50,32 +50,35 @@ sap.ui.define([
             //주기 text
             // @ts-ignore
             this.cycleText = new sap.m.Text({
-                text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
+                text: "{=${monitoring_cycle_name}.replaceAll(';', ', ')}",
             });
 
             //담당자
             this.managerText = new sap.m.Text({
-                text: "{=${monitoring_cycle_name}.replaceAll(';', ',')}",
+                text: "{=${monitoring_cycle_name}.replaceAll(';', ', ')}",
             });
 
             //주기 multicombobox
             // @ts-ignore
             this.cycle_multibox = new sap.m.MultiComboBox({
+                width: "100%",
                 selectedKeys: "{=${monitoring_cycle_code}.split(';')}",
                 placeholder: "{I18N>/CYCLE}",
                 items: {
                     path: '/TaskMonitoringCycleCodeView',
                     // @ts-ignore
-                    template: new sap.ui.core.Item({
+                    template: new sap.ui.core.ListItem({
                         key: "{code}",
                         text: "{code_name}"
                     })
                 }
             });
-             // I18N 모델 
+
+           
+            // I18N 모델 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            i18nModel = this.getModel("I18N"); 
+            i18nModel = this.getModel("I18N");
 
 
         },
@@ -350,7 +353,7 @@ sap.ui.define([
                                 oModel.refresh(true);
                             },
                             error: function (cc, vv) {
-                                 sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
+                                sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                             }
                         });
 
@@ -1008,7 +1011,7 @@ sap.ui.define([
 
             }
 
-            
+
 
 
 
@@ -1163,8 +1166,11 @@ sap.ui.define([
             var managerId = [];
             var managerNames = [];
             managers.forEach(function (manager) {
-                managerId.push(manager.getAggregation("cells")[1].getProperty("text"));
-                managerNames.push(manager.getAggregation("cells")[2].getProperty("text"));
+                if (manager.getAggregation("cells")[0].getProperty("text") !== "D") {
+                    managerId.push(manager.getAggregation("cells")[1].getProperty("text"));
+                    managerNames.push(manager.getAggregation("cells")[2].getProperty("text"));
+                }
+
             });
 
             var items = oTable.getSelectedItems();
@@ -1420,7 +1426,7 @@ sap.ui.define([
                         },
                         selectionChange: function (oEvent) {
                             var status = oEvent.getSource().getParent().getAggregation("cells")[0].getText();
-                            if(status !== "C") {
+                            if (status !== "C") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
                             }
                             if (oEvent.getSource().getSelectedKey() === "TKMTINC002") {
