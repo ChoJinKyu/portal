@@ -42,9 +42,6 @@ sap.ui.define([
 
         onDropAvailableItemsTable: function(oEvent) {
             
-            var oRighttModel = this.getModel("tblModel").getProperty("/right");
-
-            
 			var oDragSession = oEvent.getParameter("dragSession");
 			var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
 			if (!oDraggedRowContext) {
@@ -54,10 +51,7 @@ sap.ui.define([
             var item = this.getModel("tblModel").getProperty(oDraggedRowContext.getPath());
             var arr = this.getModel("tblModel").getProperty("/right");
             var idx = oDraggedRowContext.getPath().split("/")[2];
-            var length =  arr.length;
-            var str = "/right/"+length;
-            
-            
+                       
             arr.splice(idx,1);
             this.getModel("tblModel").setProperty("/right",arr);
 
@@ -85,26 +79,43 @@ sap.ui.define([
 		},
 
 		moveToSelectedItemsTable: function() {
+        
             var oAvailableTable = Utils.getAvailableItemsTable(this);
 			Utils.getSelectedItemContext(oAvailableTable, function(oSelectedRowContext) {
-				var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
-                var oFirstRowContext = oSelectedItemsTable.getContextByIndex(0);
+                var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
 
-				// insert always as a first row
-				var iNewRank = Utils.ranking.Default;
-				if (oFirstRowContext) {
-					iNewRank =  Utils.ranking.Before(oFirstRowContext.getProperty("Rank"));
-				}
+                var item = this.getModel("tblModel").getProperty(oSelectedRowContext.getPath());
+                var length =  this.getModel("tblModel").getProperty("/right").length;
+                var str = "/right/"+length;
+                this.getModel("tblModel").setProperty(str,item);
+                this.getModel("tblModel").setProperty(str+"/vendor_pool_code","VP201610260087");
 
-                var oItemsModel = oAvailableTable.getModel();
-				oItemsModel.setProperty("Rank", iNewRank, oSelectedRowContext);
-				oItemsModel.refresh(true);
-
-				// select the inserted row
-				oSelectedItemsTable.setSelectedIndex(0);
+                this.getModel("tblModel").refresh(true);
             }.bind(this));
-            var oLeftModel = this.getModel("tblModel").getProperty("/left");
-            
+
+
+            // var oAvailableTable = Utils.getAvailableItemsTable(this);
+			// Utils.getSelectedItemContext(oAvailableTable, function(oSelectedRowContext) {
+			// 	var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
+            //     var oFirstRowContext = oSelectedItemsTable.getContextByIndex(0);
+
+			// 	// insert always as a first row
+			// 	var iNewRank = Utils.ranking.Default;
+			// 	if (oFirstRowContext) {
+			// 		iNewRank =  Utils.ranking.Before(oFirstRowContext.getProperty("Rank"));
+			// 	}
+
+            //     var oItemsModel = oAvailableTable.getModel();
+			// 	oItemsModel.setProperty("Rank", iNewRank, oSelectedRowContext);
+			// 	oItemsModel.refresh(true);
+
+			// 	// select the inserted row
+			// 	oSelectedItemsTable.setSelectedIndex(0);
+            // }.bind(this));
+            ///////////////////////////////////////////////////////
+
+
+
             // var oMasterModel = this.getModel("tblModel");
             // var oDetailsModel = this.getModel("details");
             // var sTenantId = oMasterModel.getProperty("/tenant_id");

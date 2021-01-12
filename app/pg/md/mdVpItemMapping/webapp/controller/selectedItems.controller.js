@@ -52,19 +52,40 @@ sap.ui.define([
 		},
 
 		moveToAvailableItemsTable: function() {
-            
-            //////////////////////////////////////////////////////////////////
+
             var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
             Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
-                var oItemsModel = oSelectedItemsTable.getModel();
-                oItemsModel.setProperty("Rank", Utils.ranking.Initial, oSelectedItemContext);
-                oItemsModel.refresh(true);
+                debugger;
+                var item = this.getModel("tblModel").getProperty(oSelectedItemContext.getPath());
+                var arr = this.getModel("tblModel").getProperty("/right");
+                var idx = oSelectedItemContext.getPath().split("/")[2];
+                var length =  arr.length;
+                var str = "/right/"+length;
+
+                arr.splice(idx,1);
+                this.getModel("tblModel").setProperty("/right",arr);
                 
-				var oNextContext = oSelectedItemsTable.getContextByIndex(iSelectedItemIndex + 1);
-				if (!oNextContext) {
-					oSelectedItemsTable.setSelectedIndex(iSelectedItemIndex - 1);
-				}
-            });
+                this.getModel("tblModel").refresh(true);
+            }.bind(this));
+            // oSelectedItemsTable.setSelectedIndex(idx-1);
+
+            
+            //////////////////////////////////////////////////////////////////
+            // var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
+            // Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
+            //     var oItemsModel = oSelectedItemsTable.getModel();
+            //     oItemsModel.setProperty("Rank", Utils.ranking.Initial, oSelectedItemContext);
+            //     oItemsModel.refresh(true);
+                
+			// 	var oNextContext = oSelectedItemsTable.getContextByIndex(iSelectedItemIndex + 1);
+			// 	if (!oNextContext) {
+			// 		oSelectedItemsTable.setSelectedIndex(iSelectedItemIndex - 1);
+			// 	}
+            // });
+
+
+
+
 			// var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
 			// Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
             //     // reset the rank property and update the model to refresh the bindings
@@ -178,7 +199,7 @@ sap.ui.define([
 			var oModel = this.getModel();
             var oView = this.getView();
             var that = this;
-            
+
             var selectedItems = this.byId("table").getItems();
             //this.byId("table").getSelectedContextPaths();
 
