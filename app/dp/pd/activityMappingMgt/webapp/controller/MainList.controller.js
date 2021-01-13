@@ -1,36 +1,36 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
-	"sap/ui/core/routing/History",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/core/routing/History",
+    "sap/ui/model/json/JSONModel",
     "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/Formatter",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/util/Validator",
-	"sap/m/TablePersoController",
-	"./MainListPersoService",
-	"sap/ui/model/Filter",
+    "sap/m/TablePersoController",
+    "./MainListPersoService",
+    "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-	"sap/m/ColumnListItem",
-	"sap/m/ObjectIdentifier",
-	"sap/m/Text",
-	"sap/m/Input",
-	"sap/m/ComboBox",
+    "sap/m/ColumnListItem",
+    "sap/m/ObjectIdentifier",
+    "sap/m/Text",
+    "sap/m/Input",
+    "sap/m/ComboBox",
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
 ], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
-	"use strict";
+    "use strict";
 
-	return BaseController.extend("dp.pd.activityMappingMgt.controller.MainList", {
+    return BaseController.extend("dp.pd.activityMappingMgt.controller.MainList", {
 
         formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(),
-        
-        onInit: function() {
+
+        onInit: function () {
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new ManagedListModel(), "list");
@@ -44,45 +44,53 @@ sap.ui.define([
                     intent: "#Template-display"
                 }, true);
             }.bind(this));
-            
+
             this.byId("btn_search").firePress();
         },
 
-        onMainTablePersoButtonPressed: function(event) {
+        onMainTablePersoButtonPressed: function (event) {
             this._oTPC.openDialog();
         },
-        
-        onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
-			this._oTPC.refresh();
+
+        onMainTablePersoRefresh: function () {
+            MainListPersoService.resetPersData();
+            this._oTPC.refresh();
         },
-        
-        onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				this.onRefresh();
-			} else {
-				var aSearchFilters = this._getSearchStates();
-				this._applySearch(aSearchFilters);
-			}
+
+        onPageSearchButtonPress: function (oEvent) {
+            if (oEvent.getParameters().refreshButtonPressed) {
+                this.onRefresh();
+            } else {
+                var aSearchFilters = this._getSearchStates();
+                    
+                if(this.byId("searchOrgCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchOrgCombo")) !== true) {
+                    MessageToast.show("필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchOrgCombo"));
+                }
+                this._applySearch(aSearchFilters);
+            }
         },
-      
-        _applySearch: function(aSearchFilters) {
+
+        _applySearch: function (aSearchFilters) {
             var oView = this.getView(),
-                    oModel = this.getModel("list");
-                oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel());
-            
-                this.byId("mainTableCancButton").setEnabled(false);
+                oModel = this.getModel("list");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
+
+            this.byId("mainTableCancButton").setEnabled(false);
+            this.byId("mainTableSaveButton").setEnabled(false);
 
             var oTable = this.byId("mainTable");
             oModel.read("/ActivityMappingNameView", {
                 filters: aSearchFilters,
-				success: function(oData){
+                success: function (oData) {
                     oView.setBusy(false);
-                    
+
                     for (var i = 0; i < oTable.getItems().length; i++) {
-                        oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                        oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
+                        // oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
+                        // oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                         oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                         oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                         oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
@@ -96,11 +104,11 @@ sap.ui.define([
 
                         oModel.oData.ActivityMappingNameView[i]._row_state_ = "";
                     }
-                    
+
                     oTable.removeSelections(true);
-                    
-				}.bind(this)
-			});
+
+                }.bind(this)
+            });
         },
 
         onMainTableUpdateFinished: function (oEvent) {
@@ -109,37 +117,47 @@ sap.ui.define([
                 oTable = oEvent.getSource(),
                 iTotalItems = oEvent.getParameter("total");
             sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("appTitle");
-            console.log(sTitle+" ["+iTotalItems+"]");
-            this.byId("mainTableTitle").setText(sTitle+"["+iTotalItems+"]");
-        
+            //console.log(sTitle+" ["+iTotalItems+"]");
+            this.byId("mainTableTitle").setText(sTitle + "[" + iTotalItems + "]");
+
         },
-        
-        _getSearchStates: function(){
+
+        _getSearchStates: function () {
             var sTenantId = "L1100",
                 sOrgCombo = this.getView().byId("searchOrgCombo").getSelectedKey(),
                 sProductActivity = this.getView().byId("searchProductActivity").getValue(),
                 sActivity = this.getView().byId("searchActivity").getValue();
-            
-            var aSearchFilters = [];
-            
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
+
+            var aSearchFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+            ];
 
             if (sOrgCombo && sOrgCombo.length > 0) {
                 aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, sOrgCombo));
             }
 
-			if (sProductActivity && sProductActivity.length > 0) {
-                aSearchFilters.push(new Filter("product_activity_code", FilterOperator.Contains, sProductActivity));
-                //aSearchFilters.push(new Filter("product_activity_name", FilterOperator.Contains, sProductActivity));
+            if (sProductActivity && sProductActivity.length > 0) {
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        new Filter("product_activity_code", FilterOperator.Contains, sProductActivity),
+                        new Filter("product_activity_name", FilterOperator.Contains, sProductActivity)
+                    ],
+                    and: false
+                }));
             }
 
             if (sActivity && sActivity.length > 0) {
-                aSearchFilters.push(new Filter("activity_code", FilterOperator.Contains, sActivity));
-                //aSearchFilters.push(new Filter("activity_name", FilterOperator.Contains, sActivity));
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        new Filter("activity_code", FilterOperator.Contains, sActivity),
+                        new Filter("activity_name", FilterOperator.Contains, sActivity)
+                    ],
+                    and: false
+                }));
             }
-			return aSearchFilters;
+            return aSearchFilters;
         },
-        
+
         onExportPress: function (oEvent) {
             var sTableId = oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
@@ -154,25 +172,25 @@ sap.ui.define([
             });
         },
 
-        onMainTableAddButtonPress: function(){
+        onMainTableAddButtonPress: function () {
             var [tId, mName, sEntity, aCol] = arguments;
-			var oTable = this.byId(tId),
+            var oTable = this.byId(tId),
                 oModel = this.getView().getModel(mName); //list
-            var oDataArr, oDataLength;    
+            var oDataArr, oDataLength;
             if (oModel.oData) {
                 oDataArr = oModel.getProperty("/ActivityMappingNameView");
                 oDataLength = oDataArr.length;
             }
 
-			oModel.addRecord({
-                "TENANT_ID": "L1100",
-                "COMPANY_CODE": "*",
-                "ORG_TYPE_CODE": "BU",
-                "ORG_CODE": "L110010000",
-                "ACTIVITY_CODE": null,
-                "PRODUCT_ACTIVITY_CODE": null,
-                "ACTIVITY_DEPENDENCY_CODE": null,
-                "ACTIVE_FLAG": null,
+            oModel.addRecord({
+                "tenant_id": "L1100",
+                "company_code": "*",
+                "org_type_code": "BU",
+                "org_code": "L110010000",
+                "activity_code": null,
+                "product_activity_codeE": null,
+                "activity_dependency_code": null,
+                "active_flag": "true",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
                 "create_user_id": "Test",
@@ -180,12 +198,13 @@ sap.ui.define([
                 "system_create_dtm": new Date(),
                 "system_update_dtm": new Date()
             }, "/ActivityMappingNameView", 0);
-			
+
             this.rowIndex = 0;
             this.byId("mainTableCancButton").setEnabled(true);
-            
-            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
+            this.byId("mainTableSaveButton").setEnabled(true);
+
+            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
+            // oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
@@ -202,74 +221,79 @@ sap.ui.define([
 
             oTable.setSelectedItem(oTable.getAggregation('items')[0]);
             this.validator.clearValueState(this.byId("mainTable"));
-		},
+        },
 
-        onMainTableCancButtonPress: function() {
+        onMainTableCancButtonPress: function () {
             var oTable = this.byId("mainTable");
             var oModel = this.getView().getModel("list");
             var oData = oModel.oData;
             var cntMod = 0;
             for (var i = 0; i < oTable.getItems().length; i++) {
-                if(oData.ActivityMappingNameView[i]._row_state_  == "C"
-                    || oData.ActivityMappingNameView[i]._row_state_  == "U"
-                    || oData.ActivityMappingNameView[i]._row_state_  == "D"){
+                if (oData.ActivityMappingNameView[i]._row_state_ == "C"
+                    || oData.ActivityMappingNameView[i]._row_state_ == "U"
+                    || oData.ActivityMappingNameView[i]._row_state_ == "D") {
                     cntMod++;
                 }
             }
-            if( cntMod > 0){
+            if (cntMod > 0) {
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
                     title: this.getModel("I18N").getText("/EDIT_CANCEL"),
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: (function (sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             var rowIndex = this.rowIndex;
-                            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(true);
-                            oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(false);
-                            oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(true);
-                            oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(false);
-                            oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(true);
-                            oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(false);
-                            oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(true);
-                            oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(false);
+                            // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
+                            // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
+                            oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
+                            oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
+                            oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
+                            oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
+                            oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[0].setVisible(true);
+                            oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[1].setVisible(false);
 
-                            oTable.getAggregation('items')[0].getCells()[5].getItems()[0].setVisible(true);
-                            oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(false);
-                            oTable.getAggregation('items')[0].getCells()[6].getItems()[0].setVisible(true);
-                            oTable.getAggregation('items')[0].getCells()[6].getItems()[1].setVisible(false);
-                            
+                            oTable.getAggregation('items')[rowIndex].getCells()[5].getItems()[0].setVisible(true);
+                            oTable.getAggregation('items')[rowIndex].getCells()[5].getItems()[1].setVisible(false);
+                            oTable.getAggregation('items')[rowIndex].getCells()[6].getItems()[0].setVisible(true);
+                            oTable.getAggregation('items')[rowIndex].getCells()[6].getItems()[1].setVisible(false);
+
                             this.byId("btn_search").firePress();
                         }
                     }).bind(this)
                 })
-            }else{
+            } else {
                 var rowIndex = this.rowIndex;
-                oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(false);
+                // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
+                // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
+                oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
+                oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
+                oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
+                oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
+                oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[0].setVisible(true);
+                oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[1].setVisible(false);
 
-                oTable.getAggregation('items')[0].getCells()[5].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[0].getCells()[6].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[6].getItems()[1].setVisible(false);
-               
+                oTable.getAggregation('items')[rowIndex].getCells()[5].getItems()[0].setVisible(true);
+                oTable.getAggregation('items')[rowIndex].getCells()[5].getItems()[1].setVisible(false);
+                oTable.getAggregation('items')[rowIndex].getCells()[6].getItems()[0].setVisible(true);
+                oTable.getAggregation('items')[rowIndex].getCells()[6].getItems()[1].setVisible(false);
+
                 this.byId("btn_search").firePress();
             }
         },
 
-		onMainTableDeleteButtonPress: function(){
-			var oTable = this.byId("mainTable"),
+        onMainTableDeleteButtonPress: function () {
+            var oTable = this.byId("mainTable"),
                 oModel = this.getModel("list"),
                 aItems = oTable.getSelectedItems(),
                 aIndices = [];
 
-            for (var i = 0; i < oTable._iVisibleItemsLength-1; i++) {
-                oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
+            if (oTable.getSelectedItems().length < 1) {
+                MessageToast.show("선택된 데이타가 없습니다.");
+                return;
+            }
+
+            for (var i = 0; i < oTable.getItems().length - 1; i++) {
+                // oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
+                // oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                 oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                 oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                 oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
@@ -292,69 +316,52 @@ sap.ui.define([
             oTable.removeSelections(true);
             oTable.setSelectedItem(aItems);
         },
-       
-        // 저장 수정해야함
-        onMainTableSaveButtonPress: function(){
-			var oModel = this.getModel("v4Proc");
-            var oModel2 = this.getView().getModel("list"); 
+
+        cellPress: function (oEvent) {
+            console.log(oEvent);
+        },
+
+        onMainTableSaveButtonPress: function () {
+            var oModel = this.getModel("activityMappingV4Service");
+            var oModel2 = this.getView().getModel("list");
             var oView = this.getView();
             var v_this = this;
             var oTable = this.byId("mainTable");
-            var oData = oModel2.oData;                
-            var inputData = {
-                inputData : {
-                    pdProdActivityTemplateType :  []
-                }
+            var oData = oModel2.oData;
+            var input = {
+                inputData: []
             };
-            
-            if(this.validator.validate(this.byId("mainTable")) !== true) return;
+
+            if (this.validator.validate(this.byId("mainTable")) !== true) return;
             var now = new Date();
-            var PdProdActivityTemplateType  = [];
+            var PdActivityMappingType = [];
             for (var i = 0; i < oTable.getItems().length; i++) {
-                if( oData.PdProdActivityTemplate[i]._row_state_ != null && oData.PdProdActivityTemplate[i]._row_state_ != "" ){
-                    var activeFlg = "false";
-                    if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
-                        activeFlg = "true";
-                    }else {
-                        activeFlg = "false";
-                    }
-                    var milestoneFlg = "false";
-                    if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
-                        milestoneFlg = "true";
-                    }else {
-                        milestoneFlg = "false";
-                    }
-                    var pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[2].getValue();
-                    if(oData.PdProdActivityTemplate[i]._row_state_  == "C"){
-                        pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue();
-                    }
-                    var seq = oData.PdProdActivityTemplate[i].sequence;
-                    if(oData.PdProdActivityTemplate[i]._row_state_ == "C"){
-                        seq ="1";
-                    }
-                    PdProdActivityTemplateType.push( 
+                if (oData.ActivityMappingNameView[i]._row_state_ != null && oData.ActivityMappingNameView[i]._row_state_ != "") {
+
+                    PdActivityMappingType.push(
                         {
-                            tenant_id : oData.PdProdActivityTemplate[i].tenant_id,
-                            company_code : oData.PdProdActivityTemplate[i].company_code,
-                            org_type_code : oData.PdProdActivityTemplate[i].org_type_code,
-                            org_code : oData.PdProdActivityTemplate[i].org_code,
-                            product_activity_code : pacOri,
-                            develope_event_code : oData.PdProdActivityTemplate[i].develope_event_code,	
-                            sequence : oData.PdProdActivityTemplate[i].sequence,
-                            product_activity_name : oData.PdProdActivityTemplate[i].product_activity_name,	
-                            product_activity_english_name : oData.PdProdActivityTemplate[i].product_activity_english_name,
-                            milestone_flag : milestoneFlg,
-                            active_flag : activeFlg,
-                            update_user_id : this.loginUserId,
-                            system_update_dtm : now, 
-                            crud_type_code : oData.PdProdActivityTemplate[i]._row_state_,
-                            update_product_activity_code : oData.PdProdActivityTemplate[i].product_activity_code
-                    });
-                    inputData.inputData.pdProdActivityTemplateType = PdProdActivityTemplateType;
-                    var url = "dp/pd/productActivity/webapp/srv-api/odata/v4/dp.ProductActivityV4Service/PdProductActivitySaveProc";
+                            tenant_id: oData.ActivityMappingNameView[i].tenant_id,
+                            company_code: oData.ActivityMappingNameView[i].company_code,
+                            org_type_code: oData.ActivityMappingNameView[i].org_type_code,
+                            org_code: oData.ActivityMappingNameView[i].org_code,
+                            activity_code: oData.ActivityMappingNameView[i].activity_code,
+                            product_activity_codeproduct_activity_code: oData.ActivityMappingNameView[i].product_activity_codeproduct_activity_code,
+                            activity_dependency_code: oData.ActivityMappingNameView[i].activity_dependency_code,
+                            active_flag: oData.ActivityMappingNameView[i].active_flag.toString(),
+                            update_user_id: oData.ActivityMappingNameView[i].update_user_id,
+                            system_update_dtm: oData.ActivityMappingNameView[i].system_update_dtm,
+                            crud_type_code: oData.ActivityMappingNameView[i]._row_state_,
+                            update_activity_code: oData.ActivityMappingNameView[i].update_activity_code,
+                            update_product_activity_codeproduct_activity_code: oData.ActivityMappingNameView[i].update_product_activity_codeproduct_activity_code
+                        }
+                    );
+
+                    input.inputData = PdActivityMappingType;
+                    var url = "dp/pd/activityMapping/webapp/srv-api/odata/v4/dp.ActivityMappingV4Service/PdActivityMappingSaveProc";
+
                 }
             }
-            //console.log(inputData);
+
             var v_this = this;
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
@@ -363,19 +370,13 @@ sap.ui.define([
                     $.ajax({
                         url: url,
                         type: "POST",
-                        //datatype: "json",
-                        //data: inputData,
-                        data: JSON.stringify(inputData),
+                        data: JSON.stringify(input),
                         contentType: "application/json",
                         success: function (data) {
-                            //console.log(data);
-                            v_this.onSearch();
-                            //var v_returnModel = oView.getModel("returnModel").getData();
+                            v_this.byId("btn_search").firePress();
                         },
                         error: function (e) {
-                            //console.log(e);
-                            v_this.onSearch();
-
+                            v_this.byId("btn_search").firePress();
                         }
                     });
                 }).bind(this)
@@ -383,124 +384,145 @@ sap.ui.define([
         },
 
         onSelectionChange: function (oEvent) {
-            var [tId, mName, sEntity, aCol] = arguments;
+            //var [tId, mName, sEntity, aCol] = arguments;
             var oTable = this.byId("mainTable");
-            var oModel = this.getView().getModel(mName);
+            var oModel = this.getView().getModel("list");
             var oItem = oTable.getSelectedItem();
             var idxs = [];
-            for (var i = 0; i < oTable._iVisibleItemsLength; i++) {
-                oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[i].getCells()[4].getItems()[1].setVisible(false);
+            for (var i = 0; i < oTable.getItems().length; i++) {
+                if (oTable.getAggregation('items')[i] != null && oTable.getAggregation('items')[i].getCells() != undefined) {
 
-                oTable.getAggregation('items')[i].getCells()[5].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[i].getCells()[5].getItems()[1].setVisible(false);
-                oTable.getAggregation('items')[i].getCells()[6].getItems()[0].setVisible(true);
-                oTable.getAggregation('items')[i].getCells()[6].getItems()[1].setVisible(false);
+                    // oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
+                    // oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[4].getItems()[1].setVisible(false);
+
+                    oTable.getAggregation('items')[i].getCells()[5].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[5].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[i].getCells()[6].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[6].getItems()[1].setVisible(false);
+                }
             }
             if (oItem != null && oItem != undefined) {
-                this.byId("mainTableCancButton").setEnabled(true);                    
-                for(var k=0; k<oTable.getSelectedContextPaths().length; k++){
-                    idxs[k] = oTable.getSelectedContextPaths()[k].split("/")[2];
-                    oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[1].setVisible(true);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[1].setVisible(true);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[1].setVisible(true);
+                this.byId("mainTableCancButton").setEnabled(true);
+                this.byId("mainTableSaveButton").setEnabled(true);
 
-                    oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[1].setVisible(true);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[0].setVisible(false);
-                    oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[1].setVisible(true);
+                for (var k = 0; k < oTable.getSelectedContextPaths().length; k++) {
+                    idxs[k] = oTable.getSelectedContextPaths()[k].split("/")[2];
+
+                    if (oTable.getAggregation('items')[idxs[k]] != null && oTable.getAggregation('items')[idxs[k]].getCells() != undefined) {
+
+                        // oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[0].setVisible(false);
+                        // oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[1].setVisible(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[1].setVisible(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[1].setVisible(true);
+
+                        oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[1].setVisible(true);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[0].setVisible(false);
+                        oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[1].setVisible(true);
+
+                    }
                 }
             }
         },
 
-        onSearchProdecuActivity: function(oEvent) {
+        onSearchProductActivity: function (oEvent) {
             var oButton = oEvent.getSource(),
-				oView = this.getView();
+                oView = this.getView();
 
-			if (!this._pDialog) {
-				this._pDialog = Fragment.load({
-					id: oView.getId(),
-					name: "dp.pd.activityMappingMgt.view.ProductActivity",
-					controller: this
-				}).then(function(oDialog){
-					oView.addDependent(oDialog);
-					return oDialog;
-				}.bind(this));
-			}
+            if (!this._pDialog) {
+                this._pDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.pd.activityMappingMgt.view.ProductActivity",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+            }
 
-			this._pDialog.then(function(oDialog){
-				oDialog.open();
+            this._pDialog.then(function (oDialog) {
+                oDialog.open();
             });
         },
 
         handleSearch: function (oEvent) {
-			var sValue = oEvent.getParameter("value");
-			var oFilter = new Filter("product_activity_code", FilterOperator.Contains, sValue);
-			var oBinding = oEvent.getSource().getBinding("items");
-			oBinding.filter([oFilter]);
-		},
+            var sValue = oEvent.getParameter("value");
+            var oFilters = [];
+            oFilters.push(new Filter({
+                filters: [
+                    new Filter("product_activity_code", FilterOperator.Contains, sValue),
+                    new Filter("product_activity_name", FilterOperator.Contains, sValue)
+                ],
+                and: false
+            }));
+            var oBinding = oEvent.getSource().getBinding("items");
+            oBinding.filter(oFilters);
+        },
 
-		handleClose: function (oEvent) {
-            //product_activity_code
+        handleClose: function (oEvent) {
             var productActivityCode = oEvent.mParameters.selectedItem.mAggregations.cells[0].getText();
-            //product_activity_name
             var productActivityName = oEvent.mParameters.selectedItem.mAggregations.cells[1].getText();
-            
+            console.log(productActivityCode, productActivityName);
 
-			
+            var oTable = this.byId("mainTable");
+            var idx = oTable.getSelectedContextPaths()[0].split("/")[2];
+            oTable.getAggregation('items')[idx].getCells()[2].mAggregations.items[1].setValue(productActivityCode);
+            oTable.getAggregation('items')[idx].getCells()[3].mAggregations.items[1].setValue(productActivityName);
+        },
 
-		},
-
-        onSearchActivity: function(oEvent) {
+        onSearchActivity: function (oEvent) {
             var oButton = oEvent.getSource(),
-				oView = this.getView();
+                oView = this.getView();
 
-			if (!this._atDialog) {
-				this._atDialog = Fragment.load({
-					id: oView.getId(),
-					name: "dp.pd.activityMappingMgt.view.Activity",
-					controller: this
-				}).then(function(_oDialog){
-					oView.addDependent(_oDialog);
-					return _oDialog;
-				}.bind(this));
-			}
+            if (!this._atDialog) {
+                this._atDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.pd.activityMappingMgt.view.Activity",
+                    controller: this
+                }).then(function (_oDialog) {
+                    oView.addDependent(_oDialog);
+                    return _oDialog;
+                }.bind(this));
+            }
 
-			this._atDialog.then(function(_oDialog){
-				_oDialog.open();
+            this._atDialog.then(function (_oDialog) {
+                _oDialog.open();
             });
         },
 
         handleActivitySearch: function (oEvent) {
             var sValue = oEvent.getParameter("value");
-            var oFilter = [];
-            oFilter.push(new Filter("activity_code", FilterOperator.Contains, sValue));
-            //oFilter.push(new Filter("activity_name", FilterOperator.Contains, sValue));
-			var oBinding = oEvent.getSource().getBinding("items");
-			oBinding.filter([oFilter]);
-		},
+            var oFilters = [];
+            oFilters.push(new Filter({
+                filters: [
+                    new Filter("activity_code", FilterOperator.Contains, sValue),
+                    new Filter("activity_name", FilterOperator.Contains, sValue)
+                ],
+                and: false
+            }));
+            var oBinding = oEvent.getSource().getBinding("items");
+            oBinding.filter(oFilters);
+        },
 
-		handleActivityClose: function (oEvent) {
-            //activity_code
+        handleActivityClose: function (oEvent) {
             var activityCode = oEvent.mParameters.selectedItem.mAggregations.cells[0].getText();
-            //activity_name
             var activityName = oEvent.mParameters.selectedItem.mAggregations.cells[1].getText();
-            
 
-			
+            var oTable = this.byId("mainTable");
+            var idx = oTable.getSelectedContextPaths()[0].split("/")[2];
+            oTable.getAggregation('items')[idx].getCells()[5].mAggregations.items[1].setValue(activityCode);
+            oTable.getAggregation('items')[idx].getCells()[6].mAggregations.items[1].setValue(activityName);
+        }
 
-		},
-
-	});
+    });
 });
