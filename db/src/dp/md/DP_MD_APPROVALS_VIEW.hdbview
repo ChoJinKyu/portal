@@ -1,7 +1,8 @@
  view DP_MD_APPROVALS_VIEW as
     select 
-        a.approval_number
-        ,a.tenant_id
+        a.tenant_id
+        ,k.sort_no
+        ,a.approval_number
         ,a.approval_type_code
         ,d.code_name as approval_type
         ,a.approval_title
