@@ -880,14 +880,15 @@ sap.ui.define([
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
-                        if(delApprData.length > 0){
-                            data = {
-                                inputData : { 
-                                    approvalMaster : delApprData 
-                                } 
+                        if (sButton === MessageBox.Action.OK) {
+                            if(delApprData.length > 0){
+                                data = {
+                                    inputData : { 
+                                        approvalMaster : delApprData 
+                                    } 
+                                }
+                                that.callAjax(data,"deleteApproval");
                             }
-                            that.callAjax(data,"deleteApproval");
-                            //console.log(":::::::::::::::::::::::::", that.byId("pageSearchButton"));
                         }
                     }
                 });
