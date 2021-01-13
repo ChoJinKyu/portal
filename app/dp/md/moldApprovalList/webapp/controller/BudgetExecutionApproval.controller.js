@@ -383,8 +383,16 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){
-             this.byId("budgetExecutionPreview").close();
+        onPrvClosePress : function(){ 
+             if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
+                    console.log(" oDialog.close >>> ", oDialog.close);
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPrev = undefined;
+            }
+           //  this.byId("budgetExecutionPreview").close();
             // this.byId("budgetExecutionPreview").destroy();
         },
 
