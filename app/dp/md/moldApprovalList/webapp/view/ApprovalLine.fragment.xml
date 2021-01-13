@@ -81,7 +81,7 @@
                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
                                                 ],
-                                                sorter: { path: 'util>sort_no'}
+                                                sorter: { path: 'sort_no'}
                                             }"
                                     enabled="{= ${approver>editMode}?${mode>/editFlag}:false }">  
                                     <core:Item key="{util>code}" text="{util>code_name}" />
