@@ -226,15 +226,17 @@
                                             <ToolbarSpacer width="1rem"/> 
                                             <FlexBox>
                                                 <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 
-                                                    displayFormat="short" visible="{=${propInfo>/isEditMode}}"
-                                                    value="{NegoHeaders>/open_date}" />
+                                                    valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
+                                                    value="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
                                                 <Text text="{NegoHeaders>/open_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                             <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                                             <FlexBox>
                                                 <DateTimePicker id="searchEndDatePicker" placeholder="End Date ..." 
-                                                    displayFormat="short" visible="{=${propInfo>/isEditMode}}"
-                                                    value="{NegoHeaders>/closing_date}" />
+                                                    valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
+                                                    value="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
                                                 <Text text="{NegoHeaders>/closing_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                         </HBox>
