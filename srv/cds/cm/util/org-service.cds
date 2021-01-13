@@ -22,21 +22,4 @@ service OrgService {
     @readonly
     entity Unit   as projection on Org_Unit;
 
-    @readonly
-    view CompanyDetail as
-        select
-            key c.tenant_id,
-            key c.company_code,
-            key c.company_name,
-            key c.use_flag,
-                c.erp_type_code,
-                c.currency_code,
-                c.country_code,
-                c.language_code
-        from Org_Company as c
-        where
-                c.tenant_id = c.tenant_id
-            and c.use_flag  = 'true';
-
-
 }
