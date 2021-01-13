@@ -46,12 +46,12 @@ BEGIN
 
 
     /* 1. 몰드 정보 배열로 담음*/
-	DECLARE curItemList CURSOR FOR
+	DECLARE CUR CURSOR FOR
         SELECT 
             MOLD_ID
         FROM DP_MD_APPROVAL_DTL
 		WHERE APPROVAL_NUMBER = :I_APPROVAL_NUMBER;
-    OPEN curItemList  
+    OPEN CUR  
     FETCH NEXT FROM CUR INTO :V_MOLD_ID	
         WHILE @@FETCH_STATUS = 0
     BEGIN
@@ -96,7 +96,7 @@ BEGIN
     END
 
 	--커서 닫고 초기화
-	CLOSE curItemList;
+	CLOSE CUR;
 
     IF V_APPROVAL_TYPE_CODE = 'A' OR V_APPROVAL_TYPE_CODE = 'E' THEN 
         BEGIN 
