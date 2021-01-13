@@ -32,40 +32,40 @@ namespace dp;
 
 service SupplierIdeaBasicDataMgtService {
 
-    entity RoleAssign as projection on Role.Im_Supplier_Idea_Role_Assign;
+    entity IdeaRoleAssign as projection on Role.Im_Supplier_Idea_Role_Assign;
 
     @readonly
-    view RoleAssignView as
+    view IdeaRoleAssignView as
     select  key sir.tenant_id,
             key sir.company_code,
             key sir.idea_role_code,
             key sir.role_person_empno,
             emp.user_local_name,
             emp.department_local_name,
-            cd1.code_name as idea_role_name: String(240),
+            (select cd.code_name
+             from Code.Code_View cd
+             where cd.tenant_id = sir.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_ROLE'
+             and cd.code = sir.idea_role_code
+             and cd.language_cd = 'KO')  as idea_role_name: String(240),
             sir.bizunit_code,
-            biz.bizunit_name,
+            (select biz.bizunit_name
+             from BizUnit.Org_Unit biz   
+             where biz.tenant_id = sir.tenant_id
+             and biz.bizunit_code = sir.bizunit_code ) as bizunit_name : String(240),
             sir.idea_product_group_code,
-            cd2.code_name as idea_product_group_name: String(240),
+            (select cd.code_name
+             from Code.Code_View cd
+             where cd.tenant_id = sir.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
+             and cd.code = sir.idea_product_group_code
+             and cd.language_cd = 'KO') as idea_product_group_name: String(240),
             sir.effective_start_date,
             sir.effective_end_date
     from Role.Im_Supplier_Idea_Role_Assign sir 
     left join Hr.Employee emp
     on emp.tenant_id = sir.tenant_id
     and emp.employee_number = sir.role_person_empno
-    left join BizUnit.Org_Unit biz   
-    on biz.tenant_id = sir.tenant_id
-    and biz.bizunit_code = sir.bizunit_code
-    left join Code.Code_View cd1
-    on cd1.tenant_id = sir.tenant_id
-    and cd1.group_code = 'DP_IM_IDEA_ROLE'
-    and cd1.code = sir.idea_role_code
-    and cd1.language_cd = 'KO'
-    left join Code.Code_View cd2 
-    on cd2.tenant_id = sir.tenant_id
-    and cd2.group_code = 'DP_IM_IDEA_PRODUCT_GROUP'
-    and cd2.code = sir.idea_product_group_code
-    and cd2.language_cd = 'KO'
     ;
 
 }
