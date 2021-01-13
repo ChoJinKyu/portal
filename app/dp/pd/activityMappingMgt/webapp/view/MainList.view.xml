@@ -45,15 +45,16 @@
                             <ComboBox
                                 id="searchOrgCombo"
                                 width="100%"
-                                selectedKey="L110010000"
+                                selectedKey="GSZ"
                                 items="{
-                                    path: 'org>/Unit',
+                                    path: '/PdOperationOrg',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                    ]
+                                    ],
+                                    sorter: { path: 'operation_org_code'}
                                 }" required="true">
                                 <items>
-                                    <core:Item key="{org>bizunit_code}" text="{org>bizunit_code} : {org>bizunit_name}" />
+                                    <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -95,8 +96,8 @@
                 sticky="HeaderToolbar,ColumnHeaders"
                 width="auto">
                 <headerToolbar>
-                    <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle" text="Activity Mappting List ({=(${list>/ActivityMappingNameView})?${list>/ActivityMappingNameView}.length:0}) " level="H2"/>
+                    <OverflowToolbar>
+                        <Title id="mainTableTitle" text="Activity Mappting List" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="mainTableAddButton" text="Add Mapping" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
                         <Button id="mainTableDelButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
@@ -104,7 +105,7 @@
                         <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
                         <ToolbarSeparator/>
                         <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
-                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                        <Button id="mainTablePersoButton" icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="NeverOverflow" />
                             </layoutData>
