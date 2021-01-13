@@ -1361,36 +1361,36 @@ sap.ui.define([
                     break;
             }
             return "";
-        },
-
-        onAfterRendering: function () {
-            var that = this,
-                sHtmlValue = "";
-            // sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
-            // '<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
-            // 'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';                
-            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                function (RTE, EditorType) {
-                    var oRichTextEditor = new RTE("myRTE", {
-                        editorType: EditorType.TinyMCE4,
-                        width: "100%",
-                        height: "200px",
-                        //editable: "{contModel>/editMode}",
-                        editable: true,
-                        customToolbar: true,
-                        showGroupFont: true,
-                        showGroupLink: true,
-                        showGroupInsert: true,
-                        value: sHtmlValue,
-                        ready: function () {
-                            this.addButtonGroup("styleselect").addButtonGroup("table");
-                        }
-                    });
-                    that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-                });
-
-            //this.onPageEnterFullScreenButtonPress();
         }
+
+        // onAfterRendering: function () {
+        //     var that = this,
+        //         sHtmlValue = "";
+        //     // sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
+        //     // '<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
+        //     // 'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';                
+        //     sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+        //         function (RTE, EditorType) {
+        //             var oRichTextEditor = new RTE("myRTE", {
+        //                 editorType: EditorType.TinyMCE4,
+        //                 width: "100%",
+        //                 height: "200px",
+        //                 //editable: "{contModel>/editMode}",
+        //                 editable: true,
+        //                 customToolbar: true,
+        //                 showGroupFont: true,
+        //                 showGroupLink: true,
+        //                 showGroupInsert: true,
+        //                 value: sHtmlValue,
+        //                 ready: function () {
+        //                     this.addButtonGroup("styleselect").addButtonGroup("table");
+        //                 }
+        //             });
+        //             that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+        //         });
+
+        //     //this.onPageEnterFullScreenButtonPress();
+        // }
 
     });
 });

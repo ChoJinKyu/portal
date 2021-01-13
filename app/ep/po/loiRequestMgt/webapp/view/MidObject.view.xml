@@ -141,8 +141,7 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/LOIRequestDetailView}"
-                                rows="{
+                                items="{
                                     path: 'details>/LOIRequestDetailView',
                                     sorter: { 
                                         path: 'item_sequence',
@@ -173,7 +172,7 @@
 									<Text text="플랜트" />
 								</Column>
 								<Column id="midLevelValueColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="품목코드" required="true" />
+									<Text text="품목코드" />
 								</Column>
 								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center"  width="200px">
 									<Text text="품명" />
