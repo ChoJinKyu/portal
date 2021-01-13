@@ -202,7 +202,6 @@
                     <table:Table id="budgetExecutionTable" 
                             selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                             fixedColumnCount="6"  
-                            rowSelectionChange=""
                             visibleRowCountMode="Auto" 
                             rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
 					<table:extension>
