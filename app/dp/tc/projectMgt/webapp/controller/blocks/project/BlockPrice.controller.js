@@ -136,7 +136,7 @@ sap.ui.define([
                     sTxt = oData[sTextName] || "";
                 } else {// typeOf Object
                     if(sTextName.indexOf("_date") > -1) {
-                        sTxt = oData[sTextName].getFullYear() + "-" + (oData[sTextName].getMonth() < 10 ? "0" + (oData[sTextName].getMonth()+1) : (oData[sTextName].getMonth()+1));
+                        sTxt = oData[sTextName].getFullYear() + "-" + (oData[sTextName].getMonth()+1 < 10 ? "0" + (oData[sTextName].getMonth()+1) : (oData[sTextName].getMonth()+1));
                     }
                 }
                 //newObj.set(sKey, sTxt);
