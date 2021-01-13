@@ -348,6 +348,9 @@ sap.ui.define([
             var aDetails = oData.details;
             var sMessage = oI18NModel.getText("/NCM01001");
 
+            // entity에 없는 필드 삭제(OData에 없는 property 전송 시 에러)
+            delete oData.approval_requestor_empno_fk;
+
             // detail 데이터가 있을 경우 checked property 삭제(OData에 없는 property 전송 시 에러)
             if( aDetails ) {
                 aDetails.forEach(function (oDetails) {

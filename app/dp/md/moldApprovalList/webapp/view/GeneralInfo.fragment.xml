@@ -8,7 +8,7 @@
     core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     >
 
-    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" id="generalInfoLayout" width="80%"> 
+    <layout:VerticalLayout id="generalInfoLayout" width="100%"> 
         <HBox alignItems="Center">
             <Label
                 text="{path:'I18N>/SUBJECT', formatter:'I18NFormatter'}"
@@ -24,9 +24,9 @@
                 placeholder="Input data" required="true">
             </Input>
         </HBox>
-        <VBox>
+        <VBox class="sapUiTinyMarginTop">
             <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="input" ></Label> 
-            <rte:RichTextEditor width="100%" height="600px" 
+            <rte:RichTextEditor width="100%" height="600px" wrapping="false" editorType="TinyMCE4" 
                 value="{appMaster>/approval_contents}" 
                 customToolbar="true" showGroupFont="true" 
                 showGroupLink="true" showGroupInsert="true"

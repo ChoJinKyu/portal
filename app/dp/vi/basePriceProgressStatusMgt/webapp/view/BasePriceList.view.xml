@@ -384,7 +384,7 @@
                             <Label text="{I18N>/SUPPLIER_CODE}" />
                         </t:multiLabels>
                         <t:template>
-                            <Text text="{listModel>supplier_code}" />
+                            <Text text="{listModel>part_no}" />
                         </t:template>
                     </t:Column>
                     <t:Column width="12rem">

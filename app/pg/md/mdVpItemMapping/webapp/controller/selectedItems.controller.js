@@ -55,7 +55,7 @@ sap.ui.define([
 
             var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
             Utils.getSelectedItemContext(oSelectedItemsTable, function(oSelectedItemContext, iSelectedItemIndex) {
-                debugger;
+                
                 var item = this.getModel("tblModel").getProperty(oSelectedItemContext.getPath());
                 var arr = this.getModel("tblModel").getProperty("/right");
                 var idx = oSelectedItemContext.getPath().split("/")[2];
@@ -65,8 +65,8 @@ sap.ui.define([
                 arr.splice(idx,1);
                 this.getModel("tblModel").setProperty("/right",arr);
                 
-                this.getModel("tblModel").refresh(true);
             }.bind(this));
+            this.getModel("tblModel").refresh(true);
             // oSelectedItemsTable.setSelectedIndex(idx-1);
 
             
@@ -102,10 +102,7 @@ sap.ui.define([
         },
 
 		onDropSelectedItemsTable: function(oEvent) {
-            
-            var oLeftModel = this.getModel("tblModel").getProperty("/left");
 
-            
 			var oDragSession = oEvent.getParameter("dragSession");
 			var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
 			if (!oDraggedRowContext) {
@@ -113,11 +110,37 @@ sap.ui.define([
             }
             
             var item = this.getModel("tblModel").getProperty(oDraggedRowContext.getPath());
+            var arr =  this.getModel("tblModel").getProperty("/right");
             var length =  this.getModel("tblModel").getProperty("/right").length;
             var str = "/right/"+length;
-            this.getModel("tblModel").setProperty(str,item);
 
-            this.getModel("tblModel").setProperty(str+"/vendor_pool_code","VP201610260087");
+            var flag=true;
+            for(var idx=0; idx<length; idx++){
+                if(arr[idx].spmd_character_code ==item.spmd_character_code){
+                    flag = false ;
+                    return;
+                }
+            }
+            
+            if(flag){
+                item.vendor_pool_code = "VP201610260087";
+                arr.push(item);
+
+                arr.sort(function(a, b) {
+                    // var aSortNo = a.spmd_category_sort_sequence+"_"+a.spmd_character_sort_seq;
+                    // var bSortNo = b.spmd_category_sort_sequence+"_"+b.spmd_character_sort_seq;
+                    // if(aSortNo < bSortNo) return -1;
+                    // if(aSortNo > bSortNo) return 1;
+                    // if(aSortNo === bSortNo) return 0;
+                
+                    if(a.spmd_category_sort_sequence < b.spmd_category_sort_sequence) return -1;
+                    if(a.spmd_category_sort_sequence > b.spmd_category_sort_sequence) return 1;
+                    if(a.spmd_category_sort_sequence === b.spmd_category_sort_sequence) return 0;
+                    //return aSortNo - bSortNo;              
+                });
+                //this.getModel("tblModel").setProperty(arr,newArr);
+                //this.getModel("tblModel").setProperty(str+"/vendor_pool_code","VP201610260087");
+            }
 
 //////////////////////////////////////////////////////////////////////////////
 			// var oConfig = Utils.ranking;

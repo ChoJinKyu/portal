@@ -19,19 +19,21 @@ sap.ui.define([
         },
 
         // 데이터 셋팅된 후 시점을 찾으려면 앞에서 success 부분에서 해야하ㅏㄴ?
-        // onAfterRendering : function(){
-        //     debugger;
-        //     var rows = Utils.getAvailableItemsTable(this).getRows();
-        //     for(var i=0; i<rows.length; i++){
-        //         var row = rows[i];
-        //         // if(row.getCells()[0].getText() == this._category_code){
-        //             var sId = row.getId();
-        //             $("#"+sId).css("background-color", "green");
+        onAfterRendering : function(){
+            var sId = "container-mdVpItemMapping---mdVpItemMapping--availableItems--table-rows-row0";//row.getId();
+            $("#"+sId).css("background-color", "yellow");
+            // debugger;
+            // var rows = Utils.getAvailableItemsTable(this).getRows();
+            // for(var i=0; i<rows.length; i++){
+            //     var row = rows[i];
+            //     // if(row.getCells()[0].getText() == this._category_code){
+            //         var sId = row.getId();
+            //         $("#"+sId).css("background-color", "green");
                     
             
-        //         // }
-        //     }
-        // },
+            //     // }
+            // }
+        },
 
 		onDragStart: function(oEvent) {
 			var oDraggedRow = oEvent.getParameter("target");
@@ -85,10 +87,34 @@ sap.ui.define([
                 var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
 
                 var item = this.getModel("tblModel").getProperty(oSelectedRowContext.getPath());
+                var arr =  this.getModel("tblModel").getProperty("/right");
                 var length =  this.getModel("tblModel").getProperty("/right").length;
                 var str = "/right/"+length;
-                this.getModel("tblModel").setProperty(str,item);
-                this.getModel("tblModel").setProperty(str+"/vendor_pool_code","VP201610260087");
+
+                var flag=true;
+                for(var idx=0; idx<length; idx++){
+                    if(arr[idx].spmd_character_code ==item.spmd_character_code){
+                        flag = false ;
+                        return;
+                    }
+                }
+
+                if(flag){
+                    item.vendor_pool_code = "VP201610260087";
+                    arr.push(item); 
+                    arr.sort(function(a, b) {
+                        // var aSortNo = a.spmd_category_sort_sequence+"_"+a.spmd_character_sort_seq;
+                        // var bSortNo = b.spmd_category_sort_sequence+"_"+b.spmd_character_sort_seq;
+                        // if(aSortNo < bSortNo) return -1;
+                        // if(aSortNo > bSortNo) return 1;
+                        // if(aSortNo === bSortNo) return 0;
+                    
+                        if(a.spmd_category_sort_sequence < b.spmd_category_sort_sequence) return -1;
+                        if(a.spmd_category_sort_sequence > b.spmd_category_sort_sequence) return 1;
+                        if(a.spmd_category_sort_sequence === b.spmd_category_sort_sequence) return 0;
+                        //return aSortNo - bSortNo;              
+                    });
+                }
 
                 this.getModel("tblModel").refresh(true);
             }.bind(this));

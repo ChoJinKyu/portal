@@ -765,7 +765,7 @@ sap.ui.define([
             }
 
             if (this.validator.validate(this.byId("moldMstTable")) !== true) {
-                MessageToast.show(this.getModel('I18N').getText('/ECM0201'));
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
             }
 
