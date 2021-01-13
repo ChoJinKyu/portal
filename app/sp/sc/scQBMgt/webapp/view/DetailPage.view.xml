@@ -225,17 +225,17 @@
                                             <CheckBox text="Immediately" selected="{NegoHeaders>/immediate_apply_flag}" editable="{=${propInfo>/isEditMode}}"/> 
                                             <ToolbarSpacer width="1rem"/> 
                                             <FlexBox>
-                                                <DateTimePicker id="searchFromDatePicker" placeholder="Start Date ..." 
+                                                <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 
                                                     displayFormat="short" visible="{=${propInfo>/isEditMode}}"
                                                     value="{NegoHeaders>/open_date}" />
                                                 <Text text="{NegoHeaders>/open_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                             <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                                             <FlexBox>
-                                                <DateTimePicker id="searchToDatePicker" placeholder="End Date ..." 
+                                                <DateTimePicker id="searchEndDatePicker" placeholder="End Date ..." 
                                                     displayFormat="short" visible="{=${propInfo>/isEditMode}}"
-                                                    value="{NegoHeaders>/end_date}" />
-                                                <Text text="{NegoHeaders>/end_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                    value="{NegoHeaders>/closing_date}" />
+                                                <Text text="{NegoHeaders>/closing_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                         </HBox>
 
@@ -257,7 +257,7 @@
                             </FlexBox>
 
                             <VBox class="sapUiSmallMarginBegin">
-                                <Label  text="Note To Supplier" class="sapMLabelNoText"/>
+                                <Label  text="Note To Supplier" class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                 <rte:RichTextEditor id="reNoteToSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
                                      visible="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                 <FormattedText id="formTextNoteToSupplier"  visible="{=!${propInfo>/isEditMode}}"/>
@@ -382,7 +382,7 @@
                         <Panel id="panel_Line" expandable="true" expanded="true" headerText="Line Content">
                             <VBox>
 
-                                <t:Table id="table1"
+                                <t:Table id="tableLines"
                                     minAutoRowCount="2"
                                     visibleRowCountMode="Auto"
                                     rows="{NegoHeaders>/Items}"
@@ -396,7 +396,7 @@
                                             
                                             <Button  text="Vendor Pool Change" type="Transparent" press=".onMidTableAddButtonPress"  />
                                             <Button  text="Simple Change" type="Transparent" press=".onMidTableAddButtonPress"  />
-                                            <Button  text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                            <Button  text="Add" type="Transparent" press=".addLineItemRow" />
                                             <Button  text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
 
 
@@ -815,6 +815,7 @@
                                         </Panel>
                                         <Panel id="panel_Specific" expandable="true" expanded="true" headerText="Specific Supplier">
                                             <Table 
+                                                id="table_Specific"
                                                 sticky="HeaderToolbar,ColumnHeaders" 
                                                 inset="false" 
                                                 class="sapFDynamicPageAlignContent"     
