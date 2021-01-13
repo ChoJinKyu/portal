@@ -1,28 +1,18 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"ext/lib/util/Multilingual",
-	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
     "ext/lib/formatter/Formatter",
     "ext/lib/util/Validator",
-	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-	"sap/m/ColumnListItem",
-	"sap/m/ObjectIdentifier",
-	"sap/m/Text",
-	"sap/m/Input",
-	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, Validator, TablePersoController, MainListPersoService, 
-		Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    "sap/m/MessageToast"
+], function (BaseController, Multilingual, ManagedListModel, Formatter, Validator, MainListPersoService, 
+		Filter, FilterOperator, Sorter, MessageBox, MessageToast) {
 	"use strict";
-
-	// var oTransactionManager;
 
 	return BaseController.extend("cm.msgMgt.controller.MainList", {
 
@@ -52,7 +42,6 @@ sap.ui.define([
 				}, true);
 			}.bind(this));
 
-           //this._doInitTablePerso();
             this.enableMessagePopover();
         },
         
@@ -64,32 +53,13 @@ sap.ui.define([
 		/* event handlers                                              */
 		/* =========================================================== */
 
-
-		/**
-		 * Event handler when a page state changed
-		 * @param {sap.ui.base.Event} oEvent the page stateChange event
-		 * @public
-		 */
-		onPageStateChange: function(oEvent){
-			debugger;
-		},
-
-
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table updateFinished event
-		 * @public
-		 */
-		onMainTableUpdateFinished : function (oEvent) {
-		},
-
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
 		 * @public
 		 */
 		onMainTablePersoButtonPressed: function(oEvent){
-			//this._oTPC.openDialog();
+			this._oTPC.openDialog();
 		},
 
 		/**
@@ -109,8 +79,7 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
 			var forceSearch = function(){
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
+				this._applySearch(this._getSearchStates());
 			}.bind(this);
 			
 			if(this.getModel("list").isChanged() === true){
@@ -129,26 +98,24 @@ sap.ui.define([
 		},
 
 		onMainTableAddButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list");
+			var oModel = this.getModel("list");
 			oModel.addRecord({
 				"tenant_id": "L2100",
 				"chain_code": "CM",
 				"language_code": "",
 				"message_code": "",
 				"message_type_code": "LBL",
-				"message_contents": "",
-				"local_create_dtm": new Date(),
-				"local_update_dtm": new Date()
+				"message_contents": ""
             }, "/Message", 0);
             this.validator.clearValueState(this.byId("mainTable"));
+			this.byId("mainTable").clearSelection();
 		},
 
 		onMainTableDeleteButtonPress: function(){
 			var table = this.byId("mainTable"),
 				model = this.getModel("list");
-				// aItems = oTable.getSelectedItems(),
-				// aIndices = [];
+			// aItems = oTable.getSelectedItems(),
+			// aIndices = [];
 			// aItems.forEach(function(oItem){
 			// 	aIndices.push(oModel.getProperty("/Message").indexOf(oItem.getBindingContext("list").getObject()));
 			// });
@@ -157,26 +124,26 @@ sap.ui.define([
 			// 	//oModel.removeRecord(nIndex);
 			// 	oModel.markRemoved(nIndex);
 			// });
-            // oTable.removeSelections(true);
-            // this.validator.clearValueState(this.byId("mainTable"));
+			// oTable.removeSelections(true);
+			// this.validator.clearValueState(this.byId("mainTable"));
 
-            // var [tId, mName] = arguments;
-            // var table = this.byId(oTable);
-            // var model = this.getView().getModel(oModel);
+			// var [tId, mName] = arguments;
+			// var table = this.byId(oTable);
+			// var model = this.getView().getModel(oModel);
             table.getSelectedIndices().reverse().forEach(function (idx) {
                 model.markRemoved(idx);
             });
+			this.byId("mainTable").clearSelection();
         },
        
         onMainTableSaveButtonPress: function(){
 			var oModel = this.getModel("list"),
-                oView = this.getView(),
-                table = this.byId("mainTable");
+                oTable = this.byId("mainTable");
 			
-			// if(!oModel.isChanged()) {
-			// 	MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-			// 	return;
-            // }
+			if(!oModel.isChanged()) {
+				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+				return;
+            }
             
             if(this.validator.validate(this.byId("mainTable")) !== true) return;
 
@@ -185,13 +152,13 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+						oTable.setBusy(true);
 						oModel.submitChanges({
 							success: function(oEvent){
-								oView.setBusy(false);
+								this.byId("mainTable").clearSelection();
+								oTable.setBusy(false);
                                 MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                                 this.byId("pageSearchButton").firePress();
-                                //table.clearSelection().removeSelections(true);
 							}.bind(this)
 						});
 					};
@@ -206,72 +173,65 @@ sap.ui.define([
 
 		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
-		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
+		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
 		 * @private
 		 */
-		_applySearch: function(aTableSearchState) {
-			var oView = this.getView(),
+		_applySearch: function(aSearchFilters) {
+			var oTable = this.byId("mainTable"),
 				oModel = this.getModel("list");
-			oView.setBusy(true);
+			oTable.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
-                filters: aTableSearchState,
+                filters: aSearchFilters,
                 sorters: [
-					new Sorter("chain_code"),
 					new Sorter("message_code"),
-                    new Sorter("language_code", true)
+                    new Sorter("language_code", true),
+					new Sorter("chain_code")
 				],
 				success: function(oData){
-                    this.validator.clearValueState(this.byId("mainTable"));
-					oView.setBusy(false);
+					this.validator.clearValueState(this.byId("mainTable"));
+					this.byId("mainTable").clearSelection();
+					oTable.setBusy(false);
 				}.bind(this)
 			});
-            // ,
-			// 	sorters: [
-			// 		new Sorter("chain_code"),
-			// 		new Sorter("message_code"),
-			// 		new Sorter("language_code", true)
-			// 	]
-			//oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){
-			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
-                language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-                flag = this.getView().byId("search_useflag"+sSurffix).getSelectedKey(),
-                keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
+			var chain = this.getView().byId("searchChain").getSelectedKey(),
+                language = this.getView().byId("searchLanguage").getSelectedKey(),
+                messageType = this.getView().byId("searchType").getSelectedKey(),
+                keyword = this.getView().byId("searchKeyword").getValue();
 				
-			var aTableSearchState = [];
+			var aSearchFilters = [];
 			if (chain && chain.length > 0) {
-				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
+				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, chain));
 			}
 			if (language && language.length > 0) {
-				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
+				aSearchFilters.push(new Filter("language_code", FilterOperator.EQ, language));
             }
-            if (flag && flag.length > 0) {
-				aTableSearchState.push(new Filter("message_type_code", FilterOperator.EQ, flag));
+            if (messageType && messageType.length > 0) {
+				aSearchFilters.push(new Filter("message_type_code", FilterOperator.EQ, messageType));
             }
 			if (keyword && keyword.length > 0) {
-				aTableSearchState.push(new Filter({
+				aSearchFilters.push(new Filter({
 					filters: [
-						new Filter("tolower(message_code)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'"),
-						new Filter("tolower(message_contents)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'")
+						new Filter({
+							path: "message_code",
+							operator: FilterOperator.Contains,
+							value1: keyword,
+							caseSensitive: false
+						}),
+						new Filter({
+							path: "message_contents",
+							operator: FilterOperator.Contains,
+							value1: keyword,
+							caseSensitive: false
+						})
 					],
 					and: false
 				}));
 			}
-			return aTableSearchState;
-		},
-		
-		_doInitTablePerso: function(){
-			// init and activate controller
-			this._oTPC = new TablePersoController({
-				table: this.byId("mainTable"),
-				componentName: "cm.msgMgt",
-				persoService: MainListPersoService,
-				hasGrouping: true
-			}).activate();
+			return aSearchFilters;
 		}
 
 
