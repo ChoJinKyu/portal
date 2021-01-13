@@ -132,24 +132,23 @@ begin
 -- master table
 	o_table_master =
 		select
-                master.tenant_id,
-                -- master.scenario_number,
-				ifnull(master.scenario_number, lv_max_seq) as scenario_number,
-				master.monitoring_type_code,
-				master.activate_flag,
-				master.monitoring_purpose,
-				master.scenario_desc,
-				master.source_system_desc,
-				master.local_create_dtm,
-				master.local_update_dtm,
-				master.create_user_id,
-				master.update_user_id,
-				master.system_create_dtm,
-				master.system_update_dtm
+                master.tenant_id							as tenant_id,
+				ifnull(master.scenario_number, lv_max_seq)	as scenario_number,
+				master.monitoring_type_code					as monitoring_type_code,
+				master.activate_flag						as activate_flag,
+				master.monitoring_purpose					as monitoring_purpose,
+				master.scenario_desc						as scenario_desc,
+				master.source_system_desc					as source_system_desc,
+				master.local_create_dtm						as local_create_dtm,
+				master.local_update_dtm						as local_update_dtm,
+				master.create_user_id						as create_user_id,
+				master.update_user_id						as update_user_id,
+				master.system_create_dtm					as system_create_dtm,
+				master.system_update_dtm					as system_update_dtm
         from	:i_table_master master
-        ;
-    lv_sourcemaster_count = record_count(:i_table_master);    
-    if	record_count(:i_table_master) = 0 then
+        ;  
+    select count(tenant_id) into lv_sourcemaster_count from :i_table_master where tenant_id is not null;
+    if	lv_sourcemaster_count <= 0 then
         rollback;
 	else
 		merge into	pg_tm_master	as t_master_tab
@@ -208,7 +207,6 @@ begin
 	o_table_scenario =
 		select
                 scenario.tenant_id,
-                -- scenario.scenario_number,
 				ifnull(scenario.scenario_number, lv_max_seq) as scenario_number,
 				scenario.language_code,
 				scenario.scenario_name,
@@ -220,8 +218,9 @@ begin
 				scenario.system_update_dtm
 		from	:i_table_scenario scenario
         ;
-    lv_sourcescenario_count = record_count(:i_table_scenario);
-    if	record_count(:i_table_scenario) = 0 then
+    -- if	record_count(:i_table_scenario) = 0 then
+    select count(tenant_id) into lv_sourcescenario_count from :i_table_scenario where tenant_id is not null;
+    if	lv_sourcescenario_count <= 0 then
         rollback;
 	else
 		merge into	pg_tm_scenario_number_lng	as t_scenario_tab
@@ -271,7 +270,6 @@ begin
 	o_table_company =
 		select
                 company.tenant_id,
-                -- company.scenario_number,
 				ifnull(company.scenario_number, lv_max_seq) as scenario_number,
 				company.company_code,
 				company.local_create_dtm,
@@ -282,8 +280,9 @@ begin
 				company.system_update_dtm
 		from	:i_table_company company
         ;
-    lv_sourcecompany_count = record_count(:i_table_company);
-    if	record_count(:i_table_company) = 0 then
+    -- if	record_count(:i_table_company) = 0 then
+    select count(tenant_id) into lv_sourcecompany_count from :i_table_company where tenant_id is not null;
+    if	lv_sourcecompany_count <= 0 then
         rollback;
 	else
 		merge into	pg_tm_comp_code		as t_company_tab
@@ -330,7 +329,6 @@ begin
 	o_table_bizunit =
 		select
                 bizunit.tenant_id,
-                -- bizunit.scenario_number,
 				ifnull(bizunit.scenario_number, lv_max_seq) as scenario_number,
 				bizunit.bizunit_code,
 				bizunit.local_create_dtm,
@@ -341,8 +339,9 @@ begin
 				bizunit.system_update_dtm
 		from	:i_table_bizunit bizunit
         ;
-    lv_sourcebizunit_count = record_count(:i_table_bizunit);
-    if	record_count(:i_table_bizunit) = 0 then
+    -- if	record_count(:i_table_bizunit) = 0 then
+    select count(tenant_id) into lv_sourcebizunit_count from :i_table_bizunit where tenant_id is not null;
+    if	lv_sourcebizunit_count <= 0 then
         rollback;
 	else
 		merge into	pg_tm_bizunit_code	as t_bizunit_tab
@@ -389,7 +388,6 @@ begin
 	o_table_purchasing_type =
 		select
                 purchasing.tenant_id,
-                -- purchasing.scenario_number,
 				ifnull(purchasing.scenario_number, lv_max_seq) as scenario_number,
 				purchasing.monitoring_purchasing_type_code,
 				purchasing.language_code,
@@ -402,8 +400,9 @@ begin
 				purchasing.system_update_dtm
 		from	:i_table_purchasing_type purchasing
         ;
-    lv_sourcepurchasingtype_count = record_count(:i_table_purchasing_type);
-    if	record_count(:i_table_purchasing_type) = 0 then
+    -- if	record_count(:i_table_purchasing_type) = 0 then
+    select count(tenant_id) into lv_sourcepurchasingtype_count from :i_table_purchasing_type where tenant_id is not null;
+    if	lv_sourcepurchasingtype_count <= 0 then
         rollback;
 	else
 		merge into	pg_tm_purchasing_type_code_lng	as t_purchasing_tab
@@ -456,7 +455,6 @@ begin
 	o_table_type =
 		select
                 type.tenant_id,
-                -- type.scenario_number,
 				ifnull(type.scenario_number, lv_max_seq) as scenario_number,
 				type.monitoring_type_code,
 				type.language_code,
@@ -469,8 +467,9 @@ begin
 				type.system_update_dtm
 		from	:i_table_type type
         ;
-    lv_sourcetypecode_count = record_count(:i_table_type);
-    if	record_count(:i_table_type) = 0 then
+    -- if	record_count(:i_table_type) = 0 then
+    select count(tenant_id) into lv_sourcetypecode_count from :i_table_type where tenant_id is not null;
+    if	lv_sourcetypecode_count <= 0 then
         rollback;
 	else
 		merge into	pg_tm_type_code_lng	as t_type_tab
@@ -523,7 +522,6 @@ begin
 	o_table_manager =
 		select
                 manager.tenant_id,
-                -- manager.scenario_number,
 				ifnull(manager.scenario_number, lv_max_seq) as scenario_number,
 				manager.monitoring_manager_empno,
 				manager.monitoring_super_authority_flag,
@@ -535,8 +533,9 @@ begin
 				manager.system_update_dtm
 		from	:i_table_manager manager
         ;
-    lv_sourcemanager_count = record_count(:i_table_manager);
-    if	record_count(:i_table_manager) = 0 then
+    -- if	record_count(:i_table_manager) = 0 then
+    select count(tenant_id) into lv_sourcemanager_count from :i_table_manager where tenant_id is not null;
+    if	lv_sourcemanager_count <= 0 then
 	else
 		merge into	pg_tm_manager_dtl	as t_manager_tab
 			using	:o_table_manager	as s_manager_tab
@@ -585,7 +584,6 @@ begin
 	o_table_operation =
 		select
                 operation.tenant_id,
-                -- operation.scenario_number,
 				ifnull(operation.scenario_number, lv_max_seq) as scenario_number,
 				operation.monitoring_operation_mode_code,
 				operation.language_code,
@@ -598,9 +596,9 @@ begin
 				operation.system_update_dtm
 		from	:i_table_operation operation
         ;
-    lv_sourceoperation_count = record_count(:i_table_operation);
-    if  record_count(:i_table_operation) = 0 then
-    -- if	lv_count_operation is null or lv_count_operation = 0 then
+    -- if  record_count(:i_table_operation) = 0 then
+    select count(tenant_id) into lv_sourceoperation_count from :i_table_operation where tenant_id is not null;
+    if	lv_sourceoperation_count <= 0 then
 	else
 		merge into	pg_tm_operation_mode_code_lng	as t_operation_tab
 			using	:o_table_operation				as s_operation_tab

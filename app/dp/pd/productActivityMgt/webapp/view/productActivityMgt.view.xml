@@ -106,7 +106,7 @@
                             <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY}" />
                         </Column>
                         <Column id="productActivityEnd" minScreenWidth="Tablet" hAlign="Left">
-                            <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/ENGLISH}" />
+                            <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/DETAIL}" />
                         </Column>
                         <Column id="milestone" minScreenWidth="Tablet" hAlign="Left" width="7rem">
                             <Text text="{I18N>/MILESTONE}" />

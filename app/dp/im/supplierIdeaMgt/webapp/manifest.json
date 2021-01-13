@@ -2,7 +2,7 @@
   "_version": "1.12.0",
   
   "sap.app": {
-    "id": "dp.pd.productActivityMgt",
+    "id": "dp.im.supplierIdeaMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -14,7 +14,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.productActivityService/",
+        "uri": "srv-api/odata/v2/dp.SupplierIdeaMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -28,7 +28,7 @@
         }
       },
         "v4Proc": {
-            "uri": "srv-api/odata/v4/dp.ProductActivityMgtV4Service/",
+            "uri": "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/",
             "type": "OData",
             "settings": {
                 "odataVersion": "4.0"
@@ -59,7 +59,7 @@
   "sap.ui5": {
     "flexEnabled": false,
     "rootView": {
-      "viewName": "dp.pd.productActivityMgt.view.App",
+      "viewName": "dp.im.supplierIdeaMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -80,7 +80,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.pd.productActivityMgt.i18n.i18n"
+          "bundleName": "dp.im.supplierIdeaMgt.i18n.i18n"
         }
       },
       "util": {
@@ -128,7 +128,7 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "async": true,
-        "viewPath": "dp.pd.productActivityMgt.view",
+        "viewPath": "dp.im.supplierIdeaMgt.view",
         "controlAggregation": "pages",
         "controlId": "app",
         "clearControlAggregation": false
@@ -136,18 +136,35 @@
       "routes": [
         {
           "pattern": "",
-          "name": "productActivityMgt",
+          "name": "supplierIdeaMgt",
           "target": [
-            "productActivityMgt"
+            "supplierIdeaMgt"
           ]
+        },
+        {
+            "pattern": "supplierIdeaDetail/{tenantId}/{fundingNotifyNumber}",
+            "name": "supplierIdeaDetail",
+            "target": [
+                "supplierIdeaDetail"
+            ]
         }
       ],
       "targets": {
-        "productActivityMgt": {
-          "viewId": "productActivityMgt",
-          "viewName": "productActivityMgt",
+        "supplierIdeaMgt": {
+          "viewName": "SupplierIdeaMgt",
+          "viewId": "supplierIdeaMgt",
           "viewLevel": 1,
           "title": "{{appTitle}}"
+        },
+        "supplierIdeaDetail": {
+            "viewName": "SupplierIdeaDetail",
+            "viewId": "supplierIdeaDetail",
+            "viewLevel": 2
+        },
+        "notFound": {
+            "viewName": "NotFound",
+            "viewPath": "ext.lib.view",
+            "viewId": "notFound"
         }
       }
     }

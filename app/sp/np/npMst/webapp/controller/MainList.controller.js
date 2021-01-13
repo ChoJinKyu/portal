@@ -101,6 +101,7 @@ sap.ui.define([
             _onRoutedThisPage: function () {
                 this.sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
                 that.mainTable = this.byId("mainTable");
+                that.byId("search_effective_end_date").setEditable(false);
                 //this.statusKey = oEvent.getSource().getProperty("selectedKey");
             },
 
@@ -204,8 +205,8 @@ sap.ui.define([
                     if (status === "all" || status === "expPrc") {
                         oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
                     } else if (status === "effPrc") {
-                        oFilter.push(new Filter("effective_end_date", FilterOperator.GE, searchEffectiveEndDate));
-                    }
+                        oFilter.push(new Filter("effective_end_date", FilterOperator.GE, that.getToday().replace(/\./gi, "")));
+                    } 
                 }
 
                 if (!!searchEffectiveStartDate.getValue()) {
