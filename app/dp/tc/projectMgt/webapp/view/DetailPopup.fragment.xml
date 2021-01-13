@@ -91,7 +91,7 @@
 		</content>
         <buttons>
             <Button text="닫기" press=".onClose" />
-            <Button text="복사" press=".onCopy" />
+            <!--<Button text="복사" press=".onCopy" />-->
             <Button text="작성" type="Emphasized" press=".onDialogCreate" />
         </buttons>
 	</Dialog>

@@ -61,7 +61,7 @@ sap.ui.define([
                     "$orderby" : "events/sequence"
                 },
                 success : function(data){
-                    debugger;
+                    //debugger;
                     oView.setBusy(false);
                     console.log("ProjectInfo.Controller", data);
 
