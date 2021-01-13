@@ -217,8 +217,16 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){
-            this.byId("participatingSupplierSelectionPreview").close();
+        onPrvClosePress : function(){ 
+             if (this._oDialogPreview) {
+                this._oDialogPreview.then(function (oDialog) {
+                    console.log(" oDialog.close >>> ", oDialog.close);
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPreview = undefined;
+            }
+           // this.byId("participatingSupplierSelectionPreview").close();
         },
         
         onChangePayment: function (oEvent) {
@@ -255,8 +263,6 @@ sap.ui.define([
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
-
-
 
            // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if (bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0) {
