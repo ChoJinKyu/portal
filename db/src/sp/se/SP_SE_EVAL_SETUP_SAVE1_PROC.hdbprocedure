@@ -41,6 +41,13 @@ AS
 BEGIN
     DECLARE V_TRANACTION_CODE NVARCHAR(1);
     
+    --오류처리
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		--EXEC (:var_rollback);
+		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+	END;
+    
 	--평가 운영 단위 삭제 인 경우 : 화면에서 DELETE_FLAG가 'Y'인 경우만 삭제 처리될 수 있도록 Validation됨.
     DELETE FROM SP_SE_OPERATION_UNIT_MST
     WHERE  (TENANT_ID,
@@ -55,6 +62,10 @@ BEGIN
     	    	                                FROM   :I_OPMST
     	    	                                WHERE  TRANSACTION_CODE = 'D')
    ;
+
+   IF ::ROWCOUNT = 0 THEN
+       SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'There is no information to delete.';
+   END IF;
    
    MERGE INTO SP_SE_OPERATION_UNIT_MST AS MST
    USING :I_OPMST AS IMST
