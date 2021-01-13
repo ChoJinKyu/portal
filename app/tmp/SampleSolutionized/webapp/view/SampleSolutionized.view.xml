@@ -1,15 +1,4 @@
 <mvc:View controllerName="tmp.SampleSolutionized.controller.SampleSolutionized" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:uxap="sap.uxap"
-    xmlns:form="sap.ui.layout.form" 
-    xmlns:core="sap.ui.core" 
-    xmlns:layout="sap.ui.layout"
-    xmlns:tnt="sap.tnt"
-    xmlns:co="sap.suite.ui.commons"
-    xmlns:si="sap.suite.ui.commons.statusindicator"
-    xmlns:u="sap.ui.unified" 
-    xmlns:table="sap.ui.table" 
-    xmlns="sap.m"
 	height="100%">
 	<Shell id="shell">
 		<App id="app">
