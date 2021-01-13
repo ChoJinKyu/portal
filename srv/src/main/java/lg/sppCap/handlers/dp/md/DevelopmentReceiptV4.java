@@ -83,8 +83,6 @@ public class DevelopmentReceiptV4 implements EventHandler {
         String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
         
         try {
-            Connection conn = jdbc.getDataSource().getConnection();
-
             // Set Id 뒤 5자리 생성
             int setIdSeq = jdbc.queryForObject(v_sql_createSetId, Integer.class);
             
@@ -122,10 +120,6 @@ public class DevelopmentReceiptV4 implements EventHandler {
                     
                     // Procedure Call
                     jdbc.update(v_sql_callProc, row.get("mold_id"));
-                    
-                    //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-                    //v_statement_proc.setObject(1, row.get("mold_id"));
-                    //boolean v_isMore = v_statement_proc.execute();
                 }
             }
 
