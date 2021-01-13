@@ -109,6 +109,18 @@ sap.ui.define([
         }
 
         /**
+         * RowAction 목표재료비 상세화면으로 이동
+         */
+        , onDetailPopRowActionPress: function(oEvent) {
+            MessageToast.show("준비중", {at: "Center Center"});
+            return;
+            this.getView().getModel("popupListModel").setProperty("/cost_type", oEvent.getSource().data("cost_type"));
+            this.getView().getModel("")
+            var oContext = oEvent.getParameter("row").getBindingContext("listModel");
+            this._goMcstProjView(oContext);
+        }
+
+        /**
          * Date 데이터를 String 타입으로 변경. 예) 2020-10-10T00:00:00
          */
         , _getNowDayAndTimes: function (bTimesParam, oDateParam) {
@@ -119,7 +131,7 @@ sap.ui.define([
                 iHours = oDate.getHours(),
                 iMinutes = oDate.getMinutes(),
                 iSeconds = oDate.getSeconds();
-
+ 
             let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
             let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds);
 
@@ -166,6 +178,25 @@ sap.ui.define([
             //this.getOwnerComponent().getRouter().navTo("ProjectMgtDetail");
         }
         
+        /**
+         * MCST 프로젝트 상세 화면으로 이동
+         */
+        , _goMcstProjView: function() {
+            var index = 0;
+            let oTable = this.getView().byId("detailPopupTable");
+            let oContext = oTable.getContextByIndex(index);
+            let oModel = oContext.getModel();
+            let oObj = oModel.getProperty(oContext.getPath());
+
+            var oNavParam = {
+                tenant_id: oObj.tenant_id,
+                project_code: oObj.project_code,
+                model_code: oObj.model_code
+            };
+
+            this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
+        }
+
         /**
          * Table 의 선택된 index 를 리턴
          * @param {object} _oTable

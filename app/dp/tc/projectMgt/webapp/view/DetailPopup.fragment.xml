@@ -79,6 +79,13 @@
                             </t:template>                          
                         </t:Column> 
                     </t:columns>
+                    <t:rowActionTemplate>
+                        <t:RowAction>
+                            <t:items>
+                                <t:RowActionItem type="Navigation" press=".onDetailPopRowActionPress"></t:RowActionItem>
+                            </t:items>
+                        </t:RowAction>
+                    </t:rowActionTemplate>
                 </t:Table>
                 <!-- 재료비 조회 List 끝 --> 
 		</content>

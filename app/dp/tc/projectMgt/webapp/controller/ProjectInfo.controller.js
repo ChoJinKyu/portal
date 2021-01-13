@@ -56,7 +56,10 @@ sap.ui.define([
             oView.setBusy(true);
             oModel.read("/ProjectView", {
                 filters : aFilters,
-                urlParameters : {"$expand" : "events,similar_model,base_extra,mtlmob,sales_price,prcs_cost,sgna"},
+                urlParameters : { 
+                    "$expand" : "events,similar_model,base_extra,mtlmob,sales_price,prcs_cost,sgna",
+                    "$orderby" : "events/sequence"
+                },
                 success : function(data){
                     debugger;
                     oView.setBusy(false);

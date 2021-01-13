@@ -359,9 +359,21 @@
                         <!-- <Title text="{I18n>/PART_NO_LIST}" level="H2"/> -->
                         <Title text="프로젝트 관리 목록 ({= ${listModel>/results}.length})" level="H2"/>
                         <ToolbarSpacer />
-                        <Button text="견적 재료비" type="Emphasized" press=".onEstimateCreatePress" />
-                        <Button text="목표 재료비" type="Emphasized" press=".onGoalCreatePress" />
-                        <Button text="예상 재료비" type="Emphasized" press=".onProgressMgtPress" />
+                        <Button text="견적 재료비" type="Emphasized" press=".onEstimateCreatePress">
+                            <customData>
+                                <core:CustomData key="cost_type" value="E" />
+                            </customData>
+                        </Button>
+                        <Button text="목표 재료비" type="Emphasized" press=".onGoalCreatePress" >
+                            <customData>
+                                <core:CustomData key="cost_type" value="T"/>
+                            </customData>
+                        </Button>
+                        <Button text="예상 재료비" type="Emphasized" press=".onProgressMgtPress" >
+                            <customData>
+                                <core:CustomData key="cost_type" value="P"/>
+                            </customData>
+                        </Button>
                         <ToolbarSeparator/>
                         <Button text="모델 추가" type="Transparent" press=".onAddModelPress" />
                         <Button text="산출 제외" type="Transparent" press=".onExcludeCalPress" />
