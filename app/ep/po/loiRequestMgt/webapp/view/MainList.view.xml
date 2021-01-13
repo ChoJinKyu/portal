@@ -249,8 +249,7 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/LOIRequestListView}"
-                        rows="{
+                        items="{
                             path: 'list>/LOIRequestListView',
                             sorter: { 
                                 path: 'loi_number',

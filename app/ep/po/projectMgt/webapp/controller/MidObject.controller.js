@@ -115,6 +115,8 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midObjectForm2Edit"));            
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", { layout: sNextLayout });
         },
@@ -214,6 +216,8 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("midObjectForm1Edit"));
+                                that.validator.clearValueState(that.byId("midObjectForm2Edit"));
                                 that._toShowMode();
                             }
                         });
@@ -228,6 +232,8 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midObjectForm2Edit"));
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
                 this.onPageNavBackButtonPress.call(this);
             } else {
