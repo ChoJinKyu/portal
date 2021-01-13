@@ -5,7 +5,7 @@ SELECT tenant_id,
   cast(1 AS BIGINT) previous_nego_header_id,
   cast(1 AS INTEGER) reference_nego_document_number,
   cast(1 AS INTEGER) nego_document_round,
-  cast(1 AS NVARCHAR(50)) nego_document_number,
+  cast(1 AS NVARCHAR(50)) nego_document_number
   FROM SP_SC_NEGO_HEADERS
 GROUP BY tenant_id;
 /*
