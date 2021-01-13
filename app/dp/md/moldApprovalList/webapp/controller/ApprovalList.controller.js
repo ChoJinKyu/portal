@@ -235,7 +235,9 @@ sap.ui.define([
 		 * @public
 		 */
         onBackToList: function (){
-            appThis.byId("pageSearchButton").firePress();
+            if(!appThis == undefined){
+                appThis.byId("pageSearchButton").firePress();
+            }
         },
 
 		/**

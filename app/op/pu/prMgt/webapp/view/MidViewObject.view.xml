@@ -92,7 +92,7 @@
 
 		<uxap:sections id="pss">
 
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="기본 정보">
+			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
@@ -131,7 +131,7 @@
 			</uxap:ObjectPageSection>
 
             <!-- 품목 정보 시작 -->
-            <uxap:ObjectPageSection titleUppercase="false" title="품목 정보">
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ITEM_INFO}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection>
                         <!-- Participating Supplier Table -->
@@ -153,90 +153,116 @@
                             </table:extension>          
 
                             <table:columns>
-                                <table:Column id="c_model" width="5em" hAlign="Center">
-                                    <Label text="품목번호"/>
+                                <table:Column  width="5em" hAlign="Center">
+                                    <Label text="{I18N>/ITEM_NUMBER}"/>
                                     <table:template>
                                         <Text id="t_model" text="{detailModel>pr_item_number}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_moldPartNo" width="5em" hAlign="Center">
-                                    <Label text="조직코드" />           
+                                <table:Column  width="5em" hAlign="Center">
+                                    <Label text="{I18N>/ORG_CODE}" />           
                                     <table:template>
                                         <Text text="{detailModel>org_code}" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="8em" hAlign="Center">
-                                    <Label text="자재코드" />           
+                                    <Label text="{I18N>/MATERIAL_CODE}" />           
                                     <table:template>
                                         <Text  text="{detailModel>material_code}" />
                                     </table:template>
-                                </table:Column>
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="자재그룹" />           
-                                    <table:template>
-                                        <Text text="{detailModel>material_group_code}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_description" width="20em" hAlign="Center">
-                                    <Label text="구매요청 품명" />           
+                                </table:Column>                                
+                                <table:Column  width="20em" hAlign="Center">
+                                    <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/ITEM_NAME}" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_desc}"/>
                                     </table:template>
                                 </table:Column>       
-                                <table:Column id="c_MoldItemType" width="5em" hAlign="Center">
-                                    <Label text="요청수량"/>
+                                <table:Column width="5em" hAlign="Center">
+                                    <Label text="{I18N>/REQUEST_QUANTITY}"/>
                                     <table:template>
                                         <Text text="{detailModel>pr_quantity}"/>
                                     </table:template>
                                 </table:Column>                                     
-                                <table:Column id="c_bookCrrency" width="5em" hAlign="Center">
-                                    <Label text="단위" />           
+                                <table:Column  width="5em" hAlign="Center">
+                                    <Label text="{I18N>/UNIT}" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_unit}"/>
                                     </table:template>
-                                </table:Column>                                     
-                                <table:Column id="c_budetAmount" width="10em" hAlign="Center">
-                                    <Label text="구매요청가격" />           
+                                </table:Column>
+                                <table:Column  width="8em"  hAlign="Center">
+                                    <Label text="납품일" />           
+                                    <table:template>
+                                        <Text text="{
+                                                    path:'detailModel>delivery_request_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        UTC: true,
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }"/>
+                                    </table:template>
+                                </table:Column>    
+                                <table:Column  width="10em" hAlign="Center">
+                                    <Label text="{I18N>/PRICE}" />           
                                     <table:template>
                                         <Text text="{detailModel>estimated_price}"/>
                                     </table:template>
                                 </table:Column>                               
-                                <table:Column id="c_currency" width="5em" hAlign="Center">
-                                    <Label text="통화" />           
+                                <table:Column  width="5em" hAlign="Center">
+                                    <Label text="{I18N>/CURRENCY}" />           
                                     <table:template>
-                                        <Text id="currency" text="{detailModel>currency_code}"/>
+                                        <Text text="{detailModel>currency_code}"/>
                                     </table:template>
-                                </table:Column>                                     
-                                <table:Column id="c_moldSupplier1" width="8em" hAlign="Center">
-                                    <Label text="구매담당자"/>           
+                                </table:Column> 
+
+                                <table:Column  width="5em" hAlign="Center">
+                                    <Label text="{I18N>/PRICE_UNIT}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>price_unit}"/>
+                                    </table:template>
+                                </table:Column>    
+
+                                <table:Column  width="8em" hAlign="Center">
+                                    <Label text="{I18N>/BUYER}"/>           
                                     <table:template>
                                         <Text text="{detailModel>buyer_empno}"/>
                                     </table:template>
                                 </table:Column> 
-                                <table:Column id="c_moldSupplier4" width="5em" hAlign="Center">
-                                    <Label text="규격"/>    
-                                    <table:template>
-                                        <Text text="{detailModel>price_unit}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
-                                    <Label text="비고"/>
-                                    <table:template>
-                                        <Text text="{detailModel>remark}"/>
-                                    </table:template>
-                                </table:Column>
+
+
                                 <table:Column width="10em" hAlign="Center">
-                                    <Label text="구매그룹"/>           
+                                    <Label text="{I18N>/PURCHASING_GROUP_CODE}"/>           
                                     <table:template>
                                         <Text text="{detailModel>purchasing_group_code}"/>
                                     </table:template>
                                 </table:Column>
+
+
                                 <table:Column width="10em" hAlign="Center">
-                                    <Label text="저장위치"/>           
+                                    <Label text="{I18N>/MATERIAL_GROUP_CODE}"/>           
+                                    <table:template>
+                                        <Text text="{detailModel>material_group_code}"/>
+                                    </table:template>
+                                </table:Column>
+
+
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="{I18N>/STORAGE_LOCATION}"/>           
                                     <table:template>
                                         <Text text="{detailModel>sloc_code}"/>
                                     </table:template>
-                                </table:Column>                              
+                                </table:Column>  
+
+
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="{I18N>/REMARK}"/>           
+                                    <table:template>
+                                        <Text text="{detailModel>remark}"/>
+                                    </table:template>
+                                </table:Column>  
+
+
+
                             </table:columns>
                           </table:Table>
                        
