@@ -112,7 +112,7 @@
 
 		<uxap:sections id="pss">
 
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="true" title="General Info">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageGeneralInfoSection">
 					</uxap:ObjectPageSubSection>

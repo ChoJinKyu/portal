@@ -169,7 +169,7 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/BALANCED_BUDGET', formatter:'I18NFormatter'}"/>
 					<HBox alignItems="End" justifyContent="End">
-						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
+						<ObjectStatus text="{path : 'mdCommon>/provisional_budget_amount' , formatter: '.numberFormatter.toNumberString'}"/>
 						<ObjectStatus text="  KRW" state="Error"/>
 					</HBox>
 					<layoutData>
