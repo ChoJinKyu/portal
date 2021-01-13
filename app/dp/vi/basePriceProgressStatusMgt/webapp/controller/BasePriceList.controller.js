@@ -1,5 +1,5 @@
 sap.ui.define([
-  "ext/lib/controller/BaseController",
+  "./App.controller",
   "sap/ui/model/json/JSONModel",
   "ext/lib/formatter/DateFormatter",
   "sap/ui/model/Filter",
@@ -19,8 +19,11 @@ sap.ui.define([
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oRootModel.getProperty("/tenantId");
 
+            var oToday = new Date();
             var oFilterData = {tenantId: sTenantId,
                                 type: "1",
+                                 dateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30, "00", "00", "00"),
+                                secondDateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate(), "23", "59", "59"),
                                 type_list:[{code:"1", text:"개발구매"}]};
 
             this.setModel(new JSONModel(), "listModel");
@@ -37,7 +40,7 @@ sap.ui.define([
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
 
-            //this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
+            this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
         },
 
         /**

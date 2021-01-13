@@ -1,5 +1,5 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
+    "./App.controller",
     "ext/lib/model/ManagedListModel",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Validator",
@@ -128,7 +128,7 @@ sap.ui.define([
                 oModel.read("/Base_Price_Arl_Master", {
                     filters : aFilters,
                     urlParameters: {
-                        "$expand": "details/material_code_fk,details/prices"
+                        "$expand": "approval_requestor_empno_fk,details/material_code_fk,details/prices"
                     },
                     success : function(data){
                         oView.setBusy(false);
@@ -162,7 +162,7 @@ sap.ui.define([
                                     "approval_type_code": "10",
                                     "new_change_code": "10",
                                     "approval_status_code": "10",
-                                    "approval_request_desc": "품의 테스트",
+                                    "approval_request_desc": "",
                                     "approval_requestor_empno": "5452",
                                     "create_user_id": "5460", 
                                     "update_user_id": "5460", 
@@ -268,7 +268,8 @@ sap.ui.define([
             }
 
             aDetails.push({base_date:oToday, 
-                        company_code: "",
+                        company_code: "LGCKR",
+                        purOrg: this.getModel("rootModel").getProperty("/purOrg/LGCKR"),
                         org_code: "",
                         org_type_code: "PU",
                         au_code: "10",
