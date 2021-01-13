@@ -373,7 +373,7 @@
                                     <Text text="{supplier_participation_flag}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
-                            <t:Column width="6rem" hAlign="Center" sortProperty="closing_date" filterProperty="closing_date">
+                            <!-- <t:Column width="6rem" hAlign="Center" sortProperty="closing_date" filterProperty="closing_date">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date"}'/>
                                 </t:customData>
@@ -383,7 +383,7 @@
                                             formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
                                     
                                 </t:template> 
-                            </t:Column> 
+                            </t:Column>  -->
                             <t:Column width="18rem" hAlign="Center" sortProperty="nego_document_title" filterProperty="nego_document_title">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_title", "leadingProperty": "nego_document_title", "sortProperty": "nego_document_title", "filterProperty": "nego_document_title"}'/>
@@ -485,7 +485,7 @@
                                 <t:template>
                                     <Text text="{request_department_code}" wrapping="false" />
                                 </t:template>  
-                            </t:Column> 
+                            </t:Column> -->
                             <t:Column  width="12rem" hAlign="Center" sortProperty="award_type_code" filterProperty="award_type_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "award_type_code", "leadingProperty": "award_type_code", "sortProperty": "award_type_code", "filterProperty": "award_type_code"}'/>
@@ -495,6 +495,7 @@
                                     <Text text="{award_type_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+                            
                             <t:Column width="14rem" hAlign="Center" sortProperty="buyer_empno" filterProperty="buyer_empno">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "buyer_empno", "leadingProperty": "buyer_empno", "sortProperty": "buyer_empno", "filterProperty": "buyer_empno"}'/>
@@ -504,6 +505,7 @@
                                     <Text text="{buyer_empno}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+                            
                             <t:Column width="14rem" hAlign="Center" sortProperty="buyer_department_code" filterProperty="buyer_department_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "buyer_department_code", "leadingProperty": "buyer_department_code", "sortProperty": "buyer_department_code", "filterProperty": "buyer_department_code"}'/>
@@ -513,24 +515,31 @@
                                     <Text text="{buyer_department_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+                            
                             <t:Column width="14rem" hAlign="Center" sortProperty="open_date" filterProperty="open_date">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "open_date", "leadingProperty": "open_date", "sortProperty": "open_date", "filterProperty": "open_date"}'/>
                                 </t:customData>
                                 <Label text="Open Date" design="Bold"/>
                                 <t:template>
-                                    <Text text="{open_date}" wrapping="false" />
+                                    <Text text="{path: 'open_date',type : 'sap.ui.model.type.Date', 
+                                            formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
+                                    
                                 </t:template>  
                             </t:Column> 
+                            
                             <t:Column width="14rem" hAlign="Center" sortProperty="closing_date" filterProperty="closing_date">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date"}'/>
                                 </t:customData>
                                 <Label text="Close Date" design="Bold"/>
                                 <t:template>
-                                    <Text text="{closing_date}" wrapping="false" />
+                                    <Text text="{path: 'closing_date',type : 'sap.ui.model.type.Date', 
+                                            formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+                            
+                            
                             <t:Column width="14rem" hAlign="Center" sortProperty="close_date_ext_enabled_hours" filterProperty="close_date_ext_enabled_hours">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "close_date_ext_enabled_hours", "leadingProperty": "close_date_ext_enabled_hours", "sortProperty": "close_date_ext_enabled_hours", "filterProperty": "close_date_ext_enabled_hours"}'/>
@@ -549,6 +558,7 @@
                                     <Text text="{close_date_ext_enabled_count}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+                              
                             <t:Column width="14rem" hAlign="Center" sortProperty="actual_extension_count" filterProperty="actual_extension_count">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "actual_extension_count", "leadingProperty": "actual_extension_count", "sortProperty": "actual_extension_count", "filterProperty": "actual_extension_count"}'/>
@@ -558,6 +568,7 @@
                                     <Text text="{actual_extension_count}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+                            <!--
                             <t:Column width="14rem" hAlign="Center" sortProperty="requisition_flag" filterProperty="requisition_flag">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "requisition_flag", "leadingProperty": "requisition_flag", "sortProperty": "requisition_flag", "filterProperty": "requisition_flag"}'/>
@@ -566,7 +577,8 @@
                                 <t:template>
                                     <Text text="{requisition_flag}" wrapping="false" />
                                 </t:template>  
-                            </t:Column> 
+                            </t:Column> -->
+                            <!--
                             <t:Column width="14rem" hAlign="Center" sortProperty="price_submission_no" filterProperty="price_submission_no">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "price_submission_no", "leadingProperty": "price_submission_no", "sortProperty": "price_submission_no", "filterProperty": "price_submission_no"}'/>
@@ -585,16 +597,19 @@
                                     <Text text="{price_submisstion_status}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+                            -->
+                            
                             <t:Column width="14rem" hAlign="Center" sortProperty="local_create_dtm" filterProperty="local_create_dtm">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm"}'/>
                                 </t:customData>
                                 <Label text="생성 날짜" design="Bold"/>
                                 <t:template>
-                                    <Text text="{local_create_dtm}" wrapping="false" />
+                                    <Text text="{path: 'local_create_dtm',type : 'sap.ui.model.type.Date', 
+                                            formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <t:Column width="14rem" hAlign="Center" sortProperty="interface_source" filterProperty="interface_source">
+                            <!-- <t:Column width="14rem" hAlign="Center" sortProperty="interface_source" filterProperty="interface_source">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "interface_source", "leadingProperty": "interface_source", "sortProperty": "interface_source", "filterProperty": "interface_source"}'/>
                                 </t:customData>
