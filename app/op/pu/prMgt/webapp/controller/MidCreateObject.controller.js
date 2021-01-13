@@ -105,9 +105,9 @@ sap.ui.define([
             } 
             
             if(oArgs.vMode  && oArgs.vMode  !== ""){
-                this.view_mode = oArgs.vMode;
+                this.edit_mode = oArgs.vMode;
             }else{
-                this.view_mode = "NEW"
+                this.edit_mode = "NEW"
             }      
 
             // 초기 데이터 설정
@@ -155,6 +155,26 @@ sap.ui.define([
             oContModel.setProperty("/Pr_Dtl", oPrDtlVisible);
         },
 
+        /**
+         * Edit Mode setting
+         */
+        _fnSetEditMode: function(){
+            var that = this,
+                oView = this.getView(),
+                oViewModel = this.getModel('viewModel');
+            var oPrMstData = oViewModel.getProperty("/PrMst");
+
+            if(this.edit_mode === "NEW" || this.edit_mode === "COPY"){
+                this.pr_number = "NEW";
+                oPrMstData.pr_number = "NEW";
+                oPrMstData.request_date = new Date();
+                oViewModel.setProperty("/PrMst", oPrMstData);
+            }
+        },
+
+        /**
+         * 구매요청 템플릿 리스트 조회
+         */
         _fnGetPrTemplateList: function() {
             var that = this,
                 oView = this.getView(),
@@ -217,7 +237,7 @@ sap.ui.define([
                 requestor_department_name: "생산1팀",
                 request_date: oToday,
                 pr_create_status_code: "10",
-                pr_header_text: "테스트 구매요청",
+                pr_header_text: "구매요청",
                 approval_flag: false,
                 approval_number: "",
                 approval_contents: "",
@@ -265,9 +285,10 @@ sap.ui.define([
 
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
-
                         // 항목 Visible setting
                         that._fnSetVisible();
+                        // 화면 Edit Mode setting
+                        that._fnSetEditMode();
                     }
                 },
                 error : function(data){
@@ -370,9 +391,9 @@ sap.ui.define([
             }
             oPritemTable.clearSelection();
         },
-        
-		/**
-		 * Event handler for saving page changes
+
+        /**
+		 * Save button press
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
@@ -391,7 +412,36 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 
-                        that._fnPrSave();
+                        that._fnPrSave("SAVE");
+
+						// oView.setBusy(true);
+						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
+						// 	me._toShowMode();
+						// 	oView.setBusy(false);
+                        //     MessageToast.show("Success to save.");
+						// }).catch(function(err){
+                        //     MessageBox.error("Error while saving.");
+						// });
+					};
+				}
+			});
+        },
+
+		/**
+		 * Draft Button press
+		 * @public
+		 */
+        onPageDraftButtonPress: function(){
+			var oView = this.getView(),
+                that = this;
+            
+			MessageBox.confirm("임시 저장 하시겠습니까 ?", {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+
+                        that._fnPrSave("DRAFT");
 
 						// oView.setBusy(true);
 						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
@@ -409,7 +459,7 @@ sap.ui.define([
         /**
          * 구매요청 저장
          */
-        _fnPrSave: function(){
+        _fnPrSave: function(pSaveFlag){
             var oView = this.getView();
             var that = this;
             //var oDetailModel = this.getModel("detailModel");
@@ -418,6 +468,11 @@ sap.ui.define([
             var oViewModel = this.getModel("viewModel");
             var oViewData = $.extend(true, {}, oViewModel.getData());
 
+            if(pSaveFlag === "SAVE"){
+                oViewData.PrMst.pr_create_status_code = "50";
+            }else{
+                oViewData.PrMst.pr_create_status_code = "10";
+            }
 
             //대표품목명
             var pr_desc = "";
@@ -430,7 +485,7 @@ sap.ui.define([
                 }
             }
             oViewData.PrMst.pr_desc = pr_desc;
-
+                        
             //품의내용
             // var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
             // oViewData.PrMst.approval_contents = approvalContents;
@@ -471,11 +526,23 @@ sap.ui.define([
             };
 
             // Detail data
+            var drdateY, drdateM, drdateD, delivery_request_date;
             var aDetails = [];
             var aViewDataPrDtl = oViewData.Pr_Dtl;
             if(aViewDataPrDtl.length > 0){
-               aViewDataPrDtl.forEach(function(item, idx){
-                   aDetails.push({
+                aViewDataPrDtl.forEach(function(item, idx){
+
+                    if(item.delivery_request_date && item.delivery_request_date != ""){
+                        drdateY = item.delivery_request_date.getFullYear();
+                        drdateM = item.delivery_request_date.getMonth() + 1;
+                        drdateD = item.delivery_request_date.getDate();
+                        delivery_request_date = drdateY + "-" + (drdateM >= 10 ? drdateM : "0"+drdateM) + "-" + (drdateD >= 10 ? drdateD : "0"+drdateD);
+                    }else{
+                        delivery_request_date = "";
+                    }
+                    
+
+                    aDetails.push({
                         tenant_id: item.tenant_id,
                         company_code: item.company_code,
                         pr_number: oMasterData.pr_number,
@@ -492,7 +559,7 @@ sap.ui.define([
                         pr_unit: item.pr_unit,
                         requestor_empno: item.requestor_empno,
                         requestor_name: item.requestor_name,
-                        delivery_request_date: item.delivery_request_date,
+                        delivery_request_date: delivery_request_date,
                         purchasing_group_code: item.purchasing_group_code,
                         price_unit: item.price_unit,
                         pr_progress_status_code: item.pr_progress_status_code,
@@ -540,10 +607,9 @@ sap.ui.define([
                 "SavePrCreateProc",
                 function(result){
                     oView.setBusy(false);
-                    if(result.value[0].return_code === "0000") {
+                    if(result && result.value && result.value.length > 0 && result.value[0].return_code === "0000") {
                         that._fnNavigationMainPage();
                     }
-                    
                 }
             );
         },
@@ -551,9 +617,7 @@ sap.ui.define([
         /**
          * Ajax 호출 함수
          */
-        _fnCallAjax: function (sendData, targetName , callback) {
-            console.log("send data >>>> ", sendData);
-            
+        _fnCallAjax: function (sendData, targetName , callback) {            
             var that = this;            
             var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/op.PrCreateV4Service/" + targetName;
 
