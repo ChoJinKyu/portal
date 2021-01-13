@@ -293,8 +293,7 @@
                                 fileSizeExceed="onFileSizeExceed"
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
-                            <Button id="ButtonUploadOuter" text="Upload Now" press="onStartUpload" />
+                                beforeUploadStarts="onBeforeUploadStarts" />                            
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 
@@ -314,8 +313,7 @@
                                 fileSizeExceed="onFileSizeExceed"
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
-                            <Button id="ButtonUploadInner" text="Upload Now" press="onStartUpload" />
+                                beforeUploadStarts="onBeforeUploadStarts" />                            
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>

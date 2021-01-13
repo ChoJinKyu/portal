@@ -237,7 +237,7 @@
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>             
                                 <!-- <CheckBox fieldGroupIds="{= ${list>pr_create_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>pr_create_status_code}==='DR'? true:false }" select=".onCheck" />   -->
-                                <Text text="{list>pr_number}"/>
+                                <Text text="{list>pr_number}" vAlign="Left" />
                                 <Text text="{list>erp_pr_number}"/>
                                 <Text text="{list>pr_desc}"/>
                                 <Text text="{list>pr_type_name}"/>

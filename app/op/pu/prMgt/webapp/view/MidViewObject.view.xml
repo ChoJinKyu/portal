@@ -252,13 +252,41 @@
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection title="외부용" level="H2">
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
-                            
+                            <UploadCollection
+                                id="UploadCollectionOuter"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="false"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />                            
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 
                     <uxap:ObjectPageSubSection title="내부용" level="H2">
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
-                           
+                            <UploadCollection
+                                id="UploadCollectionInner"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="false"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />                            
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>

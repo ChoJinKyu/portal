@@ -223,7 +223,8 @@ sap.ui.define([
             console.group("handleTableSelectDialogPress");
 
             var oView = this.getView();
-            var oButton = oEvent.getSource();
+            var oButton = oEvent.getSource(); 
+
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
                     id: oView.getId(),
@@ -235,9 +236,16 @@ sap.ui.define([
                 }.bind(this));
             }
 
-            this._oDialogTableSelect.then(function (oDialog) {
+            this._oDialogTableSelect.then(function (oDialog) {               
                 oDialog.open();
             });
+        },
+
+        onDialogOpen: function (oEvent) {
+   
+            var oPR_TYPE2 = this.byId("SelectionPR_TYPE2")
+                oPR_TYPE2.setSelectedKey("");
+            this.onInitPR_TYPE3();           
         },
 
         onExit: function () {
@@ -319,13 +327,8 @@ sap.ui.define([
                 },
                 error: function (oData) {
                     // oCodeMasterTable.setBusy(false);
-                }
-
-                
-            });
-
-           
-            
+                }                
+            });            
         },
 
 
@@ -424,7 +427,6 @@ sap.ui.define([
                 key: "{pr_template_number}",
                 text: "{pr_template_name}"                
             });
-
             oSegmentButton.bindItems("/Pr_TMapView", oItemTemplate, null, aFilters);
         },
 
@@ -655,8 +657,6 @@ sap.ui.define([
                     })
                 );
             }
-
-            
             
             return aSearchFilters;
         },
