@@ -15,15 +15,15 @@
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service
 # Odata v2 service
-@reviews-service = {{serviceUrl}}/sp.negoHeadersService
+@reviews-service = {{serviceUrl}}/sp.sourcingService
 # Odata v4 service
-@reviews-service = {{serviceUrl}}/sp.negoHeadersV4Service
+@reviews-service = {{serviceUrl}}/sp.sourcingTest01V4Service
 
 ### Need a Cookie for credential not in local
 # https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
 @cookie = JTENANTSESSIONID_services=5fZp7Tlz85JCf51p0PLyDiYoWX3fugTkSnF61L2Fb%2BU%3D
 # https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap/
-@cookie = workspaces-ws-bhnz4_WSR_SESSIONID=Suul34z22XoXRlxYluU9QksQxt8qigb2ta2/lfMddWFIULR6WT0dlXHk360aRnC26I8LsXkRuewqAPbJIwQ22A==
+@cookie = workspaces-ws-ll5cb_WSR_SESSIONID=l29o4E9wu3PwAfEjhmtMpz70gsMR9MQmJ3RmtUxhKRT2V+Vlwtrw7Tgo1lGyBzodAPxXU52Efga/NZzmtSaoLA==
 
 # @cookie = 
 
@@ -36,9 +36,15 @@ Cookie: {{cookie}}
 #   NegoHeaders Service
 #
 
+
+
 ### Multi Select
-GET {{reviews-service}}/NegoHeaders
+GET {{reviews-service}}/NegoHeadersTest04?&$count=true
+&$filter=(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)
+&$select=HasActiveEntity,tenant_id,IsActiveEntity
 Cookie: {{cookie}}
+# &$skip=0&$top=30
+# &$count=true
 
 ### Single Select
 GET {{reviews-service}}/NegoHeaders(tenant_id='L2100',nego_header_id=3)

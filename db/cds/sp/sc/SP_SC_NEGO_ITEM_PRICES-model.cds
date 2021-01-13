@@ -45,7 +45,7 @@ entity Sc_Nego_Item_Prices {
         vendor_pool_code             : String(100)         @title : '협력사풀코드';
         request_quantity             : Decimal(28, 3)      @title : '요청수량';
         uom_code                     : String(3)           @title : 'UOM코드';
-        maturity_date                : Date                @title : '만기일자';
+        maturity_date                : DateTime                @title : '만기일자';
         currency_code                : String(5)           @title : '통화코드';
         response_currency_code       : String(15)          @title : '응답통화코드';
         exrate_type_code             : String(15)          @title : '환율유형코드';
