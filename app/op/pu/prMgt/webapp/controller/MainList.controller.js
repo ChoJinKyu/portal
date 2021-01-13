@@ -171,6 +171,8 @@ sap.ui.define([
 
 
 
+
+
         /**
          * @public
          * @see 리스트 체크박스 제어기능
@@ -534,6 +536,7 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
+
         },
 
         _getSearchStates: function () {

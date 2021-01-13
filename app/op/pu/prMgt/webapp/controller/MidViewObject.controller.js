@@ -45,6 +45,9 @@ sap.ui.define([
 					delay : 0
                 });                
 
+            this.getView().setModel(new ManagedListModel(), "PrMstView");
+            this.getView().setModel(new ManagedListModel(), "PrMst");
+            this.getView().setModel(new ManagedListModel(), "PrDtl");              
 
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
@@ -109,6 +112,8 @@ sap.ui.define([
          * 기존 데이터 조회  
          */
         _fnGetMasterData : function(oArgs){
+
+            
 
             var oViewModel = this.getModel('viewModel');
             var oDetailModel = this.getModel('detailModel');
