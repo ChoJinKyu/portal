@@ -166,8 +166,13 @@ sap.ui.define([
          */
         onChangeCompany: function (oEvent) {
             var oFilterModel = this.getModel("filterModel");
+            var aSelectedPurOrg = [];
             
-            oFilterModel.setProperty("/selectedPurOrg", this.getModel("rootModel").getProperty("/purOrg/"+oFilterModel.getProperty("/company_code")));
+            if( oFilterModel.getProperty("/company_code") !== "" ) {
+                aSelectedPurOrg = this.getModel("rootModel").getProperty("/purOrg/"+oFilterModel.getProperty("/company_code"));
+            }
+
+            oFilterModel.setProperty("/selectedPurOrg", aSelectedPurOrg);
             oFilterModel.setProperty("/org_code", "");
         },
 

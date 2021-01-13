@@ -94,6 +94,26 @@ sap.ui.define([
             this.setModel(new Multilingual().getModel(), "I18N");
 
             var oRootModel = this.getModel("rootModel");
+
+            var aConfigFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            this.getModel().read("/Base_Price_Arl_Config", {
+                filters : aConfigFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        var oConfig = {};
+
+                        data.results.forEach(function (oResult) {
+                            oConfig[oResult.control_option_level_val] = oResult.control_option_val;
+                        });
+                        
+                        oRootModel.setProperty("/config", oConfig);
+                    }
+                }.bind(this),
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+            
             var oPurOrgModel = this.getModel("purOrg");
             var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
             oPurOrgModel.read("/Pur_Operation_Org", {
@@ -132,25 +152,6 @@ sap.ui.define([
                 success : function(data){
                     if( data ) {
                         this.getModel("rootModel").setProperty("/processList", data.results);
-                    }
-                }.bind(this),
-                error : function(data){
-                    console.log("error", data);
-                }
-            });
-
-            var aConfigFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
-            this.getModel().read("/Base_Price_Arl_Config", {
-                filters : aConfigFilter,
-                success : function(data){
-                    if( data && data.results ) {
-                        var oConfig = {};
-
-                        data.results.forEach(function (oResult) {
-                            oConfig[oResult.control_option_level_val] = oResult.control_option_val;
-                        });
-                        
-                        oRootModel.setProperty("/config", oConfig);
                     }
                 }.bind(this),
                 error : function(data){
