@@ -9,7 +9,7 @@ sap.ui.define([
 
 		return Controller.extend("tmp.SampleSolutionized.controller.SampleSolutionized", {
 			onInit: function () {
-
+                alert("hi");
 			}
 		});
 	});
