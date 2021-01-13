@@ -80,59 +80,39 @@ public class MdCategoryService implements EventHandler {
 
                     // DB처리
                     try {
-                        Connection conn = jdbc.getDataSource().getConnection();
-                        // Item SPMD범주코드 생성 Function
-                        StringBuffer v_sql_get_code_fun = new StringBuffer();
-                        v_sql_get_code_fun.append("SELECT ")
-                            .append("   PG_MD_CATEGORY_CODE_FUNC(?, ?, ?, ?) AS CATE_CODE ")
-                            .append("   , ( SELECT ")
-                            .append("           IFNULL(MAX(SUBSTRING(SPMD_CATEGORY_CODE,2)), 0)+1 ")
-                            .append("       FROM PG_MD_CATEGORY_ID ")
-                            .append("       WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ")
-                            .append("     ) AS MAX_COUNT ")
-                            .append(" FROM DUMMY ");                        
-                        PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
+                        // Category 범주코드 사업본부별 신규채번
+                        StringBuffer v_sql_get_query = new StringBuffer();
 
-                        v_statement_select.setObject(1, cateId.getTenantId());
-                        v_statement_select.setObject(2, cateId.getCompanyCode());
-                        v_statement_select.setObject(3, cateId.getOrgTypeCode());
-                        v_statement_select.setObject(4, cateId.getOrgCode());
-
-                        v_statement_select.setObject(5, cateId.getTenantId());
-                        v_statement_select.setObject(6, cateId.getCompanyCode());
-                        v_statement_select.setObject(7, cateId.getOrgTypeCode());
-                        v_statement_select.setObject(8, cateId.getOrgCode());
+                        v_sql_get_query.append(" SELECT ")
+                            .append("		IFNULL(MAX(SUBSTRING(SPMD_CATEGORY_CODE,2)), 0)+1 AS MAX_COUNT ")
+                            .append("	FROM PG_MD_CATEGORY_ID ")
+                            .append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ");                        
                 
-                        ResultSet rslt = v_statement_select.executeQuery();
-                        if(rslt.next()) {
-                            if (iMultiArrayCnt > 0) {
-                                iMultiArrayCnt = iMultiArrayCnt+1;
-                            } else {
-                                //cateCode = rslt.getString("CATE_CODE");
-                                iMultiArrayCnt = rslt.getInt("MAX_COUNT");
-                            }
-                            cateCode = "C"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
-                        }
-                        
+                        int iMaxCount = jdbc.queryForObject(v_sql_get_query.toString()
+																, new Object[] {
+																	cateId.getTenantId()
+																	, cateId.getCompanyCode()
+																	, cateId.getOrgTypeCode()
+																	, cateId.getOrgCode()
+                                                                }
+																, Integer.class);
+						iMultiArrayCnt = (iMultiArrayCnt > 0) ? iMultiArrayCnt+1 : iMaxCount;
+
+						cateCode = "C"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
 
                         log.info("###[LOG-10]=> ["+cateCode+"]");
 
-                        v_statement_select.close();
-                        conn.close();
-                    } catch (SQLException sqlE) {
-                        sqlE.printStackTrace();
-                        log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
-                        log.error("### ErrMesg : "+sqlE.getMessage()+"###");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        log.error("### ErrMesg : "+ex.getMessage()+"###");
                     } finally {
 
                     }
-
                     //log.info("###[LOG-11]=> ["+cateCode+"]");
-
                     cateId.setSpmdCategoryCode(cateCode);
                 }
-			}
-		}
+            }
+        }
 
 	}
 
@@ -217,37 +197,34 @@ public class MdCategoryService implements EventHandler {
                 int iItemCnt = 0;
                 // DB처리
 				try {
-					Connection conn = jdbc.getDataSource().getConnection();
-                    // SPMD범주코드 Item특성 등록 유무 체크
-					String v_sql_get = "SELECT COUNT(*) AS CNT FROM PG_MD_CATEGORY_ITEM WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? ";
 
-                    PreparedStatement v_stmt = conn.prepareStatement(v_sql_get);
+					// Category 범주코드 삭제시 Item등록여부체크
+					StringBuffer v_sql_get_query = new StringBuffer();
 
-                    v_stmt.setObject(1, cateId.getTenantId());
-                    v_stmt.setObject(2, cateId.getCompanyCode());
-                    v_stmt.setObject(3, cateId.getOrgTypeCode());
-                    v_stmt.setObject(4, cateId.getOrgCode());
-                    v_stmt.setObject(5, cateId.getSpmdCategoryCode());
-            
-                    ResultSet rslt = v_stmt.executeQuery();
-                    
-					if(rslt.next()) {
-                        iItemCnt = rslt.getInt("CNT");
-                        if (iItemCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "범주코드["+cateId.getSpmdCategoryCode()+"]를 삭제할 수 없습니다.");
-                    }
+					v_sql_get_query.append(" SELECT ")
+						.append("		COUNT(*) AS CNT ")
+						.append("	FROM PG_MD_CATEGORY_ITEM ")
+						.append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? ");                        
+			
+					iItemCnt = jdbc.queryForObject(v_sql_get_query.toString()
+															, new Object[] {
+																cateId.getTenantId()
+																, cateId.getCompanyCode()
+																, cateId.getOrgTypeCode()
+																, cateId.getOrgCode()
+																, cateId.getSpmdCategoryCode()
+															}
+															, Integer.class);
 
-                    log.info("###[LOG-10]=> ["+iItemCnt+"]");
+                    //log.info("###[LOG-10]=> ["+iItemCnt+"]");
+					if (iItemCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "범주코드["+cateId.getSpmdCategoryCode()+"]를 삭제할 수 없습니다.");
 
-                    v_stmt.close();
-                    conn.close();
-				} catch (SQLException sqlE) {
-					sqlE.printStackTrace();
-					log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
-					log.error("### ErrMesg : "+sqlE.getMessage()+"###");
-				} finally {
+				} catch (Exception ex) {
+                    ex.printStackTrace();
+                    log.error("### ErrMesg : "+ex.getMessage()+"###");
+                } finally {
 
                 }
-
 				//log.info("###[LOG-11]=> ["+iItemCnt+"]");
 			}
 		}
@@ -272,7 +249,7 @@ public class MdCategoryService implements EventHandler {
 
 			String cateCode = "";
 			String charCode = "";
-			int charSerialNo = 0;
+			int iCharSerialNo = 0;
 
 			for (MdCategoryItem item : items) {
 
@@ -291,60 +268,41 @@ public class MdCategoryService implements EventHandler {
 					// DB처리
 					try {
 
-						Connection conn = jdbc.getDataSource().getConnection();
+						// Item 특성코드 신규채번
+                        StringBuffer v_sql_get_query = new StringBuffer();
 
-						// Item SPMD특성코드 생성 Function
-						StringBuffer v_sql_get_code_fun = new StringBuffer();
-						v_sql_get_code_fun.append("SELECT ")
-							.append("   PG_MD_CHARACTER_CODE_FUNC(?, ?, ?, ?, ?) AS CHAR_CODE ")
-                            .append("   , ( SELECT ")
-                            .append("           IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 ")
-                            .append("       FROM PG_MD_CATEGORY_ITEM ")
-                            .append("       WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ")
-                            .append("     ) AS CHAR_SERIAL_NO ")
-							.append(" FROM DUMMY ");
+                        v_sql_get_query.append(" SELECT ")
+                            .append("		IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 AS CHAR_SERIAL_NO ")
+                            .append("	FROM PG_MD_CATEGORY_ITEM ")
+                            .append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ");                        
+                
+                        iCharSerialNo = jdbc.queryForObject(v_sql_get_query.toString()
+																, new Object[] {
+																	item.getTenantId()
+																	, item.getCompanyCode()
+																	, item.getOrgTypeCode()
+																	, item.getOrgCode()
+                                                                }
+																, Integer.class);
 
-						PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
-                        v_statement_select.setObject(1, item.getTenantId());
-                        v_statement_select.setObject(2, item.getCompanyCode());
-                        v_statement_select.setObject(3, item.getOrgTypeCode());
-                        v_statement_select.setObject(4, item.getOrgCode());
-                        v_statement_select.setObject(5, item.getSpmdCategoryCode());
-                        
-                        v_statement_select.setObject(6, item.getTenantId());
-                        v_statement_select.setObject(7, item.getCompanyCode());
-                        v_statement_select.setObject(8, item.getOrgTypeCode());
-                        v_statement_select.setObject(9, item.getOrgCode());
+						iMultiArrayCnt = (iMultiArrayCnt > 0) ? iMultiArrayCnt+1 : iCharSerialNo;
 
-						ResultSet rslt = v_statement_select.executeQuery();
+						charCode = "T"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
 
-						if(rslt.next()) {
-                            if (iMultiArrayCnt > 0) {
-                                charSerialNo = iMultiArrayCnt+1;
-                            } else {
-                                //charCode = rslt.getString("CHAR_CODE");
-                                charSerialNo = rslt.getInt("CHAR_SERIAL_NO");
-                            }
-                            charCode = "T"+StringUtil.getFillZero(String.valueOf(charSerialNo), 3);
-                            iMultiArrayCnt = charSerialNo;
-						}
+						//log.info("###[LOG-10]=> ["+charCode+"] ["+iCharSerialNo+"] ["+new Long(iMultiArrayCnt)+"]");
 
-						log.info("###[LOG-10]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
+					} catch (Exception ex) {
+                        ex.printStackTrace();
+                        log.error("### ErrMesg : "+ex.getMessage()+"###");
+                    } finally {
 
-
-                        v_statement_select.close();
-                        conn.close();
-					} catch (SQLException sqlE) {
-						sqlE.printStackTrace();
-						log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
-						log.error("### ErrMesg : "+sqlE.getMessage()+"###");
                     }
                         
                     item.setSpmdCharacterCode(charCode);
-                    item.setSpmdCharacterSerialNo(new Long(charSerialNo));
+                    item.setSpmdCharacterSerialNo(new Long(iMultiArrayCnt));
 				}
 				//charCode = item.getSpmdCharacterCode();
-				log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
+				log.info("###[LOG-11]=> ["+charCode+"] ["+iCharSerialNo+"] ["+new Long(iMultiArrayCnt)+"]");
 
 			}
 		}
@@ -398,35 +356,33 @@ public class MdCategoryService implements EventHandler {
                 int iMappingCnt = 0;
                 // DB처리
 				try {
-					Connection conn = jdbc.getDataSource().getConnection();
-                    // Item특성코드 VendorPool-3별 Mapping 등록 유무 체크
-					String v_sql_get = "SELECT COUNT(*) AS CNT FROM PG_MD_VP_ITEM_MAPPING_ATTR WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? AND SPMD_CHARACTER_CODE=? ";
 
-                    PreparedStatement v_stmt = conn.prepareStatement(v_sql_get);
+					// Item특성코드 삭제시 VendorPool-3별 Mapping 등록 유무 체크
+					StringBuffer v_sql_get_query = new StringBuffer();
 
-                    v_stmt.setObject(1, item.getTenantId());
-                    v_stmt.setObject(2, item.getCompanyCode());
-                    v_stmt.setObject(3, item.getOrgTypeCode());
-                    v_stmt.setObject(4, item.getOrgCode());
-                    v_stmt.setObject(5, item.getSpmdCategoryCode());
-                    v_stmt.setObject(6, item.getSpmdCharacterCode());
-            
-                    ResultSet rslt = v_stmt.executeQuery();
-                    
-					if(rslt.next()) {
-                        iMappingCnt = rslt.getInt("CNT");
-                        if (iMappingCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "특성코드["+item.getSpmdCharacterCode()+"]를 삭제할 수 없습니다.");
-                    }
+					v_sql_get_query.append(" SELECT ")
+						.append("		COUNT(*) AS CNT ")
+						.append("	FROM PG_MD_VP_ITEM_MAPPING_ATTR ")
+						.append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? AND SPMD_CHARACTER_CODE=? ");                        
+			
+					iMappingCnt = jdbc.queryForObject(v_sql_get_query.toString()
+															, new Object[] {
+																item.getTenantId()
+																, item.getCompanyCode()
+																, item.getOrgTypeCode()
+																, item.getOrgCode()
+																, item.getSpmdCategoryCode()
+																, item.getSpmdCharacterCode()
+															}
+															, Integer.class);
 
-                    log.info("###[LOG-10]=> ["+iMappingCnt+"]");
+                    //log.info("###[LOG-10]=> ["+iMappingCnt+"]");
+					if (iMappingCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "특성코드["+item.getSpmdCharacterCode()+"]를 삭제할 수 없습니다.");
 
-                    v_stmt.close();
-                    conn.close();
-				} catch (SQLException sqlE) {
-					sqlE.printStackTrace();
-					log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
-					log.error("### ErrMesg : "+sqlE.getMessage()+"###");
-				} finally {
+				} catch (Exception ex) {
+                    ex.printStackTrace();
+                    log.error("### ErrMesg : "+ex.getMessage()+"###");
+                } finally {
 
                 }
 
@@ -435,5 +391,7 @@ public class MdCategoryService implements EventHandler {
 		}
 
     }
+
+    
 
 }
