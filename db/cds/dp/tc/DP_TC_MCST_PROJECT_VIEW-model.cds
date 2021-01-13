@@ -6,7 +6,7 @@ using {dp as Mcst_Project_Base_Exrate} from './DP_TC_MCST_PROJECT_BASE_EXRATE-mo
 using {dp as Mcst_Project_Addition_Info} from './DP_TC_MCST_PROJECT_ADDITION_INFO-model';
 
 @cds.persistence.exists
-entity TC_Mcst_Project_View {
+entity TC_Mcst_Project_View( language_code: String )  {
     key tenant_id               : String(5) not null  @title : '테넌트ID';
     key project_code            : String(30) not null @title : '프로젝트코드';
     key model_code              : String(40) not null @title : '모델코드';
@@ -61,7 +61,7 @@ entity TC_Mcst_Project_View {
         mcst_code               : String(30)          @title : '재료비코드';
         mcst_status_code        : String(30)          @title : '재료비상태코드';
         version_sequence        : Decimal             @title : '버전순서';
-
+/*
         events                  : Composition of many Mcst_Project_Event.Tc_Mcst_Project_Event
                                       on  events.tenant_id      = tenant_id
                                       and events.project_code   = project_code
@@ -108,4 +108,5 @@ entity TC_Mcst_Project_View {
                                       and sgna.model_code         = model_code
                                       and sgna.version_number     = version_number
                                       and sgna.addition_type_code = 'SGNA'; //판관비
+*/                                      
 }

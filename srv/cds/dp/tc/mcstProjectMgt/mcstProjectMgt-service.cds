@@ -19,7 +19,7 @@ service McstProjectMgtService {
     entity McstProjectExrate       as projection on mcstPjtExrate.Tc_Mcst_Project_Base_Exrate;
     entity McstProjectSimilarModel as projection on mcstPjtSimilarModel.Tc_Mcst_Project_Similar_Model;
     entity McstProjectAddInfo      as projection on mcstPjtAddInfo.Tc_Mcst_Project_Addition_Info;
-    view McstProjectView @(title : 'Mcst Project View') as select from mcstPjtView.TC_Mcst_Project_View;
+    //view McstProjectView @(title : 'Mcst Project View') as select from mcstPjtView.TC_Mcst_Project_View;
 
     @readonly
     entity Code_Dtl                as
