@@ -17,17 +17,24 @@
 		},
         "dataSources": {
             "mainService": {
+                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "buyer": {
                 "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
-            "main": {
-                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
+            "mainV4": {
+                "uri": "srv-api/odata/v4/sp.negoHeadersV4Service/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "2.0"
+                    "odataVersion": "4.0"
                 }
             }
         }
@@ -87,14 +94,26 @@
                 "settings": {
                     "odataVersion": "2.0"
                 },
-                "dataSource": "main"
+                "dataSource": "mainService"
             },
-            "main": {
+            "buyer": {
                 "type": "sap.ui.model.odata.v2.ODataModel",
                 "settings": {
                     "odataVersion": "2.0"
                 },
-                "dataSource": "main"
+                "dataSource": "buyer"
+            }
+            ,
+            "mainV4": {
+                "type": "sap.ui.model.odata.v4.ODataModel",
+                "dataSource": "mainV4",
+                
+                "settings": {
+                    "odataVersion": "4.0",
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": false
+                }
             }
 		},
 		"resources": {
@@ -104,7 +123,7 @@
 		},
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "dp.util": "../../../../dp/md/util"
+            "dp.util": "../../../../dp/util"
         },
 		"routing": {
 			"config": {

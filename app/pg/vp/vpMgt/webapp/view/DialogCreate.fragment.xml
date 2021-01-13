@@ -59,7 +59,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
-                                            change="handleCreateInput"
+                                            
                                 >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </ComboBox>    
@@ -289,12 +289,13 @@
                                                                 {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
                                                             ]
                                                         }"
+                                                change=".handlemtlChang"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>                                      
                                      
                                 </VBox>
-                                <VBox>
+                                <VBox id="v_pop_plan_base" >
                                      <Label text = "Planning Base" class="sapUiTinyMarginEnd" design="Bold"/>
                                     <ComboBox   id="pop_plan_base"
                                                 items="{
@@ -399,7 +400,7 @@
                         <VBox id="v_internal_rate">
                             <Label text = "Site Internal Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="Number" ></Input> 
+                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="Number" change=".fnCalcRate" ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>                                
                             <layoutData>
@@ -409,7 +410,7 @@
                         <VBox id="v_external_rate">
                             <Label text = "Site External Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_domestic_net_price_diff_rate" type="Number"  ></Input> 
+                                    <Input id="pop_domestic_net_price_diff_rate" type="Number" change=".fnCalcRate"  ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>
                             <layoutData>

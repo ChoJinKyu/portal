@@ -35,30 +35,15 @@ public class ProjectMgtService implements EventHandler {
 
         log.info("### Project Number Insert... [Before] ###");
 
-        //Instant current = Instant.now();
-
         String tenant_id = project.getTenantId();
-        //String company_code = project.getCompanyCode();
 
-        log.info("### tenant_id ====>" + tenant_id);
+        //log.info("### tenant_id ====>" + tenant_id);
 
-        //String max_project_number = "";
         String v_sql = "SELECT IFNULL(MAX(CAST(REPLACE(EP_PROJECT_NUMBER, 'P' , '') as INTEGER)), 0) + 1 AS MAX_PROJECT_NUMBER FROM EP_PO_PROJECT";
-
-        //ResultSet v_rs = null;          
 
         try {
 
             String project_number = "";
-
-            // 이 부분 사용하면 안됨
-            //Connection conn = jdbc.getDataSource().getConnection();
-
-            // Local Temp Table 생성
-            //PreparedStatement v_statement = conn.prepareStatement(v_sql);
-            //v_rs = v_statement.executeQuery();
-
-            //if(v_rs.next()) project_number = String.valueOf(v_rs.getInt("MAX_PROJECT_NUMBER"));
 
             // 검색조건 없음, String type으로 바로 return
             project_number = jdbc.queryForObject(v_sql, null, String.class);

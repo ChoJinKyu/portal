@@ -53,27 +53,27 @@ BEGIN
     FOR V_IDX IN 1 .. RECORD_COUNT(:I_STATUS_TAB)
     DO 
 
-        IF (:I_STATUS_TAB.TENANT_ID[V_IDX] IS NULL ) THEN
+        IF ((:I_STATUS_TAB.TENANT_ID[V_IDX] IS NULL) OR (:I_STATUS_TAB.TENANT_ID[V_IDX] = '') ) THEN
            :O_RETURN_TAB.INSERT(('E', 'EDP','This is no value(TENANT_ID)'),1);
            RETURN;      
         END IF;
 
-        IF (:I_STATUS_TAB.COMPANY_CODE[V_IDX] IS NULL ) THEN
+        IF ((:I_STATUS_TAB.COMPANY_CODE[V_IDX] IS NULL) OR (:I_STATUS_TAB.COMPANY_CODE[V_IDX] = '') ) THEN
            :O_RETURN_TAB.INSERT(('E', 'EDP','This is no value(COMPANY_CODE)'),1);
            RETURN;      
         END IF;
 
-        IF (:I_STATUS_TAB.IDEA_NUMBER[V_IDX] IS NULL ) THEN
+        IF ((:I_STATUS_TAB.IDEA_NUMBER[V_IDX] IS NULL) OR (:I_STATUS_TAB.IDEA_NUMBER[V_IDX] = '') ) THEN
             :O_RETURN_TAB.INSERT(('E', 'EDP','This is no value(IDEA_NUMBER)'),1);
             RETURN;      
         END IF;
 
-        IF (:I_STATUS_TAB.IDEA_PROGRESS_STATUS_CODE[V_IDX] IS NULL ) THEN
+        IF ((:I_STATUS_TAB.IDEA_PROGRESS_STATUS_CODE[V_IDX] IS NULL) OR (:I_STATUS_TAB.IDEA_PROGRESS_STATUS_CODE[V_IDX] = '') ) THEN
            :O_RETURN_TAB.INSERT(('E', 'EDP','This is no value(IDEA_PROGRESS_STATUS_CODE)'),1);
            RETURN;      
         END IF;
 
-        IF (:I_STATUS_TAB.USER_ID[V_IDX] IS NULL ) THEN
+        IF ((:I_STATUS_TAB.USER_ID[V_IDX] IS NULL) OR (:I_STATUS_TAB.USER_ID[V_IDX] = '') ) THEN
            :O_RETURN_TAB.INSERT(('E', 'EDP','This is no value(USER_ID)'),1);
            RETURN;      
         END IF;
@@ -113,10 +113,10 @@ BEGIN
          SYSTEM_UPDATE_DTM
         )
         VALUES 
-        (V_TENANT_ID, -- TENANT_ID
-         V_COMPANY_CODE, -- COMPANY_CODE
-         V_IDEA_NUMBER,  -- IDEA_NUMBER
-         V_IDEA_SEQUENCE,                 -- STATUS_CHANGE_SEQUENCE
+        (V_TENANT_ID,                 -- TENANT_ID
+         V_COMPANY_CODE,              -- COMPANY_CODE
+         V_IDEA_NUMBER,               -- IDEA_NUMBER
+         V_IDEA_SEQUENCE,             -- STATUS_CHANGE_SEQUENCE
          V_IDEA_PROGRESS_STATUS_CODE, -- IDEA_PROGRESS_STATUS_CODE
          V_USER_ID,                   -- STATUS_CHANGE_USER_ID
          NOW(),                       -- STATUS_CHANGE_DATE_TIME
@@ -147,6 +147,12 @@ BEGIN
         ;
 */
     END FOR;
-
-
+/*
+    O_RETURN_TAB =  SELECT 'S' AS RETURN_CODE,
+                          ''  AS RETURN_MSG_CODE,
+                          ''  AS RETURN_MSG
+                    FROM DUMMY; 
+*/                    
+    :O_RETURN_TAB.INSERT(('S', NULL,NULL),1);   
+    
 END

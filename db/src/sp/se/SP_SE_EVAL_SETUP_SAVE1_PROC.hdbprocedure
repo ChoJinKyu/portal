@@ -63,7 +63,7 @@ BEGIN
     	    	                                WHERE  TRANSACTION_CODE = 'D')
    ;
 
-   IF ::ROWCOUNT = 0 THEN
+    IF ::ROWCOUNT = 0 AND :I_OPMST.TRANSACTION_CODE[1] = 'D' THEN
        SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'There is no information to delete.';
    END IF;
    

@@ -455,10 +455,10 @@ sap.ui.define([
                         supplier_err = amount_err+1;
                     }
                 });
-                if(amount_err > 0){
-                    MessageToast.show("목표가가 투자예산 금액을 초과하였습니다.");
-                    return;
-                }
+                // if(amount_err > 0){
+                //     MessageToast.show("목표가가 투자예산 금액을 초과하였습니다.");
+                //     return;
+                // }
                 if(supplier_err > 0){
                     MessageToast.show("협력사를 하나 이상 추가하세요.");
                     return;
