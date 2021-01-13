@@ -12,7 +12,7 @@ service ImService {
             key t.company_code,
             key t.idea_role_code,
             key t.role_person_empno,
-            t.user_local_name,
+            t.role_person_name,
             t.department_local_name,
             t.company_name,
             t.idea_role_name,

@@ -41,7 +41,7 @@ service SupplierIdeaBasicDataMgtService {
             key sir.company_code,
             key sir.idea_role_code,
             key sir.role_person_empno,
-            emp.user_local_name,
+            emp.user_local_name as role_person_name,
             emp.department_local_name,
             (select company_name 
              from Org.Company t
