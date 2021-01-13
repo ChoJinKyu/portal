@@ -4,8 +4,10 @@ sap.ui.define([
 	"sap/ui/table/Row",
 	"jquery.sap.global",
 	"sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
 	"./Utils"
-], function(BaseController, ColumnListItem, TableRow, jQuery, JSONModel, Utils) {
+], function(BaseController, ColumnListItem, TableRow, jQuery, JSONModel, MessageBox, MessageToast, Utils) {
 	"use strict";
     
 	return BaseController.extend("pg.md.mdVpItemMapping.controller.selectedItems", {  
@@ -14,34 +16,7 @@ sap.ui.define([
             
             this.getModel("tblModel").setProperty("/table2",this.getView().byId("table").getId());
 
-            ////
-            // var oView = this.getView();
-			// this.oProductsModel = this.initSampleProductsModel();
-			// oView.setModel(this.oProductsModel,"value2");
-
         },
-
-		// initSampleProductsModel: function() {
-            
-        //     var oModel = new JSONModel();
-        //     jQuery.ajax({
-        //         url: "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set?$orderby=spmd_category_sort_sequence asc,spmd_character_sort_seq asc&$filter=trim(vendor_pool_code) eq 'VP201610260096'", 
-        //         contentType: "application/json",
-        //         success: function(oData2){ 
-        //             debugger;
-		// 	        oModel.setData(oData2);
-        //             // this.getModel().setData(oData2);
-        //             // oData2.value.forEach(function(oProduct) {
-        //             //     oProduct.Rank = 1;
-        //             // }, this);
-                    
-        //         }.bind(this)                        
-        //     });
-
-		// 	// var oModel = new JSONModel();
-		// 	// oModel.setData(oData2);
-		// 	return oModel;
-		// },
 
 		onDragStart: function(oEvent) {
 			var oDraggedRow = oEvent.getParameter("target");
@@ -217,6 +192,7 @@ sap.ui.define([
 		},
 
         onSave: function() { 
+            
 			var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
 			//var oItemsModel = oSelectedItemsTable.getModel();
 			var oModel = this.getModel("tblModel");
@@ -255,7 +231,12 @@ sap.ui.define([
                     data : JSON.stringify(param),
                     contentType: "application/json",
                     success: function(data){
-					    alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
+                        if(data.rsltCd=="000"){
+                            MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                        }else{
+                            alert("["+data.rsltCd+"] ["+data.rsltMesg+"]");
+                        }
+					    //alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
                         
                     },
                     error: function(req){

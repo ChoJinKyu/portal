@@ -78,6 +78,8 @@ sap.ui.define([
                 oBinding = oSelect.getBinding("items");
                 aFilters = [];
                 aFilters.push( new Filter("tenant_id", 'EQ', this.tenant_id) );
+                aFilters.push( new Filter("tenant_id", 'EQ', 'L2100') );
+                aFilters.push( new Filter("tenant_id", 'EQ', 'L2600') );
                 oBinding.filter(aFilters, FilterType.Application); 
             },
 
@@ -156,13 +158,32 @@ sap.ui.define([
 
             
             onMainTableUpdateFinished: function (oEvent) {
+                var oTable = this.byId("mainTable");
                 // update the mainList's object counter after the table update
                 var sTitle,
                     iTotalItems = oEvent.getParameter("total");
-                sTitle = this.getModel("I18N").getText("/PRODUCT")+" "+this.getModel("I18N").getText("/ACTIVITY")+" "+this.getModel("I18N").getText("/MANAGEMENT");
 
-                //console.log(sTitle+" ["+iTotalItems+"]");
-                this.byId("mainTableTitle").setText(sTitle+"("+iTotalItems+")");
+                setTimeout((function(){
+                    sTitle = this.getModel("I18N").getText("/PRODUCT")+" "+this.getModel("I18N").getText("/ACTIVITY")+" "+this.getModel("I18N").getText("/MANAGEMENT");
+
+                    //console.log(sTitle+" ["+iTotalItems+"]");
+                    this.byId("mainTableTitle").setText(sTitle+"("+iTotalItems+")");
+
+                }).bind(this), 1100);
+                
+                for (var i = 0; i < oTable.getItems().length; i++) {
+                    if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
+                        oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("Yes");
+                    }else{
+                        oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("No");
+                    }
+                    if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
+                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Active");
+                    }else{
+                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Inactive");
+                    }
+                    
+                }
             
             },
 
@@ -385,12 +406,16 @@ sap.ui.define([
                                 //data: inputData,
                                 data: JSON.stringify(inputData),
                                 contentType: "application/json",
-                                success: function () {
+                                success: function (rst) {
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     v_this.onSearch();
                                     //var v_returnModel = oView.getModel("returnModel").getData();
-                                    
-                                    
+                                    //console.log(rst.value[0].return_code);
+                                    if(rst.value[0].return_code =="OK"){
+                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    }else{
+                                        sap.m.MessageToast.show( rst.value[0].return_msg );
+                                    }
                                 },
                                 error: function () {
                                     v_this.onSearch();
@@ -403,6 +428,7 @@ sap.ui.define([
                     v_this.byId("buttonMainCancelRow").setEnabled(false);
                     v_this.byId("buttonMainDeleteRow").setEnabled(false);
                     v_this.byId("buttonSaveProc").setEnabled(false);
+                    v_this.byId("gTableExportButton").setEnabled(true);
                 }
             },
 

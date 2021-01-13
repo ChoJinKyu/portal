@@ -33,18 +33,6 @@
             </t:extension>
             <t:columns>
                 <t:Column hAlign="Center" width="10rem">
-                    <Label text="범주코드" textAlign="Center" />
-                    <t:template>
-                        <Text text="{tblModel>spmd_category_code}"/>
-                    </t:template>
-                </t:Column>
-                <t:Column>
-                    <Label text="범주명" textAlign="Center" width="100%" />
-                    <t:template>
-                        <Text text="{tblModel>spmd_category_code_name}" />
-                    </t:template>
-                </t:Column>
-                <t:Column hAlign="Center" width="10rem">
                     <Label text="특성코드" textAlign="Center" />
                     <t:template>
                         <Text text="{tblModel>spmd_character_code}"/>
@@ -54,6 +42,18 @@
                     <Label text="특성코드명" textAlign="Center" width="100%" />
                     <t:template>
                         <Text text="{tblModel>spmd_character_code_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="10rem">
+                    <Label text="범주코드" textAlign="Center" />
+                    <t:template>
+                        <Text text="{tblModel>spmd_category_code}"/>
+                    </t:template>
+                </t:Column>
+                <t:Column>
+                    <Label text="범주명" textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{tblModel>spmd_category_code_name}" />
                     </t:template>
                 </t:Column>
             </t:columns>

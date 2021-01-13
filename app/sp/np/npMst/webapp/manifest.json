@@ -162,7 +162,7 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../../lib",
-            "ext.util": "../../../util"
+            "ext.dp": "../../../../../dp"
         },
         "routing": {
             "config": {
