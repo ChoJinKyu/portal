@@ -5,10 +5,11 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"ext/lib/control/ui/CodeValueHelp",
     "cm/util/control/ui/EmployeeDialog",
+    "cm/util/control/ui/CompanyDetailDialog",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
-], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, EmployeeDialog,
+], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, EmployeeDialog, CompanyDetailDialog,
         Filter, FilterOperator, Sorter) {
 	"use strict";
 
@@ -75,6 +76,33 @@ sap.ui.define([
             this.oCodeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCodeValueHelp").getTokens());
         },
 
+        onInputWithCompanyDetailValuePress: function(){
+            this.byId("CompanyDetailDialog").open();
+        },
+
+        onCompanyDetailDialogApplyPress: function(oEvent){
+            this.byId("inputWithCompanyDetailValueHelp").setValue(oEvent.getParameter("item").company_name);
+        },
+
+        onMultiInputWithCompanyDetailValuePress: function(){
+            if(!this.oCompanyDetailMultiSelectionValueHelp){
+                this.oCompanyDetailMultiSelectionValueHelp = new CompanyDetailDialog({
+                    title: "{I18N>/COMPANY}",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oCompanyDetailMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithCompanyDetailValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oCompanyDetailMultiSelectionValueHelp.open();
+            this.oCompanyDetailMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCompanyDetailValueHelp").getTokens());
+        },
+
         onInputWithEmployeeValuePress: function(){
             this.byId("employeeDialog").open();
         },
@@ -100,7 +128,8 @@ sap.ui.define([
             }
             this.oEmployeeMultiSelectionValueHelp.open();
             this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
-        }
+        },
+
 
 	});
 });

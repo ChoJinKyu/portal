@@ -50,6 +50,28 @@
                         </VBox>
 
                         <VBox>
+                            <Label text="Input with CompanyDetail Dialog (cm.util.control.ui.CompanyDetailDialog): " labelFor="inputWithCompanyDetailValueHelp"></Label>
+                            <Input id="inputWithCompanyDetailValueHelp"
+                                placeholder="Choose a CompanyDetail from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onInputWithCompanyDetailValuePress">
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="MultiInput with CompanyDetail Dialog (cm.util.control.ui.CompanyDetailDialog): " labelFor="multiInputWithCompanyDetailValueHelp"></Label>
+                            <MultiInput id="multiInputWithCompanyDetailValueHelp"
+                                placeholder="Choose CompanyDetails from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithCompanyDetailValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
                             <Label text="Input with Employee Dialog (cm.util.control.ui.EmployeeDialog): " labelFor="inputWithEmployeeValueHelp"></Label>
                             <Input id="inputWithEmployeeValueHelp"
                                 placeholder="Choose a employee from the ValueHelp"
@@ -72,7 +94,7 @@
                         </VBox>
 
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
-                            <Button text="Open Employee Dialog" type="Transparent" press=".onInputWithEmployeeValuePress"/>
+                            <Button text="Open Employee Dialog" type="Transparent" press=".onInputWithCompanyDetailValuePress"/>
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>
@@ -134,5 +156,11 @@
             }"
             apply=".onEmployeeDialogApplyPress"
         />
+
+         <cm-ui:CompanyDetailDialog id="CompanyDetailDialog" 
+            title="{I18N>/COMPANY_CODE}"
+            apply=".onCompanyDetailDialogApplyPress"
+        />
+        
     </Page>
 </mvc:View>
