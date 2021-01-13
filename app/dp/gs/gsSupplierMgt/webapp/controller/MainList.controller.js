@@ -13,6 +13,8 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/core/message/Message",
+    "sap/ui/core/MessageType",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "cm/util/control/ui/EmployeeDialog",
@@ -25,7 +27,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
 ], function (BaseController, Multilingual, Validator, History, JSONModel, TransactionManager, ManagedModel,
-    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, 
+    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Message, MessageType, 
     MessageBox, MessageToast, EmployeeDialog, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
     "use strict";
     
@@ -37,6 +39,7 @@ sap.ui.define([
         
         validator: new Validator(),
 
+		DupChkFlag: new Boolean,
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -46,7 +49,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {            
-
+			this.DupChkFlag = false;
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
@@ -275,17 +278,10 @@ sap.ui.define([
             var tenantId = "L2100";           
             
             var ssn = this.getView().byId("ssn").getValue(); 
-            var email = this.getView().byId("email").getValue();  
-            // var ssn = "ZKH"  
+            var email = this.getView().byId("email").getValue();                
             
-            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;       
-            // this.byId("dialogAddSupplier").close();
-            // this.getRouter().navTo("suppliePage", {
-			// 	layout: LayoutType.OneColumn,
-			// 	tenantId: tenantId,
-            //     ssn: ssn,
-            //     mode: "edit"
-            // });
+            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;      
+            
             
             var chkEmail = this.CheckEmail(email);
             if(!chkEmail){
@@ -293,6 +289,10 @@ sap.ui.define([
                 return false;
             }
 
+			if(!this.DupChkFlag){
+                MessageBox.alert("중복체크 해주세요.");
+                return false; 
+            }
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -323,22 +323,42 @@ sap.ui.define([
         },     
         
         onDupChk: function () {            
-            MessageBox.alert("준비중입니다.");
-            // var url = "dp/gs/sourcingSupplierMgt/webapp/srv-api/odata/v4/dp.GsSupplierMgtV4Service/GsCheckSupplierUniqueFunc(I_TENANT_ID='L2100',I_SUPPLIER_NICKNAME='ZKH')/Set";
-
-            // $.ajax({
-            //         url: url,
-            //         type: "GET",
-            //         contentType: "application/json",
-            //         success: function(data){
+            // MessageBox.alert("준비중입니다.");
+            var iTenantId = "L2100",
+                iSn = this.byId("ssn").getValue().trim();
+            if(this.isValNull(iSn)) {
+                MessageBox.alert("소싱공급업체별칭을 입력해주세요.");
+                return false;
+            }                
+            
+            var url = "dp/gs/sourcingSupplierMgt/webapp/srv-api/odata/v4/dp.GsSupplierMgtV4Service/GsCheckSupplierUniqueFunc(I_TENANT_ID='" + iTenantId +"',I_SUPPLIER_NICKNAME='" + iSn + "')/Set";           
+            var v_this = this;
+            $.ajax({
+                    url: url,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(data){
                         
-
-                                               
-            //         },
-            //         error: function(e){
+                        var code = data.value[0].return_code;
+                        if(code === "S"){
+                            v_this.DupChkFlag = true;
+                            MessageBox.alert("사용가능한 소싱공급업체별칭 입니다.");
+                            return true;
+                        } else {
+                            v_this.DupChkFlag = false;
+                            MessageBox.alert("중복된 소싱공급업체별칭 입니다.");
+                            // sap.ui.getCore().getMessageManager().addMessages(new Message({
+                            //     message: "중복입니다.", // Get Message from ValueStateText if available
+                            //     type: MessageType.Error,
+                            //     additionalText: iSn // Get label from the form element
+                            // }));
+                            return false;
+                        }                                               
+                    },
+                    error: function(e){
                         
-            //         }
-            // });
+                    }                    
+            });
         },
 
         CheckEmail: function (str) {                                                 

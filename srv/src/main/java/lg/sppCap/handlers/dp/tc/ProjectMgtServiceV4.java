@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,7 +20,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.core.CallableStatementCreator;
+
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.EventContext;
@@ -62,10 +70,19 @@ public class ProjectMgtServiceV4 implements EventHandler {
         }
     }
     *********************************/
+
+    @Transactional(rollbackFor = SQLException.class)
     @On(event=TcUpdateProjectProcContext.CDS_NAME)
     public void onTcUpdateProjectProc(TcUpdateProjectProcContext context) {
 
         log.info("### onTcProjectMgtProc 1건 처리 [On] ###");
+
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+        String v_sql_dropable_project = "DROP TABLE #LOCAL_TEMP_PROJECT";
+        String v_sql_dropable_similar = "DROP TABLE #LOCAL_TEMP_SIMILAR_MODEL";
+        String v_sql_dropable_additional = "DROP TABLE #LOCAL_TEMP_ADDITIONAL_INFO";
+        String v_sql_dropable_base = "DROP TABLE #LOCAL_TEMP_BASE_EXRATE";
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
         StringBuffer v_sql_createTableProject = new StringBuffer();
@@ -139,7 +156,7 @@ public class ProjectMgtServiceV4 implements EventHandler {
         Collection<TcProjectSimilarModelType> v_inSimilarModel = context.getInputData().getTcPjtSimilarModel();
         Collection<TcProjectAdditionInfoType> v_inAddInfo = context.getInputData().getTcPjtAddInfo();
         Collection<TcProjectBaseExrateType> v_inBaseExtract = context.getInputData().getTcPjtBaseExrate();
-        Collection<TcProcOutType> v_result = new ArrayList<>();
+        TcProcOutType v_result = TcProcOutType.create();
         /*
         if(!v_inPrj.isEmpty() && v_inPrj.size() > 0){
             log.info("-----> v_inPrj");
@@ -205,137 +222,170 @@ public class ProjectMgtServiceV4 implements EventHandler {
             }
         }
         */
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
+
         ResultSet v_rs = null;
         
-		try {            
-            Connection conn = jdbc.getDataSource().getConnection();
+		//try {            
+            //Connection conn = jdbc.getDataSource().getConnection();
 
             // ProjectInfo Local Temp Table 생성
-            PreparedStatement v_statement_createProject = conn.prepareStatement(v_sql_createTableProject.toString());
-            v_statement_createProject.execute();
+            jdbc.execute(v_sql_createTableProject.toString());
+
+            
 
             // ProjectInfo Local Temp Table에 insert
-            PreparedStatement v_statement_insertProject = conn.prepareStatement(v_sql_insertTableProject);
-
+            List<Object[]> batch_project = new ArrayList<Object[]>();
             if(!v_inPrj.isEmpty() && v_inPrj.size() > 0){
             log.info("-----> v_inPrj : " + v_inPrj.size());
                 for(TcProjectType v_inRow : v_inPrj){
-                    v_statement_insertProject.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertProject.setObject(2, v_inRow.get("project_code"));
-                    v_statement_insertProject.setObject(3, v_inRow.get("model_code"));
-                    v_statement_insertProject.setObject(4, v_inRow.get("project_name"));
-                    v_statement_insertProject.setObject(5, v_inRow.get("model_name"));
-                    v_statement_insertProject.setObject(6, v_inRow.get("product_group_code"));
-                    v_statement_insertProject.setObject(7, v_inRow.get("source_type_code"));
-                    v_statement_insertProject.setObject(8, v_inRow.get("quotation_project_code"));
-                    v_statement_insertProject.setObject(9, v_inRow.get("project_status_code"));
-                    v_statement_insertProject.setObject(10, v_inRow.get("project_grade_code"));
-                    v_statement_insertProject.setObject(11, v_inRow.get("develope_event_code"));
-                    v_statement_insertProject.setObject(12, v_inRow.get("production_company_code"));
-                    v_statement_insertProject.setObject(13, v_inRow.get("project_leader_empno"));
-                    v_statement_insertProject.setObject(14, v_inRow.get("buyer_empno"));
-                    v_statement_insertProject.setObject(15, v_inRow.get("marketing_person_empno"));
-                    v_statement_insertProject.setObject(16, v_inRow.get("planning_person_empno"));
-                    v_statement_insertProject.setObject(17, v_inRow.get("customer_local_name"));
-                    v_statement_insertProject.setObject(18, v_inRow.get("last_customer_name"));
-                    v_statement_insertProject.setObject(19, v_inRow.get("customer_model_desc"));
-                    v_statement_insertProject.setObject(20, v_inRow.get("mcst_yield_rate"));
-                    v_statement_insertProject.setObject(21, v_inRow.get("bom_type_code"));
-                    v_statement_insertProject.setObject(22, v_inRow.get("project_create_date"));
-                    v_statement_insertProject.addBatch();
+                    Object[] values = new Object[] {
+                        v_inRow.get("tenant_id"),
+                        v_inRow.get("project_code"),
+                        v_inRow.get("model_code"),
+                        v_inRow.get("project_name"),
+                        v_inRow.get("model_name"),
+                        v_inRow.get("product_group_code"),
+                        v_inRow.get("source_type_code"),
+                        v_inRow.get("quotation_project_code"),
+                        v_inRow.get("project_status_code"),
+                        v_inRow.get("project_grade_code"),
+                        v_inRow.get("develope_event_code"),
+                        v_inRow.get("production_company_code"),
+                        v_inRow.get("project_leader_empno"),
+                        v_inRow.get("buyer_empno"),
+                        v_inRow.get("marketing_person_empno"),
+                        v_inRow.get("planning_person_empno"),
+                        v_inRow.get("customer_local_name"),
+                        v_inRow.get("last_customer_name"),
+                        v_inRow.get("customer_model_desc"),
+                        v_inRow.get("mcst_yield_rate"),
+                        v_inRow.get("bom_type_code"),
+                        v_inRow.get("project_create_date")
+                    };
+                    //v_statement_insertProject.addBatch();
+                    batch_project.add(values);
                 }
 
-                v_statement_insertProject.executeBatch();
+                //v_statement_insertProject.executeBatch();
+                int[] updateCounts = jdbc.batchUpdate(v_sql_insertTableProject, batch_project);
+                log.info("batch_project : " + updateCounts);
             }
 
             // SimilarModel Local Temp Table 생성
-            PreparedStatement v_statement_createSimilarModel = conn.prepareStatement(v_sql_createTableSimilarModel.toString());
-            v_statement_createSimilarModel.execute();
+            jdbc.execute(v_sql_createTableSimilarModel.toString());
 
             // SimilarModel Local Temp Table에 insert
-            PreparedStatement v_statement_insertSimilarModel = conn.prepareStatement(v_sql_insertTableSimilarModel);
-
+            List<Object[]> batch_similarmodel = new ArrayList<Object[]>();
             if(!v_inSimilarModel.isEmpty() && v_inSimilarModel.size() > 0){
             log.info("-----> v_inSimilarModel : " + v_inSimilarModel.size());
                 for(TcProjectSimilarModelType v_inRow : v_inSimilarModel){
-                    v_statement_insertSimilarModel.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertSimilarModel.setObject(2, v_inRow.get("project_code"));
-                    v_statement_insertSimilarModel.setObject(3, v_inRow.get("model_code"));
-                    v_statement_insertSimilarModel.setObject(4, v_inRow.get("similar_model_code"));
-                    v_statement_insertSimilarModel.setObject(5, v_inRow.get("code_desc"));
-                    v_statement_insertSimilarModel.setObject(6, v_inRow.get("direct_register_flag"));
-                    v_statement_insertSimilarModel.addBatch();
+                    Object[] values = new Object[] {
+                        v_inRow.get("tenant_id"),
+                        v_inRow.get("project_code"),
+                        v_inRow.get("model_code"),
+                        v_inRow.get("similar_model_code"),
+                        v_inRow.get("code_desc"),
+                        v_inRow.get("direct_register_flag")
+                    };
+                    //v_statement_insertSimilarModel.addBatch();
+                    batch_similarmodel.add(values);
                 }
 
-                v_statement_insertSimilarModel.executeBatch();
+                //v_statement_insertSimilarModel.executeBatch();
+                int[] updateCounts = jdbc.batchUpdate(v_sql_insertTableSimilarModel, batch_similarmodel);
+                log.info("batch_similarmodel : " + updateCounts);
             }
 
             // Additional Info Local Temp Table 생성
-            PreparedStatement v_statement_createAdditionalInfo = conn.prepareStatement(v_sql_createTableAdditionalInfo.toString());
-            v_statement_createAdditionalInfo.execute();
+            jdbc.execute(v_sql_createTableAdditionalInfo.toString());
 
             // Additional Info Local Temp Table에 insert
-            PreparedStatement v_statement_insertAdditionalInfo = conn.prepareStatement(v_sql_insertTableAdditionalInfo);
-
+            List<Object[]> batch_Additional = new ArrayList<Object[]>();
             if(!v_inAddInfo.isEmpty() && v_inAddInfo.size() > 0){
             log.info("-----> v_inAddInfo : " + v_inAddInfo.size());
                 for(TcProjectAdditionInfoType v_inRow : v_inAddInfo){
-                    v_statement_insertAdditionalInfo.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertAdditionalInfo.setObject(2, v_inRow.get("project_code"));
-                    v_statement_insertAdditionalInfo.setObject(3, v_inRow.get("model_code"));
-                    v_statement_insertAdditionalInfo.setObject(4, v_inRow.get("addition_type_code"));
-                    v_statement_insertAdditionalInfo.setObject(5, v_inRow.get("period_code"));
-                    v_statement_insertAdditionalInfo.setObject(6, v_inRow.get("addition_type_value"));
-                    v_statement_insertAdditionalInfo.addBatch();
+                    Object[] values = new Object[] {
+                        v_inRow.get("tenant_id"),
+                        v_inRow.get("project_code"),
+                        v_inRow.get("model_code"),
+                        v_inRow.get("addition_type_code"),
+                        v_inRow.get("period_code"),
+                        v_inRow.get("addition_type_value")
+                    };
+                    //v_statement_insertAdditionalInfo.addBatch();
+                    batch_Additional.add(values);
                 }
-
-                v_statement_insertAdditionalInfo.executeBatch();
+                //v_statement_insertAdditionalInfo.executeBatch();
+                int[] updateCounts = jdbc.batchUpdate(v_sql_insertTableAdditionalInfo, batch_Additional);
+                log.info("batch_Additional : " + updateCounts);
             }
 
             // BaseExtrate Local Temp Table 생성
-            PreparedStatement v_statement_createBaseExtrate = conn.prepareStatement(v_sql_createTableBaseExrate.toString());
-            v_statement_createBaseExtrate.execute();
+            jdbc.execute(v_sql_createTableBaseExrate.toString());
 
             // BaseExtrate Local Temp Table에 insert
-            PreparedStatement v_statement_insertBaseExtrate = conn.prepareStatement(v_sql_insertTableBaseExrate);
-
+            List<Object[]> batch_BaseExtrate = new ArrayList<Object[]>();
             if(!v_inBaseExtract.isEmpty() && v_inBaseExtract.size() > 0){
             log.info("-----> v_inBaseExtract : " + v_inBaseExtract.size());
                 for(TcProjectBaseExrateType v_inRow : v_inBaseExtract){
-                    v_statement_insertBaseExtrate.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertBaseExtrate.setObject(2, v_inRow.get("project_code"));
-                    v_statement_insertBaseExtrate.setObject(3, v_inRow.get("model_code"));
-                    v_statement_insertBaseExtrate.setObject(4, v_inRow.get("currency_code"));
-                    v_statement_insertBaseExtrate.setObject(5, v_inRow.get("period_code"));
-                    v_statement_insertBaseExtrate.setObject(6, v_inRow.get("exrate"));
-                    v_statement_insertBaseExtrate.addBatch();
+                    Object[] values = new Object[] {
+                        v_inRow.get("tenant_id"),
+                        v_inRow.get("project_code"),
+                        v_inRow.get("model_code"),
+                        v_inRow.get("currency_code"),
+                        v_inRow.get("period_code"),
+                        v_inRow.get("exrate")
+                    };
+                    //v_statement_insertBaseExtrate.addBatch();
+                    batch_BaseExtrate.add(values);
                 }
-
-                v_statement_insertBaseExtrate.executeBatch();
+                //v_statement_insertBaseExtrate.executeBatch();
+                int[] updateCounts = jdbc.batchUpdate(v_sql_insertTableBaseExrate, batch_BaseExtrate);
+                log.info("batch_BaseExtrate : " + updateCounts);
             }
 
             // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+            //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+            SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<TcProcOutType>(){
+                @Override
+                public TcProcOutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                    //TcProcOutType v_row = TcProcOutType.create();
+                    v_result.setReturnCode(v_rs.getString("return_code"));
+                    v_result.setReturnMsg(v_rs.getString("return_msg"));
+                    return v_result;
+                }
+            });
 
-            v_statement_proc.setString(1, context.getInputData().getUserId());
-            v_rs = v_statement_proc.executeQuery();
-            
+            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+            //paramList.add(new SqlParameter("USER_ID", Types.VARCHAR));
+            paramList.add(oTable);
+
+            Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+                @Override
+                public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                    CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                    callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
+                    return callableStatement;
+                }
+            }, paramList);
 
             // Procedure Out put 담기 TcProcOutType
-            while (v_rs.next()){
-                TcProcOutType v_row = TcProcOutType.create();
-                v_row.setReturnCode(v_rs.getString("return_code"));
-                v_row.setReturnMsg(v_rs.getString("return_msg"));
-                log.info("--------> return_code :: ", v_rs.getString("return_code"));
-                log.info("--------> return_mgs :: ", v_rs.getString("return_msg"));
-                context.setResult(v_row);
-            }
 
+            // Local Temp Table DROP
+            jdbc.execute(v_sql_dropable_project);
+            jdbc.execute(v_sql_dropable_similar);
+            jdbc.execute(v_sql_dropable_additional);
+            jdbc.execute(v_sql_dropable_base);
+
+            context.setResult(v_result);
             context.setCompleted();
 
-		} catch (SQLException e) { 
-			e.printStackTrace();
-        }
+		//} catch (SQLException e) { 
+		//	e.printStackTrace();
+        //}
         
     }
 }

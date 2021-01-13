@@ -146,3 +146,14 @@ entity Sc_Nego_Headers_Test03 {
 }
 
 extend Sc_Nego_Headers_Test03 with util.Managed;
+
+
+entity Sc_Nego_Headers_Test04 {
+    key tenant_id                       : String(5) not null  @title : '테넌트ID';
+    key nego_header_id                  : Integer not null  @title : '협상헤더ID';
+        operation_unit_code             : String(30) not null @title : '운영단위코드';
+        reference_nego_header_id        : Integer           @title : '참조협상헤더ID';
+        previous_nego_header_id         : Integer           @title : '기존협상헤더ID';
+        nego_document_round             : Integer             @title : '협상문서회차';
+}
+extend Sc_Nego_Headers_Test04 with util.Managed;

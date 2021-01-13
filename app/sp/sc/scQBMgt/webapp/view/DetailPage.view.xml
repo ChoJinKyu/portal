@@ -225,17 +225,19 @@
                                             <CheckBox text="Immediately" selected="{NegoHeaders>/immediate_apply_flag}" editable="{=${propInfo>/isEditMode}}"/> 
                                             <ToolbarSpacer width="1rem"/> 
                                             <FlexBox>
-                                                <DateTimePicker id="searchFromDatePicker" placeholder="Start Date ..." 
-                                                    displayFormat="short" visible="{=${propInfo>/isEditMode}}"
-                                                    value="{NegoHeaders>/open_date}" />
+                                                <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 
+                                                    valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
+                                                    value="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
                                                 <Text text="{NegoHeaders>/open_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                             <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                                             <FlexBox>
-                                                <DateTimePicker id="searchToDatePicker" placeholder="End Date ..." 
-                                                    displayFormat="short" visible="{=${propInfo>/isEditMode}}"
-                                                    value="{NegoHeaders>/end_date}" />
-                                                <Text text="{NegoHeaders>/end_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                <DateTimePicker id="searchEndDatePicker" placeholder="End Date ..." 
+                                                    valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
+                                                    value="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
+                                                <Text text="{NegoHeaders>/closing_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                         </HBox>
 
@@ -257,7 +259,7 @@
                             </FlexBox>
 
                             <VBox class="sapUiSmallMarginBegin">
-                                <Label  text="Note To Supplier" class="sapMLabelNoText"/>
+                                <Label  text="Note To Supplier" class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                 <rte:RichTextEditor id="reNoteToSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
                                      visible="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                 <FormattedText id="formTextNoteToSupplier"  visible="{=!${propInfo>/isEditMode}}"/>
@@ -382,7 +384,7 @@
                         <Panel id="panel_Line" expandable="true" expanded="true" headerText="Line Content">
                             <VBox>
 
-                                <t:Table id="table1"
+                                <t:Table id="tableLines"
                                     minAutoRowCount="2"
                                     visibleRowCountMode="Auto"
                                     rows="{NegoHeaders>/Items}"
@@ -396,7 +398,7 @@
                                             
                                             <Button  text="Vendor Pool Change" type="Transparent" press=".onMidTableAddButtonPress"  />
                                             <Button  text="Simple Change" type="Transparent" press=".onMidTableAddButtonPress"  />
-                                            <Button  text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                            <Button  text="Add" type="Transparent" press=".addLineItemRow" />
                                             <Button  text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
 
 
@@ -815,6 +817,7 @@
                                         </Panel>
                                         <Panel id="panel_Specific" expandable="true" expanded="true" headerText="Specific Supplier">
                                             <Table 
+                                                id="table_Specific"
                                                 sticky="HeaderToolbar,ColumnHeaders" 
                                                 inset="false" 
                                                 class="sapFDynamicPageAlignContent"     
@@ -901,6 +904,7 @@
 			<OverflowToolbar>
                 <ToolbarSpacer />
                 <Button text="Cancel" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
+                <Button text="Delete" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
                 <Button text="Edit" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
 				<Button text="Save as Draft" type="Emphasized" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
