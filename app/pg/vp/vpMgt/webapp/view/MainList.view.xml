@@ -6,6 +6,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:table="sap.ui.table"
+    xmlns:tnt="sap.tnt"    
     xmlns:lib-m="ext.lib.control.m"
     height="100%">
 	<App id="app">
@@ -60,7 +61,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
-                                             change="handleTable"
+                                             
                                     >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox> 
@@ -103,7 +104,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
-                                            change="handleTable"
+                                            
                                     >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>  
@@ -289,7 +290,13 @@
 
                             <table:Column label="Info. Change Status" width="10rem">
                                 <table:template>
-                                    <Text text="{list>info_change_status}" wrapping="false" />
+                                    <!-- <Text text="{list>info_change_status}" wrapping="false" /> -->
+                                    <tnt:InfoLabel 
+                                        text="{list>info_change_status}" 
+                                        colorScheme="{
+                                            path: 'list>info_change_status',
+                                            formatter: '.onStatusColor'
+                                        }" />                                    
                                 </table:template>
                             </table:Column>
 
@@ -341,9 +348,9 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Company" width="8rem" filterProperty="company_name" >
+                            <table:Column label="Company" width="8rem" filterProperty="supplier_company_name" >
                                 <table:template>
-                                    <Text text="{list>company_name}" wrapping="false" />
+                                    <Text text="{list>supplier_company_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             

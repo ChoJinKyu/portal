@@ -59,7 +59,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
-                                            change="handleCreateInput"
+                                            
                                 >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </ComboBox>    
@@ -399,7 +399,7 @@
                         <VBox id="v_internal_rate">
                             <Label text = "Site Internal Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="Number" ></Input> 
+                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="Number" change=".fnCalcRate" ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>                                
                             <layoutData>
@@ -409,7 +409,7 @@
                         <VBox id="v_external_rate">
                             <Label text = "Site External Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_domestic_net_price_diff_rate" type="Number"  ></Input> 
+                                    <Input id="pop_domestic_net_price_diff_rate" type="Number" change=".fnCalcRate"  ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>
                             <layoutData>
