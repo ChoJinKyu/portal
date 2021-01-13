@@ -24,7 +24,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyS" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -41,7 +41,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantS" required="true"></Label>
-                                <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
+                                <MultiComboBox id="searchPlantS" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -65,7 +65,7 @@
                             </VBox>
                              <VBox>
                                 <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS"></Label>
-                                <MultiComboBox id="searchApprovalCategoryS" width="100%" selectedKey="" items="{
+                                <MultiComboBox id="searchApprovalCategoryS" width="100%" items="{
                                             path : 'util>/Code',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
@@ -88,7 +88,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -105,7 +105,7 @@
                             </VBox>
                             <VBox> 
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantE" required="true"></Label>
-                                <MultiComboBox id="searchPlantE" width="100%" selectedKey="" items="{
+                                <MultiComboBox id="searchPlantE" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -129,7 +129,7 @@
                             </VBox>
                              <VBox>
                                 <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE"></Label>
-                                <MultiComboBox id="searchApprovalCategoryE" width="100%" selectedKey="" items="{
+                                <MultiComboBox id="searchApprovalCategoryE" width="100%" items="{
                                             path : 'util>/Code',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
