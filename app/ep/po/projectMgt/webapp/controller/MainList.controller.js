@@ -132,7 +132,7 @@ sap.ui.define([
 		 */
         onMainTableAddButtonPress: function () {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("detailPage", {
                 layout: oNextUIState.layout,
                 tenantId: "L2100",
                 companyCode: "LGCKR",
@@ -173,7 +173,7 @@ sap.ui.define([
             console.log("oRecord.tenant_id======", oRecord.tenant_id);
             console.log("oRecord.company_code======", oRecord.company_code);
             console.log("oRecord.ep_project_number======", oRecord.ep_project_number);
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("detailPage", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
                 companyCode: oRecord.company_code,

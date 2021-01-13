@@ -11,7 +11,7 @@ service SupEvalSetupV4Service {
                Key lvl.org_code,
                Key lvl.code vp_operation_unit_code,
                Key cp.copy_no level_no,
-               cp.copy_no || ' Level' level_name : String(10)
+               cp.copy_no || ' Level' level_name : String(10) 
         from   maxLvl lvl,
                copyT cp
         where  to_number(lvl.code_name) >= cp.copy_no

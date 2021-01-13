@@ -164,7 +164,7 @@ sap.ui.define([
             var oI18NModel = this.getModel("I18N");
             var sPurOrgDisplayNm = this.getModel("rootModel").getProperty("/config/PURORG_DISPLAY_NM");
 
-            return oI18NModel.getText("/"+sPurOrgDisplayNm);
+            return oI18NModel.getText("/"+sPurOrgDisplayNm) || oI18NModel.getText("/PLANT");
         }
     });
 });

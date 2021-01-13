@@ -6,9 +6,11 @@ import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import lg.sppCap.solutionized.bizrule.model.BizRuleInfo;
 
+@Component
 public class BizRuleInfoService {
  
   @Autowired
@@ -20,22 +22,22 @@ public class BizRuleInfoService {
       info.setBizRuleId(bizRuleId);
       info.setAltFlag(altFlag);
 
-      CqnSelect infoSelect = Select
-        .from("tmp.bizrule_info")
-        .columns("TENANT_ID","BIZRULE_ID","ALT_FLG","CALL_TYPE","CALL_HOST","CALL_INFO")
-        .where(
-          b->b.get("TENANT_ID").eq(info.getTenantId())
-          .and(b.get("BIZRULE_ID").eq(info.getBizRuleId()))
-          .and(b.get("ALT_FLAG").eq(info.getAltFlag()))
-        );
+       CqnSelect infoSelect = Select
+         .from("tmp.bizrule_info")
+         .columns("TENANT_ID","BIZRULE_ID","ALT_FLG","CALL_TYPE","CALL_HOST","CALL_INFO")
+         .where(
+           b->b.get("TENANT_ID").eq(info.getTenantId())
+           .and(b.get("BIZRULE_ID").eq(info.getBizRuleId()))
+           .and(b.get("ALT_FLAG").eq(info.getAltFlag()))
+         );
 
-      Result result = db.run(infoSelect);
-      info.setTenantId((String)result.first().get().get("TENANT_ID"));
-      info.setTenantId((String)result.first().get().get("BIZRULE_ID"));
-      info.setTenantId((String)result.first().get().get("ALT_FLG"));
-      info.setTenantId((String)result.first().get().get("CALL_TYPE"));
-      info.setTenantId((String)result.first().get().get("CALL_HOST"));
-      info.setTenantId((String)result.first().get().get("CALL_INFO"));
+       Result result = db.run(infoSelect);
+       info.setTenantId((String)result.first().get().get("TENANT_ID"));
+       info.setBizRuleId((String)result.first().get().get("BIZRULE_ID"));
+       info.setAltFlag((String)result.first().get().get("ALT_FLG"));
+       info.setCallType((String)result.first().get().get("CALL_TYPE"));
+       info.setCallHost((String)result.first().get().get("CALL_HOST"));
+       info.setCallInfo((String)result.first().get().get("CALL_INFO"));
       /*
       Connection conn = DataSourceConnection.getInstance().getConnection();
  

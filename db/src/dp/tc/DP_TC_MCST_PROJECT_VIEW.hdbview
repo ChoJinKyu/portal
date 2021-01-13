@@ -1,4 +1,6 @@
-view DP_TC_MCST_PROJECT_VIEW as
+view DP_TC_MCST_PROJECT_VIEW (
+            IN LANGUAGE_CODE NVARCHAR(4)
+        ) AS
 select pjt.tenant_id                  /*테넌트ID*/
      , pjt.project_code               /*프로젝트코드*/
      , pjt.model_code                 /*모델코드*/
@@ -37,7 +39,7 @@ select pjt.tenant_id                  /*테넌트ID*/
          where ccl.tenant_id = pjt.tenant_id
            and ccl.group_code = 'DC_TC_PRODUCT_GROUP_CODE'
            and ccl.code = pjt.product_group_code
-           and ccl.language_cd = 'KO') AS product_group_text        /*제품군명*/
+           and ccl.language_cd = :LANGUAGE_CODE) AS product_group_text        /*제품군명*/
      , (select ccl.code_name
           from cm_code_lng ccl
          where ccl.tenant_id = pjt.tenant_id

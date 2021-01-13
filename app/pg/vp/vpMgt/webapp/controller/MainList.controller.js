@@ -89,7 +89,7 @@ sap.ui.define([
     var pTemp_type = "";
 
     var btType="";
-
+    var reSearchVpNm;
 
 
     var oTransactionManager;
@@ -216,7 +216,11 @@ sap.ui.define([
 
             var oView = this.getView();
 
-            if(sSurffix ==="S")
+            
+
+            
+
+            if(sSurffix =="S")
             {
                 var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
                 var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
@@ -251,7 +255,7 @@ sap.ui.define([
                     MessageToast.show("필수값을 입력 하세요.");
                 }
             }
-            else if(sSurffix ==="E")
+            else if(sSurffix =="E")
             {
 
                 var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
@@ -285,6 +289,8 @@ sap.ui.define([
                             
             }
 
+            reSearchVpNm="";
+            this.byId("tpop_vendor_pool_local_name").setValue(reSearchVpNm);
 
             // var oView = this.getView();
 
@@ -647,7 +653,7 @@ sap.ui.define([
             //Tree Table 선택된 값을 변수에 선언하여 후에 Create Action 활용
             pop_h_lv = row.hierarchy_level;
             pop_h_path = row.higher_level_path;
-            pop_lv = row.level;
+            pop_lv = row.level_path;
             pop_org = row.org_code;
             pop_t_id = row.tenant_id;
             pop_com_cd = row.company_code;
@@ -802,7 +808,7 @@ sap.ui.define([
                 {
                     pop_h_lv = "3";
                 }
-
+              
             if(pop_target_level === "2")
             {
 
@@ -891,6 +897,8 @@ sap.ui.define([
                     console.log(data.value[0].return_msg);
                     // alert(sMsg);
                     MessageToast.show(sMsg);
+                    //생성시 사용된 Name를 이용하여 재조회
+                    reSearchVpNm =  svendor_pool_local_name;
                     that.onAfterDialog();
                     // that.onDialogSearch();
                     // that.resetValue();
@@ -1153,7 +1161,10 @@ sap.ui.define([
                     }
                 if (!!this.byId("tpop_operation_unit_code").getSelectedKey()) {
                         predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("tpop_operation_unit_code").getSelectedKey()));
-                    }                
+                    }
+                if (!!reSearchVpNm) {
+                    this.byId("tpop_vendor_pool_local_name").setValue(reSearchVpNm);
+                }                                   
                 if (!!this.byId("tpop_vendor_pool_local_name").getValue()) {
                     predicates.push(new Filter({
                         path:'keyword',
@@ -1185,7 +1196,8 @@ sap.ui.define([
                         .finally((function () {
                             this.getView().setBusy(false);
                         }).bind(this));
-
+                var oTable = that.byId("diatreeTable");
+                // oTable.setFirstVisibleRow();
             }
             else{
                 MessageToast.show("필수값을 입력 하세요.");
@@ -1435,6 +1447,15 @@ sap.ui.define([
         _applySearch: function(aSearchFilters) {
             console.log("_applySearch!!!");
             that.mainTable = this.byId("mainTable");
+            var iCount = that.mainTable._getTotalRowCount();
+                    //You can't use getRows(), cuz it only returns the current rows on screen
+
+                    //Now we need the data of every row
+
+                for(var i = 0 ; i<iCount; i++){
+                    // var oEntity = that.mainTable.getModel().getData(that.mainTable.getContextByIndex(i).getPath());
+                    that.mainTable.setSelectedIndex(i);
+                }            
             var oDataLen = 0;
             var oView = this.getView(),
                 oModel = this.getModel("list");

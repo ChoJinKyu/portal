@@ -146,11 +146,11 @@
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{companyCode}/{epProjectNumber}",
-              "name": "midPage",
+              "pattern": "detailObject/{layout}/{tenantId}/{companyCode}/{epProjectNumber}",
+              "name": "detailPage",
               "target": [
                   "mainObject",
-                  "midObject"
+                  "detailObject"
               ]
           }
       ],
@@ -159,8 +159,8 @@
               "viewName": "MainList",
               "controlAggregation": "beginColumnPages"
           },
-          "midObject": {
-              "viewName": "MidObject",
+          "detailObject": {
+              "viewName": "ProjectDetail",
               "controlAggregation": "midColumnPages"
           },
           "notFound": {
