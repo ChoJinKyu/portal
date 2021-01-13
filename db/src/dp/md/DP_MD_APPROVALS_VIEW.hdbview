@@ -1,7 +1,6 @@
  view DP_MD_APPROVALS_VIEW as
     select 
-        a.tenant_id
-        ,k.sort_no
+        k.sort_no
         ,a.approval_type_code
         ,d.code_name as approval_type
         ,a.approval_number
@@ -21,6 +20,7 @@
         ,h.code_name as approve_status
         ,a.approval_contents
         ,g.email_id
+        ,a.tenant_id
     from CM_APPROVAL_MST a
     left join (select approval_number, max(mold_id) as mold_id from dp_md_approval_dtl group by approval_number) b 
         on a.approval_number = b.approval_number

@@ -263,7 +263,11 @@
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onListMainTableUpdateFinished"
                     width="auto"
-                    items="{list>/Approvals}">
+                    items="{
+                        path: 'list>/Approvals',
+                        sorter: { path: 'list>sort_no'}
+                    }"
+                    >
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
