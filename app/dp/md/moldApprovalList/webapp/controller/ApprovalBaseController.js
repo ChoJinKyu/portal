@@ -656,7 +656,7 @@ sap.ui.define([
         onExitEmployee: function () {
             if (this._oDialog) {
                 this._oDialog.then(function (oDialog) {
-                    console.log(" oDialog.close >>> ", oDialog.close);
+                   
                     oDialog.close(); 
                     oDialog.destroy();
                 });
