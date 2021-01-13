@@ -1,10 +1,16 @@
-<mvc:View controllerName="tmp.SampleSolutionized.controller.SampleSolutionized" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m"
+<mvc:View controllerName="tmp.SampleSolutionized.controller.SampleSolutionized" 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m" 
+	xmlns:core="sap.ui.core"
+	displayBlock="true" 
 	height="100%">
 	<Shell id="shell">
 		<App id="app">
 			<pages>
 				<Page id="page" title="{i18n>title}">
 					<content>
+						<core:HTML content="{appMaster>/approval_contents}">
+                                        </core:HTML>
                     </content>
 				</Page>
 			</pages>
