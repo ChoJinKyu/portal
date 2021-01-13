@@ -18,7 +18,7 @@ entity Pd_Part_Activity_Template {
     attachment_mandatory_flag : Boolean   @title: '산출물필수여부' ;	
     approve_mandatory_flag : Boolean   @title: '자가결재 여부' ;	
     activity_name : String(240)   @title: '활동명' ;	
-    activity_english_name : String(240)   @title: '활동영문명' ;	
+    activity_english_name : String(240)   @title: '설명' ;	
     active_flag : Boolean   @title: '활성여부' ;	
 }	
 extend Pd_Part_Activity_Template with util.Managed;	
