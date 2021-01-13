@@ -18,7 +18,7 @@
   -.  
 *************************************************/
 FUNCTION DP_GS_CHECK_SUPPLIER_UNIQUE_FUNC (IN I_TENANT_ID NVARCHAR(5),
-                                           IN I_SUPPLIER_NICKNAME NVARCHAR(3)
+                                           IN I_SUPPLIER_NICKNAME NVARCHAR(100)
                                           )
 RETURNS TABLE (RETURN_CODE NVARCHAR(1),
                RETURN_MSG_CODE NVARCHAR(30), 
