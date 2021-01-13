@@ -902,6 +902,7 @@
 			<OverflowToolbar>
                 <ToolbarSpacer />
                 <Button text="Cancel" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
+                <Button text="Delete" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
                 <Button text="Edit" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
 				<Button text="Save as Draft" type="Emphasized" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>

@@ -208,7 +208,36 @@ sap.ui.define([
             },
             onPageCancelButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", false );
-                // this.onNavBack();
+                this.onNavBack();
+            },
+            onPageDeleteButtonPress: function() {
+                var oView = this.getView();//.getModel();
+                var sPath = oView.getModel().createKey("/NegoHeaders", {
+                        tenant_id:          oView.getModel("NegoHeaders").getProperty("/tenant_id"),
+                        nego_header_id:   oView.getModel("NegoHeaders").getProperty("/nego_header_id")
+                    });
+                
+
+                console.log( "delete :: " + sPath);
+                oView.getModel().remove(sPath,{
+                  
+                    // method: "PUT",
+                    success: function (oData) {
+
+
+                        MessageToast.show(" success !! ");
+
+                        this.onPageCancelButtonPress();
+ 
+                    }.bind(this),
+                    error: function (aa, bb){
+                        console.log( "error!!!!");
+                        console.log(  aa  );
+                        MessageToast.show(" error !! ");
+                        // MessageToast.show(that.getModel("I18N").getText("/EPG00002")); 
+                        
+                    }
+                });
             },
             onPageEditButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", true );
