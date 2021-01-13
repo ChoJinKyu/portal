@@ -9,59 +9,76 @@ sap.ui.define([
 ],
   function (BaseController, Multilingual, JSONModel, ManagedListModel, jQuery, MockServer, Utils) {
     "use strict";
+    var that;
 
     return BaseController.extend("pg.md.mdVpItemMapping.controller.mdVpItemMapping", {
 
 		onInit: function () {
-			var oMultilingual = new Multilingual();
+            that = this;
+            this.onRead();
+           
+        },
+
+        onRead: function(){
+
+            var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new JSONModel()); 
-            
-            var that = this;
+
             jQuery.ajax({
                 url: "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set", 
                 contentType: "application/json",
                 success: function(oData){ 
-                    // this.getModel().setData(oData);
-                    // this.getModel("leftModel").setData(oData.value);
+                    // debugger;
                     this.getModel("tblModel").setProperty("/left",oData.value);
+                    
                     jQuery.ajax({
                         url: "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set?$orderby=spmd_category_sort_sequence asc,spmd_character_sort_seq asc&$filter=trim(vendor_pool_code) eq 'VP201610260087'", 
                         contentType: "application/json",
                         success: function(oData2){ 
                             this.getModel("tblModel").setProperty("/right",oData2.value);
+                            setTimeout(that.onSetColor(), 3000); //화면그려지고 호출될때도 있지만 그려지기 전에 호출되기도 함
                         }.bind(this)                        
                     });
                     
                 }.bind(this)                        
             });
-
-            // var rows = this.getModel("tblModel").getProperty("/left");
-            // for(var i=0; i<rows.length; i++){
-            //     var row = rows[i];
-            //     // if(row.getCells()[0].getText() == this._category_code){
-            //         var sId = "container-mdVpItemMapping---mdVpItemMapping--availableItems--table-rows-row0";//row.getId();
-            //         $("#"+sId).css("background-color", "yellow");
-                    
             
-            //     // }
+            
+        },
+        onSetColor: function(){
+            var leftRows = this.getModel("tblModel").getProperty("/left");
+            var rightRows = this.getModel("tblModel").getProperty("/right");
+            var cellColor ="#FFFFFF";
+            var cellColor2 ="#FFFFFF";
+            // debugger;
+            var sId = Utils.getAvailableItemsTableRows(that);
+            var sId2 = Utils.getSelectedItemsTableRows(that);
+
+            //전체다 동일 색상
+            // for(var i=0; i<leftRows.length; i++){
+            //     var row = leftRows[i];
+            //     if(row.rgb_cell_clolor_code != null){
+            //         cellColor = row.rgb_cell_clolor_code;
+            //         var rowId = "#"+sId+i;
+            //         $(rowId).css("background-color", cellColor); 
+            //     }
             // }
+
+            for(var i=0; i<rightRows.length; i++){
+                var row = rightRows[i];
+                if(row.rgb_cell_clolor_code != null){
+                    cellColor2 = row.rgb_cell_clolor_code;
+                    var rowId = "#"+sId2+i;
+                    $(rowId).css("background-color", cellColor2); 
+                }
+            }
+
         },
         
 		onExit: function() {
 			this.oItemsModel.destroy();
 		},
-
-		// initItemsModel: function() {
-		// 	var oData = jQuery.sap.sjax({
-        //         url: "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set", 
-		// 		contentType: "application/json"
-        //     }).data;
-
-		// 	var oModel = new JSONModel();
-        //     oModel.setData(oData);
-		// 	return oModel;
-		// },
 
 		moveToAvailableItemsTable: function() {
 			this.byId("selectedItems").getController().moveToAvailableItemsTable();
