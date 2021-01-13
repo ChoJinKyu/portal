@@ -411,6 +411,7 @@ sap.ui.define([
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
+            
             if(this.validator.validate(this.byId("account") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
