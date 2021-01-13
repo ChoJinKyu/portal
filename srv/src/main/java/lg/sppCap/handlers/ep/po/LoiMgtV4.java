@@ -50,7 +50,7 @@ import cds.gen.ep.loimgtv4service.SavedReqDetails;
 import cds.gen.ep.loimgtv4service.SaveReturnType;
 import cds.gen.ep.loimgtv4service.SaveLoiRequestMultiEntitylProcContext;
 //import cds.gen.ep.loimgtv4service.DeleteDetails;
-import cds.gen.ep.loimgtv4service.ReqMulDelType;
+//import cds.gen.ep.loimgtv4service.ReqMulDelType;
 //import cds.gen.ep.loimgtv4service.ReqDelType;
 import cds.gen.ep.loimgtv4service.DeleteLoiMulEntityProcContext;
 import cds.gen.ep.loimgtv4service.SavedSuppliers;

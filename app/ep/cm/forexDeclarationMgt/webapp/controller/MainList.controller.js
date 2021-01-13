@@ -200,37 +200,37 @@ sap.ui.define([
                  aSearchFilters.push(new Filter("po_name", FilterOperator.EQ, poName));
             }
 
-            // if (selectManagementTargetFlag === true && selectManagementTargetFlag2 === false) {
-            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
-            // }
+            if (selectManagementTargetFlag === true && selectManagementTargetFlag2 === false) {
+                aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
+            }
 
             // if (selectManagementTargetFlag === false && selectManagementTargetFlag2 === true) {
             //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, false));
             // }
 
-            // if (selectDeclareTargetFlag === true && selectDeclareTargetFlag2 === false) {
-            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
-            // }
+            if (selectDeclareTargetFlag === true && selectDeclareTargetFlag2 === false) {
+                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
+            }
 
             // if (selectDeclareTargetFlag === false && selectDeclareTargetFlag2 === true) {
             //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, false));
             // }
 
-            if (selectManagementTargetFlag === true) {
-                aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
-            }
+            // if (selectManagementTargetFlag === true) {
+            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
+            // }
 
-            if (selectManagementTargetFlag2 === true) {
-                aSearchFilters.push(new Filter("management_target_flag2", FilterOperator.EQ, true));
-            }
+            // if (selectManagementTargetFlag2 === true) {
+            //     aSearchFilters.push(new Filter("management_target_flag2", FilterOperator.EQ, true));
+            // }
 
-            if (selectDeclareTargetFlag === true) {
-                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
-            }
+            // if (selectDeclareTargetFlag === true) {
+            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
+            // }
 
-            if (selectDeclareTargetFlag2 === true) {
-                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
-            }
+            // if (selectDeclareTargetFlag2 === true) {
+            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
+            // }
 
             
             // if(selectManagementTargetFlag){
