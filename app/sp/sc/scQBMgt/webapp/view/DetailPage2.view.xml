@@ -258,9 +258,11 @@
                                     </HBox>
                                 </VBox>
                             </FlexBox>
+                            <!-- <layout:VerticalLayout id="abcd" class="sapUiContentPadding" width="100%"></l:VerticalLayout> -->
 
                             <VBox class="sapUiSmallMarginBegin">
                                 <Label  text="Note To Supplier" class="sapMLabelNoText"/>
+                                
                                 <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                             </VBox>
 
@@ -601,7 +603,7 @@
                                     <t:Column width="11rem"  hAlign="Center">
                                         <Label text="Part No"  required="true" />
                                         <t:template>
-                                            <Input showValueHelp="true" ></Input>
+                                            <Input id="inputPartNo" showValueHelp="true" valueHelpRequest=".onPartNoPress" ></Input>
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem"  hAlign="Center">
@@ -613,7 +615,7 @@
                                     <t:Column width="11rem"  hAlign="Center">
                                         <Label text="사양/규격" />
                                         <t:template>
-                                            <Label text="{col6}" />
+                                            <Label text="{col8}" />
                                         </t:template>
                                     </t:Column>
                                     <t:Column width="11rem"  hAlign="Center">

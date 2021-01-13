@@ -14,6 +14,7 @@ service ImService {
             key t.role_person_empno,
             t.user_local_name,
             t.department_local_name,
+            t.company_name,
             t.idea_role_name,
             t.bizunit_code,
             t.bizunit_name,

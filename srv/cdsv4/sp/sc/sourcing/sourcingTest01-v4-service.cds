@@ -10,10 +10,11 @@ using {
 
 namespace sp;
 
-@path : '/sp.sourcingV4Service'
-service SourcingV4Service {
+@path : '/sp.sourcingTest01V4Service'
+service SourcingTest01V4Service {
 
     /* 협상에 대한 헤더 정보(네고종류, 네고산출물, Award유형, 개설일자, 마감일자, 오리엔테이션정보 등)를 관리한다. */
+    @odata.draft.enabled
     entity NegoHeaders @(title : '협상헤더정보')                    as projection on negoHeaders;
     /* 협상을 요청하기 위한 아이템의 가격정보를 관리한다. */
     entity NegoItemPrices @(title : '협상아이템정보')                as projection on negoItemPrices;
