@@ -87,7 +87,7 @@
                 "settings": {
                     "odataVersion": "2.0"
                 },
-                "dataSource": "mainService"
+                "dataSource": "main"
             },
             "main": {
                 "type": "sap.ui.model.odata.v2.ODataModel",
