@@ -357,7 +357,7 @@ sap.ui.define([
                    oUiModel.setProperty("/btnEditFlag", true);
                     oUiModel.setProperty("/btnCancelFlag", false);
                     oUiModel.setProperty("/btnDraftFlag", false);
-                    oUiModel.setProperty("/btnRequestCancelFlag", true);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", false);
                 }  
             }
