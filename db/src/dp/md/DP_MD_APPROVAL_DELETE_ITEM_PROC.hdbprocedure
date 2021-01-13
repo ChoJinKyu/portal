@@ -54,17 +54,37 @@ BEGIN
     FOR loop_cur AS CUR DO
         BEGIN
             /* 2. 배열가져와서 각 품의별 몰드 테이블 업데이트 NULL치는 작업*/	
-            IF I_APPROVAL_TYPE_CODE = 'E' THEN
-                BEGIN 
-                    UPDATE DP_MD_MST 
+            CASE I_APPROVAL_TYPE_CODE 
+                WHEN 'B' THEN
+                    BEGIN
+                        UPDATE DP_MD_MST 
                         SET ACCOUNT_CODE=NULL, ACCOUNTING_DEPARTMENT_CODE=NULL,
                             INVESTMENT_ECST_TYPE_CODE=NULL, IMPORT_COMPANY_CODE=NULL,
                             IMPORT_COMPANY_ORG_CODE=NULL, PROJECT_CODE=NULL,
                             MOLD_PRODUCTION_TYPE_CODE=NULL, MOLD_ITEM_TYPE_CODE=NULL,
                             PROVISIONAL_BUDGET_AMOUNT=NULL, ASSET_TYPE_CODE=NULL
                             WHERE MOLD_ID = loop_cur.MOLD_ID;
-                END;  
-            END IF;
+                    END;
+                WHEN 'V' THEN
+                    BEGIN		
+                        UPDATE DP_MD_MST
+                        SET SPLIT_PAY_TYPE_CODE=NULL, PREPAY_RATE=NULL, 
+                            PROGRESSPAY_RATE=NULL, RPAY_RATE=NULL 
+                            WHERE MOLD_ID = loop_cur.MOLD_ID;
+                END;
+                WHEN 'I' THEN 	
+                    BEGIN
+                        UPDATE DP_MD_MST
+                        SET ACQ_DEPARTMENT_CODE=NULL
+                            WHERE MOLD_ID = loop_cur.MOLD_ID;
+                    END;
+                WHEN 'E' THEN 	
+                    BEGIN
+                        UPDATE DP_MD_MST
+                        SET CURRENCY_CODE=NULL, TARGET_AMOUNT=NULL
+                            WHERE MOLD_ID = loop_cur.MOLD_ID;
+                    END;	
+            END CASE;
         END;
     END FOR;
 
@@ -74,7 +94,6 @@ BEGIN
         END ;
     END IF;
 	
-
 		
 	/* 3. 품의서 공통으로 포함되는 테이블 데이터 삭제*/
     DELETE FROM CM_REFERER WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER;
