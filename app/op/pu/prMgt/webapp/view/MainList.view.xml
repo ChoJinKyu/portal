@@ -221,8 +221,8 @@
                         </Column>
                         <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/REQUESTOR_NAME}" />
-                        </Column>
-                         <Column id="mainColumnPURCHASE_REQUISITION" minScreenWidth="Desktop" hAlign="Center"  width="auto">
+                        </Column>                        
+                        <Column id="mainColumnREQUEST_DATET" minScreenWidth="Desktop" hAlign="Center"  width="auto">
                             <Text text="{I18N>/PR_REQUEST_DATE}" />
                         </Column>
                         <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="auto">
@@ -245,11 +245,8 @@
                                 <Text text="{list>pr_type_name_3}"/>
                                 <Text text="{list>pr_template_name}"/>                                
                                 <Text text="{list>requestor_department_name}"/> 
-                                <Text text="{list>requestor_name}"/>
-                                <Text text="{
-                                        path: 'list>request_date',
-                                        formatter: '.dateFormatter.toDateString'
-                                    }"/>                                                                  
+                                <Text text="{list>requestor_name}"/>                                                                                                
+                                <Text text="{list>request_dateT}"/>
                                 <Text text="{list>pr_progress_status_cnt_txt}"/>
                                 <Text text="{list>pr_create_status_name}"/>
                             </cells>

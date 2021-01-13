@@ -31,6 +31,7 @@ service PrMgtService {
                 requestor_department_code,   //: String(50)              @title: '요청자부서코드' ;	
                 requestor_department_name, //: String(240)             @title: '요청자부서명' ;	
                 request_date    ,        //: Date                      @title: '요청일자' ;	
+                request_dateT,
                 pr_create_status_code,  //: String(30)                @title: '구매요청생성상태코드' ;	
                 pr_desc,                 //: String(100)               @title: '구매요청내역' ;		
                 pr_header_text    ,      //: String(200)               @title: '구매요청헤더텍스트' ;
