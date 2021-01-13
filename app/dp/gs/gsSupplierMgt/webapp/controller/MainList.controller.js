@@ -13,8 +13,6 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/core/message/Message",
-    "sap/ui/core/MessageType",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "cm/util/control/ui/EmployeeDialog",
@@ -27,7 +25,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
 ], function (BaseController, Multilingual, Validator, History, JSONModel, TransactionManager, ManagedModel,
-    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Message, MessageType,
+    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, 
     MessageBox, MessageToast, EmployeeDialog, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
     "use strict";
     
@@ -39,8 +37,7 @@ sap.ui.define([
         
         validator: new Validator(),
 
-        DupChkFlag: new Boolean,        
-
+		DupChkFlag: new Boolean,
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -50,7 +47,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {            
-            this.DupChkFlag = false;
+			this.DupChkFlag = false;
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
@@ -279,17 +276,10 @@ sap.ui.define([
             var tenantId = "L2100";           
             
             var ssn = this.getView().byId("ssn").getValue(); 
-            var email = this.getView().byId("email").getValue();  
-            // var ssn = "ZKH"  
+            var email = this.getView().byId("email").getValue();                
             
-            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;       
-            // this.byId("dialogAddSupplier").close();
-            // this.getRouter().navTo("suppliePage", {
-			// 	layout: LayoutType.OneColumn,
-			// 	tenantId: tenantId,
-            //     ssn: ssn,
-            //     mode: "edit"
-            // });
+            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;      
+            
             
             var chkEmail = this.CheckEmail(email);
             if(!chkEmail){
@@ -297,11 +287,10 @@ sap.ui.define([
                 return false;
             }
 
-            if(!this.DupChkFlag){
+			if(!this.DupChkFlag){
                 MessageBox.alert("중복체크 해주세요.");
                 return false; 
             }
-
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -407,8 +396,6 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){            
-            
-            
             this.getModel("mainListView").setProperty("/headerExpanded", true);      
             var sThisViewId = this.getView().getId();
             var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");
