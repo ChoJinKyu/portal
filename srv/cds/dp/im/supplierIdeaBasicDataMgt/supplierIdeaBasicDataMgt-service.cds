@@ -22,10 +22,11 @@ using { dp as Role } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_ROLE_
 // 공통코드
 using { cm as Code } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 // 사업본부
-using { cm as BizUnit } from '../../../../../db/cds/cm/CM_ORG_UNIT-model';
+//using { cm as BizUnit } from '../../../../../db/cds/cm/CM_ORG_UNIT-model';
 // Employee
-//using {cm as Employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using { cm.util.HrService as Hr } from '../../../cm/util/hr-service';
+// 회사코드 
+using { cm.util.OrgService as Org } from '../../../cm/util/org-service';
 
 namespace dp;
 @path : '/dp.SupplierIdeaBasicDataMgtService'
@@ -42,6 +43,10 @@ service SupplierIdeaBasicDataMgtService {
             key sir.role_person_empno,
             emp.user_local_name,
             emp.department_local_name,
+            (select company_name 
+             from Org.Company t
+             where t.tenant_id = sir.tenant_id
+             and t.company_code = sir.company_code) as company_name: String(240),
             (select cd.code_name
              from Code.Code_View cd
              where cd.tenant_id = sir.tenant_id
@@ -50,7 +55,7 @@ service SupplierIdeaBasicDataMgtService {
              and cd.language_cd = 'KO')  as idea_role_name: String(240),
             sir.bizunit_code,
             (select biz.bizunit_name
-             from BizUnit.Org_Unit biz   
+             from Org.Unit biz   
              where biz.tenant_id = sir.tenant_id
              and biz.bizunit_code = sir.bizunit_code ) as bizunit_name : String(240),
             sir.idea_product_group_code,
