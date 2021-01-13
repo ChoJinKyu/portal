@@ -46,6 +46,10 @@ sap.ui.define([
             }.bind(this));
 
             this.byId("btn_search").firePress();
+
+            this.byId("mainTableDelButton").setEnabled(false);
+            this.byId("mainTableCancButton").setEnabled(false);
+            this.byId("mainTableSaveButton").setEnabled(false);
         },
 
         onMainTablePersoButtonPressed: function (event) {
@@ -79,6 +83,7 @@ sap.ui.define([
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 
+            this.byId("mainTableDelButton").setEnabled(false);
             this.byId("mainTableCancButton").setEnabled(false);
             this.byId("mainTableSaveButton").setEnabled(false);
 
@@ -185,10 +190,10 @@ sap.ui.define([
             oModel.addRecord({
                 "tenant_id": "L1100",
                 "company_code": "*",
-                "org_type_code": "BU",
-                "org_code": "L110010000",
+                "org_type_code": "AU",
+                "org_code": "GSZ",
                 "activity_code": null,
-                "product_activity_codeE": null,
+                "product_activity_code": null,
                 "activity_dependency_code": null,
                 "active_flag": "true",
                 "local_create_dtm": new Date(),
@@ -257,6 +262,12 @@ sap.ui.define([
                             oTable.getAggregation('items')[rowIndex].getCells()[6].getItems()[1].setVisible(false);
 
                             this.byId("btn_search").firePress();
+
+                            this.byId("mainTableAddButton").setEnabled(false);
+                                this.byId("mainTableDelButton").setEnabled(false);
+                                this.byId("mainTableCancButton").setEnabled(false);
+                                this.byId("rTableExportButton").setEnabled(true);
+                                this.byId("mainTablePersoButton").setEnabled(true);
                         }
                     }).bind(this)
                 })
@@ -277,6 +288,12 @@ sap.ui.define([
                 oTable.getAggregation('items')[rowIndex].getCells()[6].getItems()[1].setVisible(false);
 
                 this.byId("btn_search").firePress();
+
+                this.byId("mainTableAddButton").setEnabled(false);
+                this.byId("mainTableDelButton").setEnabled(false);
+                this.byId("mainTableCancButton").setEnabled(false);
+                this.byId("rTableExportButton").setEnabled(true);
+                this.byId("mainTablePersoButton").setEnabled(true);
             }
         },
 
@@ -285,11 +302,6 @@ sap.ui.define([
                 oModel = this.getModel("list"),
                 aItems = oTable.getSelectedItems(),
                 aIndices = [];
-
-            if (oTable.getSelectedItems().length < 1) {
-                MessageToast.show("선택된 데이타가 없습니다.");
-                return;
-            }
 
             for (var i = 0; i < oTable.getItems().length - 1; i++) {
                 // oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
@@ -408,6 +420,7 @@ sap.ui.define([
                 }
             }
             if (oItem != null && oItem != undefined) {
+                this.byId("mainTableDelButton").setEnabled(true);
                 this.byId("mainTableCancButton").setEnabled(true);
                 this.byId("mainTableSaveButton").setEnabled(true);
 

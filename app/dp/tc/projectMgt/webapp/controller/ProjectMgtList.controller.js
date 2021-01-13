@@ -80,7 +80,6 @@ sap.ui.define([
          * Input Enter 시 조회 적용
          */
         , onLiveChangeInput: function(oEvent) {
-            debugger;
             let newValue = oEvent.getParameter("newValue");
             var keycode = (oEvent.keyCode ? oEvent.keyCode : oEvent.which);
             if(keycode === '13'){
@@ -114,10 +113,11 @@ sap.ui.define([
         , onDetailPopRowActionPress: function(oEvent) {
             MessageToast.show("준비중", {at: "Center Center"});
             return;
+            const view_mode = "VIEW";
             this.getView().getModel("popupListModel").setProperty("/cost_type", oEvent.getSource().data("cost_type"));
-            this.getView().getModel("")
+            this.getView().getModel("popupListModel").setProperty("/detail_mode", view_mode);
             var oContext = oEvent.getParameter("row").getBindingContext("listModel");
-            this._goMcstProjView(oContext);
+            this._goMcstProjView(oContext, oEvent.getSource().data("cost_type"));
         }
 
         /**
@@ -181,17 +181,17 @@ sap.ui.define([
         /**
          * MCST 프로젝트 상세 화면으로 이동
          */
-        , _goMcstProjView: function() {
-            var index = 0;
-            let oTable = this.getView().byId("detailPopupTable");
-            let oContext = oTable.getContextByIndex(index);
+        , _goMcstProjView: function(oContext, cost_type) {
+            const view_mode = "READ";
             let oModel = oContext.getModel();
             let oObj = oModel.getProperty(oContext.getPath());
 
             var oNavParam = {
                 tenant_id: oObj.tenant_id,
                 project_code: oObj.project_code,
-                model_code: oObj.model_code
+                model_code: oObj.model_code,
+                cost_type: cost_type,
+                view_mode: view_mode
             };
 
             this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
@@ -299,7 +299,6 @@ sap.ui.define([
          * @param {event} oEvent
          */
         , onGoalCreatePress: function (oEvent) {
-            debugger;
             var oView = this.getView();
             var oTable = oView.byId("mainTable");
             var nSelIdx = this._getSelectedIndex(oTable);
@@ -370,8 +369,9 @@ sap.ui.define([
          */
         , onClose: function (oEvent) {
             this._oDialogTableSelect.then(function (oDialog) {
+                this.getView().byId("detailPopupTable").clearSelection();
                 oDialog.close();
-            });
+            }.bind(this));
         }
 
         /**
@@ -395,7 +395,6 @@ sap.ui.define([
          * Dialog창 테이블 Index값 세팅 
          */
         , onSelectDialogChange: function (oEvent) {
-            debugger;
             var oTable = this.getView().byId("detailPopupTable"),
                 iSelectedIndex = oEvent.getSource().getSelectedIndex();
 
@@ -406,7 +405,6 @@ sap.ui.define([
          * Dialog(견적재료비 생성, 목표 재료비 생성, 진척관리) > Create(작성) > 입력/수정하는 화면으로 이동
          */
         , _goCreateView: function (oEvent) {
-            debugger;
             //var iSelIdx = this._getSelectedIndex(this.getView().byId("detailPopupTable"));
 
             //if (iSelIdx < 0) { return; }//skip

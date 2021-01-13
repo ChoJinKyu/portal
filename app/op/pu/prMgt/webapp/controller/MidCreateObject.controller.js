@@ -19,8 +19,9 @@ sap.ui.define([
     ,"sap/ui/core/syncStyleClass" 
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
+    , "dp/util/control/ui/MaterialMasterDialog"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Sorter
-            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
+            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label, MaterialMasterDialog) {
     
     "use strict";
     
@@ -84,16 +85,33 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) { 
             var oArgs = oEvent.getParameter("arguments");
-            var sTenantId = oArgs.tenantId;
-            var sPrNumber = "";
-            if(oArgs.pr_number){
-                sPrNumber = oArgs.pr_number;
-            } else {
-                sPrNumber = "NEW";
-            }            
+
+            if(oArgs.tenantId && oArgs.tenantId !== ""){
+                this.tenantId = oArgs.tenantId;
+            }else{
+                this.tenantId = "L2100"
+            } 
+
+            if(oArgs.company_code && oArgs.company_code !== ""){
+                this.company_code = oArgs.company_code;
+            }else{
+                this.company_code = "LGCKR"
+            } 
+
+            if(oArgs.pr_number && oArgs.pr_number !== ""){
+                this.pr_number = oArgs.pr_number;
+            }else{
+                this.pr_number = "NEW"
+            } 
+            
+            if(oArgs.vMode  && oArgs.vMode  !== ""){
+                this.view_mode = oArgs.vMode;
+            }else{
+                this.view_mode = "NEW"
+            }      
 
             // 초기 데이터 설정
-            if(sTenantId && sTenantId === "new") {
+            if(this.pr_number === "NEW") {
                 this._fnSetCreateData(oArgs);
             }else{
                  this._fnReadPrMaster(oArgs);
@@ -110,6 +128,33 @@ sap.ui.define([
             this.setRichEditor();
         },
         
+        /**
+         * View 항목 visible 세팅
+         */
+        _fnSetVisible: function(){
+            var that = this,
+                oView = this.getView(),
+                oServiceModel = this.getModel(),
+                oViewModel = this.getModel('viewModel'),
+                oContModel = this.getModel("contModel");
+            var oPrMstData = oViewModel.getProperty("/PrMst");
+
+            var oPrDtlVisible = {
+                material_code: true,
+                material_group_code: true,
+                sloc_code: true
+            };
+
+            //구매유형 : 공사
+            if(oPrMstData.pr_type_code === "TC00003"){
+                oPrDtlVisible.material_code = false;
+                oPrDtlVisible.material_group_code = false;
+                oPrDtlVisible.sloc_code = false;
+            }
+
+            oContModel.setProperty("/Pr_Dtl", oPrDtlVisible);
+        },
+
         _fnGetPrTemplateList: function() {
             var that = this,
                 oView = this.getView(),
@@ -156,8 +201,10 @@ sap.ui.define([
             var oViewModel = this.getModel('viewModel');
                         
             var oNewMasterData = {
-                tenant_id: "L2100",
-                company_code: "LGCKR",
+                //tenant_id: "L2100",
+                //company_code: "LGCKR",
+                tenant_id: this.tenantId,
+                company_code: this.company_code,
                 pr_number: "NEW",
                 pr_type_code: oArgs.pr_type_code,
                 pr_type_code_2: oArgs.pr_type_code_2,
@@ -191,6 +238,9 @@ sap.ui.define([
 
             // 템플릿 리스트 조회
             this._fnGetPrTemplateList();
+
+            // 항목 Visible setting
+            this._fnSetVisible();
         },
 
         _fnReadPrMaster : function(oArgs){
@@ -215,6 +265,9 @@ sap.ui.define([
 
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
+
+                        // 항목 Visible setting
+                        that._fnSetVisible();
                     }
                 },
                 error : function(data){
@@ -292,6 +345,31 @@ sap.ui.define([
             oViewModel.refresh();
         },
 
+        /**
+         * 품목 삭제
+         */
+        onItemDeleteRow: function(){
+            var that = this,
+                oView = this.getView(),
+                oViewModel = this.getModel("viewModel"),
+                aDetails = oViewModel.getProperty("/Pr_Dtl"),
+                oPritemTable = oView.byId("pritemTable");
+
+            var aSelectedIndex = oPritemTable.getSelectedIndices();
+            if(aSelectedIndex.length > 0){
+                aSelectedIndex.reverse();
+                aSelectedIndex.forEach(function(item, idx){
+                    aDetails.splice(item, 1);
+                });
+
+                //품목번호 reset
+                aDetails.forEach(function(oItem, idx){
+                    oItem.pr_item_number = idx+1;
+                });
+                oViewModel.setProperty("/Pr_Dtl", aDetails);
+            }
+            oPritemTable.clearSelection();
+        },
         
 		/**
 		 * Event handler for saving page changes
@@ -507,23 +585,20 @@ sap.ui.define([
             var sLayout = LayoutType.OneColumn;
             this.getRouter().navTo("mainPage", {layout: sLayout});
         },
-
                 
         /**
          * 이전 화면으로 이동
          */
         onNavigationBackPress: function () {
-
             this._fnNavigationMainPage();
-
-			// var sPreviousHash = History.getInstance().getPreviousHash();
-			// if (sPreviousHash !== undefined) {
-			// 	// eslint-disable-next-line sap-no-history-manipulation
-			// 	history.go(-1);
-			// } else {
-			// 	this._fnNavigationMainList();
-			// }
 		},
+        
+        /**
+         * Fotter : Cancel 버튼 클릭
+         */
+        onPageCancelButtonPress: function () {
+            this._fnNavigationMainPage();
+        },
         
         /**
          * Dialog Close
@@ -535,48 +610,85 @@ sap.ui.define([
             });
         },
 
-        //==================== Material Code Dialog 시작 ====================
+        //==================== Material Code Dialog 시작 ====================        
         /**
          * 자재정보 검색 MaterialDialog.fragment open
          */
 		onOpenMaterialDialog: function (oEvent) {
-            sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
-            var oView = this.getView();
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+                //oViewModel = this.getModel("viewModel");
+            //var oSelectedData = oViewModel.getProperty(sSelectedPath);
 
-            var oSampleData = {
-                    "familyMaterialCode": [],
-                    "materialCode": [{"org_code": "A001", "material_code": "A001-01-01"},
-                                    {"org_code": "A002", "material_code": "A001-01-02"},
-                                    {"org_code": "A003", "material_code": "A001-01-03"},
-                                    {"org_code": "A004", "material_code": "A001-01-04"},
-                                    {"org_code": "A005", "material_code": "A001-01-05"},
-                                    {"org_code": "A005", "material_code": "A001-01-06"},
-                                    {"org_code": "A005", "material_code": "A001-01-07"},
-                                    {"org_code": "A005", "material_code": "A001-01-08"},
-                                    {"org_code": "A005", "material_code": "A001-01-09"},
-                                    {"org_code": "A005", "material_code": "A001-01-10"}]
-                    };
-            this.setModel(new JSONModel(oSampleData), "materialCodeModel");
+
+            if(!this.oSearchMultiMaterialMasterDialog){
+                this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                    title: "Choose MaterialMaster",
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            //new Filter("tenant_id", FilterOperator.EQ, "L1100")
+                            new Filter("tenant_id", FilterOperator.EQ, this.tenantId)                            
+                        ]
+                    }
+                });
+                this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                    var oMaterialData = oEvent.getParameter("item");
+                    var oViewModel = this.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                    oSelectedData.org_code = (oMaterialData.org_code && oMaterialData.org_code !== "") ? oMaterialData.org_code:"";
+                    oSelectedData.material_code = oMaterialData.material_code;
+                    oSelectedData.pr_desc = (oMaterialData.material_desc && oMaterialData.material_desc !== "") ? oMaterialData.material_desc:"";
+                    oSelectedData.pr_unit = (oMaterialData.base_uom_code && oMaterialData.base_uom_code !== "") ? oMaterialData.base_uom_code:"";
+                    oSelectedData.buyer_empno = (oMaterialData.buyer_empno && oMaterialData.buyer_empno !== "") ? oMaterialData.buyer_empno:"";
+                    oSelectedData.purchasing_group_code = (oMaterialData.purchasing_group_code && oMaterialData.purchasing_group_code !== "") ? oMaterialData.purchasing_group_code:"";                    
+                    oSelectedData.material_group_code = oMaterialData.material_group_code; 
+
+                    oViewModel.refresh();
+                }.bind(that));
+            }
+            this.oSearchMultiMaterialMasterDialog.open();
+
+            //var aTokens = this.byId("searchMultiMaterialMasterDialog").getTokens();
+            //this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
+
+
+
+            // var oSampleData = {
+            //         "familyMaterialCode": [],
+            //         "materialCode": [{"org_code": "A001", "material_code": "A001-01-01"},
+            //                         {"org_code": "A002", "material_code": "A001-01-02"},
+            //                         {"org_code": "A003", "material_code": "A001-01-03"},
+            //                         {"org_code": "A004", "material_code": "A001-01-04"},
+            //                         {"org_code": "A005", "material_code": "A001-01-05"},
+            //                         {"org_code": "A005", "material_code": "A001-01-06"},
+            //                         {"org_code": "A005", "material_code": "A001-01-07"},
+            //                         {"org_code": "A005", "material_code": "A001-01-08"},
+            //                         {"org_code": "A005", "material_code": "A001-01-09"},
+            //                         {"org_code": "A005", "material_code": "A001-01-10"}]
+            //         };
+            // this.setModel(new JSONModel(oSampleData), "materialCodeModel");
 
            // oMarterialCodeModel.attachRequestCompleted(function(data) {
-                if (!this._oMaterialDialog) {
-                    this._oMaterialDialog = Fragment.load({
-                        id: oView.getId(),
-                        name: "op.pu.prMgt.view.MaterialDialog",
-                        controller: this
-                    }).then(function (oDialog) {
-                        oView.addDependent(oDialog);
-                        return oDialog;
-                    });
-                }
-                this._oMaterialDialog.then(function(oDialog) {
-                    oDialog.open();
-                });
+                // if (!this._oMaterialDialog) {
+                //     this._oMaterialDialog = Fragment.load({
+                //         id: oView.getId(),
+                //         name: "op.pu.prMgt.view.MaterialDialog",
+                //         controller: this
+                //     }).then(function (oDialog) {
+                //         oView.addDependent(oDialog);
+                //         return oDialog;
+                //     });
+                // }
+                // this._oMaterialDialog.then(function(oDialog) {
+                //     oDialog.open();
+                // });
             //}.bind(this));
 
-            this._oDialogTableSelect.then(function (oDialog) {
-                oDialog.open();
-            });
+            // this._oDialogTableSelect.then(function (oDialog) {
+            //     oDialog.open();
+            // });
         },
         
         /**

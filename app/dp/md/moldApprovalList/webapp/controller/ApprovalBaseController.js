@@ -19,7 +19,7 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    //  "./ApprovalList.controller",
+    "./ApprovalList.controller",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
@@ -40,7 +40,7 @@ sap.ui.define([
 
         validator: new Validator(),
 
-        //  approvalList: new ApprovalList(),
+        approvalList: new ApprovalList(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -90,6 +90,7 @@ sap.ui.define([
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
                 //}
+                this.approvalList.onBackToList();
             }
 
             //this.byId("pageApprovalLineSection").destroy();

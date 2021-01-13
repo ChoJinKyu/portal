@@ -45,7 +45,7 @@ sap.ui.define([
     var dialogId = "";
     var path = '';
     var approvalTarget ='';
-        
+    var appThis;
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         
         dateFormatter: DateFormatter,
@@ -61,7 +61,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            
+            appThis = this;
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
@@ -228,6 +228,14 @@ sap.ui.define([
             var aSearchFilters = this._getSearchStates();
             console.log("aSearchFilters :::", aSearchFilters);
             this._applySearch(aSearchFilters);
+        },
+        /**
+		 * @description 각 품의서에 돌아올때 재조회 기능
+		 * @param {sap.ui.base.Event} oEvent the button press event
+		 * @public
+		 */
+        onBackToList: function (){
+            appThis.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -683,10 +691,25 @@ sap.ui.define([
                 oDialog.open();
                 
             });
+            this.onToggleHandleInit();
 
         },
 
+        /**
+        * @public
+        * @see 사용처 create 팝업 로딩시 입력값 초기화 작업
+        */
+        onToggleHandleInit: function () {
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            if(!(this.byId("searchCompanyF") == undefined) || !(this.byId("searchPlantF") == undefined)){
+                this.byId("searchCompanyF").setSelectedKey("");
+                this.byId("searchPlantF").setSelectedKey("");
+            }
+            for (var i = 0; i < groupId.length; i++) {
+                groupId[i].setPressed(false);
+            }
 
+        },
         /**
         * @public
         * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
@@ -703,6 +726,8 @@ sap.ui.define([
             }
 
         },
+
+       
 
         /**
         * @public

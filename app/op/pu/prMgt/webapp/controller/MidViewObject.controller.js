@@ -220,9 +220,37 @@ sap.ui.define([
 
             this.getRouter().navTo("midModify", {
                 layout: oNextUIState.layout,
+                vMode: "EDIT",
                 tenantId: oDetailModel.getProperty("/tenantId"),
                 company_code: oDetailModel.getProperty("/company_code"),
                 pr_number: oDetailModel.getProperty("/pr_number")
+
+                
+            });
+
+            // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
+            //     this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            // }
+
+            //var oItem = oEvent.getSource();
+            //oItem.setNavigated(true);
+            //var oParent = oItem.getParent();
+            // store index of the item clicked, which can be used later in the columnResize event
+            //this.iIndex = oParent.indexOfItem(oItem);
+        },
+         onPageCopyButtonPress: function () {
+            var oDetailModel = this.getModel('detailModel');
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+                oNextUIState.layout = "MidColumnFullScreen";
+
+            this.getRouter().navTo("midModify", {
+                layout: oNextUIState.layout,
+                vMode: "COPY",
+                tenantId: oDetailModel.getProperty("/tenantId"),
+                company_code: oDetailModel.getProperty("/company_code"),
+                pr_number: oDetailModel.getProperty("/pr_number")
+
+                
             });
 
             // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {

@@ -444,7 +444,9 @@ sap.ui.define([
             oNextUIState.layout = "MidColumnFullScreen";
             this.getRouter().navTo("midCreate", {
                 layout: oNextUIState.layout,
-                tenantId: "new",
+                vMode: "NEW",
+                tenantId: "L2100",
+                company_code: "LGCKR",                
                 pr_type_code: this.byId("SelectionPR_TYPE").getSelectedKey(),
                 pr_type_code_2: this.byId("SelectionPR_TYPE2").getSelectedKey(),
                 pr_type_code_3: this.byId("SelectionPR_TYPE3").getSelectedKey(),
@@ -485,6 +487,7 @@ sap.ui.define([
 
             this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
+                vMode: "VIEW",
                 tenantId: oRecord.tenant_id,
                 company_code: oRecord.company_code,
                 pr_number: oRecord.pr_number

@@ -234,7 +234,7 @@
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="저장위치"/>           
                                     <table:template>
-                                        <Text text=""/>
+                                        <Text text="{detailModel>sloc_code}"/>
                                     </table:template>
                                 </table:Column>                              
                             </table:columns>
@@ -316,6 +316,7 @@
 			    <Button type="Emphasized" id="Btn_Cancel"  text="{I18N>/CLOSE}"   press=".onNavigationBackPress" />
 				<Button type="Transparent"  id="Btn_PageEdit"  
                     visible="{= ${detailModel>/mst/pr_create_status_code}==='10'?true:false }"  text="{I18N>/EDIT}"     press=".onPageEditButtonPress"/>
+                <Button type="Transparent" id="Btn_Copy"  text="{I18N>/COPY}"   press=".onPageCopyButtonPress" />    
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
