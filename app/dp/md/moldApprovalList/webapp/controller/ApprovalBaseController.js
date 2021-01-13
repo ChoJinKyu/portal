@@ -317,7 +317,7 @@ sap.ui.define([
                     oUiModel.setProperty("/btnRequestFlag", false);
                 }else{ // new 
                     oUiModel.setProperty("/btnEditFlag", false);
-                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", true);
                     oUiModel.setProperty("/btnDraftFlag", true);
                     oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", true);
@@ -354,7 +354,11 @@ sap.ui.define([
                     oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", false);
                 }else{ // new 
-                   // view 모드인데 new 일순 없음 
+                   oUiModel.setProperty("/btnEditFlag", true);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", true);
+                    oUiModel.setProperty("/btnRequestFlag", false);
                 }  
             }
 
@@ -394,9 +398,9 @@ sap.ui.define([
             itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
                 oPageItemSection.addBlock(oFragment);
                 
-                if (this.approval_number === "New") {
+                /*if (this.approval_number === "New") {
                     this._toEditMode();
-                }
+                }*/
             }.bind(this));
 
         },

@@ -26,11 +26,12 @@
         </HBox>
         <VBox class="sapUiTinyMarginTop">
             <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="input" ></Label> 
-            <rte:RichTextEditor width="100%" height="600px" wrapping="false" editorType="TinyMCE4" 
+            <rte:RichTextEditor id="approvalContents" width="100%" height="600px" wrapping="false" editorType="TinyMCE4" 
                 value="{appMaster>/approval_contents}" 
                 customToolbar="true" showGroupFont="true" 
                 showGroupLink="true" showGroupInsert="true"
-                editable="{mode>/editFlag}"  />
+                visible="{mode>/editFlag}"  />
+            <FormattedText id="approvalContentsFormattedText" height="600px" htmlText="{= ${appMaster>/approval_contents}?${appMaster>/approval_contents}:'' }" visible="{=!${mode>/editFlag}}"/>
         </VBox>
     </layout:VerticalLayout>
 	
