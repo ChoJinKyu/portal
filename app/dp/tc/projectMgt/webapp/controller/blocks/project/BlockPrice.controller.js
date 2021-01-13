@@ -25,7 +25,7 @@ sap.ui.define([
         }
 
         , onBeforeRendering: function() {
-            this._pivottingData()
+            //this._pivottingData()
         }
          /**
          * Table Control 에 pivot type 으로 binding 시키기 위함.

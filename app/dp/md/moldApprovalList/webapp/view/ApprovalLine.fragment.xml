@@ -31,7 +31,6 @@
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
-                        rowSelectionChange=".onCheck"
                         mode="None"
                         width="auto"
                         items="{approver>/Approvers}"
