@@ -97,14 +97,14 @@ sap.ui.define([
             },
 
             _onRoutedThisPage: function () {
-
+                this.sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             },
 
             onStatusChange: function (oEvent) {
                 var statusKey = oEvent.getSource().getProperty("selectedKey");
                 //console.log("statusKey" + statusKey);
                 that.byId("search_effective_end_date").setValue(null);
-                if (statusKey === "expPrc") {
+                if (statusKey !== "all") {
                     that.byId("search_effective_end_date").setValue(that.getToday());
                 } else {
                     that.byId("search_effective_end_date").setValue("9999.12.31");
@@ -138,10 +138,20 @@ sap.ui.define([
             },
 
             fnSearch: function () {
+                var status = "";
                 var oFilter = [];
                 var aFilter = [];
                 var searchOperationOrg = [];
-                searchOperationOrg = that.byId("search_operation_org_e").getSelectedKeys();
+
+                if (this.sSurffix === "E") {
+                    status = that.byId("status_e").getSelectedKey();
+                    searchOperationOrg = that.byId("search_operation_org_e").getSelectedKeys();
+                }
+
+                if (this.sSurffix === "S") {
+                    status = that.byId("status_s").getSelectedKey();
+                    searchOperationOrg = that.byId("search_operation_org_s").getSelectedKeys();
+                }
 
                 //console.log("searchOperationOrg:" + searchOperationOrg);
                 if (searchOperationOrg.length > 0 ) {
@@ -169,11 +179,15 @@ sap.ui.define([
                     oFilter.push(new Filter("net_price_document_type_code", FilterOperator.EQ, netPriceDocumentTypeCode));
                 }
                 
-                var searchEffectiveEndDate = that.byId("search_effective_end_date").getValue();
+                var searchEffectiveEndDate = that.byId("search_effective_end_date").getValue().replace(/\./gi, "");
                 var searchEffectiveStartDate = that.byId("search_effective_start_date");
                 
                 if (!!searchEffectiveEndDate) {
-                    oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
+                    if (status === "effPrc") {
+                        oFilter.push(new Filter("effective_end_date", FilterOperator.GE, searchEffectiveEndDate));
+                    } else {
+                        oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
+                    }
                 }
                 
                 if (!!searchEffectiveStartDate.getValue()) {
@@ -182,7 +196,7 @@ sap.ui.define([
                     this.formatDate(searchEffectiveStartDate.getSecondDateValue())
                     ));
                 }
-                
+
                 oFilter.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
 
                 that.mainTable = this.byId("mainTable");
