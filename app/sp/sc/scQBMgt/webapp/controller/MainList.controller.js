@@ -374,6 +374,7 @@ sap.ui.define([
 
             },
             tableCellClick: function(e){
+
                 
                 var vIndex = e.getParameters().rowIndex;
                 var oPath = e.oSource.getContextByIndex(vIndex).sPath;
@@ -385,7 +386,7 @@ sap.ui.define([
                 pNegoTypeCode = oRow.nego_type_code;
                 pOutcome = oRow.negotiation_output_class_code;
                 pHeader_id =  String(oRow.nego_document_number);
-                
+
                 if(pNegoTypeCode == null){
                     pNegoTypeCode = " ";
                 }
@@ -397,6 +398,13 @@ sap.ui.define([
                 }
                 
                 this.getOwnerComponent().getRouter().navTo("detailPage", { type : pNegoTypeCode , outcome : pOutcome, header_id: pHeader_id  } );
+
+                // // ======================================================
+
+                // //Test용 detailPage2
+                // this.getOwnerComponent().getRouter().navTo("detailPage2", { type : " " , outcome : " " } );
+
+                
             },
             _getSmartTable: function () {
                 if (!this._oSmartTable) {
@@ -495,35 +503,34 @@ sap.ui.define([
                 var oFilterNegoNo = this.getView().byId("filter_NegotiationNo").getValue();
                 var oFilterTitle = this.getView().byId("filter_title").getValue();
                 var oFilterNegoType = this.byId("filterNegotiationType").getSelectedKey();
-                var oFilterOutcome = this.byId("filterOutcome").getSelectedText();
+                var oFilterOutcome = this.byId("filterOutcome").getValue();
                 var oFilterStatusItems = this.byId("filterStatus").getSelectedItems();
+                
+                var oFilter = [];
 
+                //filter Status
                 for(var i=0; i<oFilterStatusItems.length; i++){
                     var oFilterStatusItem = oFilterStatusItems[i];
-
+                    var oStatusItemText = oFilterStatusItem.getText();
+                    oFilter.push(new Filter("nego_progress_status_code", "EQ", oStatusItemText));
                 }
-                
 
+                oFilter.push(new Filter("nego_type_code", "Contains", oFilterNegoType));
+                oFilter.push(new Filter("negotiation_output_class_code", "Contains", oFilterOutcome));
+                
                 var oTable = sTable.getItems()[1];
 
-                var oFilter = [];
+                //filter like조건 검색
                 var oFilterNegoNo_r = new Filter("nego_document_number", "Contains", oFilterNegoNo);
                 var oFilterTitle_r = new Filter("nego_document_title", "Contains", oFilterTitle);
-
-                debugger;
 
                 oFilter.push(oFilterNegoNo_r);
                 oFilter.push(oFilterTitle_r);
 
                 oTable.getBinding("rows").filter(oFilter);
-                // sTable.fil
 
                 console.log("oFilterNegoNo = ",oFilterNegoNo);
                 console.log("oFilterTitle = ",oFilterTitle);
-                
-
-                
             }
-            
 		});
 	});
