@@ -53,13 +53,14 @@
                                 <VBox>
                                     <Label text="Operation Uint" labelFor="search_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_S" width="10rem"
-                                            items="{
+                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                             change="handleTable"
                                     >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox> 
@@ -102,6 +103,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                            change="handleTable"
                                     >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>  
@@ -297,13 +299,13 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Review Grade" width="8rem">
+                            <table:Column id="table_review_grade" label="Review Grade" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_grade_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Equipment Type" width="8rem">
+                            <table:Column id="table_equipment_type" label="Equipment Type" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_type_name}" wrapping="false" />
                                 </table:template>

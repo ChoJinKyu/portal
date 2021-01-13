@@ -59,6 +59,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                            change="handleCreateInput"
                                 >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </ComboBox>    
@@ -350,7 +351,7 @@
                                 <layout:GridData span="XL1 L1 M1 S12" />
                             </layoutData> 
                         </VBox>                                                                       
-                        <VBox>
+                        <VBox id = "v_review_grade" >
                             <Label text = "Review Grade" design="Bold"/> 
                                 <HBox>
                                     <ComboBox   id="pop_equipment_grade_code"
@@ -370,7 +371,7 @@
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
-                        <VBox>
+                        <VBox id ="v_equipment_type" >
                             <Label text = "Equipment Type" design="Bold"/> 
                                 <HBox>
                                     <ComboBox   id="pop_equipment_type_code"
@@ -389,20 +390,20 @@
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>  
-                        <VBox>
+                        <VBox id="v_internal_rate">
                             <Label text = "Site Internal Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="type: 'sap.ui.model.type.Decimal'" ></Input> 
+                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="Number" ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>                                
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox> 
-                        <VBox>
+                        <VBox id="v_external_rate">
                             <Label text = "Site External Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_domestic_net_price_diff_rate" type="type: 'sap.ui.model.type.Decimal'"  ></Input> 
+                                    <Input id="pop_domestic_net_price_diff_rate" type="Number"  ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>
                             <layoutData>

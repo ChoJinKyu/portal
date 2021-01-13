@@ -324,6 +324,8 @@ sap.ui.define([
 
             this.resetValue();
 
+            
+
             // var oView = this.getView();
             // var oModel = oView.getModel("VpMst");  
             // oModel.setTransactionModel(oView.getModel());
@@ -356,6 +358,7 @@ sap.ui.define([
             }  
 
             this.onDialogSearch();
+            this.handleCreateInput();
 
         },
         onDialogCreatelower: function (){
@@ -374,7 +377,7 @@ sap.ui.define([
 
                 if(pop_h_lv == "2")
                 {
-                    MessageBox.error("Lower Level를 생성 할 수 없습니다.  *임시*");
+                    MessageToast.show("해당 Operation Unit에서 정의된 레벨 하위는 구성할 수 없습니다.");
                 }
                 else if (pop_h_lv == "1")
                 {
@@ -439,14 +442,14 @@ sap.ui.define([
              this.byId("tpop_operation_unit_code").getSelectedKey().length > 0 && 
              this.byId("treeTable").getSelectedIndices().length > 0){
 
-                // if(pop_h_lv === "0")
+                // if(pop_h_lv == "0")
                 // {
                 //     // MessageBox.error("추후 ORG UNIT 입력가능 콤보로 변경  *임시*");
                 //     this.byId("pop_higher_level_path").setText(pop_h_path);
                 //     this.byId("pop_operation_unit_name").setText(pop_org);
                 // }
                 // else 
-                if (pop_target_level === "2")
+                if (pop_target_level == "2")
                 {
                     this.byId("pop_higher_level_path").setText(pop_h_path);
                     this.byId("pop_operation_unit_name").setText(pop_org);
@@ -687,6 +690,54 @@ sap.ui.define([
             this.getView().byId("pop_domestic_net_price_diff_rate").setValue("");
         },
 
+        handleTable: function(event){
+
+
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
+
+            var oper_unit ;    
+            
+            if(sSurffix =="S")
+            {
+                oper_unit = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+            }
+            else if(sSurffix =="E")
+            {
+                oper_unit = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+            } 
+            
+            
+            if(oper_unit =="EQUIPMENT")
+            {
+                this.byId("table_review_grade").setVisible(true);
+                this.byId("table_equipment_type").setVisible(true);
+            }else{
+                this.byId("table_review_grade").setVisible(false);
+                this.byId("table_equipment_type").setVisible(false);
+            }
+
+        },
+
+        handleCreateInput: function()
+        {
+            var oper_unit = this.getView().byId("tpop_operation_unit_code").getSelectedKey(); 
+
+            if(oper_unit =="EQUIPMENT")
+            {
+                this.byId("v_review_grade").setVisible(true);
+                this.byId("v_equipment_type").setVisible(true);
+                this.byId("v_internal_rate").setVisible(false);
+                this.byId("v_external_rate").setVisible(false);
+            }else{
+                this.byId("v_review_grade").setVisible(false);
+                this.byId("v_equipment_type").setVisible(false);
+                this.byId("v_internal_rate").setVisible(true);
+                this.byId("v_external_rate").setVisible(true);
+            }
+
+        },
+
+        
         handleSave: function (oEvent){
 
             var stenant_id = pop_t_id;
