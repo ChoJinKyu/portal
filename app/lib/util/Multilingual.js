@@ -58,8 +58,6 @@ sap.ui.define([
             this.oModel = sap.ui.getCore().getModel(I18N_MODEL_NAME);
             if(this.oModel == null){
                 this.oModel = new I18nModel();
-                sap.ui.getCore().setModel(this.oModel, I18N_MODEL_NAME);
-
                 var oXhr = ServiceProvider.getService("cm.util.CommonService");
                 var oQuery = oXhr.createQueryBuilder()
                     .select("message_code,message_contents")
@@ -68,24 +66,29 @@ sap.ui.define([
                         .filterExpression("language_code", "eq", UserChoices.getLanguage())
                         )
                     .orderBy("chain_code asc,message_code asc,language_code desc");
-                oXhr.get("Message", oQuery, true).then(function(oData){
-                    oData.forEach(function(oItem){
-                        if(oItem && oItem.d && oItem.d.results)
-                            this.oModel.setData(oItem.d.results);
-                        else if(oItem.results)
-                            this.oModel.setData(oItem.results);
-                    }.bind(this));
-                    this.oModel.setReady(true);
+                oXhr.get("Message", oQuery, true).then(function(aBy1000Items){
+                    if(!this.oModel.isReady()){
+                        aBy1000Items.forEach(function(oItem){
+                            if(oItem && oItem.d && oItem.d.results)
+                                this.oModel.setData(oItem.d.results);
+                            else if(oItem.results)
+                                this.oModel.setData(oItem.results);
+                        }.bind(this));
+                    }
+                    this.oModel.setReady();
+                    sap.ui.getCore().setModel(this.oModel, I18N_MODEL_NAME);
                     this.fireEvent("ready", {
                         model: this.oModel
                     });
                 }.bind(this));
             }else{
-                setTimeout(function(){
-                    this.fireEvent("ready", {
-                        model: this.oModel
-                    });
-                }.bind(this), 10);
+                if(this.oModel.isReady()){
+                    setTimeout(function(){
+                        this.fireEvent("ready", {
+                            model: this.oModel
+                        });
+                    }.bind(this), 10);
+                }
             }
 
             EventProvider.prototype.constructor.apply(this, arguments);
