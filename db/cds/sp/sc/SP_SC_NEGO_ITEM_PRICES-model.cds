@@ -17,7 +17,7 @@ entity Sc_Nego_Item_Prices {
         Header                       : Association to negoHeaders.Sc_Nego_Headers
                                            on  Header.tenant_id      = $self.tenant_id
                                            and Header.nego_header_id = $self.nego_header_id;
-        //    operation_org_code : String(30)   @title: '운영조직코드' ;
+        operation_org_code           : String(30)          @title : '운영조직코드';
         operation_unit_code          : String(30)          @title : '운영단위코드';
         award_progress_status_code   : String(25)          @title : '낙찰진행상태코드';
         //    item_type_code : String(30)   @title: '품목유형코드' ;
@@ -41,7 +41,7 @@ entity Sc_Nego_Item_Prices {
         incoterms                    : String(30)          @title : 'Incoterms';
         excl_flag                    : String(1)           @title : '제외여부';
         //    ship_to_location_id : String(30)   @title: '납품처위치코드' ;
-        //    specific_supplier_count : Integer   @title: 'Specific Supplier 개수' ;
+        specific_supplier_count      : Integer             @title : 'Specific Supplier 개수';
         vendor_pool_code             : String(100)         @title : '협력사풀코드';
         request_quantity             : Decimal(28, 3)      @title : '요청수량';
         uom_code                     : String(3)           @title : 'UOM코드';

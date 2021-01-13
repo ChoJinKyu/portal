@@ -13,7 +13,7 @@ entity Sc_Nego_Suppliers {
                                                on  Item.tenant_id        = $self.tenant_id
                                                and Item.nego_header_id   = $self.nego_header_id
                                                and Item.nego_item_number = $self.nego_item_number;
-        //    operation_org_code : String(30)   @title: '운영조직코드' ;
+        operation_org_code               : String(30)          @title : '운영조직코드';
         operation_unit_code              : String(30)          @title : '운영단위코드';
         nego_supplier_register_type_code : String(10)          @title : '협상공급업체등록유형코드';
         evaluation_type_code             : String(10)          @title : '평가유형코드';
@@ -22,7 +22,7 @@ entity Sc_Nego_Suppliers {
         //    supplier_group_code : String(30)   @title: '공급업체그룹코드' ;
         supplier_type_code               : String(30)          @title : '공급업체유형코드';
         excl_flag                        : String(1)           @title : '제외여부';
-        //    excl_reason_desc : String(1000)   @title: '제외사유설명' ;
+        excl_reason_desc                 : String(1000)        @title : '제외사유설명';
         include_flag                     : String(1)           @title : '포함여부';
         nego_target_include_reason_desc  : String(1000)        @title : '협상대상포함사유설명';
         only_maker_flat                  : String(1)           @title : 'Only Maker Flag';
