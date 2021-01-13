@@ -36,8 +36,8 @@ entity Sc_Nego_Headers {
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;
         immediate_apply_flag            : String(1)          @title : '즉시적용여부';
-        open_date                       : Date               @title : '오픈일자';
-        closing_date                    : Date               @title : '마감일자';
+        open_date                       : DateTime               @title : '오픈일자';
+        closing_date                    : DateTime               @title : '마감일자';
         //    reference_closing_date : Date   @title: '참조마감일자' ;
         //    cancel_date : Date   @title: '취소일자' ;
         auto_rfq                        : String(1)          @title : 'Auto RFQ';
