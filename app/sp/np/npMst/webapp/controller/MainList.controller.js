@@ -250,7 +250,7 @@ sap.ui.define([
                         MultiSelection: true,
                         items: {
                             filters: [
-                                new Filter("tenant_id", "EQ", "L1100")
+                                new Filter("tenant_id", "EQ", "L2100")
                             ]
                         }
                     });
