@@ -3,6 +3,7 @@ sap.ui.define([
         "sap/ui/model/Filter",						
         "sap/ui/model/FilterOperator",
         "sap/m/MessageBox",
+        "sap/m/MessageToast",
         "ext/lib/util/Multilingual",
         "sap/ui/model/json/JSONModel", 
         "../controller/SupplierSelection"
@@ -11,7 +12,7 @@ sap.ui.define([
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSONModel,SupplierSelection) {
+	function (Controller, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBMgt.controller.DetailPage", {
@@ -19,6 +20,8 @@ sap.ui.define([
             supplierSelection :  new SupplierSelection(),
             
 			onInit: function () {
+
+                this.srvUrl = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/";
                 
                 this.oRouter = this.getOwnerComponent().getRouter();
                 // this.oRouter.attachBeforeRouteMatched(this._onProductMatched, this);
@@ -81,7 +84,8 @@ sap.ui.define([
                     NegoHeaders : {}
                 });
                 this.getView().setModel(this.viewModel, "viewModel");
-                this.getView().setModel(  new JSONModel(this.viewModel.NegoHeaders), "NegoHeaders");
+                this.getView().setModel( new JSONModel(this.viewModel.NegoHeaders), "NegoHeaders");
+                this.getView().setModel( new JSONModel(), "NegoItemPrices");
                 
             },
             
@@ -136,7 +140,7 @@ sap.ui.define([
                 // &$select=*,Items
                 // &$expand=Items
                 // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?$filter=tenant_id eq 'L2100' and nego_document_number eq '1-1'";
-                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._header_id + "'";
+                var url = this.srvUrl+"NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._header_id + "'";
                 $.ajax({
                     url: url,
                     type: "GET",
@@ -144,7 +148,7 @@ sap.ui.define([
                     success: function(data){
                         // debugger;
                         var v_viewHeaderModel = oView.getModel("viewModel").getData();
-                        v_viewHeaderModel = data.value[0];
+                        v_viewHeaderModel.NegoHeaders = data.value[0];
 
                         oView.getModel("NegoHeaders").setData(data.value[0]);
 
@@ -168,7 +172,9 @@ sap.ui.define([
                         console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
                         console.log(data.value[0]);
 
-                        that.setDataBinding(data.value[0]);
+                        // data.value[0].Items.lengt
+                        // oView.byId("table1")
+
                     },
                     error: function(e){
                         
@@ -176,92 +182,6 @@ sap.ui.define([
                 });
                 
                 
-            },
-
-            setDataBinding: function (oObject) {
-                if( oObject !== null ) {
-                    console.log( "-- setDataBinding " );
-                    console.log( oObject );
-                    // actual_extension_count: null
-                    // approval_flag: null
-                    // award_date: null
-                    // award_progress_status_code: null
-                    // award_supplier_count: null
-                    // award_supplier_option_mtd_cd: null
-                    // award_type_code: null
-                    // bidding_auto_closing_hour_cnt: null
-                    // bidding_info_buyer_open_date: null
-                    // bidding_info_pur_contact_empno: null
-                    // bidding_info_supp_contact_empno: null
-                    // bidding_info_supplier_open_date: null
-                    // bidding_progress_hour_count: null
-                    // bidding_result_open_status_code: null
-                    // buyer_department_code: null
-                    // buyer_empno: null
-                    // by_step_bidding_flag: null
-                    // cancel_date: null
-                    // change_reason_desc: null
-                    // close_date_ext_enabled_count: null
-                    // close_date_ext_enabled_hours: null
-                    // closing_date: null
-                    // conversion_type_code: null
-                    // create_user_id: "997F8D5A04E2433AA7341CADC74AF683_AWX430GNEBLXD7TDI8FA9J58I_DT"
-                    // evaluation_closing_date: null
-                    // file_group_code: null
-                    // immediate_apply_flag: null
-                    // interface_source_code: null
-                    // last_bid_af_auto_close_hours: null
-                    // local_create_dtm: "2021-01-11T19:29:17Z"
-                    // local_update_dtm: "2021-01-11T19:36:35Z"
-                    // nego_document_desc: null
-                    // nego_document_number: "1-1"
-                    // nego_document_round: 1
-                    // nego_document_title: null
-                    // nego_header_id: 1
-                    // nego_progress_status_code: null
-                    // nego_round_largest_times: null
-                    // nego_type_code: null
-                    // negotiation_output_class_code: null
-                    // negotiation_style_code: null
-                    // next_round_auto_creation_flag: null
-                    // note_content: null
-                    // open_date: null
-                    // operation_unit_code: ""
-                    // orientation_contact_phone_no: null
-                    // orientation_execution_flag: null
-                    // orientation_location_desc: null
-                    // orientation_start_date: null
-                    // ot_contact_employee_no: null
-                    // partial_allow_flag: null
-                    // prcd_validation_target_flag: null
-                    // previous_nego_header_id: 0
-                    // price_condition_code: null
-                    // purchasing_ord_portion_rate_val: null
-                    // purchasing_order_type_code: null
-                    // reference_closing_date: null
-                    // reference_info: null
-                    // reference_nego_header_id: 1
-                    // reply_times: null
-                    // request_reapprove_flag: null
-                    // request_submit_number: null
-                    // request_submit_status_code: null
-                    // round_bidding_flag: null
-                    // ship_to_location_code: null
-                    // submit_date: null
-                    // suffix_flag: null
-                    // supplier_count: null
-                    // supplier_participation_flag: null
-                    // system_create_dtm: "2021-01-11T08:56:22Z"
-                    // system_update_dtm: "2021-01-11T10:36:35Z"
-                    // target_amount: null
-                    // target_amount_config_flag: null
-                    // tenant_id: "L2100"
-                    // update_user_id: "anonymous"
-                    // usage_code: null
-                    
-
-
-                }
             },
 
             _update : function(uPath, uArray){
@@ -292,6 +212,8 @@ sap.ui.define([
                 
             },
             onPageSaveButtonPress: function() {
+
+                this.testUpdate();
                 
             },
             //카테고리 코드 중복 체크
@@ -384,6 +306,95 @@ sap.ui.define([
                 
 
                 
+            },
+            onLoadSuppliers: function (e) {
+                console.log("onLoadSuppliers");
+
+                var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+
+                var selectedItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+                console.log(selectedItem);
+                
+                var that = this;
+                var oView = this.getView();
+                // NegoItemPrices(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')?&$format=json&$expand=Suppliers
+                var url = this.srvUrl + "NegoItemPrices(tenant_id='L2100',nego_header_id="+selectedItem.nego_header_id+",nego_item_number='"+selectedItem.nego_item_number+"')?&$format=json&$expand=Suppliers"
+                console.log(url);
+
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(data){
+                        // debugger;
+                        // var v_viewHeaderModel = oView.getModel("viewModel").getData();
+                        // v_viewHeaderModel = data.value[0];
+
+                        oView.getModel("NegoItemPrices").setData(data);
+
+                        that.getView().byId("panel_SuppliersContent").setExpanded(true);
+
+                        // oView.getModel("viewModel").updateBindings(true);      
+                       
+                        console.log(data);
+                        // console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
+                        // console.log(data.value[0]);
+
+                        // that.setDataBinding(data.value[0]);
+                    },
+                    error: function(e){
+                        
+                    }
+                });
+
+            },
+
+            testUpdate: function () {
+                var oModel = this.getView().getModel(),
+                oView = this.getView(),
+              //  table = this.byId("mainTable"),
+                that = this;
+
+                var oItemTemp = oView.getModel("NegoHeaders").getData();
+                var oItem = {};
+
+                oItem.tenant_id = oItemTemp.tenant_id;
+                oItem.nego_header_id = String(oItemTemp.nego_header_id); 
+                oItem.nego_document_title = oView.byId("inputTitle").getValue();//oItemTemp.nego_document_title;
+
+                // var pathTemp = "/NegoHeaders(tenant_id='L2100',nego_header_id=1)";
+
+                var path = oModel.createKey("/NegoHeaders", {
+                                    tenant_id:          oItemTemp.tenant_id,
+                                    nego_header_id:   oItemTemp.nego_header_id
+                                });
+                                
+                // oView.getModel().createEntry("/MIMaterialPriceManagement", b);
+                oModel.update( path , oItem , {
+                  
+                    method: "PUT",
+                    success: function (oData) {
+
+                        console.log( "success!!!!");
+                        // oItem.__entity = sPath;
+                        // that.onPageSearchButtonPress();
+                        // that.onBeforeRebindTable();
+                        // oModel.refresh(true);
+                        MessageToast.show(" success !! ");
+                        oView.getModel("NegoHeaders").refresh(true);
+
+                        oView.getModel("propInfo").setProperty("/isEditMode", false );
+
+                        // that.byId("pageSearchButton").firePress();
+                    },
+                    error: function (aa, bb){
+                        console.log( "error!!!!");
+                        console.log(  aa  );
+                        MessageToast.show(" error !! ");
+                        // MessageToast.show(that.getModel("I18N").getText("/EPG00002")); 
+                        
+                    }
+                });
             }
 		});
 	});
