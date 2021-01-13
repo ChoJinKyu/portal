@@ -429,7 +429,7 @@ sap.ui.define([
             this.quotation_data = [];
             var qtnArr = [];
             var that = this;
-
+ 
             if(that.validator.validate(that.byId("generalInfoLayout") ) !== true){
                 MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
                 return;
