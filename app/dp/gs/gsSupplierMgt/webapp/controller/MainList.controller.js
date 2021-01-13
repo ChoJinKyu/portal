@@ -13,6 +13,8 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/core/message/Message",
+    "sap/ui/core/MessageType",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "cm/util/control/ui/EmployeeDialog",
@@ -25,7 +27,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
 ], function (BaseController, Multilingual, Validator, History, JSONModel, TransactionManager, ManagedModel,
-    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, 
+    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Message, MessageType, 
     MessageBox, MessageToast, EmployeeDialog, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
     "use strict";
     
