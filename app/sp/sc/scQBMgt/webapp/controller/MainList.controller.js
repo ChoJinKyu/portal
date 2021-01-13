@@ -375,10 +375,10 @@ sap.ui.define([
             },
             tableCellClick: function(e){
                 
-                // if(vIndex == 0 ){
-                    
                 var vIndex = e.getParameters().rowIndex;
-                var oRow = e.oSource.getContextByIndex(vIndex);
+                var oPath = e.oSource.getContextByIndex(vIndex).sPath;
+                var oRow = this.getView().getModel().getProperty(oPath);
+
                 var pNegoTypeCode,
                     pOutcome,
                     pHeader_id;
@@ -494,12 +494,24 @@ sap.ui.define([
                 var sTable = this.getView().byId("sTable1");
                 var oFilterNegoNo = this.getView().byId("filter_NegotiationNo").getValue();
                 var oFilterTitle = this.getView().byId("filter_title").getValue();
+                var oFilterNegoType = this.byId("filterNegotiationType").getSelectedKey();
+                var oFilterOutcome = this.byId("filterOutcome").getSelectedText();
+                var oFilterStatusItems = this.byId("filterStatus").getSelectedItems();
+
+                for(var i=0; i<oFilterStatusItems.length; i++){
+                    var oFilterStatusItem = oFilterStatusItems[i];
+
+                }
+                
 
                 var oTable = sTable.getItems()[1];
 
                 var oFilter = [];
                 var oFilterNegoNo_r = new Filter("nego_document_number", "Contains", oFilterNegoNo);
                 var oFilterTitle_r = new Filter("nego_document_title", "Contains", oFilterTitle);
+
+                debugger;
+
                 oFilter.push(oFilterNegoNo_r);
                 oFilter.push(oFilterTitle_r);
 

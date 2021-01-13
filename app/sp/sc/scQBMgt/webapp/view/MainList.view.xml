@@ -143,114 +143,143 @@
                     </form:content>
                 </form:SimpleForm> -->
                 <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
-                        labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" >
+                         >
                     <form:content>
-                        <VBox>
-                            <Label text="Negotiation Type" labelFor="Negotiation Type" ></Label>
-                                <ComboBox placeholder="ALL" width="100%"/>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S3" />
-                                </layoutData>
-                           
-                        </VBox>
-                        <VBox>
-                            <Label text="Negotiation No" labelFor="Negotiation No"  />
-                            <Input id="filter_NegotiationNo" />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M3 S3" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Outcome" labelFor="Outcome"  />
-                            <ComboBox placeholder="선택해주세요" width="100%">
-                                <core:Item text="BPA"/>
-                                <core:Item text="Tenative Price"/>
-                                <core:Item text="Supplier Development"/>
-                                <core:Item text="Investment PO"/>
-                                <core:Item text="Budget Price"/>
-                                <core:Item text="Negotiation Price"/>
-                                <core:Item text="Subsidiary Dev Unit Price"/>
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M3 S3" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Buyer" labelFor="Buyer"  />
-                            <Input id="inputBuyer" valueHelpRequest="onPressManagerAdd" showValueHelp="true"/>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M3 S3" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Date" />
-                            <!-- <ComboBox placeholder="Create Date" width="100%" > -->
-                            <ComboBox selectedKey="3" width="100%" >
-                                <core:Item key="1" text="open date"/>
-                                <core:Item key="2" text="close date"/>
-                                <core:Item key="3" text="create date"/>
-                            </ComboBox>
+                        <VBox width="100%">
+                            <HBox width="100%" class="sapUiSmallMarginBottom">
+                                <VBox width="25%">
+                                    <Label text="Negotiation Type" labelFor="Negotiation Type" class="sapMLabelNoText" ></Label>
+                                        <ComboBox id="filterNegotiationType" placeholder="ALL" width="90%">
+                                            <core:Item key="RFQ" text="RFQ (견적 계획)" />
+                                            <core:Item key="Competitive" text="Competitive Bidding (입찰 계획)" />
+                                            <core:Item key="RFP" text="RFP (견적 계획)" />
+                                            <core:Item key="Step" text="2-Step Bidding (입찰 계획)" />
+                                        </ComboBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL3 L3 M3 S3" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox width="25%">
+                                    <Label text="Negotiation No" labelFor="Negotiation No"  />
+                                    <Input id="filter_NegotiationNo" width="90%" />
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M3 S3" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="25%">
+                                    <Label text="Outcome" labelFor="filterOutcome" class="sapMLabelNoText"  />
+                                    <ComboBox id="filterOutcome" placeholder="선택해주세요" width="90%">
+                                        <core:Item text="BPA"/>
+                                        <core:Item text="Tentative Price"/>
+                                        <core:Item text="Supplier Development"/>
+                                        <core:Item text="Investment PO"/>
+                                        <core:Item text="Budget Price"/>
+                                        <core:Item text="Negotiation Price"/>
+                                        <core:Item text="Subsidiary Dev Unit Price"/>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M3 S3" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="25%">
+                                    <Label text="Buyer" labelFor="Buyer"  />
+                                    <Input id="inputBuyer" valueHelpRequest="onPressManagerAdd" showValueHelp="true" width="90%"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M3 S3" />
+                                    </layoutData>
+                                </VBox>
+                            </HBox>
+                            <HBox width="100%" class="sapUiSmallMarginBottom">
+                                <HBox width="50%">
+                                    <HBox width="95%">
+                                        <VBox class="sapUiTinyMarginEnd">
+                                            <Label text="Date" />
+                                            <!-- <ComboBox placeholder="Create Date" width="100%" > -->
+                                            <ComboBox selectedKey="3" width="100%" >
+                                                <core:Item key="1" text="open date"/>
+                                                <core:Item key="2" text="close date"/>
+                                                <core:Item key="3" text="create date"/>
+                                            </ComboBox>
 
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S2" />
-                            </layoutData>
-                            
-                        </VBox>
-                        <VBox>
-                            <Label text="From"/>
-                            <DatePicker
-                                placeholder="YYYY/MM/DD"
-                                change="handleChange"
-                                class="sapUiSmallMarginBottom"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S2" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="To"/>
-                            <DatePicker
-                                placeholder="YYYY/MM/DD"
-                                change="handleChange"
-                                class="sapUiSmallMarginBottom"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S2" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Title"   />
-                            <Input id="filter_title"/>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M3 S3" />
-                            </layoutData>
-                        </VBox>
-                        
-                        <VBox>
-                            <Label text="Status"  />
-                            <MultiComboBox id="multiStatus" placeholder="1개 선택됨" width="100%" selectionChange="multiSelection" 
-                                            items="{    path: 'BBB>/status'	}" >
-                                
-                                <core:Item key="{BBB>key}" text="{BBB>text}" />
-                            </MultiComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S1" />
-                            </layoutData>
-                        </VBox>
-                        <VBox alignItems="Center">
-                            <Label text="Auto RFQ"  />
-                            <CheckBox />
-                            <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S1" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Award Status"  />
-                            <ComboBox placeholder="1개 선택됨" width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S1" />
-                            </layoutData>
-                        </VBox>
-                        
-                           
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S2" />
+                                            </layoutData>
+                                            
+                                        </VBox>
+                                        <VBox>
+                                            <Label text=""/>
+                                            <DatePicker
+                                                placeholder="YYYY/MM/DD"
+                                                change="handleChange"
+                                                />
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S2" />
+                                            </layoutData>
+                                        </VBox>
+                                        <VBox class="sapUiTinyMarginBeginEnd">
+                                            <Label text=""/>
+                                            <Text text="~"/>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text=""/>
+                                            <DatePicker
+                                                placeholder="YYYY/MM/DD"
+                                                change="handleChange"
+                                                />
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S2" />
+                                            </layoutData>
+                                        </VBox>
+                                    </HBox>
+                                </HBox>
+                                <HBox width="50%">
+                                    <VBox width="100%">
+                                        <Label text="Title"   />
+                                        <Input id="filter_title" width="90%"/>
+                                        <layoutData>
+                                            <layout:GridData span="XL3 L3 M3 S3" />
+                                        </layoutData>
+                                    </VBox>
+                                </HBox>
+                            </HBox>
+                            <HBox width="100%">
+                                <VBox width="25%">
+                                    <Label text="Status"  />
+                                    <MultiComboBox id="filterStatus" placeholder="Status" width="90%"  >
+                                        <core:Item text="1st Active" />
+                                        <core:Item text="1st Closed" />
+                                        <core:Item text="Active" />
+                                        <core:Item text="Bidding Plan Created" />
+                                        <core:Item text="Cancelled" />
+                                        <core:Item text="Closed" />
+                                        <core:Item text="Waiting for Active" />
+                                        <core:Item text="Confirm Participation" />
+                                        <core:Item text="Draft" />
+                                        <core:Item text="Request Participation" />
+                                        <core:Item text="Round Completed" />
+                                        <core:Item text="Submission Created" />
+                                        <core:Item text="Submission Created" />
+                                    </MultiComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL1 L1 M1 S1" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="25%">
+                                    <Label text="Award Status"  />
+                                    <ComboBox placeholder="Award Status" width="90%" />
+                                    <layoutData>
+                                        <layout:GridData span="XL1 L1 M1 S1" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox alignItems="Center">
+                                    <Label text="Auto RFQ"  />
+                                    <CheckBox />
+                                    <layoutData>
+                                        <layout:GridData span="XL1 L1 M1 S1" />
+                                    </layoutData>
+                                </VBox>
+                            </HBox>
+                        </VBox> 
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
