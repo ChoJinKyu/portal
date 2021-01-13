@@ -144,7 +144,7 @@
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
                                     <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" />
-                                    <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" />
+                                    <!-- <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" /> -->
                                     <!-- <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" /> -->
                                     <Button id="btnItemDelete"   type="Transparent" text="Delete"  press=".onItemDeleteRow" />
                                 </OverflowToolbar>

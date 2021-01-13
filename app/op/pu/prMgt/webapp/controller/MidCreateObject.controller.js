@@ -146,7 +146,7 @@ sap.ui.define([
             };
 
             //구매유형 : 공사
-            if(oPrMstData.pr_type_code === "TC00003"){
+            if(oPrMstData.pr_type_code_2 === "TC20003"){
                 oPrDtlVisible.material_code = false;
                 oPrDtlVisible.material_group_code = false;
                 oPrDtlVisible.sloc_code = false;
@@ -648,6 +648,8 @@ sap.ui.define([
         _fnNavigationMainPage: function(){
             var sLayout = LayoutType.OneColumn;
             this.getRouter().navTo("mainPage", {layout: sLayout});
+            
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
         },
                 
         /**
