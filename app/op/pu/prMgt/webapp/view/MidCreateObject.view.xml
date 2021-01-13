@@ -140,19 +140,13 @@
                                 >
                              <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="{I18N>/ITEM} (0)" level="H2"/>
+                                    <Title text="{I18N>/ITEM} ({= (${viewModel>/Pr_Dtl})?${viewModel>/Pr_Dtl}.length:0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" >
-                                    	<customData>
-                                            <core:CustomData key="multi" value="true" />
-                                        </customData>
-                                    </Button>
+                                    <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" />
                                     <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" />
-                                    <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" />
+                                    <!-- <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" /> -->
                                     <Button id="btnItemDelete"   type="Transparent" text="Delete"  press=".onItemDeleteRow" />
-                                    <Button icon="sap-icon://group-2" />
-                                    <Button icon="sap-icon://action-settings" />
                                 </OverflowToolbar>
                             </table:extension>          
 
@@ -172,19 +166,13 @@
                                             valueHelpRequest=".onOpenOrgcodeDialog" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center">
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/Pr_Dtl/material_code}" >
                                     <Label text="자재코드" required="true"/>           
                                     <table:template>
-                                        <Input
+                                        <Input id="i_material_code"
                                             value="{viewModel>material_code}"
                                             showValueHelp="true"
                                             valueHelpRequest=".onOpenMaterialDialog" />
-                                    </table:template>
-                                </table:Column>
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="자재그룹" required="true"/>           
-                                    <table:template>
-                                        <Input value="{viewModel>material_group_code}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_description" width="10em" hAlign="Center">
@@ -204,9 +192,24 @@
                                     <table:template>
                                         <Input maxLength="3" value="{viewModel>pr_unit}"/>
                                     </table:template>
-                                </table:Column>                                     
+                                </table:Column>   
+                                <table:Column id="c_delivery_request_date" width="10em" hAlign="Center">
+                                    <Label text="납품일"/>    
+                                    <table:template>
+                                        <DatePicker id="i_delivery_request_date"
+                                                visible="true"
+                                                value="{
+                                                    path:'viewModel>delivery_request_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        UTC: true,
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }"/>
+                                    </table:template>
+                                </table:Column>                                  
                                 <table:Column id="c_budetAmount" width="10em" hAlign="Center">
-                                    <Label text="구매요청가격" required="true"/>           
+                                    <Label text="가격" required="true"/>           
                                     <table:template>
                                         <Input maxLength="20" value="{viewModel>estimated_price}"/>
                                     </table:template>
@@ -232,37 +235,28 @@
                                             valueHelpRequest=".onOpenMaterialDialog" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
-                                    <Label text="비고"/>
-                                    <table:template>
-                                        <Input maxLength="2000" value="{viewModel>remark}" />
-                                    </table:template>
-                                </table:Column>
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="구매그룹"/>
                                     <table:template>
                                         <Input value="{viewModel>purchasing_group_code}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center">
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/Pr_Dtl/material_group_code}">
+                                    <Label text="자재그룹" required="true" />           
+                                    <table:template>
+                                        <Input value="{viewModel>material_group_code}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/Pr_Dtl/sloc_code}">
                                     <Label text="저장위치"/>
                                     <table:template>
                                         <Input value="{viewModel>sloc_code}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_delivery_request_date" width="10em" hAlign="Center">
-                                    <Label text="납품요청일"/>    
+                                <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
+                                    <Label text="비고"/>
                                     <table:template>
-                                        <DatePicker id="i_delivery_request_date"
-                                                visible="true"
-                                                value="{
-                                                    path:'viewModel>delivery_request_date',
-                                                    type:'sap.ui.model.odata.type.DateTime',
-                                                    formatOptions: {
-                                                        UTC: true,
-                                                        pattern: 'yyyy-MM-dd'
-                                                    }
-                                                }"/>
+                                        <Input maxLength="2000" value="{viewModel>remark}" />
                                     </table:template>
                                 </table:Column>
                             </table:columns>
@@ -293,7 +287,8 @@
                                 fileSizeExceed="onFileSizeExceed"
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />                            
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <Button id="ButtonUploadOuter" text="Upload Now" press="onStartUpload" />
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 
@@ -313,7 +308,8 @@
                                 fileSizeExceed="onFileSizeExceed"
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />                            
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <Button id="ButtonUploadInner" text="Upload Now" press="onStartUpload" />
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -408,7 +404,7 @@
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
 				<Button type="Transparent" text="Cancel" press=".onPageCancelButtonPress" />
-				<Button type="Transparent" text="Delete" press=".onPageDeleteButtonPress" />
+				<!-- <Button type="Transparent" text="Delete" press=".onPageDeleteButtonPress" /> -->
 				<Button type="Emphasized"  text="Save" press=".onPageSaveButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

@@ -162,7 +162,8 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../../lib"
+      "ext.lib": "../../../../lib",
+      "dp": "../../../../dp"
     },
     "routing": {
       "config": {
