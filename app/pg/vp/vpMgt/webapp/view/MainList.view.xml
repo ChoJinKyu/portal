@@ -288,7 +288,7 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Info. Change Status" width="10rem">
+                            <table:Column label="Info. Change Status" width="10rem" hAlign="Center">
                                 <table:template>
                                     <!-- <Text text="{list>info_change_status}" wrapping="false" /> -->
                                     <tnt:InfoLabel 

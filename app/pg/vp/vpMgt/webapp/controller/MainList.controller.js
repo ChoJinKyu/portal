@@ -90,6 +90,8 @@ sap.ui.define([
 
     var btType = "";
     var reSearchVpNm;
+    var reSearchOpCd;
+    var reSearchOrgCd;
 
 
     var oTransactionManager;
@@ -302,6 +304,7 @@ sap.ui.define([
                 this.byId("tpop_vendor_pool_local_name").setValue("");
 
             }
+            
             // var oView = this.getView();
 
             // if (!this.pDialog) {
@@ -702,6 +705,20 @@ sap.ui.define([
             this.getView().byId("pop_equipment_type_code").setSelectedKey("");
             this.getView().byId("pop_dom_oversea_netprice_diff_rate").setValue("");
             this.getView().byId("pop_domestic_net_price_diff_rate").setValue("");
+            this.byId("v_pop_plan_base").setVisible(false);
+        },
+        
+        handlemtlChang:function(event) {
+
+            var mtl = this.getView().byId("pop_inp_type_code").getSelectedKey();
+            if(mtl == "MBLMOB")
+            {
+                this.byId("v_pop_plan_base").setVisible(true);
+
+            }else{
+                this.byId("v_pop_plan_base").setVisible(false);
+            }
+
         },
 
         handleTable: function (event) {
@@ -899,6 +916,8 @@ sap.ui.define([
                     MessageToast.show(sMsg);
                     //생성시 사용된 Name를 이용하여 재조회
                     reSearchVpNm = svendor_pool_local_name;
+                    reSearchOpCd = soperation_unit_code;
+                    reSearchOrgCd = sorg_code;
                     that.onAfterDialog();
                     
                     // that.onDialogSearch();
@@ -1159,11 +1178,23 @@ sap.ui.define([
 
             if (this.byId("tpop_Operation_ORG").getSelectedKey() && this.byId("tpop_Operation_ORG").getSelectedKey().length > 0 && this.byId("tpop_operation_unit_code").getSelectedKey() && this.byId("tpop_operation_unit_code").getSelectedKey().length > 0) {
 
-                if (!!this.byId("tpop_Operation_ORG").getSelectedKey()) {
-                    predicates.push(new Filter("org_code", FilterOperator.Contains, this.byId("tpop_Operation_ORG").getSelectedKey()));
+                if(!!reSearchOrgCd) {
+                    predicates.push(new Filter("org_code", FilterOperator.Contains, reSearchOrgCd));
+                    this.byId("tpop_Operation_ORG").setSelectedKey(reSearchOrgCd);
+                    reSearchOrgCd = "";
+                }else{
+                    if (!!this.byId("tpop_Operation_ORG").getSelectedKey()) {
+                        predicates.push(new Filter("org_code", FilterOperator.Contains, this.byId("tpop_Operation_ORG").getSelectedKey()));
+                    }
                 }
-                if (!!this.byId("tpop_operation_unit_code").getSelectedKey()) {
-                    predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("tpop_operation_unit_code").getSelectedKey()));
+                if(!!reSearchOpCd)   {
+                    predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, reSearchOpCd));
+                    this.byId("tpop_operation_unit_code").setSelectedKey(reSearchOpCd)
+                    reSearchOpCd="";
+                }else{
+                    if (!!this.byId("tpop_operation_unit_code").getSelectedKey()) {
+                        predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("tpop_operation_unit_code").getSelectedKey()));
+                    }
                 }
                 if (!!reSearchVpNm) {
                     this.byId("tpop_vendor_pool_local_name").setValue(reSearchVpNm);
