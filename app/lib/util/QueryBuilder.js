@@ -4,21 +4,23 @@ sap.ui.define([
     "use strict";
 
     return {
-        build: function(oParameter){
-            var aParams = [];
+        build: function(oParameter, oMetadata, sEntity){
+            var aParams = [],
+                oEntityType = oMetadata._getEntityTypeByPath("/" + sEntity);
             if(oParameter.urlParameters)
                 aParams.push(ODataUtils._createUrlParamsArray(oParameter.urlParameters));
             if(oParameter.filters)
-			    aParams.push(ODataUtils.createFilterParams(oParameter.filters));
+			    aParams.push(ODataUtils.createFilterParams(oParameter.filters, oMetadata, oEntityType));
             if(oParameter.sorters)
                 aParams.push(ODataUtils.createSortParams(oParameter.sorters));
             return "?" + aParams.join("&");
         },
         
-        buildForCount: function(oParameter){
-            var aParams = [];
+        buildForCount: function(oParameter, oMetadata, sEntity){
+            var aParams = [],
+                oEntityType = oMetadata._getEntityTypeByPath("/" + sEntity);
             if(oParameter.filters)
-			    aParams.push(ODataUtils.createFilterParams(oParameter.filters));
+			    aParams.push(ODataUtils.createFilterParams(oParameter.filters, oMetadata, oEntityType));
             return "/$count?" + aParams.join("&");
         }
     };

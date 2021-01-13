@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/base/ManagedObject",
     "jquery.sap.global",
     "ext/lib/util/QueryBuilder",
+    "sap/ui/model/odata/ODataMetadata",
     "ext/lib/core/service/batch"
-], function (Parent, jQuery, QueryBuilder) {
+], function (Parent, jQuery, QueryBuilder, ODataMetadata) {
     "use strict";
 
     var ODataXhrService = Parent.extend("ext.lib.core.service.ODataXhrService", {
@@ -46,6 +47,12 @@ sap.ui.define([
             return defered.promise();
         },
 
+        _getODataMetadata: function(sServiceUrl){
+            return new ODataMetadata(sServiceUrl + "$metadata", {
+                async: false
+            });
+        },
+
         /**
          * @public
          * REST GET
@@ -57,13 +64,14 @@ sap.ui.define([
          */
         get: function (sEntity, oQuery, bFetchAll) {
             var sServiceUrl = this.getServiceUrl(),
+                oMetadata = this._getODataMetadata(sServiceUrl),
                 oPromise;
             if(bFetchAll === true){
                 oPromise = jQuery.Deferred();
                 this.ajax({
-                    url: sServiceUrl + sEntity + QueryBuilder.buildForCount(oQuery)
+                    url: sServiceUrl + sEntity + QueryBuilder.buildForCount(oQuery, oMetadata, sEntity)
                 }).then(function(sCnt){
-                    this._fetchAll(sEntity, oQuery, parseInt(sCnt, 10)).then(function(aDatas){
+                    this._fetchAll(sEntity, oQuery, parseInt(sCnt, 10), oMetadata).then(function(aDatas){
                         oPromise.resolve(
                             aDatas.map(function(oData){
                                 return oData.data;
@@ -77,7 +85,7 @@ sap.ui.define([
                 return oPromise.promise();
             }else{
                 return this.ajax({
-                    url: sServiceUrl + sEntity + QueryBuilder.build(oQuery)
+                    url: sServiceUrl + sEntity + QueryBuilder.build(oQuery, oMetadata, sEntity)
                 });
             }
         },
@@ -91,7 +99,7 @@ sap.ui.define([
          * @param {number} nCount 
          * @return Promise
          */
-        _fetchAll: function(sEntity, oQuery, nCount){
+        _fetchAll: function(sEntity, oQuery, nCount, oMetadata){
             var nSkip = oQuery.urlParameters ? oQuery.urlParameters["$skip"] || 0 : 0,
                 nCeil = Math.ceil((nCount - nSkip) / 1000),
                 aRequest = [];
@@ -100,7 +108,7 @@ sap.ui.define([
                 oQuery.urlParameters["$skip"] = i*1000 + nSkip;
                 aRequest.push({
                     type: 'GET',
-                    url: sEntity + QueryBuilder.build(oQuery)
+                    url: sEntity + QueryBuilder.build(oQuery, oMetadata, sEntity)
                 });
             }
             return this.ajaxBatch({
