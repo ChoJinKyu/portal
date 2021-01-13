@@ -216,7 +216,8 @@ sap.ui.define([
         onPageEditButtonPress: function () {
             var oDetailModel = this.getModel('detailModel');
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-               
+                oNextUIState.layout = "MidColumnFullScreen";
+
             this.getRouter().navTo("midModify", {
                 layout: oNextUIState.layout,
                 tenantId: oDetailModel.getProperty("/tenantId"),
