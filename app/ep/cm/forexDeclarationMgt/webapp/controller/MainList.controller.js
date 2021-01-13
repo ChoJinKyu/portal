@@ -163,18 +163,6 @@ sap.ui.define([
                 selectDeclareTargetFlag = this.getView().byId("selectDeclareTargetFlag").getSelected(),
                 selectDeclareTargetFlag2 = this.getView().byId("selectDeclareTargetFlag2").getSelected();
 
-     
-            
-            
-
-            console.log("poName -----> " , poName);
-             console.log("selectManagementTargetFlag -----> " , this.getView().byId("selectManagementTargetFlag").getSelected());
-             console.log("selectManagementTargetFlag2 -----> " , this.getView().byId("selectManagementTargetFlag2").getSelected());
-
-            
-
-            
-
 
             var aSearchFilters = [];
 
@@ -197,13 +185,6 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("po_date", FilterOperator.BT, this.getFormatDate(requestFromDate), this.getFormatDate(requestToDate)));
             }
 
-            // if (sRequestDepartment && sRequestDepartment.length > 0) {
-            //     aSearchFilters.push(new Filter("request_department_code", FilterOperator.EQ, sLoiNumber));
-            // }
-            // if (sRequestor && sRequestor.length > 0) {
-            //     aSearchFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sLoiNumber));
-            // }
-
             if(sRequestDepartment && sRequestDepartment.length > 0){
                 aSearchFilters.push(new Filter("tolower(purchasing_department_code)", FilterOperator.Contains, "'"+sRequestDepartment.toLowerCase()+"'"));
             }
@@ -223,17 +204,33 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
             }
 
-            if (selectManagementTargetFlag === false && selectManagementTargetFlag2 === true) {
-                aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, false));
-            }
+            // if (selectManagementTargetFlag === false && selectManagementTargetFlag2 === true) {
+            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, false));
+            // }
 
             if (selectDeclareTargetFlag === true && selectDeclareTargetFlag2 === false) {
                 aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
             }
 
-            if (selectDeclareTargetFlag === false && selectDeclareTargetFlag2 === true) {
-                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, false));
-            }
+            // if (selectDeclareTargetFlag === false && selectDeclareTargetFlag2 === true) {
+            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, false));
+            // }
+
+            // if (selectManagementTargetFlag === true) {
+            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
+            // }
+
+            // if (selectManagementTargetFlag2 === true) {
+            //     aSearchFilters.push(new Filter("management_target_flag2", FilterOperator.EQ, true));
+            // }
+
+            // if (selectDeclareTargetFlag === true) {
+            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
+            // }
+
+            // if (selectDeclareTargetFlag2 === true) {
+            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
+            // }
 
             
             // if(selectManagementTargetFlag){
@@ -430,6 +427,8 @@ sap.ui.define([
 
             });
 
+            console.log("end :: ");
+
         },
 
 
@@ -444,6 +443,7 @@ sap.ui.define([
 		 */
         onForexSave: function (flag) {
 
+            console.log("save ::");
             var oView = this.getView(),
                 that = this;
 
@@ -474,8 +474,8 @@ sap.ui.define([
 
             if(statusCode == "920010" || statusCode == "920020"){
                 forexDtlModel.getData()["forexItems"].map(d => {
-                    d["declare_scheduled_date"] = oView.byId("declareScheduledDate").getValue();
-                    d["declare_date"] = oView.byId("declareDate").getValue();
+                    d["declare_scheduled_date"] = that.getFormatDate2(oView.byId("declareScheduledDate").getDateValue());
+                    d["declare_date"] = that.getFormatDate2(oView.byId("declareDate").getDateValue());
                     d["remark"] = oView.byId("remark").getValue();
                     d["attch_group_number"] = oView.byId("attchGroupNumber").getText();
                     d["forex_declare_status_code"] = statusChange;
@@ -589,6 +589,20 @@ sap.ui.define([
             var day = date.getDate();                   //d
             day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
             return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
+
+        getFormatDate2 : function (date) {
+
+            if(!date){
+                return '';
+            }
+
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         }
 
 

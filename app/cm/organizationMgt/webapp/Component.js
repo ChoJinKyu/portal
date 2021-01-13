@@ -9,15 +9,6 @@ sap.ui.define([
 		metadata : {
 			manifest: "json"
         }
-        // ,
-        //  onInit: function () {
-        //     this.setModel(new JSONModel({
-        //         selectedTabKey: "",
-        //         tenant_id: "",
-        //         company_code: "",
-        //         add: "",
-        //     }), "view");
-        // },
 
 	});
 

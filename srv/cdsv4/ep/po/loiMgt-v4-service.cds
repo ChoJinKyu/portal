@@ -227,14 +227,10 @@ service LoiMgtV4Service {
 
     action SaveLoiRequestMultiEntitylProc(inputData : saveReturnType) returns saveReturnType;
 
-    type reqMulDelType {
-        tenant_id        : String;
-        company_code     : String;
-        loi_write_number : String;
-    }
 
     //LOI 발행요청 MST & DTL 삭제
-    action DeleteLoiMulEntityProc(inputData : reqMulDelType) returns String;
+    action DeleteLoiMulEntityProc(tenant_id : String(5), company_code : String(10), loi_write_number : String(50)) returns String;
+
 
     //LOI 발행요청시 수행업체 등록
     type SavedSuppliers {

@@ -97,7 +97,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateS"></Label>
-                                <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange"/>
+                                <DateRangeSelection id="searchCreationDateS" enabled="false" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -193,7 +193,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateE"></Label>
-                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange"/>
+                                    <DateRangeSelection id="searchCreationDateE" enabled="false" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>

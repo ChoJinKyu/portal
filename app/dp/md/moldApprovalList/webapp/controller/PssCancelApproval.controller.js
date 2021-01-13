@@ -169,6 +169,7 @@ sap.ui.define([
         }, */ 
 
         onPagePreviewButtonPress : function(){ // 협력사 선정품의랑 같은거 사용 
+
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
             if(this.getModel("approver").getData().Approvers != undefined){ 
@@ -248,7 +249,15 @@ sap.ui.define([
             this.moldMaster_data = [] ;
             this.quotation_data = [];
             var qtnArr = [];
-            var that = this;
+            var that = this; 
+
+            if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
+
+
            // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if (bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0) {
 
@@ -397,7 +406,6 @@ sap.ui.define([
                     });
                 });
             }
-
 
             this._commonDataSettingAndSubmit();
         }

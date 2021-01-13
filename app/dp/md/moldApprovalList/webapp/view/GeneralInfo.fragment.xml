@@ -25,12 +25,12 @@
             </Input>
         </HBox>
         <VBox>
-            <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="input" required="true"></Label> 
+            <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="input" ></Label> 
             <rte:RichTextEditor width="100%" height="600px" 
                 value="{appMaster>/approval_contents}" 
                 customToolbar="true" showGroupFont="true" 
                 showGroupLink="true" showGroupInsert="true"
-                editable="{mode>/editFlag}" required="true" />
+                editable="{mode>/editFlag}"  />
         </VBox>
     </layout:VerticalLayout>
 	

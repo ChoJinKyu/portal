@@ -675,31 +675,31 @@
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(1)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(2)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(3)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(4)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(5)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="240" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                 </table:columns>
