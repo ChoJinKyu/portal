@@ -473,7 +473,7 @@ sap.ui.define([
             this.approvalDetails_data = [];
             this.moldMaster_data = [];
             
-            if(orderItems != undefined && orderItems.length > 0){
+            if(orderItems.length > 0){//orderItems != undefined && 
                 orderItems.forEach(function(item){
                     this.approvalDetails_data.push({
                         tenant_id : this.tenant_id, 
