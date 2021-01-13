@@ -159,13 +159,13 @@
                                         <Text id="t_model" text="{detailModel>pr_item_number}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
+                                <table:Column id="c_moldPartNo" width="5em" hAlign="Center">
                                     <Label text="조직코드" />           
                                     <table:template>
                                         <Text text="{detailModel>org_code}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center">
+                                <table:Column width="8em" hAlign="Center">
                                     <Label text="자재코드" />           
                                     <table:template>
                                         <Text  text="{detailModel>material_code}" />
@@ -177,19 +177,19 @@
                                         <Text text="{detailModel>material_group_code}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_description" width="10em" hAlign="Center">
+                                <table:Column id="c_description" width="20em" hAlign="Center">
                                     <Label text="구매요청 품명" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_desc}"/>
                                     </table:template>
                                 </table:Column>       
-                                <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
+                                <table:Column id="c_MoldItemType" width="5em" hAlign="Center">
                                     <Label text="요청수량"/>
                                     <table:template>
                                         <Text text="{detailModel>pr_quantity}"/>
                                     </table:template>
                                 </table:Column>                                     
-                                <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
+                                <table:Column id="c_bookCrrency" width="5em" hAlign="Center">
                                     <Label text="단위" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_unit}"/>
@@ -201,19 +201,19 @@
                                         <Text text="{detailModel>estimated_price}"/>
                                     </table:template>
                                 </table:Column>                               
-                                <table:Column id="c_currency" width="10em" hAlign="Center">
+                                <table:Column id="c_currency" width="5em" hAlign="Center">
                                     <Label text="통화" />           
                                     <table:template>
                                         <Text id="currency" text="{detailModel>currency_code}"/>
                                     </table:template>
                                 </table:Column>                                     
-                                <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
+                                <table:Column id="c_moldSupplier1" width="8em" hAlign="Center">
                                     <Label text="구매담당자"/>           
                                     <table:template>
                                         <Text text="{detailModel>buyer_empno}"/>
                                     </table:template>
                                 </table:Column> 
-                                <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
+                                <table:Column id="c_moldSupplier4" width="5em" hAlign="Center">
                                     <Label text="규격"/>    
                                     <table:template>
                                         <Text text="{detailModel>price_unit}"/>

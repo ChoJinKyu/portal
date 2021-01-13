@@ -204,16 +204,16 @@
                         <Column id="mainColumnPR_DESC"  demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
                             <Text text="{I18N>/PR_DESC}" />
                         </Column>                       
-                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center" width="auto">
+                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center"  width="auto">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center" width="auto">
+                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center"  width="auto">
                             <Text text="{I18N>/PR_TYPE_CODE_2}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center" width="auto">
+                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center" width="5em">
                             <Text text="{I18N>/PR_TYPE_CODE_3}" />
                         </Column>
-                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center" width="auto">
+                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center" width="12em">
                             <Text text="{I18N>/PR_TEMPLATE_NUMBER}" />
                         </Column>
                         <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
