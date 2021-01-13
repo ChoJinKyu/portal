@@ -46,7 +46,7 @@ BEGIN
 
 
     /* 1. 몰드 정보 배열로 담음*/
-	DECLARE CUR CURSOR FOR
+	DECLARE CURSOR CUR FOR
         SELECT 
             MOLD_ID
         FROM DP_MD_APPROVAL_DTL
@@ -57,7 +57,6 @@ BEGIN
         WHILE @@FETCH_STATUS = 0
     BEGIN
         SET V_ROWCNT = V_ROWCNT + 1; -- INDEX증가
-    
 
     FETCH NEXT FROM CUR INTO V_MOLD_ID	
     END
