@@ -36,6 +36,7 @@ public class FundingNotifyService implements EventHandler {
             log.info("#### beforeCreateFundingNotify START....");
 
         Instant current = Instant.now();
+        
         String funding_notify_number = "";
         String f_sql = "SELECT 'N' || YEAR(CURRENT_DATE) || '-' || LPAD(SP_SF_FUNDING_NOTIFY_SEQ.NEXTVAL, 3, '0') AS FUNDING_NOTIFY_NUMBER FROM DUMMY";
         
