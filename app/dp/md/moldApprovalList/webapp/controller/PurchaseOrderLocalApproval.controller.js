@@ -17,17 +17,15 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection"
 ], function (NumberFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, ApprovalBaseController, MoldItemSelection
 ) {
     "use strict";
 
     //var oTransactionManager;
-    //var oRichTextEditor;
 
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PurchaseOrderItemLocal", {
 
@@ -393,7 +391,7 @@ sap.ui.define([
 
         _onSubmit : function (approveStatusCode) {
             if(this.validator.validate( this.byId("generalInfoLayout") ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -459,7 +457,7 @@ sap.ui.define([
                         return;
                     }
                 }
-            }else{
+            }else{          
                 split_pay_type_code = null;
                 prepay_rate =  null;
                 progresspay_rate =  null;
