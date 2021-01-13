@@ -184,6 +184,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "refererMultiCB");
 
             oTransactionManager = new TransactionManager();
+            oTransactionManager.aDataModels.length = 0;
             oTransactionManager.addDataModel(this.getModel("moldMaster"));
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
@@ -653,8 +654,14 @@ sap.ui.define([
          * @description employee 팝업 닫기 
          */
         onExitEmployee: function () {
-            this.byId("dialogEmployeeSelection").close();
-            // this.byId("dialogEmployeeSelection").destroy();
+            if (this._oDialog) {
+                this._oDialog.then(function (oDialog) {
+                   
+                    oDialog.close(); 
+                    oDialog.destroy();
+                });
+                this._oDialog = undefined;
+            }
         },
 
         /**
