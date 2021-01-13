@@ -8,6 +8,7 @@ sap.ui.define([
     "sap/m/TablePersoController",
     "./MainListPersoService",
     "sap/ui/model/Filter",
+    "sap/ui/model/Sorter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
@@ -17,7 +18,7 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, Sorter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
     return BaseController.extend("sp.sf.fundingNotify.controller.MainList", {
@@ -208,9 +209,12 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
+            var aSorter = [];
+            aSorter.push(new Sorter("funding_notify_number", true));
             
             oModel.read("/SfFundingNotify", {
                 filters: aSearchFilters,
+                sorters : aSorter,
                 success: function (oData) {
                     oView.setBusy(false);
                 }                

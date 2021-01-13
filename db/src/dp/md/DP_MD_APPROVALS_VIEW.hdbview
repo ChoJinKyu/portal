@@ -1,9 +1,10 @@
  view DP_MD_APPROVALS_VIEW as
     select 
-        a.approval_number
-        ,a.tenant_id
+        a.tenant_id
+        ,k.sort_no
         ,a.approval_type_code
         ,d.code_name as approval_type
+        ,a.approval_number
         ,a.approval_title
         ,'['||a.company_code||'] '||e.company_name as company_name
         ,'['||a.org_code||'] '||f.org_name as org_name
