@@ -1,9 +1,18 @@
 /* Enter your custom styles here */
 
 .yellow {
-    background-color: yellow;
+    background-color: #FF8000;
 }
 
 .blue {
-    background-color: blue;
+    background-color: #408080;
+}
+.a {
+    background-color: #FFFFFF;
+}
+.b {
+    background-color: #FF0033;
+}
+.c {
+    background-color: #0033FF;
 }

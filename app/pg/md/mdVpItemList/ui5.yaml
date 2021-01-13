@@ -1,6 +1,6 @@
 specVersion: '1.0'
 metadata:
-  name: supplierIdeaMgt
+  name: mdCategory
 type: application
 resources:
   configuration:

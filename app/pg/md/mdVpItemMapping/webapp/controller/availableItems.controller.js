@@ -20,19 +20,32 @@ sap.ui.define([
 
         // 데이터 셋팅된 후 시점을 찾으려면 앞에서 success 부분에서 해야하ㅏㄴ?
         onAfterRendering : function(){
-            var sId = "container-mdVpItemMapping---mdVpItemMapping--availableItems--table-rows-row0";//row.getId();
-            $("#"+sId).css("background-color", "yellow");
-            // debugger;
-            // var rows = Utils.getAvailableItemsTable(this).getRows();
-            // for(var i=0; i<rows.length; i++){
-            //     var row = rows[i];
-            //     // if(row.getCells()[0].getText() == this._category_code){
-            //         var sId = row.getId();
-            //         $("#"+sId).css("background-color", "green");
-                    
-            
-            //     // }
-            // }
+            // var sId = "container-mdVpItemMapping---mdVpItemMapping--availableItems--table-rows-row0";//row.getId();
+            // $("#"+sId).css("background-color", "yellow");
+            this.getView().byId("table").getBinding("rows").attachDataReceived(function(data, aa){
+                debugger;
+                // firstRowCount = 0;
+                // var secondRowCount = 0;
+                // for(var i=0; i<data.mParameters.data.results.length; i++){
+                //     var oRow = data.mParameters.data.results[i];
+                //     for(var j=0; j<initModel.length; j++){
+                //         var initRow = initModel[j];
+                //         if(initRow.node_id == oRow.node_id){
+                //             break;
+                //         }
+                //         if(initModel.length == j + 1){
+                //             initModel.push(oRow);
+                //         }
+                //     }
+                // }
+                
+                // if(this._expande == true || this._expande == false){
+                //     return;
+                // }else{
+                //     var resultCount = data.mParameters.data.results.length;
+                // }
+
+            }.bind(this));
         },
 
 		onDragStart: function(oEvent) {

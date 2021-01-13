@@ -438,16 +438,17 @@
                                     <Text text="{negotiation_output_class_code}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
-                            <t:Column  width="10rem" sortProperty="request_submit_number" filterProperty="request_submit_number">
+                            <!-- =============================추가 컬럼 안됨 -->
+                            <!-- <t:Column  width="10rem" sortProperty="pr_approve_number" filterProperty="pr_approve_number">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "request_submit_number", "leadingProperty": "request_submit_number", "sortProperty": "request_submit_number", "filterProperty": "request_submit_number"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "pr_approve_number", "leadingProperty": "pr_approve_number", "sortProperty": "pr_approve_number", "filterProperty": "pr_approve_number"}'/>
                                 </t:customData>
                                 <Label text="Req Submission No" design="Bold"/>
                                 <t:template>
-                                    <Text text="{request_submit_number}" wrapping="false" />
+                                    <Text text="{pr_approve_number}" wrapping="false" />
                                 </t:template> 
-                            </t:Column> 
-                            <t:Column width="10rem" sortProperty="request_submit_status_code" filterProperty="request_submit_status_code">
+                            </t:Column>  -->
+                            <!-- <t:Column width="10rem" sortProperty="request_submit_status_code" filterProperty="request_submit_status_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "request_submit_status_code", "leadingProperty": "request_submit_status_code", "sortProperty": "request_submit_status_code", "filterProperty": "request_submit_status_code"}'/>
                                 </t:customData>
@@ -601,7 +602,7 @@
                                 <t:template>
                                     <Text text="{interface_source}" wrapping="false" />
                                 </t:template>  
-                            </t:Column> 
+                            </t:Column>  -->
 
 
 

@@ -1,23 +1,27 @@
 {
   "_version": "1.12.0",
-  
   "sap.app": {
-    "id": "dp.im.supplierIdeaMgt",
+    "id": "pg.md.mdVpItemList",
     "type": "application",
     "i18n": "i18n/i18n.properties",
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
     "applicationVersion": {
       "version": "1.0.0"
     },
-    "ach": "set-ach",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
     "resources": "resources.json",
+    "ach": "ach",
+    "sourceTemplate": {
+      "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
+      "version": "1.40.12"
+    },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.SupplierIdeaMgtService/",
+        "uri": "srv-api/odata/v2/pg.MdCategoryService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0"
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
         }
       },
       "commonUtilService": {
@@ -26,14 +30,7 @@
         "settings": {
           "odataVersion": "2.0"
         }
-      },
-        "v4Proc": {
-            "uri": "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/",
-            "type": "OData",
-            "settings": {
-                "odataVersion": "4.0"
-            }
-        }
+      }
     }
   },
   "sap.cloud": {
@@ -57,9 +54,8 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": false,
     "rootView": {
-      "viewName": "dp.im.supplierIdeaMgt.view.App",
+      "viewName": "pg.md.mdVpItemList.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -69,7 +65,9 @@
       "libs": {
         "sap.ui.core": {},
         "sap.m": {},
-        "sap.ui.layout": {}
+        "sap.ui.layout": {},
+        "sap.f": {},
+        "sap.uxap": {}
       }
     },
     "contentDensities": {
@@ -80,9 +78,10 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.im.supplierIdeaMgt.i18n.i18n"
+          "bundleName": "pg.md.mdVpItemList.i18n.i18n"
         }
       },
+
       "util": {
         "dataSource": "commonUtilService",
         "preload": true,
@@ -102,16 +101,7 @@
           "synchronizationMode": "None",
           "autoExpandSelect": true
         }
-      },
-        "v4Proc": {
-            "dataSource": "v4Proc",
-            "preload": false,
-            "settings": {
-                "synchronizationMode": "None",
-                "operationMode": "Server",
-                "autoExpandSelect": false
-            }
-        }
+      }
     },
     "resources": {
       "css": [
@@ -128,43 +118,26 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "async": true,
-        "viewPath": "dp.im.supplierIdeaMgt.view",
+        "viewPath": "pg.md.mdVpItemList.view",
         "controlAggregation": "pages",
         "controlId": "app",
         "clearControlAggregation": false
       },
       "routes": [
         {
-          "pattern": "",
-          "name": "supplierIdeaMgt",
-          "target": [
-            "supplierIdeaMgt"
-          ]
-        },
-        {
-            "pattern": "supplierIdeaDetail/{tenantId}/{fundingNotifyNumber}",
-            "name": "supplierIdeaDetail",
+            "pattern": "",
+            "name": "mdVpItemList",
             "target": [
-                "supplierIdeaDetail"
+                "mdVpItemList"
             ]
         }
       ],
       "targets": {
-        "supplierIdeaMgt": {
-          "viewName": "SupplierIdeaMgt",
-          "viewId": "supplierIdeaMgt",
+        "mdVpItemList": {
+          "viewId": "mdVpItemList",
+          "viewName": "mdVpItemList",
           "viewLevel": 1,
-          "title": "{{appTitle}}"
-        },
-        "supplierIdeaDetail": {
-            "viewName": "SupplierIdeaDetail",
-            "viewId": "supplierIdeaDetail",
-            "viewLevel": 2
-        },
-        "notFound": {
-            "viewName": "NotFound",
-            "viewPath": "ext.lib.view",
-            "viewId": "notFound"
+          "title": "{i18n>mainListViewTitle}"
         }
       }
     }
