@@ -7,8 +7,11 @@
 	xmlns:t="sap.ui.table"
 	height="100%">
             <!-- rows="{
-                path: '{tblModel>/right}',
-                filters: {path: 'Rank', operator: 'GT', value1: '0'}
+                path: '{tblModel>/right}'
+                sorter: [
+                    {path: 'tblModel>spmd_category_code', descending: false}, 
+                    {path: 'tblModel>spmd_character_code', descending: false}
+                ]
             }" -->
         <t:Table id="table"
             selectionMode="Single"

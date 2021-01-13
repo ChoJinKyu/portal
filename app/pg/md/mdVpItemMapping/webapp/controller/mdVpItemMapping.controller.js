@@ -30,32 +30,24 @@ sap.ui.define([
                         contentType: "application/json",
                         success: function(oData2){ 
                             this.getModel("tblModel").setProperty("/right",oData2.value);
-                            // debugger;
-                            // var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
-                            // oSelectedItemsTable.getModel("tblModel").setProperty("/right/Rank",1);
-
-                            // var oItemsModel = oSelectedItemsTable.getModel("/right");
-			                // oItemsModel.setProperty("Rank", 1);
-                            
-                            // if(oData2.value.length > 0){
-                            //     // for(var idx = 0; idx<oData2.value.length; idx++){
-                            //         var oSelectedItemsTable = Utils.getSelectedItemsTable(that); //table2
-                            //         // oSelectedItemsTable.setSelecedItem(oData2.value[0]);
-                            //         //table1에서 하나씩 돌면서 해당 아이템찾아서 select했다고 하고 넘기려 했음
-
-                            //         //같은 모델을 써서,,
-                            //         // oSelectedItemsTable.getModel().setData(oData2); 
-                            //     // }
-                            // }
                         }.bind(this)                        
                     });
                     
                 }.bind(this)                        
             });
 
-    
+            // var rows = this.getModel("tblModel").getProperty("/left");
+            // for(var i=0; i<rows.length; i++){
+            //     var row = rows[i];
+            //     // if(row.getCells()[0].getText() == this._category_code){
+            //         var sId = "container-mdVpItemMapping---mdVpItemMapping--availableItems--table-rows-row0";//row.getId();
+            //         $("#"+sId).css("background-color", "yellow");
+                    
+            
+            //     // }
+            // }
         },
-
+        
 		onExit: function() {
 			this.oItemsModel.destroy();
 		},
