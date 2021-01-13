@@ -59,7 +59,7 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             
-            this._showFormFragment();
+            //this._showFormFragment();
         },
 
         onAfterRendering: function () {
@@ -85,11 +85,11 @@ sap.ui.define([
                     return;
                 }
                
-                if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
+                //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
-                }
+                //}
             }
 
             //this.byId("pageApprovalLineSection").destroy();
@@ -386,6 +386,7 @@ sap.ui.define([
         },
 
         _showFormItemFragment: function (fragmentFileName) {
+            this._showFormFragment();
             var oPageItemSection = this.byId("pageItemSection");
             oPageItemSection.removeAllBlocks();
 
