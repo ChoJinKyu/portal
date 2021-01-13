@@ -68,4 +68,5 @@ FROM   HIERARCHY_ANCESTORS_AGGREGATE(
                                                STRING_AGG(NODE_ID, '/') AS PATH
                                     )
        ) M
+order by VENDOR_POOL_PATH_NAME NULLS FIRST       
 ;
