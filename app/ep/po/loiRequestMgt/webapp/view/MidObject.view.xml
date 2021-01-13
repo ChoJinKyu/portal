@@ -187,10 +187,10 @@
                                 <Column id="midEndDateColumn2" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Text text="통화" />
 								</Column>
-                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Right" >
+                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="금액" />
 								</Column>
-                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Right" >
+                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="수행업체" />
 								</Column>
                                 <Column id="midEndDateColumn5" minScreenWidth="Tablet" hAlign="Center" >
@@ -257,9 +257,9 @@
                                         <Input value="{details>item_desc}" editable="{midObjectView>/isEditMode}"/>
                                         <Input value="{details>unit}" editable="{midObjectView>/isEditMode}"/>
                                         <Input value="{details>request_quantity}" editable="{midObjectView>/isEditMode}"/>
-                                        <Input value="{details>currency_code}" editable="{midObjectView>/isEditMode}"/>
+                                        <!-- <Input value="{details>currency_code}" editable="{midObjectView>/isEditMode}"/> -->
 
-                                        <!-- <ComboBox
+                                        <ComboBox
                                         id="midLevelCombo"
                                         width="100%"
                                         selectedKey="{details>currency_code}"   
@@ -272,7 +272,7 @@
                                         <items>
                                             <core:Item key="{details>currency_code}" text="{currency_code}" />
                                         </items>
-                                        </ComboBox> -->
+                                        </ComboBox>
                                         <Input value="{details>request_amount}" editable="{midObjectView>/isEditMode}"/>
 
                                          <!-- <Input value="{
