@@ -219,8 +219,8 @@ sap.ui.define([
                                 that._toShowMode();
                                 view.setBusy(false);
                                 that.getModel("midObjectView").setProperty("/isAddedMode", false);
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"), {duration: 3000});
                                 that.onPageNavBackButtonPress.call(that);
-                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                             }.bind(this)
                         });
                     };

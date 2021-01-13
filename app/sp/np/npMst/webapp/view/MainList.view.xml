@@ -155,23 +155,8 @@
                             </VBox>
                             <VBox>
                                 <Label text="Matrial" labelFor="search_material_code"></Label>
-                                <lib-m:CodePicker id="search_material_code"
-                                    placeholder="Enter a material name"
-                                    keyField="material_code"
-                                    textField="material_desc"
-                                    suggestionItems="{
-                                        path: '/',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
-                                        ],
-                                        serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
-                                        entityName: 'VpMaterialMst'
-                                    }" value="{matlist>material_code}" change=".materialChg" enabled="{= ${matlist>_row_state_} === 'C' }">
-                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a material"
-                                        keyFieldHeaderText="Material ID" textFieldHeaderText="Material"/>
-                                </lib-m:CodePicker>
-                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
+                                <Input id="search_material_code" type="Text" value="" placeholder="" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhMatrialCode"/>
+                                <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Document Type" labelFor="search_document"></Label>
@@ -192,11 +177,21 @@
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Net Price Type" labelFor="search_net_price"></Label>
-                                <ComboBox id="search_net_price" selectedKey="" width="auto">
-                                    <core:Item key="A" text="양산"/>
-                                    <core:Item key="B" text="샘플"/>                                                            
-                                </ComboBox>  
+                                <Label text="Net Price Type" labelFor="search_net_price_type"></Label>
+                                <ComboBox id="search_net_price_type" width="100%"
+                                    items="{
+                                        path: 'util>/Code',
+                                        filters: [
+                                            {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_TYPE'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                    </items>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M3 S12" />
+                                    </layoutData>
+                                </ComboBox>
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
@@ -287,7 +282,7 @@
                             </table:Column>
                             <table:Column label="Qty" width="5rem" filterProperty="purchasing_quantity" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>purchasing_quantity}" wrapping="false" />
+                                    <Text text="{path : 'list>purchasing_quantity', formatter: '.numberUnit'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Currency" width="5rem" filterProperty="currency_code" hAlign="Center">
@@ -297,12 +292,12 @@
                             </table:Column>
                             <table:Column label="Net Price" width="5rem" filterProperty="net_price" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>net_price}" wrapping="false" />
+                                    <Text text="{path: 'list>net_price', formatter: '.numberUnit'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Price Unit" width="5rem" filterProperty="material_price_unit" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>material_price_unit}" wrapping="false" />
+                                    <Text text="{path: 'list>net_price', formatter: '.numberUnit'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Conversion Price" width="5rem" filterProperty="conversion_net_price" hAlign="Center">
@@ -312,7 +307,7 @@
                             </table:Column>
                             <table:Column label="Amount" width="5rem" filterProperty="purchasing_amount" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>purchasing_amount}" wrapping="false" />
+                                    <Text text="{path: 'list>purchasing_amount', formatter: '.numberUnit'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Line Type" width="5rem" filterProperty="line_type_code" hAlign="Center">
@@ -322,7 +317,7 @@
                             </table:Column>
                             <table:Column label="Net Price Type" width="8rem" filterProperty="x3" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>x3}" wrapping="false" />
+                                    <Text text="{list>net_price_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             <table:Column label="Sample Flag" width="8rem" filterProperty="x4" hAlign="Center">

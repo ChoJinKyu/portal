@@ -1,4 +1,4 @@
-<mvc:View controllerName="ep.po.projectMgt.controller.MidObject" 
+<mvc:View controllerName="ep.po.projectMgt.controller.ProjectDetail" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

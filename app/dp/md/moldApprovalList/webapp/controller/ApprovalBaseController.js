@@ -19,7 +19,7 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    //  "./ApprovalList.controller",
+    "./ApprovalList.controller",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
@@ -40,7 +40,7 @@ sap.ui.define([
 
         validator: new Validator(),
 
-        //  approvalList: new ApprovalList(),
+        approvalList: new ApprovalList(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -59,7 +59,7 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             
-            this._showFormFragment();
+            //this._showFormFragment();
         },
 
         onAfterRendering: function () {
@@ -85,11 +85,12 @@ sap.ui.define([
                     return;
                 }
                
-                if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
+                //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
-                }
+                //}
+                this.approvalList.onBackToList();
             }
 
             //this.byId("pageApprovalLineSection").destroy();
@@ -316,7 +317,7 @@ sap.ui.define([
                     oUiModel.setProperty("/btnRequestFlag", false);
                 }else{ // new 
                     oUiModel.setProperty("/btnEditFlag", false);
-                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", true);
                     oUiModel.setProperty("/btnDraftFlag", true);
                     oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", true);
@@ -353,7 +354,11 @@ sap.ui.define([
                     oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", false);
                 }else{ // new 
-                   // view 모드인데 new 일순 없음 
+                   oUiModel.setProperty("/btnEditFlag", true);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", true);
+                    oUiModel.setProperty("/btnRequestFlag", false);
                 }  
             }
 
@@ -386,15 +391,16 @@ sap.ui.define([
         },
 
         _showFormItemFragment: function (fragmentFileName) {
+            this._showFormFragment();
             var oPageItemSection = this.byId("pageItemSection");
             oPageItemSection.removeAllBlocks();
 
             itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
                 oPageItemSection.addBlock(oFragment);
                 
-                if (this.approval_number === "New") {
+                /*if (this.approval_number === "New") {
                     this._toEditMode();
-                }
+                }*/
             }.bind(this));
 
         },
