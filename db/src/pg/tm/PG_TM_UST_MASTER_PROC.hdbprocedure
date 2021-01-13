@@ -109,14 +109,14 @@ as
 begin
 
     declare lv_max_seq integer default 0;
-    declare lv_count_master integer default 0;
-    declare lv_count_scenario integer default 0;
-    declare lv_count_company integer default 0;
-    declare lv_count_bizunit integer default 0;
-    declare lv_count_purchasing_type integer default 0;
-    declare lv_count_type integer default 0;
-    declare lv_count_manager integer default 0;
-    declare lv_count_operation integer default 0;
+    declare lv_sourcemaster_count integer default 0;
+    declare lv_sourcescenario_count integer default 0;
+    declare lv_sourcecompany_count integer default 0;
+    declare lv_sourcebizunit_count integer default 0;
+    declare lv_sourcepurchasingtype_count integer default 0;
+    declare lv_sourcetypecode_count integer default 0;
+    declare lv_sourcemanager_count integer default 0;
+    declare lv_sourceoperation_count integer default 0;
 -- rollback message
 	declare exit handler for sqlexception
 		begin
@@ -148,11 +148,8 @@ begin
 				master.system_update_dtm
         from	:i_table_master master
         ;
-    -- select  count(*)
-    -- into    lv_count_master
-    -- from    :o_table_master
-    -- ;		
-    if	record_count(:o_table_master) = 0 then
+    lv_sourcemaster_count = record_count(:i_table_master);    
+    if	record_count(:i_table_master) = 0 then
         rollback;
 	else
 		merge into	pg_tm_master	as t_master_tab
@@ -222,12 +219,9 @@ begin
 				scenario.system_create_dtm,
 				scenario.system_update_dtm
 		from	:i_table_scenario scenario
-		;
-    -- select  count(*)
-    -- into    lv_count_scenario
-    -- from    :o_table_scenario
-    -- ;		
-    if	record_count(:o_table_scenario) = 0 then
+        ;
+    lv_sourcescenario_count = record_count(:i_table_scenario);
+    if	record_count(:i_table_scenario) = 0 then
         rollback;
 	else
 		merge into	pg_tm_scenario_number_lng	as t_scenario_tab
@@ -287,12 +281,9 @@ begin
 				company.system_create_dtm,
 				company.system_update_dtm
 		from	:i_table_company company
-		;
-    -- select  count(*)
-    -- into    lv_count_company
-    -- from    :o_table_company
-    -- ;		
-    if	record_count(:o_table_company) = 0 then
+        ;
+    lv_sourcecompany_count = record_count(:i_table_company);
+    if	record_count(:i_table_company) = 0 then
         rollback;
 	else
 		merge into	pg_tm_comp_code		as t_company_tab
@@ -349,12 +340,9 @@ begin
 				bizunit.system_create_dtm,
 				bizunit.system_update_dtm
 		from	:i_table_bizunit bizunit
-		;
-    -- select  count(*)
-    -- into    lv_count_bizunit
-    -- from    :o_table_bizunit
-    -- ;		
-    if	record_count(:o_table_bizunit) = 0 then
+        ;
+    lv_sourcebizunit_count = record_count(:i_table_bizunit);
+    if	record_count(:i_table_bizunit) = 0 then
         rollback;
 	else
 		merge into	pg_tm_bizunit_code	as t_bizunit_tab
@@ -413,12 +401,9 @@ begin
 				purchasing.system_create_dtm,
 				purchasing.system_update_dtm
 		from	:i_table_purchasing_type purchasing
-		;
-    -- select  count(*)
-    -- into    lv_count_purchasing_type
-    -- from    :o_table_purchasing_type
-    -- ;		
-    if	record_count(:o_table_purchasing_type) = 0 then
+        ;
+    lv_sourcepurchasingtype_count = record_count(:i_table_purchasing_type);
+    if	record_count(:i_table_purchasing_type) = 0 then
         rollback;
 	else
 		merge into	pg_tm_purchasing_type_code_lng	as t_purchasing_tab
@@ -483,12 +468,9 @@ begin
 				type.system_create_dtm,
 				type.system_update_dtm
 		from	:i_table_type type
-		;
-    -- select  count(*)
-    -- into    lv_count_type
-    -- from    :o_table_type
-    -- ;		
-    if	record_count(:o_table_type) = 0 then
+        ;
+    lv_sourcetypecode_count = record_count(:i_table_type);
+    if	record_count(:i_table_type) = 0 then
         rollback;
 	else
 		merge into	pg_tm_type_code_lng	as t_type_tab
@@ -552,12 +534,9 @@ begin
 				manager.system_create_dtm,
 				manager.system_update_dtm
 		from	:i_table_manager manager
-		;
-    -- select  count(*)
-    -- into    lv_count_manager
-    -- from    :o_table_manager
-    -- ;		
-    if	record_count(:o_table_manager) = 0 then
+        ;
+    lv_sourcemanager_count = record_count(:i_table_manager);
+    if	record_count(:i_table_manager) = 0 then
 	else
 		merge into	pg_tm_manager_dtl	as t_manager_tab
 			using	:o_table_manager	as s_manager_tab
@@ -618,12 +597,9 @@ begin
 				operation.system_create_dtm,
 				operation.system_update_dtm
 		from	:i_table_operation operation
-		;
-    -- select  count(*)
-    -- into    lv_count_operation
-    -- from    :o_table_operation
-    -- ;	
-    if  record_count(:o_table_operation) = 0 then
+        ;
+    lv_sourceoperation_count = record_count(:i_table_operation);
+    if  record_count(:i_table_operation) = 0 then
     -- if	lv_count_operation is null or lv_count_operation = 0 then
 	else
 		merge into	pg_tm_operation_mode_code_lng	as t_operation_tab
