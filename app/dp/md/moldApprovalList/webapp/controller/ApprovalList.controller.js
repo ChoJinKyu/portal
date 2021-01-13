@@ -29,12 +29,11 @@ sap.ui.define([
     'sap/ui/core/util/ExportTypeCSV',
     "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/ExcelUtil",
-    "ext/lib/util/Validator",
-    "sap/ui/model/Sorter",
+    "ext/lib/util/Validator"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
     , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
-    , Validator, Sorter) {
+    , Validator) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -943,16 +942,13 @@ sap.ui.define([
             oModel.setTransactionModel(this.getModel());
             oModel.read("/Approvals", {
                 filters: aSearchFilters,
-                sorters: [
-                    new Sorter("sort_no", true)
-                ],
                 success: function (oData) {
                     oView.setBusy(false);
                 }
             });
            
             
-
+ 
         },
 
         _getSearchStates: function () {
