@@ -11,8 +11,8 @@ service ImService {
     select  key t.tenant_id,
             key t.company_code,
             key t.idea_role_code,
-            key t.role_person_empno,
-            t.role_person_name,
+            key t.role_person_empno as idea_manager_empno,
+            t.role_person_name as idea_manager_name,
             t.department_local_name,
             t.company_name,
             t.idea_role_name,
@@ -23,7 +23,8 @@ service ImService {
             t.effective_start_date,
             t.effective_end_date
     from  Idea.IdeaRoleAssignView t
-    where $now between t.effective_start_date and t.effective_end_date
+    where t.idea_role_code = 'MANAGER'
+    and $now between t.effective_start_date and t.effective_end_date
     ;
 
 }
