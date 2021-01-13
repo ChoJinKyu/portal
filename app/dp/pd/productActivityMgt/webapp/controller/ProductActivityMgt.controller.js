@@ -93,7 +93,7 @@ sap.ui.define([
                 //this.getView().byId("searchPdOperationOrg").setSelectedKeys(['L110010000']);
             },
 
-            onMainTablePersoButtonPressed: function (event) {
+            onMainTablePersoButtonPressed: function () {
                 this._oTPC.openDialog();
             },
 
@@ -115,7 +115,7 @@ sap.ui.define([
                 var oTable = this.byId("mainTable");
                 oModel.read("/PdProdActivityTemplate", {
                     filters: aSearchFilters,
-                    success: function (oData) {
+                    success: function () {
                         for (var i = 0; i < oTable.getItems().length; i++) {
                             oTable.getAggregation('items')[i].getCells()[1].getItems()[2].setValue(oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue());
 
@@ -146,7 +146,7 @@ sap.ui.define([
                         oTable.removeSelections(true);
                     
                     },
-                    error: function (data) {
+                    error: function () {
                         oView.setBusy(false);
                     }
                 });
@@ -158,9 +158,9 @@ sap.ui.define([
             onMainTableUpdateFinished: function (oEvent) {
                 // update the mainList's object counter after the table update
                 var sTitle,
-                    oTable = oEvent.getSource(),
                     iTotalItems = oEvent.getParameter("total");
-                sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("appTitle");
+                sTitle = this.getModel("I18N").getText("/PRODUCT")+" "+this.getModel("I18N").getText("/ACTIVITY")+" "+this.getModel("I18N").getText("/MANAGEMENT");
+
                 //console.log(sTitle+" ["+iTotalItems+"]");
                 this.byId("mainTableTitle").setText(sTitle+"("+iTotalItems+")");
             
@@ -175,7 +175,7 @@ sap.ui.define([
                 var aSearchFilters = [];
                 if (aCompany.length > 0) {
                     var _tempFilters = [];
-                    aCompany.forEach(function (item, idx, arr) {
+                    aCompany.forEach(function (item) {
                         _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item));
                     });
                     aSearchFilters.push(
@@ -242,9 +242,7 @@ sap.ui.define([
             },
 
             onSelectRow: function () {
-                var [tId, mName, sEntity, aCol] = arguments;
-                var oTable = this.byId(tId), //mainTable
-                    oModel = this.getView().getModel(mName), //list
+                var oTable = this.byId("mainTable"), //mainTable
                     oItem = oTable.getSelectedItem();
                 var idx = oItem.getBindingContextPath().split("/")[2];
                 this.rowIndex = idx;
@@ -262,15 +260,9 @@ sap.ui.define([
 
 
             onAdd: function () {
-                var [tId, mName, sEntity, aCol] = arguments;
                 //tableId modelName EntityName tenant_id
-                var oTable = this.byId(tId), //mainTable
-                    oModel = this.getView().getModel(mName); //list
-                var oDataArr, oDataLength;
-                if (oModel.oData) {
-                    oDataArr = oModel.getProperty("/PdProdActivityTemplate");
-                    oDataLength = oDataArr.length;
-                }
+                var oTable = this.byId("mainTable"), //mainTable
+                    oModel = this.getView().getModel("list"); //list
                 oModel.addRecord({
                     "tenant_id": this.tenant_id,
                     "company_code": this.company_code,
@@ -281,8 +273,8 @@ sap.ui.define([
                     "sequence": "1",
                     "product_activity_name": null,
                     "product_activity_english_name": null,
-                    "milestone_flag": null,
-                    "active_flag": null,
+                    "milestone_flag": false,
+                    "active_flag": false,
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date(),
                     "create_user_id": this.loginUserId,
@@ -303,6 +295,11 @@ sap.ui.define([
                 oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(true);
                 oTable.getAggregation('items')[0].getCells()[4].getItems()[2].setEnabled(true);
                 oTable.getAggregation('items')[0].getCells()[5].getItems()[2].setEnabled(true);
+                oTable.getAggregation('items')[0].getCells()[4].getItems()[2].setText("No");
+                oTable.getAggregation('items')[0].getCells()[5].getItems()[2].setText("Inactive");
+
+                
+
                 oTable.setSelectedItem(oTable.getAggregation('items')[0]);
                 this.validator.clearValueState(this.byId("mainTable"));
 
@@ -312,9 +309,7 @@ sap.ui.define([
         
             onSave: function () {
                 var v_this = this;
-                var oModel = this.getModel("v4Proc");
-                var oModel2 = this.getView().getModel("list"); 
-                var oView = this.getView();
+                var oModel2 = this.getView().getModel("list");
                 var oTable = this.byId("mainTable");
                 var oData = oModel2.oData;                
                 var inputData = {
@@ -327,7 +322,7 @@ sap.ui.define([
                     MessageBox.confirm(this.getModel("I18N").getText("/ECM01002"), {
                         title: this.getModel("I18N").getText("/SAVE"),
                         initialFocus: sap.m.MessageBox.Action.CANCEL,
-                        onClose: (function (sButton) {
+                        onClose: (function () {
                         }).bind(this)
                     });
                 }else{
@@ -364,7 +359,7 @@ sap.ui.define([
                                     org_code : oData.PdProdActivityTemplate[i].org_code,
                                     product_activity_code : pacOri,
                                     develope_event_code : oData.PdProdActivityTemplate[i].develope_event_code,	
-                                    sequence : oData.PdProdActivityTemplate[i].sequence,
+                                    sequence : seq,
                                     product_activity_name : oData.PdProdActivityTemplate[i].product_activity_name,	
                                     product_activity_english_name : oData.PdProdActivityTemplate[i].product_activity_english_name,
                                     milestone_flag : milestoneFlg,
@@ -382,7 +377,7 @@ sap.ui.define([
                     MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                         title: this.getModel("I18N").getText("/SAVE"),
                         initialFocus: sap.m.MessageBox.Action.CANCEL,
-                        onClose: (function (sButton) {
+                        onClose: (function () {
                             $.ajax({
                                 url: url,
                                 type: "POST",
@@ -390,16 +385,14 @@ sap.ui.define([
                                 //data: inputData,
                                 data: JSON.stringify(inputData),
                                 contentType: "application/json",
-                                success: function (data) {
-                                    //console.log(data);
+                                success: function () {
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     v_this.onSearch();
                                     //var v_returnModel = oView.getModel("returnModel").getData();
                                     
                                     
                                 },
-                                error: function (e) {
-                                    //console.log(e);
+                                error: function () {
                                     v_this.onSearch();
 
                                 }
@@ -478,9 +471,8 @@ sap.ui.define([
             },
 
 
-            onSelectionChange: function (oEvent) {
+            onSelectionChange: function () {
                 var oTable = this.byId("mainTable");
-                var oModel = this.getView().getModel("list");
                 var oItem = oTable.getSelectedItem();
                 var idxs = [];
                 //oTable.removeSelections(true);
@@ -529,7 +521,7 @@ sap.ui.define([
             },
             
             
-            onPersoButtonPressed: function(oEvent){
+            onPersoButtonPressed: function(){
                 this._oTPC.openDialog();
             },
 
