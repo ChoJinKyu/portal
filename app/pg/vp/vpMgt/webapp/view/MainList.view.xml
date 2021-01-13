@@ -219,7 +219,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Supplier Type" labelFor="search_Sup_Type"></Label>
+                                <Label text="Supplier Registered Type" labelFor="search_Sup_Type"></Label>
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
                                         <core:Item key="Potential" text="Potential"/>
@@ -275,7 +275,7 @@
                     </table:extension> 
 
                     <table:columns>
-                            <table:Column label="Higher Lvl" width="8rem" filterProperty="higher_level_path" >
+                            <table:Column label="Higher Level" width="12rem" filterProperty="higher_level_path" >
                                 <table:template>
                                     <Text text="{list>higher_level_path}" wrapping="false" />
                                 </table:template>
@@ -317,13 +317,13 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Quantity" width="8rem">
+                            <table:Column label="Supplier Quantity" hAlign="Center" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_quantity}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Code" width="8rem" filterProperty="supplier_code" >
+                            <table:Column label="Supplier Code" width="8rem" hAlign="Center" filterProperty="supplier_code" >
                                 <table:template>
                                     <Text text="{list>supplier_code}" wrapping="false" />
                                 </table:template>
@@ -347,7 +347,7 @@
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Type" width="8rem">
+                            <table:Column label="Supplier Registered Type"  hAlign="Center" width="10rem">
                                 <table:template>
                                     <Text text="{list>supplier_type_name}" wrapping="false" />
                                 </table:template>
@@ -375,7 +375,7 @@
                                     <Text text="{path : 'list>supplier_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Status" width="8rem">
+                            <table:Column label="Status" hAlign="Center" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false"  />
                                 </table:template>
@@ -408,7 +408,6 @@
                             <table:Column label="평가통제여부" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{= !!${list>supeval_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
-                              
                                 </table:template>
                             </table:Column>                        
 
@@ -424,13 +423,9 @@
                                 </table:template>
                             </table:Column>   
 
-                            <table:Column label="RM 통제여부" width="8em">
+                            <table:Column label="RM 통제여부" hAlign="Center" width="8em">
                                 <table:template>
-                                    <Switch state="{list>supplier_rm_control_flag}" customTextOn="Yes" customTextOff="No">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </Switch>                                 
+                                    <Text text="{= !!${list>supplier_rm_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
                                 </table:template>
                             </table:Column>
 
