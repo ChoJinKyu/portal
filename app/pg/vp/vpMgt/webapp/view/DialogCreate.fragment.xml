@@ -289,12 +289,13 @@
                                                                 {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
                                                             ]
                                                         }"
+                                                change=".handlemtlChang"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>                                      
                                      
                                 </VBox>
-                                <VBox>
+                                <VBox id="v_pop_plan_base" >
                                      <Label text = "Planning Base" class="sapUiTinyMarginEnd" design="Bold"/>
                                     <ComboBox   id="pop_plan_base"
                                                 items="{
