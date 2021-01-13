@@ -1,7 +1,12 @@
 namespace dp;
 
+using {dp as mcstPjtView} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJECT_VIEW-model';
+
 @path : '/dp.McstProjectMgtV4Service'
 service McstProjectMgtV4Service {
+
+    view McstProjectView(language_code: String) as
+        select from mcstPjtView.TC_Mcst_Project_View(language_code: :language_code);
 
     type CreatePjtInputData {
         tenant_id    : String(5);

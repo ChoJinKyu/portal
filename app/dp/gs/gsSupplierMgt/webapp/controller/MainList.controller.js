@@ -15,6 +15,7 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
+    "cm/util/control/ui/EmployeeDialog",
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
@@ -25,7 +26,7 @@ sap.ui.define([
     "sap/ui/core/Fragment"
 ], function (BaseController, Multilingual, Validator, History, JSONModel, TransactionManager, ManagedModel,
     ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, 
-    MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
+    MessageBox, MessageToast, EmployeeDialog, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
     "use strict";
     
     var oTransactionManager;
@@ -353,6 +354,18 @@ sap.ui.define([
                 return true;         
 
             }
+        },
+
+        onInputWithEmployeeValuePress: function(){
+            this.byId("employeeDialog").open();
+        },
+
+        onEmployeeDialogApplyPress: function(oEvent){
+            this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
+            var sDepNo = oEvent.getParameter("item").employee_number;
+            var oDetailsModel = this.getModel("master");
+            oDetailsModel.setProperty("/developer_empno/", sDepNo);
+            oDetailsModel.setTransactionModel(this.getModel());
         },
 
 		/* =========================================================== */

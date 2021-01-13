@@ -55,9 +55,11 @@ sap.ui.define([
             this.approvalDetails_data = [];
             this.moldMaster_data = [];
             this.quotation_data = [];  // supplier 전용 
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-           // this._showFormFragment();
+            
+            this._showFormFragment();
         },
 
         onAfterRendering: function () {
@@ -83,11 +85,11 @@ sap.ui.define([
                     return;
                 }
                
-              //  if(sPropertyName !== "GeneralInfo"){
+                if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
-              //  }
+                }
             }
 
             //this.byId("pageApprovalLineSection").destroy();
@@ -361,17 +363,13 @@ sap.ui.define([
 
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
-
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection"); 
             console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
             oPageGeneralInfoSection.removeAllBlocks();
             generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
-        },
-
-        _showFormItemFragment: function (fragmentFileName) {
-            this._showFormFragment();
+        
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
 
@@ -385,12 +383,18 @@ sap.ui.define([
             approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
             }.bind(this));
+        },
 
+        _showFormItemFragment: function (fragmentFileName) {
             var oPageItemSection = this.byId("pageItemSection");
             oPageItemSection.removeAllBlocks();
 
             itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
                 oPageItemSection.addBlock(oFragment);
+                
+                if (this.approval_number === "New") {
+                    this._toEditMode();
+                }
             }.bind(this));
 
         },
@@ -420,11 +424,7 @@ sap.ui.define([
             var that = this;
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
-                if (approvalNumber === "New") {
-                    setTimeout(function () {
-                        that._toEditMode();
-                    }, 5000);
-                }
+                
             }.bind(this));
 
             console.log(" Approvers >>> ", approvalNumber);

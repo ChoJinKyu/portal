@@ -50,6 +50,7 @@ sap.ui.define([
         
         dateFormatter: DateFormatter,
         validator: new Validator(),
+
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -682,10 +683,25 @@ sap.ui.define([
                 oDialog.open();
                 
             });
+            this.onToggleHandleInit();
 
         },
 
+        /**
+        * @public
+        * @see 사용처 create 팝업 로딩시 입력값 초기화 작업
+        */
+        onToggleHandleInit: function () {
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            if(!(this.byId("searchCompanyF") == undefined) || !(this.byId("searchPlantF") == undefined)){
+                this.byId("searchCompanyF").setSelectedKey("");
+                this.byId("searchPlantF").setSelectedKey("");
+            }
+            for (var i = 0; i < groupId.length; i++) {
+                groupId[i].setPressed(false);
+            }
 
+        },
         /**
         * @public
         * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
@@ -702,6 +718,8 @@ sap.ui.define([
             }
 
         },
+
+       
 
         /**
         * @public
@@ -934,7 +952,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-
+            
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -945,6 +963,9 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
+           
+            
+ 
         },
 
         _getSearchStates: function () {
