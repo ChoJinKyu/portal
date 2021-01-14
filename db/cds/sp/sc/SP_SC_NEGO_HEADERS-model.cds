@@ -36,13 +36,13 @@ entity Sc_Nego_Headers {
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;
         immediate_apply_flag            : String(1)          @title : '즉시적용여부';
-        open_date                       : DateTime               @title : '오픈일자';
-        closing_date                    : DateTime               @title : '마감일자';
+        open_date                       : DateTime           @title : '오픈일자';
+        closing_date                    : DateTime           @title : '마감일자';
         //    reference_closing_date : Date   @title: '참조마감일자' ;
         //    cancel_date : Date   @title: '취소일자' ;
         auto_rfq                        : String(1)          @title : 'Auto RFQ';
         items_count                     : Integer            @title : '품목수';
-        itesm_count                     : Integer            @title : '품목수-삭제예정';
+        itesm_count                     : Integer            @title : '품목수-삭제예정'; //삭제예정
         negotiation_style_code          : String(30)         @title : '협상스타일코드';
         //    by_step_bidding_flag : String(1)   @title: '단계별입찰여부' ;
         //    round_bidding_flag : String(1)   @title: '회차입찰여부' ;
@@ -86,8 +86,8 @@ entity Sc_Nego_Headers {
 //    suffix_flag : String(1)   @title: 'SUFFIX여부' ;
 //    usage_code : String(40)   @title: '용도코드' ;
 
-// include structure util.Managed
-// local_create_dtm                : Date                @title : '로컬등록시간';
+//    include structure util.Managed
+//    local_create_dtm                : Date                @title : '로컬등록시간';
 //    local_update_dtm : Date   @title: '로컬수정시간' ;
 //    create_user_id : String(255)   @title: '등록사용자ID' ;
 //    update_user_id : String(255)   @title: '변경사용자ID' ;
