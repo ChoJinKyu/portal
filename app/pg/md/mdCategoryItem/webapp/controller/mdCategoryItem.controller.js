@@ -49,8 +49,9 @@ sap.ui.define([
         }).setTable(this.byId("mainTable"));
         
         this.rowIndex=0;
-        this.aSearchCategoryCd = "C001";///////////////
-        this.byId("textCategoryCode").setText(this.aSearchCategoryCd);
+
+        // this.aSearchCategoryCd = "C001";
+        // this.byId("textCategoryCode").setText(this.aSearchCategoryCd);
         // this.byId("textCategoryName").setText();
       },
 
@@ -63,7 +64,7 @@ sap.ui.define([
         this.onSearch();
       },
     
-      /** 회사(tenant_id)값으로 법인, 사업본부 combobox item filter 기능
+      /** 
     * @public
     */
     onChangeTenant: function (oEvent) {
@@ -72,8 +73,7 @@ sap.ui.define([
         business_combo.setValue("");
 
         var aFiltersComboBox = [];
-        var oFilterComboBox = new sap.ui.model.Filter("tenant_id", "EQ", oSelectedkey);
-        aFiltersComboBox.push(oFilterComboBox);
+        aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
         // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
         var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
         
@@ -84,10 +84,40 @@ sap.ui.define([
             // @ts-ignore
             template: new sap.ui.core.Item({
                 key: "{org>bizunit_code}",
-                text: "{org>bizunit_name}"
+                text: "{org>bizunit_code}: {org>bizunit_name}"
             })
         });
     },
+
+
+      /** 회사(tenant_id)값으로 법인, 사업본부 combobox item filter 기능
+    * @public
+    */
+    onChangeBizUnit: function (oEvent) {
+        var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey();
+        var oSelectedkey = oEvent.getSource().getSelectedKey();                  
+        var category_combo = this.getView().byId("searchCategory");  
+        category_combo.setValue("");
+
+        var aFiltersComboBox = [];
+        aFiltersComboBox.push( new Filter("tenant_id", "EQ", tenant_combo));
+        aFiltersComboBox.push( new Filter("org_code", "EQ", oSelectedkey));
+
+        // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
+        var businessSorter = new sap.ui.model.Sorter("spmd_category_code", false);        //sort Ascending
+        
+        category_combo.bindAggregation("items", {
+            path: "category>/MdCategory",
+            sorter: businessSorter,
+            filters: aFiltersComboBox,
+            // @ts-ignore
+            template: new sap.ui.core.Item({
+                key: "{category>spmd_category_code}",
+                text: "{category>spmd_category_code}: {category>spmd_category_code_name}"
+            })
+        });
+    },
+
       onSeletionChange: function () {
         var oTable = this.byId("mainTable"),
             oModel = this.getView().getModel("list"),
@@ -123,19 +153,22 @@ sap.ui.define([
       onSearch: function () {
             var aFilters = [];
             var aSorter = [];
-            aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
+            // aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
             aSorter.push(new Sorter("spmd_character_sort_seq", false));
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),         //회사 콤보박스       //회사 콤보박스
                 // tenant_name = tenant_combo.getValue(),
-                bizunit_combo = this.getView().byId("searchChain").getSelectedKey();           //사업본부 콤보박스
+                bizunit_combo = this.getView().byId("searchChain").getSelectedKey(),           //사업본부 콤보박스
                 // bizunit_name = bizunit_combo.getValue();
+                category_combo = this.getView().byId("searchCategory").getSelectedKey();   
             
             if (tenant_combo.length > 0) {
-                aFilters.push(new Filter("tenant_id", FilterOperator.Contains, tenant_combo));
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, tenant_combo));
             }
             if (bizunit_combo.length > 0) {
-                aFilters.push(new Filter("org_code", FilterOperator.Contains, bizunit_combo));
-                
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, bizunit_combo));                
+            }
+            if (category_combo.length > 0) {
+                aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, category_combo));                
             }
 
             // var oView = this.getView();
@@ -164,6 +197,9 @@ sap.ui.define([
                 .read("/MdCategoryItem", {
                     filters: aFilters,                
                     sorters : aSorter,
+                    urlParameters: {
+                        "$expand": "org_infos,category_infos"
+                    },
                     success: (function (oData) {
                     this.getView().setBusy(false);
                     }).bind(this)
@@ -173,7 +209,12 @@ sap.ui.define([
             // this._setEditChange(this.rowIndex,"R"); 
         },
       
-      onAdd: function () {          
+      onAdd: function () { 
+            var ctgrCode = this.getView().byId("searchCategory").setSelectedItem().getSelectedKey();
+            if(ctgrCode=="" || ctgrCode==null){
+                MessageToast.show("범주를 설정해주세요.");
+                return;
+            }         
             var oTable = this.byId("mainTable"), 
                 oModel = this.getView().getModel("list");
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
@@ -192,7 +233,7 @@ sap.ui.define([
                 org_type_code: "BU",
                 org_code: this.getView().byId("searchChain").setSelectedItem().getSelectedKey(),
                 //org_code: "BIZ00200",
-                spmd_category_code: "C001",
+                spmd_category_code: ctgrCode,
                 spmd_character_code: "new",
                 spmd_character_sort_seq: ctgrSeq
             });

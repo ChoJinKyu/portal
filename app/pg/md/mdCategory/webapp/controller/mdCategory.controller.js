@@ -52,6 +52,33 @@ sap.ui.define([
       },
 
 
+      /** 회사(tenant_id)값으로 법인, 사업본부 combobox item filter 기능
+    * @public
+    */
+    onChangeTenant: function (oEvent) {
+        var oSelectedkey = oEvent.getSource().getSelectedKey();                
+        var business_combo = this.getView().byId("searchChain");  
+        business_combo.setValue("");
+
+        var aFiltersComboBox = [];
+        var oFilterComboBox = new sap.ui.model.Filter("tenant_id", "EQ", oSelectedkey);
+        aFiltersComboBox.push(oFilterComboBox);
+        // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
+        var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+        
+        business_combo.bindAggregation("items", {
+            path: "org>/Org_Unit",
+            sorter: businessSorter,
+            filters: aFiltersComboBox,
+            // @ts-ignore
+            template: new sap.ui.core.Item({
+                key: "{org>bizunit_code}",
+                text: "{org>bizunit_code}: {org>bizunit_name}"
+            })
+        });
+    },
+
+
     onListItemPress: function (oEvent) {
         
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
@@ -70,9 +97,13 @@ sap.ui.define([
     },
 
       onSearch: function () {
+            var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey();
 			var sChain = this.getView().byId("searchChain").getSelectedKey();
 			var aSearchFilters = [];
-			if (sChain && sChain.length > 0) {
+            if (tenant_combo.length > 0) {
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, tenant_combo));
+            }
+			if (sChain.length > 0) {
 				aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, sChain));
 			}
 			
@@ -82,6 +113,9 @@ sap.ui.define([
                 .setTransactionModel(this.getView().getModel())
                 .read("/MdCategory", {
 				    filters: aSearchFilters,
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
                     success: (function (oData) {
                     this.getView().setBusy(false);
                     }).bind(this)
@@ -103,6 +137,11 @@ sap.ui.define([
         },
       
       onAdd: function () {
+            var orgCode = this.getView().byId("searchChain").setSelectedItem().getSelectedKey();
+            if(orgCode=="" || orgCode==null){
+                MessageToast.show("사업본부를 설정해주세요.");
+                return;
+            }
             var oTable = this.byId("mainTable"), 
                 oModel = this.getView().getModel("list");
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);

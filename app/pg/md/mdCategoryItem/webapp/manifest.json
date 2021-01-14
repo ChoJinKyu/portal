@@ -107,7 +107,17 @@
           "refreshAfterChange": false,
           "useBatch": true
         }
-      },  
+      }, 
+      "category": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      }, 
       "": {
         "dataSource": "mainService",
         "preload": true,

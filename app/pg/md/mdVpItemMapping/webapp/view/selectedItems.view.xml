@@ -26,7 +26,7 @@
                 </Menu>
             </contextMenu> -->
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title text="Assigned Character" />
+                    <Title text="Assigned Character ({= ${tblModel>/right}.length})" level="H2" />
                     <ToolbarSpacer/> 
                     <Button id="midTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onSave"/>
                 </OverflowToolbar>

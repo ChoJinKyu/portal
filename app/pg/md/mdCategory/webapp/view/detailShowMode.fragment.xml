@@ -7,7 +7,7 @@
         
         <Label text="범주코드" />
         <Text text="{master>/spmd_category_code}"/>
-        <Label text="범주코드명" required="true"/>
+        <Label text="범주명"/>
         <Text text="{master>/spmd_category_code_name}"/>
         <Label text="RGB글꼴색상코드"/>
         <Text text="{master>/rgb_font_color_code}"/>

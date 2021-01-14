@@ -52,7 +52,7 @@
                     </VBox>
                     <VBox>
                         <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
-                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
+                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" selectionChange="onChangeBizUnit">
                         <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                 path: 'org>/Org_Unit',
                                 filters: [
@@ -61,6 +61,23 @@
                             }"> -->
                             <items>
                                 <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData> 
+                    </VBox>
+                    <VBox>
+                        <Label text="범주" labelFor="searchCategory" required="true"></Label>
+                        <ComboBox id="searchCategory" width="100%" placeholder="All" selectedKey="" >
+                        <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
+                                path: 'org>/Org_Unit',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }"> -->
+                            <items>
+                                <core:Item key="{category>spmd_category_code}" text="{category>spmd_category_code}: {category>spmd_category_code_name}" />
                             </items>
                         </ComboBox>
                         <layoutData>
@@ -95,10 +112,10 @@
                 width="auto">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-            <Title id="title2" text="SPMD Character List"/>
+            <Title id="title2" text="SPMD Character List ({= ${list>/MdCategoryItem}.length})" level="H2"/>
             <VBox>
-                <ObjectStatus title="범주코드" id="textCategoryCode" text=""/>
-                <ObjectStatus title="범주명" id="textCategoryName" text="{list>spmd_category_code}"/>
+                <!-- <ObjectStatus title="범주코드" id="textCategoryCode" text=""/>
+                <ObjectStatus title="범주명" id="textCategoryName" text="{list>spmd_category_code}"/> -->
             </VBox>
               <ToolbarSpacer/>
               <Button icon="sap-icon://navigation-up-arrow" tooltip="Move up" press="moveUp"/>
@@ -120,22 +137,25 @@
                 <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
                     <Text text="" />
                 </Column>
-                <!-- <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
-                    <Text text="범주코드(임시:확인용)" />
-                </Column> -->
-                <Column  hAlign="Center" mergeDuplicates="false" width="10em" >
-                    <Text text="사업본부코드" />
-                </Column>
-                <!-- <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
-                    <Text text="사업본부명" />
-                </Column> -->
-                <Column  hAlign="Center" mergeDuplicates="false" width="10em" >
-                    <Text text="특성코드" />
+                <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
+                    <Text text="No." />
                 </Column>
                 <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
-                    <Text text="특성정렬순서" />
+                    <Text text="사업본부코드" />
                 </Column>
-                <Column  hAlign="Center" width="20em" >
+                <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
+                    <Text text="사업본부명" />
+                </Column>
+                <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
+                    <Text text="범주코드" />
+                </Column>
+                <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
+                    <Text text="범주명" />
+                </Column>
+                <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
+                    <Text text="특성코드" />
+                </Column>
+                <Column  hAlign="Center" width="12em" >
                     <Text text="특성코드명" />
                 </Column>
                 <Column  hAlign="Center" width="20em" >
@@ -181,28 +201,29 @@
                             }" />
                             <!-- <Text text="{list>_row_state_}"></Text> -->
                         </HBox>
-                        <!-- <HBox alignItems="Center">
-                            <Text text="{list>spmd_category_code}"></Text>
-                        </HBox> -->
-                        <HBox alignItems="Center">
-                            <Text text="{list>org_code}"></Text>
-                        </HBox>
-                        <!-- <HBox alignItems="Center">
-                            <Text text="{list>spmd_character_code}"></Text>
-                        </HBox> -->
-                        <HBox alignItems="Center">
-                            <Text text="{list>spmd_character_code}"></Text>
-                        </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>spmd_character_sort_seq}" ></Text>
                         </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>org_code}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>org_infos/bizunit_name}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>spmd_category_code}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>category_infos/spmd_category_code_name}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>spmd_character_code}"></Text>
+                        </HBox>
                         <HBox>
-                            <Text text="{list>spmd_character_code_name}" visible="true"></Text>
-                            <Input value="{list>spmd_character_code_name}" required="true" visible="false"></Input>
+                            <Text text="{list>spmd_character_code_name}"></Text>
                         </HBox>
                         <HBox alalignItemsign="Center">
-                            <Text text="{list>spmd_character_desc}" visible="true"></Text>
-                            <Input value="{list>spmd_character_desc}" visible="false"></Input>
+                            <Text text="{list>spmd_character_desc}" ></Text>
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>create_user_id}"></Text>

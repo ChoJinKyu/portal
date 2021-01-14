@@ -36,10 +36,10 @@
 				<uxap:snappedTitleOnMobile>
 					<Title text="Control Option Details" />
 				</uxap:snappedTitleOnMobile>
-				<uxap:actions>
+				<!-- <uxap:actions>
 					<Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" />
-					<!-- <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" /> -->
-				</uxap:actions>
+					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+				</uxap:actions> -->
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
@@ -140,12 +140,14 @@
                     icon="sap-icon://alert"
                     type="Emphasized"
                     text="{= ${message>/}.length }"
-                    visible="{= ${message>/}.length > 0 }"
+                    visible="true"
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<Button type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
-				<Button type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
+				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+			    <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" />
+			    <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButtonPress" />
+				<Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

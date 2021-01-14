@@ -20,9 +20,11 @@ sap.ui.define([
         },
 
         onRead: function(){
+            // return new Promise(function(resolve,seject){
 
-            var oMultilingual = new Multilingual();
-			this.setModel(oMultilingual.getModel(), "I18N");
+            // });
+            //var oMultilingual = new Multilingual();
+			//this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new JSONModel()); 
 
             jQuery.ajax({
@@ -37,7 +39,7 @@ sap.ui.define([
                         contentType: "application/json",
                         success: function(oData2){ 
                             this.getModel("tblModel").setProperty("/right",oData2.value);
-                            setTimeout(that.onSetColor(), 3000); //화면그려지고 호출될때도 있지만 그려지기 전에 호출되기도 함
+                            //setTimeout(this.onSetColor(), 3000); //화면그려지고 호출될때도 있지만 그려지기 전에 호출되기도 함
                         }.bind(this)                        
                     });
                     
@@ -47,6 +49,9 @@ sap.ui.define([
             
         },
         onSetColor: function(){
+        // onRead().then(function(){
+
+        // })    
             var leftRows = this.getModel("tblModel").getProperty("/left");
             var rightRows = this.getModel("tblModel").getProperty("/right");
             var cellColor ="#FFFFFF";
@@ -56,14 +61,16 @@ sap.ui.define([
             var sId2 = Utils.getSelectedItemsTableRows(that);
 
             //전체다 동일 색상
-            // for(var i=0; i<leftRows.length; i++){
-            //     var row = leftRows[i];
-            //     if(row.rgb_cell_clolor_code != null){
-            //         cellColor = row.rgb_cell_clolor_code;
-            //         var rowId = "#"+sId+i;
-            //         $(rowId).css("background-color", cellColor); 
-            //     }
-            // }
+            for(var i=0; i<leftRows.length; i++){
+                var row = leftRows[i];
+                if(row.rgb_cell_clolor_code != null){
+                    cellColor = row.rgb_cell_clolor_code;
+                    var rowId = "#"+sId+i;
+                    $(rowId).css("background-color", cellColor); 
+                    // console.log(rowId, row.spmd_category_code+":"+cellColor)
+
+                }
+            }
 
             for(var i=0; i<rightRows.length; i++){
                 var row = rightRows[i];

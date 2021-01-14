@@ -23,7 +23,7 @@
                 </Menu>
             </contextMenu> -->
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title text="SPMD Character List" />
+                    <Title text="SPMD Character List ({= ${tblModel>/left}.length})" level="H2"/>
                     <ToolbarSpacer/> 
                     <SearchField id="tableSearchField" width="15rem" search=".onTableFilterPress" />	
                 </OverflowToolbar>

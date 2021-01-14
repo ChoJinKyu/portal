@@ -175,6 +175,34 @@ sap.ui.define([
         },
 
 		
+        /**
+         * Event handler for delete page entity
+         * @public
+         */
+        onPageDeleteButtonPress: function () {
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                that = this;
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                if (sButton === MessageBox.Action.OK) {
+                    oView.setBusy(true);
+                    oMasterModel.removeData();
+                    oMasterModel.setTransactionModel(that.getModel());
+                    oMasterModel.submitChanges({
+                    success: function (ok) {
+                        oView.setBusy(false);
+                        that.onNavBack.call(that);
+                        that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                        MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
+                    }
+                    });
+                };
+                }
+            });
+        },
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -480,8 +508,16 @@ sap.ui.define([
 			var FALSE = false;
             this._showFormFragment('detailEditMode');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !FALSE);
+            this.byId("page").setProperty("showFooter", !FALSE);
+            
+            this.byId("pageCancelButton").setEnabled(!FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
+            if (this._sSpmd_character_code == "new"){
+                this.byId("pageDeleteButton").setEnabled(FALSE);
+            }else{
+                this.byId("pageDeleteButton").setEnabled(!FALSE);
+            }
+            this.byId("pageSaveButton").setEnabled(!FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
@@ -496,8 +532,12 @@ sap.ui.define([
 			var TRUE = true;
             this._showFormFragment('detailShowMode');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !TRUE);
-			this.byId("pageEditButton").setEnabled(TRUE);
+            this.byId("page").setProperty("showFooter", TRUE);
+            
+            this.byId("pageCancelButton").setEnabled(!TRUE);
+            this.byId("pageEditButton").setEnabled(TRUE);
+            this.byId("pageDeleteButton").setEnabled(!TRUE);
+            this.byId("pageSaveButton").setEnabled(!TRUE);
 			this.byId("pageNavBackButton").setEnabled(TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);

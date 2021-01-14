@@ -35,14 +35,30 @@
         <f:DynamicPageHeader pinnable="false">
             <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                 <form:content>
+                    <VBox>
+                        <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                        <ComboBox id="searchTenantCombo" width="100%" items="{
+                                path: 'org>/Org_Tenant',
+                                filters: []
+                            }"
+                            selectionChange="onChangeTenant">
+                            <items>
+                                <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData> 
+                    </VBox>
                     <VBox>   
                         <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
-                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
+                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
+                        <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                 path: 'org>/Org_Unit',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                 ]
-                            }">
+                            }"> -->
                             <items>
                                 <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
                             </items>
@@ -75,7 +91,7 @@
                 width="auto">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-              <Title text="SPMD Category List" level="H2"/>
+              <Title text="SPMD Category List ({= ${list>/MdCategory}.length})" level="H2"/>
               <ToolbarSpacer/>
               <Button text="{I18N>/NEW}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
               <!-- <Button text="{I18N>/UPDATE}" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/> -->
@@ -92,19 +108,25 @@
             </headerToolbar>
 
             <columns>
-                <Column id="mainColumnCode"  hAlign="Center" mergeDuplicates="false" width="80px" >
+                <Column hAlign="Center" mergeDuplicates="false" width="80px" >
+                    <Text text="No." />
+                </Column>
+                <Column hAlign="Center" mergeDuplicates="false" width="80px" >
+                    <Text text="사업본부코드" />
+                </Column>
+                <Column hAlign="Center" width="200px">
+                    <Text text="사업본부명" />
+                </Column>
+                <Column hAlign="Center" mergeDuplicates="false" width="80px" >
                     <Text text="범주코드" />
                 </Column>
-                <Column id="mainColumnSort"  hAlign="Center" mergeDuplicates="false" width="80px" >
-                    <Text text="범주정렬순서" />
-                </Column>
-                <Column id="mainColumnCodeName"  hAlign="Center" width="500px">
+                <Column hAlign="Center" width="250px">
                     <Text text="범주명" />
                 </Column>
-                <Column id="mainColumnFontCode"  hAlign="Center" width="150px" >
+                <Column hAlign="Center" width="150px" >
                     <Text text="RGB글꼴색상코드" />
                 </Column>
-                <Column id="mainColumnCellCode" hAlign="Center" width="150px" >
+                <Column hAlign="Center" width="150px" >
                     <Text text="RGB셀색상코드" />
                 </Column>
                 <Column  hAlign="Center" width="150px" >
@@ -125,23 +147,25 @@
                 <ColumnListItem type="Navigation" press="onListItemPress">
                     <cells>
                         <HBox alignItems="Center">
+                            <Text text="{list>spmd_category_sort_sequence}" visible="true"></Text>
+                        </HBox>
+                        <HBox>
+                            <Text text="{list>org_code}" visible="true"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>org_infos/bizunit_name}" visible="true"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
                             <Text text="{list>spmd_category_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>spmd_category_sort_sequence}" visible="true"></Text>
-                            <Input value="{list>spmd_category_sort_sequence}" visible="false" required="true"></Input>
-                        </HBox>
-                        <HBox>
                             <Text text="{list>spmd_category_code_name}" visible="true"></Text>
-                            <Input value="{list>spmd_category_code_name}" visible="false" required="true"></Input>
                         </HBox>
-                        <HBox alalignItemsign="Center">
+                        <HBox alignItems="Center">
                             <Text text="{list>rgb_font_color_code}" visible="true"></Text>
-                            <Input value="{list>rgb_font_color_code}" visible="false"></Input>
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>rgb_cell_clolor_code}" visible="true"></Text>
-                            <Input value="{list>rgb_cell_clolor_code}" visible="false"></Input>
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>create_user_id}"></Text>
