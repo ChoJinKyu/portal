@@ -198,7 +198,7 @@
                                 <Label text="Supplier" labelFor="search_Sup"></Label>
 
                                 <lib-m:CodePicker id="search_Sup"
-                                    placeholder="Enter a department name"
+                                    placeholder="Enter a supplier name"
                                     keyField="supplier_code"
                                     textField="supplier_local_name"
                                     suggestionItems="{
