@@ -383,6 +383,7 @@ public class MoldApprovalV4 implements EventHandler {
 
                 if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
                     m.setAccountCode("");
+                    m.setAcqDepartmentCode("");
                     m.setInvestmentEcstTypeCode("");
                     m.setAccountingDepartmentCode("");
                     m.setImportCompanyCode("");
@@ -397,6 +398,7 @@ public class MoldApprovalV4 implements EventHandler {
                 }else{ 
                     m.setAccountCode(row.getAccountCode());
                     m.setInvestmentEcstTypeCode(row.getInvestmentEcstTypeCode());
+                    m.setAcqDepartmentCode(row.getAcqDepartmentCode());
                     m.setAccountingDepartmentCode(row.getAccountingDepartmentCode());
                     m.setImportCompanyCode(row.getImportCompanyCode());
                     m.setProjectCode(row.getProjectCode());

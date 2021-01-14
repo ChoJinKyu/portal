@@ -1,5 +1,5 @@
 <!-- 
-   description : Mold Recepit Approval (금형 입고품의) 테이블 Edit 화면  
+   description : 예산집행품의 테이블 Edit 화면  
 -->
 <core:FragmentDefinition
 	xmlns="sap.m" 
@@ -58,7 +58,9 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
                     <!-- edit Mode -->
-					<Input id="acquisition_department"  value="" class="readonlyField" editable="{mode>/editFlag}" showValueHelp="true" />
+					<Input id="acquisition_department" value="{mdCommon>/acq_department_code_nm}" class="readonlyField" 
+                        editable="{mode>/editFlag}" 
+                        showValueHelp="true" valueHelpRequest=".onValueHelpRequestedDept" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -74,7 +76,6 @@
                               items="{}">
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
-
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -98,7 +99,6 @@
                               }">
 						<core:Item key="{importCompany>company_code}" text="[{importCompany>company_code}] {importCompany>company_name}" />
 					</ComboBox>
-                   
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>

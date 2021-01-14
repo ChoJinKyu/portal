@@ -19,17 +19,22 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
-    "dp/md/util/controller/MoldItemSelection"
+    "dp/md/util/controller/MoldItemSelection" ,
+    "dp/md/util/controller/DeptSelection",
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection
+    , ApprovalBaseController, MoldItemSelection , DeptSelection
 ) {
     "use strict";
 
     var oTransactionManager;
     var oRichTextEditor;
-
+    /**
+     * @Desciption  예산집행품의 
+     * @Date        2021.01.14 
+     * @Author      jinseon.lee 
+     */
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.BudgetExecutionApproval", {
 
         dateFormatter: DateFormatter,
@@ -38,6 +43,7 @@ sap.ui.define([
 
         moldItemPop: new MoldItemSelection(),
 
+        deptSelection : new DeptSelection(), 
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -95,6 +101,8 @@ sap.ui.define([
                     if(oData.results != undefined && oData.results.length > 0){
                         md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
                         md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                        md.setProperty("/acq_department_code", oData.results[0].acq_department_code);
+                        md.setProperty("/acq_department_code_nm", oData.results[0].acq_department_code_nm);
                         md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
                         md.setProperty("/import_company_code", oData.results[0].import_company_code);
                         md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
@@ -108,6 +116,8 @@ sap.ui.define([
                     }else{
                         md.setProperty("/investment_ecst_type_code", "");
                         md.setProperty("/investment_ecst_type_code_nm", "");
+                        md.setProperty("/acq_department_code", "");
+                        md.setProperty("/acq_department_code_nm", "");
                         md.setProperty("/accounting_department_code", "");
                         md.setProperty("/import_company_code","");
                         md.setProperty("/import_company_code_nm", "");
@@ -263,7 +273,29 @@ sap.ui.define([
             }
 
         },
-        
+        // 부서 버튼 클릭 
+        onValueHelpRequestedDept : function(){ 
+            var that = this;
+            this.deptSelection.openDeptSelectionPop(this, function(data){
+                console.log("data " , data[0]);
+                that.setDept(data[0].oData);
+            });
+        } ,
+        setDept : function (data){
+            var oModel = this.getModel("mdCommon").getData();
+          // acq_department_code 
+          // acq_department_code_nm
+ 
+          
+        },
+
+
+
+
+
+
+
+
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
@@ -452,6 +484,7 @@ sap.ui.define([
 
                 var account_code = mModel.getData().account_code;
                 var investment_ecst_type_code =  mModel.getData().investment_ecst_type_code;
+                var acq_department_code =  mModel.getData().acq_department_code;
                 var accounting_department_code =  mModel.getData().accounting_department_code;
                 var project_code =  mModel.getData().project_code;
                 var import_company_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_code;
@@ -469,6 +502,7 @@ sap.ui.define([
                         , mold_id : item.mold_id 
                         , account_code : account_code 
                         , investment_ecst_type_code : investment_ecst_type_code 
+                        , acq_department_code : acq_department_code 
                         , accounting_department_code : accounting_department_code 
                         , import_company_code : import_company_code 
                         , project_code : project_code 
@@ -496,6 +530,7 @@ sap.ui.define([
                         , mold_id : item.mold_id 
                         , account_code : account_code 
                         , investment_ecst_type_code : investment_ecst_type_code 
+                        , acq_department_code : acq_department_code
                         , accounting_department_code : accounting_department_code 
                         , import_company_code : import_company_code 
                         , project_code : project_code 
@@ -508,18 +543,7 @@ sap.ui.define([
                     });
                 });
             }
-
-
             this._commonDataSettingAndSubmit();
         }
-
-
-
-        
-
-
-
-        /** PO Item End */
-
     });
 });
