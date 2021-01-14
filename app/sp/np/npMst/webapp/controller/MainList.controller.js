@@ -28,8 +28,7 @@ sap.ui.define([
     'sap/m/SearchField',
     "ext/lib/util/ValidatorUtil",
     "sap/f/library",
-    "ext/lib/util/ControlUtil",
-    "ext/dp/util/control/ui/MaterialMasterDialog"
+    "ext/lib/util/ControlUtil"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -64,8 +63,7 @@ sap.ui.define([
         SearchField,
         ValidatorUtil,
         library,
-        ControlUtil,
-        MaterialMasterDialog
+        ControlUtil
     ) {
         "use strict";
         var that;
@@ -241,28 +239,28 @@ sap.ui.define([
                 }
             },
 
-            vhMatrialCode: function (oEvent) {
-                var materialItem;
+            // vhMatrialCode: function (oEvent) {
+            //     var materialItem;
 
-                 if(!this.oSearchMultiMaterialMasterDialog){
-                    this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
-                        title: "Choose MaterialMaster",
-                        MultiSelection: true,
-                        items: {
-                            filters: [
-                                new Filter("tenant_id", "EQ", "L2100")
-                            ]
-                        }
-                    });
-                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
-                        materialItem = oEvent.mParameters.item;
-                        //console.log("materialItem : ", materialItem);
-                        that.byId("search_material_code").setValue(materialItem.material_code);
+            //      if(!this.oSearchMultiMaterialMasterDialog){
+            //         this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+            //             title: "Choose MaterialMaster",
+            //             MultiSelection: true,
+            //             items: {
+            //                 filters: [
+            //                     new Filter("tenant_id", "EQ", "L2100")
+            //                 ]
+            //             }
+            //         });
+            //         this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+            //             materialItem = oEvent.mParameters.item;
+            //             //console.log("materialItem : ", materialItem);
+            //             that.byId("search_material_code").setValue(materialItem.material_code);
 
-                    }.bind(this));
-                }
-                this.oSearchMultiMaterialMasterDialog.open();
-            },
+            //         }.bind(this));
+            //     }
+            //     this.oSearchMultiMaterialMasterDialog.open();
+            // },
 
             /**
                  * Rounds the number unit value to 2 digits

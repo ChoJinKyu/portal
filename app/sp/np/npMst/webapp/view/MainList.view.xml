@@ -155,7 +155,8 @@
                             </VBox>
                             <VBox>
                                 <Label text="Matrial" labelFor="search_material_code"></Label>
-                                <Input id="search_material_code" type="Text" value="" placeholder="" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhMatrialCode"/>
+                                <Input id="search_material_code" type="Text" value="" placeholder="" />
+                                <!-- showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhMatrialCode" -->
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
