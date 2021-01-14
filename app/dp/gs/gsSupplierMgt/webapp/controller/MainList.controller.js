@@ -330,7 +330,7 @@ sap.ui.define([
             var iTenantId = "L2100",
                 iSn = this.byId("ssn").getValue().trim();
             if(this.isValNull(iSn)) {
-                MessageBox.warning("소싱공급업체별칭을 입력해주세요.");
+                MessageBox.information("소싱공급업체별칭을 입력해주세요.");
                 return false;
             }                
             
