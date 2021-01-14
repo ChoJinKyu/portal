@@ -54,7 +54,7 @@ entity Sc_Nego_Headers {
         close_date_ext_enabled_hours    : Integer            @title : '마감일자동연장가능시간수';
         close_date_ext_enabled_count    : Integer            @title : '마감일자동연장가능횟수';
         actual_extension_count          : Integer            @title : '실제연장횟수';
-        remaining_hours                 : Decimal(28, 9)     @title : '잔여시간';
+        remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
         note_content                    : LargeBinary        @title : '노트내용';
         award_type_code                 : String(100)        @title : '낙찰유형코드';
         target_amount_config_flag       : String(1)          @title : '목표금액설정여부';

@@ -27,8 +27,8 @@ entity Sc_Nego_Item_Prices {
         material_desc                : String(240)         @title : '자재내역';
         //    material_spec : String(1000)   @title: '자재규격' ;
         specification                : String(30)          @title : '사양';
-        bpa_price                    : Decimal(28, 9)      @title : 'BPA Price';
-        detail_net_price             : Decimal(28, 9)      @title : '상세단가';
+        bpa_price                    : Decimal(28, 2)      @title : 'BPA Price';
+        detail_net_price             : Decimal(28, 2)      @title : '상세단가';
         recommend_info               : String(30)          @title : '추천정보';
         group_id                     : String(30)          @title : 'Group Id';
         sparts_supply_type           : String(30)          @title : 'S/Parts Supply Type';
@@ -51,10 +51,10 @@ entity Sc_Nego_Item_Prices {
         exrate_type_code             : String(15)          @title : '환율유형코드';
         exrate_date                  : String(15)          @title : '환율일자';
         //    exrate : String(15)   @title: '환율' ;
-        bidding_start_net_price      : Decimal(28, 9)      @title : '입찰시작단가';
+        bidding_start_net_price      : Decimal(28, 2)      @title : '입찰시작단가';
         bidding_start_net_price_flag : String(1)           @title : '입찰시작단가디스플레이여부';
-        bidding_target_net_price     : Decimal(28, 9)      @title : '입찰목표단가';
-        current_price                : Decimal(28, 9)      @title : '현재가격';
+        bidding_target_net_price     : Decimal(28, 2)      @title : '입찰목표단가';
+        current_price                : Decimal(28, 2)      @title : '현재가격';
         note_content                 : LargeBinary         @title : '노트내용';
         //    award_quantity : Decimal(28,3)   @title: '낙찰수량' ;
         pr_number                    : String(50)          @title : '구매요청번호';
