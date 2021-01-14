@@ -194,7 +194,7 @@ sap.ui.define([
                     oMasterModel.submitChanges({
                     success: function (ok) {
                         oView.setBusy(false);
-                        that.onNavBack.call(that);
+                        that.onPageNavBackButtonPress();
                         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                         MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                     }

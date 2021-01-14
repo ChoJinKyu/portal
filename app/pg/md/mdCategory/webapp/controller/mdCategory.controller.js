@@ -137,6 +137,7 @@ sap.ui.define([
         },
       
       onAdd: function () {
+          debugger;
             var orgCode = this.getView().byId("searchChain").setSelectedItem().getSelectedKey();
             if(orgCode=="" || orgCode==null){
                 MessageToast.show("사업본부를 설정해주세요.");
@@ -151,8 +152,12 @@ sap.ui.define([
             if(oModel.oData){
                 oDataArr = oModel.getProperty("/MdCategory"); 
                 oDataLength = oDataArr.length;
-                lastCtgrSeq = oDataArr[oDataLength-1].spmd_category_sort_sequence;
-                ctgrSeq = String(parseInt(lastCtgrSeq)+1);
+                if(oDataLength>0){
+                    lastCtgrSeq = oDataArr[oDataLength-1].spmd_category_sort_sequence;
+                    ctgrSeq = String(parseInt(lastCtgrSeq)+1);
+                }else{
+                    ctgrSeq="1";
+                }
             }
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout, 
