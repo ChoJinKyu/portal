@@ -371,7 +371,11 @@ public class VpMappingServiceV4 implements EventHandler {
                 v_row.setReturnCode(v_rs.getString("return_code"));
                 v_row.setReturnMsg(v_rs.getString("return_msg"));
                 log.info(v_rs.getString("return_code"));
-                log.info(v_rs.getString("return_msg"));                
+                log.info(v_rs.getString("return_msg"));  
+                if("NG".equals(v_rs.getString("return_code"))){
+                    log.info("### Call Proc Error!!  ###");
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
+                }              
                 v_result.add(v_row);
                 return v_row;
             }
