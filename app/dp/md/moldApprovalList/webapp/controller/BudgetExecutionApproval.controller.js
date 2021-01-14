@@ -282,20 +282,10 @@ sap.ui.define([
             });
         } ,
         setDept : function (data){
-            var oModel = this.getModel("mdCommon").getData();
-          // acq_department_code 
-          // acq_department_code_nm
- 
-          
+         var md = this.getModel('mdCommon');
+             md.setProperty("/acq_department_code", data.department_id);
+             md.setProperty("/acq_department_code_nm", data.department_local_name);     
         },
-
-
-
-
-
-
-
-
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
