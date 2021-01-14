@@ -9,8 +9,7 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m" 
-    xmlns:lib-m="ext.lib.control.m"
+    xmlns="sap.m"
 	height="100%">
 
 	<uxap:ObjectPageLayout 
@@ -145,7 +144,7 @@
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
                                     <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" />
-                                    <!-- <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" /> -->
+                                    <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" />
                                     <!-- <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" /> -->
                                     <Button id="btnItemDelete"   type="Transparent" text="Delete"  press=".onItemDeleteRow" />
                                 </OverflowToolbar>
@@ -191,7 +190,10 @@
                                 <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
                                     <Label text="단위" required="true"/>           
                                     <table:template>
-                                        <Input maxLength="3" value="{viewModel>pr_unit}"/>
+                                        <Input maxLength="3" 
+                                            value="{viewModel>pr_unit}"
+                                            showValueHelp="true" 
+                                            valueHelpRequest=".onOpenUomDialog" />
                                     </table:template>
                                 </table:Column>   
                                 <table:Column id="c_delivery_request_date" width="10em" hAlign="Center">
