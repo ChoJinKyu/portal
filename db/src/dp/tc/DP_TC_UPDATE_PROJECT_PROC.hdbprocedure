@@ -83,6 +83,7 @@ BEGIN
                  , PRODUCTION_COMPANY_CODE = loop_project.PRODUCTION_COMPANY_CODE
                  , QUOTATION_PROJECT_CODE = loop_project.QUOTATION_PROJECT_CODE
                  , PROJECT_CREATE_DATE = loop_project.PROJECT_CREATE_DATE
+                 , PROJECT_STATUS_CODE = loop_project.PROJECT_STATUS_CODE
                  , PROJECT_GRADE_CODE = loop_project.PROJECT_GRADE_CODE
                  , PROJECT_LEADER_EMPNO = loop_project.PROJECT_LEADER_EMPNO
                  , BUYER_EMPNO = loop_project.BUYER_EMPNO

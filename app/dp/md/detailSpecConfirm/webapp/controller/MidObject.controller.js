@@ -17,7 +17,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Item, Validator, SupplierSelection) {
     "use strict";
     
-    var oTransactionManager;
+    var oTransactionManager = null;
 
 	return BaseController.extend("dp.md.detailSpecConfirm.controller.MidObject", {
 
@@ -52,6 +52,8 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "spec");
 
             oTransactionManager = new TransactionManager();
+            oTransactionManager.aDataModels.length = 0;
+
 			oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("schedule"));
             oTransactionManager.addDataModel(this.getModel("spec"));
@@ -193,6 +195,8 @@ sap.ui.define([
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
+
+            console.log(oTransactionManager.aDataModels);
 
             MessageBox.confirm( this.getModel('I18N').getText('/NCM00001') || 'NCM00001', {
                 title : "Draft",

@@ -155,23 +155,8 @@
                             </VBox>
                             <VBox>
                                 <Label text="Matrial" labelFor="search_material_code"></Label>
-                                <lib-m:CodePicker id="search_material_code"
-                                    placeholder="Enter a material name"
-                                    keyField="material_code"
-                                    textField="material_desc"
-                                    suggestionItems="{
-                                        path: '/',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
-                                        ],
-                                        serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
-                                        entityName: 'VpMaterialMst'
-                                    }" value="{matlist>material_code}" change=".materialChg" enabled="{= ${matlist>_row_state_} === 'C' }">
-                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a material"
-                                        keyFieldHeaderText="Material ID" textFieldHeaderText="Material"/>
-                                </lib-m:CodePicker>
-                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
+                                <Input id="search_material_code" type="Text" value="" placeholder="" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhMatrialCode"/>
+                                <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Document Type" labelFor="search_document"></Label>
@@ -192,11 +177,21 @@
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Net Price Type" labelFor="search_net_price"></Label>
-                                <ComboBox id="search_net_price" selectedKey="" width="auto">
-                                    <core:Item key="A" text="양산"/>
-                                    <core:Item key="B" text="샘플"/>                                                            
-                                </ComboBox>  
+                                <Label text="Net Price Type" labelFor="search_net_price_type"></Label>
+                                <ComboBox id="search_net_price_type" width="100%"
+                                    items="{
+                                        path: 'util>/Code',
+                                        filters: [
+                                            {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_TYPE'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                    </items>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M3 S12" />
+                                    </layoutData>
+                                </ComboBox>
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>
@@ -214,17 +209,18 @@
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <VBox>
-                    <table:Table
-                        id="mainTable"
-                        selectionMode="MultiToggle"
-                        fixedColumnCount="7"
-                        rows="{path: 'list>/SpNetpriceView'}"
-                        cellClick=".onCellClick"
-                        rowSelectionChange=".onCheck">
+                <table:Table
+                    id="mainTable"
+                    selectionMode="MultiToggle"
+                    fixedColumnCount="7"
+                    rows="{path: 'list>/SpNetpriceView'}"
+                    cellClick=".onCellClick"
+                    rowSelectionChange=".onCheck"
+                    visibleRowCountMode="Auto">
                         <table:extension>
                             <OverflowToolbar>
                                 <Title text="List ({= ${list>/SpNetpriceView}.length || 0})" level="H2"/>
+                                <ToolbarSpacer/>
                                 <ToolbarSeparator/>
                                 <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                                     <layoutData>
@@ -232,162 +228,161 @@
                                     </layoutData>
                                 </Button>
                             </OverflowToolbar>
-                        </table:extension> 
-                        <table:columns>
-                            <table:Column label="Oeration Org Code" width="8rem" filterProperty="org_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>org_code}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Operation Org Name" width="8rem" filterProperty="org_name" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>org_name}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Doc Type" width="8rem" filterProperty="net_price_document_type_name" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>net_price_document_type_name}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Source" width="8rem" filterProperty="net_price_source_name" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>net_price_source_name}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Supplier Code" width="8rem" filterProperty="supplier_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>supplier_code}"/>
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Supplier Name" width="8rem" filterProperty="supplier_name" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>supplier_name}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Material Code" width="8rem" filterProperty="material_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>material_code}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Description" width="12rem" filterProperty="material_desc" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>material_desc}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Market" width="8rem" filterProperty="market_name" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>market_name}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="UOM" width="5rem" filterProperty="uom_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>uom_code}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Qty" width="5rem" filterProperty="purchasing_quantity" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>purchasing_quantity}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Currency" width="5rem" filterProperty="currency_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>currency_code}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Net Price" width="5rem" filterProperty="net_price" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>net_price}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Price Unit" width="5rem" filterProperty="material_price_unit" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>material_price_unit}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Conversion Price" width="5rem" filterProperty="conversion_net_price" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>conversion_net_price}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Amount" width="5rem" filterProperty="purchasing_amount" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>purchasing_amount}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Line Type" width="5rem" filterProperty="line_type_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>line_type_code}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Net Price Type" width="8rem" filterProperty="x3" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>x3}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Sample Flag" width="8rem" filterProperty="x4" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>x4}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Effective Start Date" width="8rem" filterProperty="effective_start_date" hAlign="Center">
-                                <table:template>
-                                    <Text text="{path: 'list>effective_start_date', formatter: '.cvtStringToDate'}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Effective End Date" width="8rem" filterProperty="effective_end_date" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>}" wrapping="false" />
-                                    <Text text="{path: 'list>effective_end_date', formatter: '.cvtStringToDate'}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Payment Terms" width="8rem" filterProperty="payterms_name" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>payterms_name}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Incoterms" width="8rem" filterProperty="incoterms" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>incoterms}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Tax" width="8rem" filterProperty="tax_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>tax_code}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Customs Rate" width="8rem" filterProperty="customs_rate" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>customs_rate}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Origin" width="8rem" filterProperty="origin_code" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>origin_code}:{list>origin_name}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="ERP Net Price No" width="8rem" filterProperty="erp_pur_netprice_number" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>erp_pur_netprice_number}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="ERP Net Detail No" width="8rem" filterProperty="erp_pur_netprice_item_no" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>erp_pur_netprice_item_no}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Creator" width="8rem" filterProperty="create_user_id" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>create_user_id}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                            <table:Column label="Creation Date" width="10rem" filterProperty="system_create_dtm" hAlign="Center">
-                                <table:template>
-                                    <Text text="{list>system_create_dtm}" wrapping="false" />
-                                </table:template>
-                            </table:Column>
-                        </table:columns>
-                    </table:Table>      
-                </VBox>
+                    </table:extension> 
+                    <table:columns>
+                        <table:Column label="Oeration Org Code" width="8rem" filterProperty="org_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>org_code}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Operation Org Name" width="8rem" filterProperty="org_name" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>org_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Doc Type" width="8rem" filterProperty="net_price_document_type_name" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>net_price_document_type_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Source" width="8rem" filterProperty="net_price_source_name" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>net_price_source_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Supplier Code" width="8rem" filterProperty="supplier_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>supplier_code}"/>
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Supplier Name" width="8rem" filterProperty="supplier_name" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>supplier_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Material Code" width="8rem" filterProperty="material_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>material_code}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Description" width="12rem" filterProperty="material_desc" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>material_desc}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Market" width="8rem" filterProperty="market_name" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>market_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="UOM" width="5rem" filterProperty="uom_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>uom_code}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Qty" width="5rem" filterProperty="purchasing_quantity" hAlign="Center">
+                            <table:template>
+                                <Text text="{path : 'list>purchasing_quantity', formatter: '.numberUnit'}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Currency" width="5rem" filterProperty="currency_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>currency_code}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Net Price" width="5rem" filterProperty="net_price" hAlign="Center">
+                            <table:template>
+                                <Text text="{path: 'list>net_price', formatter: '.numberUnit'}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Price Unit" width="5rem" filterProperty="material_price_unit" hAlign="Center">
+                            <table:template>
+                                <Text text="{path: 'list>net_price', formatter: '.numberUnit'}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Conversion Price" width="5rem" filterProperty="conversion_net_price" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>conversion_net_price}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Amount" width="5rem" filterProperty="purchasing_amount" hAlign="Center">
+                            <table:template>
+                                <Text text="{path: 'list>purchasing_amount', formatter: '.numberUnit'}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Line Type" width="5rem" filterProperty="line_type_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>line_type_code}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Net Price Type" width="8rem" filterProperty="x3" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>net_price_type_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Sample Flag" width="8rem" filterProperty="x4" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>x4}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Effective Start Date" width="8rem" filterProperty="effective_start_date" hAlign="Center">
+                            <table:template>
+                                <Text text="{path: 'list>effective_start_date', formatter: '.cvtStringToDate'}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Effective End Date" width="8rem" filterProperty="effective_end_date" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>}" wrapping="false" />
+                                <Text text="{path: 'list>effective_end_date', formatter: '.cvtStringToDate'}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Payment Terms" width="8rem" filterProperty="payterms_name" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>payterms_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Incoterms" width="8rem" filterProperty="incoterms" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>incoterms}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Tax" width="8rem" filterProperty="tax_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>tax_code}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Customs Rate" width="8rem" filterProperty="customs_rate" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>customs_rate}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Origin" width="8rem" filterProperty="origin_code" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>origin_code}:{list>origin_name}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="ERP Net Price No" width="8rem" filterProperty="erp_pur_netprice_number" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>erp_pur_netprice_number}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="ERP Net Detail No" width="8rem" filterProperty="erp_pur_netprice_item_no" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>erp_pur_netprice_item_no}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Creator" width="8rem" filterProperty="create_user_id" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>create_user_id}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                        <table:Column label="Creation Date" width="10rem" filterProperty="system_create_dtm" hAlign="Center">
+                            <table:template>
+                                <Text text="{list>system_create_dtm}" wrapping="false" />
+                            </table:template>
+                        </table:Column>
+                    </table:columns>
+                </table:Table>      
             </f:content>
             <!-- DynamicPage Footer -->
             <f:footer>

@@ -9,6 +9,7 @@ sap.ui.define([
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
     "sap/ui/core/Fragment",
     "sap/f/LayoutType",
     "sap/m/MessageBox",
@@ -18,8 +19,9 @@ sap.ui.define([
     ,"sap/ui/core/syncStyleClass" 
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
-], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
-            , LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
+    , "dp/util/control/ui/MaterialMasterDialog"
+], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Sorter
+            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label, MaterialMasterDialog) {
     
     "use strict";
     
@@ -52,6 +54,7 @@ sap.ui.define([
 
             //this.setModel(new JSONModel(), "viewModel");
 
+
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
             this.setModel(new JSONModel(), "viewModel");       
@@ -60,6 +63,7 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
 
             this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
+            this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
             
             
             //this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
@@ -81,40 +85,108 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) { 
             var oArgs = oEvent.getParameter("arguments");
-            var sTenantId = oArgs.tenantId;
+
+            if(oArgs.tenantId && oArgs.tenantId !== ""){
+                this.tenantId = oArgs.tenantId;
+            }else{
+                this.tenantId = "L2100"
+            } 
+
+            if(oArgs.company_code && oArgs.company_code !== ""){
+                this.company_code = oArgs.company_code;
+            }else{
+                this.company_code = "LGCKR"
+            } 
+
+            if(oArgs.pr_number && oArgs.pr_number !== ""){
+                this.pr_number = oArgs.pr_number;
+            }else{
+                this.pr_number = "NEW"
+            } 
             
+            if(oArgs.vMode  && oArgs.vMode  !== ""){
+                this.edit_mode = oArgs.vMode;
+            }else{
+                this.edit_mode = "NEW"
+            }      
+
             // 초기 데이터 설정
-            if(sTenantId && sTenantId === "new") {
+            if(this.pr_number === "NEW") {
                 this._fnSetCreateData(oArgs);
             }else{
-                this._fnReadPrMaster(oArgs);
+                 this._fnReadPrMaster(oArgs);
+                 this._fnReadPrDetail(oArgs);
             }
+
 
             //this._createViewBindData(oArgs); 
 			//this._onLoadApprovalRow();
             //this.oSF = this.getView().byId("searchField");
 
-            // 템플릿 리스트 조회
-            this._fnGetPrTemplateList();
-
+            
             // 텍스트 에디터
             this.setRichEditor();
         },
         
+        /**
+         * View 항목 visible 세팅
+         */
+        _fnSetVisible: function(){
+            var that = this,
+                oView = this.getView(),
+                oServiceModel = this.getModel(),
+                oViewModel = this.getModel('viewModel'),
+                oContModel = this.getModel("contModel");
+            var oPrMstData = oViewModel.getProperty("/PrMst");
+
+            var oPrDtlVisible = {
+                material_code: true,
+                material_group_code: true,
+                sloc_code: true
+            };
+
+            //구매유형 : 공사
+            if(oPrMstData.pr_type_code_2 === "TC20003"){
+                oPrDtlVisible.material_code = false;
+                oPrDtlVisible.material_group_code = false;
+                oPrDtlVisible.sloc_code = false;
+            }
+
+            oContModel.setProperty("/Pr_Dtl", oPrDtlVisible);
+        },
+
+        /**
+         * Edit Mode setting
+         */
+        _fnSetEditMode: function(){
+            var that = this,
+                oView = this.getView(),
+                oViewModel = this.getModel('viewModel');
+            var oPrMstData = oViewModel.getProperty("/PrMst");
+
+            if(this.edit_mode === "NEW" || this.edit_mode === "COPY"){
+                this.pr_number = "NEW";
+                oPrMstData.pr_number = "NEW";
+                oPrMstData.request_date = new Date();
+                oViewModel.setProperty("/PrMst", oPrMstData);
+            }
+        },
+
+        /**
+         * 구매요청 템플릿 리스트 조회
+         */
         _fnGetPrTemplateList: function() {
             var that = this,
                 oView = this.getView(),
                 oServiceModel = this.getModel(),
-                oDetailModel = this.getModel('detailModel'),
                 oViewModel = this.getModel('viewModel');
-
-            var oDetailData = oDetailModel.getProperty("/");
+            var oPrMstData = oViewModel.getProperty("/PrMst");
 
             var aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("pr_type_code", FilterOperator.EQ, oDetailData.pr_type_code),
-                    new Filter("pr_type_code_2", FilterOperator.EQ, oDetailData.pr_type_code_2),
-                    new Filter("pr_type_code_3", FilterOperator.EQ, oDetailData.pr_type_code_3)
+                    new Filter("tenant_id", FilterOperator.EQ, oPrMstData.tenant_id),
+                    new Filter("pr_type_code", FilterOperator.EQ, oPrMstData.pr_type_code),
+                    new Filter("pr_type_code_2", FilterOperator.EQ, oPrMstData.pr_type_code_2),
+                    new Filter("pr_type_code_3", FilterOperator.EQ, oPrMstData.pr_type_code_3)
                 ];
 
             oServiceModel.read("/Pr_TMapView", {
@@ -124,12 +196,12 @@ sap.ui.define([
 
                     // PR 템플릿 정보 세텅
                     oData.results.some(function(oPrTemplateData){
-                        if(oPrTemplateData.pr_template_number === oDetailData.pr_template_number){
-                            oDetailData.pr_template_name =  oPrTemplateData.pr_template_name;
-                            oDetailData.pr_type_name =  oPrTemplateData.pr_type_name;
-                            oDetailData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
-                            oDetailData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
-                            oDetailModel.setProperty("/",oDetailData);
+                        if(oPrTemplateData.pr_template_number === oPrMstData.pr_template_number){
+                            oPrMstData.pr_template_name =  oPrTemplateData.pr_template_name;
+                            oPrMstData.pr_type_name =  oPrTemplateData.pr_type_name;
+                            oPrMstData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
+                            oPrMstData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
+                            oViewModel.setProperty("/PrMst",oPrMstData);
                             return true;
                         }
                     });
@@ -149,8 +221,10 @@ sap.ui.define([
             var oViewModel = this.getModel('viewModel');
                         
             var oNewMasterData = {
-                tenant_id: "L2100",
-                company_code: "LGCKR",
+                //tenant_id: "L2100",
+                //company_code: "LGCKR",
+                tenant_id: this.tenantId,
+                company_code: this.company_code,
                 pr_number: "NEW",
                 pr_type_code: oArgs.pr_type_code,
                 pr_type_code_2: oArgs.pr_type_code_2,
@@ -161,9 +235,9 @@ sap.ui.define([
                 requestor_name: "김구매",
                 requestor_department_code: "10010",
                 requestor_department_name: "생산1팀",
-                request_date: new Date(),
+                request_date: oToday,
                 pr_create_status_code: "10",
-                pr_header_text: "테스트 구매요청",
+                pr_header_text: "구매요청",
                 approval_flag: false,
                 approval_number: "",
                 approval_contents: "",
@@ -176,17 +250,26 @@ sap.ui.define([
                 pr_type_name: "",
                 pr_type_name_2: "",
                 pr_type_name_3: "",
-                pr_desc: "",
-                details: []
+                pr_desc: ""
             };
 
-            this.setModel(new JSONModel(oNewMasterData), "detailModel");
+            oViewModel.setProperty("/PrMst", oNewMasterData);
+            oViewModel.setProperty("/Pr_Dtl", []);
+
+            // 템플릿 리스트 조회
+            this._fnGetPrTemplateList();
+
+            // 항목 Visible setting
+            this._fnSetVisible();
         },
 
         _fnReadPrMaster : function(oArgs){
+            var that = this;
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenantId));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, oArgs.company_code));
             aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
+
 
             var aSorter = [];
             aSorter.push(new Sorter("pr_number", false));
@@ -197,12 +280,48 @@ sap.ui.define([
                 filters : aFilters,
                 sorters : aSorter,
                 success : function(data){
-                    oViewModel.setProperty("/PrMst", data.results);
-                    console.log(data.results);
-                    // oCodeMasterTable.setBusy(false);
+                    if(data.results.length > 0) {
+                         oViewModel.setProperty("/PrMst", data.results[0]);
+
+                         // 템플릿 리스트 조회
+                        that._fnGetPrTemplateList();
+                        // 항목 Visible setting
+                        that._fnSetVisible();
+                        // 화면 Edit Mode setting
+                        that._fnSetEditMode();
+                    }
                 },
                 error : function(data){
                     MessageToast.show("Pr_MstView read failed.");
+                }
+            });
+        },
+
+        _fnReadPrDetail : function(oArgs){
+             var that = this;
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenantId));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, oArgs.company_code));
+            aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
+ 
+            var aSorter = [];
+            aSorter.push(new Sorter("pr_number", false));
+
+            var oViewModel = this.getModel('viewModel');
+            var oServiceModel = this.getModel();
+            oServiceModel.read("/Pr_Dtl",{
+                filters : aFilters,
+                sorters : aSorter,
+                success : function(data){
+                    if(data.results.length > 0) {
+                        oViewModel.setProperty("/Pr_Dtl", data.results);
+                    } else {
+                        oViewModel.setProperty("/Pr_Dtl", []);
+                    }
+                    // oCodeMasterTable.setBusy(false);
+                },
+                error : function(data){
+                    MessageToast.show("Pr_Dtl read failed.");
                 }
             });
         },
@@ -211,16 +330,20 @@ sap.ui.define([
          * 품목 라인 추가
          */
         onItemAddRow: function () {
-            var oDetailModel = this.getModel("detailModel"),
-                aDetails = oDetailModel.getProperty("/details"),
+            var oViewModel = this.getModel("viewModel"),
+                aDetails = oViewModel.getProperty("/Pr_Dtl"),
                 oToday = new Date();
 
-            var itemNumber = aDetails.length + 1;
-
+            // 품목번호
+            var prItemNumber = 1;
+            if(aDetails) {
+                prItemNumber = aDetails.length + 1
+            }
+            
             aDetails.push({tenant_id:"L2100", 
                         company_code: "LGCKR", 
                         pr_number: "",
-                        pr_item_number: itemNumber,
+                        pr_item_number: prItemNumber+"",
                         org_type_code: "XX", 
                         org_code: "", 
                         buyer_empno: "", 
@@ -240,12 +363,37 @@ sap.ui.define([
                         remark: "",
                         sloc_code: ""
                         });
-            oDetailModel.refresh();
+            oViewModel.refresh();
         },
 
-        
-		/**
-		 * Event handler for saving page changes
+        /**
+         * 품목 삭제
+         */
+        onItemDeleteRow: function(){
+            var that = this,
+                oView = this.getView(),
+                oViewModel = this.getModel("viewModel"),
+                aDetails = oViewModel.getProperty("/Pr_Dtl"),
+                oPritemTable = oView.byId("pritemTable");
+
+            var aSelectedIndex = oPritemTable.getSelectedIndices();
+            if(aSelectedIndex.length > 0){
+                aSelectedIndex.reverse();
+                aSelectedIndex.forEach(function(item, idx){
+                    aDetails.splice(item, 1);
+                });
+
+                //품목번호 reset
+                aDetails.forEach(function(oItem, idx){
+                    oItem.pr_item_number = idx+1;
+                });
+                oViewModel.setProperty("/Pr_Dtl", aDetails);
+            }
+            oPritemTable.clearSelection();
+        },
+
+        /**
+		 * Save button press
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
@@ -264,7 +412,36 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 
-                        that._fnPrSave();
+                        that._fnPrSave("SAVE");
+
+						// oView.setBusy(true);
+						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
+						// 	me._toShowMode();
+						// 	oView.setBusy(false);
+                        //     MessageToast.show("Success to save.");
+						// }).catch(function(err){
+                        //     MessageBox.error("Error while saving.");
+						// });
+					};
+				}
+			});
+        },
+
+		/**
+		 * Draft Button press
+		 * @public
+		 */
+        onPageDraftButtonPress: function(){
+			var oView = this.getView(),
+                that = this;
+            
+			MessageBox.confirm("임시 저장 하시겠습니까 ?", {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+
+                        that._fnPrSave("DRAFT");
 
 						// oView.setBusy(true);
 						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
@@ -282,36 +459,157 @@ sap.ui.define([
         /**
          * 구매요청 저장
          */
-        _fnPrSave: function(){
+        _fnPrSave: function(pSaveFlag){
             var oView = this.getView();
             var that = this;
-            var oDetailModel = this.getModel("detailModel");
-            var oData = $.extend(true, {}, oDetailModel.getData());
+            //var oDetailModel = this.getModel("detailModel");
+            //var oData = $.extend(true, {}, oDetailModel.getData());
+            
+            var oViewModel = this.getModel("viewModel");
+            var oViewData = $.extend(true, {}, oViewModel.getData());
+
+            if(pSaveFlag === "SAVE"){
+                oViewData.PrMst.pr_create_status_code = "50";
+            }else{
+                oViewData.PrMst.pr_create_status_code = "10";
+            }
 
             //대표품목명
-            var prDesc = "";
-            if(oData.details.length === 0){
-                prDesc = oData.details[0].pr_desc;
-            }else{
-                prDesc = oData.details[0].pr_desc + ' 외 ' + (oData.details.length-1) + "건";
+            var pr_desc = "";
+            var prDtlCnt = oViewData.Pr_Dtl.length;
+            if(prDtlCnt > 0){
+                if(prDtlCnt === 1){
+                    pr_desc = oViewData.Pr_Dtl[0].pr_desc;
+                }else{
+                    pr_desc = oViewData.Pr_Dtl[0].pr_desc + ' 외 ' + (prDtlCnt-1) + "건";
+                }
             }
-            oData.pr_desc = prDesc;
+            oViewData.PrMst.pr_desc = pr_desc;
+                        
+            //품의내용
+            // var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            // oViewData.PrMst.approval_contents = approvalContents;
+
+            
+            // Master data
+            var oMaster = oViewData.PrMst;
+            var oMasterData = {
+                tenant_id: oMaster.tenant_id,
+                company_code: oMaster.company_code,
+                pr_number: oMaster.pr_number,
+                pr_type_code: oMaster.pr_type_code,
+                pr_type_code_2: oMaster.pr_type_code_2,
+                pr_type_code_3: oMaster.pr_type_code_3,
+                pr_template_number:oMaster.pr_template_number,
+                pr_create_system_code: "SPPCAP",
+                requestor_empno: oMaster.requestor_empno,
+                requestor_name: oMaster.requestor_name,
+                requestor_department_code: oMaster.requestor_department_code,
+                requestor_department_name: oMaster.requestor_department_name,
+                request_date: new Date(),
+                pr_create_status_code: oMaster.pr_create_status_code,
+                pr_header_text: oMaster.pr_header_text,
+                approval_flag: false,
+                approval_number:oMaster.approval_number,
+                approval_contents: oMaster.approval_contents,
+                erp_interface_flag: false,
+                erp_pr_type_code: oMaster.erp_pr_type_code,
+                erp_pr_number: oMaster.erp_pr_number,
+                local_create_dtm: oMaster.local_create_dtm,
+                local_update_dtm: oMaster.local_update_dtm,
+                pr_template_name: oMaster.pr_template_name,
+                pr_type_name: oMaster.pr_type_name,
+                pr_type_name_2: oMaster.pr_type_name_2,
+                pr_type_name_3: oMaster.pr_type_name_3,
+                pr_desc: oMaster.pr_desc,
+                details: []
+            };
+
+            // Detail data
+            var drdateY, drdateM, drdateD, delivery_request_date;
+            var aDetails = [];
+            var aViewDataPrDtl = oViewData.Pr_Dtl;
+            if(aViewDataPrDtl.length > 0){
+                aViewDataPrDtl.forEach(function(item, idx){
+
+                    if(item.delivery_request_date && item.delivery_request_date != ""){
+                        drdateY = item.delivery_request_date.getFullYear();
+                        drdateM = item.delivery_request_date.getMonth() + 1;
+                        drdateD = item.delivery_request_date.getDate();
+                        delivery_request_date = drdateY + "-" + (drdateM >= 10 ? drdateM : "0"+drdateM) + "-" + (drdateD >= 10 ? drdateD : "0"+drdateD);
+                    }else{
+                        delivery_request_date = "";
+                    }
+                    
+
+                    aDetails.push({
+                        tenant_id: item.tenant_id,
+                        company_code: item.company_code,
+                        pr_number: oMasterData.pr_number,
+                        pr_item_number: ++idx + "",
+                        org_type_code: item.org_type_code,
+                        org_code: item.org_code, 
+                        buyer_empno: item.buyer_empno,
+                        currency_code: item.currency_code,
+                        estimated_price: item.estimated_price, 
+                        material_code: item.material_code,
+                        material_group_code: item.material_group_code,
+                        pr_desc: item.pr_desc,                        
+                        pr_quantity: item.pr_quantity,
+                        pr_unit: item.pr_unit,
+                        requestor_empno: item.requestor_empno,
+                        requestor_name: item.requestor_name,
+                        delivery_request_date: delivery_request_date,
+                        purchasing_group_code: item.purchasing_group_code,
+                        price_unit: item.price_unit,
+                        pr_progress_status_code: item.pr_progress_status_code,
+                        remark: item.remark,
+                        sloc_code: item.sloc_code
+                        });
+                });
+            }
+
+            oMasterData.details = aDetails;
+
+
+            //대표품목명
+            // var pr_desc = "";
+            // var prDtlCnt = oViewData.Pr_Dtl.length;
+            // if(prDtlCnt === 0){
+            //     pr_desc = oViewData.Pr_Dtl[0].pr_desc;
+            // }else{
+            //     pr_desc = oViewData.Pr_Dtl[0].pr_desc + ' 외 ' + (prDtlCnt-1) + "건";
+            // }
+            // oViewData.pr_desc = pr_desc;
 
             //품의내용
-            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            oData.approval_contents = approvalContents;
+            //var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            //oViewData.PrMst.approval_contents = approvalContents;
 
             //Send data
-            var sendData = {}, masterDatas=[];
-            masterDatas.push(oData);
-            sendData.inputData = masterDatas;
+            // var oPrData = {};
+            // oPrData = oViewData.PrMst;
+            // oPrData.details = oViewData.Pr_Dtl;
 
+            // var sendData = {}, masterDatas=[];
+            // masterDatas.push(oPrData);
+            // sendData.inputData = masterDatas;
+
+
+            // 전송 데이터 세팅
+            var sendData = {}, aInputData=[];
+            aInputData.push(oMasterData);
+            sendData.inputData = aInputData;
+
+            // Call ajax
             that._fnCallAjax(
                 sendData,
                 "SavePrCreateProc",
                 function(result){
                     oView.setBusy(false);
-                    that._fnNavigationMainPage();
+                    if(result && result.value && result.value.length > 0 && result.value[0].return_code === "0000") {
+                        that._fnNavigationMainPage();
+                    }
                 }
             );
         },
@@ -319,9 +617,7 @@ sap.ui.define([
         /**
          * Ajax 호출 함수
          */
-        _fnCallAjax: function (sendData, targetName , callback) {
-            console.log("send data >>>> ", sendData);
-            
+        _fnCallAjax: function (sendData, targetName , callback) {            
             var that = this;            
             var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/op.PrCreateV4Service/" + targetName;
 
@@ -352,24 +648,23 @@ sap.ui.define([
         _fnNavigationMainPage: function(){
             var sLayout = LayoutType.OneColumn;
             this.getRouter().navTo("mainPage", {layout: sLayout});
+            
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
         },
-
                 
         /**
          * 이전 화면으로 이동
          */
         onNavigationBackPress: function () {
-
-            this._fnNavigationMainList();
-
-			// var sPreviousHash = History.getInstance().getPreviousHash();
-			// if (sPreviousHash !== undefined) {
-			// 	// eslint-disable-next-line sap-no-history-manipulation
-			// 	history.go(-1);
-			// } else {
-			// 	this._fnNavigationMainList();
-			// }
+            this._fnNavigationMainPage();
 		},
+        
+        /**
+         * Fotter : Cancel 버튼 클릭
+         */
+        onPageCancelButtonPress: function () {
+            this._fnNavigationMainPage();
+        },
         
         /**
          * Dialog Close
@@ -381,48 +676,85 @@ sap.ui.define([
             });
         },
 
-        //==================== Material Code Dialog 시작 ====================
+        //==================== Material Code Dialog 시작 ====================        
         /**
          * 자재정보 검색 MaterialDialog.fragment open
          */
 		onOpenMaterialDialog: function (oEvent) {
-            sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
-            var oView = this.getView();
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+                //oViewModel = this.getModel("viewModel");
+            //var oSelectedData = oViewModel.getProperty(sSelectedPath);
 
-            var oSampleData = {
-                    "familyMaterialCode": [],
-                    "materialCode": [{"org_code": "A001", "material_code": "A001-01-01"},
-                                    {"org_code": "A002", "material_code": "A001-01-02"},
-                                    {"org_code": "A003", "material_code": "A001-01-03"},
-                                    {"org_code": "A004", "material_code": "A001-01-04"},
-                                    {"org_code": "A005", "material_code": "A001-01-05"},
-                                    {"org_code": "A005", "material_code": "A001-01-06"},
-                                    {"org_code": "A005", "material_code": "A001-01-07"},
-                                    {"org_code": "A005", "material_code": "A001-01-08"},
-                                    {"org_code": "A005", "material_code": "A001-01-09"},
-                                    {"org_code": "A005", "material_code": "A001-01-10"}]
-                    };
-            this.setModel(new JSONModel(oSampleData), "materialCodeModel");
+
+            if(!this.oSearchMultiMaterialMasterDialog){
+                this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                    title: "Choose MaterialMaster",
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            //new Filter("tenant_id", FilterOperator.EQ, "L1100")
+                            new Filter("tenant_id", FilterOperator.EQ, this.tenantId)                            
+                        ]
+                    }
+                });
+                this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                    var oMaterialData = oEvent.getParameter("item");
+                    var oViewModel = this.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                    oSelectedData.org_code = (oMaterialData.org_code && oMaterialData.org_code !== "") ? oMaterialData.org_code:"";
+                    oSelectedData.material_code = oMaterialData.material_code;
+                    oSelectedData.pr_desc = (oMaterialData.material_desc && oMaterialData.material_desc !== "") ? oMaterialData.material_desc:"";
+                    oSelectedData.pr_unit = (oMaterialData.base_uom_code && oMaterialData.base_uom_code !== "") ? oMaterialData.base_uom_code:"";
+                    oSelectedData.buyer_empno = (oMaterialData.buyer_empno && oMaterialData.buyer_empno !== "") ? oMaterialData.buyer_empno:"";
+                    oSelectedData.purchasing_group_code = (oMaterialData.purchasing_group_code && oMaterialData.purchasing_group_code !== "") ? oMaterialData.purchasing_group_code:"";                    
+                    oSelectedData.material_group_code = oMaterialData.material_group_code; 
+
+                    oViewModel.refresh();
+                }.bind(that));
+            }
+            this.oSearchMultiMaterialMasterDialog.open();
+
+            //var aTokens = this.byId("searchMultiMaterialMasterDialog").getTokens();
+            //this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
+
+
+
+            // var oSampleData = {
+            //         "familyMaterialCode": [],
+            //         "materialCode": [{"org_code": "A001", "material_code": "A001-01-01"},
+            //                         {"org_code": "A002", "material_code": "A001-01-02"},
+            //                         {"org_code": "A003", "material_code": "A001-01-03"},
+            //                         {"org_code": "A004", "material_code": "A001-01-04"},
+            //                         {"org_code": "A005", "material_code": "A001-01-05"},
+            //                         {"org_code": "A005", "material_code": "A001-01-06"},
+            //                         {"org_code": "A005", "material_code": "A001-01-07"},
+            //                         {"org_code": "A005", "material_code": "A001-01-08"},
+            //                         {"org_code": "A005", "material_code": "A001-01-09"},
+            //                         {"org_code": "A005", "material_code": "A001-01-10"}]
+            //         };
+            // this.setModel(new JSONModel(oSampleData), "materialCodeModel");
 
            // oMarterialCodeModel.attachRequestCompleted(function(data) {
-                if (!this._oMaterialDialog) {
-                    this._oMaterialDialog = Fragment.load({
-                        id: oView.getId(),
-                        name: "op.pu.prMgt.view.MaterialDialog",
-                        controller: this
-                    }).then(function (oDialog) {
-                        oView.addDependent(oDialog);
-                        return oDialog;
-                    });
-                }
-                this._oMaterialDialog.then(function(oDialog) {
-                    oDialog.open();
-                });
+                // if (!this._oMaterialDialog) {
+                //     this._oMaterialDialog = Fragment.load({
+                //         id: oView.getId(),
+                //         name: "op.pu.prMgt.view.MaterialDialog",
+                //         controller: this
+                //     }).then(function (oDialog) {
+                //         oView.addDependent(oDialog);
+                //         return oDialog;
+                //     });
+                // }
+                // this._oMaterialDialog.then(function(oDialog) {
+                //     oDialog.open();
+                // });
             //}.bind(this));
 
-            this._oDialogTableSelect.then(function (oDialog) {
-                oDialog.open();
-            });
+            // this._oDialogTableSelect.then(function (oDialog) {
+            //     oDialog.open();
+            // });
         },
         
         /**

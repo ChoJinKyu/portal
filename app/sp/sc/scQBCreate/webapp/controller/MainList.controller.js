@@ -53,7 +53,7 @@ sap.ui.define([
                 var outcome = oRbg.getSelectedIndex() + 1;
                 
 
-                debugger;
+                // debugger;
 
                 if( this._cNum == "1" || this._cNum =="3"){
                     this.getOwnerComponent().getRouter().navTo("detailPage", { type : this._cNum, outcome : String(outcome) } );

@@ -6,10 +6,17 @@ import lg.sppCap.solutionized.bizrule.model.BizRuleInfo;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 /**
  * 주어진 파라메터로 업무규칙을 호출한다.
  */
+@Component
 public class BizRuleExecutor {
+
+    @Autowired
+    BizRuleInfoService bizRuleInfoService;
 
     /**
      * tenantId+bizRuleId+altFlag 로 구성된 업무규칙을 호출한다.

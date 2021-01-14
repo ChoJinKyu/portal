@@ -383,8 +383,16 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){
-             this.byId("budgetExecutionPreview").close();
+        onPrvClosePress : function(){ 
+             if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
+                    console.log(" oDialog.close >>> ", oDialog.close);
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPrev = undefined;
+            }
+           //  this.byId("budgetExecutionPreview").close();
             // this.byId("budgetExecutionPreview").destroy();
         },
 
@@ -411,6 +419,7 @@ sap.ui.define([
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
+            
             if(this.validator.validate(this.byId("account") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;

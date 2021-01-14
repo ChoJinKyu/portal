@@ -35,7 +35,7 @@
                                 <ToolbarSpacer />
                                 <SearchField search=".onGetMaterialCodeDialogData" width="15rem">
                                     <customData>
-                                        <core:CustomData key="dialog" value="materialCode" />
+                                        <core:CustomData key="dialog" value="dialog" />
                                     </customData>
                                 </SearchField>
                             </content>

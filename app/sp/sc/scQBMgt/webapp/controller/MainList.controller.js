@@ -33,74 +33,126 @@ sap.ui.define([
                 var oMultilingual = new Multilingual();
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
 
-                this.viewModel = new JSON({
-                    NegoHeaders : []
-                });
-                this.getView().setModel(this.viewModel, "viewModel");
 
-                var oView = this.getView();
-                // oModel = this.getModel("viewModel");
+                // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders";
+                // var that = this;
+                // var sTable = this.getView().byId("sTable1");
+
+                // var tempJModel = new JSON();
+                // var tempData = { NegoHeaders : [] };
+                // var oView = this.getView();
                 
-                // oView.setBusy(true);
-                // oModel.setTransactionModel(this.getModel());
-                // oModel.read("/NegoHeaders", {
-                //     // filters: aTableSearchState,
-                //     // sorters: [
-                //     // 	new Sorter("chain_code"),
-                //     // 	new Sorter("message_code"),
-                //     //     new Sorter("language_code", true)
-                //     // ],
-                //     success: function(oData){
-                //         // this.validator.clearValueState(this.byId("mainTable"));
-                //         // this.byId("mainTable").clearSelection();
-                //         oView.setBusy(false);
-                //     }.bind(this)
+                // var ak = $.ajax({
+                //     url: url,
+                //     type: "GET",
+                //     async: false,
+                //     contentType: "application/json",
+                //     success: function(data){
+                //         this.oRead = data.value;
+                //         return data.value;
+                //     },
+                //     error: function(e){
+                        
+                //     }
+                // }, this);
+
+                // ak.then(function(result){
+                //     for(var i=0; i<result.value.length; i++){
+                //         var oRow = result.value[i];
+                //         tempData.NegoHeaders.push(oRow);
+                //     }
+                //     tempJModel.setData(tempData);
+                //     oView.setModel(tempJModel, "viewModel");
+                //     debugger;
                 // });
 
+                
 
-                // var tempData = {
-                //     NegoHeaders : [  ] 
-                // };
 
-                // var oJSONModel = new JSON();
-                // oJSONModel.setData(tempData);
+
+
+
+
+
+
+
+
+
+                // // ====================================
+
+
+
+                // this.viewModel = new JSON({
+                //     NegoHeaders : []
+                // });
+                // this.getView().setModel(this.viewModel, "viewModel");
 
                 // var oView = this.getView();
-                // oView.setModel(oJSONModel) ;
+                // // oModel = this.getModel("viewModel");
                 
-                // , "viewModel" );
-                // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?$filter=tenant_id eq 'L2100' and nego_document_number eq '1-1'";
-                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders";
-                var that = this;
-                var sTable = this.getView().byId("sTable1");
-                async function _read(){
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        async: false,
-                        contentType: "application/json",
-                        success: function(data){
-                            console.log("data : ", data.value);
-                            var v_viewHeaderModel = oView.getModel("viewModel").getData();
-                            v_viewHeaderModel.NegoHeaders = data.value;
-                            oView.getModel("viewModel").updateBindings(true);
-                            return data;
-                        },
-                        error: function(e){
-                            
-                        }
-                    }, this);
+                // // oView.setBusy(true);
+                // // oModel.setTransactionModel(this.getModel());
+                // // oModel.read("/NegoHeaders", {
+                // //     // filters: aTableSearchState,
+                // //     // sorters: [
+                // //     // 	new Sorter("chain_code"),
+                // //     // 	new Sorter("message_code"),
+                // //     //     new Sorter("language_code", true)
+                // //     // ],
+                // //     success: function(oData){
+                // //         // this.validator.clearValueState(this.byId("mainTable"));
+                // //         // this.byId("mainTable").clearSelection();
+                // //         oView.setBusy(false);
+                // //     }.bind(this)
+                // // });
 
-                };
-                async function _read2(){
-                    var aaa = await _read();
-                    return aaa
-                };
-                var a = _read2();
-                a.then(function(data){
+
+                // // var tempData = {
+                // //     NegoHeaders : [  ] 
+                // // };
+
+                // // var oJSONModel = new JSON();
+                // // oJSONModel.setData(tempData);
+
+                // // var oView = this.getView();
+                // // oView.setModel(oJSONModel) ;
+                
+                // // , "viewModel" );
+                // // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?$filter=tenant_id eq 'L2100' and nego_document_number eq '1-1'";
+                // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders";
+                // var that = this;
+                // var sTable = this.getView().byId("sTable1");
+                // async function _read(){
+                //     $.ajax({
+                //         url: url,
+                //         type: "GET",
+                //         async: false,
+                //         contentType: "application/json",
+                //         success: function(data){
+                //             console.log("data : ", data.value);
+                //             var v_viewHeaderModel = oView.getModel("viewModel").getData();
+                //             v_viewHeaderModel.NegoHeaders = data.value;
+                //             oView.getModel("viewModel").updateBindings(true);
+                //             return data;
+                //         },
+                //         error: function(e){
+                            
+                //         }
+                //     }, this);
+
+                // };
+                // async function _read2(){
+                //     var aaa = await _read();
+                //     return aaa
+                // };
+                // var a = _read2();
+                // a.then(function(data){
                     
-                }, this);
-                sTable.rebindTable();
+                // }, this);
+                // sTable.rebindTable();
+
+
+                // // ====================================
                 // $.ajax({
                 //     url: url,
                 //     type: "GET",
@@ -322,20 +374,37 @@ sap.ui.define([
 
             },
             tableCellClick: function(e){
-                
-                // if(vIndex == 0 ){
-                    
-                var vIndex = e.getParameters().rowIndex;
-                var oRow = this.getView().byId("mainTable").getModel("viewModel").oData.NegoHeaders[vIndex];
-                // if(oRow.nego_type_code == null){
-                //     var nego_type = " ";
-                // }
-                this.getOwnerComponent().getRouter().navTo("detailPage", { type : oRow.nego_type_code , outcome : oRow.negotiation_output_class_code, header_id: String(oRow.nego_header_id)  } );
-                // this.getOwnerComponent().getRouter().navTo("detailPage", { type : "" , outcome : "", } );
-                // }else{
-                //     this.getOwnerComponent().getRouter().navTo("detailPage2", { type : "0" , outcome : "0" } );
-                // }
 
+                
+                var vIndex = e.getParameters().rowIndex;
+                var oPath = e.oSource.getContextByIndex(vIndex).sPath;
+                var oRow = this.getView().getModel().getProperty(oPath);
+
+                var pNegoTypeCode,
+                    pOutcome,
+                    pHeader_id;
+                pNegoTypeCode = oRow.nego_type_code;
+                pOutcome = oRow.negotiation_output_class_code;
+                pHeader_id =  String(oRow.nego_document_number);
+
+                if(pNegoTypeCode == null){
+                    pNegoTypeCode = " ";
+                }
+                if(pOutcome == null){
+                    pOutcome = " ";
+                }
+                if(pHeader_id == null){
+                    pHeader_id = " ";
+                }
+                
+                this.getOwnerComponent().getRouter().navTo("detailPage", { type : pNegoTypeCode , outcome : pOutcome, header_id: pHeader_id  } );
+
+                // // ======================================================
+
+                // //Test용 detailPage2
+                // this.getOwnerComponent().getRouter().navTo("detailPage2", { type : " " , outcome : " " } );
+
+                
             },
             _getSmartTable: function () {
                 if (!this._oSmartTable) {
@@ -344,17 +413,13 @@ sap.ui.define([
                 return this._oSmartTable;
             },
             onSort: function () {
-                alert("준비중입니다.");
-                return;
                 var oSmartTable = this._getSmartTable();
                 if (oSmartTable) {
                     oSmartTable.openPersonalisationDialog("Sort");
                 }
             },
 
-            onFilter: function () {
-                alert("준비중입니다.");
-                return;
+            onFilter: function () { 
                 var oSmartTable = this._getSmartTable();
                 if (oSmartTable) {
                     oSmartTable.openPersonalisationDialog("Filter");
@@ -433,6 +498,39 @@ sap.ui.define([
                 // console.log("change : ",e);
 
             },
-            
+            onPageSearchButtonPress: function(e){
+                var sTable = this.getView().byId("sTable1");
+                var oFilterNegoNo = this.getView().byId("filter_NegotiationNo").getValue();
+                var oFilterTitle = this.getView().byId("filter_title").getValue();
+                var oFilterNegoType = this.byId("filterNegotiationType").getSelectedKey();
+                var oFilterOutcome = this.byId("filterOutcome").getValue();
+                var oFilterStatusItems = this.byId("filterStatus").getSelectedItems();
+                
+                var oFilter = [];
+
+                //filter Status
+                for(var i=0; i<oFilterStatusItems.length; i++){
+                    var oFilterStatusItem = oFilterStatusItems[i];
+                    var oStatusItemText = oFilterStatusItem.getText();
+                    oFilter.push(new Filter("nego_progress_status_code", "EQ", oStatusItemText));
+                }
+
+                oFilter.push(new Filter("nego_type_code", "Contains", oFilterNegoType));
+                oFilter.push(new Filter("negotiation_output_class_code", "Contains", oFilterOutcome));
+                
+                var oTable = sTable.getItems()[1];
+
+                //filter like조건 검색
+                var oFilterNegoNo_r = new Filter("nego_document_number", "Contains", oFilterNegoNo);
+                var oFilterTitle_r = new Filter("nego_document_title", "Contains", oFilterTitle);
+
+                oFilter.push(oFilterNegoNo_r);
+                oFilter.push(oFilterTitle_r);
+
+                oTable.getBinding("rows").filter(oFilter);
+
+                console.log("oFilterNegoNo = ",oFilterNegoNo);
+                console.log("oFilterTitle = ",oFilterTitle);
+            }
 		});
 	});

@@ -76,7 +76,18 @@ sap.ui.define([
             this._getProjectMgtList(aFilters);
         }
         
-        ,onExcelExportPress: function() {
+        /**
+         * Input Enter 시 조회 적용
+         */
+        , onLiveChangeInput: function(oEvent) {
+            let newValue = oEvent.getParameter("newValue");
+            var keycode = (oEvent.keyCode ? oEvent.keyCode : oEvent.which);
+            if(keycode === '13'){
+                this.onSearch();
+            }
+        }
+
+        , onExcelExportPress: function() {
             MessageToast.show("준비중", {at: "Center Center"});
             return;
         }
@@ -97,6 +108,19 @@ sap.ui.define([
         }
 
         /**
+         * RowAction 목표재료비 상세화면으로 이동
+         */
+        , onDetailPopRowActionPress: function(oEvent) {
+            MessageToast.show("준비중", {at: "Center Center"});
+            return;
+            const view_mode = "VIEW";
+            this.getView().getModel("popupListModel").setProperty("/cost_type", oEvent.getSource().data("cost_type"));
+            this.getView().getModel("popupListModel").setProperty("/detail_mode", view_mode);
+            var oContext = oEvent.getParameter("row").getBindingContext("listModel");
+            this._goMcstProjView(oContext, oEvent.getSource().data("cost_type"));
+        }
+
+        /**
          * Date 데이터를 String 타입으로 변경. 예) 2020-10-10T00:00:00
          */
         , _getNowDayAndTimes: function (bTimesParam, oDateParam) {
@@ -107,7 +131,7 @@ sap.ui.define([
                 iHours = oDate.getHours(),
                 iMinutes = oDate.getMinutes(),
                 iSeconds = oDate.getSeconds();
-
+ 
             let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
             let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds);
 
@@ -154,6 +178,25 @@ sap.ui.define([
             //this.getOwnerComponent().getRouter().navTo("ProjectMgtDetail");
         }
         
+        /**
+         * MCST 프로젝트 상세 화면으로 이동
+         */
+        , _goMcstProjView: function(oContext, cost_type) {
+            const view_mode = "READ";
+            let oModel = oContext.getModel();
+            let oObj = oModel.getProperty(oContext.getPath());
+
+            var oNavParam = {
+                tenant_id: oObj.tenant_id,
+                project_code: oObj.project_code,
+                model_code: oObj.model_code,
+                cost_type: cost_type,
+                view_mode: view_mode
+            };
+
+            this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
+        }
+
         /**
          * Table 의 선택된 index 를 리턴
          * @param {object} _oTable
@@ -228,35 +271,163 @@ sap.ui.define([
             return;
         }
 
+
+        /********************************************************************************** */
+        /* 견적 재료비 생성, 목표 재료비 생성, 진척 관리 Dialog 창 Action  (Starat)             */
+        /********************************************************************************** */
+
         /**
          * 견적재료비 생성 클릭
+         * @param {event} oEvent
          */
-        , onEstimateCreatePress: function() {
-            var iSelIdx = this._getSelectedIndex(this.getView().byId("mainTable"));
-            if(iSelIdx < 0) { return; }//skip
+        , onEstimateCreatePress: function (oEvent) {
+            this.onGoalCreatePress(oEvent);
+        }
 
-            let oTable = this.getView().byId("mainTable");
-            let oContext = oTable.getContextByIndex(iSelIdx);
+        /**
+         * 예상 재료비 작성 Dialog 오픈 
+         * @param {event} oEvent
+         */
+        , onProgressMgtPress: function (oEvent) {
+            //MessageToast.show("준비중", { at: "Center Center" });
+            //return;
+            this.onGoalCreatePress(oEvent);
+        }
+
+        /**
+         * 목표재료비 작성 Dialog 오픈
+         * @param {event} oEvent
+         */
+        , onGoalCreatePress: function (oEvent) {
+            var oView = this.getView();
+            var oTable = oView.byId("mainTable");
+            var nSelIdx = this._getSelectedIndex(oTable);
+
+            if (nSelIdx < 0) { return; }//skip
+
+            var oButton = oEvent.getSource();
+            if (!this._oDialogTableSelect) {
+                this._oDialogTableSelect = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.tc.projectMgt.view.DetailPopup",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }
+            this._oDialogTableSelect.then(function (oDialog) {
+                oDialog.open();
+                this.onGetDialogData();
+
+            }.bind(this));
+
+        }
+        /** 
+         *  목표재료비 Dialog 창 데이터 추출  
+         */
+        , onGetDialogData: function (oEvent) {
+            var oView = this.getView("detailPopupTable");
+            //var oModel = this.getModel();
+            var oModel = this.getModel("detailListModel");   //manifest에 등록한 모델을 가져오면 해당 서비스를 사용할수 있다.
+            var oTable = oView.byId("mainTable");
+            var nSelIdx = this._getSelectedIndex(oTable);
+            var oContext = oTable.getContextByIndex(nSelIdx);
+            var sPath = oContext.getPath();
+            var oData = oTable.getBinding().getModel().getProperty(sPath);
+
+            var aFilters = [];
+            
+            if (aFilters) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oData.tenant_id));
+                aFilters.push(new Filter("project_code", FilterOperator.EQ, oData.project_code));
+                aFilters.push(new Filter("model_code", FilterOperator.EQ, oData.model_code));
+            }
+
+            oView.setBusy(true);
+            oModel.read("/McstProject", {  
+                filters: aFilters,
+                urlParameters: {
+                    "$expand": "mcst_status_text,mcst_text"
+                },
+                success: function (data) {
+                    oView.setBusy(false);
+
+                    if (data) {
+                        oView.getModel("popupListModel").setData(data);
+                    }
+                }.bind(this),
+                error: function (data) {
+                    oView.setBusy(false);
+                    console.log('error', data);
+                }
+            });
+        }
+
+        /**
+         * Dialog Close
+         */
+        , onClose: function (oEvent) {
+            this._oDialogTableSelect.then(function (oDialog) {
+                this.getView().byId("detailPopupTable").clearSelection();
+                oDialog.close();
+            }.bind(this));
+        }
+
+        /**
+        * Dialog Copy
+        */
+        , onCopy: function (oEvent) {
+            MessageToast.show("준비중", {at: "Center Center"});
+            return;
+        }
+
+        /**
+        * Dialog Create
+        */
+        , onDialogCreate: function (oEvent) {
+            MessageToast.show("준비중", {at: "Center Center"});
+            return;
+            this._goCreateView();
+        }
+
+        /**
+         * Dialog창 테이블 Index값 세팅 
+         */
+        , onSelectDialogChange: function (oEvent) {
+            var oTable = this.getView().byId("detailPopupTable"),
+                iSelectedIndex = oEvent.getSource().getSelectedIndex();
+
+            oTable.setSelectedIndex(iSelectedIndex);
+        }
+
+        /**
+         * Dialog(견적재료비 생성, 목표 재료비 생성, 진척관리) > Create(작성) > 입력/수정하는 화면으로 이동
+         */
+        , _goCreateView: function (oEvent) {
+            //var iSelIdx = this._getSelectedIndex(this.getView().byId("detailPopupTable"));
+
+            //if (iSelIdx < 0) { return; }//skip
+            var index = 0;
+            let oTable = this.getView().byId("detailPopupTable");
+            let oContext = oTable.getContextByIndex(index);
             let oModel = oContext.getModel();
             let oObj = oModel.getProperty(oContext.getPath());
 
             var oNavParam = {
-                tenant_id : oObj.tenant_id,
-                project_code : oObj.project_code,
-                model_code : oObj.model_code
+                tenant_id: oObj.tenant_id,
+                project_code: oObj.project_code,
+                model_code: oObj.model_code
             };
-            this.getRouter().navTo("ProjectInfo", oNavParam);
+
+            this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
+            //this.getRouter().navTo("ProjectInfo", oNavParam);
         }
 
-        , onGoalCreatePress: function() {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-        }
+        /********************************************************************************** */
+        /* 견적 재료비 생성, 목표 재료비 생성, 진척 관리 Dialog 창 Action  (End)               */
+        /********************************************************************************** */  
 
-        , onProgressMgtPress: function() {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-        }
 
         , onAddModelPress: function() {
             MessageToast.show("준비중", {at: "Center Center"});
@@ -288,8 +459,8 @@ sap.ui.define([
             this.getModel("updateModel").setData(updateData);
 
             var oButton = oEvent.getSource();
-			if (!this._oDialogTableSelect) {
-				this._oDialogTableSelect = Fragment.load({ 
+			if (!this._oDialogExceptCal) {
+				this._oDialogExceptCal = Fragment.load({ 
                     id: oView.getId(),
 					name: "dp.tc.projectMgt.view.ExcludeMaterialCost",
 					controller: this
@@ -299,7 +470,7 @@ sap.ui.define([
 				}.bind(this));
             } 
             
-            this._oDialogTableSelect.then(function(oDialog) { 
+            this._oDialogExceptCal.then(function(oDialog) { 
                 oDialog.open();
 			});
         }

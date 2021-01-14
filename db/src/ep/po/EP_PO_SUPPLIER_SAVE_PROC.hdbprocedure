@@ -94,7 +94,6 @@ BEGIN
 
     END FOR;
 
-	COMMIT;
 	O_RTN_MSG := 'SUCCESS';	
 
 END

@@ -1,9 +1,7 @@
 sap.ui.define([
+    "./DummyRenderer", 
     "sap/ui/core/Renderer"
-], function (Renderer) {
-    "use strict";
-    var DummyRenderer = Renderer.extend("ext.lib.control.DummyRenderer", {
-        render: function(){}
-    });
-    return DummyRenderer;
+],
+function (DummyRenderer, Renderer) {
+		return Renderer.extend(DummyRenderer);
 }, /* bExport= */ true);

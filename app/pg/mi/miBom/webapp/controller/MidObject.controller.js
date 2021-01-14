@@ -1067,8 +1067,8 @@ sap.ui.define([
         onCancel : function () {
             var that = this;
 
-            MessageBox.confirm(that.getModel("I18N").getText("/NPG00007"), {
-                title : that.getModel("I18N").getText("/NPG00014"),
+            MessageBox.confirm(that.getModel("I18N").getText("/NPG00013"), {
+                title : that.getModel("I18N").getText("/CANCEL"),
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {

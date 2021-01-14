@@ -149,8 +149,8 @@ sap.ui.define([
             console.log(" mdRecepit >>>> ", oModel);
 
             var mIdArr = [];
-            if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
-                oModel.oData.ItemBudgetExecution.forEach(function (item) {
+            if (oModel.oData.MoldRecepit != undefined && oModel.oData.MoldRecepit.length > 0) {
+                oModel.oData.MoldRecepit.forEach(function (item) {
                     mIdArr.push(item.mold_id);
                 });
             }
@@ -293,8 +293,17 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){
-             this.byId("moldRecepitPreview").close();
+        onPrvClosePress : function(){ 
+             if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
+                    console.log(" oDialog.close >>> ", oDialog.close);
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPrev = undefined;
+            }
+
+          //    this.byId("moldRecepitPreview").close();
         },
         onValueHelpRequestedDept : function(mold_id){ 
             console.log('oEvent>>>> ' , mold_id);

@@ -24,7 +24,7 @@
                 <table:extension>
                     <OverflowToolbar>
                         <ToolbarSpacer/>
-                        <Button visible="{mode>/editFlag}" id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
+                        <!-- <Button visible="{mode>/editFlag}" id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" /> -->
                     </OverflowToolbar>
                 </table:extension>                             
                  <table:columns>

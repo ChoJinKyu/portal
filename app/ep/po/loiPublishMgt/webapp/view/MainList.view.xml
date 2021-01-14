@@ -54,14 +54,14 @@
                                 <core:Item key="{loi_number}" text="{loi_number}" />
                             </MultiInput>                            
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M6 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="요청일자 : " labelFor="searchRequestDate"/>
                             <DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                                
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M6 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -124,7 +124,7 @@
                             </MultiComboBox>                     
 
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>                                            
                     </form:content>
@@ -139,7 +139,7 @@
                                 placeholder="Date"/>                            -->
                             <DateRangeSelection id="searchSystemCreateDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />       
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M6 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -150,7 +150,7 @@
                                 placeholder="Date"/>      -->
                                 <DateRangeSelection id="searchPublishDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                        
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M6 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -213,7 +213,7 @@
                             </MultiComboBox>                     
 
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>                                            
                     </form:content>
@@ -274,11 +274,11 @@
                     <Text text="{list>item_sequence}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainLoiRequestTitle" width="10rem">
+                <t:Column id="mainLoiRequestTitle" width="12rem">
                 <Label text="요청명" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Link text="{list>loi_request_title}" press="goToLoiRequest" tooltip="{list>loi_request_title}" />
-                    <!-- <Text text="{list>loi_request_title}" press="goToLoiRequest" /> -->
+                    <!-- <Link text="{list>loi_request_title}" press="goToLoiRequest" tooltip="{list>loi_request_title}" /> -->
+                    <Text text="{list>loi_request_title}" />
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainItemDesc" width="6rem">

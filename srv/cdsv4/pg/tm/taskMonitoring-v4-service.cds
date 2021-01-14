@@ -3,6 +3,8 @@ namespace pg;
 @path : '/pg.TaskMonitoringV4Service'
 service TaskMonitoringV4Service {
 
+    // type tenantid : String(5);
+
     type TaskMonitoringMaster : {
         tenant_id            : String(5);
         scenario_number      : Integer64;
@@ -17,6 +19,19 @@ service TaskMonitoringV4Service {
         update_user_id       : String(255);
         system_create_dtm    : DateTime;
         system_update_dtm    : DateTime;
+    };
+
+    type TaskMonitoringScenario : {
+        tenant_id         : String(5);
+        scenario_number   : Integer64;
+        language_code     : String(10);
+        scenario_name     : String(240);
+        local_create_dtm  : DateTime;
+        local_update_dtm  : DateTime;
+        create_user_id    : String(255);
+        update_user_id    : String(255);
+        system_create_dtm : DateTime;
+        system_update_dtm : DateTime;
     };
 
     type TaskMonitoringCompany : {
@@ -41,6 +56,34 @@ service TaskMonitoringV4Service {
         update_user_id    : String(255);
         system_create_dtm : DateTime;
         system_update_dtm : DateTime;
+    };
+
+    type TaskMonitoringPurchasingType : {
+        tenant_id                       : String(5);
+        scenario_number                 : Integer64;
+        monitoring_purchasing_type_code : String(30);
+        language_code                   : String(10);
+        monitoring_purchasing_type_name : String(240);
+        local_create_dtm                : DateTime;
+        local_update_dtm                : DateTime;
+        create_user_id                  : String(255);
+        update_user_id                  : String(255);
+        system_create_dtm               : DateTime;
+        system_update_dtm               : DateTime;
+    };
+
+    type TaskMonitoringTypeCode : {
+        tenant_id            : String(5);
+        scenario_number      : Integer64;
+        monitoring_type_code : String(30);
+        language_code        : String(10);
+        monitoring_type_name : String(240);
+        local_create_dtm     : DateTime;
+        local_update_dtm     : DateTime;
+        create_user_id       : String(255);
+        update_user_id       : String(255);
+        system_create_dtm    : DateTime;
+        system_update_dtm    : DateTime;
     };
 
     type TaskMonitoringManager : {
@@ -70,56 +113,16 @@ service TaskMonitoringV4Service {
         system_update_dtm              : DateTime;
     };
 
-    type TaskMonitoringPurchasingType : {
-        tenant_id                       : String(5);
-        scenario_number                 : Integer64;
-        monitoring_purchasing_type_code : String(30);
-        language_code                   : String(10);
-        monitoring_purchasing_type_name : String(240);
-        local_create_dtm                : DateTime;
-        local_update_dtm                : DateTime;
-        create_user_id                  : String(255);
-        update_user_id                  : String(255);
-        system_create_dtm               : DateTime;
-        system_update_dtm               : DateTime;
-    };
-
-    type TaskMonitoringScenario : {
-        tenant_id         : String(5);
-        scenario_number   : Integer64;
-        language_code     : String(10);
-        scenario_name     : String(240);
-        local_create_dtm  : DateTime;
-        local_update_dtm  : DateTime;
-        create_user_id    : String(255);
-        update_user_id    : String(255);
-        system_create_dtm : DateTime;
-        system_update_dtm : DateTime;
-    };
-
-    type TaskMonitoringTypeCode : {
-        tenant_id            : String(5);
-        scenario_number      : Integer64;
-        monitoring_type_code : String(30);
-        language_code        : String(10);
-        monitoring_type_name : String(240);
-        local_create_dtm     : DateTime;
-        local_update_dtm     : DateTime;
-        create_user_id       : String(255);
-        update_user_id       : String(255);
-        system_create_dtm    : DateTime;
-        system_update_dtm    : DateTime;
-    };
-
     type UpsertInputType : {
+        tenant_id            : String(5);
         sourceMaster         : array of TaskMonitoringMaster;
+        sourceScenario       : array of TaskMonitoringScenario;
         sourceCompany        : array of TaskMonitoringCompany;
         sourceBizunit        : array of TaskMonitoringBizunit;
+        sourcePurchasingType : array of TaskMonitoringPurchasingType;
+        sourceTypeCode       : array of TaskMonitoringTypeCode;
         sourceManager        : array of TaskMonitoringManager;
         sourceOperation      : array of TaskMonitoringOperation;
-        sourcePurchasingType : array of TaskMonitoringPurchasingType;
-        sourceScenario       : array of TaskMonitoringScenario;
-        sourceTypeCode       : array of TaskMonitoringTypeCode;
     };
 
     type UpsertOutType : {

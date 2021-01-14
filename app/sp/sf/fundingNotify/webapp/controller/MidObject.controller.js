@@ -219,7 +219,8 @@ sap.ui.define([
                                 that._toShowMode();
                                 view.setBusy(false);
                                 that.getModel("midObjectView").setProperty("/isAddedMode", false);
-                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01001"), {duration: 3000});
+                                that.onPageNavBackButtonPress.call(that);
                             }.bind(this)
                         });
                     };
@@ -310,13 +311,8 @@ sap.ui.define([
                 var oMasterModel = this.getModel("master");
                 oMasterModel.setData({
                     "tenant_id": "L2100",
-                    "funding_notify_number": "",
                     "funding_notify_title": "[안내] '21년 협력회사 무이자 직접자금 지원 신청",
                     "funding_notify_contents": notifyContent,
-                    "local_create_dtm": utcDate,
-                    "local_update_dtm": utcDate,
-                    "create_user_id": "Admin",
-                    "update_user_id": "Admin"
                 }, "/SfFundingNotify", 0);
                 this.getView().getModel("midObjectView").setProperty("/showMode", false);
                 this._toEditMode();
@@ -396,7 +392,7 @@ sap.ui.define([
             this.byId("pageSaveButton").setEnabled(false);
             oMidObjectView.setProperty("/editMode", false);
         },
-        
+
          /**
          * UTC 기준 DATE를 반환합니다.
          * @private

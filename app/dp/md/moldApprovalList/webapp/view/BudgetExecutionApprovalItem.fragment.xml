@@ -45,7 +45,7 @@
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
                                               ],
-                                              sorter: { path: 'util>sort_no'}
+                                              sorter: { path: 'sort_no'}
                                             }">
 						<items>
 							<SegmentedButtonItem width="6em" text="{util>code_name}" key="{util>code}"/>
@@ -150,7 +150,7 @@
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
                                         ],
-                                        sorter: { path: 'util>sort_no'}
+                                        sorter: { path: 'sort_no'}
                                     }">
 						<core:Item key="{util>code}" text="{util>code_name}"/>
 					</ComboBox>
@@ -169,7 +169,7 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/BALANCED_BUDGET', formatter:'I18NFormatter'}"/>
 					<HBox alignItems="End" justifyContent="End">
-						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
+						<ObjectStatus text="{path : 'mdCommon>/provisional_budget_amount' , formatter: '.numberFormatter.toNumberString'}"/>
 						<ObjectStatus text="  KRW" state="Error"/>
 					</HBox>
 					<layoutData>
@@ -202,7 +202,6 @@
                     <table:Table id="budgetExecutionTable" 
                             selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                             fixedColumnCount="6"  
-                            rowSelectionChange=""
                             visibleRowCountMode="Auto" 
                             rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
 					<table:extension>
@@ -267,7 +266,7 @@
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                         ],
-                                        sorter: { path: 'util>sort_no'}
+                                        sorter: { path: 'sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
@@ -285,7 +284,7 @@
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                         ] ,
-                                        sorter: { path: 'util>sort_no'}
+                                        sorter: { path: 'sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
@@ -316,7 +315,7 @@
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
                                         ],
-                                        sorter: { path: 'util>sort_no'}
+                                        sorter: { path: 'sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>

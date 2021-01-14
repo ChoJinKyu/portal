@@ -57,21 +57,9 @@ modules:
       - portal-content.zip
       name: portal
       target-path: resources/
-    - artifacts:
-      - SampleSolutionized-content.zip
-      name: SampleSolutionized
-      target-path: resources/
 - name: portal
   type: html5
   path: app
-  build-parameters:
-    builder: custom
-    commands:
-    - npm run build
-    supported-platforms: []
-- name: SampleSolutionized
-  type: html5
-  path: app/tmp/SampleSolutionized
   build-parameters:
     builder: custom
     commands:

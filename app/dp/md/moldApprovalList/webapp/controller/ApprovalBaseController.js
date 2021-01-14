@@ -19,7 +19,7 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    //  "./ApprovalList.controller",
+    "./ApprovalList.controller",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
@@ -40,7 +40,7 @@ sap.ui.define([
 
         validator: new Validator(),
 
-        //  approvalList: new ApprovalList(),
+        approvalList: new ApprovalList(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -55,9 +55,11 @@ sap.ui.define([
             this.approvalDetails_data = [];
             this.moldMaster_data = [];
             this.quotation_data = [];  // supplier 전용 
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-           // this._showFormFragment();
+            
+            //this._showFormFragment();
         },
 
         onAfterRendering: function () {
@@ -83,11 +85,12 @@ sap.ui.define([
                     return;
                 }
                
-              //  if(sPropertyName !== "GeneralInfo"){
+                //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
-              //  }
+                //}
+                this.approvalList.onBackToList();
             }
 
             //this.byId("pageApprovalLineSection").destroy();
@@ -181,6 +184,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "refererMultiCB");
 
             oTransactionManager = new TransactionManager();
+            oTransactionManager.aDataModels.length = 0;
             oTransactionManager.addDataModel(this.getModel("moldMaster"));
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
@@ -257,8 +261,7 @@ sap.ui.define([
             var oUiModel = this.getView().getModel("mode");
             oUiModel.setProperty("/editFlag", true);
             oUiModel.setProperty("/viewFlag", false);
-            //this.byId("titleInput").removeStyleClass("readonlyField");
-
+            this._toButtonStatus();
             this._toEditModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
         },
 
@@ -268,24 +271,111 @@ sap.ui.define([
             var oUiModel = this.getView().getModel("mode");
             oUiModel.setProperty("/editFlag", false);
             oUiModel.setProperty("/viewFlag", true);
-            //this.byId("titleInput").addStyleClass("readonlyField");
-
+            this._toButtonStatus();
             this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
         },
 
+       _toButtonStatus : function(){ 
+            /**
+             * 'DR'	'임시저장'	'L1100'
+            'AR'	'결재요청'	'L1100'
+            'IA'	'결재중'	'L1100'
+            'AP'	'결재완료'	'L1100'
+            'RJ'	'반려'	'L1100'
+            */
+            var oUiModel = this.getView().getModel("mode"); 
+            var oModel = this.getModel("appMaster");
+            if(oUiModel.getData().editFlag){
+                 if(oModel.getData().approve_status_code == 'DR'){ // 임시저장 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", true);
+                    oUiModel.setProperty("/btnDraftFlag", true);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", true);
+                }else if(oModel.getData().approve_status_code == 'AR'){ // 결재완료 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", true);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'IA'){ // 결재중 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'AP'){ // 결재완료
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'RJ'){ // 반려
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else{ // new 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", true);
+                    oUiModel.setProperty("/btnDraftFlag", true);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", true);
+                }
+            }else{
+               if(oModel.getData().approve_status_code == 'DR'){ // 임시저장 
+                    oUiModel.setProperty("/btnEditFlag", true);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", true);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", true);
+                }else if(oModel.getData().approve_status_code == 'AR'){ // 결재완료 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", true);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'IA'){ // 결재중 
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else if(oModel.getData().approve_status_code == 'RJ'){ // 반려
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);    
+                }else if(oModel.getData().approve_status_code == 'AP'){ // 결재완료
+                    oUiModel.setProperty("/btnEditFlag", false);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }else{ // new 
+                   oUiModel.setProperty("/btnEditFlag", true);
+                    oUiModel.setProperty("/btnCancelFlag", false);
+                    oUiModel.setProperty("/btnDraftFlag", false);
+                    oUiModel.setProperty("/btnRequestCancelFlag", false);
+                    oUiModel.setProperty("/btnRequestFlag", false);
+                }  
+            }
+
+
+       } ,
+
+
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
-
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection"); 
             console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
             oPageGeneralInfoSection.removeAllBlocks();
             generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
-        },
-
-        _showFormItemFragment: function (fragmentFileName) {
-            this._showFormFragment();
+        
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
 
@@ -299,12 +389,19 @@ sap.ui.define([
             approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
             }.bind(this));
+        },
 
+        _showFormItemFragment: function (fragmentFileName) {
+            this._showFormFragment();
             var oPageItemSection = this.byId("pageItemSection");
             oPageItemSection.removeAllBlocks();
 
             itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
                 oPageItemSection.addBlock(oFragment);
+                
+                /*if (this.approval_number === "New") {
+                    this._toEditMode();
+                }*/
             }.bind(this));
 
         },
@@ -322,8 +419,10 @@ sap.ui.define([
 
                     console.log(" oData >>> ", oData); 
                     this.firstStatusCode = oData.approve_status_code; // 저장하시겠습니까? 하고 취소 눌렀을 경우 다시 되돌리기 위해서 처리 
-                    //this.oRichTextEditor.setValue(oData.approval_contents);
+                    this._toButtonStatus();
                 }.bind(this));
+            }else{
+                 this._toButtonStatus();
             }
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
 
@@ -332,11 +431,7 @@ sap.ui.define([
             var that = this;
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
-                if (approvalNumber === "New") {
-                    setTimeout(function () {
-                        that._toEditMode();
-                    }, 5000);
-                }
+                
             }.bind(this));
 
             console.log(" Approvers >>> ", approvalNumber);
@@ -559,8 +654,14 @@ sap.ui.define([
          * @description employee 팝업 닫기 
          */
         onExitEmployee: function () {
-            this.byId("dialogEmployeeSelection").close();
-            // this.byId("dialogEmployeeSelection").destroy();
+            if (this._oDialog) {
+                this._oDialog.then(function (oDialog) {
+                   
+                    oDialog.close(); 
+                    oDialog.destroy();
+                });
+                this._oDialog = undefined;
+            }
         },
 
         /**

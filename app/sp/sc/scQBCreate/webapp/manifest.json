@@ -17,9 +17,17 @@
 		},
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
+                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
+                "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
+                }
+            },
+            "mainV4": {
+                "uri": "srv-api/odata/v4/sp.negoHeadersV4Service/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
                 }
             }
         }
@@ -80,6 +88,17 @@
                     "odataVersion": "2.0"
                 },
                 "dataSource": "mainService"
+            },
+            "mainV4": {
+                "type": "sap.ui.model.odata.v4.ODataModel",
+                "dataSource": "mainV4",
+                
+                "settings": {
+                    "odataVersion": "4.0",
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": false
+                }
             }
 		},
 		"resources": {
@@ -88,7 +107,8 @@
 			}]
 		},
         "resourceRoots": {
-            "ext.lib": "../../../../lib"
+            "ext.lib": "../../../../lib",
+            "dp.util": "../../../../dp/util"
         },
 		"routing": {
 			"config": {

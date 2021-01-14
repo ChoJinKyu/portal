@@ -2,9 +2,10 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:form="sap.ui.layout.form"
+    xmlns:cm-ui="cm.util.control.ui"
     xmlns:layout="sap.ui.layout" >
     
-    <Dialog id="dialogAddSupplier" class="sapUiSmallMargin" title="" contentWidth="35%" >
+    <Dialog id="dialogAddSupplier" class="sapUiSmallMargin" title="{I18N>/SUPPLIER} {I18N>/BASIC_INFO} {I18N>/REGISTER}" contentWidth="35%" >
         <content>  
             <VBox class="sapUiSmallMargin">
                 <form:SimpleForm
@@ -20,9 +21,7 @@
                     emptySpanM="0"
                     emptySpanS="0"     
                     singleContainerFullSize="false" >
-                    <form:content>                        
-                        <core:Title text="{I18N>/SUPPLIER} {I18N>/BASIC_INFO} {I18N>/REGISTER}" />
-                        
+                    <form:content>             
                             <Label text="{I18N>/SOURCING_SUPPLIER_NICKNAME}" required="true"/>                            
                             <Input id="ssn" value="{
                                 path: 'master>/sourcing_supplier_nickname',
@@ -48,16 +47,13 @@
                                 }
                             }" required="true"></Input>
                             <Label text="{I18N>/DEVELOP_DATE}" required="true"/> 
-                            <DatePicker required="true" placeholder="Develop Date" value="{path: 'master>/develop_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>                            
-                            <Label text="{I18N>/DEVELOPER_EMP}" required="true"/> 
-                            <Input id="devEmp" value="{
-                                path: 'master>/developer_empno',
-                                type: 'sap.ui.model.type.String',
-                                constraints: {
-                                    maxLength: 30
-                                }
-                            }" required="true"></Input>
-                        
+                            <DatePicker required="true" placeholder="Develop Date" value="{path: 'master>/develop_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
+                            
+                            <Label text="{I18N>/DEVELOPER_EMP}" labelFor="inputWithEmployeeValueHelp"></Label>
+                            <Input id="inputWithEmployeeValueHelp"
+                                placeholder=""
+                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress" required="true">
+                            </Input>
                         
                     </form:content>
                 </form:SimpleForm>
@@ -69,5 +65,15 @@
             <Button text="Cancel" type="Transparent" press=".createPopupClose"/>
             <Button text="Next" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".createPopupSave"/>
         </HBox>
+
+        <cm-ui:EmployeeDialog id="employeeDialog" 
+            title="{I18N>/EMPLOYEE} {I18N>/FIND}"
+            items="{
+                filters: [
+                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                ]
+            }"
+            apply=".onEmployeeDialogApplyPress"
+        />
     </Dialog>
 </core:FragmentDefinition>

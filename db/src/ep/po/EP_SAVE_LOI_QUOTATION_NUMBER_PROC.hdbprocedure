@@ -6,7 +6,7 @@ PROCEDURE EP_SAVE_LOI_QUOTATION_NUMBER_PROC (
                         QUOTATION_NUMBER DECIMAL,
                         QUOTATION_ITEM_NUMBER DECIMAL
     ),
-    OUT O_RTN_MSG NVARCHAR(3000)
+    OUT O_TABLE_MESSAGE EP_PO_PROC_OUT_TYPE
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
@@ -25,13 +25,6 @@ BEGIN
         FROM :I_TABLE A
         ;
 	
-	/* SQL Error 처리 */
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-        O_RTN_MSG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
-	END; 
-
     /* 커서 시작 */
 	FOR curItem AS curItemList
     DO
@@ -48,7 +41,6 @@ BEGIN
 
     END FOR;
 
-	COMMIT;
-	O_RTN_MSG := 'SUCCESS';	
+    O_TABLE_MESSAGE =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, '' as savedKey from dummy;
 
 END

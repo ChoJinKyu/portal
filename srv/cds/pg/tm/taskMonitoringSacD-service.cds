@@ -21,6 +21,12 @@ using {pg.Vp_Vendor_Pool_Item_Dtl as VendorPoolItemDtl} from '../../../../db/cds
 // SP SM
 using {sp.Sm_Supplier_Mst as SupplierMst} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';     // Supplier Mst(공급업체 Mst)
 
+//PG IT
+using {pg.It_Mst_Pur_Group as PurGroupMst} from '../../../../db/cds/pg/it/PG_IT_MST_PUR_GROUP-model';              // PRUCHASING GROUP Mst(구매그룹)
+using {pg.It_Mst_Item_Category as ItemCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_ITEM_CATEGORY-model';  // ITEM CATEGORY Mst(품목범주)
+using {pg.It_Mst_Aa_Category as AaCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_AA_CATEGORY-model';        // AA CATEGORY Mst(계정범주)
+using {pg.It_Mst_Mrp_Manager as MrpManagerMst} from '../../../../db/cds/pg/it/PG_IT_MST_MRP_MANAGER-model';        // MRP Manager Mst(MRP관리자)
+
 namespace pg;
 
 @path : '/pg.taskMonitoringSacDService'
@@ -266,5 +272,63 @@ service taskMonitoringSacDService {
                ,credit_evaluation_interface_code  as  CREDIT_EVAL_IF_NO : String
         from  SupplierMst
     ;
+
+    // Purchasing Group Mst View: 구매그룹
+    view PgPurGroupView @(title : '구매그룹 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||purchasing_group_code  as  ID : String
+               ,purchasing_group_code_name           as  Description
+               ,purchasing_group_code                as  PURCHASING_GROUP_CODE
+        from  PurGroupMst
+        ;
+
+    // ITEM CATEGORY Mst View: 품목범주
+    view PgItemCategoryMstView @(title : '품목범주 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||po_item_category_code  as  ID : String
+               ,po_item_category_name  as  Description
+               ,po_item_category_code  as  PO_ITEM_CATEGORY_CODE
+        from  ItemCategoryMst
+        ;
+
+    // AA CATEGORY Mst View: 계정범주
+    view PgAaCategoryMstView @(title : '계정범주 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||account_assign_category_code  as  ID : String
+               ,account_assign_category_name  as  Description
+               ,account_assign_category_code  as  ACCOUNT_ASSIGN_CATEGORY_CODE
+        from  AaCategoryMst
+        ;
+
+    // MRP MANAGER Mst View: MRP관리자
+    view PgMrpManagerMstView @(title : 'MRP관리자 View') as
+        select
+            key tenant_id||'_'||company_code||'_'||org_type_code||'_'||org_code||'_'||plant_code||'_'||mrp_manager_code  as  ID : String
+               ,mrp_manager_name  as  Description
+               ,mrp_manager_code       as  MRP_MANAGER_CODE
+        from  MrpManagerMst
+        ;
+
+    // TmImportDeclareTypeCode View: 수입신고형태
+    view TmImportDeclareTypeCodeView @(title : '수입신고형태코드 View') as
+        select
+            key tenant_id||'_'||code  as  ID : String
+               ,code_name             as  Description
+               ,code                  as  CODE
+               ,tenant_id             as  TENANT_ID
+               ,language_cd           as  LANGUAGE_CODE
+        from  CmCodeDtlView
+        where group_code  =  'PG_IT_IMPORT_DECLARE_TYPE_CODE';
+
+    // TmValuationClassCode View: 평가클래스코드
+    view TmValuationClassCodeView @(title : '평가클래스코드 View') as
+        select
+            key tenant_id||'_'||code  as  ID : String
+               ,code_name             as  Description
+               ,code                  as  CODE
+               ,tenant_id             as  TENANT_ID
+               ,language_cd           as  LANGUAGE_CODE
+        from  CmCodeDtlView
+        where group_code  =  'DP_MM_VALUATION_CLASS';
 
 }

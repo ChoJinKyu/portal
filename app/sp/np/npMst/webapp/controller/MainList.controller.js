@@ -28,7 +28,8 @@ sap.ui.define([
     'sap/m/SearchField',
     "ext/lib/util/ValidatorUtil",
     "sap/f/library",
-    "ext/lib/util/ControlUtil"
+    "ext/lib/util/ControlUtil",
+    "ext/dp/util/control/ui/MaterialMasterDialog"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -63,7 +64,8 @@ sap.ui.define([
         SearchField,
         ValidatorUtil,
         library,
-        ControlUtil
+        ControlUtil,
+        MaterialMasterDialog
     ) {
         "use strict";
         var that;
@@ -97,17 +99,23 @@ sap.ui.define([
             },
 
             _onRoutedThisPage: function () {
-
+                this.sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
+                that.mainTable = this.byId("mainTable");
+                that.byId("search_effective_end_date").setEditable(false);
+                //this.statusKey = oEvent.getSource().getProperty("selectedKey");
             },
 
             onStatusChange: function (oEvent) {
-                var statusKey = oEvent.getSource().getProperty("selectedKey");
+                this.statusKey = oEvent.getSource().getProperty("selectedKey");
                 //console.log("statusKey" + statusKey);
                 that.byId("search_effective_end_date").setValue(null);
-                if (statusKey !== "all") {
-                    that.byId("search_effective_end_date").setValue(that.getToday());
-                } else {
+
+                if (this.statusKey === "all" || this.statusKey === "effPrc") {
                     that.byId("search_effective_end_date").setValue("9999.12.31");
+                    that.byId("search_effective_end_date").setEditable(false);
+                } else {
+                    that.byId("search_effective_end_date").setValue(that.getToday());
+                    that.byId("search_effective_end_date").setEditable(true);
                 }
             },
 
@@ -138,13 +146,28 @@ sap.ui.define([
             },
 
             fnSearch: function () {
+                var iCount = that.mainTable._getTotalRowCount();
+                for (var i = 0; i < iCount; i++) {
+                    that.mainTable.setSelectedIndex(i);
+                }
+
+                var status = "";
                 var oFilter = [];
                 var aFilter = [];
                 var searchOperationOrg = [];
-                searchOperationOrg = that.byId("search_operation_org_e").getSelectedKeys();
+
+                if (this.sSurffix === "E") {
+                    status = that.byId("status_e").getSelectedKey();
+                    searchOperationOrg = that.byId("search_operation_org_e").getSelectedKeys();
+                }
+
+                if (this.sSurffix === "S") {
+                    status = that.byId("status_s").getSelectedKey();
+                    searchOperationOrg = that.byId("search_operation_org_s").getSelectedKeys();
+                }
 
                 //console.log("searchOperationOrg:" + searchOperationOrg);
-                if (searchOperationOrg.length > 0 ) {
+                if (searchOperationOrg.length > 0) {
                     for (var i = 0; i < searchOperationOrg.length; i++) {
                         aFilter.push(new Filter("org_code", FilterOperator.EQ, searchOperationOrg[i]));
                     }
@@ -152,11 +175,11 @@ sap.ui.define([
                 }
 
                 var supplierCode = that.byId("search_supplier_code").getValue();
-                
+
                 if (!!supplierCode) {
                     oFilter.push(new Filter("supplier_code", FilterOperator.EQ, supplierCode));
                 }
-                
+
                 var materialCode = that.byId("search_material_code").getValue();
 
                 if (!!materialCode) {
@@ -169,21 +192,32 @@ sap.ui.define([
                     oFilter.push(new Filter("net_price_document_type_code", FilterOperator.EQ, netPriceDocumentTypeCode));
                 }
 
-                var searchEffectiveEndDate = that.byId("search_effective_end_date").getValue();
+                var netPriceType = that.byId("search_net_price_type").getSelectedKey();
+
+                if (!!netPriceType) {
+                    oFilter.push(new Filter("net_price_type_code", FilterOperator.EQ, netPriceType));
+                }
+
+                var searchEffectiveEndDate = that.byId("search_effective_end_date").getValue().replace(/\./gi, "");
                 var searchEffectiveStartDate = that.byId("search_effective_start_date");
 
                 if (!!searchEffectiveEndDate) {
-                    oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
+                    if (status === "all" || status === "expPrc") {
+                        oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
+                    } else if (status === "effPrc") {
+                        oFilter.push(new Filter("effective_end_date", FilterOperator.GE, that.getToday().replace(/\./gi, "")));
+                    } 
                 }
 
                 if (!!searchEffectiveStartDate.getValue()) {
-                    oFilter.push(new Filter("effective_start_date", FilterOperator.BT, 
+                    oFilter.push(new Filter("effective_start_date", FilterOperator.BT,
                         this.formatDate(searchEffectiveStartDate.getDateValue()),
                         this.formatDate(searchEffectiveStartDate.getSecondDateValue())
                     ));
                 }
 
-                that.mainTable = this.byId("mainTable");
+                oFilter.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
+
                 var oDataLen = 0;
                 var oView = this.getView(),
                     oModel = this.getModel("list");
@@ -197,14 +231,57 @@ sap.ui.define([
                     }
                 });
             },
-            
-            cvtStringToDate: function(str) {
+
+            cvtStringToDate: function (str) {
                 if (!!str) {
                     var yyyy = str.substring(0, 4);
                     var mm = str.substring(4, 6);
                     var dd = str.substring(6, 8);
                     return yyyy + "." + mm + "." + dd;
                 }
+            },
+
+            vhMatrialCode: function (oEvent) {
+                var materialItem;
+
+                 if(!this.oSearchMultiMaterialMasterDialog){
+                    this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                        title: "Choose MaterialMaster",
+                        MultiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", "L2100")
+                            ]
+                        }
+                    });
+                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                        materialItem = oEvent.mParameters.item;
+                        //console.log("materialItem : ", materialItem);
+                        that.byId("search_material_code").setValue(materialItem.material_code);
+
+                    }.bind(this));
+                }
+                this.oSearchMultiMaterialMasterDialog.open();
+            },
+
+            /**
+                 * Rounds the number unit value to 2 digits
+                 * @public
+                 * @param {string} sValue the number string to be rounded
+                 * @returns {string} sValue with 2 digits rounded
+                 */
+            numberUnit: function (sValue) {
+                if (!sValue) {
+                    return "";
+                }
+
+                sValue = sValue.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+                return parseFloat(sValue).toFixed(2);
+            },
+
+            comma: function (str) {
+                str = String(str);
+                return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
             }
         });
     });

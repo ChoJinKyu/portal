@@ -4,8 +4,6 @@
     "id": "cm.msgMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
     "applicationVersion": {
       "version": "1.0.0"
     },
@@ -14,13 +12,6 @@
     "dataSources": {
       "mainService": {
         "uri": "srv-api/odata/v2/cm.MsgMgtService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "commonUtilService": {
-        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -76,16 +67,6 @@
           "bundleName": "cm.msgMgt.i18n.i18n"
         }
       },
-      "util": {
-        "dataSource": "commonUtilService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -98,14 +79,14 @@
       }
     },
     "resources": {
-        "css": [
-            {
-                "uri": "css/style.css"
-            }
-        ]
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
     },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -124,29 +105,17 @@
       "routes": [
         {
           "pattern": "",
-          "name": "mainList",
+          "name": "messageList",
           "target": [
-            "mainList"
-          ]
-        },
-        {
-          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
-          "name": "mainObject",
-          "target": [
-            "mainObject"
+            "messageList"
           ]
         }
       ],
       "targets": {
-        "mainList": {
-          "viewName": "MainList",
-          "viewId": "mainList",
+        "messageList": {
+          "viewName": "MessageList",
+          "viewId": "messageList",
           "viewLevel": 1
-        },
-        "mainObject": {
-          "viewName": "MainObject",
-          "viewId": "mainObject",
-          "viewLevel": 2
         },
         "notFound": {
           "viewName": "NotFound",

@@ -1,4 +1,5 @@
 procedure pg_tm_ust_master_proc (
+    in  i_tenant_id             nvarchar(5),
     in  i_table_master			table (  
 										tenant_id  nvarchar(5),
 										scenario_number  bigint,
@@ -7,6 +8,18 @@ procedure pg_tm_ust_master_proc (
 										monitoring_purpose  blob,
 										scenario_desc  blob,
 										source_system_desc  blob,
+										local_create_dtm  timestamp,
+										local_update_dtm  timestamp,
+										create_user_id  nvarchar(255),
+										update_user_id  nvarchar(255),
+										system_create_dtm  timestamp,
+										system_update_dtm  timestamp
+                                ),
+	in	i_table_scenario		table (
+										tenant_id  nvarchar(5),
+										scenario_number  bigint,
+										language_code  nvarchar(10),
+										scenario_name  nvarchar(240),
 										local_create_dtm  timestamp,
 										local_update_dtm  timestamp,
 										create_user_id  nvarchar(255),
@@ -29,6 +42,32 @@ procedure pg_tm_ust_master_proc (
 										tenant_id  nvarchar(5),
 										scenario_number  bigint,
 										bizunit_code  nvarchar(10),
+										local_create_dtm  timestamp,
+										local_update_dtm  timestamp,
+										create_user_id  nvarchar(255),
+										update_user_id  nvarchar(255),
+										system_create_dtm  timestamp,
+										system_update_dtm  timestamp
+                                ),
+	in	i_table_purchasing_type	table (
+										tenant_id  nvarchar(5),
+										scenario_number  bigint,
+										monitoring_purchasing_type_code  nvarchar(30),
+										language_code  nvarchar(10),
+										monitoring_purchasing_type_name  nvarchar(240),
+										local_create_dtm  timestamp,
+										local_update_dtm  timestamp,
+										create_user_id  nvarchar(255),
+										update_user_id  nvarchar(255),
+										system_create_dtm  timestamp,
+										system_update_dtm  timestamp
+								),
+	in	i_table_type			table (
+										tenant_id  nvarchar(5),
+										scenario_number  bigint,
+										monitoring_type_code  nvarchar(30),
+										language_code  nvarchar(10),
+										monitoring_type_name  nvarchar(240),
 										local_create_dtm  timestamp,
 										local_update_dtm  timestamp,
 										create_user_id  nvarchar(255),
@@ -61,44 +100,6 @@ procedure pg_tm_ust_master_proc (
 										system_create_dtm  timestamp,
 										system_update_dtm  timestamp	
 								),
-	in	i_table_purchasing_type	table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										monitoring_purchasing_type_code  nvarchar(30),
-										language_code  nvarchar(10),
-										monitoring_purchasing_type_name  nvarchar(240),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	in	i_table_scenario		table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										language_code  nvarchar(10),
-										scenario_name  nvarchar(240),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
-	in	i_table_type			table (
-										tenant_id  nvarchar(5),
-										scenario_number  bigint,
-										monitoring_type_code  nvarchar(30),
-										language_code  nvarchar(10),
-										monitoring_type_name  nvarchar(240),
-										local_create_dtm  timestamp,
-										local_update_dtm  timestamp,
-										create_user_id  nvarchar(255),
-										update_user_id  nvarchar(255),
-										system_create_dtm  timestamp,
-										system_update_dtm  timestamp
-								),
 	out o_table_message			pg_tm_proc_out_type
 )
 language sqlscript
@@ -106,88 +107,107 @@ sql security invoker
 
 as
 begin
+
+    declare lv_max_seq integer default 0;
+    declare lv_sourcemaster_count integer default 0;
+    declare lv_sourcescenario_count integer default 0;
+    declare lv_sourcecompany_count integer default 0;
+    declare lv_sourcebizunit_count integer default 0;
+    declare lv_sourcepurchasingtype_count integer default 0;
+    declare lv_sourcetypecode_count integer default 0;
+    declare lv_sourcemanager_count integer default 0;
+    declare lv_sourceoperation_count integer default 0;
 -- rollback message
 	declare exit handler for sqlexception
 		begin
 			rollback;
 			o_table_message = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnmessage from dummy;
-		end;
+        end;		
+-- Max Sequence
+        select  ifnull(max(scenario_number), 0) + 1 as max_scenario_number 
+        into    lv_max_seq
+        from    pg_tm_master
+        where   tenant_id = :i_tenant_id
+    ;
 -- master table
 	o_table_master =
 		select
-                master.tenant_id,
-                master.scenario_number,
-				-- ifnull(master.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
-				master.monitoring_type_code,
-				master.activate_flag,
-				master.monitoring_purpose,
-				master.scenario_desc,
-				master.source_system_desc,
-				master.local_create_dtm,
-				master.local_update_dtm,
-				master.create_user_id,
-				master.update_user_id,
-				master.system_create_dtm,
-				master.system_update_dtm
-		from	:i_table_master master
-		;
-
-	merge into	pg_tm_master	as t_master_tab
-		using	:o_table_master	as s_master_tab
-		on		t_master_tab.tenant_id			= s_master_tab.tenant_id
-		and		t_master_tab.scenario_number	= s_master_tab.scenario_number
-
-	when matched then
-		update set
-			t_master_tab.monitoring_type_code	= s_master_tab.monitoring_type_code,
-			t_master_tab.activate_flag			= s_master_tab.activate_flag,
-			t_master_tab.monitoring_purpose		= s_master_tab.monitoring_purpose,
-			t_master_tab.scenario_desc			= s_master_tab.scenario_desc,
-			t_master_tab.source_system_desc		= s_master_tab.source_system_desc,
-			t_master_tab.local_update_dtm		= current_timestamp,
-			t_master_tab.update_user_id			= current_user,
-			t_master_tab.system_update_dtm		= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			monitoring_type_code,
-			activate_flag,
-			monitoring_purpose,
-			scenario_desc,
-			source_system_desc,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_master_tab.tenant_id,
-            s_master_tab.scenario_number,
-            s_master_tab.monitoring_type_code,
-            s_master_tab.activate_flag,
-            s_master_tab.monitoring_purpose,
-            s_master_tab.scenario_desc,
-            s_master_tab.source_system_desc,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
+                master.tenant_id							as tenant_id,
+				ifnull(master.scenario_number, lv_max_seq)	as scenario_number,
+				master.monitoring_type_code					as monitoring_type_code,
+				master.activate_flag						as activate_flag,
+				master.monitoring_purpose					as monitoring_purpose,
+				master.scenario_desc						as scenario_desc,
+				master.source_system_desc					as source_system_desc,
+				master.local_create_dtm						as local_create_dtm,
+				master.local_update_dtm						as local_update_dtm,
+				master.create_user_id						as create_user_id,
+				master.update_user_id						as update_user_id,
+				master.system_create_dtm					as system_create_dtm,
+				master.system_update_dtm					as system_update_dtm
+        from	:i_table_master master
+        ;  
+    select count(tenant_id) into lv_sourcemaster_count from :i_table_master where tenant_id is not null;
+    if	lv_sourcemaster_count <= 0 then
+        rollback;
+	else
+		merge into	pg_tm_master	as t_master_tab
+			using	:o_table_master	as s_master_tab
+			on		t_master_tab.tenant_id			= s_master_tab.tenant_id
+			and		t_master_tab.scenario_number	= s_master_tab.scenario_number
+	
+		when matched then
+			update set
+				t_master_tab.monitoring_type_code	= s_master_tab.monitoring_type_code,
+				t_master_tab.activate_flag			= s_master_tab.activate_flag,
+				t_master_tab.monitoring_purpose		= s_master_tab.monitoring_purpose,
+				t_master_tab.scenario_desc			= s_master_tab.scenario_desc,
+				t_master_tab.source_system_desc		= s_master_tab.source_system_desc,
+				t_master_tab.local_update_dtm		= current_timestamp,
+				t_master_tab.update_user_id			= current_user,
+				t_master_tab.system_update_dtm		= current_timestamp
+	
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				monitoring_type_code,
+				activate_flag,
+				monitoring_purpose,
+				scenario_desc,
+				source_system_desc,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
 			)
+			values
+			(
+				s_master_tab.tenant_id,
+				s_master_tab.scenario_number,
+				s_master_tab.monitoring_type_code,
+				s_master_tab.activate_flag,
+				s_master_tab.monitoring_purpose,
+				s_master_tab.scenario_desc,
+				s_master_tab.source_system_desc,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
 	;
 -- scenario table
 	o_table_scenario =
 		select
                 scenario.tenant_id,
-                scenario.scenario_number,
-				-- ifnull(scenario.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+				ifnull(scenario.scenario_number, lv_max_seq) as scenario_number,
 				scenario.language_code,
 				scenario.scenario_name,
 				scenario.local_create_dtm,
@@ -197,55 +217,60 @@ begin
 				scenario.system_create_dtm,
 				scenario.system_update_dtm
 		from	:i_table_scenario scenario
-		;
-
-	merge into	pg_tm_scenario_number_lng	as t_scenario_tab
-		using	:o_table_scenario			as s_scenario_tab
-		on		t_scenario_tab.tenant_id		= s_scenario_tab.tenant_id
-		and		t_scenario_tab.scenario_number	= s_scenario_tab.scenario_number
-
-	when matched then
-		update set
-			t_scenario_tab.language_code		= s_scenario_tab.language_code,
-			t_scenario_tab.scenario_name		= s_scenario_tab.scenario_name,
-			t_scenario_tab.local_update_dtm		= current_timestamp,
-			t_scenario_tab.update_user_id		= current_user,
-			t_scenario_tab.system_update_dtm	= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			language_code,
-			scenario_name,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_scenario_tab.tenant_id,
-            s_scenario_tab.scenario_number,
-			s_scenario_tab.language_code,
-			s_scenario_tab.scenario_name,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
+        ;
+    -- if	record_count(:i_table_scenario) = 0 then
+    select count(tenant_id) into lv_sourcescenario_count from :i_table_scenario where tenant_id is not null;
+    if	lv_sourcescenario_count <= 0 then
+        rollback;
+	else
+		merge into	pg_tm_scenario_number_lng	as t_scenario_tab
+			using	:o_table_scenario			as s_scenario_tab
+			on		t_scenario_tab.tenant_id		= s_scenario_tab.tenant_id
+			and		t_scenario_tab.scenario_number	= s_scenario_tab.scenario_number
+		
+		when matched then
+			update set
+				t_scenario_tab.language_code		= s_scenario_tab.language_code,
+				t_scenario_tab.scenario_name		= s_scenario_tab.scenario_name,
+				t_scenario_tab.local_update_dtm		= current_timestamp,
+				t_scenario_tab.update_user_id		= current_user,
+				t_scenario_tab.system_update_dtm	= current_timestamp
+		
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				language_code,
+				scenario_name,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
 			)
+			values
+			(
+				s_scenario_tab.tenant_id,
+				s_scenario_tab.scenario_number,
+				s_scenario_tab.language_code,
+				s_scenario_tab.scenario_name,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
 	;
 -- company code	table
 	o_table_company =
 		select
                 company.tenant_id,
-                company.scenario_number,
-				-- ifnull(company.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+				ifnull(company.scenario_number, lv_max_seq) as scenario_number,
 				company.company_code,
 				company.local_create_dtm,
 				company.local_update_dtm,
@@ -254,52 +279,57 @@ begin
 				company.system_create_dtm,
 				company.system_update_dtm
 		from	:i_table_company company
-		;
-
-	merge into	pg_tm_comp_code		as t_company_tab
-		using	:o_table_company	as s_company_tab
-		on		t_company_tab.tenant_id			= s_company_tab.tenant_id
-		and		t_company_tab.scenario_number	= s_company_tab.scenario_number
-
-	when matched then
-		update set
-			t_company_tab.company_code		= s_company_tab.company_code,
-			t_company_tab.local_update_dtm	= current_timestamp,
-			t_company_tab.update_user_id	= current_user,
-			t_company_tab.system_update_dtm	= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			company_code,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_company_tab.tenant_id,
-            s_company_tab.scenario_number,
-            s_company_tab.company_code,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
+        ;
+    -- if	record_count(:i_table_company) = 0 then
+    select count(tenant_id) into lv_sourcecompany_count from :i_table_company where tenant_id is not null;
+    if	lv_sourcecompany_count <= 0 then
+        rollback;
+	else
+		merge into	pg_tm_comp_code		as t_company_tab
+			using	:o_table_company	as s_company_tab
+			on		t_company_tab.tenant_id			= s_company_tab.tenant_id
+			and		t_company_tab.scenario_number	= s_company_tab.scenario_number
+		
+		when matched then
+			update set
+				t_company_tab.company_code		= s_company_tab.company_code,
+				t_company_tab.local_update_dtm	= current_timestamp,
+				t_company_tab.update_user_id	= current_user,
+				t_company_tab.system_update_dtm	= current_timestamp
+		
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				company_code,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
 			)
+			values
+			(
+				s_company_tab.tenant_id,
+				s_company_tab.scenario_number,
+				s_company_tab.company_code,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
 	;
 -- bizunit code	table
 	o_table_bizunit =
 		select
                 bizunit.tenant_id,
-                bizunit.scenario_number,
-				-- ifnull(bizunit.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+				ifnull(bizunit.scenario_number, lv_max_seq) as scenario_number,
 				bizunit.bizunit_code,
 				bizunit.local_create_dtm,
 				bizunit.local_update_dtm,
@@ -308,172 +338,57 @@ begin
 				bizunit.system_create_dtm,
 				bizunit.system_update_dtm
 		from	:i_table_bizunit bizunit
-		;
-
-	merge into	pg_tm_bizunit_code	as t_bizunit_tab
-		using	:o_table_bizunit	as s_bizunit_tab
-		on		t_bizunit_tab.tenant_id			= s_bizunit_tab.tenant_id
-		and		t_bizunit_tab.scenario_number	= s_bizunit_tab.scenario_number
-
-	when matched then
-		update set
-			t_bizunit_tab.bizunit_code		= s_bizunit_tab.bizunit_code,
-			t_bizunit_tab.local_update_dtm	= current_timestamp,
-			t_bizunit_tab.update_user_id	= current_user,
-			t_bizunit_tab.system_update_dtm	= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			bizunit_code,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_bizunit_tab.tenant_id,
-            s_bizunit_tab.scenario_number,
-            s_bizunit_tab.bizunit_code,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
+        ;
+    -- if	record_count(:i_table_bizunit) = 0 then
+    select count(tenant_id) into lv_sourcebizunit_count from :i_table_bizunit where tenant_id is not null;
+    if	lv_sourcebizunit_count <= 0 then
+        rollback;
+	else
+		merge into	pg_tm_bizunit_code	as t_bizunit_tab
+			using	:o_table_bizunit	as s_bizunit_tab
+			on		t_bizunit_tab.tenant_id			= s_bizunit_tab.tenant_id
+			and		t_bizunit_tab.scenario_number	= s_bizunit_tab.scenario_number
+		
+		when matched then
+			update set
+				t_bizunit_tab.bizunit_code		= s_bizunit_tab.bizunit_code,
+				t_bizunit_tab.local_update_dtm	= current_timestamp,
+				t_bizunit_tab.update_user_id	= current_user,
+				t_bizunit_tab.system_update_dtm	= current_timestamp
+		
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				bizunit_code,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
 			)
-	;
--- manager table
-	o_table_manager =
-		select
-                manager.tenant_id,
-                manager.scenario_number,
-				-- ifnull(manager.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
-				manager.monitoring_manager_empno,
-				manager.monitoring_super_authority_flag,
-				manager.local_create_dtm,
-				manager.local_update_dtm,
-				manager.create_user_id,
-				manager.update_user_id,
-				manager.system_create_dtm,
-				manager.system_update_dtm
-		from	:i_table_manager manager
-		;
-
-	merge into	pg_tm_manager_dtl	as t_manager_tab
-		using	:o_table_manager	as s_manager_tab
-		on		t_manager_tab.tenant_id			= s_manager_tab.tenant_id
-		and		t_manager_tab.scenario_number	= s_manager_tab.scenario_number
-
-	when matched then
-		update set
-			t_manager_tab.monitoring_manager_empno			= s_manager_tab.monitoring_manager_empno,
-			t_manager_tab.monitoring_super_authority_flag	= s_manager_tab.monitoring_super_authority_flag,
-			t_manager_tab.local_update_dtm					= current_timestamp,
-			t_manager_tab.update_user_id					= current_user,
-			t_manager_tab.system_update_dtm					= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			monitoring_manager_empno,
-			monitoring_super_authority_flag,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_manager_tab.tenant_id,
-            s_manager_tab.scenario_number,
-            s_manager_tab.monitoring_manager_empno,
-			s_manager_tab.monitoring_super_authority_flag,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
-			)
-	;
--- operation mode table
-	o_table_operation =
-		select
-                operation.tenant_id,
-                operation.scenario_number,
-				-- ifnull(operation.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
-				operation.monitoring_operation_mode_code,
-				operation.language_code,
-				operation.monitoring_operation_mode_name,
-				operation.local_create_dtm,
-				operation.local_update_dtm,
-				operation.create_user_id,
-				operation.update_user_id,
-				operation.system_create_dtm,
-				operation.system_update_dtm
-		from	:i_table_operation operation
-		;
-
-	merge into	pg_tm_operation_mode_code_lng	as t_operation_tab
-		using	:o_table_operation				as s_operation_tab
-		on		t_operation_tab.tenant_id		= s_operation_tab.tenant_id
-		and		t_operation_tab.scenario_number	= s_operation_tab.scenario_number
-
-	when matched then
-		update set
-			t_operation_tab.monitoring_operation_mode_code	= s_operation_tab.monitoring_operation_mode_code,
-			t_operation_tab.language_code					= s_operation_tab.language_code,
-			t_operation_tab.monitoring_operation_mode_name	= s_operation_tab.monitoring_operation_mode_name,
-			t_operation_tab.local_update_dtm				= current_timestamp,
-			t_operation_tab.update_user_id					= current_user,
-			t_operation_tab.system_update_dtm				= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			monitoring_operation_mode_code,
-			language_code,
-			monitoring_operation_mode_name,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_operation_tab.tenant_id,
-            s_operation_tab.scenario_number,
-            s_operation_tab.monitoring_operation_mode_code,
-			s_operation_tab.language_code,
-			s_operation_tab.monitoring_operation_mode_name,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
-			)
+			values
+			(
+				s_bizunit_tab.tenant_id,
+				s_bizunit_tab.scenario_number,
+				s_bizunit_tab.bizunit_code,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
 	;
 -- purchasing type table
 	o_table_purchasing_type =
 		select
                 purchasing.tenant_id,
-                purchasing.scenario_number,
-				-- ifnull(purchasing.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+				ifnull(purchasing.scenario_number, lv_max_seq) as scenario_number,
 				purchasing.monitoring_purchasing_type_code,
 				purchasing.language_code,
 				purchasing.monitoring_purchasing_type_name,
@@ -484,58 +399,63 @@ begin
 				purchasing.system_create_dtm,
 				purchasing.system_update_dtm
 		from	:i_table_purchasing_type purchasing
-		;
-
-	merge into	pg_tm_purchasing_type_code_lng	as t_purchasing_tab
-		using	:o_table_purchasing_type		as s_purchasing_tab
-		on		t_purchasing_tab.tenant_id			= s_purchasing_tab.tenant_id
-		and		t_purchasing_tab.scenario_number	= s_purchasing_tab.scenario_number
-
-	when matched then
-		update set
-			t_purchasing_tab.monitoring_purchasing_type_code	= s_purchasing_tab.monitoring_purchasing_type_code,
-			t_purchasing_tab.language_code						= s_purchasing_tab.language_code,
-			t_purchasing_tab.monitoring_purchasing_type_name	= s_purchasing_tab.monitoring_purchasing_type_name,
-			t_purchasing_tab.local_update_dtm					= current_timestamp,
-			t_purchasing_tab.update_user_id						= current_user,
-			t_purchasing_tab.system_update_dtm					= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			monitoring_purchasing_type_code,
-			language_code,
-			monitoring_purchasing_type_name,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_purchasing_tab.tenant_id,
-            s_purchasing_tab.scenario_number,
-            s_purchasing_tab.monitoring_purchasing_type_code,
-			s_purchasing_tab.language_code,
-			s_purchasing_tab.monitoring_purchasing_type_name,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
+        ;
+    -- if	record_count(:i_table_purchasing_type) = 0 then
+    select count(tenant_id) into lv_sourcepurchasingtype_count from :i_table_purchasing_type where tenant_id is not null;
+    if	lv_sourcepurchasingtype_count <= 0 then
+        rollback;
+	else
+		merge into	pg_tm_purchasing_type_code_lng	as t_purchasing_tab
+			using	:o_table_purchasing_type		as s_purchasing_tab
+			on		t_purchasing_tab.tenant_id			= s_purchasing_tab.tenant_id
+			and		t_purchasing_tab.scenario_number	= s_purchasing_tab.scenario_number
+		
+		when matched then
+			update set
+				t_purchasing_tab.monitoring_purchasing_type_code	= s_purchasing_tab.monitoring_purchasing_type_code,
+				t_purchasing_tab.language_code						= s_purchasing_tab.language_code,
+				t_purchasing_tab.monitoring_purchasing_type_name	= s_purchasing_tab.monitoring_purchasing_type_name,
+				t_purchasing_tab.local_update_dtm					= current_timestamp,
+				t_purchasing_tab.update_user_id						= current_user,
+				t_purchasing_tab.system_update_dtm					= current_timestamp
+		
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				monitoring_purchasing_type_code,
+				language_code,
+				monitoring_purchasing_type_name,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
 			)
+			values
+			(
+				s_purchasing_tab.tenant_id,
+				s_purchasing_tab.scenario_number,
+				s_purchasing_tab.monitoring_purchasing_type_code,
+				s_purchasing_tab.language_code,
+				s_purchasing_tab.monitoring_purchasing_type_name,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
 	;
 -- type table
 	o_table_type =
 		select
                 type.tenant_id,
-                type.scenario_number,
-				-- ifnull(type.scenario_number, pg_tm_scenario_number_seq.nextval) as scenario_number,
+				ifnull(type.scenario_number, lv_max_seq) as scenario_number,
 				type.monitoring_type_code,
 				type.language_code,
 				type.monitoring_type_name,
@@ -546,51 +466,185 @@ begin
 				type.system_create_dtm,
 				type.system_update_dtm
 		from	:i_table_type type
-		;
-
-	merge into	pg_tm_type_code_lng	as t_type_tab
-		using	:o_table_type		as s_type_tab
-		on		t_type_tab.tenant_id		= s_type_tab.tenant_id
-		and		t_type_tab.scenario_number	= s_type_tab.scenario_number
-
-	when matched then
-		update set
-			t_type_tab.monitoring_type_code	= s_type_tab.monitoring_type_code,
-			t_type_tab.language_code		= s_type_tab.language_code,
-			t_type_tab.monitoring_type_name	= s_type_tab.monitoring_type_name,
-			t_type_tab.local_update_dtm		= current_timestamp,
-			t_type_tab.update_user_id		= current_user,
-			t_type_tab.system_update_dtm	= current_timestamp
-
-	when not matched then
-		insert
-		(
-			tenant_id,
-			scenario_number,
-			monitoring_type_code,
-			language_code,
-			monitoring_type_name,
-			local_create_dtm,
-			local_update_dtm,
-			create_user_id,
-			update_user_id,
-			system_create_dtm,
-			system_update_dtm
-		)
-		values
-		(
-            s_type_tab.tenant_id,
-            s_type_tab.scenario_number,
-            s_type_tab.monitoring_type_code,
-			s_type_tab.language_code,
-			s_type_tab.monitoring_type_name,
-			current_timestamp,
-			current_timestamp,
-			current_user,
-			current_user,
-			current_timestamp,
-			current_timestamp
+        ;
+    -- if	record_count(:i_table_type) = 0 then
+    select count(tenant_id) into lv_sourcetypecode_count from :i_table_type where tenant_id is not null;
+    if	lv_sourcetypecode_count <= 0 then
+        rollback;
+	else
+		merge into	pg_tm_type_code_lng	as t_type_tab
+			using	:o_table_type		as s_type_tab
+			on		t_type_tab.tenant_id		= s_type_tab.tenant_id
+			and		t_type_tab.scenario_number	= s_type_tab.scenario_number
+		
+		when matched then
+			update set
+				t_type_tab.monitoring_type_code	= s_type_tab.monitoring_type_code,
+				t_type_tab.language_code		= s_type_tab.language_code,
+				t_type_tab.monitoring_type_name	= s_type_tab.monitoring_type_name,
+				t_type_tab.local_update_dtm		= current_timestamp,
+				t_type_tab.update_user_id		= current_user,
+				t_type_tab.system_update_dtm	= current_timestamp
+		
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				monitoring_type_code,
+				language_code,
+				monitoring_type_name,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
 			)
+			values
+			(
+				s_type_tab.tenant_id,
+				s_type_tab.scenario_number,
+				s_type_tab.monitoring_type_code,
+				s_type_tab.language_code,
+				s_type_tab.monitoring_type_name,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
+	;
+-- manager table
+	o_table_manager =
+		select
+                manager.tenant_id,
+				ifnull(manager.scenario_number, lv_max_seq) as scenario_number,
+				manager.monitoring_manager_empno,
+				manager.monitoring_super_authority_flag,
+				manager.local_create_dtm,
+				manager.local_update_dtm,
+				manager.create_user_id,
+				manager.update_user_id,
+				manager.system_create_dtm,
+				manager.system_update_dtm
+		from	:i_table_manager manager
+        ;
+    -- if	record_count(:i_table_manager) = 0 then
+    select count(tenant_id) into lv_sourcemanager_count from :i_table_manager where tenant_id is not null;
+    if	lv_sourcemanager_count <= 0 then
+	else
+		merge into	pg_tm_manager_dtl	as t_manager_tab
+			using	:o_table_manager	as s_manager_tab
+			on		t_manager_tab.tenant_id			= s_manager_tab.tenant_id
+			and		t_manager_tab.scenario_number	= s_manager_tab.scenario_number
+		
+		when matched then
+			update set
+				t_manager_tab.monitoring_manager_empno			= s_manager_tab.monitoring_manager_empno,
+				t_manager_tab.monitoring_super_authority_flag	= s_manager_tab.monitoring_super_authority_flag,
+				t_manager_tab.local_update_dtm					= current_timestamp,
+				t_manager_tab.update_user_id					= current_user,
+				t_manager_tab.system_update_dtm					= current_timestamp
+		
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				monitoring_manager_empno,
+				monitoring_super_authority_flag,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
+			)
+			values
+			(
+				s_manager_tab.tenant_id,
+				s_manager_tab.scenario_number,
+				s_manager_tab.monitoring_manager_empno,
+				s_manager_tab.monitoring_super_authority_flag,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
+	;
+-- operation mode table
+	o_table_operation =
+		select
+                operation.tenant_id,
+				ifnull(operation.scenario_number, lv_max_seq) as scenario_number,
+				operation.monitoring_operation_mode_code,
+				operation.language_code,
+				operation.monitoring_operation_mode_name,
+				operation.local_create_dtm,
+				operation.local_update_dtm,
+				operation.create_user_id,
+				operation.update_user_id,
+				operation.system_create_dtm,
+				operation.system_update_dtm
+		from	:i_table_operation operation
+        ;
+    -- if  record_count(:i_table_operation) = 0 then
+    select count(tenant_id) into lv_sourceoperation_count from :i_table_operation where tenant_id is not null;
+    if	lv_sourceoperation_count <= 0 then
+	else
+		merge into	pg_tm_operation_mode_code_lng	as t_operation_tab
+			using	:o_table_operation				as s_operation_tab
+			on		t_operation_tab.tenant_id		= s_operation_tab.tenant_id
+			and		t_operation_tab.scenario_number	= s_operation_tab.scenario_number
+		
+		when matched then
+			update set
+				t_operation_tab.monitoring_operation_mode_code	= s_operation_tab.monitoring_operation_mode_code,
+				t_operation_tab.language_code					= s_operation_tab.language_code,
+				t_operation_tab.monitoring_operation_mode_name	= s_operation_tab.monitoring_operation_mode_name,
+				t_operation_tab.local_update_dtm				= current_timestamp,
+				t_operation_tab.update_user_id					= current_user,
+				t_operation_tab.system_update_dtm				= current_timestamp
+		
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				monitoring_operation_mode_code,
+				language_code,
+				monitoring_operation_mode_name,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
+			)
+			values
+			(
+				s_operation_tab.tenant_id,
+				s_operation_tab.scenario_number,
+				s_operation_tab.monitoring_operation_mode_code,
+				s_operation_tab.language_code,
+				s_operation_tab.monitoring_operation_mode_name,
+				current_timestamp,
+				current_timestamp,
+				current_user,
+				current_user,
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if
 	;
 -- commit message	
 	commit;

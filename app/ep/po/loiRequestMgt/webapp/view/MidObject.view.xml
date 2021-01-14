@@ -141,8 +141,7 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/LOIRequestDetailView}"
-                                rows="{
+                                items="{
                                     path: 'details>/LOIRequestDetailView',
                                     sorter: { 
                                         path: 'item_sequence',
@@ -173,7 +172,7 @@
 									<Text text="플랜트" />
 								</Column>
 								<Column id="midLevelValueColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="품목코드" required="true" />
+									<Text text="품목코드" />
 								</Column>
 								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center"  width="200px">
 									<Text text="품명" />
@@ -187,10 +186,10 @@
                                 <Column id="midEndDateColumn2" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Text text="통화" />
 								</Column>
-                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Right" >
+                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="금액" />
 								</Column>
-                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Right" >
+                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="수행업체" />
 								</Column>
                                 <Column id="midEndDateColumn5" minScreenWidth="Tablet" hAlign="Center" >
@@ -212,7 +211,8 @@
                                         <Text text="{details>item_sequence}"/>
                                         <!-- <Input value="{details>item_sequence}"/> -->
                                         <!-- <Input value="{details>tenant_id}"/> -->
-                                        <lib-m:CodePicker id="searchTenantPicker"
+                                        
+                                            <lib-m:CodePicker id="searchTenantPicker"
                                             placeholder="Enter a plant name"
                                             keyField="plant_code"
                                             textField="plant_name"
@@ -232,6 +232,7 @@
                                             selectedKey="{details>plant_code}">
                                             <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Plant"
                                                 keyFieldHeaderText="Plant ID" textFieldHeaderText="Plant" />
+
 
 
 
@@ -262,7 +263,8 @@
                                         <!-- <ComboBox
                                         id="midLevelCombo"
                                         width="100%"
-                                        selectedKey="{details>currency_code}"   
+                                        selectedKey="{details>currency_code}"  
+                                        editable="{midObjectView>/isEditMode}"
                                         items="{
                                             path: '/CurrencyUnitView',
                                             filters: [

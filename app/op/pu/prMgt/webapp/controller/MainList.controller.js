@@ -136,7 +136,7 @@ sap.ui.define([
             //     }
             // }
             aItems.forEach(function(oItem){
-                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "DR" )
+                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "10" )
                 {
                 //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
                  aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
@@ -168,6 +168,8 @@ sap.ui.define([
             }
 
         },
+
+
 
 
 
@@ -223,7 +225,8 @@ sap.ui.define([
             console.group("handleTableSelectDialogPress");
 
             var oView = this.getView();
-            var oButton = oEvent.getSource();
+            var oButton = oEvent.getSource(); 
+
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
                     id: oView.getId(),
@@ -235,9 +238,16 @@ sap.ui.define([
                 }.bind(this));
             }
 
-            this._oDialogTableSelect.then(function (oDialog) {
+            this._oDialogTableSelect.then(function (oDialog) {               
                 oDialog.open();
             });
+        },
+
+        onDialogOpen: function (oEvent) {
+   
+            var oPR_TYPE2 = this.byId("SelectionPR_TYPE2")
+                oPR_TYPE2.setSelectedKey("");
+            this.onInitPR_TYPE3();           
         },
 
         onExit: function () {
@@ -319,13 +329,8 @@ sap.ui.define([
                 },
                 error: function (oData) {
                     // oCodeMasterTable.setBusy(false);
-                }
-
-                
-            });
-
-           
-            
+                }                
+            });            
         },
 
 
@@ -424,7 +429,6 @@ sap.ui.define([
                 key: "{pr_template_number}",
                 text: "{pr_template_name}"                
             });
-
             oSegmentButton.bindItems("/Pr_TMapView", oItemTemplate, null, aFilters);
         },
 
@@ -442,7 +446,9 @@ sap.ui.define([
             oNextUIState.layout = "MidColumnFullScreen";
             this.getRouter().navTo("midCreate", {
                 layout: oNextUIState.layout,
-                tenantId: "new",
+                vMode: "NEW",
+                tenantId: "L2100",
+                company_code: "LGCKR",                
                 pr_type_code: this.byId("SelectionPR_TYPE").getSelectedKey(),
                 pr_type_code_2: this.byId("SelectionPR_TYPE2").getSelectedKey(),
                 pr_type_code_3: this.byId("SelectionPR_TYPE3").getSelectedKey(),
@@ -483,7 +489,9 @@ sap.ui.define([
 
             this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
+                vMode: "VIEW",
                 tenantId: oRecord.tenant_id,
+                company_code: oRecord.company_code,
                 pr_number: oRecord.pr_number
             });
 
@@ -528,6 +536,7 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
+
         },
 
         _getSearchStates: function () {
@@ -538,7 +547,7 @@ sap.ui.define([
             var sDateTo = this.getView().byId("searchRequestDate").getSecondDateValue();
             var sPR_TYPE_CODE = this.getView().byId("searchPR_TYPE_CODE").getSelectedKeys();
             var sPR_TEMPLATE_NUMBER = this.getView().byId("searchPR_TEMPLATE_NUMBER").getSelectedKeys();
-            var sPrNumber = this.getView().byId("searchPrNumber").getSelectedKey();
+            var sPrNumber = this.getView().byId("searchPrNumber").getValue();
             var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
             var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
             var sRequestor = this.getView().byId("searchRequestorS").getValue();
@@ -597,7 +606,7 @@ sap.ui.define([
 
             if (sPrNumber) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("pr_number", FilterOperator.EQ, sPrNumber));
+                _tempFilters.push(new Filter("pr_number", FilterOperator.Contains, sPrNumber));
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,
@@ -654,8 +663,6 @@ sap.ui.define([
                     })
                 );
             }
-
-            
             
             return aSearchFilters;
         },

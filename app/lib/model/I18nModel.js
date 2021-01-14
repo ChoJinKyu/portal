@@ -9,10 +9,10 @@ sap.ui.define([
 
 		metadata: {
             events: {
-                loaded: {
-                    parameters: {
-						oData: {type: "object"}
-					}
+                ready: {
+                    parameters : {
+                        model : {type : "object"}
+                    }
                 }
             }
         },
@@ -41,8 +41,11 @@ sap.ui.define([
             Parent.prototype.setData.call(this, oParsed);
         },
 
-        setReady: function(bReady){
-            this.bReady = bReady;
+        setReady: function(){
+            this.bReady = true;
+            this.fireEvent("ready", {
+                model: this
+            });
         },
 
         isReady: function(){

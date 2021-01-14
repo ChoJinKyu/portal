@@ -44,7 +44,7 @@ public class VendorPool implements EventHandler {
 
             String project_number = "";
 
-            //Connection conn = jdbc.getDataSource().getConnection();
+            
 
             // Local Temp Table 생성
             //PreparedStatement v_statement = conn.prepareStatement(v_sql);

@@ -23,7 +23,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-                    <Title text="(NPD) {I18N>/NEW_BASE_PRICE}" wrapping="true"/>
+                    <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
 					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" />
@@ -37,7 +37,7 @@
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
                     <!-- <ObjectStatus title="Approval Number" text="{detailModel>/approval_number}"/> -->
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/approval_requestor_empno}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/approval_requestor_empno_fk/user_local_name}"/>
                     <!-- <ObjectStatus title="Requester" text="{detailModel>/update_user_id}"/> -->
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
                     <!-- <ObjectStatus title="Request Date" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/> -->
@@ -158,7 +158,9 @@
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
                                             <t:template>
                                                 <!-- <Text text="{detailModel>company_code}" /> -->
-                                                <ComboBox width="100%" selectedKey="{detailModel>company_code}" 
+                                                <ComboBox width="100%" 
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' &amp;&amp; ${rootModel>/config/COMPANY_EDITABLE_FLAG} === 'Y' ? true : false}"
+                                                    selectedKey="{detailModel>company_code}" 
                                                     items="{
                                                     path: 'org>/Company',
                                                         filters: [
@@ -176,10 +178,11 @@
                                         <!-- <t:Column hAlign="Center" width="6rem"> -->
                                         <t:Column hAlign="Center" width="18rem">
                                             <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" /> -->
-                                            <Label text="{I18N>/PLANT}" textAlign="Center" />
+                                            <Label text="{path: 'I18N>/PLANT', formatter: '.onSetPurOrgText'}" textAlign="Center" />
                                             <t:template>
                                                 <!-- <Text text="{detailModel>org_code}" /> -->
-                                                <ComboBox width="100%" 
+                                                <ComboBox width="100%"
+                                                    editable="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
                                                     selectedKey="{detailModel>org_code}" 
                                                     items="{detailModel>purOrg}">
                                                     <items>
@@ -230,7 +233,7 @@
                                                 </Select>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="2" width="7rem" visible="{codeModel>/switchColumnVisible}">
+                                        <t:Column headerSpan="2" width="7rem" visible="{= ${rootModel>/config/SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/CODE}" textAlign="Center" width="100%" />
@@ -241,7 +244,7 @@
                                                 <Text text="{detailModel>supplier_code}" textAlign="Center" width="100%" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem" visible="{codeModel>/switchColumnVisible}">
+                                        <t:Column width="10rem" visible="{= ${rootModel>/config/SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/NAME}" textAlign="Center" width="100%" />
@@ -259,7 +262,7 @@
                                                 </Input>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem" visible="{codeModel>/switchColumnVisible}">
+                                        <t:Column width="10rem" visible="{= ${rootModel>/config/MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                                             </t:multiLabels>
@@ -269,7 +272,7 @@
                                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem" visible="{codeModel>/switchColumnVisible}">
+                                        <t:Column width="10rem" visible="{= ${rootModel>/config/MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
                                             <t:template>
                                                 <Input 
@@ -281,7 +284,7 @@
                                                     type="Number" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="6rem" visible="{codeModel>/switchColumnVisible}">
+                                        <t:Column width="6rem" visible="{= ${rootModel>/config/MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
                                             <t:template>
                                                 <ComboBox
@@ -294,7 +297,7 @@
                                                 </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="3" width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
+                                        <t:Column headerSpan="3" width="10rem" visible="{= ${rootModel>/config/MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -307,7 +310,7 @@
                                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
+                                        <t:Column width="10rem" visible="{= ${rootModel>/config/MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -324,7 +327,7 @@
                                                     type="Number" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="6rem" visible="{= !${codeModel>/switchColumnVisible}}">
+                                        <t:Column width="6rem" visible="{= ${rootModel>/config/MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
@@ -342,7 +345,7 @@
                                                 </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="3" width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
+                                        <t:Column headerSpan="3" width="10rem" visible="{= ${rootModel>/config/MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -355,7 +358,7 @@
                                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                                             </t:template>
                                             </t:Column>
-                                        <t:Column width="10rem" visible="{= !${codeModel>/switchColumnVisible}}">
+                                        <t:Column width="10rem" visible="{= ${rootModel>/config/MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -370,7 +373,7 @@
                                                     type="Number" />
                                             </t:template>
                                             </t:Column>
-                                        <t:Column width="6rem" visible="{= !${codeModel>/switchColumnVisible}}">
+                                        <t:Column width="6rem" visible="{= ${rootModel>/config/MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                                             <t:multiLabels>
                                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                                                 <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
@@ -400,7 +403,7 @@
                                                 <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
                                                 <!-- <Label text="Family Material Code" textAlign="Center" width="100%" /> -->
                                                 <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" /> -->
-                                                <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" />
+                                                <Label text="{path: 'I18N>/PLANT', formatter: '.onSetPurOrgText'}" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Text text="{detailModel>PART_NO}" />
@@ -574,7 +577,7 @@
 
         <!-- footer 시작 -->
         <uxap:footer>
-			<OverflowToolbar>
+			<OverflowToolbar visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}">
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"

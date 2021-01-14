@@ -195,6 +195,7 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 console.log("#########Success#####", data.value);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("dialogVos"));
                                 that.onExitVos();
                                 that.byId("pageSearchButton").firePress();
                             },
@@ -304,6 +305,7 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 console.log("#########Success#####", data.value);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("dialogRmk"));
                                 that.onExitRmk();
                                 that.byId("pageSearchButton").firePress();
                             },
@@ -424,6 +426,7 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
 
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("dialogRfq"));
 
                                 // if(data.value.rsltCnt > 0) {
                                 //     MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
@@ -1011,6 +1014,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 sLoiPublishStatus.forEach(function (item, idx, arr) {
+                    //console.log("loi_publish_status_code=", item);
                     _tempFilters.push(new Filter("loi_publish_status_code", FilterOperator.EQ, item));
                 });
 
@@ -1035,10 +1039,10 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("buyer_empno", FilterOperator.EQ, sBuyer));
             }
 
-            if (sLoiPublishStatus.length > 0) {
+            if (sLoiPoStatus.length > 0) {
                 var _tempFilters = [];
 
-                sLoiPublishStatus.forEach(function (item, idx, arr) {
+                sLoiPoStatus.forEach(function (item, idx, arr) {
                     _tempFilters.push(new Filter("po_status_code", FilterOperator.EQ, item));
                 });
 

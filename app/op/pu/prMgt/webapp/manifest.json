@@ -146,7 +146,13 @@
             "settings": {
                 "defaultBindingMode": "TwoWay"
             }
-        }
+        },
+            "viewModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            }
     },
     "resources": {
         "css": [
@@ -156,7 +162,8 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../../lib"
+      "ext.lib": "../../../../lib",
+      "dp": "../../../../dp"
     },
     "routing": {
       "config": {
@@ -164,7 +171,7 @@
         "viewType": "XML",
         "viewPath": "op.pu.prMgt.view",
         "controlId": "fcl",
-				"transition": "slide",
+		"transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -181,15 +188,7 @@
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
-          },
-          {
-              "pattern": "midCreate/{layout}/{tenantId}/{pr_number}",
+              "pattern": "midView/{layout}/{vMode}/{tenantId}/{company_code}/{pr_number}",
               "name": "midView",
               "target": [
                   "mainObject",
@@ -197,7 +196,15 @@
               ]
           },
           {
-              "pattern": "midCreate/{layout}/{tenantId}/{pr_type_code}/{pr_type_code_2}/{pr_type_code_3}/{pr_template_number}",
+              "pattern": "midModify/{layout}/{vMode}/{tenantId}/{company_code}/{pr_number}",
+              "name": "midModify",
+              "target": [
+                  "mainObject",
+                  "midModifyObject"
+              ]
+          },
+          {
+              "pattern": "midCreate/{layout}/{vMode}/{tenantId}/{company_code}/{pr_type_code}/{pr_type_code_2}/{pr_type_code_3}/{pr_template_number}",
               "name": "midCreate",
               "target": [
                   "mainObject",
@@ -211,15 +218,15 @@
               "viewName": "MainList",
               "controlAggregation": "beginColumnPages"
           },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
-          },
           "midViewObject": {
-              "viewName": "MidCreateObject",
+              "viewName": "MidViewObject",
               "controlAggregation": "midColumnPages"
           },
           "midCreateObject": {
+              "viewName": "MidCreateObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "midModifyObject": {
               "viewName": "MidCreateObject",
               "controlAggregation": "midColumnPages"
           },

@@ -146,11 +146,11 @@ BEGIN
     추후 SERVICE EXCEPTION 처리 시 자동 ROLLBACK되기 때문에 
     ROLLBACK 부분만 삭제 예정
     ****************************************************************/
-    DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
+    --DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		--O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
-		EXEC (:var_rollback);
+		--EXEC (:var_rollback);
 		IF ::SQL_ERROR_CODE < 10000 THEN
 			O_MSG = SELECT  'NG' RETURN_CODE, LPAD(::SQL_ERROR_CODE, 8, '0')||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 		ELSE 
@@ -987,7 +987,7 @@ BEGIN
 	    	
 	    	--UPDATE이고 기존 데이터가 존재지 않는 경우 에러
 	    	ELSE 
-	    	    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00013'||'-'||'Master Error.';
+	    	    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00013'||'-'||'Master Error.'||', '||loop_mst.TENANT_ID||', '||loop_mst.COMPANY_CODE||', '||loop_mst.ORG_TYPE_CODE||', '||loop_mst.ORG_CODE;
 	    	END IF;
 	    	
 	    /***************************************************************************************

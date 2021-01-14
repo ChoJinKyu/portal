@@ -183,6 +183,13 @@
           ]
         },
         {
+          "pattern": "example0",
+          "name": "example0",
+          "target": [
+            "example0"
+          ]
+        },
+        {
           "pattern": "example1",
           "name": "example1",
           "target": [
@@ -264,6 +271,10 @@
         "home": {
           "viewName": "Home",
           "viewId": "home"
+        },
+        "example0": {
+          "viewName": "FreeTest",
+          "viewId": "example0"
         },
         "example1": {
           "viewName": "SearchAreaControls",

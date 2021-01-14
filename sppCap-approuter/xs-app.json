@@ -1,5 +1,21 @@
 {
-  "authenticationMethod": "none",
   "welcomeFile": "/sppportal/index.html",
-  "routes": []
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "authenticationType": "xsuaa",
+      "csrfProtection": false,
+      "source": "^.*/srv-api/(.*)$",
+      "destination": "srv-api",
+      "cacheControl": "no-cache, no-store, must-revalidate",
+      "target": "$1"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "cacheControl": "no-cache, no-store, must-revalidate",
+      "authenticationType": "xsuaa"
+    }
+  ]
 }
