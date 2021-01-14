@@ -200,7 +200,7 @@
                             </VBox>
                             <VBox width="10%">
                                 <Label text=""></Label> 
-                                <Input id="searchMoldSeq"></Input>
+                                <Input id="searchMoldSeq" textAlign="Center"></Input>
                             </VBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
