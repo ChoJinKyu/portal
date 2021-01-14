@@ -524,7 +524,8 @@ sap.ui.define([
                     },
                     error: function(e){
                         // data 없을때,,
-                        
+                        oView.getModel("NegoItemPrices").getData().Suppliers = [];
+                        oView.getModel("NegoItemPrices").refresh(true);
                     }
                 });
 
@@ -608,6 +609,15 @@ sap.ui.define([
                 this.getView().byId("tableLines").setVisibleRowCountMode("Fixed");
                 this.getView().byId("tableLines").setVisibleRowCount( oModel.oData.Items.length );
 
+            },
+
+            onMidTableDeleteButtonPress: function () {
+                var temp = this.getView().byId("tableLines").getSelectedIndices();
+                var oView = this.getView();
+                oView.byId("tableLines").getSelectedIndices().reverse().forEach(function (idx) {
+                   oView.byId("tableLines").removeRow(idx--);
+                });
+                
             },
 
             testUpdate: function () {
