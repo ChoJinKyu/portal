@@ -109,6 +109,8 @@ as
 begin
 
     declare lv_max_seq						integer default 0;
+    -- declare current_user                       nvarchar(255) default '';
+
     declare lv_sourcemaster_count			integer default 0;
     declare lv_sourcescenario_count			integer default 0;
     declare lv_sourcecompany_count			integer default 0;
@@ -123,11 +125,18 @@ begin
 			rollback;
 			o_table_message = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnmessage from dummy;
         end;
+-- Session User
+    -- select  trim(value)
+    -- into    current_user
+    -- from    "SYS"."M_SESSION_CONTEXT"
+    -- where   connection_id = current_connection
+    -- and     key = 'APPLICATIONUSER'
+    -- ;
 -- Max Sequence
-        select  ifnull(max(scenario_number), 0) + 1 as max_scenario_number
-        into    lv_max_seq
-        from    pg_tm_master
-        where   tenant_id = :i_tenant_id
+    select  ifnull(max(scenario_number), 0) + 1 as max_scenario_number
+    into    lv_max_seq
+    from    pg_tm_master
+    where   tenant_id = :i_tenant_id
     ;
 -- master table
 	o_table_master =
