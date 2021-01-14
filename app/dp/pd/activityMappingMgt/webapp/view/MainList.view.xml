@@ -92,14 +92,13 @@
                 mode="MultiSelect"
                 noDataText="{I18N>/NCM01004}"
                 selectionChange=".onSelectionChange"
-                updateFinished=".onMainTableUpdateFinished"
                 sticky="HeaderToolbar,ColumnHeaders"
                 width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title id="mainTableTitle" text="Activity Mappting List" level="H2"/>
+                        <Title id="mainTableTitle" text="Activity Mappting List ({=(${list>/ActivityMappingNameView})?${list>/ActivityMappingNameView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="mainTableAddButton" text="Add Mapping" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
+                        <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
                         <Button id="mainTableDelButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
                         <Button id="mainTableCancButton" text="Cancel" type="Transparent" press=".onMainTableCancButtonPress" />
                         <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
@@ -143,7 +142,6 @@
                     <ColumnListItem>
                         <cells>
                             <HBox>
-                                <!-- <ObjectStatus icon="sap-icon://document" text="State" visible="false" /> -->
                                 <ObjectStatus icon="{path: 'list>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}" />
                             </HBox>
                             <HBox>
@@ -162,13 +160,13 @@
                                 <ComboBox visible="false"
                                     selectedKey="{list>activity_dependency_code}"
                                     items="{
-                                    path: 'util>/Code',
-                                    filters: [
+                                        path: 'util>/Code',
+                                        filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_DEPENDENCY'}
-                                    ]}">
+                                        ]}">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    <core:Item key="{util>code}" text="{util>code_name}" />
                                 </items>
                                 </ComboBox>
                             </HBox>
@@ -188,6 +186,7 @@
                             </HBox>
                             <Text text="{list>product_activity_code_org}" visible="false" />
                             <Text text="{list>activity_code_org}" visible="false" />
+                            <Text id="comboName" text="{list>comboName}" visible="false" />
                         </cells>
                     </ColumnListItem>
                 </items>

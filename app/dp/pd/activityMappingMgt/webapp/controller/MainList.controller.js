@@ -91,9 +91,9 @@ sap.ui.define([
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 
-            this.byId("mainTableDelButton").setEnabled(false);
+            //this.byId("mainTableDelButton").setEnabled(false);
             this.byId("mainTableCancButton").setEnabled(false);
-            this.byId("mainTableSaveButton").setEnabled(false);
+            //this.byId("mainTableSaveButton").setEnabled(false);
 
             var oTable = this.byId("mainTable");
             oModel.read("/ActivityMappingNameView", {
@@ -123,15 +123,6 @@ sap.ui.define([
 
                 }.bind(this)
             });
-        },
-
-        onMainTableUpdateFinished: function (oEvent) {
-            // update the mainList's object counter after the table update
-            var sTitle,
-                oTable = oEvent.getSource(),
-                iTotalItems = oEvent.getParameter("total");
-            sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("appTitle");
-            this.byId("mainTableTitle").setText(sTitle + " (" + iTotalItems + ") ");
         },
 
         _getSearchStates: function () {
@@ -212,6 +203,7 @@ sap.ui.define([
 
             this.rowIndex = 0;
             this.byId("mainTableCancButton").setEnabled(true);
+            this.byId("mainTableDelButton").setEnabled(true);
             this.byId("mainTableSaveButton").setEnabled(true);
 
             oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
@@ -415,19 +407,18 @@ sap.ui.define([
                     oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[4].getItems()[1].setVisible(false);
-
                     oTable.getAggregation('items')[i].getCells()[5].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[5].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[6].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[6].getItems()[1].setVisible(false);
                 }
             }
+            
             if (oItem != null && oItem != undefined) {
                 this.byId("mainTableCancButton").setEnabled(true);
 
                 for (var k = 0; k < oTable.getSelectedContextPaths().length; k++) {
                     idxs[k] = oTable.getSelectedContextPaths()[k].split("/")[2];
-
                     if (oTable.getAggregation('items')[idxs[k]] != null && oTable.getAggregation('items')[idxs[k]].getCells() != undefined) {
                         oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
                         oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
@@ -435,7 +426,6 @@ sap.ui.define([
                         oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[1].setVisible(true);
                         oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[0].setVisible(false);
                         oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[1].setVisible(true);
-
                         oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[0].setVisible(false);
                         oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[1].setVisible(true);
                         oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[0].setVisible(false);
@@ -448,11 +438,28 @@ sap.ui.define([
                 this.byId("rTableExportButton").setEnabled(false);
                 this.byId("mainTablePersoButton").setEnabled(false);
             } else {
-                this.byId("mainTableSaveButton").setEnabled(false);
-                this.byId("mainTableDelButton").setEnabled(false);
-                this.byId("mainTableCancButton").setEnabled(false);
-                this.byId("rTableExportButton").setEnabled(true);
-                this.byId("mainTablePersoButton").setEnabled(true);
+                var oModel2 = this.getView().getModel("list");
+                var oData = oModel2.oData;
+                var cnt = 0;
+                for (var i = 0; i < oTable.getItems().length; i++) {
+                    if( oData.ActivityMappingNameView[i]._row_state_ != null && oData.ActivityMappingNameView[i]._row_state_ != "" ){
+                        cnt++;
+                    }
+                }
+                if(cnt > 0 ){
+                    this.byId("mainTableCancButton").setEnabled(true);
+                    this.byId("mainTableDelButton").setEnabled(false);
+                    this.byId("mainTableSaveButton").setEnabled(true);
+                    this.byId("rTableExportButton").setEnabled(false);
+                    this.byId("mainTablePersoButton").setEnabled(false);
+                }else{
+                    this.byId("mainTableCancButton").setEnabled(false);
+                    this.byId("mainTableDelButton").setEnabled(false);
+                    this.byId("mainTableSaveButton").setEnabled(false);
+                    this.byId("rTableExportButton").setEnabled(true);
+                    this.byId("mainTablePersoButton").setEnabled(true);
+                }
+               
             }
         },
 
