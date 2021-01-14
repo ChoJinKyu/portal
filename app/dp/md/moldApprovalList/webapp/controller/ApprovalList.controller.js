@@ -409,9 +409,9 @@ sap.ui.define([
                 this._oValueHelpDialog.setKey('model');
                 this._oValueHelpDialog.setDescriptionKey('model');
 
-            } else if (oEvent.getSource().sId.indexOf("searchPart") > -1) {
+            } else if (oEvent.getSource().sId.indexOf("searchMoldNo") > -1) {
                 //part
-                this._oInputModel = this.getView().byId("searchPart");
+                this._oInputModel = this.getView().byId("searchMoldNo");
 
                 this.oColModel = new JSONModel({
                     "cols": [
@@ -989,10 +989,10 @@ sap.ui.define([
             var sCategory = this.getView().byId("searchApprovalCategory" + sSurffix).getSelectedKeys();
             var sSubject = this.getView().byId("searchSubject").getValue().trim();
             var sModel = this.getView().byId("searchModel").getValue().trim();
-            var sPart = this.getView().byId("searchPart").getValue().trim();
+            var sMoldNo = this.getView().byId("searchMoldNo").getValue().trim();
             var sRequestor = this.getView().byId("searchRequestor").getValue().trim();
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
-
+            var sMoldSeq = this.getView().byId("searchMoldSeq").getValue().trim();
             var aSearchFilters = [];
             
             if (sCategory.length > 0) {
@@ -1070,8 +1070,8 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sModel.toLowerCase().replace("'","''")+"'"));
             }
             
-            if (sPart) {
-				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sPart.toLowerCase().replace("'","''")+"'"));
+            if (sMoldNo) {
+				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sMoldNo.toLowerCase().replace("'","''")+"'"));
             }
 
             if (sRequestor) {
@@ -1085,6 +1085,11 @@ sap.ui.define([
             if (sStatus) {
                 aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
+
+            if (sMoldSeq) {
+                aSearchFilters.push(new Filter("tolower(mold_sequence)", FilterOperator.Contains, "'"+sMoldSeq.toLowerCase().replace("'","''")+"'"));
+            }
+
             
             //aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
             return aSearchFilters;

@@ -178,24 +178,34 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
-                            <Label text="Mold No" labelFor="searchPart"></Label>
-                            <Input id="searchPart" 
-                                    showValueHelp="true"  
-                                    valueHelpRequest=".onValueHelpRequested"
-                                    suggestionItems="{
-                                        path: '/PartNumbers',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
-                                        ],
-                                        sorter: { path: 'mold_number' }
-                            }">
-                                <core:Item key="{mold_number}" text="{mold_number}" />
-                            </Input>
+                        <HBox>
+                            <VBox width="87%">
+                                <Label text="Mold No" labelFor="searchMoldNo"></Label>
+                                <Input id="searchMoldNo" 
+                                        showValueHelp="true"  
+                                        valueHelpRequest=".onValueHelpRequested"
+                                        suggestionItems="{
+                                            path: '/PartNumbers',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            ],
+                                            sorter: { path: 'mold_number' }
+                                }">
+                                    <core:Item key="{mold_number}" text="{mold_number}" />
+                                </Input>
+                            </VBox>
+                            <VBox width="3%">
+                                <Label text=" "></Label>
+                                <Text textAlign="Center" text="-"/>
+                            </VBox>
+                            <VBox width="10%">
+                                <Label text=""></Label> 
+                                <Input id="searchMoldSeq"></Input>
+                            </VBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
-                        </VBox>
+                        </HBox>
                         <VBox>
                             <Label text="{path:'I18N>/APPROVAL_TITLE', formatter:'I18NFormatter'}" labelFor="searchSubject"></Label>
                             <Input id="searchSubject" placeholder="Input data"/>
@@ -216,9 +226,7 @@
                                         sorter: { path: 'email_id' }
                             }">
                             <core:Item key="{email_id}" text="{email_id}" />
-                                
                             </Input>
-                           
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -237,7 +245,7 @@
                                 </items>
                             </SegmentedButton>
                             <layoutData>
-                                <layout:GridData span="XL10 L9 M6 S12" />
+                                <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>
                         </VBox>
                     </form:content>
