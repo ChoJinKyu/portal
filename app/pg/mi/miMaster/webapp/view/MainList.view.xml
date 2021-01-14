@@ -27,15 +27,15 @@
                 </f:heading>
                 <f:snappedContent></f:snappedContent>
                 <f:expandedContent></f:expandedContent>
-                <f:navigationActions>
+                <!-- <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent"/>
-                </f:navigationActions>
+                </f:navigationActions> -->
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
 
-            <f:DynamicPageHeader pinnable="false">
+            <f:DynamicPageHeader pinnable="true">
                 <f:content>
                 <!-- <smartVariantManagement:SmartVariantManagement        
 				             id="pageVariantId"
