@@ -400,7 +400,7 @@
                         <VBox id="v_internal_rate">
                             <Label text = "Site Internal Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="Number" change=".fnCalcRate" ></Input> 
+                                    <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>                                
                             <layoutData>
@@ -410,7 +410,7 @@
                         <VBox id="v_external_rate">
                             <Label text = "Site External Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_domestic_net_price_diff_rate" type="Number" change=".fnCalcRate"  ></Input> 
+                                    <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>
                             <layoutData>

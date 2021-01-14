@@ -11,5 +11,6 @@ entity Se_Eval_Type {
   key evaluation_type_code              : String(30) not null @title: '평가유형코드' ;	
       evaluation_type_name              : String(50)          @title: '평가유형명' ;	
       evaluation_type_distrb_score_rate : Decimal             @title: '평가유형배점비율' ;	
+      use_flag                          : Boolean             @title: '사용여부';
 }	
 extend Se_Eval_Type with util.Managed;	
