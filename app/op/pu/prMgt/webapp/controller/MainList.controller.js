@@ -651,7 +651,7 @@ sap.ui.define([
                 _tempFilters = [];
 
                 sRequestor.forEach(function (item) {
-                    _tempFilters.push(new Filter("requestor_empno", FilterOperator.EQ, item.getkey()));
+                    _tempFilters.push(new Filter("requestor_empno", FilterOperator.EQ, item.getKey()));
                 });
 
                 aSearchFilters.push(
