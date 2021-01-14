@@ -438,6 +438,15 @@
 
                                     <!-- visible="{= ${/propInfo/outCome} === '' }" -->
                                     <t:columns>
+                                        <t:Column id="_row_state_" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                                            <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                            <t:template>
+                                                <ObjectStatus icon="{
+                                                    path: 'NegoHeaders>_row_state_',
+                                                    formatter: '.formatter.toModelStateColumnIcon'
+                                                }" />
+                                            </t:template>
+                                        </t:Column>
                                         <t:Column width="5rem" hAlign="Center" >
                                             <Label text="Suppliers" />
                                             <t:template>
@@ -478,7 +487,7 @@
                                             <Label text="Material Code"  required="true" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <Input showValueHelp="true" value="{NegoHeaders>material_code}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Input showValueHelp="true" value="{NegoHeaders>material_code}" visible="{=${propInfo>/isEditMode}}" valueHelpRequest=".onPartNoPress"/>
                                                     <Text text="{NegoHeaders>material_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
                                             </t:template>
@@ -487,7 +496,7 @@
                                             <Label text="Description" required="true" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <Input showValueHelp="true" value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}"/>
                                                     <Text text="{NegoHeaders>material_desc}" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
                                             </t:template>
@@ -698,7 +707,7 @@
                                                         columnsXL="4">
                                                 <Label  text="Requisition No" class="sapMLabelNoText"/>
                                                 <Input  class="sapMLabelNoText" value="{NegoItemPrices>/pr_number}" enabled="false"/>
-                                                <Label  text="Part No" class="sapMLabelNoText"/>
+                                                <Label  text="Material Code" class="sapMLabelNoText"/>
                                                 <Input  class="sapMLabelNoText" value="{NegoItemPrices>/material_code}" enabled="false"/>
                                                 <Label  text="Description" class="sapMLabelNoText"/>
                                                 <Input  class="sapMLabelNoText" value="{NegoItemPrices>/material_desc}" enabled="false"/>
@@ -712,7 +721,7 @@
                                                         columnsXL="4">
                                                 <Label  text="Requisition No" class="sapMLabelNoText"/>
                                                 <Text  class="sapMLabelNoText" text="{NegoItemPrices>/pr_number}" />
-                                                <Label  text="Part No" class="sapMLabelNoText"/>
+                                                <Label  text="Material Code" class="sapMLabelNoText"/>
                                                 <Text  class="sapMLabelNoText" text="{NegoItemPrices>/material_code}" />
                                                 <Label  text="Description" class="sapMLabelNoText"/>
                                                 <Text  class="sapMLabelNoText" text="{NegoItemPrices>/material_desc}"/>
