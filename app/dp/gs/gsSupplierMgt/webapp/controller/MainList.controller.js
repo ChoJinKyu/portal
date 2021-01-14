@@ -242,7 +242,7 @@ sap.ui.define([
                     "tenant_id": "L2100",
                     "sourcing_supplier_nickname": ""                    
                 }, "/SupplierGen");
-            oTransactionManager.setServiceModel(this.getModel());
+            oTransactionManager.setServiceModel(this.getModel());            
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -259,11 +259,13 @@ sap.ui.define([
                 oDialog.open();
                 
             });
+            
 
         },
 
         createPopupClose: function (oEvent) {
-            this.validator.clearValueState(this.byId("dialogAddSupplier"));            
+            this.validator.clearValueState(this.byId("dialogAddSupplier"));
+            this.byId("inputWithEmployeeValueHelp").setValue("");            
             this.byId("dialogAddSupplier").close();
         },
 
@@ -318,7 +320,8 @@ sap.ui.define([
 					};
 				}
             });
-            this.validator.clearValueState(this.byId("dialogAddSupplier"));            
+            this.validator.clearValueState(this.byId("dialogAddSupplier"));
+            this.byId("inputWithEmployeeValueHelp").setValue("");            
             
         },     
         
@@ -397,7 +400,8 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onRoutedThisPage: function(){            
+		_onRoutedThisPage: function(){           
+        
             this.getModel("mainListView").setProperty("/headerExpanded", true);      
             var sThisViewId = this.getView().getId();
             var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");

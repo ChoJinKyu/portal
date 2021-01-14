@@ -54,12 +54,13 @@
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus id="objectStatus_nego_document_number" title="Negotiation No" text="{path: 'NegoHeaders>/nego_document_number'}" class="sapUiLargeMarginBegin" />
                     <ObjectStatus title="Creater" text="{NegoHeaders>/buyer_empno}" class="sapUiLargeMarginBegin" />
-                    <ObjectStatus title="Create Date" text="{NegoHeaders>local_create_dtm}"  class="sapUiLargeMarginBegin" />
+                    <ObjectStatus title="Create Date" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', 
+                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }"  class="sapUiLargeMarginBegin" />
                 </layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<Label text="Status :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="{NegoHeaders>nego_progress_status_code}" state="Error" />
+                    <ObjectStatus class="sapMObjectStatusLarge" text="{path: 'NegoHeaders>/nego_progress_status_code' }" state="Error" />
 				</layout:VerticalLayout>
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <!-- <co:ProcessFlow id="pageHeaderProcessFlow" scrollable="false" nodePress="onNodePress">
@@ -222,7 +223,7 @@
 
                                         <HBox  width="50%" height="100%" alignItems="Center" >
                                             <Label  text="Period" width="100px" required="true" class="sapMLabelNoText"/> 
-                                            <CheckBox text="Immediately" selected="{NegoHeaders>/immediate_apply_flag}" editable="{=${propInfo>/isEditMode}}"/> 
+                                            <CheckBox text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"/> 
                                             <ToolbarSpacer width="1rem"/> 
                                             <FlexBox>
                                                 <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 

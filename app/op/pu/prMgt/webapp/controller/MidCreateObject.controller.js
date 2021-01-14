@@ -812,7 +812,6 @@ sap.ui.define([
                     title: "Choose Employee"
                 });
                 this.oSearchEmpDialog.attachEvent("apply", function(oEvent){
-                    debugger;
                     var oItemData = oEvent.getParameter("item");
                     var oViewModel = this.getModel("viewModel");
                     var oSelectedData = oViewModel.getProperty(sSelectedPath);

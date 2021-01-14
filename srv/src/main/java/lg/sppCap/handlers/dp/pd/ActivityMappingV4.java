@@ -52,6 +52,7 @@ public class ActivityMappingV4 implements EventHandler {
                                     .append("ACTIVITY_DEPENDENCY_CODE NVARCHAR(40), ")
                                     .append("ACTIVE_FLAG BOOLEAN, ")
                                     .append("UPDATE_USER_ID NVARCHAR((255),), ")
+                                    .append("SYSTEM_UPDATE_DTM TIMESTAMP,")
                                     .append("CRUD_TYPE_CODE  NVARCHAR(1), ")
                                     .append("UPDATE_ACTIVITY_CODE NVARCHAR(40), ")
                                     .append("UPDATE_PRODUCT_ACTIVITY_CODE NVARCHAR(40) ")
@@ -84,6 +85,7 @@ public class ActivityMappingV4 implements EventHandler {
                         , v_inRow.get("activity_dependency_code")
                         , v_inRow.get("active_flag")
                         , v_inRow.get("update_user_id")
+                        , v_inRow.get("system_update_dtm")
                         , v_inRow.get("crud_type_code")
                         , v_inRow.get("update_activity_code")
                         , v_inRow.get("update_product_activity_code")
@@ -125,11 +127,7 @@ public class ActivityMappingV4 implements EventHandler {
 
 		}catch (Exception e) {
             e.printStackTrace();
-
 		} 
     }
     
-
-
-
 }

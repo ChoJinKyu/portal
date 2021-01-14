@@ -120,7 +120,7 @@ sap.ui.define([
                 } );
                 
                 var outcome = e.getParameter("arguments").outcome;
-                if( outcome == "BPA" || outcome == "Tentative Price" ) {
+                if( outcome == "0" || outcome == "1" ) {
                     this.getView().getModel("propInfo").setProperty("/outCome","");
                 }else {
 
@@ -297,6 +297,8 @@ sap.ui.define([
                 oItem.nego_header_id = String(oItem.nego_header_id); 
                 oItem.open_date = new Date(oView.byId("searchOpenDatePicker").getDateValue());
                 oItem.closing_date = new Date(oView.byId("searchEndDatePicker").getDateValue());
+                oItem.close_date_ext_enabled_hours = Number(oItem.close_date_ext_enabled_hours);
+                oItem.close_date_ext_enabled_count = Number(oItem.close_date_ext_enabled_count);
 
                 console.log( "path :: " + path);
                 console.log( oItem);

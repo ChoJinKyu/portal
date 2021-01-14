@@ -32,14 +32,27 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": []}'
 
-# 등록 실패 : master
+# 등록 실패용 테스트 데이터 : master
 curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master \
 -H "Content-Type: application/json" \
--d '{"approval_title": "개발VI 품의서 테스트", 
-"approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 테스트", 
-"approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
-"local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
-"details": []}'
+-d '{
+    "tenant_id": "L2100",
+    "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 테스트", 
+    "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00"
+}'
+
+# 등록 실패용 테스트 데이터 : master-detail
+curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master \
+-H "Content-Type: application/json" \
+-d '{
+    "tenant_id": "L2100", "approval_title": "개발VI 품의서 테스트", 
+    "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 테스트", 
+    "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00",
+    "details": [ 
+        { "org_type_code": "PU", "org_code": "1000", "au_code": "10", "material_code": "1000234", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"},
+        { "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "au_code": "10", "material_code": "1000211", "supplier_code": "KR00002600", "base_date": "2020-12-11T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"} 
+    ]
+}'
 
 # 수정 : master
 curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202101070001\'\) \
@@ -59,8 +72,8 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": [ 
-{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "1", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"},
-{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-11T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"} 
+{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "au_code": "10", "material_code": "1000234", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"},
+{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "au_code": "10", "material_code": "1000211", "supplier_code": "KR00002600", "base_date": "2020-12-11T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"} 
 ]}'
 
 # 등록 : master-detail-prices
@@ -71,7 +84,7 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": [ 
-{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
+{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "au_code": "10", "material_code": "1000211", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
 "prices": [
 { "market_code": "1", "new_base_price": "120", "new_base_price_currency_code": "KRW", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"}
 ]} 
@@ -84,7 +97,7 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 테스트", 
 "approval_requestor_empno": "5454", "approval_request_date": "2020-12-10T00:00:00", 
 "details": [ 
-{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10",  
+{ "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "au_code": "10", "material_code": "1000211", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10",  
 "prices": [
 { "market_code": "1", "new_base_price": "120", "new_base_price_currency_code": "KRW"}
 ]} 
@@ -100,9 +113,9 @@ curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_A
     "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2021-01-04T10:18:46Z",
     "details": [ 
         { 
-            "company_code": "LGCKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
+            "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
             "prices": [
-                { "item_sequence": 1, "market_code": "2", "new_base_price": "150", "new_base_price_currency_code": "KRW", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"}
+                { "item_sequence": 1, "market_code": "1000211", "new_base_price": "150", "new_base_price_currency_code": "KRW", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"}
             ]
         } 
     ]

@@ -136,7 +136,7 @@
                             <VBox>
                                 <Label text="Supplier" labelFor="search_supplier_code"></Label>
                                 <lib-m:CodePicker id="search_supplier_code"
-                                    placeholder="Enter a department name"
+                                    placeholder="Enter a Supplier name"
                                     keyField="supplier_code"
                                     textField="supplier_local_name"
                                     suggestionItems="{
@@ -147,7 +147,7 @@
                                         ],
                                         serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
                                         entityName: 'VpSupplierMstView'
-                                    }" value="">
+                                    }" value="" change=".cvtSupplier">
                                     <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
                                         keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
                                 </lib-m:CodePicker>
@@ -155,8 +155,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Matrial" labelFor="search_material_code"></Label>
-                                <Input id="search_material_code" type="Text" value="" placeholder="" />
-                                <!-- showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhMatrialCode" -->
+                                <Input id="search_material_code" type="Text" value="" placeholder="" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhMatrialCode"/>
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>
                             <VBox>

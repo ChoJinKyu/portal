@@ -229,8 +229,6 @@ public class ProjectMgtServiceV4 implements EventHandler {
         ResultSet v_rs = null;
         
 		//try {            
-            //Connection conn = jdbc.getDataSource().getConnection();
-
             // ProjectInfo Local Temp Table 생성
             jdbc.execute(v_sql_createTableProject.toString());
 

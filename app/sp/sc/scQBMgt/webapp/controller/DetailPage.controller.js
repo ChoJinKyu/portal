@@ -158,6 +158,8 @@ sap.ui.define([
 
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                         oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
+                        oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
+                        
 
                         oView.getModel("viewModel").updateBindings(true);      
  
@@ -231,6 +233,8 @@ sap.ui.define([
                         MessageToast.show(" success !! ");
 
                         this.onPageCancelButtonPress();
+
+                        this.onNavBack();
  
                     }.bind(this),
                     error: function (aa, bb){
@@ -523,7 +527,9 @@ sap.ui.define([
                         // that.setDataBinding(data.value[0]);
                     },
                     error: function(e){
-                        
+                        // data 없을때,,
+                        oView.getModel("NegoItemPrices").getData().Suppliers = [];
+                        oView.getModel("NegoItemPrices").refresh(true);
                     }
                 });
 
@@ -531,11 +537,15 @@ sap.ui.define([
 
             addLineItemRow: function () {
                 var oTemp = this.getView().getModel("NegoHeaders").getData();
+                var itemNumberTemp = 1;
+                if( oTemp.hasOwnProperty("Items") ) {
+                    itemNumberTemp = oTemp.Items.length +1;
+                }
 
                 var oLine = {
                     "tenant_id": oTemp.tenant_id,
                     "nego_header_id"     : String(oTemp.nego_header_id),
-                    "nego_item_number"     : "00002",
+                    "nego_item_number"     : "0000" + itemNumberTemp,
                     "operation_unit_code"     : "",
                     "award_progress_status_code"     : "",
                     "line_type_code"     : "",
@@ -603,6 +613,22 @@ sap.ui.define([
                 this.getView().byId("tableLines").setVisibleRowCountMode("Fixed");
                 this.getView().byId("tableLines").setVisibleRowCount( oModel.oData.Items.length );
 
+            },
+
+            onMidTableDeleteButtonPress: function () {
+                var temp = this.getView().byId("tableLines").getSelectedIndices();
+                var oView = this.getView();
+
+
+                var lineItems = oView.getModel("NegoHeaders").getData().Items;
+                // lineItems
+
+                lineItems.splice(1,1);
+
+                // oView.byId("tableLines").getSelectedIndices().reverse().forEach(function (idx) {
+                //    oView.byId("tableLines").removeRow(idx--);
+                // });
+                
             },
 
             testUpdate: function () {
