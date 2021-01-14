@@ -48,4 +48,5 @@ entity Vp_Vendor_Pool_Search_View {
   repr_department_name: String @title: '구매부서';
   managers_name: String @title: '담당자';
   hierarchy_rank: Integer64;
+  vendor_pool_path_code: String(240) @title: 'VP Code Chain';
 }
