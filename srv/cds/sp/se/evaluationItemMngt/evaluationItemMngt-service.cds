@@ -27,7 +27,8 @@ service EvaluationItemMngtService {
     AND    cm_org.company_code  = mng.company_code
     AND    cm_org.org_type_code = mng.org_type_code
     AND    cm_org.org_code      = mng.org_code    ;
-    
+
+    /* User's Evaluation Type. (Condition) */
     view UserEvalTypeView as
     SELECT key mng.tenant_id,
            key mng.company_code,
@@ -56,5 +57,10 @@ service EvaluationItemMngtService {
             ,mng.org_code
             ,mng.evaluation_operation_unit_code
             ,mng.evaluation_op_unt_person_empno;
-    
+
+    /* User's Operation Unit */
+    entity UserOperationUnit as projection on opUnitMst;
+
+    /* User's Eval Type */
+    entity UserEvalType as projection on evalType;
 }
