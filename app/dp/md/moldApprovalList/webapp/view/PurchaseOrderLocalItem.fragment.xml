@@ -47,7 +47,7 @@
                         </OverflowToolbar>
                     </table:extension>                             
                     <table:columns>
-                        <table:Column id="moldModelColumn" width="12em" >
+                        <table:Column id="moldModelColumn" width="12em" hAlign="Center">
                             <Label text="Model"/>
                             <table:template>
                                 <Text id="model" text="{purOrderItem>model}"/>
@@ -62,10 +62,10 @@
                         <table:Column id="moldSeqColumn" width="3em" hAlign="Center">
                             <Label text="Seq"/>
                             <table:template>
-                                <Text id="mold_sequence" text="{purOrderItem>mold_sequence}"/>
+                                <Text id="mold_sequence" text="{purOrderItem>mold_sequence}" textAlign="Center"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="moldDescriptionColumn" width="12em">
+                        <table:Column id="moldDescriptionColumn" width="12em" hAlign="Center">
                             <Label text="Description"/>
                             <table:template>
                                 <Text id="spec_name" text="{purOrderItem>spec_name}"/>
@@ -96,37 +96,31 @@
                             <Label text="Currency"/>
                             </VBox>
                             <table:template>
-                                <Text id="bookCurrency" text="{purOrderItem>book_currency_code}"/>
+                                <Text id="bookCurrency" text="{purOrderItem>book_currency_code}" textAlign="Center"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="budetAmountColumn" width="7em" hAlign="End">
+                        <table:Column id="budetAmountColumn" width="7em" hAlign="Center">
                             <VBox>
                             <Label text="Budget"/>
                             <Label text="Amount"/>
                             </VBox>
                             <table:template>
-                                <ObjectNumber id="budetAmount" emphasized="false"
-                                number="{parts:[{path:'purOrderItem>provisional_budget_amount'},{path:'purOrderItem>book_currency_code'}],
-                                        type: 'sap.ui.model.type.Currency',
-                                        formatOptions: {showMeasure: false}}" />
+                                <Text id="budetAmount" text="{path: 'purOrderItem>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
                             </table:template>
                         </table:Column>
                         <table:Column id="crrencyColumn" width="6em" hAlign="Center">
                             <Label text="Currency"/>           
                             <table:template>
-                                <Text id="currency" text="{purOrderItem>currency_code}"/>
+                                <Text id="currency" text="{purOrderItem>currency_code}" textAlign="Center"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="poAmountColumn" width="7em" hAlign="End">
+                        <table:Column id="poAmountColumn" width="7em" hAlign="Center">
                             <VBox>
                             <Label text="PO"/>
                             <Label text="Amount"/>
                             </VBox>
                             <table:template>
-                                <ObjectNumber id="poAmount" emphasized="false"
-                                number="{parts:[{path:'purOrderItem>purchasing_amount'},{path:'purOrderItem>currency_code'}],
-                                        type: 'sap.ui.model.type.Currency',
-                                        formatOptions: {showMeasure: false}}" />
+                                <Text id="poAmount" text="{path: 'purOrderItem>purchasing_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
                             </table:template>
                         </table:Column>
                         <table:Column id="orderSupplierColumn" width="10em" hAlign="Center">
@@ -135,7 +129,7 @@
                             <Label text="Supplier"/>
                             </VBox>
                             <table:template>
-                                <Text id="orderSupplier" text="{purOrderItem>supplier_code}"/>
+                                <Text id="orderSupplier" text="{purOrderItem>supplier_code}" textAlign="Center"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="targetAmountColumn" width="7em" hAlign="Center">
@@ -144,10 +138,7 @@
                             <Label text="Amount"/>
                             </VBox>
                             <table:template>
-                                <ObjectNumber id="targetAmount" emphasized="false"
-                                number="{parts:[{path:'purOrderItem>target_amount'},{path:'purOrderItem>currency_code'}],
-                                        type: 'sap.ui.model.type.Currency',
-                                        formatOptions: {showMeasure: false}}" />
+                                <Text id="targetAmount" text="{path: 'purOrderItem>target_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
                             </table:template>
                         </table:Column>
                         <table:Column id="moldProductionTypeColumn" width="12em" hAlign="Center">

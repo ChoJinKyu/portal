@@ -322,10 +322,10 @@ sap.ui.define([
                 var ap = this.getModel("approver").getData().Approvers;
                 var len = 0; 
 
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
-                    len = ap.length;
+                if(this.getView().getModel("mode").getProperty("/editFlag")){
+                    len = ap.length - 1;
                 }else{
-                    len =  ap.length -1;
+                    len =  ap.length;
                 }
                 for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
