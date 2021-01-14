@@ -6,7 +6,7 @@
     xmlns:t="sap.ui.table"
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -192,11 +192,18 @@
                     <t:Column id="mainColumnuse_flag"  hAlign="Center" width="10em" >
                         <Text text="{I18N>/USE_FLAG}" />
                         <t:template>
-							 <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No">
+                        <lib-m:FlagToggleButton pressed="{list>use_flag}" />
+                        <!-- <ToggleButton text="{= ${list>use_flag}? 'Yes':'No'}" pressed="{list>use_flag}"/> -->
+                            <!-- <ToggleButton text="{path: 'list>use_flag', formatter: '.formatter.toToggleButton'}" pressed="{list>use_flag}" press="onPress" >
                                 <layoutData>
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
-                            </Switch>
+                            </ToggleButton> -->
+							 <!-- <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No">
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch> -->
 						</t:template>
                     </t:Column>
                 </t:columns>
