@@ -13,9 +13,11 @@ SELECT pam.tenant_id,
        pat1.product_activity_name,
        ad.code_name as activity_dependency_name
   FROM DP_PD_ACTIVITY_MAPPING pam,
-       DP_PD_PART_ACTIVITY_TEMPLATE pat,
+       ( Select distinct tenant_id,company_code,org_type_code, org_code, activity_code, activity_name From DP_PD_PART_ACTIVITY_TEMPLATE ) pat,
        DP_PD_PRODUCT_ACTIVITY_TEMPLATE pat1,
-       CM_CODE_LNG ad
+       ( Select l.tenant_id, l.code, l.code_name, l.language_cd
+           From CM_CODE_LNG l, CM_CODE_DTL d
+          Where l.tenant_id = d.tenant_id and l.code = d.code and d.group_code = 'DP_ACTIVITY_DEPENDENCY' ) ad
     WHERE pam.tenant_id = pat.tenant_id
       AND pam.company_code = pat.company_code
       AND pam.org_type_code = pat.org_type_code
