@@ -222,7 +222,7 @@
 
                                         <HBox  width="50%" height="100%" alignItems="Center" >
                                             <Label  text="Period" width="100px" required="true" class="sapMLabelNoText"/> 
-                                            <CheckBox text="Immediately" selected="{NegoHeaders>/immediate_apply_flag}" editable="{=${propInfo>/isEditMode}}"/> 
+                                            <CheckBox text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"/> 
                                             <ToolbarSpacer width="1rem"/> 
                                             <FlexBox>
                                                 <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 

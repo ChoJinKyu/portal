@@ -523,6 +523,7 @@ sap.ui.define([
                         // that.setDataBinding(data.value[0]);
                     },
                     error: function(e){
+                        // data 없을때,,
                         
                     }
                 });
@@ -531,13 +532,15 @@ sap.ui.define([
 
             addLineItemRow: function () {
                 var oTemp = this.getView().getModel("NegoHeaders").getData();
-                
-                // if( oTemp.hasOwnProperty("Items") )
+                var itemNumberTemp = 1;
+                if( oTemp.hasOwnProperty("Items") ) {
+                    itemNumberTemp = oTemp.Items.length +1;
+                }
 
                 var oLine = {
                     "tenant_id": oTemp.tenant_id,
                     "nego_header_id"     : String(oTemp.nego_header_id),
-                    "nego_item_number"     : "00002",
+                    "nego_item_number"     : "0000" + itemNumberTemp,
                     "operation_unit_code"     : "",
                     "award_progress_status_code"     : "",
                     "line_type_code"     : "",

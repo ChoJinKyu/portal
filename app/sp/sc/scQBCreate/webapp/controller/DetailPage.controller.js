@@ -120,7 +120,7 @@ sap.ui.define([
                 } );
                 
                 var outcome = e.getParameter("arguments").outcome;
-                if( outcome == "BPA" || outcome == "Tentative Price" ) {
+                if( outcome == "0" || outcome == "1" ) {
                     this.getView().getModel("propInfo").setProperty("/outCome","");
                 }else {
 
