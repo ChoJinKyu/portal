@@ -117,12 +117,6 @@ sap.ui.define([
                  this._fnReadPrMaster(oArgs);
                  this._fnReadPrDetail(oArgs);
             }
-
-
-            //this._createViewBindData(oArgs); 
-			//this._onLoadApprovalRow();
-            //this.oSF = this.getView().byId("searchField");
-
             
             // 텍스트 에디터
             this.setRichEditor();
@@ -281,7 +275,11 @@ sap.ui.define([
                 sorters : aSorter,
                 success : function(data){
                     if(data.results.length > 0) {
-                         oViewModel.setProperty("/PrMst", data.results[0]);
+                        oViewModel.setProperty("/PrMst", data.results[0]);
+
+                        // 품의내용
+                        var oApprovalRTE = that.getView().byId("approvalLayout").getContent()[0];
+                        oApprovalRTE.setValue(data.results[0].approval_contents);
 
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
@@ -487,9 +485,9 @@ sap.ui.define([
             oViewData.PrMst.pr_desc = pr_desc;
                         
             //품의내용
-            // var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            // oViewData.PrMst.approval_contents = approvalContents;
-
+            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            oViewData.PrMst.approval_contents = approvalContents;
+            
             
             // Master data
             var oMaster = oViewData.PrMst;
@@ -809,25 +807,29 @@ sap.ui.define([
             var that = this,
                 sHtmlValue = '';            
             var oApprovalLayout = this.getView().byId("approvalLayout");
+            var oApprovalRTE = oApprovalLayout.getContent()[0];
 
-            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                function (RTE, EditorType) {
-                    var oRichTextEditor = new RTE("prCreateApprovalRTE", {
-                        editorType: EditorType.TinyMCE4,
-                        width: "100%",
-                        height: "200px",
-                        customToolbar: true,
-                        showGroupFont: true,
-                        showGroupLink: true,
-                        showGroupInsert: true,
-                        value: sHtmlValue,
-                        ready: function () {
-                            this.addButtonGroup("styleselect").addButtonGroup("table");
-                        }
-                    });
-
-                    oApprovalLayout.addContent(oRichTextEditor);
-            });
+            if(!oApprovalRTE || oApprovalRTE.length === 0){
+                sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                    function (RTE, EditorType) {
+                        var oRichTextEditor = new RTE("prCreateApprovalRTE", {
+                            editorType: EditorType.TinyMCE4,
+                            width: "100%",
+                            height: "200px",
+                            customToolbar: true,
+                            showGroupFont: true,
+                            showGroupLink: true,
+                            showGroupInsert: true,
+                            value: sHtmlValue,
+                            ready: function () {
+                                this.addButtonGroup("styleselect").addButtonGroup("table");
+                            }
+                        });
+                        oApprovalLayout.addContent(oRichTextEditor);
+                });
+            } else {
+                oApprovalRTE.setValue("");
+            }                
         },
 
 
