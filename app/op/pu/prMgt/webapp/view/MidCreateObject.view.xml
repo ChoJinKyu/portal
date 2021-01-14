@@ -232,7 +232,7 @@
                                         <Input
                                             value="{viewModel>buyer_empno}"
                                             showValueHelp="true"
-                                            valueHelpRequest=".onOpenMaterialDialog" />
+                                            valueHelpRequest=".onOpenSearchEmpDialog" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center">

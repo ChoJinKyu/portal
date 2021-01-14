@@ -20,8 +20,9 @@ sap.ui.define([
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
     , "dp/util/control/ui/MaterialMasterDialog"
+    , "cm/util/control/ui/EmployeeDialog"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Sorter
-            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label, MaterialMasterDialog) {
+            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label, MaterialMasterDialog, EmployeeDialog) {
     
     "use strict";
     
@@ -345,7 +346,7 @@ sap.ui.define([
                         org_type_code: "XX", 
                         org_code: "", 
                         buyer_empno: "", 
-                        currency_code: "", 
+                        currency_code: "KRW", 
                         estimated_price: "", 
                         material_code: "", 
                         material_group_code: "", 
@@ -354,7 +355,7 @@ sap.ui.define([
                         pr_unit: "", 
                         requestor_empno: "A60264", 
                         requestor_name: "김구매", 
-                        delivery_request_date: "",
+                        delivery_request_date: new Date(),
                         purchasing_group_code: "", 
                         price_unit: "", 
                         pr_progress_status_code: "10", 
@@ -488,7 +489,7 @@ sap.ui.define([
             var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
             oViewData.PrMst.approval_contents = approvalContents;
             
-            
+
             // Master data
             var oMaster = oViewData.PrMst;
             var oMasterData = {
@@ -798,7 +799,34 @@ sap.ui.define([
             }
         },
         //==================== Material Code Dialog 끝 ====================
-        
+ 
+        //==================== 사원정보 검색 Dialog 시작 ====================  
+		onOpenSearchEmpDialog: function (oEvent) {
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+                //oViewModel = this.getModel("viewModel");
+            //var oSelectedData = oViewModel.getProperty(sSelectedPath);
+            
+            if(!this.oSearchEmpDialog){
+                this.oSearchEmpDialog = new EmployeeDialog({
+                    title: "Choose Employee"
+                });
+                this.oSearchEmpDialog.attachEvent("apply", function(oEvent){
+                    debugger;
+                    var oItemData = oEvent.getParameter("item");
+                    var oViewModel = this.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                    if(oItemData.employee_number && oItemData.employee_number !== ""){
+                        oSelectedData.buyer_empno = oItemData.employee_number;                    
+                        oViewModel.refresh();
+                    }
+                    
+                }.bind(that));
+            }
+            this.oSearchEmpDialog.open();
+        },
+        //==================== 사원정보 검색 Dialog 끝 ====================  
 
         /**
          * 폅집기 창 
