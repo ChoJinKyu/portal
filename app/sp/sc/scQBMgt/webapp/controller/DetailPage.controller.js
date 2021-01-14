@@ -158,6 +158,8 @@ sap.ui.define([
 
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                         oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
+                        oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
+                        
 
                         oView.getModel("viewModel").updateBindings(true);      
  
@@ -231,6 +233,8 @@ sap.ui.define([
                         MessageToast.show(" success !! ");
 
                         this.onPageCancelButtonPress();
+
+                        this.onNavBack();
  
                     }.bind(this),
                     error: function (aa, bb){
@@ -614,9 +618,16 @@ sap.ui.define([
             onMidTableDeleteButtonPress: function () {
                 var temp = this.getView().byId("tableLines").getSelectedIndices();
                 var oView = this.getView();
-                oView.byId("tableLines").getSelectedIndices().reverse().forEach(function (idx) {
-                   oView.byId("tableLines").removeRow(idx--);
-                });
+
+
+                var lineItems = oView.getModel("NegoHeaders").getData().Items;
+                // lineItems
+
+                lineItems.splice(1,1);
+
+                // oView.byId("tableLines").getSelectedIndices().reverse().forEach(function (idx) {
+                //    oView.byId("tableLines").removeRow(idx--);
+                // });
                 
             },
 
