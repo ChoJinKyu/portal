@@ -8,7 +8,7 @@ entity Sm_Supplier_Mst {
     supplier_local_name : String(240)  ;	
     supplier_english_name : String(240) ;	
     tax_id : String(30)  ;	
-    vat_number : String(30)  ;
+    vat_number : String(30) ;
     CRNO : String(50)  ;
     tax_id_except_flag : Boolean  ;	
     tax_id_except_nm : String(30)  ;	
