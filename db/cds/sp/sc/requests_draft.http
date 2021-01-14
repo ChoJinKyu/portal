@@ -112,7 +112,7 @@ Cookie: {{cookie}}
 GET {{reviews-service}}/NegoHeadersTest04(tenant_id='L2100',nego_header_id=3,IsActiveEntity=false)
 Cookie: {{cookie}}
 
-### Single Update | Draft Prepare
+### Draft Action | draftPrepare
 POST {{reviews-service}}/NegoHeadersTest04(tenant_id='L2100',nego_header_id=3,IsActiveEntity=false)/sp.SourcingTest01V4Service.draftPrepare
 Accept:application/json;odata.metadata=minimal;IEEE754Compatible=true
 Accept-Language:ko
@@ -130,7 +130,8 @@ Cookie: {{cookie}}
 # &$skip=0&$top=30
 # &$count=true
 
-POST Orders(ID=64e718c9-ff99-47f1-8ca3-950c850777d4,IsActiveEntity=false)/OrdersService.draftActivate?$select=HasActiveEntity,HasDraftEntity,ID,IsActiveEntity,OrderNo,createdAt,createdBy,modifiedAt,modifiedBy&$expand=DraftAdministrativeData($select=DraftUUID,InProcessByUser),currency($select=code,name) HTTP/1.1
+### Draft Action | draftActivate
+POST {{reviews-service}}/NegoHeadersTest04(tenant_id='L2100',nego_header_id=3,IsActiveEntity=false)/sp.SourcingTest01V4Service.draftActivate?$select=HasActiveEntity,HasDraftEntity,tenant_id,nego_header_id,nego_document_round,IsActiveEntity&$expand=DraftAdministrativeData($select=DraftUUID,InProcessByUser)
 Accept:application/json;odata.metadata=minimal;IEEE754Compatible=true
 Accept-Language:ko
 Content-Type:application/json;charset=UTF-8;IEEE754Compatible=true
