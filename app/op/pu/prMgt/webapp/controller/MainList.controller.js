@@ -526,6 +526,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
+            var that = this;
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -534,6 +535,7 @@ sap.ui.define([
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
+                    that.byId("mainTable").removeSelections();
                 }
             });
 
