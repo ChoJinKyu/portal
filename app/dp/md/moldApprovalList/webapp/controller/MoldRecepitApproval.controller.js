@@ -84,16 +84,16 @@ sap.ui.define([
             // console.log(" mode "  ,  this.getView().getModel("mode"));
             var schFilter = [];
             var that = this;
-            if (this.approval_number == "New") {
+          //  if (this.approval_number == "New") {
      
-            } else {
+          //  } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
                     // console.log("data>>>> ", oData);
                  });
-            }  
+           // }  
         },
 
         _bindViewRecepit : function (sObjectPath, sModel, aFilter, callback) { 
