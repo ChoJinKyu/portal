@@ -12,5 +12,6 @@ entity Se_Quantitative_Item {
       qttive_item_uom_code           : String(30)          @title: '정량항목측정단위코드' ;	
       qttive_item_measure_mode_code  : String(50)          @title: '정량항목측정방식' ;
       qttive_item_desc               : String(1000)        @title: '정량항목설명' ;
+      sort_sequence                  : Decimal             @title: '정렬순서';
 }	
 extend Se_Quantitative_Item with util.Managed;	

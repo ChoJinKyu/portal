@@ -72,15 +72,17 @@ public class BasePriceArlService extends BaseEventHandler {
     ParameterInfo parameterInfo;
 
     // @On(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlMaster_.CDS_NAME)
-    // public void onCreateBasePriceArlMaster(CdsCreateEventContext context, List<BasePriceArlMaster> basePriceArlMasters) {
+    // public void onCreateBasePriceArlMaster(EventContext context, List<BasePriceArlMaster> basePriceArlMasters) {
     //     System.out.println("#### onCreateBasePriceArlMaster Started....");
 
-    //     UserInfo userInfo = context.getUserInfo();
-    //     log.info("## user ID : " + userInfo.getId());
-    //     log.info("## user isAuth : " + Boolean.toString(userInfo.isAuthenticated()));
+    //     this.validationCheck(context, basePriceArlMasters);
 
-    //     context.setResult(context.getCqn().entries());
-    //     context.setCompleted();
+    //     // UserInfo userInfo = context.getUserInfo();
+    //     // log.info("## user ID : " + userInfo.getId());
+    //     // log.info("## user isAuth : " + Boolean.toString(userInfo.isAuthenticated()));
+
+    //     // context.setResult(context.getCqn().entries());
+    //     // context.setCompleted();
     // }
 
     // @After(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlMaster_.CDS_NAME)
@@ -93,22 +95,42 @@ public class BasePriceArlService extends BaseEventHandler {
     //     // context.setCompleted();
     // }
 
-    public void validMandatory(String validSource, EventContext context, Object... replacement) {
-        String messageCode = "EDP30001";
-        // String languageCode = "KO";
-        String msg = "";
+    // public void validationCheck(EventContext context, List<BasePriceArlMaster> basePriceArlMasters) {
+    //     System.out.println("## validationCheck Method Started....");
 
-        if (validSource == null || validSource.equals("")) {
-            try{
-                msg = this.getMessage(messageCode, context, replacement);
-                if(log.isDebugEnabled()) log.debug(msg);
-            } catch(Exception e) {
-                log.error(e.getLocalizedMessage(), e);
-            }
+    //     /** 
+    //      * basePriceArlMaster
+    //     */
+    //     for (BasePriceArlMaster basePriceArlMaster : basePriceArlMasters) {
+    //         // Validation
+    //         // validMandatory(basePriceArlMaster.getApprovalTitle(), context, this.getMessage("TITLE", context), this.getMessage("TITLE", context));
 
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
-        }
-    }
+    //         System.out.println("# tenant_id : " + basePriceArlMaster.getTenantId());
+    //         System.out.println("# approval_number : " + basePriceArlMaster.getApprovalNumber());
+
+    //         /** 
+    //          * BasePriceArlDetail
+    //         */
+    //         // 상세가 없으면 종료
+    //         if (basePriceArlMaster.getDetails() == null) return;
+            
+    //         List<BasePriceArlDetail> basePriceArlDetails = basePriceArlMaster.getDetails();
+            
+    //         for (BasePriceArlDetail basePriceArlDetail : basePriceArlDetails) {
+    //             System.out.println("\t# item_sequence : " + basePriceArlDetail.getItemSequence());
+    //         }
+    //     }
+    // }
+
+    // public void validMandatory(String validSource, EventContext context, Object... replacement) {
+    //     String messageCode = "EDP30001";
+    //     String msg = "";
+
+    //     if (validSource == null || validSource.equals("")) {
+    //         msg = this.getMessage(messageCode, context, replacement);
+    //         throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
+    //     }
+    // }
 
     /**
      * BasePriceArlMaster의 Create Before Event Handler 
@@ -128,7 +150,7 @@ public class BasePriceArlService extends BaseEventHandler {
         */
         for (BasePriceArlMaster basePriceArlMaster : basePriceArlMasters) {
             // Validation
-            validMandatory(basePriceArlMaster.getApprovalTitle(), context, this.getMessage("TITLE", context), this.getMessage("TITLE", context));
+            // validMandatory(basePriceArlMaster.getApprovalTitle(), context, this.getMessage("TITLE", context), this.getMessage("TITLE", context));
 
             String tenant_id = basePriceArlMaster.getTenantId();
 
@@ -210,7 +232,7 @@ public class BasePriceArlService extends BaseEventHandler {
 
     //             if (basePriceArlDetail.getItemSequence() == null) {
     //                 try {
-    //                     Connection conn = jdbc.getDataSource().getConnection();
+    //                     Connection conn = jdbc.getDataSource().getTempConnection();
 
     //                     sql = "SELECT DP_ITEM_SEQUENCE_FUNC(?, ?, ?) FROM DUMMY";
     //                     cstmt = conn.prepareCall(sql);
@@ -282,7 +304,7 @@ public class BasePriceArlService extends BaseEventHandler {
 
     //         if (basePriceArlMaster.getApprovalNumber() == null) {
     //             // try {
-    //                 // Connection conn = jdbc.getDataSource().getConnection();
+    //                 // Connection conn = jdbc.getDataSource().getTempConnection();
 
     //                 // sql = "SELECT DP_APPROVAL_NUMBER_FUNC(?) FROM DUMMY";
     //                 // cstmt = conn.prepareCall(sql);
@@ -365,7 +387,7 @@ public class BasePriceArlService extends BaseEventHandler {
 
     //             if (basePriceArlDetail.getItemSequence() == null) {
     //                 try {
-    //                     Connection conn = jdbc.getDataSource().getConnection();
+    //                     Connection conn = jdbc.getDataSource().getTempConnection();
 
     //                     sql = "SELECT DP_ITEM_SEQUENCE_FUNC(?, ?, ?) FROM DUMMY";
     //                     cstmt = conn.prepareCall(sql);

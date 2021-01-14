@@ -36,12 +36,13 @@ entity Sc_Nego_Headers {
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;
         immediate_apply_flag            : String(1)          @title : '즉시적용여부';
-        open_date                       : Date               @title : '오픈일자';
-        closing_date                    : Date               @title : '마감일자';
+        open_date                       : DateTime               @title : '오픈일자';
+        closing_date                    : DateTime               @title : '마감일자';
         //    reference_closing_date : Date   @title: '참조마감일자' ;
         //    cancel_date : Date   @title: '취소일자' ;
         auto_rfq                        : String(1)          @title : 'Auto RFQ';
-        itesm_count                     : Integer            @title : '품목수';
+        items_count                     : Integer            @title : '품목수';
+        itesm_count                     : Integer            @title : '품목수-삭제예정';
         negotiation_style_code          : String(30)         @title : '협상스타일코드';
         //    by_step_bidding_flag : String(1)   @title: '단계별입찰여부' ;
         //    round_bidding_flag : String(1)   @title: '회차입찰여부' ;
@@ -54,7 +55,7 @@ entity Sc_Nego_Headers {
         close_date_ext_enabled_hours    : Integer            @title : '마감일자동연장가능시간수';
         close_date_ext_enabled_count    : Integer            @title : '마감일자동연장가능횟수';
         actual_extension_count          : Integer            @title : '실제연장횟수';
-        remaining_hours                 : Decimal(28, 9)     @title : '잔여시간';
+        remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
         note_content                    : LargeBinary        @title : '노트내용';
         award_type_code                 : String(100)        @title : '낙찰유형코드';
         target_amount_config_flag       : String(1)          @title : '목표금액설정여부';

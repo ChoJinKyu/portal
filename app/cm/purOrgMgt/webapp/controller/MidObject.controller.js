@@ -16,7 +16,7 @@ sap.ui.define([
   "sap/m/Text",
   "sap/m/Input",
   "sap/m/ComboBox",
-  "sap/ui/core/Item",
+  "sap/ui/core/Item"
 ], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
   Filter, FilterOperator, Fragment, MessageBox, MessageToast,
   ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
@@ -53,79 +53,115 @@ sap.ui.define([
                 var entity = params.url.split("/")[0];
                 // 테넌트
                 if (entity.includes("Org_Tenant")) {
-                    setTimeout((function(){
-                        (!this.byId("searchTenantCombo").getFirstItem() || this.byId("searchTenantCombo").getFirstItem().getKey())
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
                         &&
-                        this.byId("searchTenantCombo")
+                        combo
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
-                            .setSelectedItemId(this.byId("searchTenantCombo").getFirstItem().getId());
-                    }).bind(this), 0);
+                            .setSelectedItemId(combo.getFirstItem().getId());
+
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+                    }).bind(this), 0, this.byId("searchTenantCombo"));
                 }
                 // 회사
                 else if (entity.includes("Org_Company")) {
-                    setTimeout((function(){
-                        (!this.byId("searchCompanyCode").getFirstItem() || this.byId("searchCompanyCode").getFirstItem().getKey() != "*")
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
                         &&
-                        this.byId("searchCompanyCode")
+                        combo
                             .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
-                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
-                            .setSelectedItemId(this.byId("searchCompanyCode").getFirstItem().getId());
-                    }).bind(this), 0);
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0);
+
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+
+                    }).bind(this), 0, this.byId("searchCompanyCode"));
                 }
                 // 구매조직
                 else if (entity.includes("Org_Purchasing")) {
-                    setTimeout((function(){
-                        (!this.byId("purchaseOrgCombo").getFirstItem() || this.byId("purchaseOrgCombo").getFirstItem().getKey())
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
                         &&
-                        this.byId("purchaseOrgCombo")
+                        combo
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
-                            .setSelectedItemId(this.byId("purchaseOrgCombo").getFirstItem().getId());
-                    }).bind(this), 0);
+                            .setSelectedItemId(combo.getFirstItem().getId());
+                        
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+                    }).bind(this), 0, this.byId("purchaseOrgCombo"));
                 }
                 // 플랜트
                 else if (entity.includes("Org_Plant")) {
-                    setTimeout((function(){
-                        (!this.byId("plantCodeCombo").getFirstItem() || this.byId("plantCodeCombo").getFirstItem().getKey())
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
                         &&
-                        this.byId("plantCodeCombo")
+                        combo
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
-                            .setSelectedItemId(this.byId("plantCodeCombo").getFirstItem().getId());
-                    }).bind(this), 0);
+                            .setSelectedItemId(combo.getFirstItem().getId());
+
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+                    }).bind(this), 0, this.byId("plantCodeCombo"));
                 }
                 // 사업본부
                 else if (entity.includes("Org_Unit")) {
-                    setTimeout((function(){
-                        (!this.byId("bizunitCodeCombo").getFirstItem() || this.byId("bizunitCodeCombo").getFirstItem().getKey())
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
                         &&
-                        this.byId("bizunitCodeCombo")
+                        combo
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
-                            .setSelectedItemId(this.byId("bizunitCodeCombo").getFirstItem().getId());
-                    }).bind(this), 0);
+                            .setSelectedItemId(combo.getFirstItem().getId());
+
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+                    }).bind(this), 0, this.byId("bizunitCodeCombo"));
                 }
                 else if (entity.includes("Org_Division")) {
-                    setTimeout((function(){
-                        // 사업부
-                        if (!this.byId("bizdivisionCodeCombo").getFirstItem() || this.byId("bizdivisionCodeCombo").getFirstItem().getId() != "bizId") {
-                            this.byId("bizdivisionCodeCombo")
-                                .insertItem(new Item("bizId", { key: "", text: "선택하세요" }), 0)
-                                .setSelectedItemId(this.byId("bizdivisionCodeCombo").getFirstItem().getId());
-                        }
+                    // 사업부
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
+                        &&
+                        combo
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(combo.getFirstItem().getId());
 
-                        // PLANT
-                        if (!this.byId("hqAuCodeCombo").getFirstItem() || this.byId("hqAuCodeCombo").getFirstItem().getId() != "hqAuId") {
-                            this.byId("hqAuCodeCombo")
-                                .insertItem(new Item("hqAuId", { key: "", text: "선택하세요" }), 0);
-                                //.setSelectedItemId(this.byId("hqAuCodeCombo").getFirstItem().getId());
-                            // 선택된 Key 값이 있는 경우
-                            if (this.byId("hqAuCodeCombo").getSelectedKey()) {
-                                this.byId("hqAuCodeCombo").setSelectedKey(this.byId("hqAuCodeCombo").getSelectedKey());
-                            }
-                            // 선택된 Key 값이 없는 경우
-                            else {
-                                this.byId("hqAuCodeCombo").setSelectedItemId(this.byId("hqAuCodeCombo").getFirstItem().getId());
-                            }
-                        }
-                    }).bind(this), 0);
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+                    }).bind(this), 0, this.byId("bizdivisionCodeCombo"));
+
+                    // PLANT
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
+                        &&
+                        combo
+                            .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
+                            .setSelectedItemId(combo.getFirstItem().getId());
+
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+                    }).bind(this), 0, this.byId("hqAuCodeCombo"));
                 }
             }
         }).bind(this));
@@ -136,11 +172,19 @@ sap.ui.define([
             if (!params.url.includes("$count")) {
                 var entity = params.url.split("/")[0];
                 if (entity.includes("Code")) {
-                    setTimeout((function(){
-                        this.byId("searchOrgTypeCombo")
+                    setTimeout((function(combo){
+                        let key = combo.getSelectedKey();
+                        !!combo.getFirstItem().getKey()
+                        &&
+                        combo
                             .insertItem(new Item({ key: "", text: "선택하세요" }), 0)
-                            .setSelectedItemId(this.byId("searchOrgTypeCombo").getFirstItem().getId());
-                    }).bind(this), 0);
+                            .setSelectedItemId(combo.getFirstItem().getId());
+                        
+                        combo.setSelectedItemId(combo.getFirstItem().getId());
+                        setTimeout((function(){
+                            key && combo.setSelectedKey(key);
+                        }).bind(this), 0);
+                    }).bind(this), 0, this.byId("searchOrgTypeCombo"));
                 }
             }
         }).bind(this));

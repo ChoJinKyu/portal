@@ -264,6 +264,10 @@ sap.ui.define([
                 this.oSearchMultiMaterialMasterDialog.open();
             },
 
+            cvtSupplier: function(oEvent) {
+                console.log(oEvent);
+            },
+
             /**
                  * Rounds the number unit value to 2 digits
                  * @public

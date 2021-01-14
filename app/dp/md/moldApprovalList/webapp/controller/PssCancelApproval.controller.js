@@ -30,7 +30,11 @@ sap.ui.define([
     var oTransactionManager;
     var oRichTextEditor;
     var supplierData =[];
-
+    /**
+     * @description  취소품의 
+     * @author       jinseon.lee
+     * @date         2021.01.14 
+     */
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PssCancelApproval", {
 
         dateFormatter: DateFormatter,
@@ -75,8 +79,8 @@ sap.ui.define([
         /* =========================================================== */
         _onApprovalPage : function () {
   
-            console.log(" this.approval_number "  ,  this.approval_number);
-            console.log(" Cancellation "  ,  this.getView().getModel('Cancellation'));
+            // console.log(" this.approval_number "  ,  this.approval_number);
+            // console.log(" Cancellation "  ,  this.getView().getModel('Cancellation'));
             var schFilter = [];
 
             if (this.approval_number == "New") {
@@ -85,7 +89,7 @@ sap.ui.define([
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ParticipatingSupplier New >>>>>>", oData);
+                    // console.log("ParticipatingSupplier New >>>>>>", oData);
                 });
 
             } else {
@@ -94,7 +98,7 @@ sap.ui.define([
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ParticipatingSupplier Edit >>>>>>", oData);
+                    // console.log("ParticipatingSupplier Edit >>>>>>", oData);
                 });
   
             }  
@@ -121,7 +125,7 @@ sap.ui.define([
                 , detailModel = this.getModel("mdItemMaster")
                 , oSelected = psTable.getSelectedIndices();
             ;
-            console.log(" psTable.getRows().length " , psTable);
+            // console.log(" psTable.getRows().length " , psTable);
 
             if (oSelected.length > 0) {
                 if(detailModel.getData().ParticipatingSupplier.length <= oSelected.length){
@@ -134,7 +138,7 @@ sap.ui.define([
                     });
                     psTable.clearSelection();
                 }
-                console.log("detailModel", detailModel);
+                // console.log("detailModel", detailModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -145,14 +149,14 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval : function(){ 
-             console.log(" PssCancelApproval  _toEditModeEachApproval ");
+             // console.log(" PssCancelApproval  _toEditModeEachApproval ");
          } ,
         _toShowModeEachApproval : function(){ 
-             console.log(" PssCancelApproval  _toShowModeEachApproval "); 
+             // console.log(" PssCancelApproval  _toShowModeEachApproval "); 
          } ,
         /*
         _participatingEditFragment : function(){
-            console.log("_participatingEditFragment");
+            // console.log("_participatingEditFragment");
             var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
             oPageSection.removeAllBlocks();
             this._loadFragment("ParticipatingSupplierSelectionCancelTableEdit", function (oFragment) {
@@ -160,7 +164,7 @@ sap.ui.define([
             }.bind(this));
         },
         _participatingViewFragment : function(){ // 협력사 선정품의랑 같은거 사용 
-             console.log("_participatingEditFragment");
+             // console.log("_participatingEditFragment");
              var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
             oPageSection.removeAllBlocks();
             this._loadFragment("ParticipatingSupplierSelectionTableView", function (oFragment) {
@@ -186,7 +190,7 @@ sap.ui.define([
                 }
             }
             
-            console.log("approverPreview " , this.getModel("approverPreview").getData());
+            // console.log("approverPreview " , this.getModel("approverPreview").getData());
 
             var ref = this.getModel("referer");
             this.getView().setModel(new ManagedModel(), "refererPreview");
@@ -217,8 +221,16 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){
-            this.byId("participatingSupplierSelectionPreview").close();
+        onPrvClosePress : function(){ 
+             if (this._oDialogPreview) {
+                this._oDialogPreview.then(function (oDialog) {
+                    // console.log(" oDialog.close >>> ", oDialog.close);
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPreview = undefined;
+            }
+           // this.byId("participatingSupplierSelectionPreview").close();
         },
         
         onChangePayment: function (oEvent) {
@@ -256,9 +268,7 @@ sap.ui.define([
                 return;
             }
 
-
-
-           // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
+           // // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if (bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0) {
 
                 bModel.getData().ParticipatingSupplier.forEach(function (item) {

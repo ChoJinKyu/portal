@@ -38,6 +38,7 @@ service SupEvalSetupService {
            Key org_code,
            Key evaluation_operation_unit_code,
            evaluation_operation_unit_name,
+           use_flag,
            case when (select distinct
                              evaluation_operation_unit_code
                       from   opUnitManager
@@ -102,6 +103,7 @@ service SupEvalSetupService {
                Key typ.evaluation_type_code,
                typ.evaluation_type_name,
                typ.evaluation_type_distrb_score_rate,
+               typ.use_flag,
                case when (select distinct evaluation_type_code
                           from   evalGrade
                           where  tenant_id = typ.tenant_id

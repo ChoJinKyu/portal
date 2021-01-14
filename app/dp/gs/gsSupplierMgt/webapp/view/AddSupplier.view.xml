@@ -19,27 +19,17 @@
 		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="{I18N>/GLOBAL} {I18N>/SOURCING} {I18N>/SUPPLIER}" wrapping="true" />
-				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					<Title text="{I18N>/GLOBAL} {I18N>/SOURCING} {I18N>/SUPPLIER}" wrapping="true" />
-				</uxap:snappedHeading>
-				<uxap:expandedContent>					
-				</uxap:expandedContent>
-				<uxap:snappedContent>					
-				</uxap:snappedContent>
-				<uxap:snappedTitleOnMobile>
-					<Title text="{I18N>/GLOBAL} {I18N>/SOURCING} {I18N>/SUPPLIER}" />
-				</uxap:snappedTitleOnMobile>
-				<uxap:actions>
-					<!-- <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" /> -->
-					<!-- <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" /> -->
-				</uxap:actions>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="{I18N>/GLOBAL} {I18N>/SOURCING} {I18N>/SUPPLIER}" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>
+				
                 <uxap:navigationActions>
 					<!-- <OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/> -->
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>

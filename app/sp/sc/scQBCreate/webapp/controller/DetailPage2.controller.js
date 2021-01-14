@@ -5,19 +5,20 @@ sap.ui.define([
         "sap/m/MessageBox",
         "ext/lib/util/Multilingual",
         "sap/ui/model/json/JSONModel",
-        // "../controller/SupplierSelection",
+        "../controller/SupplierSelection",
         // "dp/util/control/ui/MaterialMasterDialog"
+        "../controller/MaterialMasterDialog"
 
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON) {
+	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON, SupplierSelection, MaterialMasterDialog) {
     // function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON, SupplierSelection, MaterialMasterDialog) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBCreate.controller.DetailPage2", {
-            // supplierSelection :  new SupplierSelection(),
+            supplierSelection :  new SupplierSelection(),
             
 			onInit: function () {
                 

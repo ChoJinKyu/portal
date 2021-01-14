@@ -2,7 +2,7 @@ namespace sp;
 
 @cds.persistence.exists
 
-entity Sp_Sm_Supplier_View {
+entity Sm_Supplier_View {
     key tenant_id             : String(5)  @title : '테넌트ID';
     key company_code          : String(10) @title : '회사코드';
     key org_code              : String(10) @title : '사업본부코드';

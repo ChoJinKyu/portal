@@ -177,7 +177,7 @@
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_MstView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddDialogPress" />
-                            <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPrDeletePress" />
+                            <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPrDeletePress" visible="false" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press=".onExportPress" >
                                 <layoutData>

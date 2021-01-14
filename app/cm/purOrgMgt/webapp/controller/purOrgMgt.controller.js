@@ -43,10 +43,11 @@ sap.ui.define([
                         var entity = params.url.split("/")[0];
                         if (entity.includes("Org_Company")) {
                             setTimeout((function(){
-                                (!this.byId("searchCompanyCode").getFirstItem() || this.byId("searchCompanyCode").getFirstItem().getKey() != "*")
+                                (!this.byId("searchCompanyCode").getFirstItem() || this.byId("searchCompanyCode").getFirstItem().getKey() != "")
                                 &&
                                 this.byId("searchCompanyCode")
                                     .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
+                                    .insertItem(new Item({ key: "", text: "ALL" }), 0)
                                     .setSelectedItemId(this.byId("searchCompanyCode").getFirstItem().getId());
                             }).bind(this), 0);
                         }

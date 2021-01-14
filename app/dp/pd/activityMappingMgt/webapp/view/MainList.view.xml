@@ -45,11 +45,11 @@
                             <ComboBox
                                 id="searchOrgCombo"
                                 width="100%"
-                                selectedKey="GSZ"
+                                selectedKey="BIZ00000"
                                 items="{
                                     path: '/PdOperationOrg',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
                                     sorter: { path: 'operation_org_code'}
                                 }" required="true">
@@ -143,11 +143,8 @@
                     <ColumnListItem>
                         <cells>
                             <HBox>
-                                <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
-                                <ObjectStatus icon="{
-                                    path: 'list>_row_state_',
-                                    formatter: '.formatter.toModelStateColumnIcon'
-                                }" />
+                                <!-- <ObjectStatus icon="sap-icon://document" text="State" visible="false" /> -->
+                                <ObjectStatus icon="{path: 'list>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}" />
                             </HBox>
                             <HBox>
                                 <Text text="{list>org_code}" visible="true" />
@@ -162,15 +159,14 @@
                             </HBox>
                             <HBox>
                                 <Text text="{list>activity_dependency_name}" visible="true" />
-                                <ComboBox  visible="false"
+                                <ComboBox visible="false"
                                     selectedKey="{list>activity_dependency_code}"
                                     items="{
                                     path: 'util>/Code',
                                     filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_DEPENDENCY'}
-                                    ]
-                                }">
+                                    ]}">
                                 <items>
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </items>
@@ -185,19 +181,17 @@
                                 <SearchField value="{list>activity_name}" search=".onSearchActivity" visible="false" />
                             </HBox>
                             <HBox>
-                                <Text text="{
-                                    path: 'list>local_update_dtm',
-                                    formatter: '.dateFormatter.toDateTimeString'
-                                }" visible="true" />
+                                <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" visible="true" />
                             </HBox>
                             <HBox>
                                 <Text text="{list>update_user_id}" visible="true" />
                             </HBox>
+                            <Text text="{list>product_activity_code_org}" visible="false" />
+                            <Text text="{list>activity_code_org}" visible="false" />
                         </cells>
                     </ColumnListItem>
                 </items>
             </Table>
         </f:content>
-
     </f:DynamicPage>
 </mvc:View>

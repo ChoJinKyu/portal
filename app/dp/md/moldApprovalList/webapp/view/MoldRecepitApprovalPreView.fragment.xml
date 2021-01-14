@@ -109,7 +109,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections id="sections_bp">
-			<uxap:ObjectPageSection id="pageSectionMain_bp" titleUppercase="true" title="General Info" width="80%">
+			<uxap:ObjectPageSection id="pageSectionMain_bp" titleUppercase="true" title="General Info" >
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 

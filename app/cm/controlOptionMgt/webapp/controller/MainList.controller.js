@@ -15,8 +15,7 @@ sap.ui.define([
   "sap/m/Text",
   "sap/m/Input",
   "sap/m/ComboBox",
-  "sap/ui/core/Item",
-  "3rd/lib/lodash/lodash"
+  "sap/ui/core/Item"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
   "use strict";
 
@@ -33,7 +32,6 @@ sap.ui.define([
 		 * @public
 		 */
     onInit: function () {
-      // console.log(">>>>>> lodash", _);
       var oViewModel,
         oResourceBundle = this.getResourceBundle();
 

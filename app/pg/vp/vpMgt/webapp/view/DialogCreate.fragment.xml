@@ -348,14 +348,14 @@
                             </layoutData> 
                         </VBox> 
                         <VBox>
-                            <Label text = "V/P Exception" design="Bold"/> 
+                            <Label text = "V/P Exception" width="8rem" design="Bold"/> 
                                 <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
                                         <FlexItemData growFactor="1" />
                                     </layoutData>
                                 </Switch> 
                             <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData> 
                         </VBox>                                                                       
                         <VBox id = "v_review_grade" >
@@ -400,7 +400,7 @@
                         <VBox id="v_internal_rate">
                             <Label text = "Site Internal Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="Number" change=".fnCalcRate" ></Input> 
+                                    <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>                                
                             <layoutData>
@@ -410,7 +410,7 @@
                         <VBox id="v_external_rate">
                             <Label text = "Site External Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_domestic_net_price_diff_rate" type="Number" change=".fnCalcRate"  ></Input> 
+                                    <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>
                             <layoutData>

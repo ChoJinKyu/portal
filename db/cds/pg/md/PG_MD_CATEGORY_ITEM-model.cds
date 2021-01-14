@@ -1,6 +1,7 @@
 namespace pg;
 
 using {pg as itemLngs} from './PG_MD_CATEGORY_ITEM_LNG-model';
+using {pg as cateId } from './PG_MD_CATEGORY_ID-model';
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 using {cm as orgBizunit} from '../../cm/CM_ORG_UNIT-model';
 using util from '../../cm/util/util-model';
@@ -17,6 +18,13 @@ entity Md_Category_Item {
         spmd_character_desc      : String(500)          @title : 'SPMD특성설명';
         spmd_character_sort_seq  : Integer64 not null   @title : 'SPMD특성정렬순서';
         spmd_character_serial_no : Integer64 not null   @title : 'SPMD특성일련번호';
+        
+        category_infos              : Association to cateId.Md_Category_Id
+                                       on  category_infos.tenant_id           = tenant_id
+                                       and category_infos.company_code        = company_code
+                                       and category_infos.org_type_code       = org_type_code
+                                       and category_infos.org_code            = org_code
+                                       and category_infos.spmd_category_code  = spmd_category_code;
 
         tenant_infos                : Association to orgTenant.Org_Tenant
                                         on tenant_infos.tenant_id = tenant_id;

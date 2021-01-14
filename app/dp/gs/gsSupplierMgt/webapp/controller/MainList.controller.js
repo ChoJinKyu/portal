@@ -27,7 +27,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
 ], function (BaseController, Multilingual, Validator, History, JSONModel, TransactionManager, ManagedModel,
-    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Message, MessageType,
+    ManagedListModel, LayoutType, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Message, MessageType, 
     MessageBox, MessageToast, EmployeeDialog, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
     "use strict";
     
@@ -39,8 +39,7 @@ sap.ui.define([
         
         validator: new Validator(),
 
-        DupChkFlag: new Boolean,        
-
+		DupChkFlag: new Boolean,
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -50,7 +49,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {            
-            this.DupChkFlag = false;
+			this.DupChkFlag = false;
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
@@ -243,7 +242,7 @@ sap.ui.define([
                     "tenant_id": "L2100",
                     "sourcing_supplier_nickname": ""                    
                 }, "/SupplierGen");
-            oTransactionManager.setServiceModel(this.getModel());
+            oTransactionManager.setServiceModel(this.getModel());            
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -260,11 +259,14 @@ sap.ui.define([
                 oDialog.open();
                 
             });
+            
 
         },
 
         createPopupClose: function (oEvent) {
-            this.validator.clearValueState(this.byId("dialogAddSupplier"));            
+            this.DupChkFlag = false;
+            this.validator.clearValueState(this.byId("dialogAddSupplier"));
+            this.byId("inputWithEmployeeValueHelp").setValue("");            
             this.byId("dialogAddSupplier").close();
         },
 
@@ -279,29 +281,21 @@ sap.ui.define([
             var tenantId = "L2100";           
             
             var ssn = this.getView().byId("ssn").getValue(); 
-            var email = this.getView().byId("email").getValue();  
-            // var ssn = "ZKH"  
+            var email = this.getView().byId("email").getValue();                
             
-            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;       
-            // this.byId("dialogAddSupplier").close();
-            // this.getRouter().navTo("suppliePage", {
-			// 	layout: LayoutType.OneColumn,
-			// 	tenantId: tenantId,
-            //     ssn: ssn,
-            //     mode: "edit"
-            // });
+            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;      
+            
             
             var chkEmail = this.CheckEmail(email);
             if(!chkEmail){
-                MessageBox.alert("이메일 형식이 잘못되었습니다.");
+                MessageBox.warning("이메일 형식이 잘못되었습니다.");
                 return false;
             }
 
             if(!this.DupChkFlag){
-                MessageBox.alert("중복체크 해주세요.");
+                MessageBox.warning(this.getModel("I18N").getText("/EDP60001")); //중복체크 후 진행 가능합니다               
                 return false; 
             }
-
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -309,7 +303,9 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
 						oTransactionManager.submit({						
-							success: function(ok){								
+							success: function(ok){
+                                that.byId("inputWithEmployeeValueHelp").setValue("");
+                                that.DupChkFlag = false;								
                                 oView.setBusy(false);
                                 // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
@@ -327,7 +323,7 @@ sap.ui.define([
 					};
 				}
             });
-            this.validator.clearValueState(this.byId("dialogAddSupplier"));            
+            this.validator.clearValueState(this.byId("dialogAddSupplier"));                        
             
         },     
         
@@ -336,7 +332,7 @@ sap.ui.define([
             var iTenantId = "L2100",
                 iSn = this.byId("ssn").getValue().trim();
             if(this.isValNull(iSn)) {
-                MessageBox.alert("소싱공급업체별칭을 입력해주세요.");
+                MessageBox.information("소싱공급업체별칭을 입력해주세요.");
                 return false;
             }                
             
@@ -351,16 +347,11 @@ sap.ui.define([
                         var code = data.value[0].return_code;
                         if(code === "S"){
                             v_this.DupChkFlag = true;
-                            MessageBox.alert("사용가능한 소싱공급업체별칭 입니다.");
+                            MessageBox.success(v_this.getModel("I18N").getText("/NDP60001")); //[중복체크]등록 가능합니다                            
                             return true;
                         } else {
                             v_this.DupChkFlag = false;
-                            MessageBox.alert("중복된 소싱공급업체별칭 입니다.");
-                            // sap.ui.getCore().getMessageManager().addMessages(new Message({
-                            //     message: "중복입니다.", // Get Message from ValueStateText if available
-                            //     type: MessageType.Error,
-                            //     additionalText: iSn // Get label from the form element
-                            // }));
+                            MessageBox.warning(v_this.getModel("I18N").getText("/NDP60002")); //[중복체크]이미 등록되어 있습니다                            
                             return false;
                         }                                               
                     },
@@ -406,9 +397,8 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onRoutedThisPage: function(){            
-            
-            
+		_onRoutedThisPage: function(){           
+        
             this.getModel("mainListView").setProperty("/headerExpanded", true);      
             var sThisViewId = this.getView().getId();
             var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");

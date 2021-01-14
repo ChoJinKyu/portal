@@ -30,7 +30,6 @@ service SupEvalSetupV4Service {
         ;
     
     type operationUnitMst : {
-        transaction_code: String(1);
         tenant_id: String(5); 
         company_code: String(10); 
         org_type_code: String(2);
@@ -42,6 +41,7 @@ service SupEvalSetupV4Service {
         evaluation_request_approval_flag: Boolean;
         operation_plan_flag: Boolean;
         eval_apply_vendor_pool_lvl_no: Decimal;
+        use_flag: Boolean;
     };
 
     type vpOperationUnit : {
@@ -71,6 +71,7 @@ service SupEvalSetupV4Service {
         qttive_item_uom_code: String(30);
         qttive_item_measure_mode_code: String(50);
         qttive_item_desc: String(1000);
+        sort_sequence: Decimal;
     };
 
     type rtnMsg : {
@@ -85,7 +86,6 @@ service SupEvalSetupV4Service {
                                      user_id : String(30)) returns array of rtnMsg;
 
     type evalType : {
-        transaction_code: String(1);
         tenant_id: String(10);
         company_code: String(10);
         org_type_code: String(2);
@@ -94,6 +94,7 @@ service SupEvalSetupV4Service {
         evaluation_type_code: String(30);
         evaluation_type_name: String(50);
         evaluation_type_distrb_score_rate : Decimal;
+        use_flag: Boolean;
     };
 
     type evalGrade : {

@@ -76,6 +76,10 @@ BEGIN
         
         /*Update Project*/
         BEGIN
+		    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	        BEGIN
+	        	SIGNAL txn_error SET MESSAGE_TEXT = 'Update Project Error.';
+	        END;        
             
             UPDATE DP_TC_PROJECT
                SET PRODUCT_GROUP_CODE = loop_project.PRODUCT_GROUP_CODE
@@ -118,6 +122,11 @@ BEGIN
         
         FOR loop_similar_model AS similar_model_cursor DO
             BEGIN
+			    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		        BEGIN
+		        	SIGNAL txn_error SET MESSAGE_TEXT = 'Insert Project Similar Model Error.';
+		        END;
+
                 INSERT
                   INTO DP_TC_PROJECT_SIMILAR_MODEL(
                   	   TENANT_ID
@@ -152,6 +161,11 @@ BEGIN
         /*물동(MTLMOB)/판가(SALE_PRICE)/가공비(PROCESSING_COST)/판관비(SGNA)*/
         FOR loop_add_info AS add_info_cursor DO
             BEGIN
+			    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		        BEGIN
+		        	SIGNAL txn_error SET MESSAGE_TEXT = 'Update Project Add Info Error.';
+		        END;
+
                 UPDATE DP_TC_PROJECT_ADDITION_INFO
                    SET ADDITION_TYPE_VALUE = loop_add_info.ADDITION_TYPE_VALUE
                      , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
@@ -168,6 +182,11 @@ BEGIN
         /*환율*/
         FOR loop_base_exrate AS base_exrate_cursor DO
             BEGIN
+			    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		        BEGIN
+		        	SIGNAL txn_error SET MESSAGE_TEXT = 'Update Project Base Exrate Error.';
+		        END;
+                            
                 UPDATE DP_TC_PROJECT_BASE_EXRATE
                    SET EXRATE = loop_base_exrate.EXRATE
                      , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP

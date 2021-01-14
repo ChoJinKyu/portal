@@ -6,18 +6,21 @@ sap.ui.define([
         "sap/m/MessageToast",
         "ext/lib/util/Multilingual",
         "sap/ui/model/json/JSONModel", 
-        "../controller/SupplierSelection"
+        "../controller/SupplierSelection",
+        "ext/lib/formatter/Formatter",
+        "../controller/MaterialMasterDialog"
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection) {
+	function (Controller, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBMgt.controller.DetailPage", {
 
             supplierSelection :  new SupplierSelection(),
+            formatter: Formatter,
             
 			onInit: function () {
 
@@ -96,20 +99,18 @@ sap.ui.define([
             },
 
 
-
-
-
             onNavBack: function(e){
 
-                this.getView().byId("tableLines").setVisibleRowCountMode("Auto");
-
+                this.onPageCancelButtonPress();
+                // this.getView().byId("tableLines").setVisibleRowCountMode("Auto");
                 this.getOwnerComponent().getRouter().navTo("mainPage", {} );
             },
             _onRouteMatched: function (e) {
 
                 var outcome = e.getParameter("arguments").outcome;
+                console.log("_onRouteMatched " + outcome);
 
-                if( outcome == "0" || outcome == "1" ) {
+                if( outcome == "BPA" || outcome == "Tentative Price" ) {
                     this.getView().getModel("propInfo").setProperty("/outCome","");
                 }else {
 
@@ -131,10 +132,6 @@ sap.ui.define([
                 this._type = e.getParameter("arguments").type;
                 this._header_id = e.getParameter("arguments").header_id;
 
-                // this.getView().byId("objectPageSection").getSelectedSubSection();
-                console.log(this.getView().byId("objectPageSection").getSelectedSubSection());
-
-
                 var that = this;
                 var oView = this.getView();
                 // var url = "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/MasterFunc('A')/Set"
@@ -155,25 +152,29 @@ sap.ui.define([
 
                         oView.getModel("NegoHeaders").setData(data.value[0]);
 
-                        oView.getModel("viewModel").updateBindings(true);      
-                        // oView.setModel(v_this.viewModel.NegoHeaders, "NegoHeaders");
-
-                        // oView.getModel("viewModel").refresh();
+                        oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
+                        oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
+                        oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
                         
-                        // oView.byId("inputNegotiationNo").setValue(data.value[0].nego_document_number);
 
-                        // this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
-                        // this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
-                        // this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
-                        // this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
-                        // this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
-                        // this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
-
-                        // var oVerticalLayout = oView.byId('vLayout');
-                        // oVerticalLayout.bindElement("viewModel>/NegoHeaders");
+                        oView.getModel("viewModel").updateBindings(true);      
+ 
                         console.log(oView.getModel("viewModel").getData());
                         console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
                         console.log(data.value[0]);
+
+                        // var oModel = this.getView().getModel("NegoHeaders");//,
+                            // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
+                        if( !data.value[0].hasOwnProperty("Items") ) {
+                            oView.byId("tableLines").setVisibleRowCount( 2 );
+                            
+                        }else {
+                            oView.byId("tableLines").setVisibleRowCountMode("Fixed");
+                            oView.byId("tableLines").setVisibleRowCount( data.value[0].Items.length );
+                        }
+
+                        // this.getView().byId("tableLines").getVisibleRowCount();
+                        
 
                         // data.value[0].Items.lengt
                         // oView.byId("table1")
@@ -208,7 +209,39 @@ sap.ui.define([
             },
             onPageCancelButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", false );
+                this.getView().byId("tableLines").setSelectedIndex(-1);
                 // this.onNavBack();
+            },
+            onPageDeleteButtonPress: function() {
+                var oView = this.getView();//.getModel();
+                var sPath = oView.getModel().createKey("/NegoHeaders", {
+                        tenant_id:          oView.getModel("NegoHeaders").getProperty("/tenant_id"),
+                        nego_header_id:   oView.getModel("NegoHeaders").getProperty("/nego_header_id")
+                    });
+                
+
+                console.log( "delete :: " + sPath);
+                oView.getModel().remove(sPath,{
+                  
+                    // method: "PUT",
+                    success: function (oData) {
+
+
+                        MessageToast.show(" success !! ");
+
+                        // this.onPageCancelButtonPress();
+
+                        this.onNavBack();
+ 
+                    }.bind(this),
+                    error: function (aa, bb){
+                        console.log( "error!!!!");
+                        console.log(  aa  );
+                        MessageToast.show(" error !! ");
+                        // MessageToast.show(that.getModel("I18N").getText("/EPG00002")); 
+                        
+                    }
+                });
             },
             onPageEditButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", true );
@@ -491,7 +524,9 @@ sap.ui.define([
                         // that.setDataBinding(data.value[0]);
                     },
                     error: function(e){
-                        
+                        // data 없을때,,
+                        oView.getModel("NegoItemPrices").getData().Suppliers = [];
+                        oView.getModel("NegoItemPrices").refresh(true);
                     }
                 });
 
@@ -499,11 +534,17 @@ sap.ui.define([
 
             addLineItemRow: function () {
                 var oTemp = this.getView().getModel("NegoHeaders").getData();
+                var itemNumberTemp = 1;
+                if( oTemp.hasOwnProperty("Items") ) {
+                    itemNumberTemp = oTemp.Items.length +1;
+                }
 
                 var oLine = {
+                    "_row_state_" : "C",
+
                     "tenant_id": oTemp.tenant_id,
-                    "nego_header_id"     : String(oTemp.nego_header_id),
-                    "nego_item_number"     : "00002",
+                    "nego_header_id"     : Number(oTemp.nego_header_id),
+                    "nego_item_number"     : "0000" + itemNumberTemp,
                     "operation_unit_code"     : "",
                     "award_progress_status_code"     : "",
                     "line_type_code"     : "",
@@ -561,61 +602,64 @@ sap.ui.define([
 
                 var oModel = this.getView().getModel("NegoHeaders");//,
                     // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
-                oModel.oData.Items.push(oLine);
+                if( !oModel.getData().hasOwnProperty("Items") ) {
+                    oModel.getData().Items = [];
+                }
+                oModel.getData().Items.push(oLine);
                 oModel.refresh();
 
                 // this.getView().byId("tableLines").getVisibleRowCount();
                 this.getView().byId("tableLines").setVisibleRowCountMode("Fixed");
-                this.getView().byId("tableLines").setVisibleRowCount( oModel.oData.Items.length );
+                this.getView().byId("tableLines").setVisibleRowCount( oModel.getData().Items.length );
 
             },
 
-            testUpdate: function () {
-                var oModel = this.getView().getModel(),
-                oView = this.getView(),
-              //  table = this.byId("mainTable"),
-                that = this;
+            onMidTableDeleteButtonPress: function () {
+                var oView = this.getView();
+                var deleteList = oView.byId("tableLines").getSelectedIndices();
 
-                var oItemTemp = oView.getModel("NegoHeaders").getData();
-                var oItem = {};
-
-                oItem.tenant_id = oItemTemp.tenant_id;
-                oItem.nego_header_id = String(oItemTemp.nego_header_id); 
-                oItem.nego_document_title = oView.byId("inputTitle").getValue();//oItemTemp.nego_document_title;
-
-                // var pathTemp = "/NegoHeaders(tenant_id='L2100',nego_header_id=1)";
-
-                var path = oModel.createKey("/NegoHeaders", {
-                                    tenant_id:          oItemTemp.tenant_id,
-                                    nego_header_id:   oItemTemp.nego_header_id
-                                });
-                                
-                // oView.getModel().createEntry("/MIMaterialPriceManagement", b);
-                oModel.update( path , oItem , {
-                  
-                    method: "PUT",
-                    success: function (oData) {
-
-                        console.log( "success!!!!");
-                        // oItem.__entity = sPath;
-                        // that.onPageSearchButtonPress();
-                        // that.onBeforeRebindTable();
-                        // oModel.refresh(true);
-                        MessageToast.show(" success !! ");
-                        oView.getModel("NegoHeaders").refresh(true);
-
-                        oView.getModel("propInfo").setProperty("/isEditMode", false );
-
-                        // that.byId("pageSearchButton").firePress();
-                    },
-                    error: function (aa, bb){
-                        console.log( "error!!!!");
-                        console.log(  aa  );
-                        MessageToast.show(" error !! ");
-                        // MessageToast.show(that.getModel("I18N").getText("/EPG00002")); 
-                        
-                    }
+                var lineItems = oView.getModel("NegoHeaders").getData().Items;
+                
+                deleteList.forEach(function(element, index, array){
+                    // if( element )
+                    lineItems[element]["_row_state_"] = "D";
+                    // console.log( lineItems[element] );
+                    // lineItems.splice( index ,1);
                 });
+
+                oView.getModel("NegoHeaders").refresh(true);
+
+                // this.getView().byId("tableLines").setVisibleRowCount( oView.getModel("NegoHeaders").getData().Items.length );
+                oView.byId("tableLines").setSelectedIndex(-1);
+            },
+            onPartNoPress(e){
+                debugger;
+                var materialItem;
+                this._partnoIndex = e.oSource.getParent().getParent().getIndex();
+                
+                if(!this.oSearchMultiMaterialMasterDialog){
+                    this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                        title: "Choose MaterialMaster",
+                        MultiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", "L1100")
+                            ]
+                        }
+                    });
+                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                        materialItem = oEvent.mParameters.item;
+
+                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[6].getAggregation("items")[0].setValue(materialItem.material_code);
+                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[7].getAggregation("items")[0].setValue(materialItem.material_desc);
+                        console.log("materialItem : ", materialItem);
+
+                    }.bind(this));
+
+                }
+                this.oSearchMultiMaterialMasterDialog.open();
+                
             }
+            
 		});
 	});

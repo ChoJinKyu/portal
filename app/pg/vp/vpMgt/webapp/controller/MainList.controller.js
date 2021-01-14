@@ -212,9 +212,11 @@ sap.ui.define([
             }
             this.treeDialog.then(function (tDialog) {
                 tDialog.open();
+                this.onDialogTreeSearch();
                 // this.onAfterDialog();
             }.bind(this));
         },
+
         createTreePopupClose: function (oEvent) {
             console.log(oEvent);
             this.byId("ceateVpCategorytree").close();
@@ -1157,16 +1159,23 @@ sap.ui.define([
 
         },
 
-        selectTreeValue: function (oEvent) {
+        selectTreeValue: function (event) {
 
-            var oTable = this.byId("diatreeTable");
-            var aIndices = oTable.getSelectedIndices();
-            //선택된 Tree Table Value 
-            var tree_vpName = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[0].mProperties.text
-            var tree_vpCode = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text
+            // var oTable = this.byId("diatreeTable");
+            // var aIndices = oTable.getSelectedIndices();
+            // //선택된 Tree Table Value 
+            // var tree_vpName = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[0].mProperties.text
+            // var tree_vpCode = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text
 
-            this.getView().byId("search_Vp_Name").setValue(tree_vpName);
-            this.getView().byId("search_Vp_Code").setValue(tree_vpCode);
+            var row = this.getView().getModel("tree").getObject(event.getParameters().rowContext.sPath);
+
+            // this.getView().byId("search_Vp_Name").setValue(tree_vpName);
+            // this.getView().byId("search_Vp_Code").setValue(tree_vpCode);
+            this.getView().byId("search_Vp_Name").setValue(row.vendor_pool_local_name);
+            this.getView().byId("search_Vp_Code").setValue(row.vendor_pool_code);
+
+
+            this.byId("treepop_vendor_pool_local_name").setValue("");
 
             this.createTreePopupClose();
 

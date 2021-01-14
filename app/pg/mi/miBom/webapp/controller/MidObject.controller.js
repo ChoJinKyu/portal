@@ -2072,6 +2072,23 @@ sap.ui.define([
                 }
                 else {  //Update
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();   
+                    
+                    var _deleteItem = that.getModel("_deleteItem"),                        
+                        _deleteItemOdata = _deleteItem.getProperty("/delData");
+                           
+                    if(_deleteItemOdata.length>0){
+                        if(midList.oData[i].itemMode==this._m.itemMode.create){
+                            // 자재를 삭제후 다시 동일 자재를 등록하고자 할경우
+                            for(var idx=0;idx<_deleteItemOdata.length;idx++){
+
+                                if(_deleteItemOdata[idx].mi_material_code == midList.oData[i].mi_material_code){
+                                    midList.oData[i].itemMode=this._m.itemMode.read; //Delete-> Insert보다 수정모드로 변경하여 처리 함
+                                    _deleteItemOdata.splice(idx, 1);
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
                     if(_headerCount==0){
 
@@ -2090,7 +2107,9 @@ sap.ui.define([
                             createItem++;
                         }
 
-                    }else{                        
+                    }else{                       
+ 
+                       
                         if(that._fnUpdateItem(oModel, midList.oData[i])){
                             updateItem++;
                         }

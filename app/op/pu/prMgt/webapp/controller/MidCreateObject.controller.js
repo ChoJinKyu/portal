@@ -20,8 +20,9 @@ sap.ui.define([
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
     , "dp/util/control/ui/MaterialMasterDialog"
+    , "cm/util/control/ui/EmployeeDialog"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Sorter
-            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label, MaterialMasterDialog) {
+            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label, MaterialMasterDialog, EmployeeDialog) {
     
     "use strict";
     
@@ -117,12 +118,6 @@ sap.ui.define([
                  this._fnReadPrMaster(oArgs);
                  this._fnReadPrDetail(oArgs);
             }
-
-
-            //this._createViewBindData(oArgs); 
-			//this._onLoadApprovalRow();
-            //this.oSF = this.getView().byId("searchField");
-
             
             // 텍스트 에디터
             this.setRichEditor();
@@ -146,7 +141,7 @@ sap.ui.define([
             };
 
             //구매유형 : 공사
-            if(oPrMstData.pr_type_code === "TC00003"){
+            if(oPrMstData.pr_type_code_2 === "TC20003"){
                 oPrDtlVisible.material_code = false;
                 oPrDtlVisible.material_group_code = false;
                 oPrDtlVisible.sloc_code = false;
@@ -281,7 +276,11 @@ sap.ui.define([
                 sorters : aSorter,
                 success : function(data){
                     if(data.results.length > 0) {
-                         oViewModel.setProperty("/PrMst", data.results[0]);
+                        oViewModel.setProperty("/PrMst", data.results[0]);
+
+                        // 품의내용
+                        var oApprovalRTE = that.getView().byId("approvalLayout").getContent()[0];
+                        oApprovalRTE.setValue(data.results[0].approval_contents);
 
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
@@ -347,7 +346,7 @@ sap.ui.define([
                         org_type_code: "XX", 
                         org_code: "", 
                         buyer_empno: "", 
-                        currency_code: "", 
+                        currency_code: "KRW", 
                         estimated_price: "", 
                         material_code: "", 
                         material_group_code: "", 
@@ -356,7 +355,7 @@ sap.ui.define([
                         pr_unit: "", 
                         requestor_empno: "A60264", 
                         requestor_name: "김구매", 
-                        delivery_request_date: "",
+                        delivery_request_date: new Date(),
                         purchasing_group_code: "", 
                         price_unit: "", 
                         pr_progress_status_code: "10", 
@@ -487,10 +486,10 @@ sap.ui.define([
             oViewData.PrMst.pr_desc = pr_desc;
                         
             //품의내용
-            // var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            // oViewData.PrMst.approval_contents = approvalContents;
-
+            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            oViewData.PrMst.approval_contents = approvalContents;
             
+
             // Master data
             var oMaster = oViewData.PrMst;
             var oMasterData = {
@@ -648,6 +647,8 @@ sap.ui.define([
         _fnNavigationMainPage: function(){
             var sLayout = LayoutType.OneColumn;
             this.getRouter().navTo("mainPage", {layout: sLayout});
+            
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
         },
                 
         /**
@@ -798,7 +799,33 @@ sap.ui.define([
             }
         },
         //==================== Material Code Dialog 끝 ====================
-        
+ 
+        //==================== 사원정보 검색 Dialog 시작 ====================  
+		onOpenSearchEmpDialog: function (oEvent) {
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+                //oViewModel = this.getModel("viewModel");
+            //var oSelectedData = oViewModel.getProperty(sSelectedPath);
+            
+            if(!this.oSearchEmpDialog){
+                this.oSearchEmpDialog = new EmployeeDialog({
+                    title: "Choose Employee"
+                });
+                this.oSearchEmpDialog.attachEvent("apply", function(oEvent){
+                    var oItemData = oEvent.getParameter("item");
+                    var oViewModel = this.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                    if(oItemData.employee_number && oItemData.employee_number !== ""){
+                        oSelectedData.buyer_empno = oItemData.employee_number;                    
+                        oViewModel.refresh();
+                    }
+                    
+                }.bind(that));
+            }
+            this.oSearchEmpDialog.open();
+        },
+        //==================== 사원정보 검색 Dialog 끝 ====================  
 
         /**
          * 폅집기 창 
@@ -807,25 +834,29 @@ sap.ui.define([
             var that = this,
                 sHtmlValue = '';            
             var oApprovalLayout = this.getView().byId("approvalLayout");
+            var oApprovalRTE = oApprovalLayout.getContent()[0];
 
-            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                function (RTE, EditorType) {
-                    var oRichTextEditor = new RTE("prCreateApprovalRTE", {
-                        editorType: EditorType.TinyMCE4,
-                        width: "100%",
-                        height: "200px",
-                        customToolbar: true,
-                        showGroupFont: true,
-                        showGroupLink: true,
-                        showGroupInsert: true,
-                        value: sHtmlValue,
-                        ready: function () {
-                            this.addButtonGroup("styleselect").addButtonGroup("table");
-                        }
-                    });
-
-                    oApprovalLayout.addContent(oRichTextEditor);
-            });
+            if(!oApprovalRTE || oApprovalRTE.length === 0){
+                sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                    function (RTE, EditorType) {
+                        var oRichTextEditor = new RTE("prCreateApprovalRTE", {
+                            editorType: EditorType.TinyMCE4,
+                            width: "100%",
+                            height: "200px",
+                            customToolbar: true,
+                            showGroupFont: true,
+                            showGroupLink: true,
+                            showGroupInsert: true,
+                            value: sHtmlValue,
+                            ready: function () {
+                                this.addButtonGroup("styleselect").addButtonGroup("table");
+                            }
+                        });
+                        oApprovalLayout.addContent(oRichTextEditor);
+                });
+            } else {
+                oApprovalRTE.setValue("");
+            }                
         },
 
 

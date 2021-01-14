@@ -31,6 +31,14 @@ sap.ui.define([
         validator: new Validator(),
 
         onInit: function () {
+            var oViewModel = this.getResourceBundle();
+            oViewModel = new JSONModel({
+                headerExpanded: true,
+                readMode: false,
+                editMode: false
+            });
+            this.setModel(oViewModel, "mainListView");
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new ManagedListModel(), "list");
@@ -94,8 +102,6 @@ sap.ui.define([
                     oView.setBusy(false);
 
                     for (var i = 0; i < oTable.getItems().length; i++) {
-                        // oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                        // oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                         oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                         oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                         oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
@@ -107,7 +113,10 @@ sap.ui.define([
                         oTable.getAggregation('items')[i].getCells()[6].getItems()[0].setVisible(true);
                         oTable.getAggregation('items')[i].getCells()[6].getItems()[1].setVisible(false);
 
-                        oModel.oData.ActivityMappingNameView[i]._row_state_ = "";
+                        oTable.getAggregation('items')[i].getCells()[9].setText(oModel.oData.ActivityMappingNameView[i].product_activity_code);
+                        oTable.getAggregation('items')[i].getCells()[10].setText(oModel.oData.ActivityMappingNameView[i].activity_code);
+
+                        oModel.oData.ActivityMappingNameView[i]._row_state_ = "";                        
                     }
 
                     oTable.removeSelections(true);
@@ -122,13 +131,11 @@ sap.ui.define([
                 oTable = oEvent.getSource(),
                 iTotalItems = oEvent.getParameter("total");
             sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("appTitle");
-            //console.log(sTitle+" ["+iTotalItems+"]");
-            this.byId("mainTableTitle").setText(sTitle + "[" + iTotalItems + "]");
-
+            this.byId("mainTableTitle").setText(sTitle + " (" + iTotalItems + ") ");
         },
 
         _getSearchStates: function () {
-            var sTenantId = "L1100",
+            var sTenantId = "L2100",
                 sOrgCombo = this.getView().byId("searchOrgCombo").getSelectedKey(),
                 sProductActivity = this.getView().byId("searchProductActivity").getValue(),
                 sActivity = this.getView().byId("searchActivity").getValue();
@@ -167,7 +174,7 @@ sap.ui.define([
             var sTableId = oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
 
-            var oTable = this.byId(sTableId);
+            var oTable = this.byId("mainTable");
             var sFileName = "Activity Mapping Management";
             var oData = this.getModel("list").getProperty("/ActivityMappingNameView");
             ExcelUtil.fnExportExcel({
@@ -178,9 +185,8 @@ sap.ui.define([
         },
 
         onMainTableAddButtonPress: function () {
-            var [tId, mName, sEntity, aCol] = arguments;
-            var oTable = this.byId(tId),
-                oModel = this.getView().getModel(mName); //list
+            var oTable = this.byId("mainTable"),
+                oModel = this.getView().getModel("list"); //list
             var oDataArr, oDataLength;
             if (oModel.oData) {
                 oDataArr = oModel.getProperty("/ActivityMappingNameView");
@@ -188,10 +194,10 @@ sap.ui.define([
             }
 
             oModel.addRecord({
-                "tenant_id": "L1100",
+                "tenant_id": "L2100",
                 "company_code": "*",
                 "org_type_code": "AU",
-                "org_code": "GSZ",
+                "org_code": this.byId("searchOrgCombo").getSelectedKey(),
                 "activity_code": null,
                 "product_activity_code": null,
                 "activity_dependency_code": null,
@@ -208,8 +214,6 @@ sap.ui.define([
             this.byId("mainTableCancButton").setEnabled(true);
             this.byId("mainTableSaveButton").setEnabled(true);
 
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
@@ -221,8 +225,6 @@ sap.ui.define([
             oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[6].getItems()[0].setVisible(false);
             oTable.getAggregation('items')[0].getCells()[6].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[7].getItems()[0].setEnabled(false);
-            oTable.getAggregation('items')[0].getCells()[8].getItems()[0].setEnabled(false);
 
             oTable.setSelectedItem(oTable.getAggregation('items')[0]);
             this.validator.clearValueState(this.byId("mainTable"));
@@ -247,8 +249,7 @@ sap.ui.define([
                     onClose: (function (sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             var rowIndex = this.rowIndex;
-                            // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
-                            // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
+                            
                             oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
                             oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
                             oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
@@ -263,18 +264,18 @@ sap.ui.define([
 
                             this.byId("btn_search").firePress();
 
-                            this.byId("mainTableAddButton").setEnabled(false);
-                                this.byId("mainTableDelButton").setEnabled(false);
-                                this.byId("mainTableCancButton").setEnabled(false);
-                                this.byId("rTableExportButton").setEnabled(true);
-                                this.byId("mainTablePersoButton").setEnabled(true);
+                            this.byId("mainTableSaveButton").setEnabled(false);
+                            this.byId("mainTableDelButton").setEnabled(false);
+                            this.byId("mainTableCancButton").setEnabled(false);
+                            this.byId("rTableExportButton").setEnabled(true);
+                            this.byId("mainTablePersoButton").setEnabled(true);
+
                         }
                     }).bind(this)
                 })
             } else {
                 var rowIndex = this.rowIndex;
-                // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
-                // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
+
                 oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
                 oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
                 oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
@@ -289,7 +290,7 @@ sap.ui.define([
 
                 this.byId("btn_search").firePress();
 
-                this.byId("mainTableAddButton").setEnabled(false);
+                this.byId("mainTableSaveButton").setEnabled(false);
                 this.byId("mainTableDelButton").setEnabled(false);
                 this.byId("mainTableCancButton").setEnabled(false);
                 this.byId("rTableExportButton").setEnabled(true);
@@ -304,8 +305,6 @@ sap.ui.define([
                 aIndices = [];
 
             for (var i = 0; i < oTable.getItems().length - 1; i++) {
-                // oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                // oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                 oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                 oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                 oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
@@ -329,14 +328,8 @@ sap.ui.define([
             oTable.setSelectedItem(aItems);
         },
 
-        cellPress: function (oEvent) {
-            console.log(oEvent);
-        },
-
         onMainTableSaveButtonPress: function () {
-            var oModel = this.getModel("activityMappingV4Service");
             var oModel2 = this.getView().getModel("list");
-            var oView = this.getView();
             var v_this = this;
             var oTable = this.byId("mainTable");
             var oData = oModel2.oData;
@@ -344,68 +337,78 @@ sap.ui.define([
                 inputData: []
             };
 
-            if (this.validator.validate(this.byId("mainTable")) !== true) return;
-            var now = new Date();
-            var PdActivityMappingType = [];
-            for (var i = 0; i < oTable.getItems().length; i++) {
-                if (oData.ActivityMappingNameView[i]._row_state_ != null && oData.ActivityMappingNameView[i]._row_state_ != "") {
+            if(this.validator.validate(this.byId("mainTable")) !== true){
+                MessageBox.confirm(this.getModel("I18N").getText("/ECM01002"), {
+                    title: this.getModel("I18N").getText("/SAVE"),
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: (function () {
+                    }).bind(this)
+                });
+            }else{
+                var now = new Date();
+                var PdActivityMappingType = [];
+                for (var i = 0; i < oTable.getItems().length; i++) {
+                    if (oData.ActivityMappingNameView[i]._row_state_ != null && oData.ActivityMappingNameView[i]._row_state_ != "") {
 
-                    PdActivityMappingType.push(
-                        {
+                        PdActivityMappingType.push({
                             tenant_id: oData.ActivityMappingNameView[i].tenant_id,
                             company_code: oData.ActivityMappingNameView[i].company_code,
                             org_type_code: oData.ActivityMappingNameView[i].org_type_code,
                             org_code: oData.ActivityMappingNameView[i].org_code,
                             activity_code: oData.ActivityMappingNameView[i].activity_code,
-                            product_activity_codeproduct_activity_code: oData.ActivityMappingNameView[i].product_activity_codeproduct_activity_code,
+                            product_activity_code: oData.ActivityMappingNameView[i].product_activity_code,
                             activity_dependency_code: oData.ActivityMappingNameView[i].activity_dependency_code,
                             active_flag: oData.ActivityMappingNameView[i].active_flag.toString(),
                             update_user_id: oData.ActivityMappingNameView[i].update_user_id,
-                            system_update_dtm: oData.ActivityMappingNameView[i].system_update_dtm,
+                            system_update_dtm: now,
                             crud_type_code: oData.ActivityMappingNameView[i]._row_state_,
-                            update_activity_code: oData.ActivityMappingNameView[i].update_activity_code,
-                            update_product_activity_codeproduct_activity_code: oData.ActivityMappingNameView[i].update_product_activity_codeproduct_activity_code
-                        }
-                    );
+                            update_activity_code: oData.ActivityMappingNameView[i].activity_code_org,
+                            update_product_activity_code: oData.ActivityMappingNameView[i].product_activity_code_org
+                        });
 
-                    input.inputData = PdActivityMappingType;
-                    var url = "dp/pd/activityMapping/webapp/srv-api/odata/v4/dp.ActivityMappingV4Service/PdActivityMappingSaveProc";
-
+                        input.inputData = PdActivityMappingType;
+                        var url = "dp/pd/activityMapping/webapp/srv-api/odata/v4/dp.ActivityMappingV4Service/PdActivityMappingSaveProc";
+                    }
                 }
+                
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                    title: this.getModel("I18N").getText("/SAVE"),
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: (function (sButton) {
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: JSON.stringify(input),
+                            contentType: "application/json",
+                            success: function (data) {
+                                sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                v_this.byId("btn_search").firePress();
+                                if(data.value[0].return_code =="OK"){
+                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                }else{
+                                    sap.m.MessageToast.show(data.value[0].return_msg);
+                                }
+                            },
+                            error: function (e) {
+                                v_this.byId("btn_search").firePress();
+                            }
+                        });
+                    }).bind(this)
+                });
+                this.byId("mainTableSaveButton").setEnabled(false);
+                this.byId("mainTableDelButton").setEnabled(false);
+                this.byId("mainTableCancButton").setEnabled(false);
+                this.byId("rTableExportButton").setEnabled(true);
+                this.byId("mainTablePersoButton").setEnabled(true);
             }
-
-            var v_this = this;
-            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-                title: this.getModel("I18N").getText("/SAVE"),
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: (function (sButton) {
-                    $.ajax({
-                        url: url,
-                        type: "POST",
-                        data: JSON.stringify(input),
-                        contentType: "application/json",
-                        success: function (data) {
-                            v_this.byId("btn_search").firePress();
-                        },
-                        error: function (e) {
-                            v_this.byId("btn_search").firePress();
-                        }
-                    });
-                }).bind(this)
-            })
         },
 
         onSelectionChange: function (oEvent) {
-            //var [tId, mName, sEntity, aCol] = arguments;
             var oTable = this.byId("mainTable");
-            var oModel = this.getView().getModel("list");
             var oItem = oTable.getSelectedItem();
             var idxs = [];
             for (var i = 0; i < oTable.getItems().length; i++) {
                 if (oTable.getAggregation('items')[i] != null && oTable.getAggregation('items')[i].getCells() != undefined) {
-
-                    // oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                    // oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
@@ -420,17 +423,12 @@ sap.ui.define([
                 }
             }
             if (oItem != null && oItem != undefined) {
-                this.byId("mainTableDelButton").setEnabled(true);
                 this.byId("mainTableCancButton").setEnabled(true);
-                this.byId("mainTableSaveButton").setEnabled(true);
 
                 for (var k = 0; k < oTable.getSelectedContextPaths().length; k++) {
                     idxs[k] = oTable.getSelectedContextPaths()[k].split("/")[2];
 
                     if (oTable.getAggregation('items')[idxs[k]] != null && oTable.getAggregation('items')[idxs[k]].getCells() != undefined) {
-
-                        // oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[0].setVisible(false);
-                        // oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[1].setVisible(true);
                         oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
                         oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
                         oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[0].setVisible(false);
@@ -442,9 +440,19 @@ sap.ui.define([
                         oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[1].setVisible(true);
                         oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[0].setVisible(false);
                         oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[1].setVisible(true);
-
                     }
                 }
+                this.byId("mainTableSaveButton").setEnabled(true);
+                this.byId("mainTableDelButton").setEnabled(true);
+                this.byId("mainTableCancButton").setEnabled(true);
+                this.byId("rTableExportButton").setEnabled(false);
+                this.byId("mainTablePersoButton").setEnabled(false);
+            } else {
+                this.byId("mainTableSaveButton").setEnabled(false);
+                this.byId("mainTableDelButton").setEnabled(false);
+                this.byId("mainTableCancButton").setEnabled(false);
+                this.byId("rTableExportButton").setEnabled(true);
+                this.byId("mainTablePersoButton").setEnabled(true);
             }
         },
 
@@ -485,7 +493,6 @@ sap.ui.define([
         handleClose: function (oEvent) {
             var productActivityCode = oEvent.mParameters.selectedItem.mAggregations.cells[0].getText();
             var productActivityName = oEvent.mParameters.selectedItem.mAggregations.cells[1].getText();
-            console.log(productActivityCode, productActivityName);
 
             var oTable = this.byId("mainTable");
             var idx = oTable.getSelectedContextPaths()[0].split("/")[2];
@@ -535,7 +542,16 @@ sap.ui.define([
             var idx = oTable.getSelectedContextPaths()[0].split("/")[2];
             oTable.getAggregation('items')[idx].getCells()[5].mAggregations.items[1].setValue(activityCode);
             oTable.getAggregation('items')[idx].getCells()[6].mAggregations.items[1].setValue(activityName);
-        }
+        },
+
+        _doInitTablePerso: function(){
+			this._oTPC = new TablePersoController({
+				table: this.byId("mainTable"),
+				componentName: "activityMappingMgt",
+				persoService: MainListPersoService,
+				hasGrouping: true
+			}).activate();
+        },
 
     });
 });

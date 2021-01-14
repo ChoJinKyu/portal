@@ -8,9 +8,9 @@
 # Local PC : mvn spring-boot:run : v4
 @serviceUrl = http://localhost:8080/odata/v4
 # Cloud Container Service : sppCap
-@serviceUrl = https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap
-# Cloud Container Service : sppCap
 @serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+# Cloud Container Service : sppCap
+@serviceUrl = https://lgcommondev-workspaces-ws-ll5cb-app1.jp10.applicationstudio.cloud.sap
 
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service

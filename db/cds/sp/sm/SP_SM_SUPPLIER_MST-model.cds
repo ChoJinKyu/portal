@@ -7,8 +7,9 @@ entity Sm_Supplier_Mst {
   key supplier_code : String(10)  not null;	
     supplier_local_name : String(240)  ;	
     supplier_english_name : String(240) ;	
-    tax_id : String(16)  ;	
-    vat_number : String(10)  ;	
+    tax_id : String(30)  ;	
+    vat_number : String(30) ;
+    CRNO : String(50)  ;
     tax_id_except_flag : Boolean  ;	
     tax_id_except_nm : String(30)  ;	
     tax_id_except_rsn : String(200)  ;	
@@ -48,10 +49,10 @@ entity Sm_Supplier_Mst {
     inactive_reason : String(1000)  ;	
     bp_status_code : String(30)  ;	
     bp_status_name : String(50)  ;	
-    tel_number : String(15)  ;	
+    tel_number : String(50)  ;	
     extens_number : String(15)  ;	
     mobile_phone_number : String(15)  ;	
-    fax_number : String(15)  ;	
+    fax_number : String(50)  ;	
     url_address : String(240)  ;	
     email_address : String(240)  ;	
     fmytr_code : String(30)  ;	

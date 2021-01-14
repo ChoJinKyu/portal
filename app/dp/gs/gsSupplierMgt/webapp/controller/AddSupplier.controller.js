@@ -705,55 +705,64 @@ sap.ui.define([
                         value: {
                             path: 'SupplierFin>sales_amount'
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>opincom_amount'
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>asset_amount'
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>curasset_amount'
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>nca_amount'
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>liabilities_amount'
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>curliablities_amount'
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>ncl_amount'                            
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>equity_capital'                           
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     })
 				]
             });
@@ -796,13 +805,15 @@ sap.ui.define([
                         value: {
                             path: 'SupplierSal>annual_txn_amount'                            
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     }),
                     new Input({
                         value: {
                             path: 'SupplierSal>sales_weight'                            
                         },
-                        type: "Number"
+                        type: "Number",
+                        textAlign: "End"
                     })
 				]
             });

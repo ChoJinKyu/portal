@@ -4,35 +4,60 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "activityMappingMgt-mainList-mainColumnUOM",
+                id: "activityMappingMgt-mainList-mainColumnstat",
                 order: 0,
-                text: "UOM",
-                visible: true
-            },
-            {
-                id: "activityMappingMgt-mainList-mainColumnUN",
-                order: 1,
-                text: "Commercial Code",
+                text: "state",
                 visible: false
+            },
+            {
+                id: "activityMappingMgt-mainList-mainColumnBizUnit",
+                order: 1,
+                text: "사업본부",
+                visible: true
             },            
             {
-                id: "activityMappingMgt-mainList-mainColumnBU",
+                id: "activityMappingMgt-mainList-mainColumnPAC",
                 order: 2,
-                text: "Base Unit",
+                text: "Product Activity Code",
                 visible: true
             },
             {
-                id: "activityMappingMgt-mainList-mainColumnClass",
+                id: "activityMappingMgt-mainList-mainColumnPACN",
                 order: 3,
-                text: "Class",
+                text: "Product Activity Code명",
                 visible: true
             },            
             {
-                id: "activityMappingMgt-mainList-mainColumnDD",
+                id: "activityMappingMgt-mainList-mainColumnDependency",
                 order: 4,
-                text: "Disable Date",
+                text: "종속유형",
+                visible: true
+            },            
+            {
+                id: "activityMappingMgt-mainList-mainColumnAC",
+                order: 5,
+                text: "Activity Code",
+                visible: true
+            },            
+            {
+                id: "activityMappingMgt-mainList-mainColumnACN",
+                order: 6,
+                text: "Activity Code명",
+                visible: true
+            },            
+            {
+                id: "activityMappingMgt-mainList-mainColumnUDT",
+                order: 7,
+                text: "수정일자",
+                visible: true
+            },            
+            {
+                id: "activityMappingMgt-mainList-mainColumnUDU",
+                order: 8,
+                text: "수정자",
                 visible: true
             }
+
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
@@ -78,8 +103,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "UOM") {
-                        return "UOM (Important!)";
+                    if (oColumn.getHeader().getText() === "ActivitiMappimgMgt") {
+                        return "ActivitiMappimgMgt (Important!)";
                     }
                 }
                 return null;
@@ -87,7 +112,7 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnUOM") != -1) {
+                if (sId.indexOf("mainColumnBizUnit") != -1) {
                     return "Columns of Key";
                 }
                 return "Others";

@@ -42,6 +42,10 @@ BEGIN
 
     /*환율*/
     BEGIN
+	    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+        	SIGNAL txn_error SET MESSAGE_TEXT = 'Update Mcst Project Base Exrate Error.';
+        END;    
     
         UPDATE DP_TC_MCST_PROJECT_BASE_EXRATE
            SET EXRATE = I_EXRATE

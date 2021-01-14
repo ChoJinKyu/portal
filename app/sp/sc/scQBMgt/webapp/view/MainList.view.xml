@@ -291,7 +291,7 @@
                             useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
                             useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
                             enableAutoBinding="true" tableBindingPath="{viewModel>/NegoHeaders}"
-                            class="sapUiResponsiveContentPadding"
+                            class="sapUiResponsiveContentPadding sapUiLargeMarginBottom"
                             initiallyVisibleFields=""
                             beforeRebindTable="beforeRebindTable"
                             >
@@ -325,7 +325,7 @@
                                     <Text text="{nego_document_number}" wrapping="false" />
                                 </t:template>
                             </t:Column> 
-                            <t:Column width="4rem" sortProperty="nego_document_round" filterProperty="nego_document_round">
+                            <t:Column width="4rem" hAlign="Center" sortProperty="nego_document_round" filterProperty="nego_document_round">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_round", "leadingProperty": "nego_document_round", "sortProperty": "nego_document_round", "filterProperty": "nego_document_round"}'/>
                                 </t:customData>
@@ -334,7 +334,7 @@
                                         <Text text="{nego_document_round}" wrapping="false" />
                                     </t:template> 
                             </t:Column> 
-                            <t:Column width="4rem" sortProperty="nego_progress_status_code" filterProperty="nego_progress_status_code">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="nego_progress_status_code" filterProperty="nego_progress_status_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_progress_status_code", "leadingProperty": "nego_progress_status_code", "sortProperty": "nego_progress_status_code", "filterProperty": "nego_progress_status_code"}'/>
                                 </t:customData>
@@ -364,7 +364,7 @@
                                 </t:template>
                             </t:Column> 
 
-                            <t:Column width="7rem" sortProperty="supplier_participation_flag" filterProperty="supplier_participation_flag">
+                            <!-- <t:Column width="7rem" sortProperty="supplier_participation_flag" filterProperty="supplier_participation_flag">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "supplier_participation_flag", "leadingProperty": "supplier_participation_flag", "sortProperty": "supplier_participation_flag", "filterProperty": "supplier_participation_flag"}'/>
                                 </t:customData>
@@ -372,7 +372,7 @@
                                 <t:template>
                                     <Text text="{supplier_participation_flag}" wrapping="false" />
                                 </t:template> 
-                            </t:Column> 
+                            </t:Column>  -->
                             <!-- <t:Column width="6rem" hAlign="Center" sortProperty="closing_date" filterProperty="closing_date">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date"}'/>
@@ -384,7 +384,7 @@
                                     
                                 </t:template> 
                             </t:Column>  -->
-                            <t:Column width="18rem" hAlign="Center" sortProperty="nego_document_title" filterProperty="nego_document_title">
+                            <t:Column width="18rem" hAlign="Begin" sortProperty="nego_document_title" filterProperty="nego_document_title">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_title", "leadingProperty": "nego_document_title", "sortProperty": "nego_document_title", "filterProperty": "nego_document_title"}'/>
                                 </t:customData>
@@ -402,7 +402,7 @@
                                     <Text text="{viewModel>aa}" wrapping="false" />
                                 </t:template>   
                             </t:Column>  -->
-                            <t:Column width="10rem" sortProperty="nego_type_code" filterProperty="nego_type_code">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="nego_type_code" filterProperty="nego_type_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_type_code", "leadingProperty": "nego_type_code", "sortProperty": "nego_type_code", "filterProperty": "nego_type_code"}'/>
                                 </t:customData>
@@ -420,7 +420,7 @@
                                     <Text text="{negotiation_style_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <t:Column width="8rem" hAlign="Center" sortProperty="bidding_result_open_status_code" filterProperty="bidding_result_open_status_code">
+                            <!-- <t:Column width="8rem" hAlign="Center" sortProperty="bidding_result_open_status_code" filterProperty="bidding_result_open_status_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "bidding_result_open_status_code", "leadingProperty": "bidding_result_open_status_code", "sortProperty": "bidding_result_open_status_code", "filterProperty": "bidding_result_open_status_code"}'/>
                                 </t:customData>
@@ -428,7 +428,7 @@
                                 <t:template>
                                     <Text text="{bidding_result_open_status_code}" wrapping="false" />
                                 </t:template> 
-                            </t:Column> 
+                            </t:Column>  -->
                             <t:Column width="12rem" hAlign="Center" sortProperty="negotiation_output_class_code" filterProperty="negotiation_output_class_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_output_class_code", "leadingProperty": "negotiation_output_class_code", "sortProperty": "negotiation_output_class_code", "filterProperty": "negotiation_output_class_code"}'/>
@@ -436,6 +436,15 @@
                                 <Label text="Outcome" design="Bold"/>
                                 <t:template>
                                     <Text text="{negotiation_output_class_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column> 
+                            <t:Column width="8rem" hAlign="Center" sortProperty="partial_allow_flag" filterProperty="partial_allow_flag">
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "partial_allow_flag", "leadingProperty": "partial_allow_flag", "sortProperty": "partial_allow_flag", "filterProperty": "partial_allow_flag"}'/>
+                                </t:customData>
+                                <Label text="부분허용여부" design="Bold"/>
+                                <t:template>
+                                    <Text text="{partial_allow_flag}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
                             <!-- =============================추가 컬럼 안됨 -->
@@ -540,7 +549,7 @@
                             </t:Column> 
                             
                             
-                            <t:Column width="14rem" hAlign="Center" sortProperty="close_date_ext_enabled_hours" filterProperty="close_date_ext_enabled_hours">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="close_date_ext_enabled_hours" filterProperty="close_date_ext_enabled_hours">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "close_date_ext_enabled_hours", "leadingProperty": "close_date_ext_enabled_hours", "sortProperty": "close_date_ext_enabled_hours", "filterProperty": "close_date_ext_enabled_hours"}'/>
                                 </t:customData>
@@ -549,7 +558,7 @@
                                     <Text text="{close_date_ext_enabled_hours}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <t:Column width="14rem" hAlign="Center" sortProperty="close_date_ext_enabled_count" filterProperty="close_date_ext_enabled_count">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="close_date_ext_enabled_count" filterProperty="close_date_ext_enabled_count">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "close_date_ext_enabled_count", "leadingProperty": "close_date_ext_enabled_count", "sortProperty": "close_date_ext_enabled_count", "filterProperty": "close_date_ext_enabled_count"}'/>
                                 </t:customData>
@@ -559,7 +568,7 @@
                                 </t:template>  
                             </t:Column> 
                               
-                            <t:Column width="14rem" hAlign="Center" sortProperty="actual_extension_count" filterProperty="actual_extension_count">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="actual_extension_count" filterProperty="actual_extension_count">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "actual_extension_count", "leadingProperty": "actual_extension_count", "sortProperty": "actual_extension_count", "filterProperty": "actual_extension_count"}'/>
                                 </t:customData>

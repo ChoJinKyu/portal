@@ -110,8 +110,7 @@
       ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib",
-      "3rd.lib": "../../../node_modules"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {

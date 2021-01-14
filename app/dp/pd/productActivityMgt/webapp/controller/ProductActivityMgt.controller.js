@@ -49,7 +49,7 @@ sap.ui.define([
                 this._doInitSearch();
                 //로그인 세션 작업완료시 수정
                 this.loginUserId = "TestUser";
-                this.tenant_id = "L1100";
+                this.tenant_id = "L2100";
                 this.company_code = "*";
                 this.org_type_code = "BU";
                 this.org_code = "L110010000";
@@ -78,8 +78,9 @@ sap.ui.define([
                 oBinding = oSelect.getBinding("items");
                 aFilters = [];
                 aFilters.push( new Filter("tenant_id", 'EQ', this.tenant_id) );
-                aFilters.push( new Filter("tenant_id", 'EQ', 'L2100') );
-                aFilters.push( new Filter("tenant_id", 'EQ', 'L2600') );
+
+                //aFilters.push( new Filter("tenant_id", 'EQ', 'L2100') );
+                //aFilters.push( new Filter("tenant_id", 'EQ', 'L2600') );
                 oBinding.filter(aFilters, FilterType.Application); 
             },
 

@@ -33,14 +33,14 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT")}),
+                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE")}),
+                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT")}),
                         this.oDepartment
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})

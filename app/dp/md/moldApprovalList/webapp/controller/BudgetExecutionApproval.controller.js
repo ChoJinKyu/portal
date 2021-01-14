@@ -19,17 +19,22 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
-    "dp/md/util/controller/MoldItemSelection"
+    "dp/md/util/controller/MoldItemSelection",
+    "dp/md/util/controller/DeptSelection",
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection
+    , ApprovalBaseController, MoldItemSelection, DeptSelection
 ) {
     "use strict";
 
     var oTransactionManager;
     var oRichTextEditor;
-
+    /**
+     * @desciption  예산집행품의 
+     * @date        2021.01.14 
+     * @author      jinseon.lee 
+     */
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.BudgetExecutionApproval", {
 
         dateFormatter: DateFormatter,
@@ -38,6 +43,7 @@ sap.ui.define([
 
         moldItemPop: new MoldItemSelection(),
 
+        deptSelection: new DeptSelection(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -56,94 +62,97 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-            this.getView().setModel(new ManagedListModel(), "importCompany"); 
+            this.getView().setModel(new ManagedListModel(), "importCompany");
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
         },
-   
+
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
-		
+
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
-        _onApprovalPage : function () {
-  
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
-            this.getView().setModel(new ManagedModel(), "mdCommon"); 
-            this.getView().setModel(new ManagedListModel(), "importPlant"); 
-            
+        _onApprovalPage: function () {
 
-            console.log(" this.approval_number "  ,  this.approval_number);
+            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
+            this.getView().setModel(new ManagedModel(), "mdCommon");
+            this.getView().setModel(new ManagedListModel(), "importPlant");
+
+            //  console.log(" this.approval_number "  ,  this.approval_number);
 
             this._searchImportCompany();
 
             var schFilter = [];
             var that = this;
-            if (this.approval_number == "New") {
-               
-            } else {
+            // if (this.approval_number == "New") {
 
-                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
-                ];
-                // this.getView().setModel(new ManagedModel(), "mdCommon");
-                var md = this.getModel('mdCommon');
-                this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) { 
+            //  } else {
 
-                    if(oData.results != undefined && oData.results.length > 0){
-                        md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
-                        md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
-                        md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
-                        md.setProperty("/import_company_code", oData.results[0].import_company_code);
-                        md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
-                        md.setProperty("/project_code", oData.results[0].project_code);
-                        md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
-                        md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
-                        md.setProperty("/account_code", oData.results[0].account_code);
-                        md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
-                        md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
-                        that._bindComboPlant(oData.results[0].import_company_code);
-                    }else{
-                        md.setProperty("/investment_ecst_type_code", "");
-                        md.setProperty("/investment_ecst_type_code_nm", "");
-                        md.setProperty("/accounting_department_code", "");
-                        md.setProperty("/import_company_code","");
-                        md.setProperty("/import_company_code_nm", "");
-                        md.setProperty("/project_code", "");
-                        md.setProperty("/import_company_org_code", "");
-                        md.setProperty("/import_company_org_code_nm", "");
-                        md.setProperty("/account_code", "");
-                        md.setProperty("/account_code_nm", "");
-                        md.setProperty("/provisional_budget_amount", "");
-                    }
-                   
-                });
-            }
-            
-        }, 
+            schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
+                , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+            ];
+            // this.getView().setModel(new ManagedModel(), "mdCommon");
+            var md = this.getModel('mdCommon');
+            this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
 
-        _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
-                var oView = this.getView(),
-                    oModel = this.getModel(sModel);
-                oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel("budget"));
-                oModel.read(sObjectPath, {
-                    filters: aFilter,
-                    success: function (oData) {
-                        oView.setBusy(false);
-                        callback(oData);
-                    }
-                });
-            },
+                if (oData.results != undefined && oData.results.length > 0) {
+                    md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
+                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                    md.setProperty("/acq_department_code", oData.results[0].acq_department_code);
+                    md.setProperty("/acq_department_code_nm", oData.results[0].acq_department_code_nm);
+                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
+                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
+                    md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
+                    md.setProperty("/project_code", oData.results[0].project_code);
+                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
+                    md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
+                    md.setProperty("/account_code", oData.results[0].account_code);
+                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
+                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
+                    that._bindComboPlant(oData.results[0].import_company_code);
+                } else {
+                    md.setProperty("/investment_ecst_type_code", "");
+                    md.setProperty("/investment_ecst_type_code_nm", "");
+                    md.setProperty("/acq_department_code", "");
+                    md.setProperty("/acq_department_code_nm", "");
+                    md.setProperty("/accounting_department_code", "");
+                    md.setProperty("/import_company_code", "");
+                    md.setProperty("/import_company_code_nm", "");
+                    md.setProperty("/project_code", "");
+                    md.setProperty("/import_company_org_code", "");
+                    md.setProperty("/import_company_org_code_nm", "");
+                    md.setProperty("/account_code", "");
+                    md.setProperty("/account_code_nm", "");
+                    md.setProperty("/provisional_budget_amount", "");
+                }
 
-        _searchImportCompany : function(){
-              var nFilter = [
-                         new Filter("tenant_id", FilterOperator.EQ, 'L2600')
-                       , new Filter("company_code", FilterOperator.NE , this.company_code )
-                ];
-            console.log("nFilter>>>>> " , nFilter);
+            });
+            //  }
+
+        },
+
+        _bindViewBudget: function (sObjectPath, sModel, aFilter, callback) {
+            var oView = this.getView(),
+                oModel = this.getModel(sModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("budget"));
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
+
+        _searchImportCompany: function () {
+            var nFilter = [
+                new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                , new Filter("company_code", FilterOperator.NE, this.company_code)
+            ];
+            // console.log("nFilter>>>>> " , nFilter);
             var oView = this.getView(),
                 oModel = this.getModel("importCompany");
             oView.setBusy(true);
@@ -151,7 +160,7 @@ sap.ui.define([
             oModel.read("/Company", {
                 filters: nFilter,
                 success: function (oData) {
-                    console.log("Company oData>>> " , oData) 
+                    // console.log("Company oData>>> " , oData) 
                     oView.setBusy(false);
                 }
             });
@@ -162,19 +171,19 @@ sap.ui.define([
          * Import Company 파라미터 받고 조회 
          * @param {*} company_code 
          */
-        onBCompanyChange : function (oEvent){
+        onBCompanyChange: function (oEvent) {
             var company_code = this.getModel("mdCommon").getData().import_company_code;
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
 
-        _bindComboPlant : function (company_code) { 
-            
+        _bindComboPlant: function (company_code) {
+
             var aFilter = [
-                         new Filter("tenant_id", FilterOperator.EQ, 'L2600')
-                        , new Filter("org_type_code", FilterOperator.EQ, 'PL')
-                        , new Filter("company_code", FilterOperator.EQ, company_code)
-                ];
+                new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                , new Filter("org_type_code", FilterOperator.EQ, 'PL')
+                , new Filter("company_code", FilterOperator.EQ, company_code)
+            ];
 
             var oView = this.getView(),
                 oModel = this.getModel("importPlant");
@@ -182,23 +191,23 @@ sap.ui.define([
             oModel.setTransactionModel(this.getModel("purOrg"));
             oModel.read("/Pur_Operation_Org", {
                 filters: aFilter,
-                success: function (oData) { 
+                success: function (oData) {
                     oView.setBusy(false);
                 }
             });
-        } ,
+        },
 
-       /**
-         * @description moldItemSelect 공통팝업   
-         * @param vThis : view page의 this 
-         *       , oEvent : 이벤트 
-         * ,     , oArges : company_code , org_code (필수)
-		 */
+        /**
+          * @description moldItemSelect 공통팝업   
+          * @param vThis : view page의 this 
+          *       , oEvent : 이벤트 
+          * ,     , oArges : company_code , org_code (필수)
+          */
         onBudgetExecutionAddPress: function (oEvent) {
-            console.log("oEvent>>>>");
+            // console.log("oEvent>>>>");
             var oModel = this.getModel("mdItemMaster");
 
-            console.log(" mdItemMaster >>>> ", oModel);
+            // console.log(" mdItemMaster >>>> ", oModel);
 
             var mIdArr = [];
             if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
@@ -207,11 +216,11 @@ sap.ui.define([
                 });
             }
 
-            var oArgs = { 
-                approval_type_code : "B",
-                company_code: this.company_code ,
+            var oArgs = {
+                approval_type_code: "B",
+                company_code: this.company_code,
                 org_code: this.plant_code,
-                mold_progress_status_code : ['DEV_RCV','SUP_APP'] ,
+                mold_progress_status_code: ['DEV_RCV', 'SUP_APP'],
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
@@ -258,12 +267,24 @@ sap.ui.define([
                 "local_update_dtm": new Date()
             }, "/ItemBudgetExecution");
 
-            if(oModel.getProperty("/entityName") == undefined){ // 신규시 entityName 없어서 행삭제를 못하고 있음 
-                oModel.setProperty("/entityName","ItemBudgetExecution");
+            if (oModel.getProperty("/entityName") == undefined) { // 신규시 entityName 없어서 행삭제를 못하고 있음 
+                oModel.setProperty("/entityName", "ItemBudgetExecution");
             }
 
         },
-        
+        // 부서 버튼 클릭 
+        onValueHelpRequestedDept: function () {
+            var that = this;
+            this.deptSelection.openDeptSelectionPop(this, function (data) {
+                //  console.log("data " , data[0]);
+                that.setDept(data[0].oData);
+            });
+        },
+        setDept: function (data) {
+            var md = this.getModel('mdCommon');
+            md.setProperty("/acq_department_code", data.department_id);
+            md.setProperty("/acq_department_code_nm", data.department_local_name);
+        },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
@@ -279,12 +300,12 @@ sap.ui.define([
                 });
                 budgetExecutionTable.clearSelection();
 
-                console.log("detailModel", detailModel);
+                // console.log("detailModel", detailModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
-        } ,
-   
+        },
+
         onChangePayment: function (oEvent) {
             var oModel = this.getModel("moldMaster");
             /*
@@ -293,8 +314,8 @@ sap.ui.define([
             console.log();
         },
 
-        _toEditModeEachApproval : function(){ 
-            console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
+        _toEditModeEachApproval: function () {
+            // console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
 
             this.byId("acquisition_department").removeStyleClass("readonlyField");
             this.byId("accounting_department").removeStyleClass("readonlyField");
@@ -305,16 +326,16 @@ sap.ui.define([
 
             var oRows = this.byId("budgetExecutionTable").getRows();
 
-            oRows.forEach(function(oCell, idx){ 
-                oCell.mAggregations.cells.forEach(function(item, jdx){
-                    if(jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8){
-                         item.removeStyleClass("readonlyField");
+            oRows.forEach(function (oCell, idx) {
+                oCell.mAggregations.cells.forEach(function (item, jdx) {
+                    if (jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8) {
+                        item.removeStyleClass("readonlyField");
                     }
                 });
             });
-        } ,
-        _toShowModeEachApproval : function(){ 
-            console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
+        },
+        _toShowModeEachApproval: function () {
+            // console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
 
             this.byId("acquisition_department").addStyleClass("readonlyField");
             this.byId("accounting_department").addStyleClass("readonlyField");
@@ -323,44 +344,44 @@ sap.ui.define([
             this.byId("importPlant").addStyleClass("readonlyField");
             this.byId("account").addStyleClass("readonlyField");
 
-            var oRows = this.byId('budgetExecutionTable').getRows(); 
-            
-            oRows.forEach(function(oCell, idx){
-                oCell.mAggregations.cells.forEach(function(item, jdx){
-                    if(jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8){
-                         item.addStyleClass("readonlyField");
+            var oRows = this.byId('budgetExecutionTable').getRows();
+
+            oRows.forEach(function (oCell, idx) {
+                oCell.mAggregations.cells.forEach(function (item, jdx) {
+                    if (jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8) {
+                        item.addStyleClass("readonlyField");
                     }
                 });
             });
-         } ,
+        },
 
         /**
          * @description 미리보기 버튼눌렀을 경우 
          */
-        onPagePreviewButtonPress : function(){
-            this.getView().setModel(new ManagedListModel(), "approverPreview"); 
+        onPagePreviewButtonPress: function () {
+            this.getView().setModel(new ManagedListModel(), "approverPreview");
 
-            if(this.getModel("approver").getData().Approvers != undefined){ 
+            if (this.getModel("approver").getData().Approvers != undefined) {
                 var ap = this.getModel("approver").getData().Approvers;
-                var len = 0; 
+                var len = 0;
 
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
+                if (this.getView().getModel("mode").getProperty("/viewFlag")) {
                     len = ap.length;
-                }else{
-                    len =  ap.length -1;
+                } else {
+                    len = ap.length - 1;
                 }
-                for(var i = 0 ; i < len ; i++){
-                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                for (var i = 0; i < len; i++) {
+                    this.getModel("approverPreview").addRecord(ap[i], "/Approvers");
                 }
             }
-            
-           var ref = this.getModel("referer");
-           this.getView().setModel(new ManagedModel(), "refererPreview");
 
-           var rArr = [];
-           if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
-                ref.getData().Referers.forEach(function(item){
-                    rArr.push(item.referer_empno); 
+            var ref = this.getModel("referer");
+            this.getView().setModel(new ManagedModel(), "refererPreview");
+
+            var rArr = [];
+            if (ref.getData().Referers != undefined && ref.getData().Referers.length > 0) {
+                ref.getData().Referers.forEach(function (item) {
+                    rArr.push(item.referer_empno);
                 });
             }
             this.getModel("refererPreview").setProperty("/refArr", rArr);
@@ -370,7 +391,7 @@ sap.ui.define([
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView", 
+                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -383,52 +404,60 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){
-             this.byId("budgetExecutionPreview").close();
+        onPrvClosePress: function () {
+            if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
+                    console.log(" oDialog.close >>> ", oDialog.close);
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPrev = undefined;
+            }
+            //  this.byId("budgetExecutionPreview").close();
             // this.byId("budgetExecutionPreview").destroy();
         },
 
-        onPageRequestButtonPress : function (){
+        onPageRequestButtonPress: function () {
             this.getModel("appMaster").setProperty("/approve_status_code", "AR"); // 결제요청 
             this._budgetExecutionDataSetting();
-        } ,
-        onPageDraftButtonPress : function () { 
+        },
+        onPageDraftButtonPress: function () {
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
             this._budgetExecutionDataSetting();
-        } , 
-        onPageRequestCancelButtonPress : function () { 
+        },
+        onPageRequestCancelButtonPress: function () {
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
             this._budgetExecutionDataSetting();
-         },
-        _budgetExecutionDataSetting : function(){
+        },
+        _budgetExecutionDataSetting: function () {
             this.approval_type_code = "B";
             var bModel = this.getModel("mdItemMaster");
             var mModel = this.getModel("mdCommon");
-            this.approvalDetails_data = [] ;
-            this.moldMaster_data = [] ;
+            this.approvalDetails_data = [];
+            this.moldMaster_data = [];
 
-            if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+            if (this.validator.validate(this.byId("generalInfoLayout")) !== true) {
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
             }
-            
-            if(this.validator.validate(this.byId("account") ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+
+            if (this.validator.validate(this.byId("account")) !== true) {
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
             }
-            
-            if(bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0){
+
+            if (bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0) {
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;
             }
-            if(this.validator.validate(this.byId("budgetExecutionTable")) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+            if (this.validator.validate(this.byId("budgetExecutionTable")) !== true) {
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
             }
 
             var that = this;
-            
-            if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
+
+            if (bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0) {
                 /**
                  *   md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
                     md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
@@ -443,75 +472,67 @@ sap.ui.define([
 
 
                 var account_code = mModel.getData().account_code;
-                var investment_ecst_type_code =  mModel.getData().investment_ecst_type_code;
-                var accounting_department_code =  mModel.getData().accounting_department_code;
-                var project_code =  mModel.getData().project_code;
+                var investment_ecst_type_code = mModel.getData().investment_ecst_type_code;
+                var acq_department_code = mModel.getData().acq_department_code;
+                var accounting_department_code = mModel.getData().accounting_department_code;
+                var project_code = mModel.getData().project_code;
                 var import_company_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_code;
                 var import_company_org_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_org_code;
 
-                bModel.getData().ItemBudgetExecution.forEach(function(item){
+                bModel.getData().ItemBudgetExecution.forEach(function (item) {
                     that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                        tenant_id: that.tenant_id
+                        , approval_number: that.approval_number
+                        , mold_id: item.mold_id
+                        , _row_state_: item._row_state_ == undefined ? "U" : item._row_state_
                     });
                     that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , account_code : account_code 
-                        , investment_ecst_type_code : investment_ecst_type_code 
-                        , accounting_department_code : accounting_department_code 
-                        , import_company_code : import_company_code 
-                        , project_code : project_code 
-                        , import_company_org_code : import_company_org_code 
-                        , mold_production_type_code : item.mold_production_type_code 
-                        , mold_item_type_code :  item.mold_item_type_code 
-                        , provisional_budget_amount : item.provisional_budget_amount 
-                        , asset_type_code : item.asset_type_code 
-                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , account_code: account_code
+                        , investment_ecst_type_code: investment_ecst_type_code
+                        , acq_department_code: acq_department_code
+                        , accounting_department_code: accounting_department_code
+                        , import_company_code: import_company_code
+                        , project_code: project_code
+                        , import_company_org_code: import_company_org_code
+                        , mold_production_type_code: item.mold_production_type_code
+                        , mold_item_type_code: item.mold_item_type_code
+                        , provisional_budget_amount: item.provisional_budget_amount
+                        , asset_type_code: item.asset_type_code
+                        , _row_state_: item._row_state_ == undefined ? "U" : item._row_state_
                     });
                 });
 
             }
 
-            if(bModel._aRemovedRows.length > 0){
-                bModel._aRemovedRows.forEach(function(item){
+            if (bModel._aRemovedRows.length > 0) {
+                bModel._aRemovedRows.forEach(function (item) {
                     that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : "D"
+                        tenant_id: that.tenant_id
+                        , approval_number: that.approval_number
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
                     });
                     that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , account_code : account_code 
-                        , investment_ecst_type_code : investment_ecst_type_code 
-                        , accounting_department_code : accounting_department_code 
-                        , import_company_code : import_company_code 
-                        , project_code : project_code 
-                        , import_company_org_code : import_company_org_code 
-                        , mold_production_type_code : item.mold_production_type_code 
-                        , mold_item_type_code :  item.mold_item_type_code 
-                        , provisional_budget_amount : item.provisional_budget_amount 
-                        , asset_type_code : item.asset_type_code 
-                        , _row_state_ : "D"
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , account_code: account_code
+                        , investment_ecst_type_code: investment_ecst_type_code
+                        , acq_department_code: acq_department_code
+                        , accounting_department_code: accounting_department_code
+                        , import_company_code: import_company_code
+                        , project_code: project_code
+                        , import_company_org_code: import_company_org_code
+                        , mold_production_type_code: item.mold_production_type_code
+                        , mold_item_type_code: item.mold_item_type_code
+                        , provisional_budget_amount: item.provisional_budget_amount
+                        , asset_type_code: item.asset_type_code
+                        , _row_state_: "D"
                     });
                 });
             }
-
-
             this._commonDataSettingAndSubmit();
         }
-
-
-
-        
-
-
-
-        /** PO Item End */
-
     });
 });
