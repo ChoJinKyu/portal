@@ -302,7 +302,8 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
 						oTransactionManager.submit({						
-							success: function(ok){								
+							success: function(ok){
+                                that.byId("inputWithEmployeeValueHelp").setValue("");								
                                 oView.setBusy(false);
                                 // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
@@ -320,8 +321,7 @@ sap.ui.define([
 					};
 				}
             });
-            this.validator.clearValueState(this.byId("dialogAddSupplier"));
-            this.byId("inputWithEmployeeValueHelp").setValue("");            
+            this.validator.clearValueState(this.byId("dialogAddSupplier"));                        
             
         },     
         
