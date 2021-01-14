@@ -37,13 +37,9 @@ sap.ui.define([
       }
     })(),
 
-    // getFilter: function () {
-    //   console.log(">>>>>>>>>>> arguments", arguments);
-    // },
     /* =========================================================== */
     /* lifecycle methods                                           */
     /* =========================================================== */
-
     onSelectionChange: function () {
         var [event, field] = arguments;
         let combo, key = this.getModel("details").getProperty(event.getSource().mBindingInfos.selectedKey.binding.oContext.sPath)[field];
@@ -51,22 +47,16 @@ sap.ui.define([
         // 제어옵션레벨코드
         if (field == "control_option_level_code") {
             // 조직유형코드
-            combo = event.getSource().getParent().getCells()[2].getItems()[0];
-            //combo.setEnabled(key === "O");
-            combo.bindItems({
-                path: 'util>/Code',
-                filters: [
-                    new Filter('tenant_id', FilterOperator.EQ, 'L2100'),
-                    new Filter('group_code', FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
-                ].filter(f => f.oValue1 || f.oValue2),
-                template: new Item({
-                    key: "{util>code}", text: "{util>code} : {util>code_description}"
-                })
-            });
+            combo = event.getSource().getParent().getCells()[2];
+            combo.setEnabled(key === "O");
+            key != "O" && combo.setSelectedKey();
+            key == "T" && event.getSource().getParent().getCells()[3].getItems()[1].setValue("Default");
         }
         // 조직유형코드
-        if (field == "org_type_code") {
+        else if (field == "org_type_code") {
             // 제어옵션레벨값
+            //if (key !== "O") return ;
+            if (!key) return ;
             combo = event.getSource().getParent().getCells()[3].getItems()[0];
             combo.clearSelection();
             combo.bindItems({
@@ -87,7 +77,9 @@ sap.ui.define([
 		 * @public
 		 */
     onInit: function () {
+      // combo count
       this.getOwnerComponent().getModel("org").setSizeLimit(1000);
+
       // Model used to manipulate controlstates. The chosen values make sure,
       // detail page shows busy indication immediately so there is no break in
       // between the busy indication for loading the view's meta data
@@ -187,7 +179,7 @@ sap.ui.define([
       });
     },
 
-    onMidTableAddButtonPress: function () {
+    onAdd: function () {
       var oTable = this.byId("midTable"),
         oDetailsModel = this.getModel("details");
 
@@ -220,12 +212,14 @@ sap.ui.define([
           ].join(":");
         })());
       });
-
+      // Lock 설정
+      oTable.data("lock", true);
+      // Record 추가
       oDetailsModel.addRecord({
         "tenant_id": this._sTenantId || "",
         "control_option_code": this._sControlOptionCode || "",
         // "control_option_level_code": "",
-        "org_type_code": "*",
+        "org_type_code": "",
         // "control_option_level_val": "",
         // "control_option_val": "",
         "start_date": utc(new Date()),
@@ -233,31 +227,68 @@ sap.ui.define([
         "local_create_dtm": utc(new Date()),
         "local_update_dtm": utc(new Date())
       }, 0);
-
+    
+      // Lock 해제
+      setTimeout((function() {
+        oTable.data("lock", false);
+      }).bind(this), 500);
+    //   // Item 추가
+    //   setTimeout((function() {
+    //     var columns = oTable.getColumns();
+    //     var row = oTable.getItems()[0/*oDetailsModel.getCreatedRecords().length - 1*/];
+    //     var cells = row.getCells();
+    //     var key;
+    //     ///////////////////////////////////////////////////
+    //     // 제어옵션레벨코드
+    //     ///////////////////////////////////////////////////
+    //     key = cells[1].getSelectedKey();
+    //     !!cells[1].getFirstItem().getKey()
+    //     &&
+    //     cells[1]
+    //           .insertItem(new Item({ key: "", text: "선택하세요" }), 0);
+    //     cells[1]
+    //           .setSelectedItemId(cells[1].getFirstItem().getId());
+    //     setTimeout((function(){
+    //         key && cells[1].setSelectedKey(key);
+    //     }).bind(this), 0);
+    //     ///////////////////////////////////////////////////
+    //     // 조직유형
+    //     ///////////////////////////////////////////////////
+    //     key = cells[2].getSelectedKey();
+    //     !!cells[2].getFirstItem().getKey()
+    //     &&
+    //     cells[2]
+    //           .insertItem(new Item({ key: "*", text: "전체[*]" }), 0)
+    //           .insertItem(new Item({ key: "", text: "선택하세요" }), 0);
+    //     cells[2]
+    //           .setSelectedItemId(cells[2].getFirstItem().getId());
+    //     setTimeout((function(){
+    //         key && cells[2].setSelectedKey(key);
+    //     }).bind(this), 0);
+    //     ///////////////////////////////////////////////////
+    //     // 제어옵션레벨값
+    //     ///////////////////////////////////////////////////
+    //     key = cells[3].getItems()[0].getSelectedKey();
+    //     !!cells[3].getItems()[0].getFirstItem().getKey()
+    //     &&
+    //     cells[3]
+    //           .getItems()[0].insertItem(new Item({ key: "", text: "선택하세요" }), 0);
+    //     cells[3]
+    //           .getItems()[0].setSelectedItemId(cells[3].getItems()[0].getFirstItem().getId());
+    //     setTimeout((function(){
+    //         key && cells[3].getItems()[0].setSelectedKey(key);
+    //     }).bind(this), 0);
+    //   }).bind(this), 500);
     },
 
     onMidTableDeleteButtonPress: function () {
-      // var oTable = this.byId("midTable"),
-      //   oModel = this.getModel("details"),
-      //   aItems = oTable.getSelectedItems(),
-      //   aIndices = [];
-      // aItems.forEach(function (oItem) {
-      //   console.log(
-      //     ">>>>> getData", oModel.getData()["ControlOptionDetails"],
-      //     ">>>>> getData - details", oItem.getBindingContext("details"),
-      //     ">>>>> getData - item", oItem.getBindingContext(),
-      //     oItem.getBindingContext("details").getObject());
-      //   aIndices.push(oModel.getData()["ControlOptionDetails"].indexOf(oItem.getBindingContext("details").getObject()));
-      // });
-      // aIndices = aIndices.sort(function (a, b) { return b - a; });
-      // aIndices.forEach(function (nIndex) {
-      //   oModel.markRemoved(nIndex);
-      // });
-      // oTable.removeSelections(true);
-
       var [tId, mName, sEntity] = arguments;
       var table = this.byId(tId);
       var model = this.getView().getModel(mName);
+
+      // lock
+      table.data("lock", true);
+
       //debugger;
       table
         .getSelectedItems()
@@ -271,6 +302,11 @@ sap.ui.define([
       table
         //.clearSelection()
         .removeSelections(true);
+
+      // unlock
+      setTimeout((function() {
+        table.data("lock", false);
+      }).bind(this), 500)
     },
 
     /**
@@ -419,11 +455,11 @@ sap.ui.define([
         oDetailsModel.setTransactionModel(this.getModel());
         oDetailsModel.read("/ControlOptionDetails", {
           filters: [
-            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId || "XXXXX"),
+            new Filter("tenant_id", FilterOperator.EQ, "L2100" || "XXXXX"),
           ],
-          success: function (oData) {
-            //console.log("##### 1", oData, oDetailsModel);
-          }
+          success: (function (oData) {
+            this.byId()
+          }).bind(this)
         });
 
         this._toEditMode();
@@ -441,7 +477,6 @@ sap.ui.define([
             new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
           ],
           success: (function (oData) {
-            //console.log("##### 2", oData, oDetailsModel);
             oView.setBusy(false);
           }).bind(this)
         });
@@ -549,8 +584,60 @@ sap.ui.define([
       } else {
         if (oHandler) oHandler(this._oFragments[sFragmentName]);
       }
+    },
+    onMidTableUpdateFinished: function(event, tId, mName) {
+        // Item 존재시에만, Lock 상태에서는 미처리
+        if (event.getParameters().total <= 0 || event.getSource().data("lock")) return ;
+        // Aggregations
+        var table = event.getSource();
+        var columns = table.getColumns();
+        var rows = table.getItems();
+        // Setting - Combo
+        rows.forEach((function(row, r) {
+            columns.forEach((function(column, c){
+                let combo, 
+                    record = row.getModel(mName).getProperty(row.getBindingContextPath()),
+                    key, 
+                    customData = column.getCustomData()[0] || "",
+                    field = customData ? column.getCustomData()[0].getValue()["sap.ui.core.CustomData"]["field"] : "";
+
+                field 
+                && 
+                (function() {
+                    if (tId != 'midTable') {
+                        return false;
+                    }
+                    // 조직유형코드
+                    if (field == "org_type_code") {
+                        // Source
+                        combo = row.getCells()[c];
+                        key = row.getCells()[c].getSelectedKey();
+                        // Target - 제어옵션레벨값
+                        combo = row.getCells()[
+                            columns.findIndex(function(column) {
+                                return (
+                                    column.getCustomData()[0] 
+                                    && 
+                                    column.getCustomData()[0].getValue()["sap.ui.core.CustomData"]["field"] 
+                                ) == "control_option_level_val"
+                            })
+                        ].getItems()[0];
+                        // 재조회
+                        combo.bindItems({
+                            path: 'org>/organization',
+                            filters: [
+                                new Filter('tenant_id', FilterOperator.EQ, record["tenant_id"] || "L2100"),
+                                new Filter('type', FilterOperator.EQ, key)
+                            ].filter(f => f.oValue1 || f.oValue2),
+                            template: new Item({
+                                key: "{org>code}", text: "{org>code}"
+                            })
+                        });
+                    }
+                    return true;
+                }).call(this)
+            }).bind(this));
+        }).bind(this));
     }
-
-
   });
 });
