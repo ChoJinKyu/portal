@@ -287,12 +287,12 @@ sap.ui.define([
             
             var chkEmail = this.CheckEmail(email);
             if(!chkEmail){
-                MessageBox.alert("이메일 형식이 잘못되었습니다.");
+                MessageBox.warning("이메일 형식이 잘못되었습니다.");
                 return false;
             }
 
-			if(!this.DupChkFlag){
-                MessageBox.alert("중복체크 해주세요.");
+            if(!this.DupChkFlag){
+                MessageBox.warning(this.getModel("I18N").getText("/EDP60001")); //중복체크 후 진행 가능합니다               
                 return false; 
             }
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -330,7 +330,7 @@ sap.ui.define([
             var iTenantId = "L2100",
                 iSn = this.byId("ssn").getValue().trim();
             if(this.isValNull(iSn)) {
-                MessageBox.alert("소싱공급업체별칭을 입력해주세요.");
+                MessageBox.warning("소싱공급업체별칭을 입력해주세요.");
                 return false;
             }                
             
@@ -345,11 +345,11 @@ sap.ui.define([
                         var code = data.value[0].return_code;
                         if(code === "S"){
                             v_this.DupChkFlag = true;
-                            MessageBox.alert("사용가능한 소싱공급업체별칭 입니다.");
+                            MessageBox.success(v_this.getModel("I18N").getText("/NDP60001")); //[중복체크]등록 가능합니다                            
                             return true;
                         } else {
                             v_this.DupChkFlag = false;
-                            MessageBox.alert("중복된 소싱공급업체별칭 입니다.");
+                            MessageBox.warning(v_this.getModel("I18N").getText("/NDP60002")); //[중복체크]이미 등록되어 있습니다
                             // sap.ui.getCore().getMessageManager().addMessages(new Message({
                             //     message: "중복입니다.", // Get Message from ValueStateText if available
                             //     type: MessageType.Error,
