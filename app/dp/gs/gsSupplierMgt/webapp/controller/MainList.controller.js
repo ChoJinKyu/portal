@@ -351,12 +351,7 @@ sap.ui.define([
                             return true;
                         } else {
                             v_this.DupChkFlag = false;
-                            MessageBox.warning(v_this.getModel("I18N").getText("/NDP60002")); //[중복체크]이미 등록되어 있습니다
-                            // sap.ui.getCore().getMessageManager().addMessages(new Message({
-                            //     message: "중복입니다.", // Get Message from ValueStateText if available
-                            //     type: MessageType.Error,
-                            //     additionalText: iSn // Get label from the form element
-                            // }));
+                            MessageBox.warning(v_this.getModel("I18N").getText("/NDP60002")); //[중복체크]이미 등록되어 있습니다                            
                             return false;
                         }                                               
                     },
