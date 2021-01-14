@@ -9,7 +9,8 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m"
+    xmlns="sap.m" 
+    xmlns:lib-m="ext.lib.control.m"
 	height="100%">
 
 	<uxap:ObjectPageLayout 
