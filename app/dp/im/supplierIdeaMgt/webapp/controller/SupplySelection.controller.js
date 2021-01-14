@@ -51,6 +51,9 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+
+            console.log("SupplySelection start");
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
@@ -65,49 +68,10 @@ sap.ui.define([
 
             this.getRouter().getRoute("selectionPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-            // this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
-
-            //this._initTableTemplates();
             this.enableMessagePopover();
 
         },
 
-        /* =========================================================== */
-        /* event handlers                                              */
-        /* =========================================================== */
-
-        // /**
-        //  * Event handler for Enter Full Screen Button pressed
-        //  * @public
-        //  */
-        // onPageEnterFullScreenButtonPress: function () {
-        //     var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-        //     this.getRouter().navTo("midPage", {
-        //         layout: sNextLayout,
-        //         tenantId: this._sTenantId,
-        //         companyCode: this._sCompanyCode,
-        //         loiWriteNumber: this._sLoiWriteNumber,
-        //         loiItemNumber: this._sLoiItemNumber,
-        //         loiSelectionNumber: this._sLoiSelectionNumber,
-        //         loiNumber: this._sLoiNumber
-        //     });
-        // },
-        // /**
-        //  * Event handler for Exit Full Screen Button pressed
-        //  * @public
-        //  */
-        // onPageExitFullScreenButtonPress: function () {
-        //     var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-        //     this.getRouter().navTo("midPage", {
-        //         layout: sNextLayout,
-        //         tenantId: this._sTenantId,
-        //         companyCode: this._sCompanyCode,
-        //         loiWriteNumber: this._sLoiWriteNumber,
-        //         loiItemNumber: this._sLoiItemNumber,
-        //         loiSelectionNumber: this._sLoiSelectionNumber,
-        //         loiNumber: this._sLoiNumber
-        //     });
-        // },
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
@@ -339,61 +303,23 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
+            console.log(oArgs);
             this._sTenantId = oArgs.tenantId;
             this._sCompanyCode = oArgs.companyCode;
-            this._sLoiWriteNumber = oArgs.loiWriteNumber;
-            this._sLoiItemNumber = oArgs.loiItemNumber;
-            this._sLoiSelectionNumber = oArgs.loiSelectionNumber;
-            this._sLoiNumber = oArgs.loiNumber;
-            this.getModel("midObjectViewModel").setProperty("/viewLoiNumber", oArgs.loiNumber);
+            this._sIdeaNumber = oArgs.ideaNumber;
+            this.getModel("midObjectViewModel").setProperty("/IdeaView", oArgs);
 
 
             console.log("##getOwnerComponent==", this.getOwnerComponent().getRootControl().byId("fcl"));
 
             console.log("##oArgs.tenantId==", oArgs.tenantId);
             console.log("##oArgs.companyCode==", oArgs.companyCode);
-            console.log("##oArgs.loiWriteNumber==", oArgs.loiWriteNumber);
-            console.log("##oArgs.loiItemNumber==", oArgs.loiItemNumber);
-            console.log("##oArgs.loiSelectionNumber==", oArgs.loiSelectionNumber);
-            console.log("##oArgs.loiNumber==", oArgs.loiNumber);
+            console.log("##oArgs.ideaNumber==", oArgs.ideaNumber);
             console.log("####################22222");
-
-            var loiDtlArr = [];
-
-            var tenantIdArr = oArgs.tenantId.split(","),
-                companyCodeArr = oArgs.companyCode.split(","),
-                loiWriteNumberArr = oArgs.loiWriteNumber.split(","),
-                loiItemNumberArr = oArgs.loiItemNumber.split(",");
-
-            tenantIdArr.forEach(function (item, index) {
-                var arr = {
-                    "tenant_id": item,
-                    "company_code": "",
-                    "loi_write_number": "",
-                    "loi_item_number": "",
-                };
-                loiDtlArr[index] = arr;
-            });
-
-            companyCodeArr.forEach(function (item, index) {
-                loiDtlArr[index]["company_code"] = item;
-            });
-
-            loiWriteNumberArr.forEach(function (item, index) {
-                loiDtlArr[index]["loi_write_number"] = item;
-            });
-
-            loiItemNumberArr.forEach(function (item, index) {
-                loiDtlArr[index]["loi_item_number"] = item;
-            });
-
-            console.log("loiDtlArr==", loiDtlArr);
-
-            this._sLoiDtlArrr = loiDtlArr;
 
 
             //발행요청시 품목의 tenantId, companyCode 와 업체선정품의의 tenantId, companyCode가 다를 수 있다면 둘다 함께 체크
-            if (oArgs.loiSelectionNumber == "new") {
+            if (oArgs.ideaNumber == "new") {
                 //It comes Add button pressed from the before page.
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
 
@@ -411,109 +337,25 @@ sap.ui.define([
                 oMasterModel.setData({
                     "tenant_id": this._sTenantId,
                     "company_code": this._sCompanyCode,
-                    "loi_selection_number": "",
-                    "loi_selection_status_code": "122030",
-                    "loi_selection_status_name": "작성중",
-                    "special_note": "",
-                    "attch_group_number": "",
-                    "approval_number": "",
-                    "buyer_empno": "9586",
-                    "purchasing_department_code": "50008948",
-                    "remark": "",
-                    "org_type_code": "",
-                    "org_code": "",
-                    "user_id": "9586"
-                }, "/LoiVendorSelection");
-
-                //console.log("oMasterModel.getData()====", oMasterModel.getData());
-
-                // var orFilter = [];
-
-                // argArr.forEach(function(item) { 
-                //     var andFilter = [];
-
-                //     andFilter.push(new Filter("tenant_id", FilterOperator.EQ, item.tenant_id));
-                //     andFilter.push(new Filter("company_code", FilterOperator.EQ, item.company_code));
-                //     andFilter.push(new Filter("loi_write_number", FilterOperator.EQ, item.loi_write_number));
-                //     andFilter.push(new Filter("loi_item_number", FilterOperator.EQ, item.loi_item_number));
-
-                //     orFilter.push(andFilter, false);
-
-
-                // });     
-
-                // console.log("orFilter==", orFilter);
-
-                // var oDetailsModel = this.getModel("details");
-                // oDetailsModel.setTransactionModel(this.getModel());
-                // oDetailsModel.read("/LOIPublishItemView", {
-                // 	filters: orFilter,
-
-                //     // filters: [
-                //     //     new Filter({
-                //     //         and: true,
-                //     //         filters: [
-                //     //             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                //     //             new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                //     //             new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber),
-                //     //             new Filter("loi_item_number", FilterOperator.EQ, this._sLoiItemNumber
-                //     //         ]}),
-                //     //     new Filter({
-                //     //         and: true,
-                //     //         filters: [
-                //     //         new Filter("property3", FilterOperator.Contains, sQuery),
-                //     //         new Filter("property4", FilterOperator.Contains, sQuery)
-                //     //         ]}),
-                //     //     new Filter({
-                //     //         and: true,
-                //     //         filters: [
-                //     //         new Filter("property5", FilterOperator.Contains, sQuery),
-                //     //         new Filter("property6", FilterOperator.Contains, sQuery)
-                //     //         ]})
-                //     // ]});
-
-                // 	success: function(oData){
-                // 		oView.setBusy(false);
-                // 	}
-                // });         
+                    "idea_number": this._sIdeaNumber
+                }, "/IdeaView"); 
 
                 this._toEditMode();
             } else {
                 console.log("###수정");
-                var that = this;
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
-                var loi_status = "";
-                //뷰생성해서 변경예정
-                var sObjectPath = "/LOISupplySelectionView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',loi_selection_number='" + this._sLoiSelectionNumber + "')";
+
+                var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + this._sIdeaNumber + "')";
                 var oMasterModel = this.getModel("master");
+
                 oView.setBusy(true);
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
                     success: function (oData) {
-                        console.log("oData====", oData.loi_selection_status_code);
+                        console.log("oData====", oData);
                         oView.setBusy(false);
-                        loi_status = oData.loi_selection_status_code;
-                        // if (loi_status == "122030") {
-                        //     that._toEditMode();
-                        // } else {
-                        //     that._toShowMode();
-                        // }
                     }
                 });
-                //console.log("loi_status====", loi_status);
-                // var oDetailsModel = this.getModel("details");
-                // oDetailsModel.setTransactionModel(this.getModel());
-                // oDetailsModel.read("/LOIPublishItemView", {
-                // 	filters: [
-                // 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                //         new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                //         new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber),
-                //         new Filter("loi_item_number", FilterOperator.EQ, this._sLoiItemNumber)
-                // 	],
-                // 	success: function(oData){
-                // 		oView.setBusy(false);
-                // 	}
-                // });
                 this._toShowMode();
             }
 
@@ -561,25 +403,10 @@ sap.ui.define([
 
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
-            var statusCode = oMasterModel.getData().loi_selection_status_code;
-            console.log("statusCode=", statusCode);
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
-            // this._showFormFragment('MidObject_Show');
-            // this.byId("page").setSelectedSection("pageSectionMain");
-            if(statusCode == "122060") {
-                this.byId("page").setProperty("showFooter", false);
-            }else {
                 this.byId("page").setProperty("showFooter", true);
-            }
-            //this.byId("pageEditButton").setVisible(true);
-            // if (statusCode === "122040" || statusCode === "122060") {
-            //     this.byId("pageEditButton").setVisible(false);
-            //     this.byId("pageDeleteButton").setVisible(false);
-            // } else {
             this.byId("pageEditButton").setVisible(true);
             this.byId("pageDeleteButton").setVisible(true)
-            //}
-            //this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);
             
             this.byId("pageSaveButton").setVisible(false);
@@ -587,89 +414,9 @@ sap.ui.define([
             this.byId("pageRequestButton").setVisible(false);
 
             this.byId("pageCancelButton").setEnabled(true);
-            // this.byId("midTableAddButton").setEnabled(!TRUE);
-            // this.byId("midTableDeleteButton").setEnabled(!TRUE);
-            // this.byId("midTableSearchField").setEnabled(TRUE);
-            // this.byId("midTableApplyFilterButton").setEnabled(TRUE);
-            // this.byId("midTable").setMode(sap.m.ListMode.None);
-            // this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
             console.log("####################isEditMode", this.getModel("midObjectViewModel").getProperty("/isEditMode"));
         },
 
-        // _initTableTemplates: function(){
-        // 	this.oReadOnlyTemplate = new ColumnListItem({
-        // 		cells: [
-        // 			new Text({
-        // 				text: "{details>_row_state_}"
-        // 			}), 
-        // 			new ObjectIdentifier({
-        // 				text: "{details>control_option_code}"
-        // 			}), 
-        // 			new ObjectIdentifier({
-        // 				text: "{details>control_option_level_code}"
-        // 			}), 
-        // 			new Text({
-        // 				text: "{details>control_option_level_val}"
-        // 			}), 
-        // 			new Text({
-        // 				text: "{details>control_option_val}"
-        // 			})
-        // 		],
-        // 		type: sap.m.ListType.Inactive
-        // 	});
-
-        // 	this.oEditableTemplate = new ColumnListItem({
-        // 		cells: [
-        // 			new Text({
-        // 				text: "{details>_row_state_}"
-        // 			}), 
-        // 			new Text({
-        // 				text: "{details>control_option_code}"
-        // 			}), 
-        // 			new ComboBox({
-        //                 selectedKey: "{details>control_option_level_code}",
-        //                 items: {
-        //                     id: "testCombo1",
-        //                     path: 'util>/CodeDetails',
-        //                     filters: [
-        //                         new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-        //                         new Filter("group_code", FilterOperator.EQ, 'TEST')
-        //                     ],
-        //                     template: new Item({
-        //                         key: "{util>code}",
-        //                         text: "{util>code_description}"
-        //                     })
-        //                 },
-        //                 required: true
-        //             }), 
-        // 			new Input({
-        // 				value: {
-        // 					path: "details>control_option_level_val",
-        //                     type: new sap.ui.model.type.String(null, {
-        // 						maxLength: 100
-        // 					}),
-        // 				},
-        // 				required: true
-        // 			}),
-        // 			new Input({
-        // 				value: {
-        // 					path: "details>control_option_val",
-        //                     type: new sap.ui.model.type.String(null, {
-        // 						maxLength: 100
-        // 					})
-        // 				},
-        // 				required: true
-        // 			})
-        // 		]
-        //     });
-        // },
-
-        // _bindMidTable: function(oTemplate, sKeyboardMode){
-        // 	this.byId("midTable").bindItems({
-        // 		path: "details>/ControlOptionDetails",
-        // 		template: oTemplate
-        // 	}).setKeyboardMode(sKeyboardMode);
-        // },
 
         _oFragments: {},
         _showFormFragment: function (sFragmentName) {
@@ -694,34 +441,6 @@ sap.ui.define([
             }
         }
 
-        // onAfterRendering : function () {
-        //     var that = this,
-        //         sHtmlValue = "";
-        //         // sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
-        // 		// '<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
-        // 		// 'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';                
-        // 	sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-        // 		function (RTE, EditorType) {
-        // 			var oRichTextEditor = new RTE("myRTE", {
-        // 				editorType: EditorType.TinyMCE4,
-        // 				width: "100%",
-        //                 height: "200px",
-        //                 //editable: "{contModel>/editMode}",
-        //                 editable: true,
-        // 				customToolbar: true,
-        // 				showGroupFont: true,
-        // 				showGroupLink: true,
-        // 				showGroupInsert: true,
-        // 				value: sHtmlValue,
-        // 				ready: function () {
-        // 					this.addButtonGroup("styleselect").addButtonGroup("table");
-        // 				}
-        //             });
-        // 			that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-        //     });
-
-        //     //this.onPageEnterFullScreenButtonPress();
-        // }
 
     });
 });

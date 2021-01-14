@@ -104,7 +104,8 @@
             ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../../lib"
+            "ext.lib": "../../../../lib",
+            "dp": "../../../../dp"
         },
         "routing": {
             "config": {
@@ -129,14 +130,14 @@
                     ]
                 },
                 {
-                    "pattern": "selectionObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiSelectionNumber}/{loiNumber}",
+                    "pattern": "selectionObject/{tenantId}/{companyCode}/{ideaNumber}",
                     "name": "selectionPage",
                     "target": [
                         "selectionObject"
                     ]
                 },
                 {
-                    "pattern": "publishObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiPublishNumber}/{loiNumber}",
+                    "pattern": "publishObject/{tenantId}/{companyCode}/{ideaNumber}",
                     "name": "publishPage",
                     "target": [
                         "publishObject"

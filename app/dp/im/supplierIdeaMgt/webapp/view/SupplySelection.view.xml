@@ -22,10 +22,10 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="LOI 업체선정 품의" wrapping="true" />
+					<Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="LOI 업체선정 품의" wrapping="true" />
+					<Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
 				</uxap:snappedHeading>
 				<!-- <uxap:expandedContent>
 					<Text text="Details for control option {control_option_code}" />
@@ -52,57 +52,20 @@
 			<FlexBox wrap="Wrap" visible="true">
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="LOI 번호: "
-                        text="{midObjectViewModel>/viewLoiNumber}"/>
+                        title="{I18N>/IDEA} {I18N>/SEQUENCE}: "
+                        text="{master>/idea_number}"/>
+                    <ObjectStatus
+                        title="{I18N>/SUPPLIER}: "
+                        text="{master>/supplier_local_name}"/>
                     <ObjectStatus
                         id="createUser"         
-                        title="작성자"
-                        text="**민"/>
+                        title="{I18N>/IDEA} {I18N>/WRITER}: "
+                        text="{master>/idea_create_user_local_name}"/>
+                    <ObjectStatus
+                        id="ideaDate"         
+                        title="{I18N>/IDEA} {I18N>/WRITE_DATE}: "
+                        text="{master>/idea_date}"/>
 				</layout:VerticalLayout>
-
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus 
-                        id="createDate"
-                        title="작성일자"
-                        text="{
-                                path: 'master>/supplier_selection_date',
-                                formatter: '.dateFormatter.toUTCDateString'
-                            }" />
-
-                    <ObjectStatus
-                        id="createDepartment"
-                        title="작성부서"
-                        text="첨단소재.구매2.공사구매팀(청주P)"/>
-                    </layout:VerticalLayout>
-
-                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <Label text="Status :"/>
-                    <ObjectStatus
-                        class="sapMObjectStatusLarge"
-                        text="{master>/loi_selection_status_name}"
-                        state="Error" />
-                </layout:VerticalLayout>
-
-                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="Process : "/>
-                    <HBox>
-                        <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                            </sc:content>
-                        </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text="LOI요청"  width="4em" renderWhitespace="true" />
-                        <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
-                        <Text text="LOI발행" width="6em" textAlign="Center" />
-                        <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
-                    </HBox>
-                </layout:VerticalLayout>   -->
-
 			</FlexBox>
 		</uxap:headerContent>
 

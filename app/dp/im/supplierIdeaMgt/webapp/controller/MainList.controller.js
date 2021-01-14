@@ -23,10 +23,11 @@ sap.ui.define([
     "sap/m/Text",
     "sap/m/Label",
     "sap/m/Input",
-    "sap/m/VBox"
+    "sap/m/VBox",
+    "dp/util/control/ui/IdeaManagerDialog"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,IdeaManagerDialog) {
     "use strict";
 
     var oTransactionManager;
@@ -114,17 +115,8 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            location.href = "../../../../ep/po/loiRequestMgt/webapp";
+            location.href = "../../../../dp/im/supplierIdeaMgt/webapp";
 
-            // this.getRouter().navTo("selectionPage", {
-            //     //layout: oNextUIState.layout,
-            //     tenantId: oRecord.tenant_id,
-            //     companyCode: oRecord.company_code,
-            //     loiWriteNumber: oRecord.loi_write_number,
-            //     loiItemNumber: oRecord.loi_item_number,
-            //     loiSelectionNumber: oRecord.loi_selection_number,
-            //     loiNumber: oRecord.loi_number
-            // }, true);
 
         },
 
@@ -894,9 +886,12 @@ sap.ui.define([
             var searchProductGroup = this.getView().byId("searchProductGroup").getSelectedKeys();
             var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
                 requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
+            var searchIdeaManagerId = this.getView().byId("searchIdeaManagerId").getValue();
 
 
             var aSearchFilters = [];
+
+            
             if (searchIdeaProcess.length > 0) {
                 var _tempFilters = [];
                 searchIdeaProcess.forEach(function (item, idx, arr) {
@@ -937,8 +932,14 @@ sap.ui.define([
             }
 
             
+
+            
             if (requestFromDate && requestToDate) {
                 aSearchFilters.push(new Filter("idea_date", FilterOperator.BT, requestFromDate, requestToDate));
+            }
+
+            if (searchIdeaManagerId != "") {
+                aSearchFilters.push(new Filter("idea_manager_empno", FilterOperator.EQ, searchIdeaManagerId) );
             }
 
             return aSearchFilters;
@@ -971,18 +972,18 @@ sap.ui.define([
          * Cell 클릭 후 상세화면으로 이동
          */
         onCellClickPress: function(oEvent) {
-            this._goDetailView(oEvent);
+           // this._goDetailView(oEvent);
         },
 
         _goDetailView: function(oEvent){
 
-                var oView = this.getView();
-                var oTable = oView.byId("mainTable"),
-                    oModel = this.getView().getModel("list");
-                var rowData = oEvent.getParameter('rowBindingContext').getObject();
+            var oView = this.getView();
+            var oTable = oView.byId("mainTable"),
+                oModel = this.getView().getModel("list");
+            var rowData = oEvent.getParameter('rowBindingContext').getObject();
 
-                var idea_number = rowData.idea_number;
-                console.log("####idea_number====", idea_number);
+            var idea_number = rowData.idea_number;
+            console.log("####idea_number====", idea_number);
 
             this.getRouter().navTo("selectionPage", {
                 //layout: oNextUIState.layout,
@@ -990,9 +991,34 @@ sap.ui.define([
                 companyCode: rowData.company_code,
                 ideaNumber: rowData.idea_number
             }, true);
+        },
+
+
+        /**
+         * function : 아이디어 관리자 팝업 Call 함수
+         * date : 2021/01/14
+         */
+        onIdeaManagerDialogPress : function(){
+
+            if(!this.oSearchIdeaManagerDialog){
+                this.oSearchIdeaManagerDialog = new IdeaManagerDialog({
+                    title: this.getModel("I18N").getText("/SEARCH_IDEA_MANAGER"),
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oSearchIdeaManagerDialog.attachEvent("apply", function(oEvent){ 
+                    this.byId("searchIdeaManager").setValue(oEvent.getParameter("item").idea_manager_name);
+                    this.byId("searchIdeaManagerId").setValue(oEvent.getParameter("item").idea_manager_empno);
+                    
+                }.bind(this));
+                }
+            this.oSearchIdeaManagerDialog.open();
+
         }
-
-
 
 
 
