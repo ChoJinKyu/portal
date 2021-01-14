@@ -264,6 +264,7 @@ sap.ui.define([
         },
 
         createPopupClose: function (oEvent) {
+            this.DupChkFlag = false;
             this.validator.clearValueState(this.byId("dialogAddSupplier"));
             this.byId("inputWithEmployeeValueHelp").setValue("");            
             this.byId("dialogAddSupplier").close();
@@ -303,7 +304,8 @@ sap.ui.define([
 						oView.setBusy(true);
 						oTransactionManager.submit({						
 							success: function(ok){
-                                that.byId("inputWithEmployeeValueHelp").setValue("");								
+                                that.byId("inputWithEmployeeValueHelp").setValue("");
+                                that.DupChkFlag = false;								
                                 oView.setBusy(false);
                                 // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
