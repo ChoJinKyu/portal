@@ -682,14 +682,14 @@ sap.ui.define([
                     }
 
                     //견적번호 동일한지 체크
-                    var quotationNumber = oModel.getData().LOIPublishItemView[chkIdx].quotation_number;
-                    // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
-                    if (index > 0 && !quotationNumberrArr.includes(quotationNumber)) {
-                        MessageToast.show("견적번호가 동일하지 않습니다.");
-                        canSelect = false;
-                        return true;
-                    }
-                    quotationNumberrArr.push(oModel.getData().LOIPublishItemView[chkIdx].quotation_number);
+                    // var quotationNumber = oModel.getData().LOIPublishItemView[chkIdx].quotation_number;
+                    // // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
+                    // if (index > 0 && !quotationNumberrArr.includes(quotationNumber)) {
+                    //     MessageToast.show("견적번호가 동일하지 않습니다.");
+                    //     canSelect = false;
+                    //     return true;
+                    // }
+                    // quotationNumberrArr.push(oModel.getData().LOIPublishItemView[chkIdx].quotation_number);
 
                     //업체선정번호 동일한지 체크로직 추가여부 확인
 
@@ -897,7 +897,8 @@ sap.ui.define([
 		 */
         _applySearch: function (aSearchFilters, aSorter) {
             var oView = this.getView(),
-                oModel = this.getModel("list");
+                oModel = this.getModel("list"),
+                that = this;
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
             oModel.read("/LOIPublishItemView", {
@@ -905,6 +906,8 @@ sap.ui.define([
                 sorters: aSorter,
                 success: function (oData) {
                     console.log("oData====", oData);
+                    var oTable = that.byId("mainTable");
+                    oTable.clearSelection();
                     oView.setBusy(false);
                 }
             });
