@@ -1494,10 +1494,15 @@ sap.ui.define([
 
             //Now we need the data of every row
 
-            for (var i = 0; i < iCount; i++) {
-                // var oEntity = that.mainTable.getModel().getData(that.mainTable.getContextByIndex(i).getPath());
-                that.mainTable.setSelectedIndex(i);
-            }
+            // that.mainTable.removeSelections(true);
+            // that.mainTable.selectAll(true);
+            // that.mainTable.setSelectedIndex(-1);
+            that.mainTable.clearSelection();
+            // for (var i = 0; i < iCount; i++) {
+            //     // var oEntity = that.mainTable.getModel().getData(that.mainTable.getContextByIndex(i).getPath());
+                
+                
+            // }
             var oDataLen = 0;
             var oView = this.getView(),
                 oModel = this.getModel("list");
