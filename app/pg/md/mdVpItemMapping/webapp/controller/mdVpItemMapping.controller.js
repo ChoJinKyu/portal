@@ -23,8 +23,8 @@ sap.ui.define([
             // return new Promise(function(resolve,seject){
 
             // });
-            //var oMultilingual = new Multilingual();
-			//this.setModel(oMultilingual.getModel(), "I18N");
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new JSONModel()); 
 
             jQuery.ajax({
