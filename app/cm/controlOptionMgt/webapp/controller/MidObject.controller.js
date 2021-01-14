@@ -455,7 +455,7 @@ sap.ui.define([
         oDetailsModel.setTransactionModel(this.getModel());
         oDetailsModel.read("/ControlOptionDetails", {
           filters: [
-            new Filter("tenant_id", FilterOperator.EQ, "L2100" || "XXXXX"),
+            new Filter("tenant_id", FilterOperator.EQ, "XXXXX"),
           ],
           success: (function (oData) {
             this.byId()
