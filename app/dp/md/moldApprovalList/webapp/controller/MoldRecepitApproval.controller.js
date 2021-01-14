@@ -31,6 +31,8 @@ sap.ui.define([
     "use strict";
     /**
      * @description 금형 입고품의 
+     * @date 2021.01.14
+     * @author jinseon.lee 
      */
     var oTransactionManager;
     var oRichTextEditor;
@@ -79,7 +81,7 @@ sap.ui.define([
         _onApprovalPage : function () {
             this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
-            console.log(" mode "  ,  this.getView().getModel("mode"));
+            // console.log(" mode "  ,  this.getView().getModel("mode"));
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
@@ -89,7 +91,7 @@ sap.ui.define([
                     , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
-                    console.log("data>>>> ", oData);
+                    // console.log("data>>>> ", oData);
                  });
             }  
         },
@@ -110,12 +112,12 @@ sap.ui.define([
 
 
         _toEditModeEachApproval : function(){ 
-            console.log(" Mold RecepitApproval  _toEditModeEachApproval ");
+            // console.log(" Mold RecepitApproval  _toEditModeEachApproval ");
             
             var oRows = this.byId("moldRecepitTable").getRows();
             oRows.forEach(function(oCell, idx){
                oCell.mAggregations.cells.forEach(function(item, jdx){ 
-                   console.log("item>>> " , item , ">>> jdx " , jdx);
+                   // console.log("item>>> " , item , ">>> jdx " , jdx);
                     if(jdx == 12){
                          item.removeStyleClass("readonlyField");
                     }
@@ -124,11 +126,11 @@ sap.ui.define([
 
          },
         _toShowModeEachApproval : function(){ 
-            console.log(" Mold RecepitApproval  _toShowModeEachApproval ");
+            // console.log(" Mold RecepitApproval  _toShowModeEachApproval ");
             var oRows = this.byId("moldRecepitTable").getRows();
             oRows.forEach(function(oCell, idx){
                oCell.mAggregations.cells.forEach(function(item, jdx){ 
-                   console.log("item>>> " , item , ">>> jdx " , jdx);
+                   // console.log("item>>> " , item , ">>> jdx " , jdx);
                     if(jdx == 12){
                          item.addStyleClass("readonlyField");
                     }
@@ -143,10 +145,10 @@ sap.ui.define([
          * ,     , oArges : company_code , org_code (필수)
 		 */
         onMoldRecepitAddPress: function (oEvent) {
-            console.log("oEvent>>>>");
+            // console.log("oEvent>>>>");
             var oModel = this.getModel("mdRecepit");
 
-            console.log(" mdRecepit >>>> ", oModel);
+            // console.log(" mdRecepit >>>> ", oModel);
 
             var mIdArr = [];
             if (oModel.oData.MoldRecepit != undefined && oModel.oData.MoldRecepit.length > 0) {
@@ -168,7 +170,7 @@ sap.ui.define([
             var that = this;
 
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
-                console.log("selected data list >>>> ", oDataMold);
+                // console.log("selected data list >>>> ", oDataMold);
                 if (oDataMold.length > 0) {
                     oDataMold.forEach(function (item) {
                         that._addMoldItemTable(item);
@@ -296,7 +298,7 @@ sap.ui.define([
         onPrvClosePress : function(){ 
              if (this._oDialogPrev) {
                 this._oDialogPrev.then(function (oDialog) {
-                    console.log(" oDialog.close >>> ", oDialog.close);
+                    // console.log(" oDialog.close >>> ", oDialog.close);
                     oDialog.close();
                     oDialog.destroy();
                 });
@@ -306,10 +308,10 @@ sap.ui.define([
           //    this.byId("moldRecepitPreview").close();
         },
         onValueHelpRequestedDept : function(mold_id){ 
-            console.log('oEvent>>>> ' , mold_id);
+            // console.log('oEvent>>>> ' , mold_id);
             var that = this;
             this.deptSelection.openDeptSelectionPop(this, function(data){
-                console.log("data " , data[0]);
+                // console.log("data " , data[0]);
                 that.setDept(mold_id, data[0].oData);
             });
         } ,
@@ -317,11 +319,11 @@ sap.ui.define([
             var oModel = this.getModel("mdRecepit").getData();
           
             for(var i = 0 ; i < oModel.MoldRecepit.length ; i++){ 
-                console.log("============= setDept  =============  ");
-                console.log("oModel " , oModel.MoldRecepit[i]);
+                // console.log("============= setDept  =============  ");
+                // console.log("oModel " , oModel.MoldRecepit[i]);
 
                 if(String(oModel.MoldRecepit[i].mold_id) == String(mold_id)){ 
-                    console.log(" =============  " , data);
+                    // console.log(" =============  " , data);
                     oModel.MoldRecepit[i].acq_department_code = data['department_id'];
                     oModel.MoldRecepit[i].acq_department_code_nm =  data['department_local_name'];
                 }

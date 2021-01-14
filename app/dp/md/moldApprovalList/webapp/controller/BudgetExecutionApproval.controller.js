@@ -31,9 +31,9 @@ sap.ui.define([
     var oTransactionManager;
     var oRichTextEditor;
     /**
-     * @Desciption  예산집행품의 
-     * @Date        2021.01.14 
-     * @Author      jinseon.lee 
+     * @desciption  예산집행품의 
+     * @date        2021.01.14 
+     * @author      jinseon.lee 
      */
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.BudgetExecutionApproval", {
 
@@ -79,9 +79,8 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
             this.getView().setModel(new ManagedModel(), "mdCommon"); 
             this.getView().setModel(new ManagedListModel(), "importPlant"); 
-            
-
-            console.log(" this.approval_number "  ,  this.approval_number);
+        
+          //  console.log(" this.approval_number "  ,  this.approval_number);
 
             this._searchImportCompany();
 
@@ -153,7 +152,7 @@ sap.ui.define([
                          new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                        , new Filter("company_code", FilterOperator.NE , this.company_code )
                 ];
-            console.log("nFilter>>>>> " , nFilter);
+           // console.log("nFilter>>>>> " , nFilter);
             var oView = this.getView(),
                 oModel = this.getModel("importCompany");
             oView.setBusy(true);
@@ -161,7 +160,7 @@ sap.ui.define([
             oModel.read("/Company", {
                 filters: nFilter,
                 success: function (oData) {
-                    console.log("Company oData>>> " , oData) 
+                   // console.log("Company oData>>> " , oData) 
                     oView.setBusy(false);
                 }
             });
@@ -205,10 +204,10 @@ sap.ui.define([
          * ,     , oArges : company_code , org_code (필수)
 		 */
         onBudgetExecutionAddPress: function (oEvent) {
-            console.log("oEvent>>>>");
+           // console.log("oEvent>>>>");
             var oModel = this.getModel("mdItemMaster");
 
-            console.log(" mdItemMaster >>>> ", oModel);
+           // console.log(" mdItemMaster >>>> ", oModel);
 
             var mIdArr = [];
             if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
@@ -277,7 +276,7 @@ sap.ui.define([
         onValueHelpRequestedDept : function(){ 
             var that = this;
             this.deptSelection.openDeptSelectionPop(this, function(data){
-                console.log("data " , data[0]);
+              //  console.log("data " , data[0]);
                 that.setDept(data[0].oData);
             });
         } ,
@@ -301,7 +300,7 @@ sap.ui.define([
                 });
                 budgetExecutionTable.clearSelection();
 
-                console.log("detailModel", detailModel);
+               // console.log("detailModel", detailModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -316,7 +315,7 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval : function(){ 
-            console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
+           // console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
 
             this.byId("acquisition_department").removeStyleClass("readonlyField");
             this.byId("accounting_department").removeStyleClass("readonlyField");
@@ -336,7 +335,7 @@ sap.ui.define([
             });
         } ,
         _toShowModeEachApproval : function(){ 
-            console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
+           // console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
 
             this.byId("acquisition_department").addStyleClass("readonlyField");
             this.byId("accounting_department").addStyleClass("readonlyField");
