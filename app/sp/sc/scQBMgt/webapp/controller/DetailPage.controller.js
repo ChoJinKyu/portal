@@ -531,6 +531,8 @@ sap.ui.define([
 
             addLineItemRow: function () {
                 var oTemp = this.getView().getModel("NegoHeaders").getData();
+                
+                // if( oTemp.hasOwnProperty("Items") )
 
                 var oLine = {
                     "tenant_id": oTemp.tenant_id,
