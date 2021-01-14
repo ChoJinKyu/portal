@@ -108,8 +108,9 @@ sap.ui.define([
             _onRouteMatched: function (e) {
 
                 var outcome = e.getParameter("arguments").outcome;
+                console.log("_onRouteMatched " + outcome);
 
-                if( outcome == "0" || outcome == "1" ) {
+                if( outcome == "BPA" || outcome == "Tentative Price" ) {
                     this.getView().getModel("propInfo").setProperty("/outCome","");
                 }else {
 
@@ -155,25 +156,27 @@ sap.ui.define([
 
                         oView.getModel("NegoHeaders").setData(data.value[0]);
 
+                        oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
+                        oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
+
                         oView.getModel("viewModel").updateBindings(true);      
-                        // oView.setModel(v_this.viewModel.NegoHeaders, "NegoHeaders");
-
-                        // oView.getModel("viewModel").refresh();
-                        
-                        // oView.byId("inputNegotiationNo").setValue(data.value[0].nego_document_number);
-
-                        // this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
-                        // this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
-                        // this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
-                        // this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
-                        // this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
-                        // this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
-
-                        // var oVerticalLayout = oView.byId('vLayout');
-                        // oVerticalLayout.bindElement("viewModel>/NegoHeaders");
+ 
                         console.log(oView.getModel("viewModel").getData());
                         console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
                         console.log(data.value[0]);
+
+                        // var oModel = this.getView().getModel("NegoHeaders");//,
+                            // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
+                        if( !data.value[0].hasOwnProperty("Items") ) {
+                            oView.byId("tableLines").setVisibleRowCount( 2 );
+                            
+                        }else {
+                            oView.byId("tableLines").setVisibleRowCountMode("Fixed");
+                            oView.byId("tableLines").setVisibleRowCount( data.value[0].Items.length );
+                        }
+
+                        // this.getView().byId("tableLines").getVisibleRowCount();
+                        
 
                         // data.value[0].Items.lengt
                         // oView.byId("table1")
@@ -208,7 +211,7 @@ sap.ui.define([
             },
             onPageCancelButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", false );
-                this.onNavBack();
+                // this.onNavBack();
             },
             onPageDeleteButtonPress: function() {
                 var oView = this.getView();//.getModel();
@@ -590,6 +593,9 @@ sap.ui.define([
 
                 var oModel = this.getView().getModel("NegoHeaders");//,
                     // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
+                if( !oModel.oData.hasOwnProperty("Items") ) {
+                    oModel.oData.Items = [];
+                }
                 oModel.oData.Items.push(oLine);
                 oModel.refresh();
 

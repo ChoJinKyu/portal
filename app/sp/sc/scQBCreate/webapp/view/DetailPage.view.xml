@@ -189,10 +189,10 @@
                             <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin" >
                                 <Label  text="Description"  class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                 <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
-                                    showGroupFont="true" showGroupLink="true" showGroupInsert="false"
+                                    showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
                                     visible="{=${propInfo>/isEditMode}}" 
                                     />
-                                <FormattedText id="formTextDescription"  visible="{=!${propInfo>/isEditMode}}"/>
+                                <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/>
                                 <!-- nego_document_desc -->
                             </VBox>
 
@@ -229,7 +229,8 @@
                                                     valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
                                                     value="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
                                                             formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
-                                                <Text text="{NegoHeaders>/open_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                <Text text="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                             <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                                             <FlexBox>
@@ -237,20 +238,21 @@
                                                     valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
                                                     value="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
                                                             formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
-                                                <Text text="{NegoHeaders>/closing_date}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                <Text text="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             </FlexBox>
                                         </HBox>
 
                                         <HBox  width="50%" height="100%" alignItems="Center" >
                                             <Label  text="Extension Period" width="130px" class="sapMLabelNoText "/> 
-                                            <Input id="inputEP" value="{NegoHeaders/close_date_ext_enabled_hours}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
-                                            <Text text="{NegoHeaders/close_date_ext_enabled_hours}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                            <Input id="inputEP" value="{NegoHeaders>/close_date_ext_enabled_hours}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
+                                            <Text text="{NegoHeaders>/close_date_ext_enabled_hours}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             <Label  text="Hr"  class="sapUiSmallMarginBegin" />
 
                                             <ToolbarSpacer width="3rem"/> 
                                             <Label  text="Extension Count" width="130px"  class="sapMLabelNoText "/> 
-                                            <Input id="inputEC"  value="{NegoHeaders/close_date_ext_enabled_count}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
-                                            <Text text="{NegoHeaders/close_date_ext_enabled_count}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                            <Input id="inputEC"  value="{NegoHeaders>/close_date_ext_enabled_count}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
+                                            <Text text="{NegoHeaders>/close_date_ext_enabled_count}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                             <Label  text="Times"  class="sapUiSmallMarginBegin"/>   
                                             
                                         </HBox>
@@ -348,16 +350,22 @@
                                             columnsL="2"
                                             columnsXL="4">
                                 <Label  text="Award Type"  class="sapMLabelNoText"/> 
-                                <ComboBox placeholder="Award by Total Amount" selectedKey="{NegoHeaders>/award_type_code}" /> 
-                                <Label  text="Target Total Amount"   class="sapMLabelNoText"/> 
-                                <Input value="{NegoHeaders>/target_amount}"/> 
+                                <ComboBox selectedKey="{NegoHeaders>/award_type_code}" >
+                                    <core:Item key="Award By Lines" text="Award by Lines"/>
+                                    <core:Item key="Award by Total Amount" text="Award by Total Amount"/>
+                                </ComboBox> 
+                                <Label  text="Target Total Amount"  class="sapMLabelNoText" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
+                                <Input value="{NegoHeaders>/target_amount}" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
                                 <Label text="Partial Response" class="sapMLabelNoText"/>
-                                <SegmentedButton id="SegmentButtonUsed" selectedKey="{NegoHeaders>/partial_allow_flag}" class="sapUiSmallMarginEnd"  >
+
+                                <SegmentedButton id="SegmentButtonUsed" 
+                                    selectedKey="{=${NegoHeaders>/award_type_code} !== 'Award by Total Amount' ? false : ${NegoHeaders>/partial_allow_flag} === 'yes' ? true : false }" class="sapUiSmallMarginEnd" 
+                                    enabled="{=${NegoHeaders>/award_type_code} !== 'Award by Total Amount'}" >
                                     <items>
                                         <SegmentedButtonItem key="true" text="Yes"/>
                                         <SegmentedButtonItem key="false" text="No" />
                                     </items>
-                                </SegmentedButton>   
+                                </SegmentedButton>    
                                 
                             </form:SimpleForm>
 

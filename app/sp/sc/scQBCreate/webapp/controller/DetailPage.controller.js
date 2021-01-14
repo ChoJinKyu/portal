@@ -105,7 +105,7 @@ sap.ui.define([
                     'actual_extension_count'        : null,
                     'remaining_hours'               : null,
                     // // 'note_content'                  : "",
-                    'award_type_code'               : "",
+                    'award_type_code'               : "Award By Lines",
                     'target_amount_config_flag'     : "",
                     'target_amount'                 : null,
                     'supplier_participation_flag'   : "",
@@ -120,7 +120,7 @@ sap.ui.define([
                 } );
                 
                 var outcome = e.getParameter("arguments").outcome;
-                if( outcome == "0" || outcome == "1" ) {
+                if( outcome == "BPA" || outcome == "Tentative Price" ) {
                     this.getView().getModel("propInfo").setProperty("/outCome","");
                 }else {
 
@@ -166,7 +166,7 @@ sap.ui.define([
 
                
                 console.log("_onRouteMatched " + this._outcome);
-                
+               console.log(oView.getModel("NegoHeaders").getData()) ;
                
                 
                 
@@ -616,6 +616,9 @@ sap.ui.define([
 
                 var oModel = this.getView().getModel("NegoHeaders");//,
                     // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
+                if( !oModel.oData.hasOwnProperty("Items") ) {
+                    oModel.oData.Items = [];
+                }
                 oModel.oData.Items.push(oLine);
                 oModel.refresh();
 
