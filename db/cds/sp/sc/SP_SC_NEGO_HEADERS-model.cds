@@ -41,7 +41,8 @@ entity Sc_Nego_Headers {
         //    reference_closing_date : Date   @title: '참조마감일자' ;
         //    cancel_date : Date   @title: '취소일자' ;
         auto_rfq                        : String(1)          @title : 'Auto RFQ';
-        itesm_count                     : Integer            @title : '품목수';
+        items_count                     : Integer            @title : '품목수';
+        itesm_count                     : Integer            @title : '품목수-삭제예정';
         negotiation_style_code          : String(30)         @title : '협상스타일코드';
         //    by_step_bidding_flag : String(1)   @title: '단계별입찰여부' ;
         //    round_bidding_flag : String(1)   @title: '회차입찰여부' ;
