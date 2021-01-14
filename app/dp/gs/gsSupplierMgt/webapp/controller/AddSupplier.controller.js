@@ -326,43 +326,13 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-            // this.onPageNavBackButtonPress();
-			// if(this.getModel("addSupplierView").getProperty("/isAddedMode") == true){
-			// 	this.onPageNavBackButtonPress.call(this);
-			// }else{
-			// 	this._toShowMode();
-            // }
-            // var oView = this.getView();
-            // var sTenantId = this._sTenantId;
-            // if (sTenantId === "new"){
-            //     this.onPageNavBackButtonPress();
-            // }else if (sTenantId !== "new"){
-                
-            //     this.getModel("addSupplierView").setProperty("/isAddedMode", false);                
-            //     this._bindView("/Uom(tenant_id='" + this._sTenantId + "',uom_code='" + this._sSsn + "')");
-			// 	oView.setBusy(true);
-			// 	var oDetailsModel = this.getModel("SupplierFin");
-			// 	oDetailsModel.setTransactionModel(this.getModel());				
-            //     oDetailsModel.read("/UomLng", {
-			// 		filters: [
-			// 			new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-			// 			new Filter("uom_code", FilterOperator.EQ, this._sSsn),
-			// 		],
-			// 		success: function(oData){
-			// 			oView.setBusy(false);
-			// 		}
-			// 	});
-            //     this._toShowMode();
-            // }
-            // this.validator.clearValueState(this.byId("midObjectForm1Edit"));
-            // this.validator.clearValueState(this.byId("midTable"));
+            
             var oView = this.getView();
             var sMode = this._sMode;
             if (sMode === "edit"){
                 this.onPageNavBackButtonPress();
-            }else if (sMode !== "edit"){
-                
-                // this.getModel("midObjectView").setProperty("/isAddedMode", false);
+            }else if (sMode !== "edit"){                
+               
                 this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
 				oView.setBusy(true);
                 var oDetailsModel = this.getModel("SupplierFin");
@@ -429,53 +399,7 @@ sap.ui.define([
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
             this._sSsn = oArgs.ssn;
-            this._sMode = oArgs.mode;            
-            
-			// if(oArgs.tenantId == "new" && oArgs.uomCode == "code"){
-			// 	//It comes Add button pressed from the before page.
-			// 	this.getModel("addSupplierView").setProperty("/isAddedMode", true);
-
-			// 	var oMasterModel = this.getModel("SupplierGen");
-			// 	oMasterModel.setData({
-            //         "tenant_id": "L2600",
-            //         "sourcing_supplier_nickname": "",
-            //         "base_unit_flag": false					
-			// 	}, "/Uom");
-			// 	var oDetailsModel = this.getModel("SupplierFin");
-			// 	oDetailsModel.setTransactionModel(this.getModel());
-			// 	oDetailsModel.setData([], "/UomLng");
-			// 	oDetailsModel.addRecord({
-			// 		"tenant_id": this._sTenantId,
-			// 		"uom_code": this._sSsn,
-			// 		"language_code": "",
-			// 		"commercial_uom_code": "",
-            //         "technical_uom_code": "",
-            //         "commercial_uom_name": "",
-            //         "technical_uom_name": "",
-            //         "uom_desc": ""					
-			// 	}, "/UomLng");
-			// 	this._toEditMode();
-			// }else{
-			// 	this.getModel("addSupplierView").setProperty("/isAddedMode", false);
-
-			// 	this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
-			// 	oView.setBusy(true);
-			// 	var oDetailsModel = this.getModel("SupplierFin");
-			// 	oDetailsModel.setTransactionModel(this.getModel());
-			// 	oDetailsModel.read("/SupplierFin", {
-			// 		filters: [
-			// 			new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-			// 			new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
-			// 		],
-			// 		success: function(oData){
-			// 			oView.setBusy(false);
-			// 		}
-			// 	});
-			// 	this._toShowMode();
-            // }
-            
-            // this.getModel("addSupplierView").setProperty("/isAddedMode", false);
-
+            this._sMode = oArgs.mode;
             this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
             
             var oDetailsModel = this.getModel("SupplierFin");
@@ -869,20 +793,5 @@ sap.ui.define([
 				hasGrouping: true
 			}).activate();
         }
-        
-        // onMidTableFilterPress: function() {
-        //     this._MidTableApplyFilter();
-        // },
-
-        // _MidTableApplyFilter: function() {
-
-        //     var oView = this.getView(),
-		// 		sValue = oView.byId("midTableSearchField").getValue(),
-		// 		oFilter = new Filter("uom_name", FilterOperator.Contains, sValue);
-
-		// 	oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
-
-        // }
-
-	});
+    });
 });
