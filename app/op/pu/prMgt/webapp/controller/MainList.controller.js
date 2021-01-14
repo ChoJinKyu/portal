@@ -4,6 +4,7 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
+    "cm/util/control/ui/EmployeeDialog",    
     "ext/lib/util/Validator",
     "sap/m/TablePersoController",
     "./MainListPersoService",
@@ -13,7 +14,7 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
     "ext/lib/util/ExcelUtil"
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, Validator,
+], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, EmployeeDialog, Validator,
     TablePersoController, MainListPersoService,
     Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil) {
     "use strict";
@@ -166,7 +167,6 @@ sap.ui.define([
             } else {
                 MessageBox.error("선택된 임시저장 요청이 없습니다.");
             }
-
         },
 
 
@@ -526,6 +526,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
+            var that = this;
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -534,6 +535,8 @@ sap.ui.define([
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
+                    // 조회 버튼 클릭시 체크박스 초기화..
+                    that.byId("mainTable").removeSelections();
                 }
             });
 
@@ -550,7 +553,9 @@ sap.ui.define([
             var sPrNumber = this.getView().byId("searchPrNumber").getValue();
             var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
             var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
-            var sRequestor = this.getView().byId("searchRequestorS").getValue();
+
+            var sRequestor = this.getView().byId("multiInputWithEmployeeValueHelp").getTokens();
+
             var sPr_desc = this.getView().byId("searchPr_desc").getValue();
             var _tempFilters = [];
 
@@ -642,9 +647,13 @@ sap.ui.define([
                 );
             }
 
-            if (sRequestor) {
+            if (sRequestor.length > 0) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestor));
+
+                sRequestor.forEach(function (item) {
+                    _tempFilters.push(new Filter("requestor_empno", FilterOperator.EQ, item.getkey()));
+                });
+
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,
@@ -666,6 +675,32 @@ sap.ui.define([
             
             return aSearchFilters;
         },
+        onInputWithEmployeeValuePress: function(){
+            this.byId("employeeDialog").open();
+        },
+
+        onEmployeeDialogApplyPress: function(oEvent){
+            this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
+        },
+        
+         onMultiInputWithEmployeeValuePress: function(){
+            if(!this.oEmployeeMultiSelectionValueHelp){
+                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                    title: "Choose Employees",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
+        },
         getFormatDate: function (date) {
             var year = date.getFullYear();              //yyyy
             var month = (1 + date.getMonth());          //M
@@ -684,6 +719,8 @@ sap.ui.define([
                 hasGrouping: true
             }).activate();
         }
+
+        
 
 
     });

@@ -6,6 +6,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:cm-ui="cm.util.control.ui"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -116,23 +117,12 @@
                                             additionalText="{pr_template_number}" />
                                     </items>
                                 </MultiComboBox>
-                                <Label text="{I18N>/REQUESTOR_NAME}" labelFor="searchRequestorS"></Label>
+                                <Label text="{I18N>/REQUESTOR_NAME}" labelFor="multiInputWithEmployeeValueHelp"></Label>
                                 <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
-                                <lib-m:CodePicker id="searchRequestorS"
-                                    placeholder="Enter a Employee name"
-                                    keyField="employee_number"
-                                    textField="user_local_name"
-                                    suggestionItems="{
-                                        path: '/',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                        ],
-                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                        entityName: 'Employee'
-                                    }">
-                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                                </lib-m:CodePicker>    
+                                <MultiInput id="multiInputWithEmployeeValueHelp"
+                                    placeholder="Choose employees from the ValueHelp"
+                                    showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
+                                </MultiInput>    
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
