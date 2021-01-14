@@ -8,7 +8,7 @@ service TmpMgrService {
     entity prjt as projection on TMP_PRJT.prjt;
 
     type SampleType{
-        result : String(2000);
+        result : LargeString;
     };
     
     action SampleLogicTransition(TENANT_ID : String) returns SampleType;
