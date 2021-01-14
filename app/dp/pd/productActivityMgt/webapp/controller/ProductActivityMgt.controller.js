@@ -41,18 +41,20 @@ sap.ui.define([
             org_code: new String,
 
             onInit: function () {
+                
+                //로그인 세션 작업완료시 수정
+                this.loginUserId = "TestUser";
+                this.tenant_id = "L2100";
+                this.company_code = "*";
+                this.org_type_code = "BU";
+                this.org_code = "BIZ00000";
+                
                 var oMultilingual = new Multilingual();
                 this.setModel(oMultilingual.getModel(), "I18N");
                 this.getView().setModel(new ManagedListModel(), "list");
                 this.setModel(new ManagedListModel(), "orgMap");
                 this.rowIndex = 0;
                 this._doInitSearch();
-                //로그인 세션 작업완료시 수정
-                this.loginUserId = "TestUser";
-                this.tenant_id = "L2100";
-                this.company_code = "*";
-                this.org_type_code = "BU";
-                this.org_code = "L110010000";
                 oMultilingual.attachEvent("ready", function (oEvent) {
                     var oi18nModel = oEvent.getParameter("model");
                     this.addHistoryEntry({
@@ -94,6 +96,8 @@ sap.ui.define([
 
                 //접속자 법인 사업본부로 바꿔줘야함 로그인 세션이 공통에서 작업되면 작업해줘야 함
                 //this.getView().byId("searchPdOperationOrg").setSelectedKeys(['L110010000']);
+                console.log(this.org_code);
+                this.getView().byId("searchPdOperationOrg").setSelectedKey(this.org_code);
             },
 
             onMainTablePersoButtonPressed: function () {
@@ -120,27 +124,27 @@ sap.ui.define([
                     filters: aSearchFilters,
                     success: function () {
                         for (var i = 0; i < oTable.getItems().length; i++) {
-                            oTable.getAggregation('items')[i].getCells()[1].getItems()[2].setValue(oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue());
+                            oTable.getAggregation('items')[i].getCells()[2].getItems()[2].setValue(oTable.getAggregation('items')[i].getCells()[2].getItems()[1].getValue());
 
-                            if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
-                                oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("Yes");
-                            }else{
-                                oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("No");
-                            }
                             if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
-                                oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Active");
+                                oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Yes");
                             }else{
-                                oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Inactive");
+                                oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("No");
+                            }
+                            if (oTable.getAggregation('items')[i].getCells()[6].getItems()[2].getPressed()) {
+                                oTable.getAggregation('items')[i].getCells()[6].getItems()[2].setText("Active");
+                            }else{
+                                oTable.getAggregation('items')[i].getCells()[6].getItems()[2].setText("Inactive");
                             }
                             
-                            oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                            oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                             oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                             oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                             oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
                             oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
-                            oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
+                            oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
+                            oTable.getAggregation('items')[i].getCells()[4].getItems()[1].setVisible(false);
                             oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
+                            oTable.getAggregation('items')[i].getCells()[6].getItems()[2].setEnabled(false);
 
                             oModel.oData.PdProdActivityTemplate[i]._row_state_ = "";
                         }
@@ -173,15 +177,15 @@ sap.ui.define([
                 }).bind(this), 1100);
                 
                 for (var i = 0; i < oTable.getItems().length; i++) {
-                    if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
-                        oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("Yes");
-                    }else{
-                        oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setText("No");
-                    }
                     if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
-                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Active");
+                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Yes");
                     }else{
-                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("Inactive");
+                        oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setText("No");
+                    }
+                    if (oTable.getAggregation('items')[i].getCells()[6].getItems()[2].getPressed()) {
+                        oTable.getAggregation('items')[i].getCells()[6].getItems()[2].setText("Active");
+                    }else{
+                        oTable.getAggregation('items')[i].getCells()[6].getItems()[2].setText("Inactive");
                     }
                     
                 }
@@ -193,8 +197,14 @@ sap.ui.define([
 
             _getSearchStates: function () {
                 var status = this.getView().byId("searchStatusButton").getSelectedKey();
-                var aCompany = this.getView().byId("searchPdOperationOrg").getSelectedKeys();
+                //var aCompany = this.getView().byId("searchPdOperationOrg").getSelectedKeys();
+                var aCompany = this.getView().byId("searchPdOperationOrg").getSelectedKey();
                 var aSearchFilters = [];
+
+                //일반콤보
+                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, aCompany));
+
+                /*   //멀티
                 if (aCompany.length > 0) {
                     var _tempFilters = [];
                     aCompany.forEach(function (item) {
@@ -207,6 +217,7 @@ sap.ui.define([
                         })
                     );
                 }
+                */
                 if (status != "all") {
                     aSearchFilters.push(new Filter("active_flag", FilterOperator.EQ, status));
                 }
@@ -232,12 +243,12 @@ sap.ui.define([
                         onClose: (function (sButton) {
                             if (sButton === MessageBox.Action.OK) {
                                 var rowIndex = this.rowIndex;
-                                oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
-                                oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
                                 oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
                                 oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
                                 oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
                                 oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
+                                oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[0].setVisible(true);
+                                oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[1].setVisible(false);
                                 this.onSearch();
                                 
                                 this.byId("buttonMainCancelRow").setEnabled(false);
@@ -249,12 +260,12 @@ sap.ui.define([
                     })
                 }else{
                     var rowIndex = this.rowIndex;
-                    oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
-                    oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
+                    oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[1].setVisible(false);
                     this.byId("buttonMainCancelRow").setEnabled(false);
                     this.byId("buttonMainDeleteRow").setEnabled(false);
                     this.byId("buttonSaveProc").setEnabled(false);
@@ -271,12 +282,12 @@ sap.ui.define([
                 //this.byId("buttonMainAddRow").setEnabled(false);
                 //this.byId("buttonMainEditRow").setEnabled(false);
                 this.byId("buttonMainCancelRow").setEnabled(true);
-                oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
-                oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(true);
                 oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(false);
                 oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(true);
                 oTable.getAggregation('items')[idx].getCells()[3].getItems()[0].setVisible(false);
                 oTable.getAggregation('items')[idx].getCells()[3].getItems()[1].setVisible(true);
+                oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(false);
+                oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(true);
             },
 
 
@@ -285,11 +296,12 @@ sap.ui.define([
                 //tableId modelName EntityName tenant_id
                 var oTable = this.byId("mainTable"), //mainTable
                     oModel = this.getView().getModel("list"); //list
+
                 oModel.addRecord({
                     "tenant_id": this.tenant_id,
                     "company_code": this.company_code,
                     "org_type_code": this.org_type_code,
-                    "org_code": this.org_code,
+                    "org_code": this.getView().byId("searchPdOperationOrg").getSelectedKey(),
                     "product_activity_code": null,
                     "develope_event_code": null,
                     "sequence": "1",
@@ -309,16 +321,16 @@ sap.ui.define([
                 this.byId("buttonMainCancelRow").setEnabled(true);
                 this.byId("buttonMainDeleteRow").setEnabled(true);
                 this.byId("buttonSaveProc").setEnabled(true);
-                oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-                oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
                 oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
                 oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
                 oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
                 oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(true);
-                oTable.getAggregation('items')[0].getCells()[4].getItems()[2].setEnabled(true);
+                oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
+                oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
                 oTable.getAggregation('items')[0].getCells()[5].getItems()[2].setEnabled(true);
-                oTable.getAggregation('items')[0].getCells()[4].getItems()[2].setText("No");
-                oTable.getAggregation('items')[0].getCells()[5].getItems()[2].setText("Inactive");
+                oTable.getAggregation('items')[0].getCells()[6].getItems()[2].setEnabled(true);
+                oTable.getAggregation('items')[0].getCells()[5].getItems()[2].setText("No");
+                oTable.getAggregation('items')[0].getCells()[6].getItems()[2].setText("Inactive");
 
                 
 
@@ -354,20 +366,20 @@ sap.ui.define([
                     for (var i = 0; i < oTable.getItems().length; i++) {
                         if( oData.PdProdActivityTemplate[i]._row_state_ != null && oData.PdProdActivityTemplate[i]._row_state_ != "" ){
                             var activeFlg = "false";
-                            if (oTable.getAggregation('items')[i].getCells()[4].getItems()[2].getPressed()) {
+                            if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
                                 activeFlg = "true";
                             }else {
                                 activeFlg = "false";
                             }
                             var milestoneFlg = "false";
-                            if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
+                            if (oTable.getAggregation('items')[i].getCells()[6].getItems()[2].getPressed()) {
                                 milestoneFlg = "true";
                             }else {
                                 milestoneFlg = "false";
                             }
-                            var pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[2].getValue();
+                            var pacOri = oTable.getAggregation('items')[i].getCells()[2].getItems()[2].getValue();
                             if(oData.PdProdActivityTemplate[i]._row_state_  == "C"){
-                                pacOri = oTable.getAggregation('items')[i].getCells()[1].getItems()[1].getValue();
+                                pacOri = oTable.getAggregation('items')[i].getCells()[2].getItems()[1].getValue();
                             }
                             var seq = oData.PdProdActivityTemplate[i].sequence;
                             if(oData.PdProdActivityTemplate[i]._row_state_ == "C"){
@@ -415,7 +427,7 @@ sap.ui.define([
                                     if(rst.value[0].return_code =="OK"){
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else{
-                                        sap.m.MessageToast.show( rst.value[0].return_msg );
+                                        sap.m.MessageToast.show( "error : "+rst.value[0].return_msg );
                                     }
                                 },
                                 error: function () {
@@ -441,14 +453,14 @@ sap.ui.define([
                     aIndices = [];
 
                 for (var i = 0; i < oTable.getItems().length-1; i++) {
-                    oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                    oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
                     oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
-                    oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
+                    oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
+                    oTable.getAggregation('items')[i].getCells()[4].getItems()[1].setVisible(false);
                     oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
+                    oTable.getAggregation('items')[i].getCells()[6].getItems()[2].setEnabled(false);
                 }
 
                 aItems.forEach(function (oItem) {
@@ -459,7 +471,7 @@ sap.ui.define([
                     oModel.markRemoved(nIndex);
                 });
                 oTable.removeSelections(true);
-                //this.byId("searchLanguageE").setSelectedKey(oTable.getItems()[0].getCells()[1].getSelectedKey());
+                //this.byId("searchLanguageE").setSelectedKey(oTable.getItems()[0].getCells()[2].getSelectedKey());
                 oTable.setSelectedItem(aItems);
 
             },
@@ -506,15 +518,15 @@ sap.ui.define([
                 for (var i = 0; i < oTable.getItems().length; i++) {
                     if(oTable.getAggregation('items')[i] !=null && oTable.getAggregation('items')[i].getCells()!=undefined){
 
-                        oTable.getAggregation('items')[i].getCells()[1].getItems()[0].setVisible(true);
-                        oTable.getAggregation('items')[i].getCells()[1].getItems()[1].setVisible(false);
                         oTable.getAggregation('items')[i].getCells()[2].getItems()[0].setVisible(true);
                         oTable.getAggregation('items')[i].getCells()[2].getItems()[1].setVisible(false);
                         oTable.getAggregation('items')[i].getCells()[3].getItems()[0].setVisible(true);
                         oTable.getAggregation('items')[i].getCells()[3].getItems()[1].setVisible(false);
-                        //oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
-                        oTable.getAggregation('items')[i].getCells()[4].getItems()[2].setEnabled(false);
+                        oTable.getAggregation('items')[i].getCells()[4].getItems()[0].setVisible(true);
+                        oTable.getAggregation('items')[i].getCells()[4].getItems()[1].setVisible(false);
+                        //oTable.getAggregation('items')[i].getCells()[5].getItems()[0].setVisible(true);
                         oTable.getAggregation('items')[i].getCells()[5].getItems()[2].setEnabled(false);
+                        oTable.getAggregation('items')[i].getCells()[6].getItems()[2].setEnabled(false);
                     }
                 }
                 if (oItem != null && oItem != undefined) {
@@ -523,14 +535,14 @@ sap.ui.define([
                         idxs[k] = oTable.getSelectedContextPaths()[k].split("/")[2];
                         if(oTable.getAggregation('items')[idxs[k]] !=null && oTable.getAggregation('items')[idxs[k]].getCells()!=undefined){
 
-                            oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[0].setVisible(false);
-                            oTable.getAggregation('items')[idxs[k]].getCells()[1].getItems()[1].setVisible(true);
                             oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[0].setVisible(false);
                             oTable.getAggregation('items')[idxs[k]].getCells()[2].getItems()[1].setVisible(true);
                             oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[0].setVisible(false);
                             oTable.getAggregation('items')[idxs[k]].getCells()[3].getItems()[1].setVisible(true);
-                            oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[2].setEnabled(true);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[0].setVisible(false);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[4].getItems()[1].setVisible(true);
                             oTable.getAggregation('items')[idxs[k]].getCells()[5].getItems()[2].setEnabled(true);
+                            oTable.getAggregation('items')[idxs[k]].getCells()[6].getItems()[2].setEnabled(true);
                         }
                     }
                     this.byId("buttonMainCancelRow").setEnabled(true);
@@ -538,10 +550,26 @@ sap.ui.define([
                     this.byId("buttonSaveProc").setEnabled(true);
                     this.byId("gTableExportButton").setEnabled(false);
                 }else{
-                    this.byId("buttonMainCancelRow").setEnabled(false);
-                    this.byId("buttonMainDeleteRow").setEnabled(false);
-                    this.byId("buttonSaveProc").setEnabled(false);
-                    this.byId("gTableExportButton").setEnabled(true);
+                    
+                    var oModel2 = this.getView().getModel("list");
+                    var oData = oModel2.oData;
+                    var cnt = 0;
+                    for (var i = 0; i < oTable.getItems().length; i++) {
+                        if( oData.PdProdActivityTemplate[i]._row_state_ != null && oData.PdProdActivityTemplate[i]._row_state_ != "" ){
+                            cnt++;
+                        }
+                    }
+                    if(cnt > 0 ){
+                        this.byId("buttonMainCancelRow").setEnabled(true);
+                        this.byId("buttonMainDeleteRow").setEnabled(false);
+                        this.byId("buttonSaveProc").setEnabled(true);
+                        this.byId("gTableExportButton").setEnabled(false);
+                    }else{
+                        this.byId("buttonMainCancelRow").setEnabled(false);
+                        this.byId("buttonMainDeleteRow").setEnabled(false);
+                        this.byId("buttonSaveProc").setEnabled(false);
+                        this.byId("gTableExportButton").setEnabled(true);
+                    }
                     
 
                 }

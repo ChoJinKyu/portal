@@ -26,8 +26,18 @@
                 <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/BUSINESS_UNIT}: " labelFor="searchPdOperationOrg"></Label>
-                            <MultiComboBox id="searchPdOperationOrg" width="100%" items="{
+                            <Label text="{I18N>/BUSINESS_UNIT}: " labelFor="searchPdOperationOrg" required="true"></Label>
+                            
+                            
+                            <ComboBox id="searchPdOperationOrg" width="100%"  
+                                items="{
+                                    path: '/PdOperationOrg',
+                                    sorter: { path: 'operation_org_code' }
+                                }">
+                                <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                            </ComboBox>
+                            <!--
+                            <MultiComboBox id="searchPdOperationOrg" width="100%"  required="true" items="{
                                 path: '/PdOperationOrg',
                                 filters: [],
                                 sorter: { path: 'operation_org_code'}
@@ -36,6 +46,7 @@
                                     <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
                                 </items>
                             </MultiComboBox>
+                            -->
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -82,10 +93,8 @@
                             <Title id="mainTableTitle" text=" " level="H2"/>
                             <ToolbarSpacer/>
                             <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/>
-                            <!--Button text="Edit" id="buttonMainEditRow" press=".onSelectRow('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/-->
-                            <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onCancel"  type="Transparent" enabled="false"/>
                             <Button text="{I18N>/DELETE}" id="buttonMainDeleteRow" press=".onDelete"   type="Transparent" enabled="true" />
-                            <!--<Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/-->
+                            <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onCancel"  type="Transparent" enabled="false"/>
                             <Button text="{I18N>/SAVE}" id="buttonSaveProc" press=".onSave"   type="Emphasized"/>
                             <ToolbarSeparator/>
                             <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
@@ -99,6 +108,9 @@
 
                     <columns>
                         <Column id="stat" minScreenWidth="Tablet" hAlign="Left" width="1.5rem"/>
+                        <Column id="orgCode" minScreenWidth="Tablet" hAlign="Left" >
+                            <Text text="{I18N>/ORG_CODE}" />
+                        </Column>
                         <Column id="productActivityCode" minScreenWidth="Tablet" hAlign="Left" >
                             <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/CODE}" />
                         </Column>
@@ -131,6 +143,9 @@
                                         path: 'list>_row_state_',
                                         formatter: '.formatter.toModelStateColumnIcon'
                                     }" />
+                                </HBox>
+                                <HBox>
+                                    <Text text="{list>org_code}" ></Text>
                                 </HBox>
                                 <HBox>
                                     <Text text="{list>product_activity_code}" ></Text>
