@@ -317,7 +317,7 @@ sap.ui.define([
         _toEditModeEachApproval: function () {
             // console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
 
-            this.byId("acquisition_department").removeStyleClass("readonlyField");
+          /*  this.byId("acquisition_department").removeStyleClass("readonlyField");
             this.byId("accounting_department").removeStyleClass("readonlyField");
             this.byId("importCompany").removeStyleClass("readonlyField");
             this.byId("projectCode").removeStyleClass("readonlyField");
@@ -332,11 +332,11 @@ sap.ui.define([
                         item.removeStyleClass("readonlyField");
                     }
                 });
-            });
+            }); */ 
         },
         _toShowModeEachApproval: function () {
             // console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
-
+            /* 
             this.byId("acquisition_department").addStyleClass("readonlyField");
             this.byId("accounting_department").addStyleClass("readonlyField");
             this.byId("importCompany").addStyleClass("readonlyField");
@@ -353,6 +353,7 @@ sap.ui.define([
                     }
                 });
             });
+            */ 
         },
 
         /**

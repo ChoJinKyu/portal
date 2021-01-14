@@ -183,7 +183,7 @@
                     <!-- view Mode -->
                     <ComboBox 
                               editable="false" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               width="100%"  
                               selectedKey="{mdCommon>/accounting_department_code}" 
                               items="{}">
@@ -197,7 +197,7 @@
 					<Label text="{path:'I18N>/IMPORT_COMPANY', formatter:'I18NFormatter'}"/>
                     <!-- view Mode -->
                   	<ComboBox  editable="false" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               width="100%" 
                               selectionChange=".onBCompanyChange"
                               selectedKey="{mdCommon>/import_company_code}" 
@@ -219,7 +219,7 @@
 					<Label text="{I18N>/PROJECT_CODE}" required="true"/> 
                     <!-- view Mode -->
                     <ComboBox editable="false" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               width="100%" 
                              
                               selectedKey="{mdCommon>/project_code}" 
@@ -235,7 +235,7 @@
                      <!-- view Mode -->
                    <ComboBox width="100%" 
                               editable="false" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
@@ -250,7 +250,7 @@
 				<VBox height="6em">
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
                     <ComboBox editable="false" 
-                              class="readonlyField"  
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"  
                               width="100%" 
                               required="true"
                               selectedKey="{mdCommon>/account_code}" 
@@ -356,7 +356,7 @@
 							<Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
                                 <ComboBox editable="false"  
-                                        class="readonlyField" 
+                                        class="{=${mode>/editFlag}?'':'readonlyField'}" 
                                         selectedKey="{mdItemMaster>mold_production_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
@@ -373,7 +373,7 @@
 							<table:template>
 								<ComboBox  editable="false" 
                                         selectedKey="{mdItemMaster>mold_item_type_code}" 
-                                        class="readonlyField"
+                                        class="{=${mode>/editFlag}?'':'readonlyField'}"
                                         items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
@@ -401,7 +401,7 @@
 							<table:template>
                                 <ComboBox 
                                         editable="false" 
-                                        class="readonlyField"
+                                        class="{=${mode>/editFlag}?'':'readonlyField'}"
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [

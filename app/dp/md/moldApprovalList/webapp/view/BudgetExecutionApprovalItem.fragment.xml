@@ -58,7 +58,7 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
                     <!-- edit Mode -->
-					<Input id="acquisition_department" value="{mdCommon>/acq_department_code_nm}" class="readonlyField" 
+					<Input id="acquisition_department" value="{mdCommon>/acq_department_code_nm}" class="{=${mode>/editFlag}?'':'readonlyField'}" 
                         editable="{mode>/editFlag}" 
                         showValueHelp="true" valueHelpRequest=".onValueHelpRequestedDept" />
 					<layoutData>
@@ -70,7 +70,7 @@
                     <!-- edit Mode -->
 					<ComboBox id="accounting_department"
                               editable="{mode>/editFlag}" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               width="100%"  
                               selectedKey="{mdCommon>/accounting_department_code}" 
                               items="{}">
@@ -84,7 +84,7 @@
 					<Label text="{path:'I18N>/IMPORT_COMPANY', formatter:'I18NFormatter'}"/>
                     <!-- edit Mode -->
 					<ComboBox  editable="{mode>/editFlag}" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               width="100%" 
                               id="importCompany" 
                               selectionChange=".onBCompanyChange"
@@ -108,7 +108,7 @@
 					<Label text="{I18N>/PROJECT_CODE}" required="true"/> 
                     <!-- edit Mode -->
 					<ComboBox editable="{mode>/editFlag}" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               width="100%" 
                               id="projectCode" 
                               selectedKey="{mdCommon>/project_code}" 
@@ -124,7 +124,7 @@
 					<Label text="{path:'I18N>/IMPORT_PLANT', formatter:'I18NFormatter'}" />
 					<ComboBox width="100%" 
                               editable="{mode>/editFlag}" 
-                              class="readonlyField"
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"
                               id="importPlant" 
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
@@ -140,7 +140,7 @@
 				<VBox  height="6em">
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
 					<ComboBox editable="{mode>/editFlag}" 
-                              class="readonlyField"  
+                              class="{=${mode>/editFlag}?'':'readonlyField'}"  
                               width="100%" 
                               id="account" 
                               required="true"
@@ -258,7 +258,7 @@
 							<Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<ComboBox id="b_mold_production_type_code" 
-                                        class="readonlyField"
+                                        class="{=${mode>/editFlag}?'':'readonlyField'}"
                                         editable="{mode>/editFlag}"
                                         selectedKey="{mdItemMaster>mold_production_type_code}" 
                                         items="{ path : 'util>/Code',
@@ -278,7 +278,7 @@
 								<ComboBox  id="b_mold_item_type_code"
                                         editable="{mode>/editFlag}" 
                                         selectedKey="{mdItemMaster>mold_item_type_code}" 
-                                        class="readonlyField"
+                                        class="{=${mode>/editFlag}?'':'readonlyField'}"
                                         items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
@@ -299,7 +299,7 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
-								<Input id="b_provisional_budget_amount" class="readonlyField" required="true" textAlign="Right" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input id="b_provisional_budget_amount" class="{=${mode>/editFlag}?'':'readonlyField'}" required="true" textAlign="Right" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
@@ -308,7 +308,7 @@
 								<ComboBox id="b_asset_type_code" 
                                         required="true" 
                                         editable="{mode>/editFlag}" 
-                                        class="readonlyField"
+                                        class="{=${mode>/editFlag}?'':'readonlyField'}"
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [

@@ -128,7 +128,7 @@
                                 <Input 
                                    id="acq_department_code" 
                                     editable="{mode>/editFlag}" 
-                                    class="readonlyField"
+                                    class="{=${mode>/editFlag}?'':'readonlyField'}"
                                     showValueHelp="true" 
                                     valueHelpOnly="true"
                                     value="{mdRecepit>acq_department_code_nm}"
