@@ -34,6 +34,7 @@ entity Md_Vp_Mapping_Item_View( language_code: String )  {
 		hierarchy_is_cycle				: Integer64		@title : '순환구조여부(0:false,	1:true)';
 		hierarchy_is_orphan				: Integer64		@title : '전개후 연결이	끊어진 노드여부(0:false, 1:true)';
 		confirmed_status_code			: String(3)		@title : '확정상태코드';
+		max_mapping_cnt	                : Integer64		@title : '협력사전체Mapping최대Count';
 		vendor_pool_item_mapping_cnt	: Integer64		@title : '협력사Item매핑총Count';
 
 		spmd_attr_info_001 : String(1000) @title : 'spmd_attr_info_001';
