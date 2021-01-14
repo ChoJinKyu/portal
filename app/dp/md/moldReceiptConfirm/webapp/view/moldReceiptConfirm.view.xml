@@ -97,7 +97,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateS"></Label>
-                                <DateRangeSelection id="searchCreationDateS" enabled="false" width="100%" change="creationDateChange"/>
+                                <DateRangeSelection id="searchCreationDateS" enabled="false" width="100%" change="creationDateChange"  displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -193,7 +193,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateE"></Label>
-                                    <DateRangeSelection id="searchCreationDateE" enabled="false" width="100%" change="creationDateChange"/>
+                                    <DateRangeSelection id="searchCreationDateE" enabled="false" width="100%" change="creationDateChange"  displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -368,13 +368,13 @@
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldModelColumn" width="15em"  hAlign="Center">
+                    <table:Column id="moldModelColumn" width="9em"  hAlign="Center">
                         <Label text="{I18N>/MODEL}"/>
                         <table:template >
-                            <Text id="model" text="{list>model}" textAlign="Left"/>
+                            <Text id="model" text="{list>model}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldNoColumn" width="8em" hAlign="Center">
+                    <table:Column id="moldMoldNoColumn" width="11em" hAlign="Center">
                         <Label text="Mold No" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>
@@ -386,13 +386,13 @@
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldDescriptionColumn" width="12em">
+                    <table:Column id="moldDescriptionColumn" width="8em">
                         <Label text="{I18N>/DESCRIPTION}"/>
                         <table:template>
                             <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldStatusColumn" width="13em" hAlign="Center">
+                    <table:Column id="moldStatusColumn" width="8em" hAlign="Center">
                         <Label text="{I18N>/STATUS}"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
@@ -515,7 +515,7 @@
                         <table:template>
                             <!-- <Text text="{path: 'list>receipt_confirmed_date',
                                   formatter: '.dateFormatter.toDateString'}"/> -->
-                            <DatePicker value="{list>receipt_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false"/>
+                            <DatePicker value="{list>receipt_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                         </table:template>
                     </table:Column>
 
