@@ -225,8 +225,6 @@ sap.ui.define([
             oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[6].getItems()[0].setVisible(false);
             oTable.getAggregation('items')[0].getCells()[6].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[7].getItems()[0].setEnabled(false);
-            oTable.getAggregation('items')[0].getCells()[8].getItems()[0].setEnabled(false);
 
             oTable.setSelectedItem(oTable.getAggregation('items')[0]);
             this.validator.clearValueState(this.byId("mainTable"));
@@ -372,7 +370,7 @@ sap.ui.define([
                         var url = "dp/pd/activityMapping/webapp/srv-api/odata/v4/dp.ActivityMappingV4Service/PdActivityMappingSaveProc";
                     }
                 }
-
+                
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                     title: this.getModel("I18N").getText("/SAVE"),
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -388,7 +386,7 @@ sap.ui.define([
                                 if(data.value[0].return_code =="OK"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                 }else{
-                                    sap.m.MessageToast.show(data.value[0].return_msg );
+                                    sap.m.MessageToast.show(data.value[0].return_msg);
                                 }
                             },
                             error: function (e) {

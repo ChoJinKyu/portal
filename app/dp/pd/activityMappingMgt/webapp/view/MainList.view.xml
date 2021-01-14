@@ -144,10 +144,7 @@
                         <cells>
                             <HBox>
                                 <!-- <ObjectStatus icon="sap-icon://document" text="State" visible="false" /> -->
-                                <ObjectStatus icon="{
-                                    path: 'list>_row_state_',
-                                    formatter: '.formatter.toModelStateColumnIcon'
-                                }" />
+                                <ObjectStatus icon="{path: 'list>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}" />
                             </HBox>
                             <HBox>
                                 <Text text="{list>org_code}" visible="true" />
@@ -162,7 +159,7 @@
                             </HBox>
                             <HBox>
                                 <Text text="{list>activity_dependency_name}" visible="true" />
-                                <ComboBox  visible="false"
+                                <ComboBox visible="false"
                                     selectedKey="{list>activity_dependency_code}"
                                     items="{
                                     path: 'util>/Code',
@@ -184,10 +181,7 @@
                                 <SearchField value="{list>activity_name}" search=".onSearchActivity" visible="false" />
                             </HBox>
                             <HBox>
-                                <Text text="{
-                                    path: 'list>local_update_dtm',
-                                    formatter: '.dateFormatter.toDateTimeString'
-                                }" visible="true" />
+                                <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" visible="true" />
                             </HBox>
                             <HBox>
                                 <Text text="{list>update_user_id}" visible="true" />
