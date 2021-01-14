@@ -6,6 +6,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:table="sap.ui.table"
+    xmlns:tnt="sap.tnt"    
     xmlns:lib-m="ext.lib.control.m"
     height="100%">
 	<App id="app">
@@ -53,13 +54,14 @@
                                 <VBox>
                                     <Label text="Operation Uint" labelFor="search_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_S" width="10rem"
-                                            items="{
+                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                             
                                     >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox> 
@@ -102,6 +104,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                            
                                     >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>  
@@ -195,7 +198,7 @@
                                 <Label text="Supplier" labelFor="search_Sup"></Label>
 
                                 <lib-m:CodePicker id="search_Sup"
-                                    placeholder="Enter a department name"
+                                    placeholder="Enter a supplier name"
                                     keyField="supplier_code"
                                     textField="supplier_local_name"
                                     suggestionItems="{
@@ -217,7 +220,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Supplier Type" labelFor="search_Sup_Type"></Label>
+                                <Label text="Supplier Registered Type" labelFor="search_Sup_Type"></Label>
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
                                         <core:Item key="Potential" text="Potential"/>
@@ -273,7 +276,7 @@
                     </table:extension> 
 
                     <table:columns>
-                            <table:Column label="Higher Lvl" width="8rem" filterProperty="higher_level_path" >
+                            <table:Column label="Higher Level" width="12rem" filterProperty="higher_level_path" >
                                 <table:template>
                                     <Text text="{list>higher_level_path}" wrapping="false" />
                                 </table:template>
@@ -285,9 +288,15 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Info. Change Status" width="10rem">
+                            <table:Column label="Info. Change Status" width="10rem" hAlign="Center">
                                 <table:template>
-                                    <Text text="{list>info_change_status}" wrapping="false" />
+                                    <!-- <Text text="{list>info_change_status}" wrapping="false" /> -->
+                                    <tnt:InfoLabel 
+                                        text="{list>info_change_status}" 
+                                        colorScheme="{
+                                            path: 'list>info_change_status',
+                                            formatter: '.onStatusColor'
+                                        }" />                                    
                                 </table:template>
                             </table:Column>
 
@@ -297,13 +306,13 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Review Grade" width="8rem">
+                            <table:Column id="table_review_grade" label="Review Grade" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_grade_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Equipment Type" width="8rem">
+                            <table:Column id="table_equipment_type" label="Equipment Type" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_type_name}" wrapping="false" />
                                 </table:template>
@@ -315,13 +324,13 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Quantity" width="8rem">
+                            <table:Column label="Supplier Quantity" hAlign="Center" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_quantity}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Code" width="8rem" filterProperty="supplier_code" >
+                            <table:Column label="Supplier Code" width="8rem" hAlign="Center" filterProperty="supplier_code" >
                                 <table:template>
                                     <Text text="{list>supplier_code}" wrapping="false" />
                                 </table:template>
@@ -339,13 +348,13 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Company" width="8rem" filterProperty="company_name" >
+                            <table:Column label="Company" width="8rem" filterProperty="supplier_company_name" >
                                 <table:template>
-                                    <Text text="{list>company_name}" wrapping="false" />
+                                    <Text text="{list>supplier_company_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Type" width="8rem">
+                            <table:Column label="Supplier Registered Type"  hAlign="Center" width="10rem">
                                 <table:template>
                                     <Text text="{list>supplier_type_name}" wrapping="false" />
                                 </table:template>
@@ -373,7 +382,7 @@
                                     <Text text="{path : 'list>supplier_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Status" width="8rem">
+                            <table:Column label="Status" hAlign="Center" width="0rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false"  />
                                 </table:template>
@@ -406,7 +415,6 @@
                             <table:Column label="평가통제여부" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{= !!${list>supeval_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
-                              
                                 </table:template>
                             </table:Column>                        
 
@@ -422,13 +430,9 @@
                                 </table:template>
                             </table:Column>   
 
-                            <table:Column label="RM 통제여부" width="8em">
+                            <table:Column label="RM 통제여부" hAlign="Center" width="8em">
                                 <table:template>
-                                    <Switch state="{list>supplier_rm_control_flag}" customTextOn="Yes" customTextOff="No">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </Switch>                                 
+                                    <Text text="{= !!${list>supplier_rm_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
                                 </table:template>
                             </table:Column>
 

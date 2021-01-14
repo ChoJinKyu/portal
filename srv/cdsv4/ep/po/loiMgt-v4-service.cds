@@ -3,6 +3,12 @@ namespace ep;
 @path : '/ep.LoiMgtV4Service'
 service LoiMgtV4Service {
 
+    type OutType : {
+        returncode    : String(2);
+        returnmessage : String(500);
+        savedkey      : String(50);
+    };
+
     type InputData : {
         tenant_id             : String;
         company_code          : String;
@@ -28,7 +34,7 @@ service LoiMgtV4Service {
      * ********************************
      * ```
      */
-    action SaveLoiQuotationNumberProc(inputData : array of InputData) returns String;
+    action SaveLoiQuotationNumberProc(inputData : array of InputData) returns array of OutType;
 
     // (단일 Header에 multi Detail) 가 multi
     // Test 데이터
@@ -99,7 +105,7 @@ service LoiMgtV4Service {
     }
 
     //LOI업체선정 삭제 - 항목의 업체선정번호 null처리
-    action DeleteLoiSupplySelectionProc(inputData : delLoiSelectionType) returns String;
+    action DeleteLoiSupplySelectionProc(inputData : delLoiSelectionType) returns array of OutType;
 
     type saveLoiPublishType {
         tenant_id                  : String;
@@ -124,12 +130,6 @@ service LoiMgtV4Service {
         details                    : array of loiDtlType;
     }
 
-    type OutType : {
-        returncode    : String(2);
-        returnmessage : String(500);
-        savedkey      : String(50);
-    };
-
     //LOI발행 등록
     action SaveLoiPublishProc(inputData : saveLoiPublishType) returns array of OutType;
 
@@ -142,7 +142,7 @@ service LoiMgtV4Service {
     }
 
     //LOI발행 삭제 - 항목의 발행번호 null처리
-    action DeleteLoiPublishProc(inputData : delLoiPublishType) returns String;
+    action DeleteLoiPublishProc(inputData : delLoiPublishType) returns array of OutType;
     // LOI 발행현황 VOS 저장
     // Fiori Json Array 데이터 Ajax로 V4호출
     // URL : /ep.LoiMgtV4Service/SaveLoiVosProc
@@ -227,14 +227,10 @@ service LoiMgtV4Service {
 
     action SaveLoiRequestMultiEntitylProc(inputData : saveReturnType) returns saveReturnType;
 
-    type reqMulDelType {
-        tenant_id        : String;
-        company_code     : String;
-        loi_write_number : String;
-    }
 
     //LOI 발행요청 MST & DTL 삭제
-    action DeleteLoiMulEntityProc(inputData : reqMulDelType) returns String;
+    action DeleteLoiMulEntityProc(tenant_id : String(5), company_code : String(10), loi_write_number : String(50)) returns String;
+
 
     //LOI 발행요청시 수행업체 등록
     type SavedSuppliers {

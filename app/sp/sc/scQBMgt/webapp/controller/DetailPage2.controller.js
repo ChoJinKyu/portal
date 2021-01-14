@@ -5,15 +5,15 @@ sap.ui.define([
         "sap/m/MessageBox",
         "ext/lib/util/Multilingual",
         "sap/ui/model/json/JSONModel",
-        // "dp/util/controller/SupplierSelection"
-        // "dp/util/controller/SupplierSelection"
-        // "dp/util/control/m/MaterialMstPickerValueHelp"
-        "../controller/SupplierSelection"
+        "../controller/SupplierSelection",
+        // "dp/util/control/ui/MaterialMasterDialog"
+        "../controller/MaterialMasterDialog"
+
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON, SupplierSelection) {
+	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON, SupplierSelection, MaterialMasterDialog) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBMgt.controller.DetailPage2", {
@@ -24,6 +24,22 @@ sap.ui.define([
                 this.oRouter = this.getOwnerComponent().getRouter();
                 // this.oRouter.attachBeforeRouteMatched(this._onProductMatched, this);
                 this.oRouter.getRoute("detailPage2").attachPatternMatched(this._onProductMatched, this);
+
+                // var oRichTextEditor = new sap.ui.richtexteditor.RichTextEditor("myRTE", {
+				// 		editorType: new sap.ui.richtexteditor.EditorType.TinyMCE4,
+				// 		width: "100%",
+				// 		height: "600px",
+				// 		customToolbar: true,
+				// 		showGroupFont: true,
+				// 		showGroupLink: true,
+				// 		showGroupInsert: true,
+				// 		value: "",
+				// 		ready: function () {
+				// 			this.addButtonGroup("styleselect").addButtonGroup("table");
+				// 		}
+				// 	});
+
+				// 	this.getView().byId("abcd").addContent(oRichTextEditor);
                 
                 var temp = {
                     "list": [
@@ -217,6 +233,7 @@ sap.ui.define([
                 return promise;
             },
             onPageSaveButtonPress: function() {
+                debugger;
                 
             },
             //카테고리 코드 중복 체크
@@ -414,6 +431,34 @@ sap.ui.define([
                 // }
 
                 // this._ManagerDialog.open();
+                
+            },
+            onPartNoPress(e){
+                debugger;
+                var materialItem;
+                this._partnoIndex = e.oSource.getParent().getIndex();
+                
+                if(!this.oSearchMultiMaterialMasterDialog){
+                    this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                        title: "Choose MaterialMaster",
+                        // MultiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", "L1100")
+                            ]
+                        }
+                    });
+                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                        materialItem = oEvent.mParameters.item;
+
+                        this.getView().byId("table1").getRows()[this._partnoIndex].getCells()[5].setValue(materialItem.material_code);
+                        this.getView().byId("table1").getRows()[this._partnoIndex].getCells()[6].setText(materialItem.material_desc);
+                        console.log("materialItem : ", materialItem);
+
+                    }.bind(this));
+
+                }
+                this.oSearchMultiMaterialMasterDialog.open();
                 
             }
 		});

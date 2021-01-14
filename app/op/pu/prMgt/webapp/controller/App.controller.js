@@ -47,11 +47,18 @@ sap.ui.define([
             {
                 var oMidCreateObjectView = this.oRouter.getView("op.pu.prMgt.view.MidCreateObject");
                 this.getView().byId("fcl").removeMidColumnPage(oMidCreateObjectView);
+                // if (this.oRouter.getView("op.pu.prMgt.view.MidModifyObject"))
+                //     this.getView().byId("fcl").removeMidColumnPage(this.oRouter.getView("op.pu.prMgt.view.MidModifyObject")) ;
+                // if (this.oRouter.getView("op.pu.prMgt.view.MidCreateObject"))
+                //     this.getView().byId("fcl").removeMidColumnPage(this.oRouter.getView("op.pu.prMgt.view.MidCreateObject")) ; 
             }
             if (this.sCurrentRouteName === "midModify")
             {
-                var oMidModifyObjectView = this.oRouter.getView("op.pu.prMgt.view.MidModifyObject");
-                this.getView().byId("fcl").removeMidColumnPage(oMidModifyObjectView);
+               var oMidCreateObjectView = this.oRouter.getView("op.pu.prMgt.view.MidCreateObject");
+                this.getView().byId("fcl").removeMidColumnPage(oMidCreateObjectView);  
+
+                // var oMidModifyObjectView = this.oRouter.getView("op.pu.prMgt.view.MidModifyObject");
+                // this.getView().byId("fcl").removeMidColumnPage(oMidModifyObjectView);
             }
 		},
 

@@ -10,7 +10,7 @@
     height="100%"
         >
     
-    <Dialog id="ceateVpCategory" class="sapUiSmallMargin" title="" contentWidth="100%" >
+    <Dialog id="ceateVpCategory" class="sapUiSmallMargin"  contentWidth="100%" title ="Create Vendor Pool">
         <content>  
         <HBox>
             <VBox class="sapUiSmallMargin" width="40%" >
@@ -59,6 +59,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                            
                                 >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </ComboBox>    
@@ -209,7 +210,8 @@
                         </VBox>
                         <VBox>
                             <Label text = "Operation Unit" design="Bold" required="true"/> 
-                                <Text id="pop_operation_unit_name" text=""/> 
+                                <Text id="pop_operation_unit_name" visible="false" text=""/> 
+                                <Text id="pop_operation_unit_name1" text=""/>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
@@ -276,8 +278,9 @@
                             </layoutData> 
                         </VBox> 
                         <VBox>
-                            <Label text = "Mtl. Attribute/Planning Base" class="sapUiTinyMarginEnd" design="Bold"/> 
-                                <HBox>
+                            <HBox>
+                                <VBox>
+                                    <Label text = "Mtl. Attribute" class="sapUiTinyMarginEnd" design="Bold"/> 
                                     <ComboBox   id="pop_inp_type_code" class="sapUiTinyMarginEnd"
                                                 items="{
                                                             path : 'util>/CodeDetails',
@@ -286,9 +289,14 @@
                                                                 {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
                                                             ]
                                                         }"
+                                                change=".handlemtlChang"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>                                       
+                                    </ComboBox>                                      
+                                     
+                                </VBox>
+                                <VBox id="v_pop_plan_base" >
+                                     <Label text = "Planning Base" class="sapUiTinyMarginEnd" design="Bold"/>
                                     <ComboBox   id="pop_plan_base"
                                                 items="{
                                                             path : 'util>/CodeDetails',
@@ -300,7 +308,8 @@
                                     >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>                                       
-                                </HBox>                               
+                                </VBox> 
+                            </HBox>                              
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
@@ -339,17 +348,17 @@
                             </layoutData> 
                         </VBox> 
                         <VBox>
-                            <Label text = "V/P Exception" design="Bold"/> 
+                            <Label text = "V/P Exception" width="8rem" design="Bold"/> 
                                 <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
                                         <FlexItemData growFactor="1" />
                                     </layoutData>
                                 </Switch> 
                             <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData> 
                         </VBox>                                                                       
-                        <VBox>
+                        <VBox id = "v_review_grade" >
                             <Label text = "Review Grade" design="Bold"/> 
                                 <HBox>
                                     <ComboBox   id="pop_equipment_grade_code"
@@ -369,7 +378,7 @@
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
-                        <VBox>
+                        <VBox id ="v_equipment_type" >
                             <Label text = "Equipment Type" design="Bold"/> 
                                 <HBox>
                                     <ComboBox   id="pop_equipment_type_code"
@@ -388,20 +397,20 @@
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>  
-                        <VBox>
+                        <VBox id="v_internal_rate">
                             <Label text = "Site Internal Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_dom_oversea_netprice_diff_rate" type="type: 'sap.ui.model.type.Decimal'" ></Input> 
+                                    <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>                                
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox> 
-                        <VBox>
+                        <VBox id="v_external_rate">
                             <Label text = "Site External Rate" design="Bold"/> 
                                 <HBox>
-                                    <Input id="pop_domestic_net_price_diff_rate" type="type: 'sap.ui.model.type.Decimal'"  ></Input> 
+                                    <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  ></Input> 
                                     <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                 </HBox>
                             <layoutData>

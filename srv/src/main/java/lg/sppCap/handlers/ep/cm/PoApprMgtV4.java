@@ -5,8 +5,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Collection;
+import java.util.stream.Stream;
 
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
@@ -17,6 +21,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.core.CallableStatementCreator;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import cds.gen.ep.poapprmgtv4service.*;
 
@@ -31,10 +44,14 @@ public class PoApprMgtV4 implements EventHandler {
     
 
     // Procedure 호출해서 외환신고품목 저장
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = SavePoForexDeclarationProcContext.CDS_NAME)
     public void onSavePoForexDeclaration(SavePoForexDeclarationProcContext context) {
 
-		log.info("### EP_PO_FOREX_DECLARATION_SAVE_PROC 프로시저 호출 시작 ###");
+        log.info("### EP_PO_FOREX_DECLARATION_SAVE_PROC 프로시저 호출 시작 ###");
+        
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
 
 		// local Temp table은 테이블명이 #(샵) 으로 시작해야 함
 		StringBuffer v_sql_createTable = new StringBuffer();
@@ -52,75 +69,86 @@ public class PoApprMgtV4 implements EventHandler {
                          .append(", UPDATE_USER_ID NVARCHAR(255) ")
                          .append(")");
 
+        String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_EP_PO_FOREX_DECLARATION";
+        
 		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_FOREX_DECLARATION VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		String v_sql_callProc = "CALL EP_PO_FOREX_DECLARATION_SAVE_PROC( I_TABLE => #LOCAL_TEMP_EP_PO_FOREX_DECLARATION, O_TABLE => ? )";
 
-		Collection<ResultForexItems> v_result = new ArrayList<>();
         Collection<SavedForexItems> v_inRows = context.getForexItems();
+
+        ResultForexItems v_result = ResultForexItems.create();
+        Collection<ResultForexItems> v_resultH = new ArrayList<>();
+  
         
 
-         log.info("###111111===="+context.getForexItems()); 
+         log.info("###getForexItems===="+context.getForexItems()); 
          log.info("###v_inRows.size(===="+v_inRows.size()); 
 
 
-        ResultSet v_rs = null;
-		try {
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
 
-			Connection conn = jdbc.getDataSource().getConnection();
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTable.toString());
 
-			// Local Temp Table 생성
-			PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable.toString());
-			v_statement_table.execute();
-
-			// Local Temp Table에 insert
-			PreparedStatement v_statement_insert = conn.prepareStatement(v_sql_insertTable);
-
-			if(!v_inRows.isEmpty() && v_inRows.size() > 0){
-				for(SavedForexItems v_inRow : v_inRows){
-
-					log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getPoNumber()+"###");
-
-					v_statement_insert.setString(1, v_inRow.getTenantId());
-					v_statement_insert.setString(2, v_inRow.getCompanyCode());
-					v_statement_insert.setString(3, v_inRow.getPoNumber());
-					v_statement_insert.setString(4, v_inRow.getForexDeclareStatusCode());
-					v_statement_insert.setObject(5, v_inRow.getDeclareScheduledDate());
-                    v_statement_insert.setObject(6, v_inRow.getDeclareDate());
-					v_statement_insert.setString(7, v_inRow.getAttchGroupNumber());
-					v_statement_insert.setString(8, v_inRow.getRemark());
-					v_statement_insert.setString(9, v_inRow.getUpdateUserId());                    
-
-					v_statement_insert.addBatch();
-				}
-				// Temp Table에 Multi건 등록
-				v_statement_insert.executeBatch();
-			}
-
-			// Procedure Call
-			CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-			v_rs = v_statement_proc.executeQuery();
-        
-            while(v_rs.next()) {
-                ResultForexItems v_resultDetail = ResultForexItems.create();
-                v_resultDetail.setTenantId(v_rs.getString("TENANT_ID"));
-                v_resultDetail.setCompanyCode(v_rs.getString("COMPANY_CODE"));
-                v_resultDetail.setPoNumber(v_rs.getString("PO_NUMBER"));
-                v_resultDetail.setResultCode(v_rs.getString("RESULT_CODE"));
-                v_result.add(v_resultDetail);
+        // Header Local Temp Table에 insert
+        List<Object[]> batchH = new ArrayList<Object[]>();
+        if(!v_inRows.isEmpty() && v_inRows.size() > 0){
+            for(SavedForexItems v_inRow : v_inRows){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("po_number"),
+                    v_inRow.get("forex_declare_status_code"),
+                    v_inRow.get("declare_scheduled_date"),
+                    v_inRow.get("declare_date"),
+                    v_inRow.get("attch_group_number"),
+                    v_inRow.get("remark"),
+                    v_inRow.get("update_user_id")
+                };
+                batchH.add(values);
             }
+        }
 
-            context.setResult(v_result);
-            //context.setCompleted();
+        int[] updateCountsH = jdbc.batchUpdate(v_sql_insertTable, batchH);
 
-		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
+        boolean delFlag = false;
 
-		} catch (Exception e) {
-			e.printStackTrace();
+        SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<ResultForexItems>(){
+            @Override
+            public ResultForexItems mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                ResultForexItems v_row = ResultForexItems.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setCompanyCode(v_rs.getString("company_code"));
+                v_row.setPoNumber(v_rs.getString("po_number"));
+                v_row.setResultCode(v_rs.getString("result_code"));
+                v_resultH.add(v_row);
+                return v_row;
+            }
+        });
 
-		} finally {
-			context.setCompleted();
-		}
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(oTable);
+
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                String callProc = "";
+
+                callProc = v_sql_callProc;
+                
+                CallableStatement callableStatement = connection.prepareCall(callProc);
+                return callableStatement;
+            }
+        }, paramList);
+
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropableH);
+
+        //v_result.setResultForexItems(v_resultH);
+
+        context.setResult(v_resultH);
+        context.setCompleted();
 
 	}    
 

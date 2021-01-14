@@ -54,7 +54,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_develope_event_code}">
+            <Text text="{detailModel>/develope_event_code}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -313,7 +313,7 @@
             </Input>-->
             <ComboBox
                 width="100%"
-                selectedKey="{detailModel>/project_develope_event_code}"
+                selectedKey="{detailModel>/develope_event_code}"
                 items="{
                     path: 'util>/Code',
                     filters: [

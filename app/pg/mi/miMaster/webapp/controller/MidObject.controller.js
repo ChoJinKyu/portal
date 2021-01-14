@@ -1131,9 +1131,22 @@ sap.ui.define([
                     var org_language_code = oMIMaterialCodeTextModel.oData[i].org_language_code;
                     var language_code = oMIMaterialCodeTextModel.oData[i].language_code;
                     var mi_material_name = oMIMaterialCodeTextModel.oData[i].mi_material_name;
+                 
+                    if(itemMode==this._m.itemMode.create){
+                        //언어키를 삭제 했다가 동일한 언어키를 다시 등록할경우
+                        for(var idx=0;idx<_deleteItemOdata.length;idx++){
+                            if(_deleteItemOdata[idx].language_code == language_code){
+                                itemMode=this._m.itemMode.read; //Delete-> Insert보다 수정모드로 변경하여 처리 함
+                                org_language_code = language_code;
+                                _deleteItemOdata.splice(idx, 1);
+                                break;
+                            }
+                        }
+                    }
 
                     if(itemMode==this._m.itemMode.read){
 
+                        //로드한 언어키를 변경하여 저장할경우 
                         if(org_language_code != language_code){                            
                             //키 변경 delete 등록 
                             //삭제를 위한 등록 

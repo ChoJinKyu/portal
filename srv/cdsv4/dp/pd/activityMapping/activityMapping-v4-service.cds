@@ -7,7 +7,7 @@
 //using { dp as activityMappingType} from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_MAPPING_TYPE-model';
 
 namespace dp;
-@path : '/dp.activityMappingV4Service'
+@path : '/dp.ActivityMappingV4Service'
 
 service ActivityMappingV4Service {
 //    entity ActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
@@ -37,6 +37,6 @@ service ActivityMappingV4Service {
         return_code : String(2);
         return_msg  : String(5000);
     };
-    action PdActivityMappingSaveProc(inputData : PdActivityMappingType) returns array of OutType;
+    action PdActivityMappingSaveProc(inputData : array of PdActivityMappingType) returns array of OutType;
 
 }

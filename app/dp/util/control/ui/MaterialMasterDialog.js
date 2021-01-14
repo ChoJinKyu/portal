@@ -38,7 +38,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.PurOrgMgtService',
                     entityName: 'Pur_Operation_Org'
@@ -53,7 +53,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MM_USER_ITEM_TYPE')
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.util.CommonService',
@@ -173,19 +173,23 @@ sap.ui.define([
                 sUIT = this.oSearchUIT.getSelectedKey(),
                 sHSCode = this.oSearchHSCode.getSelectedKey(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L1100")
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ],
-                orgCode = false;
+                orgCode = false,
+                masterCode = false;
 
             if(sCode){
+                masterCode=true;
                 aFilters.push(new Filter("material_code", FilterOperator.Contains, sCode));
             }
 
             if(sDesc){
+                masterCode=true;
                 aFilters.push(new Filter("material_desc", FilterOperator.Contains, sDesc));
             }
             
             if(sSpec){
+                masterCode=true;
                 aFilters.push(new Filter("material_spec", FilterOperator.Contains, sSpec));
             }
 
@@ -212,7 +216,9 @@ sap.ui.define([
                         this.oDialog.setData(aRecords, false);
                     }.bind(this)
                 });
-            } else {
+            }
+            
+            if(masterCode){
                 ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialMstView", {
                     filters: aFilters,
                     success: function(oData){

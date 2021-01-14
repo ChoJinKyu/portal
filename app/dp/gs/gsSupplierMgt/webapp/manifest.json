@@ -98,7 +98,8 @@
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib",
-      "dp.util": "../../util"
+      "dp.util": "../../util",
+      "cm": "../../../../cm"
     },
     "routing": {
       "config": {

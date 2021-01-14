@@ -162,7 +162,9 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../../lib"
+      "ext.lib": "../../../../lib",
+      "dp": "../../../../dp",
+      "cm": "../../../../cm"
     },
     "routing": {
       "config": {
@@ -187,7 +189,7 @@
               ]
           },
           {
-              "pattern": "midView/{layout}/{tenantId}/{company_code}/{pr_number}",
+              "pattern": "midView/{layout}/{vMode}/{tenantId}/{company_code}/{pr_number}",
               "name": "midView",
               "target": [
                   "mainObject",
@@ -195,7 +197,7 @@
               ]
           },
           {
-              "pattern": "midModify/{layout}/{tenantId}/{company_code}/{pr_number}",
+              "pattern": "midModify/{layout}/{vMode}/{tenantId}/{company_code}/{pr_number}",
               "name": "midModify",
               "target": [
                   "mainObject",
@@ -203,7 +205,7 @@
               ]
           },
           {
-              "pattern": "midCreate/{layout}/{tenantId}/{pr_type_code}/{pr_type_code_2}/{pr_type_code_3}/{pr_template_number}",
+              "pattern": "midCreate/{layout}/{vMode}/{tenantId}/{company_code}/{pr_type_code}/{pr_type_code_2}/{pr_type_code_3}/{pr_template_number}",
               "name": "midCreate",
               "target": [
                   "mainObject",

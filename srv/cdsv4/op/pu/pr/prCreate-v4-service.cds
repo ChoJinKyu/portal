@@ -38,7 +38,7 @@ service PrCreateV4Service {
         tenant_id : String;
         company_code : String;
         pr_number : String;
-        pr_item_number: Integer64;
+        pr_item_number: String;
         org_type_code: String;
         org_code: String;
         buyer_empno: String;
@@ -51,7 +51,7 @@ service PrCreateV4Service {
         pr_unit: String;
         requestor_empno: String;
         requestor_name: String;
-        delivery_request_date: Date;
+        delivery_request_date: String;
         purchasing_group_code: String;
         price_unit: String;
         pr_progress_status_code: String;

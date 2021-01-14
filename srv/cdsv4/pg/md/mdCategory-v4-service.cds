@@ -322,4 +322,57 @@ service MdCategoryV4Service {
 		and cid.org_code = :org_code
 		and cid.spmd_category_code = :spmd_category_code
 		;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Vendor Pool Level-3별 Category범주>Item특성 Mapping 목록 Parameter View V4호출
+    // URL : /pg.MdCategoryV4Service/MdVpMappingItemViewProc
+    /*********************************
+    {"language_code":"EN"}
+    /*********************************
+    {
+        "params" : {"language_code":"EN"}
+    }
+    *********************************/
+    //@cds.query.limit.default: 10
+    //@cds.query.limit.max: 20
+    action MdVpMappingItemViewProc( params : DynamicParamType ) returns MdVpMappingItemViewData;
+
+    type DynamicParamType {
+        language_code : String(4);
+        /*
+        tenant_id : String(5); 
+        company_code : String(10); 
+        org_type_code : String(30); 
+        org_code : String(10); 
+        vendor_pool_code : String(20);
+        */
+    }
+
+    // UI5 - PivotTable Backend CDS
+    type DynamicTitle {
+        label: String;
+        colId: String;
+    };
+    type DynamicRecord {
+        colIds: many String;
+        values: many String null;
+    };
+    type MdVpMappingItemViewData {
+        titles: many DynamicTitle;
+        records: many DynamicRecord;
+    };
+
 }

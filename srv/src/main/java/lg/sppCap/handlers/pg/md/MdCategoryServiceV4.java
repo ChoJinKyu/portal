@@ -292,6 +292,7 @@ public class MdCategoryServiceV4 implements EventHandler {
 		}
 	}
 
+
 	// Vendor Pool Item매핑 목록
 	@After(event = CdsService.EVENT_READ, entity=MdVpMappingItemView_.CDS_NAME)
 	public void readAfterMdVpMappingItemViewProc(List<MdVpMappingItemView> lists) {
@@ -396,5 +397,125 @@ public class MdCategoryServiceV4 implements EventHandler {
 		return (MdVpMappingItemView) mapToObject(hMap, list);
 
     }
+
+
+    
+
+/*    
+
+    // VendorPool Category Item Mapping 프로시져 array건 처리
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event=MdVpMappingItemViewProcContext.CDS_NAME)
+	public void getMdMappingItemViewProcList(MdVpMappingItemViewProcContext context) {
+
+        log.info("### onMdVpMappingItemMultiProc array건 처리 [On] ###");
+
+        
+        // Array건 입력값
+        //Collection<MdVpMappingItemProcType> v_inRows = context.getItems();
+        //Collection<DynamicParamType> param = context.get.getParams();
+
+        //log.info("### [0] ###"+param.getLanguageCode()+"###");
+
+        // Result return
+        MdVpMappingItemViewData rtnRsltData = MdVpMappingItemViewData.create();
+
+        // Result return
+        //DynamicTitle rtnTitleRslt = DynamicTitle.create();
+        //DynamicRecord rtnBodyRslt = DynamicRecord.create();
+
+
+        int iTotColCnt = 6+20;  // 전체Title수 (기본Title수 + 가변Title수)
+        int iRowCnt = 10;       // 전체 Row수
+        
+        List<DynamicTitle> listTitles = new ArrayList<>();
+
+        for(int i=0; i<iTotColCnt; i++){
+
+            DynamicTitle column = DynamicTitle.create();
+
+            if(i == 0){
+                column.setColId("NO");
+                column.setLabel("No");
+            }else if(i == 1){
+                column.setColId("VPLVL1");
+                column.setLabel("VP Lvl1");
+            }else if(i == 2){
+                column.setColId("VPLVL2");
+                column.setLabel("VP Lvl2");
+            }else if(i == 3){
+                column.setColId("VPLVL3");
+                column.setLabel("VP Lvl3");
+            }else if(i == 4){
+                column.setColId("TEAM");
+                column.setLabel("구매팀");
+            }else if(i == 5){
+                column.setColId("STATUS");
+                column.setLabel("상태");
+            }else{
+                column.setColId("CELLID" + (i-5));
+                column.setLabel("관리항목" + (i-5));
+            }
+
+            listTitles.add(column);
+        }
+
+        rtnRsltData.setTitles(listTitles);
+
+        log.info("### [1] ###"+listTitles.size()+"###");
+
+        List<DynamicRecord> listRecords = new ArrayList<>();
+        for(int rowNo=0; rowNo<iRowCnt; rowNo++){ // Select Data Row Count
+
+            List<String> colIds = new ArrayList<>();
+            List<String> values = new ArrayList<>();
+
+            for(int i=0; i<iTotColCnt; i++){
+
+                if(i == 0){
+                    colIds.add("NO");
+                    values.add("NO-"+rowNo);
+                }else if(i == 1){
+                    colIds.add("VPLVL1");
+                    values.add(rowNo+"-VP Lvl1-값");
+                }else if(i == 2){
+                    colIds.add("VPLVL2");
+                    values.add(rowNo+"-VP Lvl2-값");
+                }else if(i == 3){
+                    colIds.add("VPLVL3");
+                    values.add(rowNo+"-VP Lvl3-값");
+                }else if(i == 4){
+                    colIds.add("TEAM");
+                    values.add(rowNo+"-구매팀-값");
+                }else if(i == 5){
+                    colIds.add("STATUS");
+                    values.add(rowNo+"-상태-값");
+                }else{
+                    colIds.add("CELLID" + (i-5));
+                    values.add(rowNo+"데이터 값" + (i-5));
+                }
+
+            }
+
+            DynamicRecord recordData = DynamicRecord.create();
+            recordData.setColIds(colIds);
+            recordData.setValues(values);
+            
+            listRecords.add(recordData);
+        }
+        rtnRsltData.setRecords(listRecords);
+
+        log.info("### [2] ###"+listRecords.size()+"###");
+        
+
+        context.setResult(rtnRsltData);
+        context.setCompleted();
+        
+    }
+*/
+
+
+
+
 
 }

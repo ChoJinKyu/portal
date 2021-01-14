@@ -198,8 +198,8 @@
                 <Button id="pageSandMailButton" text="{I18N>/MAIL_TRANSFER}" type="Transparent" press=".onMainSendMailButtonPress" />
                 <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />
                 <Button id="pageDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPageDeleteButtonPress" />
-				<Button id="pageSaveButton" text="{I18N>/SAVE}" type="Transparent" press=".onPageSaveButtonPress" />
-				<Button id="pageCancelButton" text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				<Button id="pageCancelButton" text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress" />
+                <Button id="pageSaveButton" text="{I18N>/SAVE}" type="Transparent" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

@@ -30,6 +30,8 @@ entity Np_Net_Price_Mst_View {
     approve_status_code : String(30)   @title: '결재상태코드' ;	
     approve_date : Date   @title: '결재일자' ;	
     tentprc_flag : Boolean   @title: '가단가여부' ;	
+    net_price_type_code : String(3)   @title: '단가유형코드' ;	
+    net_price_type_name : String(240)  @title: '단가유형명' ;	
     currency_code : String(3)   @title: '통화코드' ;	
     exrate_type_code : String(3)   @title: '환율유형코드' ;	
     exrate_date : Date   @title: '환율일자' ;	

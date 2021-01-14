@@ -13,7 +13,8 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "ext/lib/util/Validator"
-], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator) {
+], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+                Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator) {
      "use strict";
     
     var oTransactionManager;
@@ -44,6 +45,9 @@ sap.ui.define([
 					delay : 0
                 });                
 
+            this.getView().setModel(new ManagedListModel(), "PrMstView");
+            this.getView().setModel(new ManagedListModel(), "PrMst");
+            this.getView().setModel(new ManagedListModel(), "PrDtl");              
 
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
@@ -109,6 +113,8 @@ sap.ui.define([
          */
         _fnGetMasterData : function(oArgs){
 
+            
+
             var oViewModel = this.getModel('viewModel');
             var oDetailModel = this.getModel('detailModel');
             var that = this;
@@ -136,14 +142,31 @@ sap.ui.define([
                     }
                 });
 
+                oServiceModel.read("/Pr_Dtl",{
+                    filters : aFilters,
+                    success : function(data){
+                        //oDetailModel.setProperty(data.results[0], "detailModel"); 
+                        oDetailModel.setProperty("/dtl" , data.results);    
+                        //oCodeMasterTable.setBusy(false);
+                    },
+                    error : function(data){
+                        //oCodeMasterTable.setBusy(false);
+                    }
+                });
+
+
+
+
+            // this._bindView("/Pr_Mst", "mst", aFilters, function(oData){
+            //      oDetailModel.setProperty("/dtl" , oData); 
+            // });
+
 
             // this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
             //     self._toShowMode();
             // });
            
-            // this._bindView("/Pr_Mst", "mst", aFilters, function(oData){
-            //      oMstViewModel.setProperty("/CodeMasters", data.results);
-            // });
+           
             
             //oTransactionManager.setServiceModel(this.getModel());
 
@@ -198,12 +221,41 @@ sap.ui.define([
         onPageEditButtonPress: function () {
             var oDetailModel = this.getModel('detailModel');
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-               
+                oNextUIState.layout = "MidColumnFullScreen";
+
             this.getRouter().navTo("midModify", {
                 layout: oNextUIState.layout,
+                vMode: "EDIT",
                 tenantId: oDetailModel.getProperty("/tenantId"),
                 company_code: oDetailModel.getProperty("/company_code"),
                 pr_number: oDetailModel.getProperty("/pr_number")
+
+                
+            });
+
+            // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
+            //     this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            // }
+
+            //var oItem = oEvent.getSource();
+            //oItem.setNavigated(true);
+            //var oParent = oItem.getParent();
+            // store index of the item clicked, which can be used later in the columnResize event
+            //this.iIndex = oParent.indexOfItem(oItem);
+        },
+         onPageCopyButtonPress: function () {
+            var oDetailModel = this.getModel('detailModel');
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+                oNextUIState.layout = "MidColumnFullScreen";
+
+            this.getRouter().navTo("midModify", {
+                layout: oNextUIState.layout,
+                vMode: "COPY",
+                tenantId: oDetailModel.getProperty("/tenantId"),
+                company_code: oDetailModel.getProperty("/company_code"),
+                pr_number: oDetailModel.getProperty("/pr_number")
+
+                
             });
 
             // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {

@@ -45,11 +45,12 @@ sap.ui.define([
     var dialogId = "";
     var path = '';
     var approvalTarget ='';
-        
+    var appThis;
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         
         dateFormatter: DateFormatter,
         validator: new Validator(),
+
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -60,7 +61,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            
+            appThis = this;
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
@@ -227,6 +228,16 @@ sap.ui.define([
             var aSearchFilters = this._getSearchStates();
             console.log("aSearchFilters :::", aSearchFilters);
             this._applySearch(aSearchFilters);
+        },
+        /**
+		 * @description 각 품의서에 돌아올때 재조회 기능
+		 * @param {sap.ui.base.Event} oEvent the button press event
+		 * @public
+		 */
+        onBackToList: function (){
+            if(!appThis == undefined){
+                appThis.byId("pageSearchButton").firePress();
+            }
         },
 
 		/**
@@ -398,9 +409,9 @@ sap.ui.define([
                 this._oValueHelpDialog.setKey('model');
                 this._oValueHelpDialog.setDescriptionKey('model');
 
-            } else if (oEvent.getSource().sId.indexOf("searchPart") > -1) {
+            } else if (oEvent.getSource().sId.indexOf("searchMoldNo") > -1) {
                 //part
-                this._oInputModel = this.getView().byId("searchPart");
+                this._oInputModel = this.getView().byId("searchMoldNo");
 
                 this.oColModel = new JSONModel({
                     "cols": [
@@ -682,10 +693,25 @@ sap.ui.define([
                 oDialog.open();
                 
             });
+            this.onToggleHandleInit();
 
         },
 
+        /**
+        * @public
+        * @see 사용처 create 팝업 로딩시 입력값 초기화 작업
+        */
+        onToggleHandleInit: function () {
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            if(!(this.byId("searchCompanyF") == undefined) || !(this.byId("searchPlantF") == undefined)){
+                this.byId("searchCompanyF").setSelectedKey("");
+                this.byId("searchPlantF").setSelectedKey("");
+            }
+            for (var i = 0; i < groupId.length; i++) {
+                groupId[i].setPressed(false);
+            }
 
+        },
         /**
         * @public
         * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
@@ -702,6 +728,8 @@ sap.ui.define([
             }
 
         },
+
+       
 
         /**
         * @public
@@ -854,14 +882,15 @@ sap.ui.define([
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
-                        if(delApprData.length > 0){
-                            data = {
-                                inputData : { 
-                                    approvalMaster : delApprData 
-                                } 
+                        if (sButton === MessageBox.Action.OK) {
+                            if(delApprData.length > 0){
+                                data = {
+                                    inputData : { 
+                                        approvalMaster : delApprData 
+                                    } 
+                                }
+                                that.callAjax(data,"deleteApproval");
                             }
-                            that.callAjax(data,"deleteApproval");
-                            //console.log(":::::::::::::::::::::::::", that.byId("pageSearchButton"));
                         }
                     }
                 });
@@ -934,7 +963,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-
+            
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -945,6 +974,9 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
+           
+            
+ 
         },
 
         _getSearchStates: function () {
@@ -957,10 +989,10 @@ sap.ui.define([
             var sCategory = this.getView().byId("searchApprovalCategory" + sSurffix).getSelectedKeys();
             var sSubject = this.getView().byId("searchSubject").getValue().trim();
             var sModel = this.getView().byId("searchModel").getValue().trim();
-            var sPart = this.getView().byId("searchPart").getValue().trim();
+            var sMoldNo = this.getView().byId("searchMoldNo").getValue().trim();
             var sRequestor = this.getView().byId("searchRequestor").getValue().trim();
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
-
+            var sMoldSeq = this.getView().byId("searchMoldSeq").getValue().trim();
             var aSearchFilters = [];
             
             if (sCategory.length > 0) {
@@ -1038,8 +1070,8 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sModel.toLowerCase().replace("'","''")+"'"));
             }
             
-            if (sPart) {
-				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sPart.toLowerCase().replace("'","''")+"'"));
+            if (sMoldNo) {
+				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sMoldNo.toLowerCase().replace("'","''")+"'"));
             }
 
             if (sRequestor) {
@@ -1053,6 +1085,11 @@ sap.ui.define([
             if (sStatus) {
                 aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
+
+            if (sMoldSeq) {
+                aSearchFilters.push(new Filter("tolower(mold_sequence)", FilterOperator.Contains, "'"+sMoldSeq.toLowerCase().replace("'","''")+"'"));
+            }
+
             
             //aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
             return aSearchFilters;

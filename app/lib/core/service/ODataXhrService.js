@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/base/ManagedObject",
     "jquery.sap.global",
     "ext/lib/util/QueryBuilder",
+    "sap/ui/model/odata/ODataMetadata",
     "ext/lib/core/service/batch"
-], function (Parent, jQuery, QueryBuilder) {
+], function (Parent, jQuery, QueryBuilder, ODataMetadata) {
     "use strict";
 
     var ODataXhrService = Parent.extend("ext.lib.core.service.ODataXhrService", {
@@ -46,16 +47,10 @@ sap.ui.define([
             return defered.promise();
         },
 
-        /**
-         * @public
-         * 이 XhrService 호출에 필요한 QueryBuilder 생성
-         * @param {string} sEntity 
-         * @param {QueryBuilder} oQuery 
-         * @param {boolean} bFetchAll true면 100건 이상의 데이터 모두 일괄 조회
-         * @return Promise
-         */
-        createQueryBuilder: function(){
-            return new QueryBuilder();
+        _getODataMetadata: function(sServiceUrl){
+            return new ODataMetadata(sServiceUrl + "$metadata", {
+                async: false
+            });
         },
 
         /**
@@ -69,14 +64,14 @@ sap.ui.define([
          */
         get: function (sEntity, oQuery, bFetchAll) {
             var sServiceUrl = this.getServiceUrl(),
-                oQuery = oQuery || this.createQueryBuilder(),
+                oMetadata = this._getODataMetadata(sServiceUrl),
                 oPromise;
             if(bFetchAll === true){
                 oPromise = jQuery.Deferred();
                 this.ajax({
-                    url: sServiceUrl + sEntity + oQuery.toQuery(true)
+                    url: sServiceUrl + sEntity + QueryBuilder.buildForCount(oQuery, oMetadata, sEntity)
                 }).then(function(sCnt){
-                    this._fetchAll(sEntity, oQuery, parseInt(sCnt, 10)).then(function(aDatas){
+                    this._fetchAll(sEntity, oQuery, parseInt(sCnt, 10), oMetadata).then(function(aDatas){
                         oPromise.resolve(
                             aDatas.map(function(oData){
                                 return oData.data;
@@ -90,7 +85,7 @@ sap.ui.define([
                 return oPromise.promise();
             }else{
                 return this.ajax({
-                    url: sServiceUrl + sEntity + oQuery.toQuery()
+                    url: sServiceUrl + sEntity + QueryBuilder.build(oQuery, oMetadata, sEntity)
                 });
             }
         },
@@ -104,15 +99,16 @@ sap.ui.define([
          * @param {number} nCount 
          * @return Promise
          */
-        _fetchAll: function(sEntity, oQuery, nCount){
-            var nCeil = Math.ceil(nCount / 1000),
-                aRequest = [], 
-                nSkip = oQuery.getSkip() || 0;
+        _fetchAll: function(sEntity, oQuery, nCount, oMetadata){
+            var nSkip = oQuery.urlParameters ? oQuery.urlParameters["$skip"] || 0 : 0,
+                nCeil = Math.ceil((nCount - nSkip) / 1000),
+                aRequest = [];
             for(var i = 0; i < nCeil; i++){
-                oQuery.top((i+1)*1000).skip(i*1000 + nSkip);
+                oQuery.urlParameters["$top"] = (i+1)*1000 + nSkip;
+                oQuery.urlParameters["$skip"] = i*1000 + nSkip;
                 aRequest.push({
                     type: 'GET',
-                    url: sEntity + oQuery.toQuery()
+                    url: sEntity + QueryBuilder.build(oQuery, oMetadata, sEntity)
                 });
             }
             return this.ajaxBatch({
@@ -122,6 +118,7 @@ sap.ui.define([
         },
 
         _call: function (oParam) {
+            //TODO : Please implementation
             var successHandler = oParam.success;
             var errorHandler = oParam.error;
             // jQuery.ajax({
@@ -141,7 +138,6 @@ sap.ui.define([
             //     }
             // });
             debugger;
-
         },
 
         concat: function(aDatas){

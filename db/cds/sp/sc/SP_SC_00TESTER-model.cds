@@ -113,7 +113,7 @@ entity Sc_Nego_Headers_Test03 {
         close_date_ext_enabled_hours    : Integer             @title : '마감일자연장가능시개수';
         close_date_ext_enabled_count    : Integer             @title : '마감일자연장가능횟수';
         actual_extension_count          : Integer             @title : '실제연장횟수';
-        note_content                    : LargeBinary(4000)   @title : '노트내용';
+        note_content                    : LargeBinary         @title : '노트내용';
         // supplier_notice                 : String(4000)        @title : '공급업체특기사항';
         award_type_code                 : String(100)         @title : '낙찰유형코드';
         target_amount_config_flag       : String(1)           @title : '목표금액설정여부';
@@ -146,3 +146,14 @@ entity Sc_Nego_Headers_Test03 {
 }
 
 extend Sc_Nego_Headers_Test03 with util.Managed;
+
+
+entity Sc_Nego_Headers_Test04 {
+    key tenant_id                       : String(5) not null  @title : '테넌트ID';
+    key nego_header_id                  : Integer not null  @title : '협상헤더ID';
+        operation_unit_code             : String(30) not null @title : '운영단위코드';
+        reference_nego_header_id        : Integer           @title : '참조협상헤더ID';
+        previous_nego_header_id         : Integer           @title : '기존협상헤더ID';
+        nego_document_round             : Integer             @title : '협상문서회차';
+}
+extend Sc_Nego_Headers_Test04 with util.Managed;

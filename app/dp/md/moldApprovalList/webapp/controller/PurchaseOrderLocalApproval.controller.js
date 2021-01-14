@@ -17,17 +17,15 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection"
 ], function (NumberFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, ApprovalBaseController, MoldItemSelection
 ) {
     "use strict";
 
     //var oTransactionManager;
-    //var oRichTextEditor;
 
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PurchaseOrderItemLocal", {
 
@@ -324,10 +322,10 @@ sap.ui.define([
                 var ap = this.getModel("approver").getData().Approvers;
                 var len = 0; 
 
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
-                    len = ap.length;
+                if(this.getView().getModel("mode").getProperty("/editFlag")){
+                    len = ap.length - 1;
                 }else{
-                    len =  ap.length -1;
+                    len =  ap.length;
                 }
                 for(var i = 0 ; i < len ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
@@ -393,7 +391,7 @@ sap.ui.define([
 
         _onSubmit : function (approveStatusCode) {
             if(this.validator.validate( this.byId("generalInfoLayout") ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
 
@@ -412,10 +410,10 @@ sap.ui.define([
                     supplierCode = orderItems[0].supplier_code,
                     currencyCode = orderItems[0].currency_code;
                 for(var idx = 1; idx < orderItems.length; idx++){
-                    if(accountCode !== orderItems[idx].account_code){
+                    /*if(accountCode !== orderItems[idx].account_code){
                         MessageToast.show("계정코드가 같지 않습니다.");
                         return;
-                    }
+                    }*/
                     if(supplierCode !== orderItems[idx].supplier_code){
                         MessageToast.show("업체가 같지 않습니다.");
                         return;
@@ -459,7 +457,7 @@ sap.ui.define([
                         return;
                     }
                 }
-            }else{
+            }else{          
                 split_pay_type_code = null;
                 prepay_rate =  null;
                 progresspay_rate =  null;
@@ -473,7 +471,7 @@ sap.ui.define([
             this.approvalDetails_data = [];
             this.moldMaster_data = [];
             
-            if(orderItems != undefined && orderItems.length > 0){
+            if(orderItems.length > 0){//orderItems != undefined && 
                 orderItems.forEach(function(item){
                     this.approvalDetails_data.push({
                         tenant_id : this.tenant_id, 

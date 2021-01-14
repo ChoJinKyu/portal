@@ -443,7 +443,7 @@ sap.ui.define([
                     MessageToast.show( "같은 플랜트일 때 Bind & Receipt 가능합니다." );
                     return;
                 }
-                           
+                
                 if(!this._checkFamilyPartNo()) return;
  
                 MessageBox.confirm("Bind & Receipt 후엔 미접수 상태로 변경은 불가능합니다. Bind & Receipt 하시겠습니까?", {
@@ -526,7 +526,9 @@ sap.ui.define([
                     MessageToast.show( "Development Request, Receipt 상태일 때만 Cancel Bind 가능합니다." );
                     return;
                 }
-                            
+                
+                if(!this._checkFamilyPartNo()) return;
+ 
                 MessageBox.confirm("Cancel Bind 하시겠습니까?", {
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -763,7 +765,7 @@ sap.ui.define([
             }
 
             if (this.validator.validate(this.byId("moldMstTable")) !== true) {
-                MessageToast.show(this.getModel('I18N').getText('/ECM0201'));
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
             }
 

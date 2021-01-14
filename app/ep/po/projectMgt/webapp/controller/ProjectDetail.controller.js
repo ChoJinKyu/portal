@@ -28,7 +28,7 @@ sap.ui.define([
 
     var oTransactionManager;
 
-    return BaseController.extend("ep.po.projectMgt.controller.MidObject", {
+    return BaseController.extend("ep.po.projectMgt.controller.ProjectDetail", {
 
         dateFormatter: DateFormatter,
 
@@ -58,8 +58,10 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("detailPage").attachPatternMatched(this._onRoutedThisPage, this);
             this.setModel(oViewModel, "midObjectView");
+
+            console.log("Detail 실행");
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -89,7 +91,7 @@ sap.ui.define([
         onPageEnterFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
             console.log("fcl=", this.getModel("fcl"));
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("detailPage", {
                 layout: sNextLayout,
                 tenantId: this._sTenantId,
                 companyCode: this._sCompanyCode,
@@ -103,7 +105,7 @@ sap.ui.define([
         onPageExitFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
             console.log("fcl=", this.getModel("fcl"));
-            this.getRouter().navTo("midPage", {
+            this.getRouter().navTo("detailPage", {
                 layout: sNextLayout,
                 tenantId: this._sTenantId,
                 companyCode: this._sCompanyCode,
@@ -115,6 +117,8 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midObjectForm2Edit"));            
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", { layout: sNextLayout });
         },
@@ -214,6 +218,8 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("midObjectForm1Edit"));
+                                that.validator.clearValueState(that.byId("midObjectForm2Edit"));
                                 that._toShowMode();
                             }
                         });
@@ -228,6 +234,8 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midObjectForm2Edit"));
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
                 this.onPageNavBackButtonPress.call(this);
             } else {
@@ -349,7 +357,7 @@ sap.ui.define([
 
         _toEditMode: function () {
             console.log("#===Edit==", this.getModel("master").getData());
-            this._showFormFragment('MidObject_Edit');
+            this._showFormFragment('ProjectDetail_Edit');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(false);
@@ -405,7 +413,7 @@ sap.ui.define([
             //     }
             // });
 
-            this._showFormFragment('MidObject_Show');
+            this._showFormFragment('ProjectDetail_Show');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(true);

@@ -1,5 +1,5 @@
 VIEW DP_PD_ACTIVITY_MAPPING_NAME_VIEW AS
-SELECT pam.tenant_id,
+SELECT pam.tenant_id, 
        pam.company_code,
        pam.org_type_code,
        pam.org_code,
@@ -12,21 +12,23 @@ SELECT pam.tenant_id,
        pat.activity_name,
        pat1.product_activity_name,
        ad.code_name as activity_dependency_name
-  FROM DP_PD_ACTIVITY_MAPPING pam
-    LEFT JOIN DP_PD_PART_ACTIVITY_TEMPLATE pat
-    ON pam.tenant_id = pat.tenant_id
-    AND pam.company_code = pat.company_code
-    AND pam.org_type_code = pat.org_type_code
-    AND pam.org_code = pat.org_code
-    AND pam.activity_code = pat.activity_code
-    LEFT JOIN DP_PD_PRODUCT_ACTIVITY_TEMPLATE pat1
-        ON pam.tenant_id = pat1.tenant_id
-        AND pam.company_code = pat1.company_code
-        AND pam.org_type_code = pat1.org_type_code
-        AND pam.org_code = pat1.org_code
-        AND pam.product_activity_code = pat1.product_activity_code
-    LEFT JOIN CM_CODE_LNG ad
-        ON pam.tenant_id = ad.tenant_id
-        AND pam.activity_dependency_code = ad.code
-        AND ad.language_cd = 'KO'
+  FROM DP_PD_ACTIVITY_MAPPING pam,
+       ( Select distinct tenant_id,company_code,org_type_code, org_code, activity_code, activity_name From DP_PD_PART_ACTIVITY_TEMPLATE ) pat,
+       DP_PD_PRODUCT_ACTIVITY_TEMPLATE pat1,
+       ( Select l.tenant_id, l.code, l.code_name, l.language_cd
+           From CM_CODE_LNG l, CM_CODE_DTL d
+          Where l.tenant_id = d.tenant_id and l.code = d.code and d.group_code = 'DP_ACTIVITY_DEPENDENCY' ) ad
+    WHERE pam.tenant_id = pat.tenant_id
+      AND pam.company_code = pat.company_code
+      AND pam.org_type_code = pat.org_type_code
+      AND pam.org_code = pat.org_code
+      AND pam.activity_code = pat.activity_code
+      AND pam.tenant_id = pat1.tenant_id
+      AND pam.company_code = pat1.company_code
+      AND pam.org_type_code = pat1.org_type_code
+      AND pam.org_code = pat1.org_code
+      AND pam.product_activity_code = pat1.product_activity_code
+      AND pam.tenant_id = ad.tenant_id
+      AND pam.activity_dependency_code = ad.code
+      AND ad.language_cd = 'KO'
 ;

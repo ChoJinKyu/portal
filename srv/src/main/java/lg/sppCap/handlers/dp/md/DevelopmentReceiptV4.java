@@ -82,59 +82,50 @@ public class DevelopmentReceiptV4 implements EventHandler {
         String v_sql_createSetId = "SELECT DP_MD_MST_SET_ID_SEQ.NEXTVAL FROM DUMMY";
         String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
         
-        try {
-            Connection conn = jdbc.getDataSource().getConnection();
 
-            // Set Id 뒤 5자리 생성
-            int setIdSeq = jdbc.queryForObject(v_sql_createSetId, Integer.class);
-            
-            for (SavedMolds row :  v_inMultiData) {
-                if((Boolean) row.get("chk")){
-                    MoldMasters master = MoldMasters.create();
-                    master.setMoldId((String) row.get("mold_id"));
-                    master.setMoldProgressStatusCode("DEV_RCV");
-                    master.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
-                    master.setMoldItemTypeCode((String) row.get("mold_item_type_code"));
-                    master.setMoldTypeCode((String) row.get("mold_type_code"));
-                    master.setMoldLocationTypeCode((String) row.get("mold_location_type_code"));
-                    master.setMoldCostAnalysisTypeCode((String) row.get("mold_cost_analysis_type_code"));
-                    master.setMoldPurchasingTypeCode((String) row.get("mold_purchasing_type_code"));
-                    master.setMoldDeveloperEmpno((String) row.get("mold_developer_empno"));
-                    master.setRemark((String) row.get("remark"));
-                    master.setFamilyPartNumber1((String) row.get("family_part_number_1"));
-                    master.setFamilyPartNumber2((String) row.get("family_part_number_2"));
-                    master.setFamilyPartNumber3((String) row.get("family_part_number_3"));
-                    master.setFamilyPartNumber4((String) row.get("family_part_number_4"));
-                    master.setFamilyPartNumber5((String) row.get("family_part_number_5"));
-                    master.setSetId(Integer.toString(setIdSeq));
-                    master.setLocalUpdateDtm(current);
+        // Set Id 뒤 5자리 생성
+        int setIdSeq = jdbc.queryForObject(v_sql_createSetId, Integer.class);
+        
+        for (SavedMolds row :  v_inMultiData) {
+            if((Boolean) row.get("chk")){
+                MoldMasters master = MoldMasters.create();
+                master.setMoldId((String) row.get("mold_id"));
+                master.setMoldProgressStatusCode("DEV_RCV");
+                master.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
+                master.setMoldItemTypeCode((String) row.get("mold_item_type_code"));
+                master.setMoldTypeCode((String) row.get("mold_type_code"));
+                master.setMoldLocationTypeCode((String) row.get("mold_location_type_code"));
+                master.setMoldCostAnalysisTypeCode((String) row.get("mold_cost_analysis_type_code"));
+                master.setMoldPurchasingTypeCode((String) row.get("mold_purchasing_type_code"));
+                master.setMoldDeveloperEmpno((String) row.get("mold_developer_empno"));
+                master.setRemark((String) row.get("remark"));
+                master.setFamilyPartNumber1((String) row.get("family_part_number_1"));
+                master.setFamilyPartNumber2((String) row.get("family_part_number_2"));
+                master.setFamilyPartNumber3((String) row.get("family_part_number_3"));
+                master.setFamilyPartNumber4((String) row.get("family_part_number_4"));
+                master.setFamilyPartNumber5((String) row.get("family_part_number_5"));
+                master.setSetId(Integer.toString(setIdSeq));
+                master.setLocalUpdateDtm(current);
 
-                    CqnUpdate masterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(master);
-                    Result resultMaster = developmentReceiptService.run(masterUpdate);
+                CqnUpdate masterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(master);
+                Result resultMaster = developmentReceiptService.run(masterUpdate);
 
-                    MoldSpecs spec = MoldSpecs.create();
-                    spec.setMoldId((String) row.get("mold_id"));
-                    spec.setDieForm((String) row.get("die_form"));
-                    spec.setMoldSize((String) row.get("mold_size"));
-                    spec.setLocalUpdateDtm(current);
-                    CqnUpdate specUpdate = Update.entity(MoldSpecs_.CDS_NAME).data(spec);
-                    Result resultSpec = developmentReceiptService.run(specUpdate);
-                    
-                    // Procedure Call
-                    jdbc.update(v_sql_callProc, row.get("mold_id"));
-                    
-                    //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-                    //v_statement_proc.setObject(1, row.get("mold_id"));
-                    //boolean v_isMore = v_statement_proc.execute();
-                }
+                MoldSpecs spec = MoldSpecs.create();
+                spec.setMoldId((String) row.get("mold_id"));
+                spec.setDieForm((String) row.get("die_form"));
+                spec.setMoldSize((String) row.get("mold_size"));
+                spec.setLocalUpdateDtm(current);
+                CqnUpdate specUpdate = Update.entity(MoldSpecs_.CDS_NAME).data(spec);
+                Result resultSpec = developmentReceiptService.run(specUpdate);
+                
+                // Procedure Call
+                jdbc.update(v_sql_callProc, row.get("mold_id"));
             }
-
-            context.setResult(msg);
-            context.setCompleted();
-
-        } catch (SQLException e) { 
-			e.printStackTrace();
         }
+
+        context.setResult(msg);
+        context.setCompleted();
+
     }
     
     @On(event = CancelBindDevelopmentReceiptContext.CDS_NAME)

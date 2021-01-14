@@ -19,17 +19,22 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
-    "dp/md/util/controller/MoldItemSelection"
+    "dp/md/util/controller/MoldItemSelection" ,
+    "dp/md/util/controller/DeptSelection",
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection
+    , ApprovalBaseController, MoldItemSelection , DeptSelection
 ) {
     "use strict";
 
     var oTransactionManager;
     var oRichTextEditor;
-
+    /**
+     * @desciption  예산집행품의 
+     * @date        2021.01.14 
+     * @author      jinseon.lee 
+     */
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.BudgetExecutionApproval", {
 
         dateFormatter: DateFormatter,
@@ -38,6 +43,7 @@ sap.ui.define([
 
         moldItemPop: new MoldItemSelection(),
 
+        deptSelection : new DeptSelection(), 
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -73,9 +79,8 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
             this.getView().setModel(new ManagedModel(), "mdCommon"); 
             this.getView().setModel(new ManagedListModel(), "importPlant"); 
-            
-
-            console.log(" this.approval_number "  ,  this.approval_number);
+        
+          //  console.log(" this.approval_number "  ,  this.approval_number);
 
             this._searchImportCompany();
 
@@ -95,6 +100,8 @@ sap.ui.define([
                     if(oData.results != undefined && oData.results.length > 0){
                         md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
                         md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                        md.setProperty("/acq_department_code", oData.results[0].acq_department_code);
+                        md.setProperty("/acq_department_code_nm", oData.results[0].acq_department_code_nm);
                         md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
                         md.setProperty("/import_company_code", oData.results[0].import_company_code);
                         md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
@@ -108,6 +115,8 @@ sap.ui.define([
                     }else{
                         md.setProperty("/investment_ecst_type_code", "");
                         md.setProperty("/investment_ecst_type_code_nm", "");
+                        md.setProperty("/acq_department_code", "");
+                        md.setProperty("/acq_department_code_nm", "");
                         md.setProperty("/accounting_department_code", "");
                         md.setProperty("/import_company_code","");
                         md.setProperty("/import_company_code_nm", "");
@@ -143,7 +152,7 @@ sap.ui.define([
                          new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                        , new Filter("company_code", FilterOperator.NE , this.company_code )
                 ];
-            console.log("nFilter>>>>> " , nFilter);
+           // console.log("nFilter>>>>> " , nFilter);
             var oView = this.getView(),
                 oModel = this.getModel("importCompany");
             oView.setBusy(true);
@@ -151,7 +160,7 @@ sap.ui.define([
             oModel.read("/Company", {
                 filters: nFilter,
                 success: function (oData) {
-                    console.log("Company oData>>> " , oData) 
+                   // console.log("Company oData>>> " , oData) 
                     oView.setBusy(false);
                 }
             });
@@ -195,10 +204,10 @@ sap.ui.define([
          * ,     , oArges : company_code , org_code (필수)
 		 */
         onBudgetExecutionAddPress: function (oEvent) {
-            console.log("oEvent>>>>");
+           // console.log("oEvent>>>>");
             var oModel = this.getModel("mdItemMaster");
 
-            console.log(" mdItemMaster >>>> ", oModel);
+           // console.log(" mdItemMaster >>>> ", oModel);
 
             var mIdArr = [];
             if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
@@ -263,7 +272,19 @@ sap.ui.define([
             }
 
         },
-        
+        // 부서 버튼 클릭 
+        onValueHelpRequestedDept : function(){ 
+            var that = this;
+            this.deptSelection.openDeptSelectionPop(this, function(data){
+              //  console.log("data " , data[0]);
+                that.setDept(data[0].oData);
+            });
+        } ,
+        setDept : function (data){
+         var md = this.getModel('mdCommon');
+             md.setProperty("/acq_department_code", data.department_id);
+             md.setProperty("/acq_department_code_nm", data.department_local_name);     
+        },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
@@ -279,7 +300,7 @@ sap.ui.define([
                 });
                 budgetExecutionTable.clearSelection();
 
-                console.log("detailModel", detailModel);
+               // console.log("detailModel", detailModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -294,7 +315,7 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval : function(){ 
-            console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
+           // console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
 
             this.byId("acquisition_department").removeStyleClass("readonlyField");
             this.byId("accounting_department").removeStyleClass("readonlyField");
@@ -314,7 +335,7 @@ sap.ui.define([
             });
         } ,
         _toShowModeEachApproval : function(){ 
-            console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
+           // console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
 
             this.byId("acquisition_department").addStyleClass("readonlyField");
             this.byId("accounting_department").addStyleClass("readonlyField");
@@ -383,8 +404,16 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){
-             this.byId("budgetExecutionPreview").close();
+        onPrvClosePress : function(){ 
+             if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
+                    console.log(" oDialog.close >>> ", oDialog.close);
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPrev = undefined;
+            }
+           //  this.byId("budgetExecutionPreview").close();
             // this.byId("budgetExecutionPreview").destroy();
         },
 
@@ -411,6 +440,7 @@ sap.ui.define([
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
             }
+            
             if(this.validator.validate(this.byId("account") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 return;
@@ -443,6 +473,7 @@ sap.ui.define([
 
                 var account_code = mModel.getData().account_code;
                 var investment_ecst_type_code =  mModel.getData().investment_ecst_type_code;
+                var acq_department_code =  mModel.getData().acq_department_code;
                 var accounting_department_code =  mModel.getData().accounting_department_code;
                 var project_code =  mModel.getData().project_code;
                 var import_company_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_code;
@@ -460,6 +491,7 @@ sap.ui.define([
                         , mold_id : item.mold_id 
                         , account_code : account_code 
                         , investment_ecst_type_code : investment_ecst_type_code 
+                        , acq_department_code : acq_department_code 
                         , accounting_department_code : accounting_department_code 
                         , import_company_code : import_company_code 
                         , project_code : project_code 
@@ -487,6 +519,7 @@ sap.ui.define([
                         , mold_id : item.mold_id 
                         , account_code : account_code 
                         , investment_ecst_type_code : investment_ecst_type_code 
+                        , acq_department_code : acq_department_code
                         , accounting_department_code : accounting_department_code 
                         , import_company_code : import_company_code 
                         , project_code : project_code 
@@ -499,18 +532,7 @@ sap.ui.define([
                     });
                 });
             }
-
-
             this._commonDataSettingAndSubmit();
         }
-
-
-
-        
-
-
-
-        /** PO Item End */
-
     });
 });

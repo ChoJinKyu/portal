@@ -1,5 +1,5 @@
 sap.ui.define([
-  "ext/lib/controller/BaseController",
+  "./App.controller",
   "sap/ui/model/json/JSONModel",
   "ext/lib/formatter/DateFormatter",
   "sap/ui/model/Filter",
@@ -31,12 +31,15 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("rootModel");
-            sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+            var oRootModel = this.getOwnerComponent().getModel("rootModel");
+            sTenantId = oRootModel.getProperty("/tenantId");
 
+            var oToday = new Date();
             this.setModel(new JSONModel(), "listModel");
             this.setModel(new JSONModel({tenantId: sTenantId,
                                         type: "1",
+                                        dateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30, "00", "00", "00"),
+                                        secondDateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate(), "23", "59", "59"),
                                         type_list:[{code:"1", text:"개발구매"}]}), "filterModel");
 
             // Dialog에서 사용할 Model 생성
@@ -48,7 +51,7 @@ sap.ui.define([
         /**
          * Search 버튼 클릭(Filter 추출)
          */
-        onSearch: function () {
+        onSearch: function (oEvent) {
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],
@@ -160,8 +163,8 @@ sap.ui.define([
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
-                var oBasePriceListRootModel = this.getModel("rootModel");
-                oBasePriceListRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
+                var oRootModel = this.getModel("rootModel");
+                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
             }
 
             this.getRouter().navTo("basePriceDetail");

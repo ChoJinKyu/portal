@@ -23,4 +23,6 @@ entity Md_Approvals_View {
     approve_status      : String(240)                            ;
     approval_contents   : LargeString                           ;
     email_id            : String(240)                           ;
+    sort_no             : Decimal                            ;
+    mold_sequence       : String(100)                           ;
 }

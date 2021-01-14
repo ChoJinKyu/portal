@@ -8,22 +8,12 @@
     xmlns:lib-m="ext.lib.m"
     height="100%">
 
-    <f:DynamicPage id="page" 
-        headerExpanded="{mainListView>/headerExpanded}" 
-        toggleHeaderOnTitleClick="true">
+    <f:DynamicPage id="page"  toggleHeaderOnTitleClick="true" headerExpanded="true" >
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
                     <Title text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/MANAGEMENT}" />
                 </f:heading>
-                <f:snappedContent>
-                </f:snappedContent>
-                <f:expandedContent>
-                </f:expandedContent>
-                <!-- 조회 -->
-                <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
-                </f:actions>
                 <!-- 즐겨찾기 -->
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -36,11 +26,11 @@
                 <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/BUSINESS_UNIT}: " labelFor="searchPdOperationOrg" required="true"></Label>
-                            <MultiComboBox id="searchPdOperationOrg" width="100%" selectedKey="" required="true"  items="{
+                            <Label text="{I18N>/BUSINESS_UNIT}: " labelFor="searchPdOperationOrg"></Label>
+                            <MultiComboBox id="searchPdOperationOrg" width="100%" items="{
                                 path: '/PdOperationOrg',
                                 filters: [],
-                                sorter: { path: 'operation_org_name'}
+                                sorter: { path: 'operation_org_code'}
                                 }">
                                 <items>
                                     <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
@@ -65,6 +55,11 @@
                         </VBox>
                     </form:content>
                 </form:SimpleForm>
+                <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+                    <items>
+                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
+                    </items>
+                </HBox>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -78,10 +73,13 @@
                     path: 'list>/PdProdActivityTemplate'
                     }"
                     selectionChange=".onSelectionChange" 
-                    width="auto">
+                    width="auto"
+                    growing="true"
+                    growingThreshold="9"
+                    growingScrollToLoad="false" >
                     <headerToolbar>
                         <OverflowToolbar class="sapFDynamicPageAlignContent">
-                            <Title id="mainTableTitle" text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/LIST}" level="H2"/>
+                            <Title id="mainTableTitle" text=" " level="H2"/>
                             <ToolbarSpacer/>
                             <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/>
                             <!--Button text="Edit" id="buttonMainEditRow" press=".onSelectRow('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/-->
@@ -108,7 +106,7 @@
                             <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY}" />
                         </Column>
                         <Column id="productActivityEnd" minScreenWidth="Tablet" hAlign="Left">
-                            <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/ENGLISH}" />
+                            <Text text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/DETAIL}" />
                         </Column>
                         <Column id="milestone" minScreenWidth="Tablet" hAlign="Left" width="7rem">
                             <Text text="{I18N>/MILESTONE}" />

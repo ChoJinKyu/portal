@@ -113,6 +113,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm"));
             // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             // this.getRouter().navTo("mainPage", {layout: sNextLayout});
             var sPreviousHash = History.getInstance().getPreviousHash();
@@ -277,6 +278,8 @@ sap.ui.define([
                                 //console.log("#########Success#####", data.value[0].savedkey);
                                 oView.setBusy(false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("midObjectForm"));
+
                                 var sObjectPath = "/LOISupplySelectionView(tenant_id='" + tenantId + "',company_code='" + companyCode + "',loi_selection_number='" + data.value[0].savedkey + "')";
                                 var oMasterModel = that.getModel("master");
                                 oView.setBusy(true);
@@ -316,11 +319,11 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm"));
             if (this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true) {
                 this.onPageNavBackButtonPress.call(this);
             } else {
                 if (this.getModel("midObjectViewModel").getProperty("/isEditMode") == true) {
-                    this.validator.clearValueState(this.byId("page"));
                     this._toShowMode();
                 } else {
                     this.onPageNavBackButtonPress.call(this);

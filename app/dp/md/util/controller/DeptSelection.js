@@ -129,9 +129,16 @@ sap.ui.define([
       * @public 
       * @see 사용처 Participating Supplier Fragment 취소 이벤트
       */
-        onExit: function () {
+        onExit: function () { 
+              if (this._oDialogTableSelect) {
+                this._oDialogTableSelect.then(function (oDialog) {
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogTableSelect = undefined;
+            }
             // this._setInitPop();
-            oThis.byId("dialogDeptSelection").close();
+           // oThis.byId("dialogDeptSelection").close();
         },
       
         /**

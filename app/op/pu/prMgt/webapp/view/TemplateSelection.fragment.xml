@@ -7,9 +7,10 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogTemplateSelection" class="sapUiSmallMargin" title="Select Template" contentWidth="35%" >
+    <Dialog id="dialogTemplateSelection" class="sapUiSmallMargin" title="Select Template" contentWidth="35%" 
+        afterOpen=".onDialogOpen">
         <VBox class="sapUiSmallMargin" >
-            <form:SimpleForm  title="구매요청 생성"             
+            <form:SimpleForm  title="구매요청 생성"     
                 editable="false"
                 layout="ResponsiveGridLayout"
                 labelSpanXL="4"
@@ -30,6 +31,7 @@
                               width="100%"
                               required="true"
                               showSecondaryValues= "false"
+                              
                               selectionChange=".onInitPR_TYPE3"
                               items="{
                                 path: 'util>/Code',

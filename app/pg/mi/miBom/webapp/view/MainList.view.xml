@@ -37,7 +37,7 @@
         <!-- DynamicPage Header -->
         <f:header>
 
-            <f:DynamicPageHeader pinnable="false">
+            <f:DynamicPageHeader pinnable="true">
                 <f:content>
                 <!-- <smartVariantManagement:SmartVariantManagement        
 				             id="pageVariantId"

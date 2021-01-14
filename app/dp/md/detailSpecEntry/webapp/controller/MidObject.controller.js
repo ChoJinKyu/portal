@@ -51,6 +51,8 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "spec");
 
             oTransactionManager = new TransactionManager();
+            oTransactionManager.aDataModels.length = 0;
+            
 			oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("schedule"));
             oTransactionManager.addDataModel(this.getModel("spec"));

@@ -147,7 +147,7 @@
           "viewId": "productActivityMgt",
           "viewName": "productActivityMgt",
           "viewLevel": 1,
-          "title": "{i18n>mainListViewTitle}"
+          "title": "{{appTitle}}"
         }
       }
     }

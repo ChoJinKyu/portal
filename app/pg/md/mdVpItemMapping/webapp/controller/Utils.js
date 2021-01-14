@@ -20,6 +20,18 @@ sap.ui.define([
 			}
 		},
 
+        getAvailableItemsTableRows:function(oController){
+            var tableId = oController.getModel("tblModel").getProperty("/table1");
+            var rowId = tableId+"-rows-row";
+			return rowId;
+        },
+
+        getSelectedItemsTableRows:function(oController){
+            var tableId = oController.getModel("tblModel").getProperty("/table2");
+            var rowId = tableId+"-rows-row";
+			return rowId;
+        },
+        
 		getAvailableItemsTable: function(oController) {
             
             var aTableId = oController.getModel("tblModel").getProperty("/table1")

@@ -112,7 +112,7 @@ select pjt.tenant_id                  /*테넌트ID*/
            and emp.tenant_id = dept.tenant_id
            and emp.employee_number = pjt.planning_person_empno
            and emp.department_id = dept.department_id) AS planning_person_info     /*기획담당자이름부서*/
-     , 'CP' AS project_develope_event_code                             /*현재 Event 산정하는 로직 넣어야 함*/
+     , pjt.develope_event_code
      , to_varchar(current_date, 'yyyy-mm-dd') AS last_register_date    /*최종 재료비 등록일 로직 넣어야 함*/
      , '접수' AS estimate_status_name                                   /*각 재료비 정보 조회 로직 넣어야 함*/
      , 'ACCEPT' AS estimate_status_code

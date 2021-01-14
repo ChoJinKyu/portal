@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,7 +19,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.reflect.CdsModel;
@@ -64,272 +71,17 @@ public class VpMappingServiceV4 implements EventHandler {
     *********************************/
 
     @On(event=VpMappingChangeProcContext.CDS_NAME)
-    public void onVpMappingChangeProc(VpMappingChangeProcContext context) {
-
-        log.info("### onVpMappingChangeProc 1건 처리 [On] ###");
-
-        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
-        StringBuffer v_sql_createTableMst = new StringBuffer();
-        v_sql_createTableMst.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MST (");
-        v_sql_createTableMst.append("TENANT_ID NVARCHAR(5),");
-        v_sql_createTableMst.append("COMPANY_CODE NVARCHAR(10),");
-        v_sql_createTableMst.append("ORG_TYPE_CODE NVARCHAR(2),");
-        v_sql_createTableMst.append("ORG_CODE NVARCHAR(10),");
-        v_sql_createTableMst.append("VENDOR_POOL_CODE NVARCHAR(20),");
-        v_sql_createTableMst.append("VENDOR_POOL_LOCAL_NAME NVARCHAR(240),");
-        v_sql_createTableMst.append("VENDOR_POOL_ENGLISH_NAME NVARCHAR(240),");
-        v_sql_createTableMst.append("REPR_DEPARTMENT_CODE NVARCHAR(50),");
-        v_sql_createTableMst.append("OPERATION_UNIT_CODE NVARCHAR(30),");
-        v_sql_createTableMst.append("INP_TYPE_CODE NVARCHAR(30),");
-        v_sql_createTableMst.append("MTLMOB_BASE_CODE NVARCHAR(30),");
-        v_sql_createTableMst.append("REGULAR_EVALUATION_FLAG BOOLEAN,");
-        v_sql_createTableMst.append("INDUSTRY_CLASS_CODE NVARCHAR(30),");
-        v_sql_createTableMst.append("SD_EXCEPTION_FLAG BOOLEAN,");
-        v_sql_createTableMst.append("VENDOR_POOL_APPLY_EXCEPTION_FLAG BOOLEAN,");
-        v_sql_createTableMst.append("DOMESTIC_NET_PRICE_DIFF_RATE DECIMAL,");
-        v_sql_createTableMst.append("DOM_OVERSEA_NETPRICE_DIFF_RATE DECIMAL,");
-        v_sql_createTableMst.append("EQUIPMENT_GRADE_CODE NVARCHAR(30),");
-        v_sql_createTableMst.append("EQUIPMENT_TYPE_CODE NVARCHAR(30),");
-        v_sql_createTableMst.append("VENDOR_POOL_USE_FLAG BOOLEAN,");
-        v_sql_createTableMst.append("VENDOR_POOL_DESC NVARCHAR(3000),");
-        v_sql_createTableMst.append("VENDOR_POOL_HISTORY_DESC NVARCHAR(3000),");
-        v_sql_createTableMst.append("PARENT_VENDOR_POOL_CODE NVARCHAR(20),");
-        v_sql_createTableMst.append("LEAF_FLAG BOOLEAN,");
-        v_sql_createTableMst.append("LEVEL_NUMBER DECIMAL,");
-        v_sql_createTableMst.append("DISPLAY_SEQUENCE BIGINT,");
-        v_sql_createTableMst.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableMst.append("APPROVAL_NUMBER NVARCHAR(50))");
-
-        StringBuffer v_sql_createTableSupplier = new StringBuffer();
-        v_sql_createTableSupplier.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_SUPPLIER (");        
-        v_sql_createTableSupplier.append("TENANT_ID NVARCHAR(5),");
-        v_sql_createTableSupplier.append("COMPANY_CODE NVARCHAR(10),");
-        v_sql_createTableSupplier.append("ORG_TYPE_CODE NVARCHAR(2),");
-        v_sql_createTableSupplier.append("ORG_CODE NVARCHAR(10),");
-        v_sql_createTableSupplier.append("VENDOR_POOL_CODE NVARCHAR(20),");
-        v_sql_createTableSupplier.append("SUPPLIER_CODE NVARCHAR(15),");
-        v_sql_createTableSupplier.append("SUPEVAL_TARGET_FLAG BOOLEAN,");
-        v_sql_createTableSupplier.append("SUPPLIER_OP_PLAN_REVIEW_FLAG BOOLEAN,");
-        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_FLAG BOOLEAN,");
-        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_START_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_END_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_START_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_END_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("INP_CODE NVARCHAR(30),");
-        v_sql_createTableSupplier.append("SUPPLIER_RM_CONTROL_FLAG BOOLEAN,");
-        v_sql_createTableSupplier.append("SUPPLIER_BASE_PORTION_RATE DECIMAL,");
-        v_sql_createTableSupplier.append("VENDOR_POOL_MAPPING_USE_FLAG BOOLEAN,");
-        v_sql_createTableSupplier.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableSupplier.append("APPROVAL_NUMBER NVARCHAR(50))");
-
-        StringBuffer v_sql_createTableItem = new StringBuffer();
-        v_sql_createTableItem.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_ITEM (");        
-        v_sql_createTableItem.append("TENANT_ID NVARCHAR(5),");
-        v_sql_createTableItem.append("COMPANY_CODE NVARCHAR(10),");
-        v_sql_createTableItem.append("ORG_TYPE_CODE NVARCHAR(2),");
-        v_sql_createTableItem.append("ORG_CODE NVARCHAR(10),");
-        v_sql_createTableItem.append("VENDOR_POOL_CODE NVARCHAR(20),");
-        v_sql_createTableItem.append("MATERIAL_CODE NVARCHAR(40),");
-        v_sql_createTableItem.append("VENDOR_POOL_MAPPING_USE_FLAG BOOLEAN,");
-        v_sql_createTableItem.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableItem.append("APPROVAL_NUMBER NVARCHAR(50))");
-
-        StringBuffer v_sql_createTableManager = new StringBuffer();
-        v_sql_createTableManager.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MANAGER (");        
-        v_sql_createTableManager.append("TENANT_ID NVARCHAR(5),");
-        v_sql_createTableManager.append("COMPANY_CODE NVARCHAR(10),");
-        v_sql_createTableManager.append("ORG_TYPE_CODE NVARCHAR(2),");
-        v_sql_createTableManager.append("ORG_CODE NVARCHAR(10),");
-        v_sql_createTableManager.append("VENDOR_POOL_CODE NVARCHAR(20),");
-        v_sql_createTableManager.append("VENDOR_POOL_PERSON_EMPNO NVARCHAR(30),");
-        v_sql_createTableManager.append("VENDOR_POOL_PERSON_ROLE_TEXT NVARCHAR(50),");
-        v_sql_createTableManager.append("VENDOR_POOL_MAPPING_USE_FLAG BOOLEAN,");
-        v_sql_createTableManager.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableManager.append("APPROVAL_NUMBER NVARCHAR(50))");
-
-        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableSupplier = "INSERT INTO #LOCAL_TEMP_SUPPLIER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableItem = "INSERT INTO #LOCAL_TEMP_ITEM VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableManager = "INSERT INTO #LOCAL_TEMP_MANAGER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        StringBuffer v_sql_callProc = new StringBuffer();
-        v_sql_callProc.append("CALL PG_VP_VENDOR_POOL_CHANGE_PROC(");        
-            v_sql_callProc.append("I_MST => #LOCAL_TEMP_MST,");        
-            v_sql_callProc.append("I_SUP => #LOCAL_TEMP_SUPPLIER,");        
-            v_sql_callProc.append("I_ITM => #LOCAL_TEMP_ITEM, ");        
-            v_sql_callProc.append("I_MAN => #LOCAL_TEMP_MANAGER,");        
-            v_sql_callProc.append("I_USER_ID => ?,");        
-            v_sql_callProc.append("I_USER_NO => ?,");        
-            v_sql_callProc.append("O_MSG => ?)");                    
-
-        Collection<VpMstType> v_inMst = context.getInputData().getVpMst();
-        Collection<VpSuppilerType> v_inSupplier = context.getInputData().getVpSupplier();
-        Collection<VpItemType> v_inItem = context.getInputData().getVpItem();
-        Collection<VpManagerType> v_inManager = context.getInputData().getVpManager();
-        Collection<VpOutType> v_result = new ArrayList<>();
-
-        ResultSet v_rs = null;
-
-		try {
-            
-            Connection conn = jdbc.getDataSource().getConnection();
-
-            // Vendor Pool Mst Local Temp Table 생성
-            PreparedStatement v_statement_tableMst = conn.prepareStatement(v_sql_createTableMst.toString());
-            v_statement_tableMst.execute();
-
-            // Vendor Pool Mst Local Temp Table에 insert
-            PreparedStatement v_statement_insertMst = conn.prepareStatement(v_sql_insertTableMst);
-
-            if(!v_inMst.isEmpty() && v_inMst.size() > 0){
-                for(VpMstType v_inRow : v_inMst){
-                    v_statement_insertMst.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertMst.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertMst.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertMst.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertMst.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertMst.setObject(6, v_inRow.get("vendor_pool_local_name"));
-                    v_statement_insertMst.setObject(7, v_inRow.get("vendor_pool_english_name"));
-                    v_statement_insertMst.setObject(8, v_inRow.get("repr_department_code"));
-                    v_statement_insertMst.setObject(9, v_inRow.get("operation_unit_code"));
-                    v_statement_insertMst.setObject(10, v_inRow.get("inp_type_code"));
-                    v_statement_insertMst.setObject(11, v_inRow.get("mtlmob_base_code"));
-                    v_statement_insertMst.setObject(12, v_inRow.get("regular_evaluation_flag"));
-                    v_statement_insertMst.setObject(13, v_inRow.get("industry_class_code"));
-                    v_statement_insertMst.setObject(14, v_inRow.get("sd_exception_flag"));
-                    v_statement_insertMst.setObject(15, v_inRow.get("vendor_pool_apply_exception_flag"));
-                    v_statement_insertMst.setObject(16, v_inRow.get("domestic_net_price_diff_rate"));
-                    v_statement_insertMst.setObject(17, v_inRow.get("dom_oversea_netprice_diff_rate"));
-                    v_statement_insertMst.setObject(18, v_inRow.get("equipment_grade_code"));
-                    v_statement_insertMst.setObject(19, v_inRow.get("equipment_type_code"));
-                    v_statement_insertMst.setObject(20, v_inRow.get("vendor_pool_use_flag"));
-                    v_statement_insertMst.setObject(21, v_inRow.get("vendor_pool_desc"));
-                    v_statement_insertMst.setObject(22, v_inRow.get("vendor_pool_history_desc"));
-                    v_statement_insertMst.setObject(23, v_inRow.get("parent_vendor_pool_code"));
-                    v_statement_insertMst.setObject(24, v_inRow.get("leaf_flag"));
-                    v_statement_insertMst.setObject(25, v_inRow.get("level_number"));
-                    v_statement_insertMst.setObject(26, v_inRow.get("display_sequence"));
-                    v_statement_insertMst.setObject(27, v_inRow.get("register_reason"));
-                    v_statement_insertMst.setObject(28, v_inRow.get("approval_number"));
-                    v_statement_insertMst.addBatch();
-                }
-
-                v_statement_insertMst.executeBatch();
-            }
-
-            // Vendor Pool Supplier Local Temp Table 생성
-            PreparedStatement v_statement_tableSupplier = conn.prepareStatement(v_sql_createTableSupplier.toString());
-            v_statement_tableSupplier.execute();
-
-            // Vendor Pool Supplier Local Temp Table에 insert
-            PreparedStatement v_statement_insertSupplier = conn.prepareStatement(v_sql_insertTableSupplier);
-
-            if(!v_inSupplier.isEmpty() && v_inSupplier.size() > 0){
-                for(VpSuppilerType v_inRow : v_inSupplier){
-                    v_statement_insertSupplier.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertSupplier.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertSupplier.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertSupplier.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertSupplier.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertSupplier.setObject(6, v_inRow.get("supplier_code"));
-                    v_statement_insertSupplier.setObject(7, v_inRow.get("supeval_target_flag"));
-                    v_statement_insertSupplier.setObject(8, v_inRow.get("supplier_op_plan_review_flag"));
-                    v_statement_insertSupplier.setObject(9, v_inRow.get("supeval_control_flag"));
-                    v_statement_insertSupplier.setObject(10, v_inRow.get("supeval_control_start_date"));
-                    v_statement_insertSupplier.setObject(11, v_inRow.get("supeval_control_end_date"));
-                    v_statement_insertSupplier.setObject(12, v_inRow.get("supeval_restrict_start_date"));
-                    v_statement_insertSupplier.setObject(13, v_inRow.get("supeval_restrict_end_date"));
-                    v_statement_insertSupplier.setObject(14, v_inRow.get("inp_code"));
-                    v_statement_insertSupplier.setObject(15, v_inRow.get("supplier_rm_control_flag"));
-                    v_statement_insertSupplier.setObject(16, v_inRow.get("supplier_base_portion_rate"));
-                    v_statement_insertSupplier.setObject(17, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertSupplier.setObject(18, v_inRow.get("register_reason"));
-                    v_statement_insertSupplier.setObject(19, v_inRow.get("approval_number"));
-                    v_statement_insertSupplier.addBatch();
-                }
-
-                v_statement_insertSupplier.executeBatch();
-            }
-
-            // Vendor Pool Item Local Temp Table 생성
-            PreparedStatement v_statement_tableItem = conn.prepareStatement(v_sql_createTableItem.toString());
-            v_statement_tableItem.execute();
-
-            // Vendor Pool Mst Local Temp Table에 insert
-            PreparedStatement v_statement_insertItem = conn.prepareStatement(v_sql_insertTableItem);
-
-            if(!v_inItem.isEmpty() && v_inItem.size() > 0){
-                for(VpItemType v_inRow : v_inItem){
-                    v_statement_insertItem.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertItem.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertItem.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertItem.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertItem.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertItem.setObject(6, v_inRow.get("material_code"));
-                    v_statement_insertItem.setObject(7, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertItem.setObject(8, v_inRow.get("register_reason"));
-                    v_statement_insertItem.setObject(9, v_inRow.get("approval_number"));                    
-                    v_statement_insertItem.addBatch();
-                }
-
-                v_statement_insertItem.executeBatch();
-            }
-
-            // Vendor Pool Manager Local Temp Table 생성
-            PreparedStatement v_statement_tableManager = conn.prepareStatement(v_sql_createTableManager.toString());
-            v_statement_tableManager.execute();
-
-            // Vendor Pool Manager Local Temp Table에 insert
-            PreparedStatement v_statement_insertManager = conn.prepareStatement(v_sql_insertTableManager);
-
-            if(!v_inManager.isEmpty() && v_inManager.size() > 0){
-                for(VpManagerType v_inRow : v_inManager){
-                    v_statement_insertManager.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertManager.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertManager.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertManager.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertManager.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertManager.setObject(6, v_inRow.get("vendor_pool_person_empno"));
-                    v_statement_insertManager.setObject(7, v_inRow.get("vendor_pool_person_role_text"));
-                    v_statement_insertManager.setObject(8, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertManager.setObject(9, v_inRow.get("register_reason"));
-                    v_statement_insertManager.setObject(10, v_inRow.get("approval_number"));
-                    v_statement_insertManager.addBatch();
-                }
-
-                v_statement_insertManager.executeBatch();
-            }
-
-            // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
-
-            v_statement_proc.setString(1, context.getInputData().getUserId());
-            v_statement_proc.setString(2, context.getInputData().getUserNo());
-            v_rs = v_statement_proc.executeQuery();
-            
-
-            //VpOutType
-
-            // Procedure Out put 담기
-            while (v_rs.next()){
-                VpOutType v_row = VpOutType.create();
-                v_row.setReturnCode(v_rs.getString("return_code"));
-                v_row.setReturnMsg(v_rs.getString("return_msg"));                
-                v_result.add(v_row);
-            }
-
-            context.setResult(v_result);
-            context.setCompleted();
-
-		} catch (SQLException e) { 
-			e.printStackTrace();
-        }
+    public void onVpMappingChangeProc(VpMappingChangeProcContext context) {        
     }
 
+    @Transactional(rollbackFor = SQLException.class)
     @On(event=VpMappingChangeTestProcContext.CDS_NAME)
     public void onVpMappingChangeTestProc(VpMappingChangeTestProcContext context) {
 
         log.info("### onVpMappingChangeTestProc 1건 처리 [On] ###");
+
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
         StringBuffer v_sql_createTableMst = new StringBuffer();
@@ -363,12 +115,9 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableMst.append("DISPLAY_SEQUENCE BIGINT,");
         v_sql_createTableMst.append("REGISTER_REASON NVARCHAR(50),");
         v_sql_createTableMst.append("APPROVAL_NUMBER NVARCHAR(50),"); 
-        v_sql_createTableMst.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
-
-
+        v_sql_createTableMst.append("CRUD_TYPE_CODE NVARCHAR(2))");         
         
-        
-        String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST;";                
+        String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST";                
 
         StringBuffer v_sql_createTableSupplier = new StringBuffer();
         v_sql_createTableSupplier.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_SUPPLIER (");        
@@ -393,7 +142,7 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableSupplier.append("APPROVAL_NUMBER NVARCHAR(50),");
         v_sql_createTableSupplier.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
 
-        String v_sql_dropTableSupplier = "DROP TABLE #LOCAL_TEMP_SUPPLIER;";                      
+        String v_sql_dropTableSupplier = "DROP TABLE #LOCAL_TEMP_SUPPLIER";                      
 
         StringBuffer v_sql_createTableItem = new StringBuffer();
         v_sql_createTableItem.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_ITEM (");        
@@ -408,7 +157,7 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableItem.append("APPROVAL_NUMBER NVARCHAR(50),");
         v_sql_createTableItem.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
         
-        String v_sql_dropTableItem = "DROP TABLE #LOCAL_TEMP_ITEM;";                
+        String v_sql_dropTableItem = "DROP TABLE #LOCAL_TEMP_ITEM";                
 
         StringBuffer v_sql_createTableManager = new StringBuffer();
         v_sql_createTableManager.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MANAGER (");        
@@ -424,7 +173,7 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableManager.append("APPROVAL_NUMBER NVARCHAR(50),");
         v_sql_createTableManager.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
 
-        String v_sql_dropTableManager = "DROP TABLE #LOCAL_TEMP_MANAGER;";        
+        String v_sql_dropTableManager = "DROP TABLE #LOCAL_TEMP_MANAGER";        
 
         String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableSupplier = "INSERT INTO #LOCAL_TEMP_SUPPLIER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -448,268 +197,229 @@ public class VpMappingServiceV4 implements EventHandler {
         Collection<VpMstType> v_inMst = context.getInputData().getVpMst();
         Collection<VpSuppilerType> v_inSupplier = context.getInputData().getVpSupplier();
         Collection<VpItemType> v_inItem = context.getInputData().getVpItem();
-        Collection<VpManagerType> v_inManager = context.getInputData().getVpManager();
+        Collection<VpManagerType> v_inManager = context.getInputData().getVpManager();             
+
         Collection<VpOutType> v_result = new ArrayList<>();
+        		            
+        log.info("### Proc Start ###");            
 
-        ResultSet v_rs = null;
-
-        Connection conn = null;
-        PreparedStatement v_statement_tableMst = null;
-        PreparedStatement v_statement_tableSupplier = null;
-        PreparedStatement v_statement_tableItem = null;
-        PreparedStatement v_statement_tableManager = null;
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
         
-		try {
-            
-            log.info("### try Start ###");
-            conn = jdbc.getDataSource().getConnection();
-            
-            // Vendor Pool Mst Local Temp Table 생성
-            v_statement_tableMst = conn.prepareStatement(v_sql_createTableMst.toString());
-            v_statement_tableMst.execute();
+        // Vendor Pool Mst Local Temp Table 생성            
+        jdbc.execute(v_sql_createTableMst.toString());
 
-            // Vendor Pool Mst Local Temp Table에 insert
-            PreparedStatement v_statement_insertMst = conn.prepareStatement(v_sql_insertTableMst);
-            
-
-            if(!v_inMst.isEmpty() && v_inMst.size() > 0){
-                for(VpMstType v_inRow : v_inMst){
-                    v_statement_insertMst.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertMst.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertMst.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertMst.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertMst.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertMst.setObject(6, v_inRow.get("vendor_pool_local_name"));
-                    v_statement_insertMst.setObject(7, v_inRow.get("vendor_pool_english_name"));
-                    v_statement_insertMst.setObject(8, v_inRow.get("repr_department_code"));
-                    v_statement_insertMst.setObject(9, v_inRow.get("operation_unit_code"));
-                    v_statement_insertMst.setObject(10, v_inRow.get("inp_type_code"));
-                    v_statement_insertMst.setObject(11, v_inRow.get("mtlmob_base_code"));
-                    v_statement_insertMst.setObject(12, v_inRow.get("regular_evaluation_flag"));
-                    v_statement_insertMst.setObject(13, v_inRow.get("industry_class_code"));
-                    v_statement_insertMst.setObject(14, v_inRow.get("sd_exception_flag"));
-                    v_statement_insertMst.setObject(15, v_inRow.get("vendor_pool_apply_exception_flag"));
-                    v_statement_insertMst.setObject(16, v_inRow.get("maker_material_code_mngt_flag"));
-                    v_statement_insertMst.setObject(17, v_inRow.get("domestic_net_price_diff_rate"));
-                    v_statement_insertMst.setObject(18, v_inRow.get("dom_oversea_netprice_diff_rate"));
-                    v_statement_insertMst.setObject(19, v_inRow.get("equipment_grade_code"));
-                    v_statement_insertMst.setObject(20, v_inRow.get("equipment_type_code"));
-                    v_statement_insertMst.setObject(21, v_inRow.get("vendor_pool_use_flag"));
-                    v_statement_insertMst.setObject(22, v_inRow.get("vendor_pool_desc"));
-                    v_statement_insertMst.setObject(23, v_inRow.get("vendor_pool_history_desc"));
-                    v_statement_insertMst.setObject(24, v_inRow.get("parent_vendor_pool_code"));
-                    v_statement_insertMst.setObject(25, v_inRow.get("leaf_flag"));
-                    v_statement_insertMst.setObject(26, v_inRow.get("level_number"));
-                    v_statement_insertMst.setObject(27, v_inRow.get("display_sequence"));
-                    v_statement_insertMst.setObject(28, v_inRow.get("register_reason"));
-                    v_statement_insertMst.setObject(29, v_inRow.get("approval_number"));
-                    v_statement_insertMst.setObject(30, v_inRow.get("crud_type_code"));
-                    v_statement_insertMst.addBatch();
-                }
-
-                v_statement_insertMst.executeBatch();
-            }
-
-            /*v_statement_insertMst.setObject(1, "L2100");
-            v_statement_insertMst.setObject(2, "*");
-            v_statement_insertMst.setObject(3, "BU");
-            v_statement_insertMst.setObject(4, "BIZ00200");
-            v_statement_insertMst.setObject(5, "VP201610260092");            
-            v_statement_insertMst.addBatch();
-
-            v_statement_insertMst.setObject(1, "L2100");
-            v_statement_insertMst.setObject(2, "*");
-            v_statement_insertMst.setObject(3, "BU");
-            v_statement_insertMst.setObject(4, "BIZ00200");
-            v_statement_insertMst.setObject(5, "VP201610260095");            
-            v_statement_insertMst.addBatch();*/
-
-            v_statement_insertMst.executeBatch();
-
-            log.info("### insertMst Success ###");
-
-            // Vendor Pool Supplier Local Temp Table 생성
-            v_statement_tableSupplier = conn.prepareStatement(v_sql_createTableSupplier.toString());
-            v_statement_tableSupplier.execute();
-
-            // Vendor Pool Supplier Local Temp Table에 insert
-            PreparedStatement v_statement_insertSupplier = conn.prepareStatement(v_sql_insertTableSupplier);
-
-            if(!v_inSupplier.isEmpty() && v_inSupplier.size() > 0){
-                for(VpSuppilerType v_inRow : v_inSupplier){
-                    v_statement_insertSupplier.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertSupplier.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertSupplier.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertSupplier.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertSupplier.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertSupplier.setObject(6, v_inRow.get("supplier_code"));
-                    v_statement_insertSupplier.setObject(7, v_inRow.get("supeval_target_flag"));
-                    v_statement_insertSupplier.setObject(8, v_inRow.get("supplier_op_plan_review_flag"));
-                    v_statement_insertSupplier.setObject(9, v_inRow.get("supeval_control_flag"));
-                    v_statement_insertSupplier.setObject(10, v_inRow.get("supeval_control_start_date"));
-                    v_statement_insertSupplier.setObject(11, v_inRow.get("supeval_control_end_date"));
-                    v_statement_insertSupplier.setObject(12, v_inRow.get("supeval_restrict_start_date"));
-                    v_statement_insertSupplier.setObject(13, v_inRow.get("supeval_restrict_end_date"));
-                    v_statement_insertSupplier.setObject(14, v_inRow.get("inp_code"));
-                    v_statement_insertSupplier.setObject(15, v_inRow.get("supplier_rm_control_flag"));
-                    v_statement_insertSupplier.setObject(16, v_inRow.get("supplier_base_portion_rate"));
-                    v_statement_insertSupplier.setObject(17, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertSupplier.setObject(18, v_inRow.get("register_reason"));
-                    v_statement_insertSupplier.setObject(19, v_inRow.get("approval_number"));
-                    v_statement_insertSupplier.setObject(20, v_inRow.get("crud_type_code"));                    
-                    v_statement_insertSupplier.addBatch();
-                }
-
-                v_statement_insertSupplier.executeBatch();
-            }
-
-            log.info("### insertSupplier Success ###");
-
-            // Vendor Pool Item Local Temp Table 생성
-            v_statement_tableItem = conn.prepareStatement(v_sql_createTableItem.toString());
-            v_statement_tableItem.execute();
-
-            // Vendor Pool Mst Local Temp Table에 insert
-            PreparedStatement v_statement_insertItem = conn.prepareStatement(v_sql_insertTableItem);
-
-            if(!v_inItem.isEmpty() && v_inItem.size() > 0){
-                for(VpItemType v_inRow : v_inItem){
-                    v_statement_insertItem.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertItem.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertItem.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertItem.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertItem.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertItem.setObject(6, v_inRow.get("material_code"));
-                    v_statement_insertItem.setObject(7, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertItem.setObject(8, v_inRow.get("register_reason"));
-                    v_statement_insertItem.setObject(9, v_inRow.get("approval_number"));    
-                    v_statement_insertItem.setObject(10, v_inRow.get("crud_type_code"));                                        
-                    v_statement_insertItem.addBatch();
-                }
-
-                v_statement_insertItem.executeBatch();
-            }
-
-            log.info("### insertItem Success ###");
-
-            // Vendor Pool Manager Local Temp Table 생성
-            v_statement_tableManager = conn.prepareStatement(v_sql_createTableManager.toString());
-            v_statement_tableManager.execute();
-
-            // Vendor Pool Manager Local Temp Table에 insert
-            PreparedStatement v_statement_insertManager = conn.prepareStatement(v_sql_insertTableManager);
-
-            if(!v_inManager.isEmpty() && v_inManager.size() > 0){
-                for(VpManagerType v_inRow : v_inManager){
-                    v_statement_insertManager.setObject(1, v_inRow.get("tenant_id"));
-                    v_statement_insertManager.setObject(2, v_inRow.get("company_code"));
-                    v_statement_insertManager.setObject(3, v_inRow.get("org_type_code"));
-                    v_statement_insertManager.setObject(4, v_inRow.get("org_code"));
-                    v_statement_insertManager.setObject(5, v_inRow.get("vendor_pool_code"));
-                    v_statement_insertManager.setObject(6, v_inRow.get("vendor_pool_person_empno"));
-                    v_statement_insertManager.setObject(7, v_inRow.get("vendor_pool_person_role_text"));
-                    v_statement_insertManager.setObject(8, v_inRow.get("vendor_pool_mapping_use_flag"));
-                    v_statement_insertManager.setObject(9, v_inRow.get("register_reason"));
-                    v_statement_insertManager.setObject(10, v_inRow.get("approval_number"));
-                    v_statement_insertManager.setObject(11, v_inRow.get("crud_type_code"));                    
-                    v_statement_insertManager.addBatch();
-                }
-
-                v_statement_insertManager.executeBatch();
-            }
-
-            log.info("### insertManager Success ###");
-
-            // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
-
-            v_statement_proc.setString(1, context.getInputData().getUserId());
-            v_statement_proc.setString(2, context.getInputData().getUserNo());
-            v_rs = v_statement_proc.executeQuery();
-            
-            log.info("### callProc Success ###");
-            //VpOutType
-
-            // Procedure Out put 담기
-            while (v_rs.next()){
-                VpOutType v_row = VpOutType.create();
-                v_row.setReturnCode(v_rs.getString("return_code"));
-                v_row.setReturnMsg(v_rs.getString("return_msg"));                
-
-                log.info(v_rs.getString("return_code"));
-                log.info(v_rs.getString("return_msg"));
-
-                if( "NG".equals(v_rs.getString("return_code"))){
-                    log.info("### Call Proc Error!!  ###");
-                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
-                }
-                v_result.add(v_row);              
-            }
-
-
-            // Vendor Pool Master Local Temp Table 삭제
-            v_statement_tableMst = conn.prepareStatement(v_sql_dropTableMst);
-            v_statement_tableMst.execute();
-
-            // Vendor Pool Supplier Local Temp Table 삭제
-            v_statement_tableSupplier = conn.prepareStatement(v_sql_dropTableSupplier);
-            v_statement_tableSupplier.execute();
-
-            // Vendor Pool Item Local Temp Table 삭제
-            v_statement_tableItem = conn.prepareStatement(v_sql_dropTableItem);
-            v_statement_tableItem.execute();
-
-            // Vendor Pool Manager Local Temp Table 삭제
-            v_statement_tableManager = conn.prepareStatement(v_sql_dropTableManager);
-            v_statement_tableManager.execute();
-
-
-            v_statement_tableMst.close();
-            v_statement_tableSupplier.close();
-            v_statement_tableItem.close();
-            v_statement_tableManager.close();
-
-            context.setResult(v_result);
-            context.setCompleted();
-
-		} catch (SQLException e) { 
-			e.printStackTrace();
-        } finally {
-            try{ 
-                if(v_statement_tableMst != null){
-                    // Vendor Pool Master Local Temp Table 삭제
-                    v_statement_tableMst = conn.prepareStatement(v_sql_dropTableMst);
-                    v_statement_tableMst.execute();
-            
-                    v_statement_tableMst.close();             
-                } 
-                if(v_statement_tableSupplier != null){
-                    // Vendor Pool Supplier Local Temp Table 삭제
-                    v_statement_tableSupplier = conn.prepareStatement(v_sql_dropTableSupplier);
-                    v_statement_tableSupplier.execute();
-            
-                    v_statement_tableSupplier.close();              
-                } 
-                if(v_statement_tableItem != null){
-                    // Vendor Pool Item Local Temp Table 삭제
-                    v_statement_tableItem = conn.prepareStatement(v_sql_dropTableItem);
-                    v_statement_tableItem.execute();
-            
-                    v_statement_tableItem.close();
-                } 
-                if(v_statement_tableManager != null){
-                    // Vendor Pool Manager Local Temp Table 삭제
-                    v_statement_tableManager = conn.prepareStatement(v_sql_dropTableManager);
-                    v_statement_tableManager.execute();
+        // Vendor Pool Mst Local Temp Table에 insert                        
+        List<Object[]> batchMst = new ArrayList<Object[]>();
+        if(!v_inMst.isEmpty() && v_inMst.size() > 0){
+            for(VpMstType v_inRow : v_inMst){
+                Object[] values = new Object[] {                        
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("org_type_code"),
+                    v_inRow.get("org_code"),
+                    v_inRow.get("vendor_pool_code"),
+                    v_inRow.get("vendor_pool_local_name"),
+                    v_inRow.get("vendor_pool_english_name"),
+                    v_inRow.get("repr_department_code"),
+                    v_inRow.get("operation_unit_code"),
+                    v_inRow.get("inp_type_code"),
+                    v_inRow.get("mtlmob_base_code"),
+                    v_inRow.get("regular_evaluation_flag"),
+                    v_inRow.get("industry_class_code"),
+                    v_inRow.get("sd_exception_flag"),
+                    v_inRow.get("vendor_pool_apply_exception_flag"),
+                    v_inRow.get("maker_material_code_mngt_flag"),
+                    v_inRow.get("domestic_net_price_diff_rate"),
+                    v_inRow.get("dom_oversea_netprice_diff_rate"),
+                    v_inRow.get("equipment_grade_code"),
+                    v_inRow.get("equipment_type_code"),
+                    v_inRow.get("vendor_pool_use_flag"),
+                    v_inRow.get("vendor_pool_desc"),
+                    v_inRow.get("vendor_pool_history_desc"),
+                    v_inRow.get("parent_vendor_pool_code"),
+                    v_inRow.get("leaf_flag"),
+                    v_inRow.get("level_number"),
+                    v_inRow.get("display_sequence"),
+                    v_inRow.get("register_reason"),
+                    v_inRow.get("approval_number"),
+                    v_inRow.get("crud_type_code")
+                };
                     
-                    v_statement_tableManager.close();
-                } 
-                if(conn != null){
-                    conn.close();              
-                }                 
-            } catch(Exception e){
-
+                batchMst.add(values);
             }
         }
+
+        int[] updateCountsMst = jdbc.batchUpdate(v_sql_insertTableMst, batchMst);                        
+
+        log.info("### insertMst Success ###");
+
+        // Vendor Pool Supplier Local Temp Table 생성
+        jdbc.execute(v_sql_createTableSupplier.toString());
+
+        // Vendor Pool Supplier Local Temp Table에 insert            
+        List<Object[]> batchSupp = new ArrayList<Object[]>();
+        if(!v_inSupplier.isEmpty() && v_inSupplier.size() > 0){
+            for(VpSuppilerType v_inRow : v_inSupplier){
+                Object[] values = new Object[] {                        
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("org_type_code"),
+                    v_inRow.get("org_code"),
+                    v_inRow.get("vendor_pool_code"),
+                    v_inRow.get("vendor_pool_local_name"),
+                    v_inRow.get("vendor_pool_english_name"),
+                    v_inRow.get("repr_department_code"),
+                    v_inRow.get("operation_unit_code"),
+                    v_inRow.get("inp_type_code"),
+                    v_inRow.get("mtlmob_base_code"),
+                    v_inRow.get("regular_evaluation_flag"),
+                    v_inRow.get("industry_class_code"),
+                    v_inRow.get("sd_exception_flag"),
+                    v_inRow.get("vendor_pool_apply_exception_flag"),
+                    v_inRow.get("maker_material_code_mngt_flag"),
+                    v_inRow.get("domestic_net_price_diff_rate"),
+                    v_inRow.get("dom_oversea_netprice_diff_rate"),
+                    v_inRow.get("equipment_grade_code"),
+                    v_inRow.get("equipment_type_code"),
+                    v_inRow.get("vendor_pool_use_flag"),
+                    v_inRow.get("vendor_pool_desc"),
+                    v_inRow.get("vendor_pool_history_desc"),
+                    v_inRow.get("parent_vendor_pool_code"),
+                    v_inRow.get("leaf_flag"),
+                    v_inRow.get("level_number"),
+                    v_inRow.get("display_sequence"),
+                    v_inRow.get("register_reason"),
+                    v_inRow.get("approval_number"),
+                    v_inRow.get("crud_type_code")
+                };
+                    
+                batchSupp.add(values);
+            }
+        }
+
+        int[] updateCountsSupp = jdbc.batchUpdate(v_sql_insertTableSupplier, batchSupp);                          
+
+        log.info("### insertSupplier Success ###");
+
+        // Vendor Pool Item Local Temp Table 생성
+        jdbc.execute(v_sql_createTableItem.toString());
+
+        // Vendor Pool Item Local Temp Table에 insert
+        List<Object[]> batchItem = new ArrayList<Object[]>();
+        if(!v_inItem.isEmpty() && v_inItem.size() > 0){
+            for(VpItemType v_inRow : v_inItem){
+                Object[] values = new Object[] {                        
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("org_type_code"),
+                    v_inRow.get("org_code"),
+                    v_inRow.get("vendor_pool_code"),
+                    v_inRow.get("material_code"),
+                    v_inRow.get("vendor_pool_mapping_use_flag"),
+                    v_inRow.get("register_reason"),
+                    v_inRow.get("approval_number"),    
+                    v_inRow.get("crud_type_code")  
+                };
+                    
+                batchItem.add(values);
+            }
+        }
+
+        int[] updateCountsItem = jdbc.batchUpdate(v_sql_insertTableItem, batchItem);                                      
+
+        log.info("### insertItem Success ###");
+
+        // Vendor Pool Manager Local Temp Table 생성
+        jdbc.execute(v_sql_createTableManager.toString());
+
+        // Vendor Pool Manager Local Temp Table에 insert
+        List<Object[]> batchManager = new ArrayList<Object[]>();
+        if(!v_inManager.isEmpty() && v_inManager.size() > 0){
+            for(VpManagerType v_inRow : v_inManager){
+                Object[] values = new Object[] {                        
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("org_type_code"),
+                    v_inRow.get("org_code"),
+                    v_inRow.get("vendor_pool_code"),
+                    v_inRow.get("vendor_pool_person_empno"),
+                    v_inRow.get("vendor_pool_person_role_text"),
+                    v_inRow.get("vendor_pool_mapping_use_flag"),
+                    v_inRow.get("register_reason"),
+                    v_inRow.get("approval_number"),
+                    v_inRow.get("crud_type_code")                    
+                };
+                    
+                batchManager.add(values);
+            }
+        }
+
+        int[] updateCountsManager = jdbc.batchUpdate(v_sql_insertTableManager, batchManager);            
+
+        log.info("### insertManager Success ###");
+
+        // Procedure Call
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
+        paramList.add(new SqlParameter("I_USER_NO", Types.VARCHAR));       
+        
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_MSG", new RowMapper<VpOutType>(){
+            @Override
+            public VpOutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                VpOutType v_row = VpOutType.create();
+                v_row.setReturnCode(v_rs.getString("return_code"));
+                v_row.setReturnMsg(v_rs.getString("return_msg"));
+                log.info(v_rs.getString("return_code"));
+                log.info(v_rs.getString("return_msg"));  
+                if("NG".equals(v_rs.getString("return_code"))){
+                    log.info("### Call Proc Error!!  ###");
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
+                }              
+                v_result.add(v_row);
+                return v_row;
+            }
+        });
+        paramList.add(oReturn);       
+
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
+                callableStatement.setString("I_USER_NO", context.getInputData().getUserNo());
+                return callableStatement;
+            }
+        }, paramList);
+
+        log.info("### callProc Success ###");
+
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableMst);
+        jdbc.execute(v_sql_dropTableSupplier);
+        jdbc.execute(v_sql_dropTableItem);
+        jdbc.execute(v_sql_dropTableManager);
+
+        /*while (resultMap.next()){
+            VpOutType v_row = VpOutType.create();
+            v_row.setReturnCode(resultMap.getString("return_code"));
+            v_row.setReturnMsg(resultMap.getString("return_msg"));                
+
+            log.info(resultMap.getString("return_code"));
+            log.info(resultMap.getString("return_msg"));
+
+            if( "NG".equals(resultMap.getString("return_code"))){
+                log.info("### Call Proc Error!!  ###");
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, resultMap.getString("return_msg"));
+            }
+            v_result.add(v_row);              
+        }*/        
+        //log.info(v_rs.getString("return_code"));
+        //log.info(v_rs.getString("return_msg"));        
+        //v_result.setReturnCode(resultMap.getReturnCode());
+        //v_result.setReturnMsg(resultMap.getReturnMsg());
+        
+        context.setResult(v_result);
+        context.setCompleted();            		
     }
 }

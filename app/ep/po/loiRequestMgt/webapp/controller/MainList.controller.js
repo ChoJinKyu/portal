@@ -60,6 +60,13 @@ sap.ui.define([
 
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+            // this._oTPC = new TablePersoController({
+            //     customDataKey: "loiRequestMgt",
+            //     persoService: MainListPersoService
+            // }).setTable(this.byId("mainTable"));
+
+            this._doInitTablePerso();
+
             /** Date */
             var today = new Date();
 
@@ -324,15 +331,15 @@ sap.ui.define([
 
         
 
-        // _doInitTablePerso: function () {
-        //     // init and activate controller
-        //     this._oTPC = new TablePersoController({
-        //         table: this.byId("mainTable"),
-        //         componentName: "loiMgr",
-        //         persoService: MainListPersoService,
-        //         hasGrouping: true
-        //     }).activate();
-        // },
+        _doInitTablePerso: function () {
+            // init and activate controller
+            this._oTPC = new TablePersoController({
+                table: this.byId("mainTable"),
+                componentName: "loiRequestMgt",
+                persoService: MainListPersoService,
+                hasGrouping: true
+            }).activate();
+        },
 
         creationDateChange: function (oEvent) {
             // var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",

@@ -195,6 +195,7 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 console.log("#########Success#####", data.value);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("dialogVos"));
                                 that.onExitVos();
                                 that.byId("pageSearchButton").firePress();
                             },
@@ -304,6 +305,7 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 console.log("#########Success#####", data.value);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("dialogRmk"));
                                 that.onExitRmk();
                                 that.byId("pageSearchButton").firePress();
                             },
@@ -424,6 +426,7 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
 
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                that.validator.clearValueState(that.byId("dialogRfq"));
 
                                 // if(data.value.rsltCnt > 0) {
                                 //     MessageToast.show(that.getModel("I18N").getText("/NCM0005"));

@@ -317,6 +317,32 @@ sap.ui.define([
                 oSearchStatus = this.getView().byId("searchStatus"+seSurffix);
 
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
+
+            this.toggleEnabledDate(oEvent.getParameter("item").getKey());
+        },
+
+        toggleEnabledDate: function(status){
+            //confirm 일때 활성화
+
+            var dateS = this.byId('searchCreationDateS');
+            var dateE = this.byId('searchCreationDateE');
+
+            if(status == 'RCV_CNF'){
+                dateS.setEnabled(true);
+                dateE.setEnabled(true);
+
+                dateS.setRequired(true);
+                dateE.setRequired(true);
+            }else{
+                dateS.setEnabled(false);
+                dateE.setEnabled(false);
+
+                dateS.setRequired(false);
+                dateE.setRequired(false);
+
+                dateS.setValue('');
+                dateE.setValue('');
+            }
         },
         
         onSuppValueHelpRequested: function(oEvent){

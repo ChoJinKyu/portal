@@ -22,7 +22,7 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -38,7 +38,20 @@
                     <!-- 조회조건 -->
                         <VBox>
                             
-                        </VBox>                                                
+                        </VBox>
+                        <FlexBox
+                            alignItems="Start"
+                            justifyContent="End">
+                            <Button 
+                                id="pageSearchButton"
+                                text="{I18N>/SEARCH}"
+                                type="Emphasized"
+                                press=".onPageSearchButtonPress"/>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL4 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>                                                
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>

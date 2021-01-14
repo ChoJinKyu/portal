@@ -9,6 +9,7 @@ using {cm as orgPlant}from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
 using {cm as orgCompany} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using {cm.Pur_Operation_Org as org } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model'; 
 using { cm as purOrgTypeMap } from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
+using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 
 namespace dp;
 
@@ -81,7 +82,13 @@ service BudgetExecutionApprovalService {
                         and l.tenant_id   = mst.tenant_id
                 ) as account_code_nm              : String(240),
                 mst.accounting_department_code,
-                mst.acq_department_code,
+                mst.acq_department_code, 
+                ( 
+                    select d.department_local_name  
+                    from Dept as d 
+                    where d.tenant_id = mst.tenant_id 
+                    and mst.acq_department_code = d.department_id
+                ) as acq_department_code_nm    : String(240) , 
                 mst.production_supplier_code,
                 mst.remark,
                 mst.mold_develope_request_type_code,

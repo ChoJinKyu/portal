@@ -171,6 +171,8 @@ sap.ui.define([
 
 
 
+
+
         /**
          * @public
          * @see 리스트 체크박스 제어기능
@@ -223,7 +225,8 @@ sap.ui.define([
             console.group("handleTableSelectDialogPress");
 
             var oView = this.getView();
-            var oButton = oEvent.getSource();
+            var oButton = oEvent.getSource(); 
+
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
                     id: oView.getId(),
@@ -235,9 +238,16 @@ sap.ui.define([
                 }.bind(this));
             }
 
-            this._oDialogTableSelect.then(function (oDialog) {
+            this._oDialogTableSelect.then(function (oDialog) {               
                 oDialog.open();
             });
+        },
+
+        onDialogOpen: function (oEvent) {
+   
+            var oPR_TYPE2 = this.byId("SelectionPR_TYPE2")
+                oPR_TYPE2.setSelectedKey("");
+            this.onInitPR_TYPE3();           
         },
 
         onExit: function () {
@@ -319,13 +329,8 @@ sap.ui.define([
                 },
                 error: function (oData) {
                     // oCodeMasterTable.setBusy(false);
-                }
-
-                
-            });
-
-           
-            
+                }                
+            });            
         },
 
 
@@ -424,7 +429,6 @@ sap.ui.define([
                 key: "{pr_template_number}",
                 text: "{pr_template_name}"                
             });
-
             oSegmentButton.bindItems("/Pr_TMapView", oItemTemplate, null, aFilters);
         },
 
@@ -442,7 +446,9 @@ sap.ui.define([
             oNextUIState.layout = "MidColumnFullScreen";
             this.getRouter().navTo("midCreate", {
                 layout: oNextUIState.layout,
-                tenantId: "new",
+                vMode: "NEW",
+                tenantId: "L2100",
+                company_code: "LGCKR",                
                 pr_type_code: this.byId("SelectionPR_TYPE").getSelectedKey(),
                 pr_type_code_2: this.byId("SelectionPR_TYPE2").getSelectedKey(),
                 pr_type_code_3: this.byId("SelectionPR_TYPE3").getSelectedKey(),
@@ -483,6 +489,7 @@ sap.ui.define([
 
             this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
+                vMode: "VIEW",
                 tenantId: oRecord.tenant_id,
                 company_code: oRecord.company_code,
                 pr_number: oRecord.pr_number
@@ -529,6 +536,7 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
+
         },
 
         _getSearchStates: function () {
@@ -655,8 +663,6 @@ sap.ui.define([
                     })
                 );
             }
-
-            
             
             return aSearchFilters;
         },
