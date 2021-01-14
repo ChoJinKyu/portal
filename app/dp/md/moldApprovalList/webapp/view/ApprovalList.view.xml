@@ -21,7 +21,7 @@
                 <f:snappedContent>
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
-                            <VBox>
+                            <VBox height="4em">
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyS" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyS" width="100%" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
@@ -38,7 +38,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox height="4em">
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantS" required="true"></Label>
                                 <MultiComboBox id="searchPlantS" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
@@ -55,14 +55,14 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateS" required="true"></Label>
                                 <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                             <VBox>
+                             <VBox height="4em">
                                 <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS"></Label>
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" items="{
                                             path : 'util>/Code',
@@ -85,7 +85,7 @@
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
-                            <VBox>
+                            <VBox height="4em">
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyE" width="100%" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
@@ -102,7 +102,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox> 
+                            <VBox height="4em"> 
                                 <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantE" required="true"></Label>
                                 <MultiComboBox id="searchPlantE" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
@@ -119,14 +119,14 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true"></Label>
                                 <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                             <VBox>
+                             <VBox height="4em">
                                 <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE"></Label>
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" items="{
                                             path : 'util>/Code',
@@ -160,7 +160,7 @@
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
-                        <VBox>
+                        <VBox height="4em">
                             <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" labelFor="searchModel"></Label>
                             <Input id="searchModel" 
                                     showValueHelp="true"  
@@ -178,9 +178,9 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <HBox>
+                        <HBox height="4em">
                             <VBox width="87%">
-                                <Label text="Mold No" labelFor="searchMoldNo"></Label>
+                                <Label text="몰드 No" labelFor="searchMoldNo"></Label>
                                 <Input id="searchMoldNo" 
                                         showValueHelp="true"  
                                         valueHelpRequest=".onValueHelpRequested"
@@ -206,14 +206,14 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </HBox>
-                        <VBox>
+                        <VBox height="4em">
                             <Label text="{path:'I18N>/APPROVAL_TITLE', formatter:'I18NFormatter'}" labelFor="searchSubject"></Label>
                             <Input id="searchSubject" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
+                        <VBox height="4em">
                             <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" labelFor="searchRequestor"></Label>
                             <Input id="searchRequestor" 
                                     showValueHelp="true"  
@@ -231,7 +231,7 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
+                        <VBox height="5em">
                             <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" class="sapUiSmallMarginTop"></Label>
                             <SegmentedButton id="searchStatus" selectedKey="" width="100%">
                                 <items>
