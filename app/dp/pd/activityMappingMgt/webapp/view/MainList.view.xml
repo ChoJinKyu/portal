@@ -45,11 +45,11 @@
                             <ComboBox
                                 id="searchOrgCombo"
                                 width="100%"
-                                selectedKey="GSZ"
+                                selectedKey="BIZ00000"
                                 items="{
                                     path: '/PdOperationOrg',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
                                     sorter: { path: 'operation_org_code'}
                                 }" required="true">
@@ -143,7 +143,7 @@
                     <ColumnListItem>
                         <cells>
                             <HBox>
-                                <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                <!-- <ObjectStatus icon="sap-icon://document" text="State" visible="false" /> -->
                                 <ObjectStatus icon="{
                                     path: 'list>_row_state_',
                                     formatter: '.formatter.toModelStateColumnIcon'
@@ -169,8 +169,7 @@
                                     filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_DEPENDENCY'}
-                                    ]
-                                }">
+                                    ]}">
                                 <items>
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </items>
@@ -193,11 +192,12 @@
                             <HBox>
                                 <Text text="{list>update_user_id}" visible="true" />
                             </HBox>
+                            <Text text="{list>product_activity_code_org}" visible="false" />
+                            <Text text="{list>activity_code_org}" visible="false" />
                         </cells>
                     </ColumnListItem>
                 </items>
             </Table>
         </f:content>
-
     </f:DynamicPage>
 </mvc:View>
