@@ -6,7 +6,8 @@ sap.ui.define([
         "ext/lib/util/Multilingual",
         "sap/ui/model/json/JSONModel",
         "../controller/SupplierSelection",
-        "dp/util/control/ui/MaterialMasterDialog"
+        // "dp/util/control/ui/MaterialMasterDialog"
+        "../controller/MaterialMasterDialog"
 
 	],
 	/**
@@ -440,7 +441,7 @@ sap.ui.define([
                 if(!this.oSearchMultiMaterialMasterDialog){
                     this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
                         title: "Choose MaterialMaster",
-                        MultiSelection: true,
+                        // MultiSelection: true,
                         items: {
                             filters: [
                                 new Filter("tenant_id", "EQ", "L1100")
