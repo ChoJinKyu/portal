@@ -35,7 +35,7 @@
             <Label text="{I18N>/EMAIL_ADDRESS}" required="true"/>
 			<Input value="{SupplierGen>/email_address}" editable="false" class="readonlyField"/>
             <Label text="{I18N>/AN_PROFILE}"/>
-			<Input value="{SupplierGen>/an_profile}" editable="false" class="readonlyField"/>
+            <Link text="{SupplierGen>/an_profile}" target="_blank" href="{SupplierGen>/an_profile}"/>
             <Label text="{I18N>/REMARK}"/>
 			<Input value="{SupplierGen>/remark}" editable="false" class="readonlyField"/>			
 	    </form:content>
