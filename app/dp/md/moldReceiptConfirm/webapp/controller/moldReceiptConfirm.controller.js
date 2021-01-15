@@ -99,15 +99,18 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
         _doInitSearch: function(){
+            var companyRole = 'LGESL';
+            var orgRole = 'A040';
+
             this.getView().setModel(this.getOwnerComponent().getModel());
 
-            this.setDivision('LGEKR');
+            this.setDivision(companyRole);
 
             //접속자 법인 사업부로 바꿔줘야함
-            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
-            // this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchCompanyS").setSelectedKeys(companyRole);
+            this.getView().byId("searchCompanyE").setSelectedKeys(companyRole);
+            this.getView().byId("searchDivisionS").setSelectedKeys(orgRole);
+            this.getView().byId("searchDivisionE").setSelectedKeys(orgRole);
 
             /** Create Date */
             var today = new Date();
