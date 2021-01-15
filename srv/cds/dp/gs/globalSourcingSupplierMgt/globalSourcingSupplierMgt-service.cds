@@ -15,7 +15,8 @@
   7. service description : Sourcing Supplier 서비스
   8. history
   -. 2020.12.21 : 최미희 최초작성
-  -. 2021.01.07 : 최미희 Supplier 등록시 중복체크 Function Entity 추가
+  -. 2020.01.15 : 최미희 필드 추가
+       sourcing_supplier_id, tax_id, sourcing_contents
 
 *************************************************/
 
@@ -39,6 +40,7 @@ service GsSupplierMgtService {
     view SupplierGenView as
     select key gen.tenant_id,
            key gen.sourcing_supplier_nickname,
+           gen.sourcing_supplier_id,
            gen.develop_date,
            gen.developer_empno,
            emp.user_local_name  as developer_empname,
@@ -50,6 +52,8 @@ service GsSupplierMgtService {
            gen.an_profile,
            gen.product_desc,
            gen.remark,
+           gen.tax_id,
+           gen.sourcing_contents,
            gen.attch_group_number,
            gen.local_update_dtm
     from General.Gs_Supplier_Gen gen
@@ -58,10 +62,5 @@ service GsSupplierMgtService {
     and emp.employee_number = gen.developer_empno
     ;
 
-    // DB Object로 생성된 function을 model-cds로 entity를 만들고 사용하는 경우
-    //entity MasterFunc(CD : String) as select from MasterF.Sample_Master_Func(CD: :CD);
-    // DB Object로 생성된 function을 서비스
-    //entity GsCheckSupplierUniqueFunc(i_tenant_id: String, i_supplier_nickname: String) as 
-    //select from GeneralF.Gs_Check_Supplier_Unigue_Func(i_tenant_id: :tenant_id, i_supplier_nickname: :sourcing_supplier_local_name);
-    
+        
 }
