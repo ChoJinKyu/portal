@@ -476,7 +476,7 @@ sap.ui.define([
         },
 
        onMultiInputWithCodeValuePress: function(){ 
-           var that = this;
+          
             if(!this.oEmployeeMultiSelectionValueHelp){
                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
                     title: "Choose Referer",
@@ -489,20 +489,7 @@ sap.ui.define([
                 });
                 this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
                     this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
-                    that.setModel(new ManagedListModel(),'referer');
-                    var referModel = that.getModel('referer');
-                    var multi = that.byId("referMulti").getTokens();
-                    if(multi != undefined && multi.length > 0){
-                        multi.forEach(function(item){ 
-                            console.log(item);
-                            referModel.addRecord({
-                                "referer_empno": item.getKey(),
-                                "approval_number": that.approval_number,
-                                "tenant_id": that.tenant_id
-                            }, "/Referers");
-                        });
-                    }
-                    console.log(oEvent.getSource().getTokens());
+                 
                 }.bind(this));
             }
             this.oEmployeeMultiSelectionValueHelp.open();
