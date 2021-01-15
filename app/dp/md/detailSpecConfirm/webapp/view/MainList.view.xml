@@ -235,37 +235,37 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column>
+                        <Column id="mainCompany" >
                             <Text text="{I18N>/COMPANY}" />
                         </Column>
-                        <Column>
+                        <Column id="mainOrg" >
                             <Text text="{I18N>/PLANT}"/>
                         </Column>
-                        <Column>
+                        <Column id="mainModel" >
                             <Text text="{I18N>/MODEL}" />
                         </Column>
-                        <Column>
+                        <Column id="mainMoldNumber" >
                             <Text text="Mold Part No" />
                         </Column>
-                        <Column>
+                        <Column id="mainMoldSeq" >
                             <Text text="Mold Seq" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainDesc"  minScreenWidth="Desktop" demandPopin="false">
                             <Text text="{I18N>/DESCRIPTION}" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="true">
+                        <Column id="mainStatus"  minScreenWidth="Desktop" demandPopin="true">
                             <Text text="{I18N>/STATUS}" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="true">
+                        <Column id="mainItemType"  minScreenWidth="Desktop" demandPopin="true">
                             <Text text="Item Type" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainRequester"  minScreenWidth="Desktop" demandPopin="false">
                             <Text text="Requester" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainDate"  minScreenWidth="Desktop" demandPopin="false">
                             <Text text="{I18N>/DATE}" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainFamilyPartNumber"  minScreenWidth="Desktop" demandPopin="false">
                             <Text text="Family Part No" />
                         </Column>
                     </columns>

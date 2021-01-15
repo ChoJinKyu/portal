@@ -218,37 +218,37 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column>
+                        <Column id="mainCompany">
                             <Text text="LG Company" />
                         </Column>
-                        <Column>
+                        <Column id="mainOrg">
                             <Text text="LG Division"/>
                         </Column>
-                        <Column>
+                        <Column id="mainModel">
                             <Text text="{I18N>/MODEL}" />
                         </Column>
-                        <Column>
+                        <Column id="mainMoldNumber">
                             <Text text="{path:'I18N>/MOLD_PART_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column>
+                        <Column id="mainMoldSeq">
                             <Text text="Mold Seq" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainDesc" minScreenWidth="Desktop" demandPopin="false">
                             <Text text="{I18N>/DESCRIPTION}" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="true">
+                        <Column id="mainStatus" minScreenWidth="Desktop" demandPopin="true">
                             <Text text="{I18N>/STATUS}" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="true">
+                        <Column id="mainItemType" minScreenWidth="Desktop" demandPopin="true">
                             <Text text="Item Type" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainUser" minScreenWidth="Desktop" demandPopin="false">
                             <Text text="[USER]" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainDate" minScreenWidth="Desktop" demandPopin="false">
                             <Text text="{I18N>/DATE}" />
                         </Column>
-                        <Column minScreenWidth="Desktop" demandPopin="false">
+                        <Column id="mainFamilyPartNumber" minScreenWidth="Desktop" demandPopin="false">
                             <Text text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
                     </columns>
