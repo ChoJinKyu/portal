@@ -21,7 +21,7 @@
                 editable="{mode>/editFlag}" 
                 width="40em" 
                 placeholder="Input data" required="true">
-            </Input><!--class="readonlyField"-->
+            </Input><!--class="readonlyField" fieldGroupIds="ge"-->
         </HBox>
         <VBox class="sapUiTinyMarginTop">
             <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="input" ></Label> 

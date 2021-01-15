@@ -86,9 +86,9 @@ sap.ui.define([
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
             for (var sPropertyName in this._oFragments) {
-                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
+                /*if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] === null) {
                     return;
-                }
+                }*/
                
                 //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
@@ -98,6 +98,14 @@ sap.ui.define([
                 this.approvalList.onBackToList();
             }
 
+            /*
+            var oEnabledA = this.getView().getControlsByFieldGroupId("ge");
+            oEnabledA.forEach(function(oCon){
+                if(oCon.setEditable){
+                    oCon.setEditable(false);
+                }
+            });
+            */
             //this.byId("pageApprovalLineSection").destroy();
             /*this.generalInfoFragment.destroy();
             this.attachmentsFragment.destroy();
