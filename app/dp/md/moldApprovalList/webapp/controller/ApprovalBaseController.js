@@ -19,11 +19,16 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    "./ApprovalList.controller",
+    "./ApprovalList.controller", 
+    "sap/ui/model/Sorter",
+    "dp/md/util/controller/EmployeeDialog",
+    "sap/m/Token",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
-
+    , Sorter 
+    , EmployeeDialog 
+     , Token
 ) {
     "use strict";
 
@@ -435,19 +440,47 @@ sap.ui.define([
             }.bind(this));
 
             console.log(" Approvers >>> ", approvalNumber);
-            var refererMultiCB = this.getModel('refererMultiCB');
+           // var refererMultiCB = this.getModel('refererMultiCB');
+            var referMulti = this.byId("referMulti");
+            var oView = this.getView();
             this._bindView("/Referers", "referer", filter, function (oData) {
                 if (oData.results.length > 0) {
-                    var rList = [];
-                    oData.results.forEach(function (item) {
-                        rList.push(item.referer_empno);
+                  //  var rList = [];
+                    var tokens = [] ;
+                    oData.results.forEach(function (item) { 
+                        console.log("item>>> " , item);
+                        var oToken = new Token();
+                        oToken.setKey(item.referer_empno);
+                        oToken.setText(item.s_referer_name);
+                        tokens.push(oToken);
+                      //  rList.push(item.referer_empno); 
                         // this.getView().byId("refererMultiCB").mProperties.selectedKeys.push(item.referer_empno);
                     }.bind(this));
-                    refererMultiCB.setProperty("/refer", rList);
+                   referMulti.setTokens(tokens);
+              //  refererMultiCB.setProperty("/refer", rList);
                 }
             }.bind(this));
 
             oTransactionManager.setServiceModel(this.getModel());
+        },
+
+       onMultiInputWithCodeValuePress: function(){
+            if(!this.oEmployeeMultiSelectionValueHelp){
+               this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                    title: "Choose Referer",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2600")
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("referMulti").getTokens());
         },
 
         _loadFragment: function (sFragmentName, oHandler) {

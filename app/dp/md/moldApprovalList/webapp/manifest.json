@@ -275,7 +275,8 @@
         "resourceRoots": {
             "ext.lib": "../../../../lib",
             "dp.md.util": "../../util",
-            "dp.md" : "controller"
+            "dp.md" : "controller" ,
+            "cm": "../../../../cm"
         },
         "routing": {
             "config": {
