@@ -5,31 +5,31 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "container-moldApprovalList-mainColumnApprovalCategory",
+                id: "moldApprovalList-mainTable-mainColumnApprovalCategory",
                 order: 0,
                 text: "Approval Category",
                 visible: true
             },
             {
-                id: "container-moldApprovalList-mainColumnCompany",
+                id: "moldApprovalList-mainTable-mainColumnCompany",
                 order: 1,
                 text: "Company",
                 visible: false
             },
             {
-                id: "container-moldApprovalList-mainColumnPlant",
+                id: "moldApprovalList-mainTable-mainColumnPlant",
                 order: 4,
                 text: "Plant",
                 visible: false
             },
             {
-                id: "container-moldApprovalList-mainColumnApprovalNo",
+                id: "moldApprovalList-mainTable-mainColumnApprovalNo",
                 order: 2,
                 text: "Contents",
                 visible: true
             },
             {
-                id: "container-moldApprovalList-mainColumnSubject",
+                id: "moldApprovalList-mainTable-mainColumnSubject",
                 order: 3,
                 text: "Type",
                 visible: true
