@@ -10,26 +10,28 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
-    "sap/m/Input"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
+    "sap/m/Input",
+    "sap/m/SearchField"
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
     "use strict";
 
     var IdeaManagerDialog = Parent.extend("dp.util.control.ui.IdeaManagerDialog", {
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "company_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "idea_role_code" }
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "60em"},
+                keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
+                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
             }
         },
 
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oCompanyCode = new Input({ placeholder: this.getModel("I18N").getText("/COMPANY_CODE")});
-            this.oBizunitCode = new Input({ placeholder: this.getModel("I18N").getText("/BIZUNIT_CODE")});
-            this.oLocalUserName = new Input({ placeholder: this.getModel("I18N").getText("/LOCAL_USER_NAME")});
+            this.oCompanyCode = new SearchField({ placeholder: this.getModel("I18N").getText("/COMPANY_CODE")});
+            this.oBizunitCode = new SearchField({ placeholder: this.getModel("I18N").getText("/BIZUNIT_CODE")});
+            this.oLocalUserName = new SearchField({ placeholder: this.getModel("I18N").getText("/LOCAL_USER_NAME")});
+            
             this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
             this.oBizunitCode.attachEvent("change", this.loadData.bind(this));
             this.oLocalUserName.attachEvent("change", this.loadData.bind(this));
@@ -40,21 +42,21 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/COMPANY_CODE")}),
                         this.oCompanyCode
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/BIZUNIT_CODE")}),
                         this.oBizunitCode
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/LOCAL_USER_NAME")}),
                         this.oLocalUserName
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12"})
                 })
             ];
         },
@@ -62,18 +64,22 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
+                    width: "10%",
                     label: new Label({text: this.getModel("I18N").getText("/COMPANY_CODE")}),
                     template: new Text({text: "{company_code}"})
                 }),
                 new Column({
+                    width: "15%",
                     label: new Label({text: this.getModel("I18N").getText("/BIZUNIT_CODE")}),
                     template: new Text({text: "{bizunit_code}"})
                 }),
                 new Column({
+                    width: "15%",
                     label: new Label({text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")}),
                     template: new Text({text: "{idea_manager_name}"})
                 }),
                 new Column({
+                    width: "60%",
                     label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
                     template: new Text({text: "{department_local_name}"})
                 })
@@ -85,23 +91,24 @@ sap.ui.define([
                 sBizunitCode = this.oBizunitCode.getValue(),
                 sLocalUserName = this.oLocalUserName.getValue(),
                 aFilters = [
-                    // new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                     new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ];
             if(sCompanyCode){
                 aFilters.push(
                     new Filter({
-                        filters: [
-                            new Filter("company_code", FilterOperator.Contains, sCompanyCode)
+                        filters : [
+                        new Filter("tolower(company_code)", FilterOperator.Contains,  "'" + sCompanyCode.toLowerCase().replace("'","''") + "'")
                         ],
-                        and: false
-                    })
+                        and : false
+                    })  
+                      
                 );
             }    
             if(sBizunitCode){
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("bizunit_code", FilterOperator.Contains, sBizunitCode )
+                            new Filter("tolower(bizunit_code)", FilterOperator.Contains,  "'" + sBizunitCode.toLowerCase().replace("'","''") + "'")
                         ],
                         and: false
                     })
@@ -111,7 +118,7 @@ sap.ui.define([
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("idea_manager_name", FilterOperator.Contains, sLocalUserName )
+                            new Filter("tolower(idea_manager_name)", FilterOperator.Contains,  "'" + sLocalUserName.toLowerCase().replace("'","''") + "'")
                         ],
                         and: false
                     })
