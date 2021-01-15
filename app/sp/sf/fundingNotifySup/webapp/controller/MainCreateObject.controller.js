@@ -27,15 +27,25 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-            var oViewTableModel = new JSONModel();
+            var oViewTableModel = new JSONModel(
+                {items :[]}
+            );
+
+            this.setModel(new JSONModel(), "application");
+
             this.getView().setModel(oViewTableModel, "localModel");
 
-            //this.getRouter().getRoute("mainCreateObject").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("mainCreateObject").attachPatternMatched(this._onRoutedThisPage, this);
 
         },
 
         onAfterRender: function(){
-            this.setModel(this.getModel(), "createNotify");
+            this.setModel(this.getModel("fundingApp"), "createNotify");
+
+            
+            // for() {
+            //     this.byId("VBox").addContent(new CheckBox({text: ""}));
+            // }
         },
 
         onPageNavBackButtonPress : function() {
@@ -44,15 +54,24 @@ sap.ui.define([
         
         onInvestmentDtlAddButtonPress : function() {
             
-            var oTable = this.byId("investmentDtl");
-            var oModel = this.getView().getModel("localModel");
-            oModel.setData({items :[{
-                "itemCode1" : "1",
-                "itemCode2" : "",
-                "itemCode3" : "",
-                "itemCode4" : "",
-                "itemCode5" : ""
-            }]});
+            // var oTable = this.byId("investmentDtl");
+            var oModel = this.getView().getModel("localModel"),
+                oTableModel = oModel.getProperty("/items");
+            
+            oTableModel.push({
+                            itemCode1 : "",
+                            itemCode2 : "",
+                            itemCode3 : "",
+                            itemCode4 : "",
+                            itemCode5 : ""
+                        });
+
+            oModel.setProperty("/items", oTableModel);
+            
+        },
+
+        onPageSaveButtonPress : function() {
+            alert("준비중");
         },
 
         onInvestmentPlanAddButtonPress : function(oEvent) {
@@ -86,17 +105,50 @@ sap.ui.define([
          * @private
          */
         _onRoutedThisPage: function (oEvent) {
-            var oArgs = oEvent.getParameter("arguments"),
-                oView = this.getView(),
-                oModel = this.getModel("");
-            
+            var oArgs = oEvent.getParameter("arguments");
+
             this._sTenantId = oArgs.tenantId;
             this._sFundingNotifyNumber = oArgs.fundingNotifyNumber;
-            
-            oModel.read("/creatOentity", {
+
+            var oView = this.getView(),
+                oModel = this.getModel("fundingApp"),
+                that  = this,
+                oData = {
+                    funding_notify_number	: this._sFundingNotifyNumber,
+                    supplier_code			: "KR01817100",
+                    tenant_id				: this._sTenantId,
+                    company_code			: "X",
+                    org_type_code			: "X",
+                    org_code				: "X",
+                    funding_step_code		: "S10",
+                    funding_status_code		: "110"
+                };
+                
+                
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
+            aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
+
+            oModel.read("/SfFundingApplication", {
                 //Filter : 공고번호, sub 정보
-                success: function(oRetrievedResult) { /* do something */ },
-                error: function(oError) { /* do something */ }
+                filters : aFilters,
+                success: function(oRetrievedResult) { 
+                    // if(oRetrievedResult.results.length < 1){
+                        // oModel.create("/SfFundingApplication", oData, {
+                        //     success: function(oCreatedEntry) {
+                        //         that.getModel("application").setData(oCreatedEntry);
+                        //     },
+                        //     error: function(oError) {
+                        //         console.log(oError);
+                        //     }
+                        // });
+                    // }else{
+                    that.getModel("application").setData(oRetrievedResult.results[0]);    
+                    // }
+                },
+                error: function(oError) {
+                    
+                }
             });
         }
     })

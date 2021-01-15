@@ -56,52 +56,55 @@
                             columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <Label text="거래사업부 :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path: '',
-                                            type: 'sap.ui.model.type.String',
-                                            constraints: {
-                                                maxLength: 30
-                                            }
-                                        }"/>
+                                    <Label text="신청번호 :" />
+                                    <Text text="{
+                                            path:'application>/funding_appl_number',
+                                            type:'sap.ui.model.odata.type.String'
+                                        }" />
                                     <layoutData>
-                                        <layout:GridData span="XL3 L3 M3 S12" />
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="공고번호 :" />
+                                    <Text text="{
+                                            path:'application>/funding_notify_number',
+                                            type:'sap.ui.model.odata.type.String'
+                                        }" />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <!-- <VBox>
+                                    <Label text="신청일 :" required="true"/>
+                                    <ObjectIdentifier 
+                                        text="{
+                                            path: 'application>/local_create_dtm', 
+                                            type: 'sap.ui.model.type.Date', 
+                                            formatOptions: {pattern: 'yyyy-MM-dd'} ,
+                                            UTC: true
+                                        }"
+                                    />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox> -->
+                                <VBox>
+                                    <Label text="거래사업부 :" required="true"/>
+                                    <ComboBox id="transactionDivision"
+                                        selectedKey="" width="100%">
+                                        <core:Item key="KR00297400" text="유창금속공업(주)"/>
+                                        <core:Item key="KR01817100" text="(주)유진테크"/>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="LG 구매팀 :" required="true"/>
                                     <Input editable="{midObjectView>/editMode}"
                                         value="{
-                                            path: '',
-                                            type: 'sap.ui.model.type.String',
-                                            constraints: {
-                                                maxLength: 30
-                                            }
-                                        }"/>
-                                    <layoutData>
-                                        <layout:GridData span="XL3 L3 M3 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="총 자본금(백만원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path: '',
-                                            type: 'sap.ui.model.type.String',
-                                            constraints: {
-                                                maxLength: 30
-                                            }
-                                        }"/>
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="자기자본금(백만원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path: '',
+                                            path: 'application>/purchasing_department_name',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
                                                 maxLength: 30
@@ -112,15 +115,31 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
+                                    <Label text="총 자본금(백만원) :" required="true"/>
+                                    <Text text="{
+                                            path:'',
+                                            type:'sap.ui.model.odata.type.String'
+                                        }" />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="자기자본금(백만원) :" required="true"/>
+                                    <Text text="{
+                                            path:'',
+                                            type:'sap.ui.model.odata.type.String'
+                                        }" />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
                                     <Label text="자산(백만원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path: '',
-                                            type: 'sap.ui.model.type.String',
-                                            constraints: {
-                                                maxLength: 30
-                                            }
-                                        }"/>
+                                    <Text text="{
+                                            path:'',
+                                            type:'sap.ui.model.odata.type.String'
+                                        }" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
@@ -128,13 +147,8 @@
                                 <VBox>
                                     <Label text="전년도매출액(백만원) :" required="true"/>
                                     <Input editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path: '',
-                                            type: 'sap.ui.model.type.String',
-                                            constraints: {
-                                                maxLength: 30
-                                            }
-                                        }"/>
+                                        value="{application>/pyear_sales_amount}"
+                                        type="Number"/>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
@@ -143,39 +157,33 @@
                                     <Label text="주거래은행 :" required="true"/>
                                     <Input editable="{midObjectView>/editMode}"
                                         value="{
-                                            path: '',
+                                            path: 'application>/main_bank_name',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
-                                                maxLength: 30
+                                                maxLength: 100
                                             }
                                         }"/>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
                                 </VBox>
-                                
                                 <VBox>
                                     <Label text="신청금액(원) :" required="true"/>
                                     <Input editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path: '',
-                                            type: 'sap.ui.model.type.String',
-                                            constraints: {
-                                                maxLength: 30
-                                            }
-                                        }"/>
+                                        value="{application>/funding_appl_amount}"
+                                        type="Number"/>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="희망년월 :" required="true"/>
-                                    <DatePicker editable="{midObjectView>/editMode}"
+                                    <DatePicker editable="true"
+                                        displayFormat='yyyy-MM'
                                         value="{
-                                            path:'',
-                                            type:'sap.ui.model.odata.type.DateTime',
+                                            path:'application>/funding_hope_yyyymm',
                                             formatOptions: {
-                                                pattern: 'yyyy-MM'
+                                                UTC: true, displayFormat: 'yyyy-MM'
                                             }
                                         }"/>
                                     <layoutData>
@@ -193,10 +201,10 @@
                                     <Label text="신청자 :" required="true"/>
                                     <Input editable="{midObjectView>/editMode}"
                                         value="{
-                                            path: '',
+                                            path: 'application>/appl_user_name',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
-                                                maxLength: 30
+                                                maxLength: 240
                                             }
                                         }"/>
                                     <layoutData>
@@ -207,10 +215,10 @@
                                     <Label text="전화번호 :" required="true"/>
                                     <Input editable="{midObjectView>/editMode}"
                                         value="{
-                                            path: '',
+                                            path: 'application>/appl_user_tel_number',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
-                                                maxLength: 30
+                                                maxLength: 15
                                             }
                                         }"/>
                                     <layoutData>
@@ -222,10 +230,10 @@
                                     <Label text="Mail Address :" required="true"/>
                                     <Input editable="{midObjectView>/editMode}"
                                         value="{
-                                            path: '',
+                                            path: 'application>/appl_user_email_address',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
-                                                maxLength: 30
+                                                maxLength: 240
                                             }
                                         }"/>
                                     <layoutData>
@@ -267,6 +275,7 @@
                             inset="false"
                             mode="MultiSelect"
                             class="sapFDynamicPageAlignContent"
+                            items="{localModel>/master}"
                             width="auto">
                             <headerToolbar>
                                 <OverflowToolbar>
@@ -298,12 +307,12 @@
                             <items>
                                 <ColumnListItem>
                                     <cells>
-                                        <ObjectIdentifier text=""/>
-                                        <ObjectIdentifier text=""/>
-                                        <ObjectIdentifier text=""/>
-                                        <ObjectIdentifier text=""/>
-                                        <ObjectIdentifier text=""/>
-                                        <ObjectIdentifier text=""/>
+                                        <Text text=""/>
+                                        <Text text=""/>
+                                        <Text text=""/>
+                                        <Text text=""/>
+                                        <Text text=""/>
+                                        <Text text=""/>
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -322,14 +331,11 @@
                             <form:content>
                                 <VBox>
                                     <Label text="담보물 :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{
-                                            path: '',
-                                            type: 'sap.ui.model.type.String',
-                                            constraints: {
-                                                maxLength: 30
-                                            }
-                                        }"/>
+                                    <ComboBox id="collateral"
+                                        selectedKey="" width="100%">
+                                        <core:Item key="a" text="지급이행 보증보험"/>
+                                        <core:Item key="b" text="지급보증서"/>
+                                    </ComboBox>
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>
@@ -388,7 +394,7 @@
                     press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
                 <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
-                <Button id="pageSaveButton" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
+                <Button id="pageSaveButton" type="Transparent" text="임시저장" press=".onPageSaveButtonPress" />
                 <Button id="pageSubmissionButton" type="Emphasized" text="제출" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>

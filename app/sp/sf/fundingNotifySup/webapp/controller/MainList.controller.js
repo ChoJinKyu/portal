@@ -9,6 +9,7 @@ sap.ui.define([
     //"./MainListPersoService",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/m/ColumnListItem",
@@ -17,7 +18,7 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, /*MainListPersoService,*/ Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, /*MainListPersoService,*/ Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
     return BaseController.extend("sp.sf.fundingNotifySup.controller.MainList", {
@@ -168,10 +169,13 @@ sap.ui.define([
         },
 
         onCreateFundingNotify: function (oEvent) {
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
+
             this.getRouter().navTo("mainCreateObject", {
-                tenantId: "new",
-                fundingNotifyNumber: "number",
-                supplierCode:"test",
+                tenantId: oRecord.tenant_id,
+                fundingNotifyNumber: oRecord.funding_notify_number,
+                supplierCode:"KR00297400",
                 "?query": {
                     //param1: "1111111111"
                 }
@@ -202,11 +206,14 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
+            
+            var aSorter = [];
+            aSorter.push(new Sorter("funding_notify_number", true));
 
             oModel.read("/SfFundingNotify", {
                 filters: aSearchFilters,
+                sorters : aSorter,
                 success: function (oData) {
-                    
                     for(var i =0 ; i < oData.results.length; i++){
                         if(oData.results[i].funding_notify_end_date < new Date() || oData.results[i].funding_notify_start_date > new Date()){
                             oData.results[i].btnClose = true;
@@ -229,12 +236,9 @@ sap.ui.define([
                 sStartDate = this.byId("searchDateS").getValue().substring(0, 10),
                 sEndDate = this.byId("searchDateS").getValue().substring(13);
 
+
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
-                aSearchFilters.push(new Filter({
-                    filters: [
-                        new Filter("funding_notify_title", FilterOperator.EQ, sTitle)
-                    ]
-                }));
+                aSearchFilters.push(new Filter("tolower(funding_notify_title)", FilterOperator.Contains, "'"+sTitle.toLowerCase().replace("'","''")+"'"));
             };
 
             if (!!sFromDate || !!sToDate) {

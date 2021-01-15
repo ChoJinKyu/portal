@@ -205,10 +205,14 @@ sap.ui.define([
         },
 
         onCreateFundingNotify: function (oEvent) {
+            var oMasterModel = this.getModel("master"),
+                sfundingNotifySupNumber = oMasterModel.getProperty("/funding_notify_number");
+
+
             this.getRouter().navTo("mainCreateObject", {
                 tenantId: "new",
-                fundingNotifyNumber: "number",
-                supplierCode:"code",
+                fundingNotifyNumber: sfundingNotifySupNumber,
+                supplierCode:"KR00297400",
                 "?query": {
                     //param1: "1111111111"
                 }
@@ -222,9 +226,9 @@ sap.ui.define([
         _onMasterDataChanged: function (oEvent) {
             
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
-                var oMasterModel = this.getModel("master");
-                var sTenantId = oMasterModel.getProperty("/tenant_id");
-                var sfundingNotifySupNumber = oMasterModel.getProperty("/funding_notify_number");
+                var oMasterModel = this.getModel("master"),
+                    sTenantId = oMasterModel.getProperty("/tenant_id"),
+                    sfundingNotifySupNumber = oMasterModel.getProperty("/funding_notify_number");
             }
         },
 

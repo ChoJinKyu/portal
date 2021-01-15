@@ -18,6 +18,20 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
+            },
+            "fundingAppService": {
+                "uri": "srv-api/odata/v2/sp.fundingApplicationService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "comCodeService": {
+                "uri": "srv-api/odata/v2/cm.CodeMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -70,6 +84,26 @@
             },
             "": {
                 "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true,
+                    "useBatch": true
+                }
+            },
+            "fundingApp": {
+                "dataSource": "fundingAppService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true,
+                    "useBatch": true
+                }
+            },
+            "comCode": {
+                "dataSource": "comCodeService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
