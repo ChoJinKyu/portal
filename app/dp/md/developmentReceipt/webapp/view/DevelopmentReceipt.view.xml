@@ -453,7 +453,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField"
                                 selectionChange="familyFlagChange">
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
@@ -473,7 +473,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" selectionChange="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -492,7 +492,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" selectionChange="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -512,7 +512,7 @@
                                         }"
                                 required="true" selectionChange="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
-                                class="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? '' : 'readonlyField' }" >
+                                class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -531,7 +531,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" selectionChange="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -550,7 +550,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 selectionChange="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -583,7 +583,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 selectionChange="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -602,7 +602,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 selectionChange="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -621,7 +621,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 selectionChange="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -643,7 +643,7 @@
                         <table:template>
                             <!--<Text id="mold_developer_empno" text="{list>mold_developer_empno}" visible="{mode>/viewFlag}" />-->
                             <SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" search=".onMoldMstTableUserSearch" required="true"
-                                enabled="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
+                                enabled="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" />
                             <!--<Input id=""
                                 value="{list>mold_developer_empno}" 
                                 showValueHelp="true"
@@ -657,7 +657,7 @@
                         <Label text="Remark" wrapping="true"/>
                         <table:template>
                             <TextArea id="remark" value="{list>remark}" rows="2" width="100%" change="inputFieldChange"
-                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
+                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldProjectCodeColumn" width="15em">
@@ -675,31 +675,31 @@
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(1)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(2)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(3)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(4)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(5)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                 </table:columns>

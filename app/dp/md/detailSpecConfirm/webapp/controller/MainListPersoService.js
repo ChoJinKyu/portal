@@ -4,50 +4,68 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "detailSpecConfirm-mainList-mainColumnCode",
+                id: "detailSpecConfirm-mainList-mainCompany",
                 order: 0,
                 text: "Code",
                 visible: true
             },
             {
-                id: "detailSpecConfirm-mainList-mainColumnName",
+                id: "detailSpecConfirm-mainList-mainOrg",
                 order: 1,
                 text: "Name",
                 visible: false
             },
             {
-                id: "detailSpecConfirm-mainList-mainColumnStartDate",
+                id: "detailSpecConfirm-mainList-mainModel",
                 order: 2,
                 text: "Start Date",
                 visible: false
             },
             {
-                id: "detailSpecConfirm-mainList-mainColumnEndDate",
+                id: "detailSpecConfirm-mainList-mainMoldNumber",
                 order: 3,
                 text: "End Date",
                 visible: true
             },
             {
-                id: "detailSpecConfirm-mainList-mainColumnSiteFlag",
+                id: "detailSpecConfirm-mainList-mainMoldSeq",
                 order: 4,
                 text: "Site",
                 visible: true
             },
             {
-                id: "detailSpecConfirm-mainList-mainColumnCompanyFlag",
+                id: "detailSpecConfirm-mainList-mainDesc",
                 order: 5,
                 text: "Company",
                 visible: true
             },
             {
-                id: "detailSpecConfirm-mainList-mainColumnOrganizationFlag",
+                id: "detailSpecConfirm-mainList-mainStatus",
                 order: 6,
+                text: "Role",
+                visible: true
+            },
+            {
+                id: "detailSpecConfirm-mainList-mainItemType",
+                order: 7,
                 text: "Organization",
                 visible: true
             },
             {
-                id: "detailSpecConfirm-mainList-mainColumnUserFlag",
-                order: 7,
+                id: "detailSpecConfirm-mainList-mainRequester",
+                order: 8,
+                text: "User",
+                visible: true
+            },
+            {
+                id: "detailSpecConfirm-mainList-mainDate",
+                order: 9,
+                text: "User",
+                visible: true
+            },
+            {
+                id: "detailSpecConfirm-mainList-mainFamilyPartNumber",
+                order: 10,
                 text: "User",
                 visible: true
             }

@@ -124,7 +124,7 @@ sap.ui.define([
             this.getView().byId("part").removeStyleClass("readonlyField");
             this.getView().byId("residual").removeStyleClass("readonlyField");
 
-            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
+            //this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
 		},
 
 		_toShowModeEachApproval: function(){
@@ -132,7 +132,7 @@ sap.ui.define([
             this.getView().byId("part").addStyleClass("readonlyField");
             this.getView().byId("residual").addStyleClass("readonlyField");
             
-            this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
+            //this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
 		},
 
         /**

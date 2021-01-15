@@ -25,9 +25,9 @@ import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cds.gen.dp.projectmgtv4service.ProjectMgtV4Service_;
 import cds.gen.ep.projectmgtv4service.DeleteProjectProcContext;
 import cds.gen.ep.projectmgtv4service.OutType;
+import cds.gen.ep.projectmgtv4service.ProjectMgtV4Service_;
 import cds.gen.ep.projectmgtv4service.SaveProjectProcContext;
 
 @Component

@@ -200,7 +200,6 @@ public class MdCategoryService implements EventHandler {
 
 	// 카테고리 삭제 전
 	@Before(event=CdsService.EVENT_DELETE, entity=MdCategory_.CDS_NAME)
-	//public void deleteBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
     public void deleteBeforeMdCategoryIdProc(CdsDeleteEventContext context) {
         log.info("### ID Delete [Before] ###");
         
@@ -220,7 +219,7 @@ public class MdCategoryService implements EventHandler {
             .append("	FROM PG_MD_CATEGORY_ITEM ")
             .append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? ");                        
 
-        int iItemCnt = jdbc.queryForObject(v_sql_get_query.toString()
+        int iCnt = jdbc.queryForObject(v_sql_get_query.toString()
                                                 , new Object[] {
                                                     param.get("tenant_id")
                                                     , param.get("company_code")
@@ -230,21 +229,36 @@ public class MdCategoryService implements EventHandler {
                                                 }
                                                 , Integer.class);
 
-        //log.info("###[LOG-10]=> ["+iItemCnt+"]");
-        if (iItemCnt > 0) {
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "범주코드["+param.get("spmd_category_code")+"]를 삭제할 수 없습니다.");
+        log.info("###[LOG-10]=> ["+iCnt+"]");
+        if (iCnt > 0) {
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Category 범주에 등록된 Item특성이 존재하여 삭제할 수 없습니다.");
         } else {
             // Multi Language Delete
-            MdCategoryLng cateLng = MdCategoryLng.create();
-            cateLng.setTenantId((String) param.get("tenant_id"));
-            cateLng.setCompanyCode((String) param.get("company_code"));
-            cateLng.setOrgTypeCode((String) param.get("org_type_code"));
-            cateLng.setOrgCode((String) param.get("org_code"));
-            cateLng.setSpmdCategoryCode((String) param.get("spmd_category_code"));
-            CqnDelete cateLngDelete = Delete.from(MdCategoryLng_.CDS_NAME).matching(cateLng);
-            Result rsltCateLng = mdCategoryService.run(cateLngDelete);
+            MdCategoryLng filter = MdCategoryLng.create();
+            filter.setTenantId((String) param.get("tenant_id"));
+            filter.setCompanyCode((String) param.get("company_code"));
+            filter.setOrgTypeCode((String) param.get("org_type_code"));
+            filter.setOrgCode((String) param.get("org_code"));
+            filter.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+            CqnDelete delete = Delete.from(MdCategoryLng_.CDS_NAME).matching(filter);
+            Result rslt = mdCategoryService.run(delete);
         }
-        //log.info("###[LOG-11]=> ["+iItemCnt+"]");
+/*
+        List<MdCategory> v_results = new ArrayList<MdCategory>();
+        MdCategory v_result = MdCategory.create();
+        
+        v_result.setTenantId((String) param.get("tenant_id"));
+        v_result.setCompanyCode((String) param.get("company_code"));
+        v_result.setOrgTypeCode((String) param.get("org_type_code"));
+        v_result.setOrgCode((String) param.get("org_code"));
+        v_result.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+
+        v_results.add(v_result);
+
+        context.setResult(v_results);
+        context.setCompleted();
+*/
+        log.info("###[LOG-11]=> ["+iCnt+"]");
     }
 
 	/*
@@ -363,49 +377,69 @@ public class MdCategoryService implements EventHandler {
     
 	// 카테고리 Item 삭제 전
 	@Before(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
-	public void deleteBeforeMdCategoryItemItemProc(List<MdCategoryItem> items) {
+	public void deleteBeforeMdCategoryItemItemProc(CdsDeleteEventContext context) {
         log.info("### Item Delete [Before] ###");
 
-		if(!items.isEmpty() && items.size() > 0){
+        CdsModel cdsModel = context.getModel();
+        CqnAnalyzer cqnAnalyzer = CqnAnalyzer.create(cdsModel);
+        CqnStatement cqn = context.getCqn();
+        AnalysisResult result = cqnAnalyzer.analyze(cqn.ref());
+        Map<String, Object> param = result.targetValues();
 
-            for (MdCategoryItem item : items) {
-                int iMappingCnt = 0;
-                // DB처리
-				try {
+        log.info("###"+param.get("tenant_id")+"###"+param.get("company_code")+"###"+param.get("org_type_code")+"###"+param.get("org_code")+"###"+param.get("spmd_category_code")+"###"+param.get("spmd_character_code")+"###");
+        
+        // Item특성코드 삭제시 VendorPool-3별 Mapping 등록 유무 체크
+        StringBuffer v_sql_get_query = new StringBuffer();
 
-					// Item특성코드 삭제시 VendorPool-3별 Mapping 등록 유무 체크
-					StringBuffer v_sql_get_query = new StringBuffer();
+        v_sql_get_query.append(" SELECT ")
+            .append("		COUNT(*) AS CNT ")
+            .append("	FROM PG_MD_VP_ITEM_MAPPING_ATTR ")
+            .append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? AND SPMD_CHARACTER_CODE=? ");                        
 
-					v_sql_get_query.append(" SELECT ")
-						.append("		COUNT(*) AS CNT ")
-						.append("	FROM PG_MD_VP_ITEM_MAPPING_ATTR ")
-						.append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? AND SPMD_CHARACTER_CODE=? ");                        
-			
-					iMappingCnt = jdbc.queryForObject(v_sql_get_query.toString()
-															, new Object[] {
-																item.getTenantId()
-																, item.getCompanyCode()
-																, item.getOrgTypeCode()
-																, item.getOrgCode()
-																, item.getSpmdCategoryCode()
-																, item.getSpmdCharacterCode()
-															}
-															, Integer.class);
+        int iCnt = jdbc.queryForObject(v_sql_get_query.toString()
+                                                , new Object[] {
+                                                    param.get("tenant_id")
+                                                    , param.get("company_code")
+                                                    , param.get("org_type_code")
+                                                    , param.get("org_code")
+                                                    , param.get("spmd_category_code")
+                                                    , param.get("spmd_character_code")
+                                                }
+                                                , Integer.class);
 
-                    //log.info("###[LOG-10]=> ["+iMappingCnt+"]");
-					if (iMappingCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "특성코드["+item.getSpmdCharacterCode()+"]를 삭제할 수 없습니다.");
+        log.info("###[LOG-10]=> ["+iCnt+"]");
+        if (iCnt > 0) {
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Vendor Pool에 Mapping된 Item특성이 존재하여 삭제할 수 없습니다.");
+        } else {
+            // Multi Language Delete
+            MdCategoryItemLng filter = MdCategoryItemLng.create();
+            filter.setTenantId((String) param.get("tenant_id"));
+            filter.setCompanyCode((String) param.get("company_code"));
+            filter.setOrgTypeCode((String) param.get("org_type_code"));
+            filter.setOrgCode((String) param.get("org_code"));
+            filter.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+            filter.setSpmdCharacterCode((String) param.get("spmd_character_code"));
+            CqnDelete delete = Delete.from(MdCategoryItemLng_.CDS_NAME).matching(filter);
+            mdCategoryService.run(delete);
 
-				} catch (Exception ex) {
-                    ex.printStackTrace();
-                    log.error("### ErrMesg : "+ex.getMessage()+"###");
-                } finally {
+        }
+/*        
+        List<MdCategoryItem> v_results = new ArrayList<MdCategoryItem>();
+        MdCategoryItem v_result = MdCategoryItem.create();
+        
+        v_result.setTenantId((String) param.get("tenant_id"));
+        v_result.setCompanyCode((String) param.get("company_code"));
+        v_result.setOrgTypeCode((String) param.get("org_type_code"));
+        v_result.setOrgCode((String) param.get("org_code"));
+        v_result.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+        v_result.setSpmdCharacterCode((String) param.get("spmd_character_code"));
 
-                }
+        v_results.add(v_result);
 
-				//log.info("###[LOG-11]=> ["+iMappingCnt+"]");
-			}
-		}
-
+        context.setResult(v_results);
+        context.setCompleted();
+*/
+        log.info("###[LOG-11]=> ["+iCnt+"]");
     }
 
     

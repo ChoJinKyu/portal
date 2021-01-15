@@ -162,7 +162,7 @@
 				</VBox>
 				<VBox  height="6em">
 					<Label text="{I18N>/CUSTOMER}"/>
-					<Input value="" showValueHelp="true" class="readonlyField" editable="{mode>/editFlag}" /> 
+					<Input value="" showValueHelp="true" class="readonlyField" editable="{mode>/editFlag}" id="customer"  /> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -179,7 +179,7 @@
 				</VBox>
 				<VBox height="6em">
 					<Label text="{path:'I18N>/CUSTOMER_PO_NO', formatter:'I18NFormatter'}"/>
-					<Input value="" editable="{mode>/editFlag}" class="readonlyField" />
+					<Input value="" editable="{mode>/editFlag}" class="readonlyField"  id="customer_po_no"  />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
