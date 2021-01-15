@@ -316,7 +316,9 @@ sap.ui.define([
 
         _toEditModeEachApproval: function () {
             // console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
-
+            console.log(" this " , this.getView());
+            this.byId("customer_po_no").removeStyleClass("readonlyField");
+            this.byId("customer").removeStyleClass("readonlyField");
             this.byId("acquisition_department").removeStyleClass("readonlyField");
             this.byId("accounting_department").removeStyleClass("readonlyField");
             this.byId("importCompany").removeStyleClass("readonlyField");
@@ -336,7 +338,8 @@ sap.ui.define([
         },
         _toShowModeEachApproval: function () {
             // console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
-          
+            this.byId("customer_po_no").addStyleClass("readonlyField");
+            this.byId("customer").addStyleClass("readonlyField");
             this.byId("acquisition_department").addStyleClass("readonlyField");
             this.byId("accounting_department").addStyleClass("readonlyField");
             this.byId("importCompany").addStyleClass("readonlyField");
