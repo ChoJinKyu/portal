@@ -4,7 +4,7 @@
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
 
-    <VBox>
+    <!-- <VBox>
 
     <form:SimpleForm id="midObjectForm1Show" editable="false"> 
     <VBox alignContent="Center" alignItems="Stretch"> 
@@ -59,20 +59,6 @@
 			</items>
 		</ComboBox>
 		<Label text="* 구매유형" design="Bold" class="sapMLabelNoText"/>
-        <!-- <SegmentedButton items="{
-                        path: 'common>/Code',
-                        filters: [
-                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                            {path: 'group_code', operator: 'EQ', value1: 'EP_PURCHASING_TYPE'}
-                        ],
-                        sorter: { path: 'code'}
-                    }" class="sapUiSmallMarginBottom" enabled="false">
-                                <items>
-                                    <SegmentedButtonItem text="All" key="all" width="4.1rem" />
-                                    <SegmentedButtonItem text="설비" key="E" width="5rem" />
-                                    <SegmentedButtonItem text="공사" key="C" width="5rem" />
-                                </items>                                                    
-        </SegmentedButton>     -->
         <SegmentedButton class="sapUiSmallMarginBottom" selectedKey="{master>/ep_purchasing_type_code}" enabled="false">
             <items>
                 <SegmentedButtonItem text="설비" key="E" width="6rem" />
@@ -88,14 +74,14 @@
     </VBox>
     </form:SimpleForm>
 
-    </VBox>
+    </VBox> -->
 
-    <!-- <VBox>
+    <VBox>
 
         <form:SimpleForm id="midObjectForm1Show" editable="false"> 
         <VBox alignContent="Center" alignItems="Stretch"> 
             <Label text="* 프로젝트명" design="Bold" class="sapMLabelNoText"/>
-            <Text text="{masterView>/project_name}" width="100%"/>
+            <Text text="{master>/project_name}" width="100%"/>
         </VBox>
         </form:SimpleForm>
 
@@ -105,23 +91,23 @@
                         columnsXL="2">
 
             <Label text="* 사업본부" design="Bold" class="sapMLabelNoText" />
-            <Text text="{masterView>/bizunit_name}"/>
+            <Text text="{master>/bizunit_name}"/>
             <Label text="* 사업부" design="Bold" class="sapMLabelNoText"/>
-            <Text text="{masterView>/bizdivision_name}"/>
+            <Text text="{master>/bizdivision_name}"/>
             <Label text="* 플랜트" design="Bold" class="sapMLabelNoText"/>
-            <Text text="{masterView>/plant_name}"/>
+            <Text text="{master>/plant_name}"/>
             <Label text="* 구매유형" design="Bold" class="sapMLabelNoText"/>
-            <Text text="{masterView>/ep_purchasing_type_name}"/> 
+            <Text text="{master>/ep_purchasing_type_name}"/> 
 
         </form:SimpleForm>
 
         <form:SimpleForm id="midObjectForm3Show" editable="false"> 
         <VBox alignContent="Center" alignItems="Stretch"> 
             <Label text="* 비고" design="Bold" class="sapMLabelNoText"/>
-            <Text text="{masterView>/remark}" width="100%"/>
+            <Text text="{master>/remark}" width="100%"/>
         </VBox>
         </form:SimpleForm>
 
-    </VBox> -->
+    </VBox>
 
 </core:FragmentDefinition>

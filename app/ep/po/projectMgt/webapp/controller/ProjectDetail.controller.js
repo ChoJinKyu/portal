@@ -118,7 +118,7 @@ sap.ui.define([
 		 */
         onPageNavBackButtonPress: function () {
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
-            this.validator.clearValueState(this.byId("midObjectForm2Edit"));            
+            this.validator.clearValueState(this.byId("midObjectForm2Edit"));
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", { layout: sNextLayout });
         },
@@ -139,20 +139,37 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 that = this;
+
+            var inputData = {};
+
+            inputData = {
+                "tenant_id": oMasterModel.getData().tenant_id,
+                "company_code": oMasterModel.getData().company_code,
+                "ep_project_number": oMasterModel.getData().ep_project_number
+            }
+
+            var url = "ep/po/projectMgt/webapp/srv-api/odata/v4/ep.ProjectMgtV4Service/DeleteProjectProc";
+
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                 title: "Comfirmation",
                 initialFocus: MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
-                        oMasterModel.removeData();
-                        oMasterModel.setTransactionModel(that.getModel());
-                        oMasterModel.submitChanges({
-                            success: function (ok) {
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: JSON.stringify(inputData),
+                            contentType: "application/json",
+                            success: function (data) {
+                                console.log("#########Success#####", data.value);
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 that.onPageNavBackButtonPress.call(that);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
+                            },
+                            error: function (e) {
+                                console.log("error====", e);
                             }
                         });
                     };
@@ -202,28 +219,71 @@ sap.ui.define([
             var oView = this.getView(),
                 that = this;
             var oMasterModel = this.getModel("master");
-            console.log("_sTenantId=", this._sTenantId);
-            console.log("oMasterModel.getData()=", oMasterModel.getData());
-            // this.validator.validate(this.byId("midObjectForm1Edit"))
+
+            var inputData = {};
+
+            inputData = {
+                "tenant_id": oMasterModel.getData().tenant_id,
+                "company_code": oMasterModel.getData().company_code,
+                "ep_project_number": oMasterModel.getData().ep_project_number,
+                "project_name": oMasterModel.getData().project_name,
+                "ep_purchasing_type_code": oMasterModel.getData().ep_purchasing_type_code,
+                "plant_code": oMasterModel.getData().plant_code,
+                "bizunit_code": oMasterModel.getData().bizunit_code,
+                "bizdivision_code": oMasterModel.getData().bizdivision_code,
+                "remark": oMasterModel.getData().remark,
+                "org_type_code": oMasterModel.getData().org_type_code,
+                "org_code": oMasterModel.getData().org_code,
+                "user_id": '9586'
+            }
+
+            console.log("inputData=", JSON.stringify(inputData));
+
             if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if (this.validator.validate(this.byId("midObjectForm2Edit")) !== true) return;
+
+            var url = "ep/po/projectMgt/webapp/srv-api/odata/v4/ep.ProjectMgtV4Service/SaveProjectProc";
+
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: "Comfirmation",
                 initialFocus: MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
-                        oTransactionManager.submit({
-                            success: function (ok) {
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: JSON.stringify(inputData),
+                            contentType: "application/json",
+                            success: function (data) {
+                                //console.log("#########Success#####", data.value[0].savedkey);
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.validator.clearValueState(that.byId("midObjectForm1Edit"));
                                 that.validator.clearValueState(that.byId("midObjectForm2Edit"));
-                                that._toShowMode();
+
+                                var sObjectPath = "/ProjectView(tenant_id='" + inputData.tenant_id + "',company_code='" + inputData.company_code + "',ep_project_number='" + data.value[0].savedkey + "')";
+                                var oMasterModel = that.getModel("master");
+                                oView.setBusy(true);
+                                oMasterModel.setTransactionModel(that.getModel());
+                                oMasterModel.read(sObjectPath, {
+                                    success: function (oData) {
+                                        oView.setBusy(false);
+                                        oView.getModel("master").updateBindings(true);
+                                        that._toShowMode();
+                                    }
+                                });
+
+                                console.log("master=======", oView.getModel("master"));
+
+                            },
+                            error: function (e) {
+                                console.log("error====", e);
                             }
                         });
-                    };
+
+                    }
                 }
             });
 
@@ -287,32 +347,14 @@ sap.ui.define([
                     "tenant_id": this._sTenantId,
                     "company_code": this._sCompanyCode,
                     "ep_project_number": "",
-                    "ep_purchasing_type_code": "E",
-                    "local_create_dtm": new Date(),
-                    "local_update_dtm": new Date()
+                    "ep_purchasing_type_code": "E"
                 }, "/Project");
 
-                // var oDetailsModel = this.getModel("details");
-                // oDetailsModel.setTransactionModel(this.getModel());
-                // oDetailsModel.addRecord({
-                //     "tenant_id": this._sTenantId,
-                //     "company_code": this._sCompanyCode,
-                //     "ep_project_number": this._sEpProjectNumber,
-                // 	"bizunit_code": "",
-                // 	"bizdivision_code": "",
-                // 	"project_name": "",
-                //     "plant_code": "",
-                //     "ep_purchasing_type_code": "",
-                //     "create_user_id": "",
-                //     "local_create_dtm": new Date(),
-                // 	"system_create_dtm": new Date()
-                // }, "/Project");
                 this._toEditMode();
             } else {
                 this.getModel("midObjectView").setProperty("/isAddedMode", true);
 
-                //저장용
-                var sObjectPath = "/Project(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
+                var sObjectPath = "/ProjectView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
                 var oMasterModel = this.getModel("master");
                 oView.setBusy(true);
                 //console.log("this.getModel()=",this.getModel());
