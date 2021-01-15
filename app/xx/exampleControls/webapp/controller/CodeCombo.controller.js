@@ -9,8 +9,10 @@ sap.ui.define([
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
+    "dp/util/control/ui/MaterialMasterDialog",
+    "dp/util/control/ui/MaterialOrgDialog"
 ], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, CodePopUp, EmployeeDialog,
-        Filter, FilterOperator, Sorter) {
+        Filter, FilterOperator, Sorter, MaterialMasterDialog, MaterialOrgDialog) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -136,6 +138,48 @@ sap.ui.define([
 
             var aTokens = this.byId("searchMultiEmployeeFromDialog").getTokens();
             this.oSearchMultiEmployeeDialog.setTokens(aTokens);
+        },
+
+        onMaterialMasterMultiDialogPress: function(){
+            if(!this.oSearchMultiMaterialMasterDialog){
+                this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                    title: "Choose MaterialMaster",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiMaterialMasterFromDialog").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oSearchMultiMaterialMasterDialog.open();
+
+            var aTokens = this.byId("searchMultiMaterialMasterFromDialog").getTokens();
+            this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
+        },
+
+        onMaterialOrgMultiDialogPress: function(){
+            if(!this.oSearchMultiMaterialOrgDialog){
+                this.oSearchMultiMaterialOrgDialog = new MaterialOrgDialog({
+                    title: "Choose MaterialOrg",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiMaterialOrgFromDialog").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oSearchMultiMaterialOrgDialog.open();
+
+            var aTokens = this.byId("searchMultiMaterialOrgFromDialog").getTokens();
+            this.oSearchMultiMaterialOrgDialog.setTokens(aTokens);
         },
 
 	});
