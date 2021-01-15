@@ -19,10 +19,9 @@
             <Input
                 value="{appMaster>/approval_title}"
                 editable="{mode>/editFlag}" 
-                class="{=${mode>/editFlag}?'':'readonlyField'}"
                 width="40em" 
                 placeholder="Input data" required="true">
-            </Input>
+            </Input><!--class="readonlyField"-->
         </HBox>
         <VBox class="sapUiTinyMarginTop">
             <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="input" ></Label> 
