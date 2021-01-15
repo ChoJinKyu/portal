@@ -23,14 +23,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.sap.cds.Result;
+import com.sap.cds.ql.Delete;
+import com.sap.cds.ql.cqn.AnalysisResult;
+import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnDelete;
+import com.sap.cds.ql.cqn.CqnStatement;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsCreateEventContext;
+import com.sap.cds.services.cds.CdsDeleteEventContext;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.changeset.ChangeSetContext;
@@ -53,6 +61,10 @@ public class MdCategoryService implements EventHandler {
 
 	@Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier(MdCategoryService_.CDS_NAME)
+    private CdsService mdCategoryService;
     
     // Multi Key값 Count
     private int iMultiArrayCnt = 0;
@@ -188,47 +200,51 @@ public class MdCategoryService implements EventHandler {
 
 	// 카테고리 삭제 전
 	@Before(event=CdsService.EVENT_DELETE, entity=MdCategory_.CDS_NAME)
-	public void deleteBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
+	//public void deleteBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
+    public void deleteBeforeMdCategoryIdProc(CdsDeleteEventContext context) {
         log.info("### ID Delete [Before] ###");
+        
+        CdsModel cdsModel = context.getModel();
+        CqnAnalyzer cqnAnalyzer = CqnAnalyzer.create(cdsModel);
+        CqnStatement cqn = context.getCqn();
+        AnalysisResult result = cqnAnalyzer.analyze(cqn.ref());
+        Map<String, Object> param = result.targetValues();
 
-		if(!cateIds.isEmpty() && cateIds.size() > 0){
+        log.info("###"+param.get("tenant_id")+"###"+param.get("company_code")+"###"+param.get("org_type_code")+"###"+param.get("org_code")+"###"+param.get("spmd_category_code")+"###");
+        
+        // Category 범주코드 삭제시 Item등록여부체크
+        StringBuffer v_sql_get_query = new StringBuffer();
 
-			for(MdCategory cateId : cateIds) {
-                int iItemCnt = 0;
-                // DB처리
-				try {
+        v_sql_get_query.append(" SELECT ")
+            .append("		COUNT(*) AS CNT ")
+            .append("	FROM PG_MD_CATEGORY_ITEM ")
+            .append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? ");                        
 
-					// Category 범주코드 삭제시 Item등록여부체크
-					StringBuffer v_sql_get_query = new StringBuffer();
+        int iItemCnt = jdbc.queryForObject(v_sql_get_query.toString()
+                                                , new Object[] {
+                                                    param.get("tenant_id")
+                                                    , param.get("company_code")
+                                                    , param.get("org_type_code")
+                                                    , param.get("org_code")
+                                                    , param.get("spmd_category_code")
+                                                }
+                                                , Integer.class);
 
-					v_sql_get_query.append(" SELECT ")
-						.append("		COUNT(*) AS CNT ")
-						.append("	FROM PG_MD_CATEGORY_ITEM ")
-						.append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? ");                        
-			
-					iItemCnt = jdbc.queryForObject(v_sql_get_query.toString()
-															, new Object[] {
-																cateId.getTenantId()
-																, cateId.getCompanyCode()
-																, cateId.getOrgTypeCode()
-																, cateId.getOrgCode()
-																, cateId.getSpmdCategoryCode()
-															}
-															, Integer.class);
-
-                    //log.info("###[LOG-10]=> ["+iItemCnt+"]");
-					if (iItemCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "범주코드["+cateId.getSpmdCategoryCode()+"]를 삭제할 수 없습니다.");
-
-				} catch (Exception ex) {
-                    ex.printStackTrace();
-                    log.error("### ErrMesg : "+ex.getMessage()+"###");
-                } finally {
-
-                }
-				//log.info("###[LOG-11]=> ["+iItemCnt+"]");
-			}
-		}
-
+        //log.info("###[LOG-10]=> ["+iItemCnt+"]");
+        if (iItemCnt > 0) {
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "범주코드["+param.get("spmd_category_code")+"]를 삭제할 수 없습니다.");
+        } else {
+            // Multi Language Delete
+            MdCategoryLng cateLng = MdCategoryLng.create();
+            cateLng.setTenantId((String) param.get("tenant_id"));
+            cateLng.setCompanyCode((String) param.get("company_code"));
+            cateLng.setOrgTypeCode((String) param.get("org_type_code"));
+            cateLng.setOrgCode((String) param.get("org_code"));
+            cateLng.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+            CqnDelete cateLngDelete = Delete.from(MdCategoryLng_.CDS_NAME).matching(cateLng);
+            Result rsltCateLng = mdCategoryService.run(cateLngDelete);
+        }
+        //log.info("###[LOG-11]=> ["+iItemCnt+"]");
     }
 
 	/*
