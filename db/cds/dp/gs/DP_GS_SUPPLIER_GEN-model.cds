@@ -35,7 +35,7 @@ entity Gs_Supplier_Gen {
     product_desc : String(300)   @title: '제품설명' ;	
     an_profile : String(100)   @title: 'Ariba Network 프로파일' ;	     	
     tax_id : String(16)   @title: '세금등록번호' ;	
-    sourcing_contents : LargeBinary   @title: '소싱내용' ;
+    sourcing_contents : LargeString   @title: '소싱내용' ;
     remark : String(3000)   @title: '비고' ;	
     attch_group_number : String(100)   @title: '첨부파일그룹번호' ;	
 }
