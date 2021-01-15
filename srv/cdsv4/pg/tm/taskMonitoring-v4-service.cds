@@ -130,13 +130,13 @@ service TaskMonitoringV4Service {
         returnmessage : String(5000);
     };
 
-    type DeleteInputParamters : {
+    type DeleteInputParameters : {
         tenant_id            : String(5);
         scenario_number      : Integer64;
     };
 
     type DeleteInputType : {
-        sourcParameters : array of DeleteInputParamters;
+        sourcParameters : array of DeleteInputParameters;
     };
 
     type DeleteOutType : {
