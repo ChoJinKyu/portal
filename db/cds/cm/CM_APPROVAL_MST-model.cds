@@ -3,6 +3,7 @@ namespace cm;
 using util from './util/util-model';
 using {cm.Approver as arlApprover} from './CM_APPROVER-model';
 using {cm.Referer as arlReferer} from './CM_REFERER-model';
+using {cm.Code_Dtl as code} from './CM_CODE_DTL-model';
 
 entity Approval_Mst {
     key tenant_id              : String(5) not null   @title : '테넌트ID';
@@ -26,6 +27,11 @@ entity Approval_Mst {
         referers               : Composition of many arlReferer
                                      on  referers.tenant_id       = tenant_id
                                      and referers.approval_number = approval_number;
+                                     
+        approve_status_code_fk : Association to code
+                                     on  approve_status_code_fk.tenant_id  = tenant_id
+                                     and approve_status_code_fk.group_code = 'CM_APPROVE_STATUS'
+                                     and approve_status_code_fk.code       = approve_status_code;
 }
 
 extend Approval_Mst with util.Managed;

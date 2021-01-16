@@ -15,14 +15,14 @@ service BasePriceArlV4Service {
         request_date           : String(8);
         attch_group_number     : String(100);
 
-        // Approvers              : array of BasePriceArlApproverType;
-        // Referers               : array of BasePriceArlRefererType;
-        details                : array of BasePriceArlDtlType;
-
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
         create_user_id         : String(255);
         update_user_id         : String(255);
+
+        Approvers              : array of BasePriceArlApproverType;
+        Referers               : array of BasePriceArlRefererType;
+        details                : array of BasePriceArlDtlType;
     };
 
     type BasePriceArlApproverType : {
@@ -63,12 +63,12 @@ service BasePriceArlV4Service {
         base_date              : Date;
         base_price_ground_code : String(30);
 
-        prices                 : array of BasePriceArlPriceType;
-
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
         create_user_id         : String(255);
         update_user_id         : String(255);
+
+        prices                 : array of BasePriceArlPriceType;
     };
 
     type BasePriceArlPriceType : {
