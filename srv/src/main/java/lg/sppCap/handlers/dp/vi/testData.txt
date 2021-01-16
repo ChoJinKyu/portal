@@ -1,13 +1,13 @@
-curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePriceArlMergeProc \
+curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePriceArlProc \
 -H "Content-Type: application/json" \
 -d '{
     "inputData" : { 
         "cmd" : "insert",
         "basePriceArlMst" : [
             { 
-                "tenant_id": "L2100", "approval_number": "T202101160010", "chain_code": "DP", "approval_type_code": "VI10",	"approve_status_code": "DR",
+                "approval_type_code": "VI10", "approve_status_code": "DR",
                 "approval_title": "개발VI 신규 품의서 제목", "approval_contents": "개발VI 신규 품의서 내용",
-                "requestor_empno": "5459", "request_date": "20201210", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
+                "requestor_empno": "5459", "request_date": "20201210",
                 "Approvers" : [
                     { "approve_sequence": "1", "approver_empno": "5460", "approver_type_code": "APP" },
                     { "approve_sequence": "2", "approver_empno": "5473", "approver_type_code": "AGR" }

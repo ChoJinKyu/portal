@@ -57,31 +57,106 @@ public class BasePriceArlValidationV4 {
 
         if (!basePriceArlMasters.isEmpty() && basePriceArlMasters.size() > 0){
             for (BasePriceArlMstType basePriceArlMst : basePriceArlMasters) {
-                System.out.println("# tenant_id : "             + basePriceArlMst.getTenantId());
-                System.out.println("# approval_number : "       + basePriceArlMst.getApprovalNumber());
-                System.out.println("# chain_code : "            + basePriceArlMst.getChainCode());
-                System.out.println("# approval_type_code : "    + basePriceArlMst.getApprovalTypeCode());
-                System.out.println("# approval_title : "        + basePriceArlMst.getApprovalTitle());
-                System.out.println("# approval_contents : "     + basePriceArlMst.getApprovalContents());
-                System.out.println("# approve_status_code : "   + basePriceArlMst.getApproveStatusCode());
-                System.out.println("# requestor_empno : "       + basePriceArlMst.getRequestorEmpno());
-                System.out.println("# request_date : "          + basePriceArlMst.getRequestDate());
-                System.out.println("# attch_group_number : "    + basePriceArlMst.getAttchGroupNumber());
+                // System.out.println("# tenant_id : "             + basePriceArlMst.getTenantId());
+                // System.out.println("# approval_number : "       + basePriceArlMst.getApprovalNumber());
+                // System.out.println("# chain_code : "            + basePriceArlMst.getChainCode());
+                // System.out.println("# approval_type_code : "    + basePriceArlMst.getApprovalTypeCode());
+                // System.out.println("# approval_title : "        + basePriceArlMst.getApprovalTitle());
+                // System.out.println("# approval_contents : "     + basePriceArlMst.getApprovalContents());
+                // System.out.println("# approve_status_code : "   + basePriceArlMst.getApproveStatusCode());
+                // System.out.println("# requestor_empno : "       + basePriceArlMst.getRequestorEmpno());
+                // System.out.println("# request_date : "          + basePriceArlMst.getRequestDate());
+                // System.out.println("# attch_group_number : "    + basePriceArlMst.getAttchGroupNumber());
 
-                System.out.println("# local_create_dtm : "      + basePriceArlMst.getLocalCreateDtm());
-                System.out.println("# local_update_dtm : "      + basePriceArlMst.getLocalUpdateDtm());
-                System.out.println("# create_user_id : "        + basePriceArlMst.getCreateUserId());
-                System.out.println("# update_user_id : "        + basePriceArlMst.getUpdateUserId());
-                System.out.println("# ----------------------------------");
+                // System.out.println("# local_create_dtm : "      + basePriceArlMst.getLocalCreateDtm());
+                // System.out.println("# local_update_dtm : "      + basePriceArlMst.getLocalUpdateDtm());
+                // System.out.println("# create_user_id : "        + basePriceArlMst.getCreateUserId());
+                // System.out.println("# update_user_id : "        + basePriceArlMst.getUpdateUserId());
+                // System.out.println("# --------------------------------------------------------------------------------------------");
 
                 // validMandatory(basePriceArlMst.getApprovalNumber(),          context, this.getMessage("APPROVAL_NUMBER", context));
 
-                // 상세가 없으면 종료
+                // 결재라인이 있으면
+                if (basePriceArlMst.getApprovers() == null) {
+                    return;
+                } else {
+                    this.validationBasePriceArlApprover(context, basePriceArlMst.getApprovers());
+                }
+
+                // 결재라인이 있으면
+                if (basePriceArlMst.getReferers() != null) this.validationBasePriceArlReferer(context, basePriceArlMst.getReferers());
+
+                // 상세가 있으면
                 if (basePriceArlMst.getDetails() == null) {
                     return;
                 } else {
                     this.validationBasePriceArlDetail(context, basePriceArlMst.getDetails());
                 }
+            }
+        }
+    }
+
+    /**
+     * basePriceArlApprover 입력값 체크
+     * @param context
+     * @param basePriceArlApprovers
+     */
+    public void validationBasePriceArlApprover(EventContext context, Collection<BasePriceArlApproverType> basePriceArlApprovers) {
+        log.info("## validationBasePriceArlApprover Method Started....");
+        
+        if (!basePriceArlApprovers.isEmpty() && basePriceArlApprovers.size() > 0){
+            for (BasePriceArlApproverType basePriceArlApprover : basePriceArlApprovers) {
+                // System.out.println("\t# tenant_id : "              + basePriceArlApprover.getTenantId());
+                // System.out.println("\t# approval_number : "        + basePriceArlApprover.getApprovalNumber());
+                // System.out.println("\t# approve_sequence : "       + basePriceArlApprover.getApproveSequence());
+                // System.out.println("\t# approver_empno : "         + basePriceArlApprover.getApproverEmpno());
+                // System.out.println("\t# approver_type_code : "     + basePriceArlApprover.getApproverTypeCode());
+                // System.out.println("\t# approve_status_code : "    + basePriceArlApprover.getApproveStatusCode());
+
+                // System.out.println("\t# local_create_dtm : "       + basePriceArlApprover.getLocalCreateDtm());
+                // System.out.println("\t# local_update_dtm : "       + basePriceArlApprover.getLocalUpdateDtm());
+                // System.out.println("\t# create_user_id : "         + basePriceArlApprover.getCreateUserId());
+                // System.out.println("\t# update_user_id : "         + basePriceArlApprover.getUpdateUserId());
+                // System.out.println("\t# --------------------------------------------------------------------------------------------");
+
+                // validMandatory(basePriceArlDetail.getItemSequence(),        context, this.getMessage("ITEM_SEQUENCE", context));
+                // validMandatory(basePriceArlDetail.getCompanyCode(),         context, this.getMessage("COMPANY_CODE", context));
+                // validMandatory(basePriceArlDetail.getOrgTypeCode(),         context, this.getMessage("ORG_TYPE_CODE", context));
+                // validMandatory(basePriceArlDetail.getOrgCode(),             context, this.getMessage("ORG_CODE", context));
+                // validMandatory(basePriceArlDetail.getAuCode(),              context, this.getMessage("AU_CODE", context));
+                // validMandatory(basePriceArlDetail.getMaterialCode(),        context, this.getMessage("MATERIAL_CODE", context));
+                // validMandatory(basePriceArlDetail.getBasePriceGroundCode(), context, this.getMessage("BASE_PRICE_GROUND_CODE", context));
+            }
+        }
+    }
+
+    /**
+     * basePriceArlReferer 입력값 체크
+     * @param context
+     * @param basePriceArlReferers
+     */
+    public void validationBasePriceArlReferer(EventContext context, Collection<BasePriceArlRefererType> basePriceArlReferers) {
+        log.info("## validationBasePriceArlReferer Method Started....");
+        
+        if (!basePriceArlReferers.isEmpty() && basePriceArlReferers.size() > 0){
+            for (BasePriceArlRefererType basePriceArlReferer : basePriceArlReferers) {
+                // System.out.println("\t# tenant_id : "              + basePriceArlReferer.getTenantId());
+                // System.out.println("\t# approval_number : "        + basePriceArlReferer.getApprovalNumber());
+                // System.out.println("\t# referer_empno : "       + basePriceArlReferer.getRefererEmpno());
+
+                // System.out.println("\t# local_create_dtm : "       + basePriceArlReferer.getLocalCreateDtm());
+                // System.out.println("\t# local_update_dtm : "       + basePriceArlReferer.getLocalUpdateDtm());
+                // System.out.println("\t# create_user_id : "         + basePriceArlReferer.getCreateUserId());
+                // System.out.println("\t# update_user_id : "         + basePriceArlReferer.getUpdateUserId());
+                // System.out.println("\t# --------------------------------------------------------------------------------------------");
+
+                // validMandatory(basePriceArlDetail.getItemSequence(),        context, this.getMessage("ITEM_SEQUENCE", context));
+                // validMandatory(basePriceArlDetail.getCompanyCode(),         context, this.getMessage("COMPANY_CODE", context));
+                // validMandatory(basePriceArlDetail.getOrgTypeCode(),         context, this.getMessage("ORG_TYPE_CODE", context));
+                // validMandatory(basePriceArlDetail.getOrgCode(),             context, this.getMessage("ORG_CODE", context));
+                // validMandatory(basePriceArlDetail.getAuCode(),              context, this.getMessage("AU_CODE", context));
+                // validMandatory(basePriceArlDetail.getMaterialCode(),        context, this.getMessage("MATERIAL_CODE", context));
+                // validMandatory(basePriceArlDetail.getBasePriceGroundCode(), context, this.getMessage("BASE_PRICE_GROUND_CODE", context));
             }
         }
     }
@@ -96,18 +171,23 @@ public class BasePriceArlValidationV4 {
         
         if (!basePriceArlDetails.isEmpty() && basePriceArlDetails.size() > 0){
             for (BasePriceArlDtlType basePriceArlDetail : basePriceArlDetails) {
-                // System.out.println("# tenant_id : "              + basePriceArlDetail.getTenantId());
-                // System.out.println("# approval_number : "        + basePriceArlDetail.getApprovalNumber());
-                // System.out.println("# item_sequence : "          + basePriceArlDetail.getItemSequence());
-                // System.out.println("# company_code : "           + basePriceArlDetail.getCompanyCode());
-                // System.out.println("# org_type_code : "          + basePriceArlDetail.getOrgTypeCode());
-                // System.out.println("# org_code : "               + basePriceArlDetail.getOrgCode());
-                // System.out.println("# au_code : "                + basePriceArlDetail.getAuCode());
-                // System.out.println("# material_code : "          + basePriceArlDetail.getMaterialCode());
-                // System.out.println("# supplier_code : "          + basePriceArlDetail.getSupplierCode());
-                // System.out.println("# base_date : "              + basePriceArlDetail.getBaseDate());
-                // System.out.println("# base_price_ground_code : " + basePriceArlDetail.getBasePriceGroundCode());
-                // System.out.println("# ----------------------------------");
+                // System.out.println("\t# tenant_id : "              + basePriceArlDetail.getTenantId());
+                // System.out.println("\t# approval_number : "        + basePriceArlDetail.getApprovalNumber());
+                // System.out.println("\t# item_sequence : "          + basePriceArlDetail.getItemSequence());
+                // System.out.println("\t# company_code : "           + basePriceArlDetail.getCompanyCode());
+                // System.out.println("\t# org_type_code : "          + basePriceArlDetail.getOrgTypeCode());
+                // System.out.println("\t# org_code : "               + basePriceArlDetail.getOrgCode());
+                // System.out.println("\t# au_code : "                + basePriceArlDetail.getAuCode());
+                // System.out.println("\t# material_code : "          + basePriceArlDetail.getMaterialCode());
+                // System.out.println("\t# supplier_code : "          + basePriceArlDetail.getSupplierCode());
+                // System.out.println("\t# base_date : "              + basePriceArlDetail.getBaseDate());
+                // System.out.println("\t# base_price_ground_code : " + basePriceArlDetail.getBasePriceGroundCode());
+
+                // System.out.println("\t# local_create_dtm : "       + basePriceArlDetail.getLocalCreateDtm());
+                // System.out.println("\t# local_update_dtm : "       + basePriceArlDetail.getLocalUpdateDtm());
+                // System.out.println("\t# create_user_id : "         + basePriceArlDetail.getCreateUserId());
+                // System.out.println("\t# update_user_id : "         + basePriceArlDetail.getUpdateUserId());
+                // System.out.println("\t# --------------------------------------------------------------------------------------------");
 
                 // validMandatory(basePriceArlDetail.getItemSequence(),        context, this.getMessage("ITEM_SEQUENCE", context));
                 // validMandatory(basePriceArlDetail.getCompanyCode(),         context, this.getMessage("COMPANY_CODE", context));
@@ -118,11 +198,7 @@ public class BasePriceArlValidationV4 {
                 // validMandatory(basePriceArlDetail.getBasePriceGroundCode(), context, this.getMessage("BASE_PRICE_GROUND_CODE", context));
 
                 // 가격이 없으면 종료
-                if (basePriceArlDetail.getPrices() == null) {
-                    return;
-                } else {
-                    this.validationBasePriceArlPrice(context, basePriceArlDetail.getPrices());
-                }
+                if (basePriceArlDetail.getPrices() != null) this.validationBasePriceArlPrice(context, basePriceArlDetail.getPrices());
             }
         }
     }
@@ -137,18 +213,23 @@ public class BasePriceArlValidationV4 {
  
         if (!basePriceArlPrices.isEmpty() && basePriceArlPrices.size() > 0){
             for (BasePriceArlPriceType basePriceArlPrice : basePriceArlPrices) {
-                // System.out.println("# tenant_id : "                          + basePriceArlPrice.getTenantId());
-                // System.out.println("# approval_number : "                    + basePriceArlPrice.getApprovalNumber());
-                // System.out.println("# item_sequence : "                      + basePriceArlPrice.getItemSequence());
-                // System.out.println("# market_code : "                        + basePriceArlPrice.getMarketCode());
-                // System.out.println("# new_base_price : "                     + basePriceArlPrice.getNewBasePrice());
-                // System.out.println("# new_base_price_currency_code : "       + basePriceArlPrice.getNewBasePriceCurrencyCode());
-                // System.out.println("# current_base_price : "                 + basePriceArlPrice.getCurrentBasePrice());
-                // System.out.println("# current_base_price_currency_code : "   + basePriceArlPrice.getCurrentBasePriceCurrencyCode());
-                // System.out.println("# first_purchasing_net_price : "         + basePriceArlPrice.getFirstPurchasingNetPrice());
-                // System.out.println("# first_pur_netprice_curr_cd : "         + basePriceArlPrice.getFirstPurNetpriceCurrCd());
-                // System.out.println("# first_pur_netprice_str_dt : "          + basePriceArlPrice.getFirstPurNetpriceStrDt());
-                // System.out.println("# ----------------------------------");
+                // System.out.println("\t\t# tenant_id : "                          + basePriceArlPrice.getTenantId());
+                // System.out.println("\t\t# approval_number : "                    + basePriceArlPrice.getApprovalNumber());
+                // System.out.println("\t\t# item_sequence : "                      + basePriceArlPrice.getItemSequence());
+                // System.out.println("\t\t# market_code : "                        + basePriceArlPrice.getMarketCode());
+                // System.out.println("\t\t# new_base_price : "                     + basePriceArlPrice.getNewBasePrice());
+                // System.out.println("\t\t# new_base_price_currency_code : "       + basePriceArlPrice.getNewBasePriceCurrencyCode());
+                // System.out.println("\t\t# current_base_price : "                 + basePriceArlPrice.getCurrentBasePrice());
+                // System.out.println("\t\t# current_base_price_currency_code : "   + basePriceArlPrice.getCurrentBasePriceCurrencyCode());
+                // System.out.println("\t\t# first_purchasing_net_price : "         + basePriceArlPrice.getFirstPurchasingNetPrice());
+                // System.out.println("\t\t# first_pur_netprice_curr_cd : "         + basePriceArlPrice.getFirstPurNetpriceCurrCd());
+                // System.out.println("\t\t# first_pur_netprice_str_dt : "          + basePriceArlPrice.getFirstPurNetpriceStrDt());
+
+                // System.out.println("\t\t# local_create_dtm : "                   + basePriceArlPrice.getLocalCreateDtm());
+                // System.out.println("\t\t# local_update_dtm : "                   + basePriceArlPrice.getLocalUpdateDtm());
+                // System.out.println("\t\t# create_user_id : "                     + basePriceArlPrice.getCreateUserId());
+                // System.out.println("\t\t# update_user_id : "                     + basePriceArlPrice.getUpdateUserId());
+                // System.out.println("\t\t# --------------------------------------------------------------------------------------------");
 
                 //     validMandatory(basePriceArlPrice.getMarketCode(), context, this.getMessage("MARKET_CODE", context));
             }
