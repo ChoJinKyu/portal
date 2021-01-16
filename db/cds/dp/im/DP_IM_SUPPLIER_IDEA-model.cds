@@ -36,7 +36,7 @@ entity Im_Supplier_Idea {
     idea_part_desc : String(100)   @title: '아이디어부품설명' ;	
     current_proposal_contents : String(500)   @title: '현재제안내용' ;	
     change_proposal_contents : String(500)   @title: '변경제안내용' ;	
-    idea_contents : LargeBinary   @title: '아이디어내용' ;	
+    idea_contents : LargeString    @title: '아이디어내용' ;	
     attch_group_number : String(100)   @title: '첨부파일그룹번호' ;	
 }
 
