@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 import com.sap.cds.services.EventContext;
@@ -21,7 +20,7 @@ import cds.gen.dp.basepricearlv4service.*;
 @Component
 public class BasePriceArlValidationV4 {
 
-    private static final Logger log = LoggerFactory.getLogger(BasePriceArlValidation.class);
+    private static final Logger log = LoggerFactory.getLogger(BasePriceArlValidationV4.class);
 
     @Autowired
     protected Multilingual i18n;
@@ -58,8 +57,22 @@ public class BasePriceArlValidationV4 {
 
         if (!basePriceArlMasters.isEmpty() && basePriceArlMasters.size() > 0){
             for (BasePriceArlMstType basePriceArlMst : basePriceArlMasters) {
-                // System.out.println("# tenant_id : " + basePriceArlMst.getTenantId());
-                // System.out.println("# ----------------------------------");
+                System.out.println("# tenant_id : "             + basePriceArlMst.getTenantId());
+                System.out.println("# approval_number : "       + basePriceArlMst.getApprovalNumber());
+                System.out.println("# chain_code : "            + basePriceArlMst.getChainCode());
+                System.out.println("# approval_type_code : "    + basePriceArlMst.getApprovalTypeCode());
+                System.out.println("# approval_title : "        + basePriceArlMst.getApprovalTitle());
+                System.out.println("# approval_contents : "     + basePriceArlMst.getApprovalContents());
+                System.out.println("# approve_status_code : "   + basePriceArlMst.getApproveStatusCode());
+                System.out.println("# requestor_empno : "       + basePriceArlMst.getRequestorEmpno());
+                System.out.println("# request_date : "          + basePriceArlMst.getRequestDate());
+                System.out.println("# attch_group_number : "    + basePriceArlMst.getAttchGroupNumber());
+
+                System.out.println("# local_create_dtm : "      + basePriceArlMst.getLocalCreateDtm());
+                System.out.println("# local_update_dtm : "      + basePriceArlMst.getLocalUpdateDtm());
+                System.out.println("# create_user_id : "        + basePriceArlMst.getCreateUserId());
+                System.out.println("# update_user_id : "        + basePriceArlMst.getUpdateUserId());
+                System.out.println("# ----------------------------------");
 
                 // validMandatory(basePriceArlMst.getApprovalNumber(),          context, this.getMessage("APPROVAL_NUMBER", context));
 

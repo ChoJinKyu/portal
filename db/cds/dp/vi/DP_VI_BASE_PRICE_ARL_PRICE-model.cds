@@ -7,7 +7,7 @@ using {cm.Org_Tenant as tenant} from '../../cm/CM_ORG_TENANT-model';
 
 entity VI_Base_Price_Arl_Price {
     key tenant_id                        : String(5) not null;
-    key approval_number                  : String(50) not null;
+    key approval_number                  : String(30) not null;
     key item_sequence                    : Decimal not null;
     key market_code                      : String(30) not null;
         new_base_price                   : Decimal(19, 4);

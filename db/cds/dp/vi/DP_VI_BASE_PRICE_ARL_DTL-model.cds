@@ -12,7 +12,7 @@ using {sp.Sm_Supplier_Mst as supplier} from '../../sp/sm/SP_SM_SUPPLIER_MST-mode
 
 entity VI_Base_Price_Arl_Dtl {
     key tenant_id                 : String(5) not null;
-    key approval_number           : String(50) not null;
+    key approval_number           : String(30) not null;
     key item_sequence             : Decimal not null;
         company_code              : String(10) not null;
         org_type_code             : String(2) not null;

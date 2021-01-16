@@ -62,12 +62,12 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
 
         Collection<BasePriceArlMstType> basePriceArlMasters = context.getInputData().getBasePriceArlMst();
 
-        // 입력값이 없을 경우, 에러 처리
-        if (basePriceArlMasters.isEmpty() || basePriceArlMasters.size() < 1) {
-            // 메시지코드 정의 필요
-            String msg = this.getMessage("EDP30001", context);
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
-        }
+        // // 입력값이 없을 경우, 에러 처리
+        // if (basePriceArlMasters.isEmpty() || basePriceArlMasters.size() < 1) {
+        //     // 메시지코드 정의 필요
+        //     String msg = this.getMessage("EDP30001", context);
+        //     throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
+        // }
 
         for (BasePriceArlMstType basePriceArlMaster : basePriceArlMasters) {
             String tenant_id = basePriceArlMaster.getTenantId();
