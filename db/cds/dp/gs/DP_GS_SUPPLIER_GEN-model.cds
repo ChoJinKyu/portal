@@ -23,8 +23,8 @@ using util from '../../cm/util/util-model';
 
 entity Gs_Supplier_Gen {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
-  key sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
-    sourcing_supplier_id : Integer64   @title: '소싱공급업체ID' ;	
+  key sourcing_supplier_id : Integer64  not null @title: '소싱공급업체ID' ;	
+    sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
     email_address : String(100)  not null @title: '이메일주소' ;	
     develop_date : Date  not null @title: '발굴일자' ;	
     developer_empno : String(30)  not null @title: '발굴자사번' ;	
