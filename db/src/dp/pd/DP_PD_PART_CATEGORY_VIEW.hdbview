@@ -10,7 +10,8 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
       pa.category_code,				
       pa.parent_category_code,
       pa.sequence,
-      pa.category_name,
+      DP_GET_CODE_NAME_FUNC('L1100','PD_CATEGORY',pa.category_code,'KO' ) as category_name,
+--      pcl.code_name as category_name,
       pa.active_flag,
       pa.update_user_id,
       pa.system_update_dtm
@@ -22,7 +23,6 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
                                 org_code,
                                 category_code,				
                                 parent_category_code,	
-						        category_name,
 						        sequence,
 						        active_flag,
 						        update_user_id,
@@ -37,6 +37,6 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
                           AND active_flag = :i_active_flag                            */
 				    )
 				    START WHERE parent_category_code = 'T'
-            ) pa		
+            ) pa
 ORDER BY pa.HIERARCHY_RANK
 ;
