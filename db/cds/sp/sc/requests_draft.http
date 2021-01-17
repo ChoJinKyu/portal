@@ -1,23 +1,20 @@
-
-@bookshop = http://localhost:8080
-
 # Local PC : cds serve all --with-mocks --in-memory?
 @serviceUrl = http://localhost:4004
 # Local PC : mvn spring-boot:run : v2
 @serviceUrl = http://localhost:8080/odata/v2
-# Local PC : mvn spring-boot:run : v4
-@serviceUrl = http://localhost:8080/odata/v4
 # Cloud Container Service : sppCap
 @serviceUrl = https://lgcommondev-workspaces-ws-ll5cb-app1.jp10.applicationstudio.cloud.sap
 # Cloud Container Service : sppCap
 @serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+# Local PC : mvn spring-boot:run : v4
+@serviceUrl = http://localhost:8080/odata/v4
  
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service
 # Odata v2 service
 @reviews-service = {{serviceUrl}}/sp.sourcingService
 # Odata v4 service
-@reviews-service = {{serviceUrl}}/odata/v4/sp.sourcingTest01V4Service
+@reviews-service = {{serviceUrl}}/sp.sourcingTest01V4Service
 
 ### Need a Cookie for credential not in local
 # https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
@@ -30,6 +27,9 @@
 ### Ping Test
 GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
 Cookie: {{cookie}}
+
+### Ping Test
+GET http://localhost:8080/odata/v4/sp.sourcingTest01V4Service/$metadata
 
 ### Get Metadata for Service
 GET {{reviews-service}}/$metadata
