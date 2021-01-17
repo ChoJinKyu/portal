@@ -45,18 +45,7 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
-
-
              //this.setModel(oViewModel, "mainListView");
-
-            // // Add the mainList page to the flp routing history
-            // this.addHistoryEntry({
-            //     title: oResourceBundle.getText("mainListViewTitle"),
-            //     icon: "sap-icon://table-view",
-            //     intent: "#Template-display"
-            // }, true);
-
-            console.log("1.11 -------------------->");
 
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -69,7 +58,6 @@ sap.ui.define([
 
             /** Date */
             var today = new Date();
-
             //this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             //this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             //this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
@@ -175,8 +163,6 @@ sap.ui.define([
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-                console.log("sPath ---------------------->" ,sPath);
-
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
@@ -250,9 +236,6 @@ sap.ui.define([
              var oFilterModel = this.getModel("list"),
                 oFilterModelData = oFilterModel.getData();
 
-
-                
-
             var loiNumberTokens = this.getView().byId("searchLoiNumberS").getTokens();
             var sLoiNumber = loiNumberTokens.map(function (oToken) {
                 return oToken.getKey();
@@ -261,12 +244,9 @@ sap.ui.define([
             var requestFromDate = this.getView().byId("searchRequestDateS").getDateValue(),
                 requestToDate = this.getView().byId("searchRequestDateS").getSecondDateValue(),
                 status = this.getView().byId("searchStatus").getSelectedKey();
-            // var oDateValue = oFilterModelData.dateValue,
-            //     oSecondDateValue = oFilterModelData.secondDateValue;
 
             var sRequestDepartment = this.getView().byId("searchRequestDepartmentS").getValue(),
                 sRequestor = this.getView().byId("searchRequestorS").getValue();
-
 
             var aSearchFilters = [];
 
@@ -285,24 +265,9 @@ sap.ui.define([
                 );
             }
 
-            console.log("--------------- requestFromDate-------" ,requestFromDate );
-            console.log("--------------- requestToDate -----------------" ,requestToDate );
-
-            // if (requestFromDate === null) {
-            //     MessageToast.show("Request Date를 입력해 주세요");
-            //     return false;
-            // } 
-
             if (requestFromDate && requestToDate) {
                 aSearchFilters.push(new Filter("request_date", FilterOperator.BT, this.getFormatDate(requestFromDate), this.getFormatDate(requestToDate)));
             }
-
-            // if (sRequestDepartment && sRequestDepartment.length > 0) {
-            //     aSearchFilters.push(new Filter("request_department_code", FilterOperator.EQ, sLoiNumber));
-            // }
-            // if (sRequestor && sRequestor.length > 0) {
-            //     aSearchFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sLoiNumber));
-            // }
 
             if(sRequestDepartment && sRequestDepartment.length > 0){
                 aSearchFilters.push(new Filter("tolower(request_department_code)", FilterOperator.Contains, "'"+sRequestDepartment.toLowerCase()+"'"));
@@ -314,7 +279,6 @@ sap.ui.define([
             if (status) {
                 aSearchFilters.push(new Filter("loi_request_status_code", FilterOperator.EQ, status));
             }
-
 
             console.log("aSearchFilters -----> " , aSearchFilters);
             return aSearchFilters;
@@ -328,8 +292,6 @@ sap.ui.define([
 
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
         },
-
-        
 
         _doInitTablePerso: function () {
             // init and activate controller

@@ -11,7 +11,15 @@
     xmlns:lib-m="ext.lib.control.m"
     xmlns:m="sap.m"
     xmlns:t="sap.ui.table"
+    xmlns:cm-ui="cm.util.control.ui"
+    xmlns:html="http://www.w3.org/1999/xhtml"
 	height="100%">
+
+    <html:style>
+	  .sapMListTbl span.mandatory {
+	    color: red; !important
+	  }
+    </html:style>
 
 	<uxap:ObjectPageLayout id="page"
 		toggleHeaderOnTitleClick="false"
@@ -175,37 +183,37 @@
 								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midLevelCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="50px">
+								<Column id="midLineNoColumn" minScreenWidth="Tablet" hAlign="Center" width="50px">
 									<Text text="Line No." />
 								</Column>
-                                <Column id="midOrgTypeCodeColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midPlantColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="플랜트" />
 								</Column>
-								<Column id="midLevelValueColumn" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midItemCodeColumn" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="품목코드" />
 								</Column>
-								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center"  width="200px">
+								<Column id="midItemDescColumn" minScreenWidth="Tablet" hAlign="Center"  width="200px">
 									<Text text="품명" />
 								</Column>
-                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
+                                <Column id="midUnitColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
 									<Text text="단위" />
 								</Column>
-                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
+                                <Column id="midRequestQuantityColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
 									<Text text="수량" />
 								</Column>
-                                <Column id="midEndDateColumn2" minScreenWidth="Tablet" hAlign="Center" width="100px">
+                                <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Text text="통화" />
 								</Column>
-                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midRequestAmountColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="금액" />
 								</Column>
-                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midSupplierCodeColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="수행업체" />
 								</Column>
-                                <Column id="midEndDateColumn5" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midBuyerEmpnoColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="구매담당자" />
 								</Column>
-                                <Column id="midEndDateColumn6" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midRemarkColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="비고" />
 								</Column>
 
@@ -246,11 +254,70 @@
                                         </lib-m:CodePicker> -->
 
 
-                                        <Input value="{details>plant_code}" editable="{midObjectView>/isEditMode}"/>
-                                        <Input value="{details>ep_item_code}" editable="{midObjectView>/isEditMode}"/>
+                                        <!-- <HBox>
+                                            <Text text="*" class="mandatory"/>
+                                            <Input value="{details>plant_code}" required="true" editable="{midObjectView>/isEditMode}"/>
+                                        </HBox> -->
+
+                                        <HBox>  
+                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
+                                            <Input value="{details>plant_code}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/> 
+                                            <Text   text="{details>plant_code}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>    
+
+                                         <HBox>  
+                                            <Input value="{details>ep_item_code}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/> 
+                                            <Text   text="{details>ep_item_code}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>  
+
+                                        <HBox>  
+                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
+                                            <Input value="{details>item_desc}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/>  
+                                            <Text   text="{details>item_desc}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>  
+
+                                        <HBox>  
+                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
+                                            <Input value="{details>unit}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/> 
+                                            <Text   text="{details>unit}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>  
+
+                                         <HBox> 
+                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
+                                            <Input value="{details>request_quantity}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/> 
+                                            <Text   text="{details>request_quantity}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>  
+
+                                        
+                                        <!-- <Input value="{details>ep_item_code}" editable="{midObjectView>/isEditMode}"/>
                                         <Input value="{details>item_desc}" editable="{midObjectView>/isEditMode}"/>
                                         <Input value="{details>unit}" editable="{midObjectView>/isEditMode}"/>
-                                        <Input value="{details>request_quantity}" editable="{midObjectView>/isEditMode}"/>
+                                        <Input value="{details>request_quantity}" editable="{midObjectView>/isEditMode}"/> -->
                                         <!-- <Input value="{details>currency_code}" editable="{midObjectView>/isEditMode}"/> -->
 
                                         <!-- <ComboBox
@@ -270,12 +337,13 @@
                                         </items>
                                         </ComboBox> -->
 
-
+                                    <HBox> 
                                         <ComboBox
                                             showSecondaryValues= "true"
                                             width="100%" 
                                             selectedKey="{details>currency_code}"  
-                                            editable="{midObjectView>/isEditMode}"
+                                            visible="{=!${midObjectView>/isShowMode}}"
+                                            required="{=!${midObjectView>/isShowMode}}"
                                             items="{/CurrencyUnitView}">
                                             <items>
                                                 <core:ListItem 
@@ -283,13 +351,37 @@
                                                     text="{currency_code}" />
                                             </items>
                                         </ComboBox>
-                                        <Input value="{details>request_amount}" editable="{midObjectView>/isEditMode}"/>
+                                        <Text   text="{details>currency_code}"
+                                                visible="{midObjectView>/isShowMode}"/>                                                          
+                                    </HBox>  
+
+                                    <HBox> 
+                                        <Input value="{details>request_amount}" 
+                                            visible="{=!${midObjectView>/isShowMode}}"
+                                            required="{=!${midObjectView>/isShowMode}}"
+                                            width="100%"/> 
+                                        <Text   text="{details>request_amount}"
+                                                visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                    </HBox>  
+                                    <HBox>   
+                                        <Input value="{details>supplier_code}" 
+                                            visible="{=!${midObjectView>/isShowMode}}"
+                                            required="{=!${midObjectView>/isShowMode}}"
+                                            width="100%"/>  
+                                        <Text   text="{details>supplier_code}"
+                                                visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                    </HBox>  
+
+                                        
+                                        <!-- <Input value="{details>request_amount}" editable="{midObjectView>/isEditMode}"/> -->
                                          <!-- <Input value="{
                                             path: 'details>request_amount',
                                             formatter: '.numberFormatter.toNumberString'
                                         }"/> -->
-                                        <Input value="{details>supplier_code}" editable="{midObjectView>/isEditMode}"/>
-                                        <lib-m:CodePicker id="searchRequestorS"
+                                        <!-- <Input value="{details>supplier_code}" editable="{midObjectView>/isEditMode}"/> -->
+                                        <!-- <lib-m:CodePicker id="searchRequestorS"
                                             placeholder="Enter a Employee name"
                                             keyField="employee_number"
                                             textField="user_local_name"
@@ -305,13 +397,46 @@
                                             selectedKey="{details>buyer_empno}">
                                         <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
                                             keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                                        </lib-m:CodePicker>
-                                        <Input value="{details>buyer_empno}" editable="{midObjectView>/isEditMode}"/>
-                                        <Input value="{details>remark}" editable="{midObjectView>/isEditMode}"/>
+                                        </lib-m:CodePicker> -->
+
+                                        <!-- <Input id="inputWithEmployeeValueHelp" value="{details>buyer_empno}"
+                                            placeholder="Choose a employee from the ValueHelp"
+                                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                                        </Input> -->
+
+                                        <HBox> 
+                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
+                                            <Input value="{details>buyer_empno}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/>  
+                                            <Text   text="{details>buyer_empno}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>  
+                                        
+                                        <!-- <Input value="{details>buyer_empno}" editable="{midObjectView>/isEditMode}"/> -->
+                                        <!-- <Input value="{details>remark}" editable="{midObjectView>/isEditMode}"/> -->
+
+
+                                        <HBox> 
+                                            <Input value="{details>remark}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/> 
+                                            <Text   text="{details>remark}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>  
 									</cells>
 								</ColumnListItem>
 							</items>
+
+
+                            
 						</Table>
+
+                        
 
 
 
@@ -359,4 +484,16 @@
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
+
+
+    <cm-ui:EmployeeDialog id="employeeDialog" 
+                            title="직원 검색"
+                            items="{
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }"
+                            apply=".onEmployeeDialogApplyPress"
+                        />
+
 </mvc:View>
