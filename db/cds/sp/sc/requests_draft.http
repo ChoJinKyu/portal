@@ -11,7 +11,7 @@
 @serviceUrl = https://lgcommondev-workspaces-ws-ll5cb-app1.jp10.applicationstudio.cloud.sap
 # Cloud Container Service : sppCap
 @serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
-
+ 
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service
 # Odata v2 service
