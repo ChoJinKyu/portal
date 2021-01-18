@@ -365,9 +365,11 @@ sap.ui.define([
                     var PdProdActivityTemplateType  = [];
                     for (var i = 0; i < oTable.getItems().length; i++) {
                         if( oData.PdProdActivityTemplate[i]._row_state_ != null && oData.PdProdActivityTemplate[i]._row_state_ != "" ){
+                            
+
                             var activeFlg = "false";
                             if (oTable.getAggregation('items')[i].getCells()[5].getItems()[2].getPressed()) {
-                                activeFlg = "true";
+                                activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                             }else {
                                 activeFlg = "false";
                             }
@@ -380,6 +382,18 @@ sap.ui.define([
                             var pacOri = oTable.getAggregation('items')[i].getCells()[2].getItems()[2].getValue();
                             if(oData.PdProdActivityTemplate[i]._row_state_  == "C"){
                                 pacOri = oTable.getAggregation('items')[i].getCells()[2].getItems()[1].getValue();
+                            }
+                            
+                            if(pacOri ==""){
+                                
+                                MessageBox.confirm(this.getModel("I18N").getText("/ECM01002"), {
+                                    title: this.getModel("I18N").getText("/SAVE"),
+                                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                                    onClose: (function () {
+                                    }).bind(this)
+                                });
+                                //sap.m.MessageToast.show(v_this.getModel("I18N").getText("/PRODUCT")+ v_this.getModel("I18N").getText("/ACTIVITY")+ v_this.getModel("I18N").getText("/CODE") +v_this.getModel("I18N").getText("/ECM01001"));
+                                return false;
                             }
                             var seq = oData.PdProdActivityTemplate[i].sequence;
                             if(oData.PdProdActivityTemplate[i]._row_state_ == "C"){
