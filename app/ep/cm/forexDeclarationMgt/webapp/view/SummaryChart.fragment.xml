@@ -179,8 +179,8 @@
       
          <ToolbarSpacer/>
         <HBox alignItems="Center" justifyContent="Center" >
-            <Button text="Cancel" class="sapUiSmallMargin" type="Transparent" press=".onExitForex"/>
-            <Button text="Cancel Complete" class="sapUiSmallMargin" type="Emphasized" press=".onForexSave('N')"/>
+            <Button text="Cancel" class="sapUiSmallMargin" type="Transparent" press=".onExitSummaryChart"/>
+            <!-- <Button text="Cancel Complete" class="sapUiSmallMargin" type="Emphasized" press=".onForexSave('N')"/> -->
         </HBox>
 
     </Dialog>
