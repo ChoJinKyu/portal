@@ -24,29 +24,29 @@
                 emptySpanS="0"     
                 singleContainerFullSize="false" >                    
                     <form:content >
-                            <Label text = "프로젝트코드">
+                            <Label text = "프로젝트코드" class="sapUiLargeMarginEnd">
                                 <layoutData>
-                                    <layout:GridData span="XL2 L2 M2 S2" />
+                                    <layout:GridData span="XL3 L3 M3 S12" />
                                 </layoutData>
                             </Label>
                             <Text text = "{updateModel>/project_code}" width="100%">
                                 <layoutData>
-                                    <layout:GridData span="XL4 L4 M4 S4" />
+                                    <layout:GridData span="XL3 L3 M3 S12" />
                                 </layoutData>
                             </Text>
-                            <Label text = "개발구매담당자">
+                            <Label text = "개발구매담당자" class="sapUiLargeMarginEnd">
                                 <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S3" />
+                                    <layout:GridData span="XL3 L3 M3 S12" />
                                 </layoutData>
                             </Label>
                             <Text text = "{updateModel>/buyer_name}" width="100%">
                                 <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S3" />
+                                    <layout:GridData span="XL3 L3 M3 S12" />
                                 </layoutData>
                             </Text>
-                            <Label text = "제외사유" width="100%">
+                            <Label text = "제외사유" width="100%" class="sapUiLargeMarginBegin">
                                 <layoutData>
-                                    <layout:GridData span="XL2 L2 M2 S2" lineBreak="true"/>
+                                    <layout:GridData span="XL12 L12 M12 S12" lineBreak="true"/>
                                 </layoutData> 
                             </Label>
                             <TextArea value="{updateModel>/mcst_excl_reason}" width="100%" rows="5">

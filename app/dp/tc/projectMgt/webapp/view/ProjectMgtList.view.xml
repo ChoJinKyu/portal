@@ -296,7 +296,7 @@
                         </Label>
                         <ComboBox
                             width="100%"
-                            selectedKey="{filterModel>/project_develope_event_code/value}"
+                            selectedKey="{filterModel>/develope_event_code/value}"
                             items="{
                                 path: 'util>/Code',
                                 filters: [
@@ -476,7 +476,7 @@
                         <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
                         <Label text="이벤트" />
                         <t:template>
-                            <Text text="{listModel>project_develope_event_code}" />
+                            <Text text="{listModel>develope_event_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="7rem">
