@@ -95,7 +95,7 @@
                         <Label text="{I18N>/REQUESTOR} "></Label>
                         <!-- <Label text="Request By"></Label> -->
                         <!-- <SearchField value="{filterModel>/requestBy}" /> -->
-                        <lib-m:CodePicker id="searchEmployeePicker"
+                        <lib-m:CodePicker
                             placeholder="Enter a Employee name"
                             value="{filterModel>/requestBy}"
                             keyField="employee_number"

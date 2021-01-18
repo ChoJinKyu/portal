@@ -93,9 +93,20 @@
                         <!-- Plant 끝 -->
 
                         <!-- Material Code 시작 -->
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="{I18N>/MATERIAL_CODE}"></Label>
                             <SearchField value="{filterModel>/materialCode}" search=".onGetMaterialCodeDialogData" />
+                            <layoutData>
+                                <layout:GridData span="XL2 L4 M6 S12" />
+                            </layoutData>
+                        </VBox> -->
+                        <VBox>
+                            <Label text="{I18N>/MATERIAL_CODE}" />
+                            <MultiInput
+                                showValueHelp="true"
+                                tokenChange=".onChangeMaterialCode"
+                                valueHelpRequest=".onMaterialMasterMultiDialogPress">
+                            </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -256,7 +267,7 @@
                             <Text text="{listModel>approval_number_fk/approval_status_code}" textAlign="Right" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column headerSpan="2" width="7rem" visible="{= ${rootModel>/config/SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column headerSpan="2" width="7rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/CODE}" textAlign="Center" width="100%" />
@@ -265,7 +276,7 @@
                             <Text text="{listModel>supplier_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="10rem" visible="{= ${rootModel>/config/SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NAME}" textAlign="Center" width="100%" />
@@ -274,7 +285,7 @@
                             <Text text="{listModel>supplier_local_name}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="7rem" visible="{= ${rootModel>/config/MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{
@@ -282,19 +293,26 @@
                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="10rem" visible="{= ${rootModel>/config/MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
                         <t:template>
-                            <Text text="{listModel>prices/results/0/new_base_price}" textAlign="Right" width="100%" />
+                            <Text text="{
+                                    parts: [
+                                        {path: 'listModel>prices/results/0/new_base_price'},
+                                        {path: 'rootModel>/number/symbol'},
+                                        {path: 'rootModel>/number/currency'}
+                                    ],
+                                    formatter: '.numberFormatter.toNumberString'
+                                }" textAlign="Right" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="6rem" visible="{= ${rootModel>/config/MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>prices/results/0/new_base_price_currency_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -305,7 +323,7 @@
                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="10rem" visible="{= ${rootModel>/config/MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -314,7 +332,7 @@
                             <Text text="{listModel>prices/results/0/new_base_price}" textAlign="Right" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="6rem" visible="{= ${rootModel>/config/MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
@@ -323,7 +341,7 @@
                             <Text text="{listModel>prices/results/0/new_base_price_currency_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -334,7 +352,7 @@
                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="10rem" visible="{= ${rootModel>/config/MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
@@ -343,7 +361,7 @@
                             <Text text="{listModel>prices/results/1/new_base_price}" textAlign="Right" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="6rem" visible="{= ${rootModel>/config/MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
