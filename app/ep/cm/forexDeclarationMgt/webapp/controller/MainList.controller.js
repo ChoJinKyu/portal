@@ -568,6 +568,13 @@ sap.ui.define([
             this.byId("dialogForex").close();
         },
 
+        onExitSummaryChart: function () {
+            this.byId("dialogForexChart").close();
+        },
+
+
+        
+
         // _doInitTablePerso: function(){
         // 	// init and activate controller
         // 	this._oTPC = new TablePersoController({

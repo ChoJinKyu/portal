@@ -43,7 +43,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/product_group_text}">
+            <Text text="{detailModel>/product_group_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -54,7 +54,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_develope_event_code}">
+            <Text text="{detailModel>/develope_event_code}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -111,7 +111,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_status_text}">
+            <Text text="{detailModel>/project_status_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -136,7 +136,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_grade_text}">
+            <Text text="{detailModel>/project_grade_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -159,7 +159,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_leader_info}">
+            <Text text="{detailModel>/project_leader_info/user_local_name} {detailModel>/project_leader_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -170,7 +170,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/buyer_info}">
+            <Text text="{detailModel>/buyer_info/user_local_name} {detailModel>/buyer_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -181,7 +181,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/marketing_person_info}">
+            <Text text="{detailModel>/marketing_person_info/user_local_name} {detailModel>/marketing_person_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -192,7 +192,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/planning_person_info}">
+            <Text text="{detailModel>/planning_person_info/user_local_name} {detailModel>/planning_person_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -237,7 +237,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/bom_type_text}">
+            <Text text="{detailModel>/bom_type_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -305,14 +305,14 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <!--<Input value="{detailModel>/project_develope_event_code}">
+            <!--<Input value="{detailModel>/develope_event_code}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
             </Input>-->
             <ComboBox
                 width="100%"
-                selectedKey="{detailModel>/project_develope_event_code}"
+                selectedKey="{detailModel>/develope_event_code}"
                 items="{
                     path: 'util>/Code',
                     filters: [
@@ -384,7 +384,7 @@
                 items="{
                     path: 'util>/Code',
                     filters: [
-                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_MCST_STATUS_CODE'}
+                        {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_STATUS_CODE'}
                     ]
                 }">
                 <items>
@@ -461,7 +461,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/project_leader_info}">
+            <Input value="{detailModel>/project_leader_empno}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -472,7 +472,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/buyer_info}">
+            <Input value="{detailModel>/buyer_empno}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -483,7 +483,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/marketing_person_info}">
+            <Input value="{detailModel>/marketing_person_empno}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -494,7 +494,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/planning_person_info}">
+            <Input value="{detailModel>/planning_person_empno}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -569,7 +569,7 @@
             class="sapFDynamicPageAlignContent"
             mode="None"
             width="auto"
-            items="{detailModel>/similar_model/results}"
+            items="{detailModel>/mcst_similar_model/results}"
             >
         <headerToolbar>
             <OverflowToolbar>
@@ -600,7 +600,7 @@
             class="sapFDynamicPageAlignContent"
             mode="None"
             width="auto"
-            items="{detailModel>/similar_model/results}"
+            items="{detailModel>/mcst_similar_model/results}"
             >
         <headerToolbar>
             <OverflowToolbar>

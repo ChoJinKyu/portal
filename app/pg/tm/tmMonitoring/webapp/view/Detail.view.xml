@@ -1,8 +1,9 @@
-<mvc:View xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:uxap="sap.uxap" xmlns:table="sap.ui.table" xmlns:u="sap.ui.unified"
- xmlns:rte="sap.ui.richtexteditor" xmlns:l="sap.ui.layout" xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:smartTable="sap.ui.comp.smarttable" xmlns:f="sap.ui.layout.form"
-  class="sapUiSizeCompact" displayBlock="true" controllerName="pg.tm.tmMonitoring.controller.Detail">
+<mvc:View 
+    xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:uxap="sap.uxap" xmlns:table="sap.ui.table" xmlns:u="sap.ui.unified"
+    xmlns:rte="sap.ui.richtexteditor" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" displayBlock="true" xmlns:cm-ui="ext.cm.util.control.ui"
+    controllerName="pg.tm.tmMonitoring.controller.Detail" >
         <App id="idAppControl">
-            <Page title="Monitoring Management System" showNavButton="true" navButtonType="Back" navButtonPress="onNavToBack"> 
+            <Page title="{I18N>/MONITORING_MANAGEMENT}" showNavButton="true" navButtonType="Back" navButtonPress="onNavToBack"> 
                 <content>         
                     <uxap:ObjectPageLayout id="page" alwaysShowContentHeader="false" preserveHeaderStateOnScroll="true" headerContentPinnable="false" upperCaseAnchorBar="false" enableLazyLoading="true" showFooter="true" class="sapUiContentPadding">
                         <uxap:headerTitle/>
@@ -25,16 +26,16 @@
                                                 	<f:SimpleForm id="SimpleFormChange354" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="0" labelSpanM="0" emptySpanL="0" emptySpanM="0" columnsL="3" columnsM="3">
                                                                         <f:content>
                                                                         <VBox id="VBox_manager">
-                                                                            <Label text="{I18N>/MANAGER}"/>
-                                                                            <Input id="managerInput" width="100%" placeholder="{I18N>/MANAGER}" editable="{=${DetailView>/isEditMode}}" value="{=${manager_local_name}.replaceAll(';', ',')}"/>
-                                                                            <!-- <Button id="managerTableBtn" type="Transparent" press="onPressManagerTable" icon="sap-icon://collapse-all"/> -->
+                                                                            <Label text="{I18N>/MANAGER}" labelFor="multiInputWithEmployeeValueHelp"/>
+                                                                            <Text text="{=${manager_local_name}.split(';')}" visible="{=!${DetailView>/isEditMode}}" />
+                                                                            <MultiInput id="multiInputWithEmployeeValueHelp" placeholder="{I18N>/MANAGER}" visible="{=${DetailView>/isEditMode}}" tokenUpdate="onTokenUpdate" showValueHelp="false"/>
                                                                             <layoutData>
                                                                                 <l:GridData span="XL3 L3 M6 S12"/>
                                                                             </layoutData>
                                                                         </VBox>
                                                                         <VBox>
                                                                             <Label class="sapUiSmallMarginBegin" text=""/>
-                                                                           <Button id="managerTableBtn" type="Transparent" press="onPressManagerTable" icon="sap-icon://collapse-all"/>
+                                                                            <Button id="managerTableBtn" type="Transparent" press="onPressManagerTable" visible="{=${DetailView>/isEditMode}}" icon="sap-icon://collapse-all"/>
                                                                             <layoutData>
                                                                                 <l:GridData span="XL3 L3 M6 S12"/>
                                                                             </layoutData>
@@ -45,22 +46,22 @@
                                                                                     <OverflowToolbar>
                                                                                         <content>
                                                                                             <ToolbarSpacer/>
-                                                                                            <Button text="{I18N>/ROW_ADD}" id="btnManagerAddRow" enabled="{=${DetailView>/isEditMode}}" press=".onPressManagerAdd" type="Transparent"/>
+                                                                                            <Button text="{I18N>/ROW_ADD}" id="btnManagerAddRow" enabled="{=${DetailView>/isEditMode}}" press=".onMultiInputWithEmployeeValuePress" type="Transparent"/>
                                                                                             <Button text="{I18N>/ROW_DELETE}" id="btnManagerDeleteRow" enabled="{=${DetailView>/isEditMode}}" press=".onPressManagerDelete" type="Transparent"/>
                                                                                         </content>
                                                                                     </OverflowToolbar>
                                                                                 </headerToolbar>
                                                                                 <columns>
-                                                                                    <Column hAlign="Center" width="5rem">
+                                                                                    <Column hAlign="Center" width="5rem" visible="{=${DetailView>/isEditMode}}">
                                                                                         <header>
                                                                                             <Label text="{I18N>/STATUS}"/>
                                                                                         </header>
                                                                                     </Column>
-                                                                                  <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                                                                  <!-- <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
                                                                                         <header>
                                                                                             <Label text="{I18N>/EMPNO}"/>
                                                                                         </header>
-                                                                                    </Column>
+                                                                                    </Column> -->
                                                                                     <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
                                                                                         <header>
                                                                                             <Label text="{I18N>/MANAGER}" />
@@ -190,7 +191,7 @@
                                      <l:VerticalLayout width="100%">
                                             <VBox class="sapUiSmallMarginTop" id="systemVBox">
                                                 <Label text="{I18N>/SOURCE_SYSTEM_DESC}" design="Bold"/>
-                                                <rte:RichTextEditor id="reSourceSystemDetail" wrapping="false" beforeEditorInit="onBeforeEditorInit" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                <rte:RichTextEditor id="reSourceSystemDetail" wrapping="false"  class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                                 <FormattedText id="ReSourceSystemFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
                                             </VBox>
                                         </l:VerticalLayout>
@@ -314,6 +315,15 @@
                         </uxap:footer>
                         </uxap:ObjectPageLayout>
                         </content>
+                        <cm-ui:EmployeeDialog id="employeeDialog" 
+                            title="직원 검색"
+                            items="{
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }"
+                            apply=".onEmployeeDialogApplyPress"
+                        />
                     </Page>
                 </App>
 </mvc:View>

@@ -744,6 +744,42 @@ sap.ui.define([
             }
         },
         
+        onSelectionChange : function (oEvent) {
+            oEvent.getSource().getParent().getCells()[0].setSelected(true);
+            var combo, colName = oEvent.getSource().sId.split('--')[2].split('-')[0],
+                key = this.getModel("list").getProperty(oEvent.getSource().getBindingInfo("selectedKey").binding.getContext().getPath()).mold_item_type_code;
+
+            if(colName === "mold_item_type_code"){
+                combo = oEvent.getSource().getParent().getCells()[12];
+                combo.setSelectedKey(null); 
+                combo.bindItems({
+                    path: 'util>/Code',
+                    filters: [
+                        new Filter('tenant_id', FilterOperator.EQ, 'L2600'),
+                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_TYPE'),
+                        new Filter("parent_code", FilterOperator.EQ, key)
+                    ],
+                    template: new Item({
+                        key: "{util>code}", text: "{util>code_name}"
+                    })
+                });
+            }else if(colName === "mold_type_code"){
+                combo = oEvent.getSource().getParent().getCells()[17];
+                combo.setSelectedKey(null); 
+                combo.bindItems({
+                    path: 'util>/Code',
+                    filters: [
+                        new Filter('tenant_id', FilterOperator.EQ, 'L2600'),
+                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_STRUCTURE'),
+                        new Filter("parent_code", FilterOperator.EQ, key)
+                    ],
+                    template: new Item({
+                        key: "{util>code}", text: "{util>code_name}"
+                    })
+                });
+            }
+        },
+        
         onRefresh: function () {
             var oBinding = this.byId("moldMstTable").getBinding("rows");
             this.getView().setBusy(true);
@@ -893,19 +929,21 @@ sap.ui.define([
                 filters: aTableSearchState,
                 success: function (oData) {
                     this.validator.clearValueState(this.byId("moldMstTable"));
-                    var oRows = this.byId("moldMstTable").getRows();
-                    oRows.forEach(function (oRow, idx) {
-                        var oCells = oRow.getCells();
-                        
-                        
-                        if(oData.results[idx].set_progress_status === 'DEV_REQ' || oData.results[idx].set_progress_status === 'DEV_RCV'){
-                            oCells.forEach(function (oCell, jdx) {
-                                if(jdx > 8 && jdx !== 15){
-                                    oCell.removeStyleClass("readonlyField");
-                                }
-                            });
-                        }
-                    });
+                    /*var oRows = this.byId("moldMstTable").getRows();
+                    if(oData.results.length > 0){
+                        oRows.forEach(function (oRow, idx) {
+                            var oCells = oRow.getCells();
+                            
+                            
+                            if(oData.results[idx].set_progress_status === 'DEV_REQ' || oData.results[idx].set_progress_status === 'DEV_RCV'){
+                                oCells.forEach(function (oCell, jdx) {
+                                    if(jdx > 8 && jdx !== 15){
+                                        oCell.removeStyleClass("readonlyField");
+                                    }
+                                });
+                            }
+                        });
+                    }*/
                     oView.setBusy(false);
                 }.bind(this)
             });

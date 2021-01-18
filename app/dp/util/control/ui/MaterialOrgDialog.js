@@ -25,7 +25,7 @@ sap.ui.define([
                 textField: { type: "string", group: "Misc", defaultValue: "material_desc" },
                 aggregations: {
                     filters: [
-                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                     ]
                 }
             }
@@ -34,14 +34,12 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            //this.oTenantId = this.getMetadata()._mProperties.aggregations.appData.filters[0].value1;
-            this.oSearchCode = new Input({ placeholder: "Search"});
-            this.oSearchDesc = new Input({ placeholder: "Search"});
-            this.oSearchSpec = new Input({ placeholder: "Search"});
+            this.oSearchCode = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
+            this.oSearchDesc = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
+            this.oSearchSpec = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")});
             this.oSearchCode.attachEvent("change", this.loadData.bind(this));
             this.oSearchDesc.attachEvent("change", this.loadData.bind(this));
             this.oSearchSpec.attachEvent("change", this.loadData.bind(this));
-            
 
             this.oSearchOrg = new CodeComboBox({
                 showSecondaryValues:true,
@@ -51,7 +49,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
+                        new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.PurOrgMgtService',
                     entityName: 'Pur_Operation_Org'
@@ -67,7 +65,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MM_USER_ITEM_TYPE')
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.util.CommonService',
@@ -93,97 +91,99 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: "조직코드", required:true}),
+                        new Label({ text: this.getModel("I18N").getText("/ORG_CODE"), required:true}),  //조직코드
                         this.oSearchOrg
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "UIT"}),
-                        this.oSearchUIT
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: "HS코드"}),
-                        this.oSearchHSCode
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: "자재코드"}),
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE")}),            // 자재코드
                         this.oSearchCode
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "자재내역"}),
+                        new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
+                        this.oSearchUIT
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }),
+
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_DESC")}),    // 자재내역
                         this.oSearchDesc
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "자재스펙"}),
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}),   //자재스펙
                         this.oSearchSpec
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/HS_CODE") }),  //HS_CODE
+                        this.oSearchHSCode
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
+
             ];
         },
 
         createTableColumns: function(){
             return [
                 new Column({
-                    width: "13%",
+                    width: "15%",
                     hAlign: "Center",
-                    label: new Label({text: "조직코드"}),
+                    label: new Label({text: this.getModel("I18N").getText("/ORG_CODE")}),
                     template: new Text({text: "[{org_code}]{org_name}"})
                 }),
                 new Column({
-                    width: "12%",
+                    width: "10%",
                     hAlign: "Center",
-                    label: new Label({text: "자재코드"}),
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE")}),
                     template: new Text({text: "{material_code}"})
                 }),
                 new Column({
-                    width: "20%",
+                    width: "15%",
                     hAlign: "Center",
-                    label: new Label({text: "자재내역", textAlign:"Center"}),
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),
                     template: new Text({text: "{material_desc}", textAlign:"Begin"})
                 }),
                 new Column({
                     width: "25%",
                     hAlign: "Center",
-                    label: new Label({text: "자재스팩"}),
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}),
                     template: new Text({text: "{material_spec}"})
                 }),
                 new Column({
-                    width: "5%",
+                    width: "10%",
                     hAlign: "Center",
-                    label: new Label({text: "단위"}),
+                    label: new Label({text: this.getModel("I18N").getText("/BASE_UOM_CODE")}),
                     template: new Text({text: "{base_uom_code}"})
                 }),
                 new Column({
                     width: "10%",
                     hAlign: "Center",
-                    label: new Label({text: "구매가능"}),
+                    label: new Label({text: this.getModel("I18N").getText("/PURCHASING") + this.getModel("I18N").getText("/ENABLE") }),   // 구매가능
                     template: new Text({text: "{purchasing_enable_flag}"})
                 }),
                 new Column({
                     width: "10%",
                     hAlign: "Center",
-                    label: new Label({text: "HS코드"}),
+                    label: new Label({text: this.getModel("I18N").getText("/HS_CODE")}),
                     template: new Text({text: "{hs_code}"})
                 }),
                 new Column({
                     width: "5%",
                     hAlign: "Center",
-                    label: new Label({text: "UIT"}),
+                    label: new Label({text: this.getModel("I18N").getText("/UIT")}),
                     template: new Text({text: "{user_item_type_code}"})
                 })
             ];
@@ -197,41 +197,41 @@ sap.ui.define([
                 sDesc = this.oSearchDesc.getValue(),
                 sSpec = this.oSearchSpec.getValue(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    new Filter("tenant_id", FilterOperator.EQ, "L1100")
                 ],
-                sOrgCode = false;
+                sOrgCode=false;
                               
             if(sOrg){
-                sOrgCode = true;
+                sOrgCode=true;
                 aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrg));
             }
 
             if(sUIT){
-                sOrgCode = true;
+                sOrgCode=true;
                 aFilters.push(new Filter("user_item_type_code", FilterOperator.EQ, sUIT));
             }
 
             if(sHSCode){
-                sOrgCode = true;
+                sOrgCode=true;
                 aFilters.push(new Filter("hs_code", FilterOperator.EQ, sHSCode));
             }
 
             if(sCode){
-                sOrgCode = true;
-                aFilters.push(new Filter("material_code", FilterOperator.Contains, sCode));
+                sOrgCode=true;
+                aFilters.push(new Filter("tolower(material_code)", FilterOperator.Contains, "'" + sCode.toLowerCase().replace("'","''") + "'"));
             }
 
             if(sDesc){
-                sOrgCode = true;
-                aFilters.push(new Filter("material_desc", FilterOperator.Contains, sDesc));
+                sOrgCode=true;
+                aFilters.push(new Filter("tolower(material_spec)", FilterOperator.Contains, "'" + sDesc.toLowerCase().replace("'","''") + "'"));
             }
             
             if(sSpec){
-                sOrgCode = true;
-                aFilters.push(new Filter("material_spec", FilterOperator.Contains, sSpec));
+                sOrgCode=true;
+                aFilters.push(new Filter("tolower(material_spec)", FilterOperator.Contains, "'" + sSpec.toLowerCase().replace("'","''") + "'"));
             }
 
-            if(sOrgCode) {
+             if(sOrgCode) {
                 ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialOrgView", {
                     filters: aFilters,
                     success: function(oData){
@@ -240,7 +240,7 @@ sap.ui.define([
                     }.bind(this)
                 });
             } else {
-                MessageToast.show("조직코드는 필수 선택 항목입니다.");
+                MessageToast.show(this.getModel("I18N").getText("/ORG_CODE") + "는 " + this.getModel("I18N").getText("/ECM01001"));
                 this.oDialog.setBusy(false);
                 return;
             }

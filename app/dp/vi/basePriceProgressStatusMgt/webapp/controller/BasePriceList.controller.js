@@ -5,9 +5,11 @@ sap.ui.define([
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/ui/core/Fragment",
-  "sap/m/MessageBox"
+  "sap/m/MessageBox",
+  "ext/lib/formatter/NumberFormatter",
+  "dp/util/control/ui/MaterialMasterDialog"
 ],
-  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox) {
+  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, NumberFormatter, MaterialMasterDialog) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oDialogInfo;
@@ -15,12 +17,15 @@ sap.ui.define([
     return BaseController.extend("dp.vi.basePriceProgressStatusMgt.controller.BasePriceList", {
         dateFormatter: DateFormatter,
 
+        numberFormatter: NumberFormatter,
+
         onInit: function () {
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oRootModel.getProperty("/tenantId");
 
             var oToday = new Date();
             var oFilterData = {tenantId: sTenantId,
+                                materialCodes: [],
                                 type: "1",
                                  dateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30, "00", "00", "00"),
                                 secondDateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate(), "23", "59", "59"),
@@ -43,6 +48,11 @@ sap.ui.define([
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
         },
 
+        _addDateTime9: function (oDateParam) {
+            //var oReturnValue = new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
+            return new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
+        },
+
         /**
          * Search 버튼 클릭(Filter 추출)
          */
@@ -53,7 +63,7 @@ sap.ui.define([
                 sCompanyCode = oFilterModelData.company_code,
                 sOrgCode = oFilterModelData.org_code,
                 sStatus = oFilterModelData.status,
-                sMaterialCode = oFilterModelData.materialCode,
+                aMaterialCodes = oFilterModelData.materialCodes,
                 sApprovalNumber = oFilterModelData.approvalNumber,
                 sRequestBy = oFilterModelData.requestBy,
                 oDateValue = oFilterModelData.dateValue,
@@ -75,8 +85,17 @@ sap.ui.define([
             }
 
             // Material Code가 있는 경우
-            if( sMaterialCode ) {
-                aFilters.push(new Filter("material_code", FilterOperator.EQ, sMaterialCode));
+            if( aMaterialCodes && 0<aMaterialCodes.length ) {
+                var aMaterialCodeFilter = [];
+                
+                aMaterialCodes.forEach(function (oMaterialCode) {
+                    aMaterialCodeFilter.push(new Filter("material_code", FilterOperator.EQ, oMaterialCode.getKey()));
+                });
+
+                aFilters.push(new Filter({
+                    filters: aMaterialCodeFilter,
+                    and: false,
+                }));
             }
 
             // Approval Number가 있는 경우
@@ -86,7 +105,7 @@ sap.ui.define([
 
             // Request Date가 있는 경우
             if( oDateValue ) {
-                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, oDateValue, oSecondDateValue));
+                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, this._addDateTime9(oDateValue), this._addDateTime9(oSecondDateValue)));
             }
 
 
@@ -116,7 +135,8 @@ sap.ui.define([
             oModel.read("/Base_Price_Arl_Detail", {
                 filters : filtersParam,
                 urlParameters: {
-                    "$expand": "approval_number_fk,prices,material_code_fk,company_code_fk,org_code_fk"
+                    "$expand": "approval_number_fk,prices,material_code_fk,company_code_fk,org_code_fk",
+                    "$orderby": "approval_number desc, material_code"
                 },
                 success : function(data){
                     oView.setBusy(false);
@@ -309,6 +329,36 @@ sap.ui.define([
         /**
          * ==================== Dialog 끝 ==========================
          */
+
+         onMaterialMasterMultiDialogPress: function (oEvent) {
+            var oMultiInput = oEvent.getSource();
+
+             if( !this.oSearchMultiMaterialMasterDialog ) {
+                 this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                     title: "Choose MaterialMaster",
+                     multiSelection: true,
+                     items: {
+                         filters:[
+                             new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                         ]
+                     }
+                 })
+
+                 this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent) {
+                    oMultiInput.setTokens(oEvent.getSource().getTokens());
+                 }.bind(this));
+             }
+
+             this.oSearchMultiMaterialMasterDialog.open();
+
+             var aTokens = oMultiInput.getTokens();
+             this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
+         },
+
+         onChangeMaterialCode: function (oEvent) {
+             var oFilterModel = this.getModel("filterModel"); 
+             oFilterModel.setProperty("/materialCodes", oEvent.getSource().getTokens());
+         }
     });
   }
 );

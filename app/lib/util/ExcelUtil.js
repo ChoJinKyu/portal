@@ -110,11 +110,20 @@ sap.ui.define([
                     if(oBindingInfo.prop === "") {//binding 정보가 없으면 pass
                         return;
                     }
+                    debugger;
+                    var aPath = [];
+                    if(Array.isArray(oBindingInfo.prop)) {
+                        aPath = oBindingInfo.prop.map(function(oProp) {
+                            return oProp.parts[0].path;
+                        });
+                    } else {
+                        aPath = [oBindingInfo.prop.parts[0].path];
+                    }
 	    			return {
 	    				label : sLabel,
 	    				width : oCol.getWidth(),
 	    				textAlign: oBindingInfo.align ? oBindingInfo.align : "Left",
-	    				property : oBindingInfo.prop === "" ? "" : oBindingInfo.prop.parts[0].path
+	    				property : aPath
 	    			};
 	    		}.bind(this)	
     		);
@@ -130,8 +139,13 @@ sap.ui.define([
             switch(sEleNm) {
                 case "sap.m.Text" :
                 case "sap.m.ObjectIdentifier" :
-                    oBindingInfo.prop = oCell.getBindingInfo("text") || "";
                     
+                    if(sEleNm === "sap.m.ObjectIdentifier") {
+                        let aParam = [oCell.getBindingInfo("title"), oCell.getBindingInfo("text")];
+                        oBindingInfo.prop =  aParam;
+                    } else {
+                        oBindingInfo.prop = oCell.getBindingInfo("text") || "";
+                    }
                     if(typeof oCell.getTextAlign === "function") {
                         oBindingInfo.align = this._convAlign(oCell.getTextAlign());
                     }

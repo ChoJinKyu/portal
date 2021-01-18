@@ -19,7 +19,7 @@
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
@@ -531,7 +531,7 @@
                                     <Title text="List ({= ${manlist>/vPSearchMngListView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".managerAddRow"   enabled="{mode>/viewFlag}" />
-                                    <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".onDetailSaveButtonPress"   enabled="{mode>/viewFlag}" />                                    
+                                    <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                    
                                     <!-- <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                     -->
                                     <!-- <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".onMngListAddButtonPress"   enabled="{mode>/viewFlag}" />
                                     <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".onDetailSaveButtonPress"   enabled="{mode>/viewFlag}" /> -->

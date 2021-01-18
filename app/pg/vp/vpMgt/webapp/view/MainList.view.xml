@@ -9,7 +9,7 @@
     xmlns:tnt="sap.tnt"    
     xmlns:lib-m="ext.lib.control.m"
     height="100%">
-	<App id="app">
+
         <f:DynamicPage id="page"
             headerExpanded="{mainListView>/headerExpanded}" 
             toggleHeaderOnTitleClick="true">
@@ -35,7 +35,7 @@
                             <form:content>
 
                                 <VBox>
-                                    <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG_S" required="true"></Label>
                                     <ComboBox id="search_Operation_ORG_S" width="10rem" items="{
                                         path: '/VpOperationOrg',
                                         filters: [
@@ -52,7 +52,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation Uint" labelFor="search_Operation_UNIT_S" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_UNIT}" labelFor="search_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_S" width="10rem"
                                              items="{
                                                         path : 'util>/CodeDetails',
@@ -78,7 +78,7 @@
                             <form:content>
 
                                 <VBox>
-                                    <Label text="Operation ORG" labelFor="search_Operation_ORG_E" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG_E" required="true"></Label>
                                     <ComboBox id="search_Operation_ORG_E" width="10rem"  items="{
                                         path: '/VpOperationOrg',
                                         filters: [
@@ -95,7 +95,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation Uint" labelFor="search_Operation_UNIT_E" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_UNIT}" labelFor="search_Operation_UNIT_E" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_E" width="10rem"
                                             items="{
                                                         path : 'util>/CodeDetails',
@@ -117,7 +117,7 @@
                         </form:SimpleForm>
                     </f:expandedContent>
                     <f:actions>
-                        <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                     </f:actions>
                     <f:navigationActions>
                         <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -131,7 +131,7 @@
                     <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                            <Label text="Department"></Label>
+                            <Label text="{I18N>/DEPARTMENT}"></Label>
                             <lib-m:CodePicker id="search_Dept"
                                 placeholder="Enter a department name"
                                 keyField="department_id"
@@ -152,7 +152,7 @@
                             </layoutData>                                
                             </VBox>
                             <VBox>
-                                <Label text="Manager"></Label>
+                                <Label text="{I18N>/MANAGER}"></Label>
                                 <lib-m:CodePicker id="search_Man"
                                     placeholder="Enter a Employee name"
                                     keyField="employee_number"
@@ -173,7 +173,7 @@
                                 </layoutData>                                
                             </VBox>
                             <VBox>
-                                <Label text= "Vendor Pool" labelFor="search_Vp_Name"></Label>
+                                <Label text= "{I18N>/VENDOR_POOL}" labelFor="search_Vp_Name"></Label>
                                 <HBox>
                                     <SearchField id="search_Vp_Name"
                                                 search=".onDialogTreeCreate" 
@@ -195,7 +195,7 @@
                                 </layoutData>
                             </VBox>                        
                             <VBox>
-                                <Label text="Supplier" labelFor="search_Sup"></Label>
+                                <Label text="{I18N>/SUPPLIER}" labelFor="search_Sup"></Label>
 
                                 <lib-m:CodePicker id="search_Sup"
                                     placeholder="Enter a supplier name"
@@ -249,7 +249,7 @@
                             ]
                         }"
 
-                    
+                        cellClick=".onCellClick"
                         enableColumnReordering="false"
                         filter="filterPrice"
                         visibleRowCountMode="Auto"
@@ -260,12 +260,12 @@
                         <OverflowToolbar>
                             <Title text="List ({= ${list>/vPSearchView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableCreateButton"          type="Emphasized" text="Create Level"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
+                            <Button id="mainTableCreateButton"          type="Emphasized" text="{I18N>/CREATE_LEVEL}"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
                             <!-- Add the Personalization button -->
-                            <Button id="mainTableEditButton"             text="Info.Edit"        press=".onMainTableEditButtonPress"     enabled="false" />
-                            <Button id="mainTableChangeListButton"       text="Change List"      press=".onMainTableChangeListButtonPress"   enabled="false" />
-                            <Button id="mainTableCombineButton"          text="Combine/Move"     press=".onMainTableCombineButtonPress"   enabled="false" />
-                            <Button id="mainTableSplitButton"            text="Split"            press=".onMainTableSplitButtonPress"  enabled="false" />
+                            <Button id="mainTableEditButton"             text="{I18N>/INFO_EDIT}"        press=".onMainTableEditButtonPress"     enabled="false" />
+                            <Button id="mainTableChangeListButton"       text="{I18N>/CHANGE_LIST}"      press=".onMainTableChangeListButtonPress"   enabled="false" />
+                            <Button id="mainTableCombineButton"          text="{I18N>/COMBINE_MOVE}"     press=".onMainTableCombineButtonPress"   enabled="false" />
+                            <Button id="mainTableSplitButton"            text="{I18N>/SPLIT}"            press=".onMainTableSplitButtonPress"  enabled="false" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                                 <layoutData>
@@ -276,19 +276,19 @@
                     </table:extension> 
 
                     <table:columns>
-                            <table:Column label="Higher Level" width="12rem" filterProperty="higher_level_path" >
+                            <table:Column label="{I18N>/HIGHER_LEVEL}" width="12rem" filterProperty="higher_level_path" >
                                 <table:template>
                                     <Text text="{list>higher_level_path}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Vendor Pool" width="8rem" filterProperty="vendor_pool_local_name"  >
+                            <table:Column label="{I18N>/VENDOR_POOL}" width="8rem" filterProperty="vendor_pool_local_name"  >
                                 <table:template>
                                     <Text text="{list>vendor_pool_local_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Info. Change Status" width="10rem" hAlign="Center">
+                            <table:Column label="{I18N>/INFO_CHANGE_STATUS}" width="10rem" hAlign="Center">
                                 <table:template>
                                     <!-- <Text text="{list>info_change_status}" wrapping="false" /> -->
                                     <tnt:InfoLabel 
@@ -300,19 +300,19 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Mtl. Attribute" width="8rem" filterProperty="vendor_pool_local_name" >
+                            <table:Column label="{I18N>/MTL_ATTRIBUTE}" width="8rem" filterProperty="vendor_pool_local_name" >
                                 <table:template>
                                     <Text text="{list>inp_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column id="table_review_grade" label="Review Grade" width="8rem">
+                            <table:Column id="table_review_grade" label="{I18N>/REVIEW_GRADE}" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_grade_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column id="table_equipment_type" label="Equipment Type" width="8rem">
+                            <table:Column id="table_equipment_type" label="{I18N>/EQUIPMENT_TYPE}" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_type_name}" wrapping="false" />
                                 </table:template>
@@ -324,19 +324,19 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Quantity" hAlign="Center" width="8rem">
+                            <table:Column label="{I18N>/SUPPLIER_QUANTITY}" hAlign="Center" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_quantity}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Code" width="8rem" hAlign="Center" filterProperty="supplier_code" >
+                            <table:Column label="{I18N>/SUPPLIER_CODE}" width="8rem" hAlign="Center" filterProperty="supplier_code" >
                                 <table:template>
                                     <Text text="{list>supplier_code}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Name" width="8rem" filterProperty="supplier_local_name" >
+                            <table:Column label="{I18N>/SUPPLIER_NAME}" width="8rem" filterProperty="supplier_local_name" >
                                 <table:template>
                                     <Text text="{list>supplier_local_name}" wrapping="false" />
                                 </table:template>
@@ -348,7 +348,7 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Company" width="8rem" filterProperty="supplier_company_name" >
+                            <table:Column label="{I18N>/COMPANY}" width="8rem" filterProperty="supplier_company_name" >
                                 <table:template>
                                     <Text text="{list>supplier_company_name}" wrapping="false" />
                                 </table:template>
@@ -371,66 +371,66 @@
                                     <Text text="{list>supplier_flag}" wrapping="false" />
                                 </table:template>
                             </table:Column> -->
-                            <table:Column label="Maker Flag" width="8rem" hAlign="Center">
+                            <table:Column label="{I18N>/MAKER_FLAG}" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{path : 'list>maker_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="Supplier Flag" width="8rem"  hAlign="Center">
+                            <table:Column label="{I18N>/SUPPLIER_FLAG}" width="8rem"  hAlign="Center">
                                 <table:template>
                                     <Text text="{path : 'list>supplier_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="Status" hAlign="Center" width="0rem">
+                            <table:Column label="{I18N>/STATUS}" hAlign="Center" width="0rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false"  />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="V/P 제외여부" width="8rem"  hAlign="Center">
+                            <table:Column label="{I18N>/VP_EXCEPTION_FLAG}" width="8rem"  hAlign="Center">
                                 <table:template >
                                     <Text text="{= !!${list>vendor_pool_apply_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                               
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="SD 제외여부" width="8rem" hAlign="Center">
+                            <table:Column label="{I18N>/SD_EXCEPTION_FLAG}" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{= !!${list>sd_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                                
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="Department" width="8rem" filterProperty="repr_department_name">
+                            <table:Column label="{I18N>/DEPARTMENT}" width="8rem" filterProperty="repr_department_name">
                                 <table:template>
                                     <Text text="{list>repr_department_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Manager" width="8rem" filterProperty="managers_name">
+                            <table:Column label="{I18N>/MANAGER}" width="8rem" filterProperty="managers_name">
                                 <table:template>
                                     <Text text="{list>managers_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="평가통제여부" width="8rem" hAlign="Center">
+                            <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{= !!${list>supeval_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
                                 </table:template>
                             </table:Column>                        
 
-                            <table:Column label="평가통제시작일" width="8em">
+                            <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="8em">
                                 <table:template>
                                     <Text text="{list>supeval_control_start_date}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="평가통제종료일" width="8em">
+                            <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="8em">
                                 <table:template>
                                     <Text text="{list>supeval_control_end_date}" wrapping="false" />
                                 </table:template>
                             </table:Column>   
 
-                            <table:Column label="RM 통제여부" hAlign="Center" width="8em">
+                            <table:Column label="{I18N>/RM_CONTROL_FLAG}" hAlign="Center" width="8em">
                                 <table:template>
                                     <Text text="{= !!${list>supplier_rm_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
                                 </table:template>
@@ -445,9 +445,9 @@
                 <OverflowToolbar>
                     <ToolbarSpacer />
                     <Button type="Accept" text="Accept"/>
-                    <Button type="Reject" text="Reject"/>
+                    <Button type="Reject" text="{I18N>/REJECT}"/>
                 </OverflowToolbar>
             </f:footer>
         </f:DynamicPage>
-	</App>
+
 </mvc:View>

@@ -11,61 +11,61 @@ sap.ui.define([
   function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Filter, FilterOperator, MessageBox) {
     "use strict";
 
-    return BaseController.extend("dp.tc.projectMgt.controller.ProjectInfo", {
+    return BaseController.extend("dp.tc.projectMgt.controller.McstProjectInfo", {
          dateFormatter: DateFormatter
         , numberFormatter: NumberFormatter
+        , oUerInfo : {user_id : "A60262"}
 
         , onInit: function () {
-            // this.setModel(new JSONModel(), "detailModel");
-            // this.setModel(new JSONModel(), "eventsModel");
-            // this.setModel(new JSONModel(), "priceModel")
-            // this.setModel(new JSONModel(), "exchangeModel");
-            
             this.oRouter = this.getOwnerComponent().getRouter();
-            this.oRouter.getRoute("ProjectInfo").attachPatternMatched(this._getProjectDetail, this);
-
+            this.oRouter.getRoute("McstProjectInfo").attachPatternMatched(this.onAttachPatternMatched, this);
         }
 
         , onAfterRendering: function () {
-            //let sId = this.byId("oplProjectInfo").getHeaderContent()[0].getParent().sId;
-            //jQuery("#"+sId).removeClass("sapUxAPObjectPageHeaderContent");
+            debugger;
+            let sId = this.byId("oplProjectInfo").getHeaderContent()[0].getParent().sId;
+            jQuery("#"+sId).removeClass("sapFDynamicPageHeaderWithContent");
         }
 
         , onBeforeRendering: function() {
         }
         
-        /**
-         * Project 상세정보 read 후 model 에 set 한다.
-         */
-        , _getProjectDetail: function (oEvent) {
+        , onAttachPatternMatched: function(oEvent) {
             let oParam = {};
             if(oEvent) {
                 oParam = oEvent.getParameter("arguments");
             } else {
-                oParam.tenant_id = this.getModel("detailModel").getProperty("/tenant_id");
+                oParam.tenant_id    = this.getModel("detailModel").getProperty("/tenant_id");
                 oParam.project_code = this.getModel("detailModel").getProperty("/project_code");
-                oParam.model_code = this.getModel("detailModel").getProperty("/model_code");
+                oParam.model_code   = this.getModel("detailModel").getProperty("/model_code");
+                oParam.version_number = this.getModel("detailModel").getProperty("/version_number");
             }
-            
+            this._getProjectDetail(oParam);
+        }
+        /**
+         * Project 상세정보 read 후 model 에 set 한다.
+         */
+        , _getProjectDetail: function (oParam) {
             var oView = this.getView();
 
-            let oModel = this.getModel();
+            let oDataModel = this.getModel("mcstProjectMgtModel");//McstProjectMgtService V2 OData Service
             let aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oParam.tenant_id));
             aFilters.push(new Filter("project_code", FilterOperator.EQ, oParam.project_code));
             aFilters.push(new Filter("model_code", FilterOperator.EQ, oParam.model_code));
+            aFilters.push(new Filter("version_number", FilterOperator.EQ, oParam.version_number));
 
             oView.setBusy(true);
-            oModel.read("/ProjectView", {
+            var sExpand  = "mcst_events,mcst_similar_model,mcst_base_extra,mcst_mtlmob,mcst_sales_price,mcst_prcs_cost,mcst_sgna";
+                sExpand += ",product_group_text,project_grade_text,bom_type_text,project_status_text,mcst_text,mcst_status_text,project_creator_info";
+                sExpand += ",project_leader_info,buyer_info,marketing_person_info,planning_person_info,bizdivision_text";
+            oDataModel.read("/McstProject", {
                 filters : aFilters,
-                urlParameters : { 
-                    "$expand" : "events,similar_model,base_extra,mtlmob,sales_price,prcs_cost,sgna",
-                    "$orderby" : "events/sequence"
-                },
+                urlParameters : { "$expand" : sExpand },
                 success : function(data){
-                    //debugger;
+                    debugger;
                     oView.setBusy(false);
-                    console.log("ProjectInfo.Controller", data);
+                    console.log("McstProjectInfo.Controller", data);
 
                     if( data && data.results && 0<data.results.length ) {
                         oView.getModel("detailModel").setData(data.results[0]);
@@ -90,10 +90,10 @@ sap.ui.define([
         }
 
         , _sendSaveData: function(oSendData) {
-            var oModel = this.getModel("v4Proc");
+            //var oModel = this.getModel("v4Proc");
             //var url = oModel.sServiceUrl + "TcUpdateProjectProc";
-            var targetName = "TcUpdateProjectProc";
-            var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.ProjectMgtV4Service/" + targetName;
+            var targetName = "TcUpdateMcstProjectProc";
+            var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.McstProjectMgtV4Service/" + targetName;
             $.ajax({
                 url: url,
                 type: "POST",
@@ -125,9 +125,10 @@ sap.ui.define([
         , _reFactorySaveModel: function() {
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
-            var aSimilarModelData = oData.similar_model.results || [];
-            var aBaseExtract = oData.base_extra.results || [];
-            
+            var aSimilarModelData = oData.mcst_similar_model.results || [];
+            var aBaseExtract = oData.mcst_base_extra.results || [];
+            var me = this;
+
             //tblPrice_edit
             var oTblPrice   = this.byId("tblPrice_edit");
             var oTblExchange = this.byId("tblExchange_edit");
@@ -151,6 +152,8 @@ sap.ui.define([
                     tenant_id               : oData.tenant_id,
                     project_code            : oData.project_code,
                     model_code              : oData.model_code,
+                    version_number          : oData.version_number,
+                    mcst_code               : oData.mcst_code,
                     project_name            : oData.project_name,
                     model_name              : oData.model_name,
                     product_group_code      : oData.product_group_code,
@@ -169,25 +172,31 @@ sap.ui.define([
                     customer_model_desc     : oData.customer_model_desc,
                     mcst_yield_rate         : oData.mcst_yield_rate,
                     bom_type_code           : oData.bom_type_code,
-                    project_create_date     : sCreateDate
+                    project_create_date     : sCreateDate,
+                    user_id                 : me.oUerInfo.user_id
                 };
             var aTcPjt = [oTcPjt];
             
-            var aSimModelResult = aSimilarModelData.map(function(oSimModel) {
+            var aSimilarModel = aSimilarModelData.map(function(oSimModel) {
                 return {
-                    tenant_id            : oSimModel.tenant_id,
-                    project_code         : oSimModel.project_code,
-                    model_code           : oSimModel.model_code,
                     similar_model_code   : oSimModel.similar_model_code,
                     code_desc            : oSimModel.code_desc,
                     direct_register_flag : oSimModel.direct_register_flag
                 };
             });
-
+            var oSimModelResult = {
+                tenant_id            : oData.tenant_id,
+                project_code         : oData.project_code,
+                model_code           : oData.model_code,
+                version_number       : oData.version_number,
+                similarModel         : aSimilarModel,
+                user_id              : me.oUerInfo.user_id
+            }
+            
             var aPriceResult = [];
             $.each(aPriceData.datas, function(idx, oPrice) {
-                if(oData.hasOwnProperty(oPrice.addition_type_code.toLowerCase())) {
-                    var aAddition = oData[oPrice.addition_type_code.toLowerCase()].results;
+                if(oData.hasOwnProperty(("mcst_"+oPrice.addition_type_code).toLowerCase())) {
+                    var aAddition = oData["mcst_" + oPrice.addition_type_code.toLocaleLowerCase()].results;
                     $.each(Object.keys(oPrice), function(idx2, sKey) {
                         $.each(aAddition, function(idx3, oAddition) {
                             if(!oAddition.addition_type_code) {
@@ -197,14 +206,16 @@ sap.ui.define([
                                     tenant_id           : oAddition.tenant_id,
                                     project_code        : oAddition.project_code,
                                     model_code          : oAddition.model_code,
+                                    version_number      : oData.version_number,
                                     addition_type_code  : oAddition.addition_type_code,
                                     period_code         : oAddition.period_code,
-                                    addition_type_value : oPrice[sKey]                                
+                                    addition_type_value : oPrice[sKey],
+                                    user_id             : me.oUerInfo.user_id
                                 });
                                 return false;
                             }
                         });
-                    })
+                    });
                 }
             });
 
@@ -217,9 +228,11 @@ sap.ui.define([
                             tenant_id     : oBaseEx.tenant_id,
                             project_code  : oBaseEx.project_code,
                             model_code    : oBaseEx.model_code,
+                            version_number: oData.version_number,
                             currency_code : oBaseEx.currency_code,
                             period_code   : oBaseEx.period_code,
-                            exrate        : oTableData[oBaseEx.period_code]
+                            exrate        : oTableData[oBaseEx.period_code],
+                            user_id       : me.oUerInfo.user_id
                         })
                     }
                 });
@@ -228,13 +241,13 @@ sap.ui.define([
             var oSendData = {
                 inputData : {
                     tcPjt             : aTcPjt,
-                    tcPjtSimilarModel : aSimModelResult,
+                    tcPjtSimilarModel : [oSimModelResult],
                     tcPjtAddInfo      : aPriceResult,
                     tcPjtBaseExrate   : aBaseExtractResult,
-                    user_id           : "A60262"                   
+                    user_id           : me.oUerInfo.user_id                 
                 }
             };
-            
+            debugger;
             this._sendSaveData(oSendData);
         }
 
@@ -288,14 +301,14 @@ sap.ui.define([
             var oDetailData = this.getOwnerComponent().getModel("detailModel").getData();
             console.log("BlockPrice.Controller", oDetailData);
             //Grid Table 별로 
-            var oEvents = oDetailData.events ? oDetailData.events.results : [];//개발일정
+            var oEvents = oDetailData.mcst_events ? oDetailData.mcst_events.results : [];//개발일정
 
-            var oMtlmob = oDetailData.mtlmob ? oDetailData.mtlmob.results : [];//판가/물동/원가의 예상물동
-            var oSalesPrice = oDetailData.sales_price ? oDetailData.sales_price.results : [];//판가/물동/원가의 판가
-            var oPrcsCost = oDetailData.prcs_cost ? oDetailData.prcs_cost.results : [];//판가/물동/원가의 가공비
-            var oSgna = oDetailData.sgna ? oDetailData.sgna.results : [];//판가/물동/원가의 판관비
+            var oMtlmob = oDetailData.mcst_mtlmob ? oDetailData.mcst_mtlmob.results : [];//판가/물동/원가의 예상물동
+            var oSalesPrice = oDetailData.mcst_sales_price ? oDetailData.mcst_sales_price.results : [];//판가/물동/원가의 판가
+            var oPrcsCost = oDetailData.mcst_prcs_cost ? oDetailData.mcst_prcs_cost.results : [];//판가/물동/원가의 가공비
+            var oSgna = oDetailData.mcst_sgna ? oDetailData.mcst_sgna.results : [];//판가/물동/원가의 판관비
             
-            var oBaseExtra = oDetailData.base_extra ? oDetailData.base_extra.results : [];//환율
+            var oBaseExtra = oDetailData.mcst_base_extra ? oDetailData.mcst_base_extra.results : [];//환율
 
             //events
             var aEventsData = this._reCompositData(oEvents, "develope_event_code", "start_date");
@@ -343,11 +356,13 @@ sap.ui.define([
                 this._factoryTableColumns("tblPrice_edit", "Center", false);
             }
             //환율
-            var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : "구분", "data" : "currency_code"});
-            this.setModel(new JSONModel(aExchange), "exchangeModel");
-            this._factoryTableColumns("tblExchange", "End", true);
-            this._factoryTableColumns("tblExchange_edit", "Center", false);
-            
+
+            if(oBaseExtra.length > 0) {
+                var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : "구분", "data" : "currency_code"});
+                this.setModel(new JSONModel(aExchange), "exchangeModel");
+                this._factoryTableColumns("tblExchange", "End", true);
+                this._factoryTableColumns("tblExchange_edit", "Center", false);
+            }
         }
 
         /**

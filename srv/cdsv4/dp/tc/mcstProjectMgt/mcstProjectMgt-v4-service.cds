@@ -25,7 +25,7 @@ service McstProjectMgtV4Service {
     //재료비 프로젝트 생성(프로젝트, 유사모델, 개발일정, 판가물동원가, 환율 일괄 생성)
     action TcCreateMcstProjectProc(inputData : CreatePjtInputData) returns CreatePjtOutputData;
 
-    type UpdatePjtInputData {
+    type TcProjectType {
         tenant_id               : String(5);
         project_code            : String(30);
         model_code              : String(40);
@@ -53,13 +53,8 @@ service McstProjectMgtV4Service {
         user_id                 : String(255);
     }
 
-    type OutputData : {
-        return_code : String(20);
-        return_msg  : String(5000);
-    };
-
     //재료비 프로젝트 수정
-    action TcUpdateMcstProjectProc(inputData : UpdatePjtInputData) returns OutputData;
+    //action TcUpdateMcstProjectProc(inputData : UpdatePjtInputData) returns OutputData;
 
     type UpdateSimilarModelInputData : {
         similar_model_code   : String(40);
@@ -75,9 +70,10 @@ service McstProjectMgtV4Service {
         similarModel   : array of UpdateSimilarModelInputData;
         user_id        : String(255);
     }
-
+    
+/*
     //재료비 프로젝트의 유사모델 수정(delete,insert)
-    action TcUpdateMcstSimilarModelProc(inputData : UpdateSimilarModelInputDataType) returns OutputData;
+    //action TcUpdateMcstSimilarModelProc(inputData : UpdateSimilarModelInputDataType) returns OutputData;
 
 
     type UpdateAddInfoInputData {
@@ -92,7 +88,11 @@ service McstProjectMgtV4Service {
     }
 
     //재료비 프로젝트의 물동, 판가, 가공비, 판관비 수정
-    action TcUpdateMcstAddInfoProc(inputData : UpdateAddInfoInputData) returns OutputData;
+    //action TcUpdateMcstAddInfoProc(inputData : UpdateAddInfoInputData) returns OutputData;
+
+
+    //재료비 프로젝트의 환율 수정
+    //action TcUpdateMcstBaseExrateProc(inputData : UpdateBaseExrateInputData) returns OutputData;
 
     type UpdateBaseExrateInputData {
         tenant_id      : String(5);
@@ -104,8 +104,52 @@ service McstProjectMgtV4Service {
         exrate         : String(30);
         user_id        : String(255);
     }
+*/
+    type TcProjectSimilarModelType : {
+        tenant_id            : String(5);
+        project_code         : String(30);
+        model_code           : String(40);
+        version_number : String(30);
+        similar_model_code   : String(40);
+        code_desc            : String(300);
+        direct_register_flag : Boolean;
+    };
+    
+    type TcProjectAdditionInfoType : {
+        tenant_id           : String(5);
+        project_code        : String(30);
+        model_code          : String(40);
+        version_number : String(30);
+        addition_type_code  : String(30);
+        period_code         : String(30);
+        addition_type_value : String(10);
+        user_id        : String(255);
+    };
 
-    //재료비 프로젝트의 환율 수정
-    action TcUpdateMcstBaseExrateProc(inputData : UpdateBaseExrateInputData) returns OutputData;
+    type TcProjectBaseExrateType : {
+        tenant_id      : String(5);
+        project_code   : String(30);
+        model_code     : String(40);
+        version_number : String(30);
+        currency_code  : String(3);
+        period_code    : String(30);
+        exrate         : String(30);
+        user_id        : String(255);
+    };
+
+    type InputDataType : {
+        tcPjt             : array of TcProjectType;
+        tcPjtSimilarModel : array of UpdateSimilarModelInputDataType;
+        tcPjtAddInfo      : array of TcProjectAdditionInfoType;
+        tcPjtBaseExrate   : array of TcProjectBaseExrateType;
+        user_id           : String(255);
+    }
+
+    type OutputData : {
+        return_code : String(20);
+        return_msg  : String(5000);
+    };
+
+    action TcUpdateMcstProjectProc(inputData : InputDataType) returns OutputData;
 
 }

@@ -125,5 +125,5 @@ service SupEvalSetupService {
     /* Evaluation Operation Unit Scale List */
     entity EvalGrade as projection on evalGrade;
 
- 
+
 }

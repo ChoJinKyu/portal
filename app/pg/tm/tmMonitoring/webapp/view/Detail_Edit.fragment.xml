@@ -35,7 +35,7 @@
                                     items="{/TaskMonitoringPurchaingTypeCodeView}"
                                     required="true"
                                    >
-                                    <core:Item key="{code}" text="{code_name}"/>
+                                    <core:ListItem key="{code}" text="{code_name}"/>
                             </MultiComboBox>
                             <layoutData>
                                 <l:GridData span="XL3 L3 M4 S12" />
@@ -113,7 +113,7 @@
                                 class="sapUiSmallMarginBottom"
                                 maxWidth="100%"
                                 >
-                                <core:Item key="{company_code}" text="{company_name}" />
+                                <core:ListItem key="{company_code}" text="{company_name}" />
                             </MultiComboBox>
                             <layoutData>
                                 <l:GridData span="XL3 L3 M4 S12" />
@@ -128,7 +128,7 @@
                                 placeholder="{I18N>/BUSINESS_UNIT}"
                                 required="true"
                                 maxWidth="100%">
-                                <core:Item key="{bizunit_code}" text="{bizunit_name}" />
+                                <core:ListItem key="{bizunit_code}" text="{bizunit_name}" />
                             </MultiComboBox>
                             <layoutData>
                                 <l:GridData span="XL3 L3 M4 S12" />

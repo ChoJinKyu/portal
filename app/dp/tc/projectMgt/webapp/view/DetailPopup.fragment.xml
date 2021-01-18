@@ -9,7 +9,7 @@
     xmlns:form="sap.ui.layout.form"
     displayBlock="true">
 	
-	<Dialog title="재료비 조회" contentWidth="40%" >
+	<Dialog id="dialogProjectSelection" title="재료비 조회" contentWidth="40%" >
 		<content>
                 <!-- 재료비 조회 List 시작 -->
                 <t:Table 
@@ -28,16 +28,16 @@
                         </OverflowToolbar>
                     </t:extension>
                     <t:columns>
-                        <t:Column hAlign="Center"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="산출정보" />  
+                        <t:Column hAlign="Begin"> <!-- width="10rem" 컬럼 사이즈 조절  -->
+                            <Label text="산출정보" width="100%" textAlign="Center"/>  
                             <t:template>
-                                 <Text text="{popupListModel>mcst_text/code_description} - {popupListModel>version_sequence}'st"/>
+                                 <Text text="{popupListModel>mcst_text/code_name} - {popupListModel>version_sequence}'st"/>
                             </t:template>                          
                         </t:Column>
                         <t:Column hAlign="Center"> <!-- width="10rem" 컬럼 사이즈 조절  -->
                             <Label text="상태" />  
                             <t:template>
-                                 <Text text="{popupListModel>mcst_status_text/code_description}"/>
+                                 <Text text="{popupListModel>mcst_status_text/code_name}"/>
                             </t:template>                          
                         </t:Column>
                         <t:Column hAlign="Center"> <!-- width="10rem" 컬럼 사이즈 조절  -->
@@ -94,5 +94,8 @@
             <!--<Button text="복사" press=".onCopy" />-->
             <Button text="작성" type="Emphasized" press=".onDialogCreate" />
         </buttons>
+        <customData>
+            <core:CustomData key="cost_type" value=""/>
+        </customData>
 	</Dialog>
 </core:FragmentDefinition>

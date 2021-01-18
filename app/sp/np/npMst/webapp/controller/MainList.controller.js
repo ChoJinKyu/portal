@@ -146,11 +146,8 @@ sap.ui.define([
             },
 
             fnSearch: function () {
-                var iCount = that.mainTable._getTotalRowCount();
-                for (var i = 0; i < iCount; i++) {
-                    that.mainTable.setSelectedIndex(i);
-                }
 
+                that.mainTable.clearSelection();
                 var status = "";
                 var oFilter = [];
                 var aFilter = [];
@@ -206,7 +203,7 @@ sap.ui.define([
                         oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
                     } else if (status === "effPrc") {
                         oFilter.push(new Filter("effective_end_date", FilterOperator.GE, that.getToday().replace(/\./gi, "")));
-                    } 
+                    }
                 }
 
                 if (!!searchEffectiveStartDate.getValue()) {
@@ -221,13 +218,51 @@ sap.ui.define([
                 var oDataLen = 0;
                 var oView = this.getView(),
                     oModel = this.getModel("list");
+
                 oView.setBusy(true);
                 oModel.setTransactionModel(this.getModel());
                 oModel.read("/SpNetpriceView", {
                     filters: oFilter,
                     success: function (oData) {
-                        console.log(oData.results.length);
-                        oView.setBusy(false);
+                        oDataLen = oData.results.length;
+
+                        that.mainTable.setVisibleRowCount(0);
+                        var oColumn = that.mainTable.getColumns()[0];
+                        that.mainTable.sort(oColumn);
+                        console.log(oDataLen);
+
+                        that.mainTable.onAfterRendering = function () {
+                            sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
+                            var aRows = that.mainTable.getRows();
+                            if (aRows && aRows.length > 0) {
+                                var pRow = {};
+                                for (var i = 0; i < aRows.length; i++) {
+                                    if (i > 0) {
+                                        var pCell = pRow.getCells()[0],
+                                            cCell = aRows[i].getCells()[0];
+                                        console.log(cCell.getText(), pCell.getText());
+                                        if (cCell.getText() === pCell.getText()) {
+                                            $("#" + cCell.getId()).css("visibility", "hidden");
+                                            $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
+                                        }
+
+                                        var pCell1 = pRow.getCells()[1],
+                                            cCell1 = aRows[i].getCells()[1];
+                                        console.log(cCell.getText(), pCell.getText());
+                                        if (cCell1.getText() === pCell1.getText()) {
+                                            $("#" + cCell1.getId()).css("visibility", "hidden");
+                                            $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
+                                        }
+
+
+                                    }
+                                    pRow = aRows[i];
+                                }
+                            }
+                            console.log(oDataLen);
+                            that.mainTable.setVisibleRowCount(oDataLen);
+                            oView.setBusy(false);
+                        };
                     }
                 });
             },
@@ -244,7 +279,7 @@ sap.ui.define([
             vhMatrialCode: function (oEvent) {
                 var materialItem;
 
-                 if(!this.oSearchMultiMaterialMasterDialog){
+                if (!this.oSearchMultiMaterialMasterDialog) {
                     this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
                         title: "Choose MaterialMaster",
                         MultiSelection: true,
@@ -254,7 +289,7 @@ sap.ui.define([
                             ]
                         }
                     });
-                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
                         materialItem = oEvent.mParameters.item;
                         //console.log("materialItem : ", materialItem);
                         that.byId("search_material_code").setValue(materialItem.material_code);
@@ -264,7 +299,7 @@ sap.ui.define([
                 this.oSearchMultiMaterialMasterDialog.open();
             },
 
-            cvtSupplier: function(oEvent) {
+            cvtSupplier: function (oEvent) {
                 console.log(oEvent);
             },
 

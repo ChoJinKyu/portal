@@ -201,16 +201,28 @@ sap.ui.define([
             //         }).bind(this));            
         },
         
-        onCellClick : function (oEvent) {
+        onCellClick : function (event) {
 
-            var oTable = this.byId("midTreeTable");
-            var aIndices = oTable.getSelectedIndices();
+            // var oTable = this.byId("midTreeTable");
+            // var aIndices = oTable.getSelectedIndices();
             //선택된 Tree Table Value 
-            var p_vendor_pool_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text
-            var p_org_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[2].mProperties.text            
-            var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[3].mProperties.text
-            var p_tenat_id = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[4].mProperties.text
-            var p_temp_type = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[5].mProperties.text
+            // var p_vendor_pool_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text
+            // var p_org_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[2].mProperties.text            
+            // var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[3].mProperties.text
+            // var p_tenat_id = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[4].mProperties.text
+            // var p_temp_type = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[5].mProperties.text
+            
+            var row = this.getView().getModel("tree").getObject(event.getParameters().rowContext.sPath);    
+
+            var p_vendor_pool_code = row.vendor_pool_code;
+            var p_org_code = row.org_code;           
+            var p_operation_unit_code = row.operation_unit_code;
+            var p_tenat_id = row.tenant_id;
+            var p_temp_type = row.temp_type;
+
+
+            
+
 
             // var rowData = oEvent.getParameter('rowBindingContext').getObject();
             var LayoutType = library.LayoutType;

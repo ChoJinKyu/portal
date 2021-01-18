@@ -12,10 +12,12 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "dp/util/control/ui/MaterialMasterDialog",
+    "sap/m/Token"
 ],
   function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter,
-        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast) {
+        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialMasterDialog, Token) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oOpenDialog;
@@ -48,9 +50,15 @@ sap.ui.define([
             return sReturnValue;
         },
 
+        /**
+         *  상태값에 따른 Icon 선택
+         */
+        onSetProcessIcon: function (sStatusParam) {
+
+        },
+
         onInit: function () {
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
-            oRootModel.setProperty("/detail", "Y");
             sTenantId = oRootModel.getProperty("/tenantId");
 
             // 하드코딩 시작
@@ -59,11 +67,12 @@ sap.ui.define([
                          {code: "20", text: "Cost Analysis (RFQ)"},
                          {code: "30", text: "Family Part-No"},
                          {code: "40", text: "ETC"}],
-                currency: []
+                currency: [],
+                viewMode: false
             };
-            var oCodeModel = new JSONModel(oCodeData);
-            oCodeModel.setSizeLimit(1000);
-            this.setModel(oCodeModel, "codeModel");
+            var oDetailViewModel = new JSONModel(oCodeData);
+            oDetailViewModel.setSizeLimit(1000);
+            this.setModel(oDetailViewModel, "detailViewModel");
             // 하드코딩 끝
 
             switch (sTenantId) {
@@ -80,7 +89,7 @@ sap.ui.define([
                 filters : [],
                 success : function(data){
                     if( data && data.results ) {
-                        oCodeModel.setProperty("/currency", data.results);
+                        oDetailViewModel.setProperty("/currency", data.results);
                     }
                 },
                 error : function(data){
@@ -110,7 +119,7 @@ sap.ui.define([
         */
         _getBasePriceDetail: function () {
             var oView = this.getView();
-            var oCodeModel = this.getModel("codeModel");
+            var oDetailViewModel = this.getModel("detailViewModel");
             var oRootModel = this.getModel("rootModel");
             var oSelectedData = oRootModel.getProperty("/selectedData");
 
@@ -133,18 +142,19 @@ sap.ui.define([
                     },
                     success : function(data){
                         oView.setBusy(false);
+                        oDetailViewModel.setProperty("/viewMode", false);
 
                         if( data && data.results && 0<data.results.length ) {
                             var oMaster = that._returnDataRearrange(data.results[0]);
 
                             oView.getModel("detailModel").setData(oMaster);
-                            oCodeModel.setProperty("/detailsLength", oMaster.details.length);
+                            oDetailViewModel.setProperty("/detailsLength", oMaster.details.length);
                             //oView.getModel("detailModel").refresh();
 
                             //this._setEditorStatusAndValue(oMaster.approval_status_code, oMaster.approval_request_desc);
                         }else {
                             oView.getModel("detailModel").setData(null);
-                            oCodeModel.setProperty("/detailsLength", 0);
+                            oDetailViewModel.setProperty("/detailsLength", 0);
                         }
                     }.bind(this),
                     error : function(data){
@@ -170,12 +180,21 @@ sap.ui.define([
                                     "approval_request_date": oToday,
                                     "details": []};
                 this.setModel(new JSONModel(oNewBasePriceData), "detailModel");
-                oCodeModel.setProperty("/detailsLength", 0);
+                oDetailViewModel.setProperty("/detailsLength", 0);
+                oDetailViewModel.setProperty("/viewMode", true);
 
                 //this._setEditorStatusAndValue(oNewBasePriceData.approval_status_code);
             }
 
             //this.setRichEditor();
+        },
+
+        /**
+         * 수정모드 변경
+         */
+        onEditToggle: function () {
+            var oDetailViewModel = this.getModel("detailViewModel");
+            oDetailViewModel.setProperty("/viewMode", !oDetailViewModel.getProperty("/viewMode"));
         },
 
         /**
@@ -276,7 +295,7 @@ sap.ui.define([
                         au_code: "10",
                         base_price_ground_code: "10",
                         local_create_dtm: oToday, 
-                        local_update_dtm: oToday,
+                        local_update_dtm: oToday, 
                         prices: aPrice
                         });
             oDetailModel.refresh();
@@ -350,7 +369,7 @@ sap.ui.define([
 
             // entity에 없는 필드 삭제(OData에 없는 property 전송 시 에러)
             delete oData.approval_requestor_empno_fk;
-
+            
             // detail 데이터가 있을 경우 checked property 삭제(OData에 없는 property 전송 시 에러)
             if( aDetails ) {
                 aDetails.forEach(function (oDetails) {
@@ -381,13 +400,15 @@ sap.ui.define([
                         // return 값이 있고 approval_number가 있는 경우에만 저장 완료
                         if( data && data.approval_number ) {
                             MessageToast.show(sMessage);
-                            var oMaster = that._returnDataRearrange(data);
-                            oDetailModel.setData(oMaster);
+                            // var oMaster = that._returnDataRearrange(data);
+                            // oDetailModel.setData(oMaster);
+
+                            this.onBack();
                         }else {
                             console.log('error', data);
                             MessageBox.error("에러가 발생했습니다.");
                         }
-                    },
+                    }.bind(this),
                     error: function(data){
                         console.log('error', data);
                         MessageBox.error(JSON.parse(data.responseText).error.message.value);
@@ -402,13 +423,15 @@ sap.ui.define([
                         // if( data && data.approval_number ) {
                             MessageToast.show(sMessage);
 
-                            if( sActionParam === "approval" ) {
-                                oDetailModel.setProperty("/approval_status_code", "20");
-                            }
+                            // if( sActionParam === "approval" ) {
+                            //     oDetailModel.setProperty("/approval_status_code", "20");
+                            // }
                         //     var oMaster = that._returnDataRearrange(data);
                         //     oDetailModel.setData(oMaster);
                         // }
-                    },
+
+                        this.onBack();
+                    }.bind(this),
                     error: function(data){
                         console.log('error', data);
                         MessageBox.error(JSON.parse(data.responseText).error.message.value);
@@ -827,6 +850,44 @@ sap.ui.define([
          * ==================== Dialog 끝 ==========================
          */
 
+         onMaterialMasterMultiDialogPress: function (oEvent) {
+             var oDetailModel = this.getModel("detailModel");
+             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+             var oDetail = oDetailModel.getProperty(sSelectedPath);
+             this._oDetail = oDetail;
+
+             if( !this.oSearchMultiMaterialMasterDialog ) {
+                 this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                     title: "Choose MaterialMaster",
+                     multiSelection: false,
+                     items: {
+                         filters:[
+                             new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                         ]
+                     }
+                 })
+
+                 this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent) {
+                     var oSelectedDialogItem = oEvent.getParameter("item");
+                     this._oDetail.material_code = oSelectedDialogItem.material_code;
+                     this._oDetail.material_code_fk = this._oDetail.material_code_fk || {};
+                     this._oDetail.material_code_fk.material_desc = oSelectedDialogItem.material_desc;
+                     this._oDetail.material_code_fk.material_spec = oSelectedDialogItem.material_spec;
+                     oDetailModel.refresh();
+                    //  oDetailModel.setProperty(sSelectedPath+"/material_code", oSelectedDialogItem.material_code);
+                    //  oDetailModel.setProperty(sSelectedPath+"/material_code_fk", {});
+                    //  oDetailModel.setProperty(sSelectedPath+"/material_code_fk/material_desc", oSelectedDialogItem.material_desc);
+                    //  oDetailModel.setProperty(sSelectedPath+"/material_code_fk/material_spec", oSelectedDialogItem.material_spec);
+                 }.bind(this));
+             }
+
+             this.oSearchMultiMaterialMasterDialog.open();
+
+             var aTokens = [new Token({key: oDetail.material_code, text: (oDetail.material_code_fk ? oDetail.material_code_fk.material_desc : "")})];
+             this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
+         }
+
     });
+
   }
 );

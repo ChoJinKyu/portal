@@ -48,6 +48,11 @@ sap.ui.define([
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
         },
 
+        _addDateTime9: function (oDateParam) {
+            //var oReturnValue = new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
+            return new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
+        },
+
         /**
          * Search 버튼 클릭(Filter 추출)
          */
@@ -79,7 +84,7 @@ sap.ui.define([
             
             // Request Date가 있는 경우
             if( oDateValue ) {
-                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, oDateValue, oSecondDateValue));
+                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, this._addDateTime9(oDateValue), this._addDateTime9(oSecondDateValue)));
             }
 
             // Request By가 있는 경우
@@ -109,7 +114,7 @@ sap.ui.define([
                 filters : filtersParam,
                 urlParameters: {
                     "$expand": "approval_status_code_fk,approval_requestor_empno_fk,approval_type_code_fk,tenant_id_fk",
-                    "$orderby": "approval_request_date,approval_number desc"
+                    "$orderby": "approval_request_date desc,approval_number desc"
                 },
                 success : function(data){
                     oView.setBusy(false);

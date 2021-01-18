@@ -345,8 +345,8 @@ sap.ui.define([
             this._sLoiItemNumber = oArgs.loiItemNumber;
             this._sLoiSelectionNumber = oArgs.loiSelectionNumber;
             this._sLoiNumber = oArgs.loiNumber;
+            this._sExistRfq = oArgs.existRfq;
             this.getModel("midObjectViewModel").setProperty("/viewLoiNumber", oArgs.loiNumber);
-
 
             console.log("##getOwnerComponent==", this.getOwnerComponent().getRootControl().byId("fcl"));
 
@@ -391,8 +391,43 @@ sap.ui.define([
 
             this._sLoiDtlArrr = loiDtlArr;
 
+            //품목조회
+            if(this._sExistRfq) {
+                this.getModel("midObjectViewModel").setProperty("/existRfq", true);
+            }else {
+                this.getModel("midObjectViewModel").setProperty("/existRfq", false);
+            }
 
-            //발행요청시 품목의 tenantId, companyCode 와 업체선정품의의 tenantId, companyCode가 다를 수 있다면 둘다 함께 체크
+            //뷰생성해서 변경예정
+            var orFilter = [];
+            var andFilter = [];
+
+            loiDtlArr.forEach(function (item) {
+                andFilter = [];
+                andFilter.push(new Filter("tenant_id", FilterOperator.EQ, item.tenant_id));
+                andFilter.push(new Filter("company_code", FilterOperator.EQ, item.company_code));
+                andFilter.push(new Filter("loi_write_number", FilterOperator.EQ, item.loi_write_number));
+                andFilter.push(new Filter("loi_item_number", FilterOperator.EQ, item.loi_item_number));
+                orFilter.push(new Filter(andFilter, true));
+                //orFilter.push()
+                console.log("andFilter==", andFilter);
+            });
+            console.log("orFilter==", orFilter);
+            //orFilter = new Filter(orFilter, false);
+
+            var oDetailsModel = this.getModel("details");
+            oDetailsModel.setTransactionModel(this.getModel());
+            oDetailsModel.read("/LOIPublishItemView", {
+                filters: [
+                    new Filter(orFilter, false)
+                ],
+                success: function (oData) {
+                    oView.setBusy(false);
+                    console.log("details=====", oData);
+                    //oView.getModel("details").updateBindings(true);
+                }
+            });
+
             if (oArgs.loiSelectionNumber == "new") {
                 //It comes Add button pressed from the before page.
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
@@ -424,58 +459,6 @@ sap.ui.define([
                     "org_code": "",
                     "user_id": "9586"
                 }, "/LoiVendorSelection");
-
-                //console.log("oMasterModel.getData()====", oMasterModel.getData());
-
-                // var orFilter = [];
-
-                // argArr.forEach(function(item) { 
-                //     var andFilter = [];
-
-                //     andFilter.push(new Filter("tenant_id", FilterOperator.EQ, item.tenant_id));
-                //     andFilter.push(new Filter("company_code", FilterOperator.EQ, item.company_code));
-                //     andFilter.push(new Filter("loi_write_number", FilterOperator.EQ, item.loi_write_number));
-                //     andFilter.push(new Filter("loi_item_number", FilterOperator.EQ, item.loi_item_number));
-
-                //     orFilter.push(andFilter, false);
-
-
-                // });     
-
-                // console.log("orFilter==", orFilter);
-
-                // var oDetailsModel = this.getModel("details");
-                // oDetailsModel.setTransactionModel(this.getModel());
-                // oDetailsModel.read("/LOIPublishItemView", {
-                // 	filters: orFilter,
-
-                //     // filters: [
-                //     //     new Filter({
-                //     //         and: true,
-                //     //         filters: [
-                //     //             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                //     //             new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                //     //             new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber),
-                //     //             new Filter("loi_item_number", FilterOperator.EQ, this._sLoiItemNumber
-                //     //         ]}),
-                //     //     new Filter({
-                //     //         and: true,
-                //     //         filters: [
-                //     //         new Filter("property3", FilterOperator.Contains, sQuery),
-                //     //         new Filter("property4", FilterOperator.Contains, sQuery)
-                //     //         ]}),
-                //     //     new Filter({
-                //     //         and: true,
-                //     //         filters: [
-                //     //         new Filter("property5", FilterOperator.Contains, sQuery),
-                //     //         new Filter("property6", FilterOperator.Contains, sQuery)
-                //     //         ]})
-                //     // ]});
-
-                // 	success: function(oData){
-                // 		oView.setBusy(false);
-                // 	}
-                // });         
 
                 this._toEditMode();
             } else {

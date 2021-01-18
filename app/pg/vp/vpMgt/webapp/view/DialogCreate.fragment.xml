@@ -33,7 +33,7 @@
                     <form:content>
                         <!-- 팝업 영역 -->
                         <VBox>
-                            <Label text="Operation ORG" labelFor="search_Operation_ORG" required="true"></Label>
+                            <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG" required="true"></Label>
                             <ComboBox id="tpop_Operation_ORG" width="100%" items="{
                                 path: '/VpOperationOrg',
                                 filters: [
@@ -50,7 +50,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text="Operation Unit" labelFor="pop_operation_unit_code" required="true"></Label>                        
+                            <Label text="{I18N>/OPERATION_UNIT}" labelFor="pop_operation_unit_code" required="true"></Label>                        
                             <ComboBox   id="tpop_operation_unit_code"
                                             items="{
                                                         path : 'util>/CodeDetails',
@@ -69,13 +69,13 @@
                         </VBox>
                         <VBox>
                             <Label text = " " design="Bold" width="0rem"/> 
-                            <Button id="popTreeTableSearchButton"          text="Search"     press=".onDialogSearch"     type="Emphasized" />
+                            <Button id="popTreeTableSearchButton"          text="{I18N>/SEARCH}"     press=".onDialogSearch"     type="Emphasized" />
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M4 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Vendor Pool" design="Bold" /> 
+                            <Label text = "{I18N>/VENDOR_POOL}" design="Bold" /> 
                                 <Input id="tpop_vendor_pool_local_name" placeholder="Input data"></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
@@ -102,15 +102,15 @@
                             <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
-                                    <Button id="popTableCreateButton"          text="Create Same Level"     press=".onDialogCreateSame"     enabled="{mode>/viewFlag}" />
-                                    <Button id="popTableEditButton"            text="Create Lower Level"    press=".onDialogCreatelower"     enabled="{mode>/viewFlag}" />
-                                    <Button id="popTableDelButton"            icon="sap-icon://delete" text="Delete"    press=".onDialogDel"     enabled="{mode>/viewFlag}" />
+                                    <Button id="popTableCreateButton"          text="{I18N>/CREATE_SAME_LEVEL}"     press=".onDialogCreateSame"     enabled="{mode>/viewFlag}" />
+                                    <Button id="popTableEditButton"            text="{I18N>/CREATE_LOWER_LEVEL}"    press=".onDialogCreatelower"     enabled="{mode>/viewFlag}" />
+                                    <Button id="popTableDelButton"            icon="sap-icon://delete" text="{I18N>/DELETE}"    press=".onDialogDel"     enabled="{mode>/viewFlag}" />
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>     
                                 <!-- visibleRowCountMode="Auto"> -->
                             <table:columns>
-                                    <table:Column label="Vendor Pool" >
+                                    <table:Column label="{I18N>/VENDOR_POOL}" >
                                         <table:template>
                                             <Text id="t_vpNm" text="{tree>vendor_pool_local_name}" wrapping="false" />
                                         </table:template>
@@ -202,14 +202,14 @@
                         <!-- 팝업 영역 -->
                         <core:Title text="Category Info" />                        
                         <VBox>
-                            <Label text = "Higher Level" design="Bold"/> 
+                            <Label text = "{I18N>/HIGHER_LEVEL}" design="Bold"/> 
                                 <Text id="pop_higher_level_path" text=""/>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Operation Unit" design="Bold" required="true"/> 
+                            <Label text = "{I18N>/OPERATION_UNIT}" design="Bold" required="true"/> 
                                 <Text id="pop_operation_unit_name" visible="false" text=""/> 
                                 <Text id="pop_operation_unit_name1" text=""/>
                             <layoutData>
@@ -224,208 +224,214 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Level Name(Eng)*" design="Bold" required="true"/> 
+                            <Label text = "Level Name(Eng)" design="Bold" required="true"/> 
                                 <Input id="pop_vendor_pool_english_name" placeholder="Input data"></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>    
                         <VBox>
-                            <Label text = "Description" design="Bold" /> 
+                            <Label text = "{I18N>/DESCRIPTION}" design="Bold" /> 
                                 <Input id="pop_vendor_pool_desc" placeholder="Input data"></Input> 
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData> 
                         </VBox> 
-                        <core:Title text="Detail Info" />                        
-                        <VBox>
-                            <Label text = "Department" design="Bold"/> 
-                                <lib-m:CodePicker id="pop_repr_department_code"
-                                placeholder="Enter a department name"
-                                keyField="department_id"
-                                textField="department_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Department'
-                                }">
-                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
-                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
-                                </lib-m:CodePicker>
-                                <!-- <Input id="pop_repr_department_code"></Input>  -->
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
-                            </layoutData> 
-                        </VBox>
-                        <VBox>
-                            <Label text = "Industrial Classification" design="Bold"/> 
-                                <ComboBox   id="pop_industry_class_code"
-                                            items="{
-                                                        path : 'util>/CodeDetails',
-                                                        filters : [
-                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                            {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INDUSTRY_CLASS_CODE'}                               
-                                                        ]
-                                                    }"
-                                >
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </ComboBox>                                                                 
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
-                            </layoutData> 
-                        </VBox> 
-                        <VBox>
-                            <HBox>
-                                <VBox>
-                                    <Label text = "Mtl. Attribute" class="sapUiTinyMarginEnd" design="Bold"/> 
-                                    <ComboBox   id="pop_inp_type_code" class="sapUiTinyMarginEnd"
-                                                items="{
-                                                            path : 'util>/CodeDetails',
-                                                            filters : [
-                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
-                                                            ]
-                                                        }"
-                                                change=".handlemtlChang"
-                                    >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>                                      
-                                     
+                        <!-- <VBox id="v_pop_detail_info"> -->
+                        <core:Title id="pop_detail_info" text="Detail Info" />  
+                        <!-- </VBox> -->
+                    
+                                <VBox id="v_pop_repr_department_code">
+                                    <Label text = "{I18N>/DEPARTMENT}" design="Bold"/> 
+                                        <lib-m:CodePicker id="pop_repr_department_code"
+                                        placeholder="Enter a department name"
+                                        keyField="department_id"
+                                        textField="department_local_name"
+                                        suggestionItems="{
+                                            path: '/',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                            ],
+                                            serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                            entityName: 'Department'
+                                        }">
+                                        <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                            keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                        </lib-m:CodePicker>
+                                        <!-- <Input id="pop_repr_department_code"></Input>  -->
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData> 
                                 </VBox>
-                                <VBox id="v_pop_plan_base" >
-                                     <Label text = "Planning Base" class="sapUiTinyMarginEnd" design="Bold"/>
-                                    <ComboBox   id="pop_plan_base"
-                                                items="{
-                                                            path : 'util>/CodeDetails',
-                                                            filters : [
-                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_MTLMOB_BASE_CODE'}                                
-                                                            ]
-                                                        }"
-                                    >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>                                       
+                                <VBox id="v_pop_industry_class_code">
+                                    <Label text = "{I18N>/INDUSTRIAL_CLASS}" design="Bold"/> 
+                                        <ComboBox   id="pop_industry_class_code"
+                                                    items="{
+                                                                path : 'util>/CodeDetails',
+                                                                filters : [
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                    {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INDUSTRY_CLASS_CODE'}                               
+                                                                ]
+                                                            }"
+                                        >
+                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                        </ComboBox>                                                                 
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData> 
                                 </VBox> 
-                            </HBox>                              
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
-                            </layoutData> 
-                        </VBox>
-                        <VBox>
-                            <Label text = "Evaluation" design="Bold"/> 
-                                <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                <VBox id="v_pop_inp_type_code">
+                                    <HBox>
+                                        <VBox>
+                                            <Label text = "{I18N>/MTL_ATTRIBUTE}" class="sapUiTinyMarginEnd" design="Bold"/> 
+                                            <ComboBox   id="pop_inp_type_code" class="sapUiTinyMarginEnd"
+                                                        items="{
+                                                                    path : 'util>/CodeDetails',
+                                                                    filters : [
+                                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                        {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
+                                                                    ]
+                                                                }"
+                                                        change=".handlemtlChang"
+                                            >
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>                                      
+                                            
+                                        </VBox>
+                                        <VBox id="v_pop_plan_base" >
+                                            <Label text = "{I18N>/PLANNING_BASE}" class="sapUiTinyMarginEnd" design="Bold"/>
+                                            <ComboBox   id="pop_plan_base"
+                                                        items="{
+                                                                    path : 'util>/CodeDetails',
+                                                                    filters : [
+                                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                        {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_MTLMOB_BASE_CODE'}                                
+                                                                    ]
+                                                                }"
+                                            >
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>                                       
+                                        </VBox> 
+                                    </HBox>                              
                                     <layoutData>
-                                        <FlexItemData growFactor="1" />
-                                    </layoutData>
-                                </Switch> 
-                            <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S12" />
-                            </layoutData> 
-                        </VBox> 
-                        <VBox>
-                            <Label text = "SD Flag" design="Bold"/> 
-                                <Switch id="pop_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData> 
+                                </VBox>
+                                <VBox id="v_pop_regular_evaluation_flag">
+                                    <Label text = "{I18N>/EVALUATION}" design="Bold"/> 
+                                        <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
                                     <layoutData>
-                                        <FlexItemData growFactor="1" />
-                                    </layoutData>
-                                </Switch> 
-                            <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S12" />
-                            </layoutData> 
-                        </VBox>                         
-                        <VBox>
-                            <Label text = "Maker P/N" design="Bold"/> 
-                                <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox id="v_pop_sd_exception_flag">
+                                    <Label text = "{I18N>/SD_FLAG}" design="Bold"/> 
+                                        <Switch id="pop_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
                                     <layoutData>
-                                        <FlexItemData growFactor="1" />
-                                    </layoutData>
-                                </Switch> 
-                            <layoutData>
-                                <layout:GridData span="XL1 L1 M1 S12" />
-                            </layoutData> 
-                        </VBox> 
-                        <VBox>
-                            <Label text = "V/P Exception" width="8rem" design="Bold"/> 
-                                <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                    </layoutData> 
+                                </VBox>                         
+                                <VBox id="v_pop_maker_material_code_mngt_flag">
+                                    <Label text = "Maker P/N" design="Bold"/> 
+                                        <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
                                     <layoutData>
-                                        <FlexItemData growFactor="1" />
-                                    </layoutData>
-                                </Switch> 
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S12" />
-                            </layoutData> 
-                        </VBox>                                                                       
-                        <VBox id = "v_review_grade" >
-                            <Label text = "Review Grade" design="Bold"/> 
-                                <HBox>
-                                    <ComboBox   id="pop_equipment_grade_code"
-                                                items="{
-                                                            path : 'util>/CodeDetails',
-                                                            filters : [
-                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_GRADE_CODE'}                                
-                                                            ]
-                                                        }"
-                                    >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>                                    
+                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox id="v_pop_vendor_pool_apply_exception_flag">
+                                    <Label text = "{I18N>/VP_EXCEPTION_FLAG}" width="8rem" design="Bold"/> 
+                                        <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12" />
+                                    </layoutData> 
+                                </VBox>                                                                       
+                                <VBox id = "v_review_grade" >
+                                    <Label text = "{I18N>/REVIEW_GRADE}" design="Bold"/> 
+                                        <HBox>
+                                            <ComboBox   id="pop_equipment_grade_code"
+                                                        items="{
+                                                                    path : 'util>/CodeDetails',
+                                                                    filters : [
+                                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                        {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_GRADE_CODE'}                                
+                                                                    ]
+                                                                }"
+                                            >
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>                                    
 
-                                </HBox>                               
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
-                            </layoutData> 
-                        </VBox>
-                        <VBox id ="v_equipment_type" >
-                            <Label text = "Equipment Type" design="Bold"/> 
-                                <HBox>
-                                    <ComboBox   id="pop_equipment_type_code"
-                                                items="{
-                                                            path : 'util>/CodeDetails',
-                                                            filters : [
-                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_TYPE_CODE'}                                
-                                                            ]
-                                                        }"
-                                    >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>                                        
-                                </HBox>                               
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
-                            </layoutData> 
-                        </VBox>  
-                        <VBox id="v_internal_rate">
-                            <Label text = "Site Internal Rate" design="Bold"/> 
-                                <HBox>
-                                    <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" ></Input> 
-                                    <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
-                                </HBox>                                
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
-                            </layoutData> 
-                        </VBox> 
-                        <VBox id="v_external_rate">
-                            <Label text = "Site External Rate" design="Bold"/> 
-                                <HBox>
-                                    <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  ></Input> 
-                                    <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
-                                </HBox>
-                            <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
-                            </layoutData> 
-                        </VBox>                                                                                                                                         
-                    </form:content>
+                                        </HBox>                               
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData> 
+                                </VBox>
+                                <VBox id ="v_equipment_type" >
+                                    <Label text = "{I18N>/EQUIPMENT_TYPE}" design="Bold"/> 
+                                        <HBox>
+                                            <ComboBox   id="pop_equipment_type_code"
+                                                        items="{
+                                                                    path : 'util>/CodeDetails',
+                                                                    filters : [
+                                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                        {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_TYPE_CODE'}                                
+                                                                    ]
+                                                                }"
+                                            >
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>                                        
+                                        </HBox>                               
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData> 
+                                </VBox>  
+                                <VBox id="v_internal_rate">
+                                    <Label text = "{I18N>/OVERSEA_NET_PRICE_DIFF_RATE}" design="Bold"/> 
+                                        <HBox>
+                                            <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" ></Input> 
+                                            <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
+                                        </HBox>                                
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox id="v_external_rate">
+                                    <Label text = "{I18N>/DOMESTIC_NET_PRICE_DIFF_RATE}" design="Bold"/> 
+                                        <HBox>
+                                            <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  ></Input> 
+                                            <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
+                                        </HBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData> 
+                                </VBox> 
+
+                                                                                                                                      
+                        </form:content>
+                    
                 </form:SimpleForm>
             </VBox> 
         </HBox>                           
         </content>
         <ToolbarSpacer/>
         <HBox justifyContent="End" >
-            <Button text="Cancel" type="Transparent" class="sapUiSmallMarginBeginEnd" press=".createPopupClose"/>
-            <Button id= "pop_save_bt" text="Save" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleSave"/>
+            <Button text="{I18N>/CANCEL}" type="Transparent" class="sapUiSmallMarginBeginEnd" press=".createPopupClose"/>
+            <Button id= "pop_save_bt" text="{I18N>/SAVE}" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleSave"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

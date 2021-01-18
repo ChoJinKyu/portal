@@ -11,7 +11,7 @@
     height="100%">
 
     <f:DynamicPage id="page2"
-        headerExpanded="{mainListViewModel>/headerExpanded}" 
+        headerExpanded="true" 
         toggleHeaderOnTitleClick="true">        
         <!-- DynamicPage Title -->
         <f:title>
@@ -37,7 +37,7 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="LOI 번호:" labelFor="searchLoiNumber"></Label>
+                            <Label text="{I18N>/LOI_NUMBER} : " labelFor="searchLoiNumber"></Label>
                             <!-- group by 추가(일단 view에서 추가)-->
                             <MultiInput width="100%"
                                 id="searchLoiNumber"
@@ -58,14 +58,14 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="요청일자 : " labelFor="searchRequestDate"/>
+                            <Label text="{I18N>/REQUEST_DATE} : " labelFor="searchRequestDate"/>
                             <DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                                
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="요청부서 :" labelFor="searchRequestDepartment"></Label>
+                            <Label text="{I18N>/REQUEST_DEPARTMENT} :" labelFor="searchRequestDepartment"></Label>
                             <lib-m:CodePicker id="searchRequestDepartment"
                                 placeholder="Enter a department name"
                                 keyField="department_id"
@@ -86,7 +86,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="요청자 :" labelFor="searchRequestor"></Label>
+                            <Label text="{I18N>/REQUESTOR} :" labelFor="searchRequestor"></Label>
                             <lib-m:CodePicker id="searchRequestor"
                                 placeholder="Enter a Employee name"
                                 keyField="employee_number"
@@ -107,7 +107,7 @@
                             </layoutData>
                         </VBox>    
                         <VBox>
-                            <Label text="LOI발행상태 :" labelFor="searchLoiPublishStatus"></Label>
+                            <Label text="{I18N>/LOI}{I18N>/PUBLISH_STATUS} :" labelFor="searchLoiPublishStatus"></Label>
                             <MultiComboBox id="searchLoiPublishStatus" width="100%"
                                             items="{
                                                 path: 'common>/CodeDetails',
@@ -132,7 +132,7 @@
                 <form:SimpleForm id="pageSearchForm2" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="작성일자 : " labelFor="searchSystemCreateDate"/>
+                            <Label text="{I18N>/WRITE_DATE} : " labelFor="searchSystemCreateDate"/>
                             <!-- <DatePicker
                                 id="searchSystemCreateDate"
                                 visible="true"
@@ -143,7 +143,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="발행일자 : " labelFor="searchPublishDate"/>
+                            <Label text="{I18N>/PUBLISH_DATE} : " labelFor="searchPublishDate"/>
                             <!-- <DatePicker
                                 id="searchPublishDate"
                                 visible="true"
@@ -154,7 +154,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="구매부서 :" labelFor="searchPurchasingDepartment"></Label>
+                            <Label text="{I18N>/PURCHASING_DEPARTMENT} :" labelFor="searchPurchasingDepartment"></Label>
                             <lib-m:CodePicker id="searchPurchasingDepartment"
                                 placeholder="Enter a department name"
                                 keyField="employee_number"
@@ -175,7 +175,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="구매자 :" labelFor="searchBuyer"></Label>
+                            <Label text="{I18N>/BUYER} :" labelFor="searchBuyer"></Label>
                             <lib-m:CodePicker id="searchBuyer"
                                 placeholder="Enter a Employee name"
                                 keyField="employee_number"
@@ -196,7 +196,7 @@
                             </layoutData>
                         </VBox>    
                         <VBox>
-                            <Label text="발주상태 :" labelFor="searchPoStatus"></Label>
+                            <Label text="{I18N>/EP_PO_STATUS} :" labelFor="searchPoStatus"></Label>
                             <MultiComboBox id="searchPoStatus" width="100%"
                                             items="{
                                                 path: 'common>/CodeDetails',
@@ -240,11 +240,11 @@
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                 <Title text="LOI발행현황 {= ${list>/LOIPublishItemView}.length > 0 ? '(' + ${list>/LOIPublishItemView}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
-                <Button text="RFQ" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
-                <Button text="업체선정품의" id="supplierSelectionButton" press=".onSupplierSelectionButtonPress" type="Transparent"/>
-                <Button text="발행품의" id="publishButton" press=".onPublishButtonPress"   type="Transparent"/>
-                <Button text="발주매핑" id="poMappingButton" press=".onSave('mainTable', 'list')"   type="Transparent"/>
-                <Button text="발주매핑취소" id="poMappingCansel" press=".onSave('mainTable', 'list')"   type="Transparent"/>
+                <Button text="{I18N>/RFQ_CREATE}" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
+                <Button text="{I18N>/SUPPLIER_SELECTION_APPROVAL}" id="supplierSelectionButton" press=".onSupplierSelectionButtonPress" type="Transparent"/>
+                <Button text="{I18N>/PUBLISH_APPROVAL}" id="publishButton" press=".onPublishButtonPress"   type="Transparent"/>
+                <Button text="{I18N>/ORDER_MAPPING}" id="poMappingButton" press=".onSave('mainTable', 'list')"   type="Transparent"/>
+                <Button text="{I18N>/ORDER_MAPPING_CANCEL}" id="poMappingCansel" press=".onSave('mainTable', 'list')"   type="Transparent"/>
                 <ToolbarSeparator/>
                 <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                     <layoutData>
@@ -263,38 +263,38 @@
                 </t:template>
                 </t:Column> -->
                 <t:Column id="mainLoiNumber" width="7rem">
-                <Label text="LOI번호" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/LOI_NUMBER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>loi_number}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainItemSequence" width="5rem">
-                <Label text="Line No." textAlign="Center" width="100%"/>
+                <Label text="{I18N>/LINE_NO}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>item_sequence}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainLoiRequestTitle" width="12rem">
-                <Label text="요청명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REQUEST_TITLE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <!-- <Link text="{list>loi_request_title}" press="goToLoiRequest" tooltip="{list>loi_request_title}" /> -->
                     <Text text="{list>loi_request_title}" />
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainItemDesc" width="6rem">
-                <Label text="품명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/ITEM_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>item_desc}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainSupplierName" width="4rem">
-                <Label text="협력사" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>supplier_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainPublishDate" width="6rem" hAlign="Center">
-                <Label text="발행일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PUBLISH_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>publish_date',
@@ -303,7 +303,7 @@
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainDeliveryRequestDate" width="6rem" hAlign="Center">
-                <Label text="납기일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/DUE_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>delivery_request_date',
@@ -312,19 +312,19 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainRequestQuantity" width="3rem" hAlign="Right">
-                <Label text="수량" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/QUANTITY}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>request_quantity}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainCurrencyCode" width="3rem" hAlign="Center">
-                <Label text="통화" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>currency_code}"/>
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainRequestAmount" width="6rem" hAlign="Right">
-                <Label text="금액" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/AMOUNT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text  text="{
                                 path: 'list>request_amount',
@@ -333,51 +333,51 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainLoiSelectionStatusCode" width="9rem" hAlign="Center">
-                <Label text="업체선정진행상태" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
+                <Label text="{I18N>/SUPPLIER_SELECTION_STATUS}" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
                 <t:template>
 			        <Link text="{list>loi_selection_status_name}" press="onTableSupplierSelectionPress" enabled="{= ${list>loi_selection_status_code} !== '122020' ? true : false }" />                
                 <!-- <Text text="{list>loi_selection_status_name}" visible="{= ${list>loi_selection_status_code} === '122020' ? true : false }" /> -->
                 </t:template>
                 </t:Column>
                 <t:Column id="mainLoiPublishStatusCode" width="7rem" hAlign="Center">
-                <Label text="LOI발행상태" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
+                <Label text="{I18N>/LOI}{I18N>/PUBLISH_STATUS}" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
                 <t:template>
                     <Link text="{list>loi_publish_status_name}" press="onTablePublishPress" />
                     <!-- <Text text="{list>loi_publish_status_name}"/> -->
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainPoStatusCode" width="5rem" hAlign="Center">
-                <Label text="발주상태" textAlign="Center" width="100%" tooltip="발주상태"/>
+                <Label text="{I18N>/EP_PO_STATUS}" textAlign="Center" width="100%" tooltip="발주상태"/>
                 <t:template>
                     <Text text="{list>po_status_code}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainRequestDepartmentName" width="15rem">
-                <Label text="요청부서" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REQUEST_DEPARTMENT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>request_department_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainRequestorName" width="4rem" hAlign="Center">
-                <Label text="요청자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REQUESTOR}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>requestor_name}"/>
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainPurchasingDepartmentName" width="15rem">
-                <Label text="구매부서" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PURCHASING_DEPARTMENT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>purchasing_department_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainBuyerName" width="6rem" hAlign="Center">
-                <Label text="구매담당자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/BUYER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>buyer_name}"/>
                 </t:template>
                 </t:Column>                
                 <t:Column id="mainRequestDate" width="6rem" hAlign="Center">
-                <Label text="요청일자" textAlign="Center" width="100%" tooltip="요청일자"/>
+                <Label text="{I18N>/REQUEST_DATE}" textAlign="Center" width="100%" tooltip="요청일자"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>request_date',
@@ -395,7 +395,7 @@
                 </t:template>
                 </t:Column>      
                 <t:Column id="mainSupplierOpinion" width="4rem" hAlign="Center">
-                <Label text="VOS" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/VOS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <!-- <Text text="{list>supplier_opinion}"/> -->
                     <Button icon="sap-icon://notes" press=".onVosButtonPress" />
@@ -403,31 +403,31 @@
                 </t:template>
                 </t:Column>   
                 <t:Column id="mainPoNumber" width="6rem">
-                <Label text="발주번호" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PO_NUMBER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_number}"/>
                 </t:template>
                 </t:Column>   
                     <t:Column id="mainPurchasingRequestDate" width="8rem" hAlign="Center">
-                <Label text="구매요청일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PURCHASE_REQUISITION}{I18N>/DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text=""/>
                 </t:template>
                 </t:Column>   
                 <t:Column id="mainPoDate" width="6rem" hAlign="Center">
-                <Label text="발주일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PO_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text=""/>
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainPoDate2" width="6rem" hAlign="Center">
-                <Label text="입고일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/RECEIPT}{I18N>/DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text=""/>
                 </t:template>
                 </t:Column>   
                 <t:Column id="mainRemark" width="4rem" hAlign="Center">
-                <Label text="비고" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REMARK}" textAlign="Center" width="100%"/>
                 <t:template>
                     <!-- <Text text="{list>supplier_opinion}"/> -->
                     <Button icon="sap-icon://notes" press=".onRmkButtonPress" />
@@ -438,12 +438,12 @@
             </t:Table>
         </f:content>
         <!-- DynamicPage Footer -->
-        <f:footer>
+        <!-- <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
 				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
 				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
             </OverflowToolbar>
-        </f:footer>
+        </f:footer> -->
     </f:DynamicPage>
 </mvc:View>

@@ -192,7 +192,7 @@
                     "defaultBindingMode": "TwoWay"
                 }
             },
-            "detailListModel": {
+            "mcstProjectMgtModel": {
                 "dataSource": "McstProjectMgtService",
                 "preload": true,
                 "settings": {
@@ -242,9 +242,9 @@
                     "target": "ProjectInfo"
                 },
                 {
-                    "pattern": "McstProjectMgtDetail/{tenant_id}/{project_code}/{model_code}/{cost_type}/{view_mode}",
-                    "name": "McstProjectMgtDetail",
-                    "target": "McstProjectMgtDetail"
+                    "pattern": "McstProjectInfo/{tenant_id}/{project_code}/{model_code}/{cost_type}/{view_mode}/:version_number:",
+                    "name": "McstProjectInfo",
+                    "target": "McstProjectInfo"
                 }
             ],
             "targets": {
@@ -256,9 +256,9 @@
                     "viewId": "ProjectInfo",
                     "viewName": "ProjectInfo"
                 },
-                "McstProjectMgtDetail": {
-                    "viewId": "McstProjectMgtDetail",
-                    "viewName": "McstProjectMgtDetail"
+                "McstProjectInfo": {
+                    "viewId": "McstProjectInfo",
+                    "viewName": "McstProjectInfo"
                 }
             }
         }

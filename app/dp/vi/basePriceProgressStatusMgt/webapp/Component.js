@@ -18,6 +18,7 @@ sap.ui.define([
             UIComponent.prototype.init.apply(this, arguments);
 
             var oBasePriceArlMgtRootData = {tenantId: "L2100",
+            number: {symbol: "", currency: "KRW"},
             tenantList: [
                 {
                     "tenant_id": "L1100",

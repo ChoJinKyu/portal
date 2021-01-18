@@ -31,7 +31,7 @@ sap.ui.define([
                 project_status_code : {operator: 'EQ', value: ''},
                 massprod_start_date : {operator: 'BT', start: null, end: null},
                 project_grade_code : {operator: 'EQ', value: ''},
-                project_develope_event_code : {operator: 'EQ', value: ''},
+                develope_event_code : {operator: 'EQ', value: ''},
                 buyer_name : {operator: 'Contains', value: ''}
             };
             
@@ -100,7 +100,7 @@ sap.ui.define([
         }
 
         /**
-         * RowAction 클릭 후 상세화면으로 이동
+         * RowAction 클릭 후 최신 상세화면으로 이동
          */
         , onRowActionPress: function(oEvent) {
             var oContext = oEvent.getParameter("row").getBindingContext("listModel");
@@ -111,13 +111,11 @@ sap.ui.define([
          * RowAction 목표재료비 상세화면으로 이동
          */
         , onDetailPopRowActionPress: function(oEvent) {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-            const view_mode = "VIEW";
-            this.getView().getModel("popupListModel").setProperty("/cost_type", oEvent.getSource().data("cost_type"));
-            this.getView().getModel("popupListModel").setProperty("/detail_mode", view_mode);
-            var oContext = oEvent.getParameter("row").getBindingContext("listModel");
-            this._goMcstProjView(oContext, oEvent.getSource().data("cost_type"));
+            //MessageToast.show("준비중", {at: "Center Center"});
+            //return;
+            
+            let oContext = oEvent.getParameter("row").getBindingContext("popupListModel");
+            this._goMcstProjView(oContext);
         }
 
         /**
@@ -181,20 +179,21 @@ sap.ui.define([
         /**
          * MCST 프로젝트 상세 화면으로 이동
          */
-        , _goMcstProjView: function(oContext, cost_type) {
+        , _goMcstProjView: function(oContext) {
             const view_mode = "READ";
             let oModel = oContext.getModel();
             let oObj = oModel.getProperty(oContext.getPath());
-
+            let sCostType = sap.ui.core.Fragment.byId("fragmentProjectSelection","dialogProjectSelection").data("cost_type");
             var oNavParam = {
-                tenant_id: oObj.tenant_id,
-                project_code: oObj.project_code,
-                model_code: oObj.model_code,
-                cost_type: cost_type,
-                view_mode: view_mode
+                tenant_id: oContext.getObject("tenant_id"),
+                project_code: oContext.getObject("project_code"),
+                model_code: oContext.getObject("model_code"),
+                cost_type: sCostType,
+                view_mode: view_mode,
+                version_number: oContext.getObject("version_number")
             };
 
-            this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
+            this.getRouter().navTo("McstProjectInfo", oNavParam);
         }
 
         /**
@@ -305,10 +304,9 @@ sap.ui.define([
 
             if (nSelIdx < 0) { return; }//skip
 
-            var oButton = oEvent.getSource();
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
-                    id: oView.getId(),
+                    id: "fragmentProjectSelection",
                     name: "dp.tc.projectMgt.view.DetailPopup",
                     controller: this
                 }).then(function (oDialog) {
@@ -316,8 +314,11 @@ sap.ui.define([
                     return oDialog;
                 });
             }
+            var sCostType = oEvent.getSource().data("cost_type");
             this._oDialogTableSelect.then(function (oDialog) {
                 oDialog.open();
+                oDialog.data("cost_type", sCostType);    
+                
                 this.onGetDialogData();
 
             }.bind(this));
@@ -326,10 +327,10 @@ sap.ui.define([
         /** 
          *  목표재료비 Dialog 창 데이터 추출  
          */
-        , onGetDialogData: function (oEvent) {
+        , onGetDialogData: function () {
             var oView = this.getView("detailPopupTable");
             //var oModel = this.getModel();
-            var oModel = this.getModel("detailListModel");   //manifest에 등록한 모델을 가져오면 해당 서비스를 사용할수 있다.
+            var oModel = this.getModel("mcstProjectMgtModel");   //manifest에 등록한 모델을 가져오면 해당 서비스를 사용할수 있다.
             var oTable = oView.byId("mainTable");
             var nSelIdx = this._getSelectedIndex(oTable);
             var oContext = oTable.getContextByIndex(nSelIdx);
@@ -352,8 +353,7 @@ sap.ui.define([
                 },
                 success: function (data) {
                     oView.setBusy(false);
-
-                    if (data) {
+                    if( data && data.results && 0<data.results.length ) {
                         oView.getModel("popupListModel").setData(data);
                     }
                 }.bind(this),
@@ -369,7 +369,9 @@ sap.ui.define([
          */
         , onClose: function (oEvent) {
             this._oDialogTableSelect.then(function (oDialog) {
-                this.getView().byId("detailPopupTable").clearSelection();
+                //this.getView().byId("detailPopupTable").clearSelection();
+                sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable").clearSelection();
+                var oTable = sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable")
                 oDialog.close();
             }.bind(this));
         }
@@ -395,7 +397,8 @@ sap.ui.define([
          * Dialog창 테이블 Index값 세팅 
          */
         , onSelectDialogChange: function (oEvent) {
-            var oTable = this.getView().byId("detailPopupTable"),
+            //var oTable = this.getView().byId("detailPopupTable"),
+            var oTable = sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable"),
                 iSelectedIndex = oEvent.getSource().getSelectedIndex();
 
             oTable.setSelectedIndex(iSelectedIndex);
@@ -453,6 +456,7 @@ sap.ui.define([
                 company_code : oData.company_code,
                 project_code : oData.project_code,
                 model_code : oData.model_code,
+                buyer_name : oData.buyer_name,
                 mcst_excl_flag : oData.mcst_excl_flag,
                 mcst_excl_reason : oData.mcst_excl_reason
             };

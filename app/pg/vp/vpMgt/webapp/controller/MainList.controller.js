@@ -405,6 +405,22 @@ sap.ui.define([
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
 
                     //화면 LAYOUT
+
+                    this.byId("pop_detail_info").setText("Detail Info");
+                    this.byId("v_pop_repr_department_code").setVisible(true);
+                    this.byId("v_pop_industry_class_code").setVisible(true);
+                    this.byId("v_pop_inp_type_code").setVisible(true);
+                    this.byId("v_pop_regular_evaluation_flag").setVisible(true);
+                    this.byId("v_pop_sd_exception_flag").setVisible(true);
+                    this.byId("v_pop_maker_material_code_mngt_flag").setVisible(true);
+                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
+                    this.byId("v_review_grade").setVisible(true);
+                    this.byId("v_equipment_type").setVisible(true);
+                    this.byId("v_internal_rate").setVisible(true);
+                    this.byId("v_external_rate").setVisible(true);
+
+                    this.handleCreateInput();  
+
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
@@ -427,6 +443,20 @@ sap.ui.define([
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     //화면 LAYOUT
+                    this.byId("pop_detail_info").setText("");
+                    this.byId("v_pop_repr_department_code").setVisible(false);
+                    this.byId("v_pop_industry_class_code").setVisible(false);
+                    this.byId("v_pop_inp_type_code").setVisible(false);
+                    this.byId("v_pop_regular_evaluation_flag").setVisible(false);
+                    this.byId("v_pop_sd_exception_flag").setVisible(false);
+                    this.byId("v_pop_maker_material_code_mngt_flag").setVisible(false);
+                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
+                    this.byId("v_review_grade").setVisible(false);
+                    this.byId("v_equipment_type").setVisible(false);
+                    this.byId("v_internal_rate").setVisible(false);
+                    this.byId("v_external_rate").setVisible(false);
+
+
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
@@ -475,6 +505,22 @@ sap.ui.define([
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     //화면 LAYOUT
+                    this.byId("pop_detail_info").setText("Detail Info");                                      
+                    this.byId("v_pop_repr_department_code").setVisible(true);
+                    this.byId("v_pop_industry_class_code").setVisible(true);
+                    this.byId("v_pop_inp_type_code").setVisible(true);
+                    this.byId("v_pop_regular_evaluation_flag").setVisible(true);
+                    this.byId("v_pop_sd_exception_flag").setVisible(true);
+                    this.byId("v_pop_maker_material_code_mngt_flag").setVisible(true);
+                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
+                    this.byId("v_review_grade").setVisible(true);
+                    this.byId("v_equipment_type").setVisible(true);
+                    this.byId("v_internal_rate").setVisible(true);
+                    this.byId("v_external_rate").setVisible(true);
+
+                    this.handleCreateInput();  
+
+
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
@@ -497,6 +543,22 @@ sap.ui.define([
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     //화면 LAYOUT
+                    this.byId("pop_detail_info").setText("");
+                    this.byId("v_pop_repr_department_code").setVisible(false);
+                    this.byId("v_pop_industry_class_code").setVisible(false);
+                    this.byId("v_pop_inp_type_code").setVisible(false);
+                    this.byId("v_pop_regular_evaluation_flag").setVisible(false);
+                    this.byId("v_pop_sd_exception_flag").setVisible(false);
+                    this.byId("v_pop_maker_material_code_mngt_flag").setVisible(false);
+                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
+                    this.byId("v_review_grade").setVisible(false);
+                    this.byId("v_equipment_type").setVisible(false);
+                    this.byId("v_internal_rate").setVisible(false);
+                    this.byId("v_external_rate").setVisible(false);
+
+
+
+
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
