@@ -108,12 +108,13 @@ service PrCreateV4Service {
         pr_type_name: String;
         pr_type_name_2: String;
         pr_type_name_3: String;
-        request_date: String;
         requestor_department_code: String;
         requestor_department_name: String;
         requestor_empno: String;
         requestor_name: String;
+        request_date: String;
         pr_desc: String;
+        update_user_id: String;
         details:  array of SavedDetail;
     }
 
