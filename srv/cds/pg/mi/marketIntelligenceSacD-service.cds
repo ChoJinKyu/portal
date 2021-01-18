@@ -47,78 +47,74 @@ service marketIntelligenceSacDService {
     // Company View: 법인
     view OrgCompanyView @(title : '법인 마스터 View') as
         select
-            key tenant_id||'_'||company_code  as  ID : String
-               ,company_name                  as  Description
-               ,company_code                  as  COMPANY_CODE
-               ,tenant_id                     as  TENANT_ID
-               ,use_flag                      as  USE_FLAG
-               ,erp_type_code                 as  ERP_TYPE_CODE
-               ,currency_code                 as  CURRENCY_CODE
-               ,country_code                  as  COUNTRY_CODE
-               ,language_code                 as  LANGUAGE_CODE
-               ,affiliate_code                as  AFFILIATE_CODE
+            key tenant_id       as  TENANT_ID
+           ,key company_code    as  ID : String
+               ,company_name    as  Description
+               ,use_flag        as  USE_FLAG
+               ,erp_type_code   as  ERP_TYPE_CODE
+               ,currency_code   as  CURRENCY_CODE
+               ,country_code    as  COUNTRY_CODE
+               ,language_code   as  LANGUAGE_CODE
+               ,affiliate_code  as  AFFILIATE_CODE
         from OrgCompany;
 
     // Unit View: 사업본부
     view OrgUnitView @(title : '사업본부 마스터 View') as
         select
-            key tenant_id||'_'||bizunit_code  as  ID : String
-               ,bizunit_name                  as  Description
-               ,bizunit_code                  as  BIZUNIT_CODE
-               ,tenant_id                     as  TENANT_ID
-               ,use_flag                      as  USE_FLAG
+            key tenant_id       as  TENANT_ID
+           ,key bizunit_code    as  ID : String
+               ,bizunit_name    as  Description
+               ,use_flag        as  USE_FLAG
         from OrgUnit;
 
     // Plant View: 플랜트
     view OrgPlantView @(title : '플랜트 마스터 View') as
         select
-            key tenant_id||'_'||company_code||'_'||plant_code  as  ID : String
-               ,plant_name                  as  Description
-               ,plant_code                  as  PLANT_CODE
-               ,tenant_id                   as  TENANT_ID
-               ,use_flag                    as  USE_FLAG
-               ,purchase_org_code           as  PURCHASING_ORG_CODE
-               ,bizdivision_code            as  BIZDIVISION_CODE
-               ,au_code                     as  AU_CODE
-               ,hq_au_code                  as  HQ_AU_CODE
-               ,master_org_flag             as  MASTER_ORG_FLAG
-               ,validation_org_flag         as  VALIDATION_ORG_FLAG
+            key tenant_id                       as  TENANT_ID
+           ,key company_code||'_'||plant_code   as  ID : String
+               ,plant_name                      as  Description
+               ,plant_code                      as  PLANT_CODE
+               ,company_code                    as  COMPANY_CODE
+               ,use_flag                        as  USE_FLAG
+               ,purchase_org_code               as  PURCHASING_ORG_CODE
+               ,bizdivision_code                as  BIZDIVISION_CODE
+               ,au_code                         as  AU_CODE
+               ,hq_au_code                      as  HQ_AU_CODE
+               ,master_org_flag                 as  MASTER_ORG_FLAG
+               ,validation_org_flag             as  VALIDATION_ORG_FLAG
         from OrgPlant;
 
     // Purchasing View: 구매조직
     view OrgPurchasingView @(title : '구매조직 View') as
         select
-            key tenant_id||'_'||purchase_org_code  as  ID : String
-               ,purchase_org_name                  as  Description
-               ,purchase_org_code                  as  PURCHAING_ORG_CODE
-               ,tenant_id                          as  TENANT_ID
-               ,use_flag                           as  USE_FLAG
+            key tenant_id           as  TENANT_ID
+           ,key purchase_org_code   as  ID : String
+               ,purchase_org_name   as  Description
+               ,use_flag            as  USE_FLAG
         from OrgPurchasing;
 
     // Division View: 사업부
     view OrgDivisionView @(title : '사업부 View') as
         select
-            key tenant_id||'_'||bizdivision_code  as  ID : String
-               ,bizdivision_name                  as  Description
-               ,bizdivision_code                  as  BIZDIVISION_CODE
-               ,tenant_id                         as  TENANT_ID
-               ,hq_au_flag                        as  HQ_AU_FLAG
-               ,bizunit_code                      as  BIZUNIT_CODE
-               ,use_flag                          as  USE_FLAG
+            key tenant_id           as  TENANT_ID
+           ,key bizdivision_code    as  ID : String
+               ,bizdivision_name    as  Description
+               ,hq_au_flag          as  HQ_AU_FLAG
+               ,bizunit_code        as  BIZUNIT_CODE
+               ,use_flag            as  USE_FLAG
         from OrgDivision;
 
     // Currency View: 통화
     view CmCurrencyView @(title : '통화 View') as
         select
-            key cc.tenant_id||'_'||cc.currency_code  as  ID : String
-               ,cl.currency_code_desc                as  Description
-               ,cc.currency_code                     as  CURRENCY_CODE
-               ,cc.tenant_id                         as  TENANT_ID
-               ,cc.effective_start_date              as  EFFECTIVE_START_DATE
-               ,cc.effective_end_date                as  EFFECTIVE_END_DATE
-               ,cc.use_flag                          as  USE_FLAG
-               ,cc.scale                             as  SCALE
-               ,cc.extension_scale                   as  EXTENSION_SCALE
+            key cc.tenant_id                as  TENANT_ID
+           ,key cc.currency_code            as  ID : String
+               ,cl.currency_code_desc       as  Description
+               ,cc.effective_start_date     as  EFFECTIVE_START_DATE
+               ,cc.effective_end_date       as  EFFECTIVE_END_DATE
+               ,cc.use_flag                 as  USE_FLAG
+               ,cc.scale                    as  SCALE
+               ,cc.extension_scale          as  EXTENSION_SCALE
         from  Currency  cc
               inner join CurrencyLng  cl
                   on  cc.tenant_id      =  cl.tenant_id
@@ -128,12 +124,13 @@ service marketIntelligenceSacDService {
     // 시황자재코드 View: 시황자재코드
     view PgMaterialCodeView @(title : '시황자재코드 View') as
         select
-            key mc.tenant_id||'_'||mc.mi_material_code  as  ID : String
-               ,ml.mi_material_name                     as  Description
-               ,mc.mi_material_code                     as  MI_MATERIAL_CODE
-               ,mc.tenant_id                            as  TENANT_ID
-               ,mc.category_code                        as  CATEGORY_CODE
-               ,mc.use_flag                             as  USE_FLAG
+            key mc.tenant_id            as  TENANT_ID
+           ,key mc.category_code||'_'||mc.mi_material_code  as  ID : String 
+        //    ,key mc.company_code||'_'||mc.org_type_code_code||'_'||mc.org_code||'_'||mc.category_code||'_'||mc.mi_material_code  as  ID : String
+               ,mc.mi_material_code     as  MI_MATERIAL_CODE
+               ,ml.mi_material_name     as  Description
+               ,mc.category_code        as  CATEGORY_CODE
+               ,mc.use_flag             as  USE_FLAG
         from  MaterialCode  mc
               inner join MaterialCodeLng  ml
                   on  mc.tenant_id         =  ml.tenant_id
@@ -172,83 +169,79 @@ service marketIntelligenceSacDService {
     // MiExchangeCode View: 거래소코드
     view MiExchangeCodeView @(title : '거래소코드 View') as
         select
-            key tenant_id||'_'||code  as  ID : String
-               ,code_name             as  Description
-               ,code                  as  CODE
-               ,tenant_id             as  TENANT_ID
-               ,language_cd           as  LANGUAGE_CODE
+            key tenant_id       as  TENANT_ID 
+           ,key code            as  ID : String
+               ,code_name       as  Description
+               ,language_cd     as  LANGUAGE_CODE
         from  CmCodeDtlView
         where group_code  =  'PG_MI_EXCHANGE_CODE';
 
     // MiTermsdelvCode View: 인도조건코드
     view MiTermsdelvCodeView @(title : '인도조건코드 View') as
         select
-            key tenant_id||'_'||code  as  ID : String
-               ,code_name             as  Description
-               ,code                  as  CODE
-               ,tenant_id             as  TENANT_ID
-               ,language_cd           as  LANGUAGE_CODE
+            key tenant_id       as  TENANT_ID
+           ,key code            as  ID : String
+               ,code_name       as  Description
+               ,language_cd     as  LANGUAGE_CODE
         from  CmCodeDtlView
         where group_code  =  'PG_MI_TERMSDELV_CODE';
 
     // Material Mst View: 자재
     view DpMaterialMstView @(title : '자재 View') as
         select
-            key tenant_id||'_'||material_code  as  ID : String
-               ,material_desc                  as  Description
-               ,material_code                  as  MATERIAL_CODE
-               ,tenant_id                      as  TENANT_ID
-               ,material_type_code             as  MATERIAL_TYPE_CODE
-               ,material_spec                  as  MATERIAL_SPEC
-               ,base_uom_code                  as  BASE_UOM_CODE
-               ,material_group_code            as  MATERIAL_GROUP_CODE
-               ,purchasing_uom_code            as  PURCHASING_UOM_CODE
-               ,variable_po_unit_indicator     as  VARIABLE_ORDER_UNIT_INDICATOR
-               ,material_class_code            as  MATERIAL_CLASS_CODE
-               ,commodity_code                 as  COMMODITY_CODE
-               ,maker_part_number              as  MAKER_PART_NUMBER
-               ,maker_code                     as  MAKER_CODE
-               ,maker_part_profile_code        as  MAKER_PART_PROFILE_CODE
-               ,maker_material_code            as  MAKER_MATERIAL_CODE
+            key tenant_id                       as  TENANT_ID
+           ,key material_code                   as  ID : String
+               ,material_desc                   as  Description
+               ,material_type_code              as  MATERIAL_TYPE_CODE
+               ,material_spec                   as  MATERIAL_SPEC
+               ,base_uom_code                   as  BASE_UOM_CODE
+               ,material_group_code             as  MATERIAL_GROUP_CODE
+               ,purchasing_uom_code             as  PURCHASING_UOM_CODE
+               ,variable_po_unit_indicator      as  VARIABLE_ORDER_UNIT_INDICATOR
+               ,material_class_code             as  MATERIAL_CLASS_CODE
+               ,commodity_code                  as  COMMODITY_CODE
+               ,maker_part_number               as  MAKER_PART_NUMBER
+               ,maker_code                      as  MAKER_CODE
+               ,maker_part_profile_code         as  MAKER_PART_PROFILE_CODE
+               ,maker_material_code             as  MAKER_MATERIAL_CODE
         from  MaterialMst;
 
     // Unit Of Measure View: 측정단위
     view DpUOMView @(title : 'UOM View') as
         select
-            key tenant_id||'_'||uom_code      as  ID : String
-               ,technical_uom_name            as  Description
-               ,uom_code                      as  UOM_CODE
-               ,tenant_id                     as  TENANT_ID
-               ,commercial_uom_code           as  COMMERCIAL_UOM_CODE
-               ,technical_uom_code            as  TECHNICAL_UOM_CODE
-               ,commercial_uom_name           as  COMMERCIAL_UOM_NAME
-               ,technical_uom_name            as  TECHNICAL_UOM_NAME
-               ,base_unit_flag                as  BASE_UNIT_FLAG
-               ,uom_class_code                as  UOM_CLASS_CODE
-               ,uom_desc                      as  UOM_DESCRIPTION
-               ,decimal_places                as  DECIMAL_PLACES
-               ,floating_decpoint_index       as  FLOATING_DECPOINT_INDEX
-               ,conversion_numerator          as  CONVERSION_NUMERATOR
-               ,conversion_denominator        as  CONVERSION_DENOMINATOR
-               ,conversion_index              as  CONVERSION_INDEX
-               ,conversion_rate               as  CONVERSION_RATE
-               ,conversion_addition_constant  as  CONVERSION_ADDITION_CONSTANT
-               ,decplaces_rounding            as  DECPLACES_ROUNDING
-               ,family_unit_flag              as  FAMILY_UNIT_FLAG
-               ,uom_iso_code                  as  UOM_ISO_CODE
-               ,uom_iso_primary_code_flag     as  UOM_ISO_PRIMARY_CODE_FLAG
-               ,commercial_unit_flag          as  COMMERCIAL_UNIT_FLAG
-               ,value_base_commitment_flag    as  VALUE_BASE_COMMITMENT_FLAG
-               ,disable_date                  as  DISABLE_DATE
+            key tenant_id                       as  TENANT_ID
+           ,key uom_code                        as  ID : String
+               ,technical_uom_name              as  Description
+               ,commercial_uom_code             as  COMMERCIAL_UOM_CODE
+               ,technical_uom_code              as  TECHNICAL_UOM_CODE
+               ,commercial_uom_name             as  COMMERCIAL_UOM_NAME
+               ,technical_uom_name              as  TECHNICAL_UOM_NAME
+               ,base_unit_flag                  as  BASE_UNIT_FLAG
+               ,uom_class_code                  as  UOM_CLASS_CODE
+               ,uom_desc                        as  UOM_DESCRIPTION
+               ,decimal_places                  as  DECIMAL_PLACES
+               ,floating_decpoint_index         as  FLOATING_DECPOINT_INDEX
+               ,conversion_numerator            as  CONVERSION_NUMERATOR
+               ,conversion_denominator          as  CONVERSION_DENOMINATOR
+               ,conversion_index                as  CONVERSION_INDEX
+               ,conversion_rate                 as  CONVERSION_RATE
+               ,conversion_addition_constant    as  CONVERSION_ADDITION_CONSTANT
+               ,decplaces_rounding              as  DECPLACES_ROUNDING
+               ,family_unit_flag                as  FAMILY_UNIT_FLAG
+               ,uom_iso_code                    as  UOM_ISO_CODE
+               ,uom_iso_primary_code_flag       as  UOM_ISO_PRIMARY_CODE_FLAG
+               ,commercial_unit_flag            as  COMMERCIAL_UNIT_FLAG
+               ,value_base_commitment_flag      as  VALUE_BASE_COMMITMENT_FLAG
+               ,disable_date                    as  DISABLE_DATE
         from  UnitOfMeasure;
 
     // Vendor Pool Mst View: Vendor Pool Mst
     view VpVendorPoolMstView @(title : 'Vendor Pool Mst View') as
         select
-            key tenant_id||'_'||vendor_pool_code  as  ID : String
+            key tenant_id                         as  TENANT_ID
+           ,key company_code||'_'||org_type_code||'_'||org_code||'_'||vendor_pool_code  as  ID : String
                ,vendor_pool_desc                  as  Description
                ,vendor_pool_code                  as  VENDOR_POOL_CODE
-               ,tenant_id                         as  TENANT_ID
                ,company_code                      as  COMPANY_CODE
                ,org_type_code                     as  ORG_TYPE_CODE
                ,org_code                          as  ORG_CODE
@@ -280,10 +273,10 @@ service marketIntelligenceSacDService {
     // Vendor Pool Item Dtl View: Vendor Pool Item Dtl
     view VpVendorPoolItemDtlView @(title : 'Vendor Pool 품목상세연결 View') as
         select
-            key vp.tenant_id||'_'||vp.company_code||'_'||vp.org_type_code||'_'||vp.org_code||'_'||vp.vendor_pool_code||'_'||vp.material_code  as  ID : String
+            key vp.tenant_id                         as  TENANT_ID
+           ,key vp.company_code||'_'||vp.org_type_code||'_'||vp.org_code||'_'||vp.vendor_pool_code||'_'||vp.material_code  as  ID : String
                ,mm.material_desc                     as  Description
                ,vp.material_code                     as  MATERIAL_CODE
-               ,vp.tenant_id                         as  TENANT_ID
                ,vp.company_code                      as  COMPANY_CODE
                ,vp.org_type_code                     as  ORG_TYPE_CODE
                ,vp.org_code                          as  ORG_CODE
@@ -300,63 +293,62 @@ service marketIntelligenceSacDService {
     // Supplier Mst View: Supplier Mst
     view SpSupplierMstView @(title : 'Supplier Mst View') as
         select  
-            key tenant_id||'_'||supplier_code     as  ID : String
-               ,replace(supplier_local_name, char(10), '')  as  Description : String
-               ,supplier_code                     as  SUPPLIER_CODE
-               ,tenant_id                         as  TENANT_ID
-               ,replace(supplier_local_name, char(10), '')    as  SUPPLIER_LOCAL_NAME : String
-               ,replace(supplier_english_name, char(10), '')  as  SUPPLIER_ENGLISH_NAME : String
-               ,tax_id                            as  TAX_ID : String
-               ,vat_number                        as  VAT_NUMBER
-               ,tax_id_except_flag                as  TAX_ID_EXCEPTION_FLAG
-               ,replace(tax_id_except_nm, char(10), '')        as  TAX_ID_EXCEPTION_NAME : String
-               ,replace(tax_id_except_rsn, char(10), '')       as  TAX_ID_EXCEPTION_REASON : String
-               ,duns_number                       as  DUNS_NUMBER : String
-               ,duns_number_4                     as  DUNS_NUMBER_4 : String
-               ,country_code                      as  COUNTRY_CODE : String
-               ,replace(country_name, char(10), '')            as  COUNTRY_NAME : String
-               ,zip_code                          as  ZIP_CODE : String
-               ,replace(local_address_1, char(10), '')         as  LOCAL_ADDRESS_1 : String
-               ,replace(local_address_2, char(10), '')         as  LOCAL_ADDRESS_2 : String
-               ,replace(local_address_3, char(10), '')         as  LOCAL_ADDRESS_3 : String
-               ,replace(local_address_4, char(10), '')         as  LOCAL_ADDRESS_4 : String
-               ,replace(english_address_1, char(10), '')       as  ENGLISH_ADDRESS_1 : String
-               ,replace(english_address_2, char(10), '')       as  ENGLISH_ADDRESS_2 : String
-               ,replace(english_address_3, char(10), '')       as  ENGLISH_ADDRESS_3 : String
-               ,replace(english_address_4, char(10), '')       as  ENGLISH_ADDRESS_4 : String
-               ,replace(local_full_address, char(10), '')      as  LOCAL_FULL_ADDRESS : String
-               ,replace(english_full_address, char(10), '')    as  ENGLISH_FULL_ADDRESS : String
-               ,common_class_code                 as  COMMON_CLASS_CODE : String
-               ,replace(common_class_name, char(10), '')       as  COMMON_CLASS_NAME : String
-               ,affiliate_code                    as  AFFILIATE_CODE : String
-               ,replace(affiliate_code_name, char(10), '')     as  AFFILIATE_CODE_NAME : String
-               ,individual_biz_flag               as  INDIVIDUAL_BIZ_FLAG
-               ,replace(individual_biz_desc, char(10), '')     as  INDIVIDUAL_BIZ_DESC : String
-               ,company_register_number           as  COMPANY_REGISTER_NUMBER : String
-               ,company_class_code                as  COMPANY_CLASS_CODE : String
-               ,replace(company_class_name, char(10), '')      as  COMPANY_CLASS_NAME : String
-               ,replace(repre_name, char(10), '')              as  REPRE_NAME : String
-               ,replace(biz_type, char(10), '')                as  BIZ_TYPE : String
-               ,replace(industry, char(10), '')                as  INDUSTRY : String
-               ,biz_certi_attch_number            as  BIZ_CERTI_ATTCH_NUMBER : String
-               ,attch_number_2                    as  ATTCH_NUMBER_2 : String
-               ,attch_number_3                    as  ATTCH_NUMBER_3 : String
-               ,inactive_status_code              as  INACTIVE_STATUS_CODE : String
-               ,replace(inactive_status_name, char(10), '')    as  INACTIVE_STATUS_NAME : String
-               ,inactive_date                     as  INACTIVE_DATE
-               ,replace(inactive_reason, char(10), '')         as  INACTIVE_REASON : String
-               ,bp_status_code                    as  BP_STATUS_CODE : String
-               ,replace(bp_status_name, char(10), '')          as  BP_STATUS_NAME : String
-               ,tel_number                        as  TEL_NUMBER : String
-               ,extens_number                     as  EXTENS_NUMBER : String
-               ,mobile_phone_number               as  MOBILE_PHONE_NUMBER : String
-               ,fax_number                        as  FAX_NUMBER : String
-               ,replace(url_address, char(10), '')             as  URL_ADDRESS : String
-               ,replace(email_address, char(10), '')           as  EMAIL_ADDRESS : String
-               ,fmytr_code                        as  FMYTR_CODE : String
-               ,replace(fmytr_name, char(10), '')              as  FMYTR_NAME : String
-               ,credit_evaluation_interface_code  as  CREDIT_EVAL_IF_NO : String
+            key tenant_id                                       as  TENANT_ID
+           ,key supplier_code                                   as  ID : String
+               ,replace(supplier_local_name, char(10), '')      as  Description : String
+               ,replace(supplier_local_name, char(10), '')      as  SUPPLIER_LOCAL_NAME : String
+               ,replace(supplier_english_name, char(10), '')    as  SUPPLIER_ENGLISH_NAME : String
+               ,tax_id                                          as  TAX_ID : String
+               ,vat_number                                      as  VAT_NUMBER
+               ,tax_id_except_flag                              as  TAX_ID_EXCEPTION_FLAG
+               ,replace(tax_id_except_nm, char(10), '')         as  TAX_ID_EXCEPTION_NAME : String
+               ,replace(tax_id_except_rsn, char(10), '')        as  TAX_ID_EXCEPTION_REASON : String
+               ,duns_number                                     as  DUNS_NUMBER : String
+               ,duns_number_4                                   as  DUNS_NUMBER_4 : String
+               ,country_code                                    as  COUNTRY_CODE : String
+               ,replace(country_name, char(10), '')             as  COUNTRY_NAME : String
+               ,zip_code                                        as  ZIP_CODE : String
+               ,replace(local_address_1, char(10), '')          as  LOCAL_ADDRESS_1 : String
+               ,replace(local_address_2, char(10), '')          as  LOCAL_ADDRESS_2 : String
+               ,replace(local_address_3, char(10), '')          as  LOCAL_ADDRESS_3 : String
+               ,replace(local_address_4, char(10), '')          as  LOCAL_ADDRESS_4 : String
+               ,replace(english_address_1, char(10), '')        as  ENGLISH_ADDRESS_1 : String
+               ,replace(english_address_2, char(10), '')        as  ENGLISH_ADDRESS_2 : String
+               ,replace(english_address_3, char(10), '')        as  ENGLISH_ADDRESS_3 : String
+               ,replace(english_address_4, char(10), '')        as  ENGLISH_ADDRESS_4 : String
+               ,replace(local_full_address, char(10), '')       as  LOCAL_FULL_ADDRESS : String
+               ,replace(english_full_address, char(10), '')     as  ENGLISH_FULL_ADDRESS : String
+               ,common_class_code                               as  COMMON_CLASS_CODE : String
+               ,replace(common_class_name, char(10), '')        as  COMMON_CLASS_NAME : String
+               ,affiliate_code                                  as  AFFILIATE_CODE : String
+               ,replace(affiliate_code_name, char(10), '')      as  AFFILIATE_CODE_NAME : String
+               ,individual_biz_flag                             as  INDIVIDUAL_BIZ_FLAG
+               ,replace(individual_biz_desc, char(10), '')      as  INDIVIDUAL_BIZ_DESC : String
+               ,company_register_number                         as  COMPANY_REGISTER_NUMBER : String
+               ,company_class_code                              as  COMPANY_CLASS_CODE : String
+               ,replace(company_class_name, char(10), '')       as  COMPANY_CLASS_NAME : String
+               ,replace(repre_name, char(10), '')               as  REPRE_NAME : String
+               ,replace(biz_type, char(10), '')                 as  BIZ_TYPE : String
+               ,replace(industry, char(10), '')                 as  INDUSTRY : String
+               ,biz_certi_attch_number                          as  BIZ_CERTI_ATTCH_NUMBER : String
+               ,attch_number_2                                  as  ATTCH_NUMBER_2 : String
+               ,attch_number_3                                  as  ATTCH_NUMBER_3 : String
+               ,inactive_status_code                            as  INACTIVE_STATUS_CODE : String
+               ,replace(inactive_status_name, char(10), '')     as  INACTIVE_STATUS_NAME : String
+               ,inactive_date                                   as  INACTIVE_DATE
+               ,replace(inactive_reason, char(10), '')          as  INACTIVE_REASON : String
+               ,bp_status_code                                  as  BP_STATUS_CODE : String
+               ,replace(bp_status_name, char(10), '')           as  BP_STATUS_NAME : String
+               ,tel_number                                      as  TEL_NUMBER : String
+               ,extens_number                                   as  EXTENS_NUMBER : String
+               ,mobile_phone_number                             as  MOBILE_PHONE_NUMBER : String
+               ,fax_number                                      as  FAX_NUMBER : String
+               ,replace(url_address, char(10), '')              as  URL_ADDRESS : String
+               ,replace(email_address, char(10), '')            as  EMAIL_ADDRESS : String
+               ,fmytr_code                                      as  FMYTR_CODE : String
+               ,replace(fmytr_name, char(10), '')               as  FMYTR_NAME : String
+               ,credit_evaluation_interface_code                as  CREDIT_EVAL_IF_NO : String
         from  SupplierMst
-    ;
+        ;
 
 }
