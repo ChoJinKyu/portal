@@ -508,6 +508,15 @@ public class MoldApprovalV4 implements EventHandler {
                     
                     q.setSequence(new Integer(row.getSequence()==null?0:row.getSequence()));
                     q.setSupplierCode(row.getSupplierCode()==null?"":row.getSupplierCode());
+                    q.setQuotationStatusCode("C");
+                    // q.setQuotationAmount(0);
+                    // q.setMcst(0);
+                    // q.setPcst(0);
+                    // q.setProfit(0);
+                    // q.setPackingCost(0);
+                    // q.setBizTripCost(0);
+                    // q.setSparePartCost(0);
+                   
                     
                     CqnInsert i = Insert.into(Quotation_.CDS_NAME).entry(q); 
                     Result rst = moldApprovalService.run(i);

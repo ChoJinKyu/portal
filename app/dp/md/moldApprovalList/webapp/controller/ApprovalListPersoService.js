@@ -69,7 +69,8 @@ sap.ui.define(["jquery.sap.global"],
                 order: 10,
                 text: "Plant",
                 visible: false
-            }       
+            }
+            
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
