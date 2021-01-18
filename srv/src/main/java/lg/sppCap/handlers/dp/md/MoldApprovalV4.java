@@ -561,6 +561,7 @@ public class MoldApprovalV4 implements EventHandler {
                         q.setUpdateUserId(aMaster.getUpdateUserId()); 
                         q.setSequence(new Integer(row.getSequence()==null?0:row.getSequence()));
                         q.setSupplierCode(row.getSupplierCode()==null?"":row.getSupplierCode());
+                        q.setQuotationStatusCode("C");
                         CqnInsert i = Insert.into(Quotation_.CDS_NAME).entry(q); 
                         Result rst = moldApprovalService.run(i);
                     }
@@ -607,6 +608,7 @@ public class MoldApprovalV4 implements EventHandler {
                         q.setUpdateUserId(aMaster.getUpdateUserId()); 
                         q.setSequence(new Integer(row.getSequence()==null?0:row.getSequence()));
                         q.setSupplierCode(row.getSupplierCode()==null?"":row.getSupplierCode());
+                        q.setQuotationStatusCode("C");
                         CqnInsert i = Insert.into(Quotation_.CDS_NAME).entry(q); 
                         Result rst = moldApprovalService.run(i);
                     }
