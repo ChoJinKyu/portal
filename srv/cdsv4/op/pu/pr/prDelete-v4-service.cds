@@ -17,6 +17,6 @@ service PrDeleteV4Service {
         return_msg  : String(5000);
     }
 
-    action DeletePrProc (inputData : DeletingKeys) returns OutType;
+    action DeletePrProc (inputData : array of DeletingKeys) returns array of  OutType;
 
 }

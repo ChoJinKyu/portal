@@ -761,7 +761,7 @@ public class LoiMgtV4 implements EventHandler {
         String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        String v_sql_callProc = "CALL EP_PO_LOI_REQUEST_HD_SAVE_PROC(I_H_TABLE => #LOCAL_TEMP_H, I_D_TABLE => #LOCAL_TEMP_D, O_D_TABLE => ?)";
+        String v_sql_callProc = "CALL EP_PO_LOI_REQUEST_HD_SAVE_PROC(I_H_TABLE => #LOCAL_TEMP_H, I_D_TABLE => #LOCAL_TEMP_D, O_H_TABLE => ?, O_D_TABLE => ?)";
 
         Collection<SavedHeaders> v_inHeaders = context.getInputData().getSavedHeaders();
         Collection<SavedReqDetails> v_inDetails = context.getInputData().getSavedReqDetails();
@@ -832,17 +832,24 @@ public class LoiMgtV4 implements EventHandler {
 
         boolean delFlag = false;
 
-        // SqlReturnResultSet oHTable = new SqlReturnResultSet("O_H_TABLE", new RowMapper<SavedHeaders>(){
-        //     @Override
-        //     public SavedHeaders mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-        //         SavedHeaders v_row = SavedHeaders.create();
-        //         v_row.setTenantId(v_rs.getString("tenant_id"));
-        //         v_row.setCompanyCode(v_rs.getString("company_code"));
-        //         v_row.setLoiWriteNumber(v_rs.getString("loi_write_number"));
-        //         v_resultH.add(v_row);
-        //         return v_row;
-        //     }
-        // });
+        SqlReturnResultSet oHTable = new SqlReturnResultSet("O_H_TABLE", new RowMapper<SavedHeaders>(){
+            @Override
+            public SavedHeaders mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                SavedHeaders v_row = SavedHeaders.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setCompanyCode(v_rs.getString("company_code"));
+                v_row.setLoiWriteNumber(v_rs.getString("loi_write_number"));
+                v_row.setLoiNumber(v_rs.getString("loi_number"));
+                v_row.setLoiRequestTitle(v_rs.getString("loi_request_title"));
+                v_row.setLoiPublishPurposeDesc(v_rs.getString("loi_publish_purpose_desc"));
+                v_row.setSpecialNote(v_rs.getString("special_note"));
+                v_row.setRequestorEmpno(v_rs.getString("requestor_empno"));
+                v_row.setRequestDepartmentCode(v_rs.getString("request_department_code"));
+                v_row.setLoiRequestStatusCode(v_rs.getString("loi_request_status_code"));
+                v_resultH.add(v_row);
+                return v_row;
+            }
+        });
 
         SqlReturnResultSet oDTable = new SqlReturnResultSet("O_D_TABLE", new RowMapper<SavedReqDetails>(){
             @Override
@@ -872,6 +879,7 @@ public class LoiMgtV4 implements EventHandler {
 
         
         List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(oHTable);
         paramList.add(oDTable);
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {

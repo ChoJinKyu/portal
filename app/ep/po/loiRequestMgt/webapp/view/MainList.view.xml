@@ -39,18 +39,6 @@
                         <form:content>
                             <VBox>
                                 <Label text="LOI 번호" labelFor="searchLoiNumberS" ></Label>
-                                <!-- <MultiComboBox id="searchLoiNumberS" width="100%" selectedKey="" items="{
-                                    path: 'multiLoi>/LoiNumberGroupbyView',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: '1000'}
-                                    ],
-                                    sorter: { path: 'loi_number'}
-                                }">
-                                    <items>
-                                        <core:Item key="{multiLoi>loi_number}" text="{multiLoi>loi_number}" />
-                                    </items>
-                                </MultiComboBox> -->
-
                                 <MultiInput width="100%"
                                     id="searchLoiNumberS"
                                     suggestionItems="{
@@ -79,7 +67,6 @@
                             </VBox>
                             <VBox>
                                 <Label text="요청부서" labelFor="searchRequestDepartmentS"></Label>
-                                <!-- <Input id="searchRequestDepartment" placeholder="Input data"></Input> -->
                                 <lib-m:CodePicker id="searchRequestDepartmentS"
                                     placeholder="Enter a department name"
                                     keyField="department_id"
@@ -101,7 +88,6 @@
                             </VBox>
                             <VBox>
                                 <Label text="요청자" labelFor="searchRequestorS"></Label>
-                                <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
                                 <lib-m:CodePicker id="searchRequestorS"
                                     placeholder="Enter a employee name"
                                     keyField="employee_number"
@@ -267,7 +253,7 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainLoiNumber" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="LOI번호" />
+                            <Text text="LOI번호"/>
                         </Column>
                         <Column id="mainRequestDepartmentCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="요청부서" />
@@ -300,7 +286,7 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>loi_number}" />
+                                <ObjectIdentifier text="{list>loi_number}"/>
                                 <ObjectIdentifier text="{list>request_department_name}" />
                                 <ObjectIdentifier text="{list>requestor_name}" />
                                 <ObjectIdentifier text="{

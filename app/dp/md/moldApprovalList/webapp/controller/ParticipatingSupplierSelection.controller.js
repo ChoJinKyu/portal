@@ -362,16 +362,16 @@ sap.ui.define([
             
             console.log("approverPreview " , this.getModel("approverPreview").getData());
 
-            var ref = this.getModel("referer");
-            this.getView().setModel(new ManagedModel(), "refererPreview");
+            // var ref = this.getModel("referer");
+            // this.getView().setModel(new ManagedModel(), "refererPreview");
 
-            var rArr = [];
-            if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
-                ref.getData().Referers.forEach(function(item){
-                    rArr.push(item.referer_empno); 
-                });
-            }
-            this.getModel("refererPreview").setProperty("/refArr", rArr);
+            // var rArr = [];
+            // if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
+            //     ref.getData().Referers.forEach(function(item){
+            //         rArr.push(item.referer_empno); 
+            //     });
+            // }
+            // this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
 
@@ -388,11 +388,20 @@ sap.ui.define([
 
             this._oDialogPreview.then(function (oDialog) {
                 oDialog.open();
+                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens()); // 미리보기 레퍼러 
             });
 
         },
-        onPrvClosePress : function(){
-            this.byId("participatingSupplierSelectionPreview").close();
+        onPrvClosePress : function(){ 
+             var oView = this.getView();
+             if (this._oDialogPreview) {
+                this._oDialogPreview.then(function (oDialog) {
+                    oView.byId('referMulti').setTokens(oView.byId("referMultiPrev").getTokens()); // 이거 안하면 본화면에 표시가 안됨 
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPreview = undefined;
+            }
         },
         
         onChangePayment: function (oEvent) {
@@ -438,9 +447,11 @@ sap.ui.define([
                 MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
                 return;
             }
-            if(!(appNum === undefined) ){
+            if(status == "AR"){
                 if(bModel.getData().ParticipatingSupplier == undefined || bModel.getData().ParticipatingSupplier.length == 0){
                     MessageToast.show("item 을 하나 이상 추가하세요.");
+                    // 벨리데이션 발생시 결제상태를 임시저장으로 원복시킴
+                    this.getModel("appMaster").setProperty("/approve_status_code", "DR");
                     return;
                 }
             }

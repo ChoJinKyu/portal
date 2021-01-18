@@ -88,6 +88,9 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) { 
             var oArgs = oEvent.getParameter("arguments");
+            
+            // 텍스트 에디터
+            this._fnSetRichEditor();
 
             if(oArgs.tenantId && oArgs.tenantId !== ""){
                 this.tenantId = oArgs.tenantId;
@@ -120,9 +123,6 @@ sap.ui.define([
                  this._fnReadPrMaster(oArgs);
                  this._fnReadPrDetail(oArgs);
             }
-            
-            // 텍스트 에디터
-            this.setRichEditor();
         },
         
         /**
@@ -172,16 +172,16 @@ sap.ui.define([
         /**
          * 품의내용 폅집기 창 
          */
-        setRichEditor : function (){ 
+        _fnSetRichEditor : function (){ 
             var that = this,
                 sHtmlValue = '';            
             var oApprovalLayout = this.getView().byId("approvalLayout");
             var oApprovalRTE = oApprovalLayout.getContent()[0];
 
-            if(!oApprovalRTE || oApprovalRTE.length === 0){
+            if(!that.oApprovalRichTextEditor){
                 sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
                     function (RTE, EditorType) {
-                        var oRichTextEditor = new RTE("prCreateApprovalRTE", {
+                        that.oApprovalRichTextEditor = new RTE("prCreateApprovalRTE", {
                             editorType: EditorType.TinyMCE4,
                             width: "100%",
                             height: "200px",
@@ -194,10 +194,10 @@ sap.ui.define([
                                 this.addButtonGroup("styleselect").addButtonGroup("table");
                             }
                         });
-                        oApprovalLayout.addContent(oRichTextEditor);
+                        oApprovalLayout.addContent(that.oApprovalRichTextEditor);
                 });
             } else {
-                oApprovalRTE.setValue("");
+                that.oApprovalRichTextEditor.setValue("");
             }                
         },
 
@@ -250,8 +250,6 @@ sap.ui.define([
             var oViewModel = this.getModel('viewModel');
                         
             var oNewMasterData = {
-                //tenant_id: "L2100",
-                //company_code: "LGCKR",
                 tenant_id: this.tenantId,
                 company_code: this.company_code,
                 pr_number: "NEW",
@@ -273,13 +271,12 @@ sap.ui.define([
                 erp_interface_flag: false,
                 erp_pr_type_code: "",
                 erp_pr_number: "",
-                local_create_dtm: oToday,
-                local_update_dtm: oToday,
                 pr_template_name: "",
                 pr_type_name: "",
                 pr_type_name_2: "",
                 pr_type_name_3: "",
-                pr_desc: ""
+                pr_desc: "",
+                update_user_id: "A60264"
             };
 
             oViewModel.setProperty("/PrMst", oNewMasterData);
@@ -313,8 +310,10 @@ sap.ui.define([
                         oViewModel.setProperty("/PrMst", data.results[0]);
 
                         // 품의내용
-                        var oApprovalRTE = that.getView().byId("approvalLayout").getContent()[0];
-                        oApprovalRTE.setValue(data.results[0].approval_contents);
+                        if(that.oApprovalRichTextEditor){
+                            var approval_contents = data.results[0].approval_contents;
+                            that.oApprovalRichTextEditor.setValue(approval_contents);
+                        }
 
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
@@ -543,9 +542,22 @@ sap.ui.define([
             var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
             oViewData.PrMst.approval_contents = approvalContents;
             
+            
 
             // Master data
             var oMaster = oViewData.PrMst;
+
+            //구매요청일
+            var dateY, dateM, dateD, sRrequestDate;
+            if(oMaster.request_date && oMaster.request_date != ""){
+                        dateY = oMaster.request_date.getFullYear();
+                        dateM = oMaster.request_date.getMonth() + 1;
+                        dateD = oMaster.request_date.getDate();
+                        sRrequestDate = dateY + "-" + (dateM >= 10 ? dateM : "0"+dateM) + "-" + (dateD >= 10 ? dateD : "0"+dateD);
+            }else{
+                sRrequestDate = "";
+            }
+
             var oMasterData = {
                 tenant_id: oMaster.tenant_id,
                 company_code: oMaster.company_code,
@@ -554,12 +566,12 @@ sap.ui.define([
                 pr_type_code_2: oMaster.pr_type_code_2,
                 pr_type_code_3: oMaster.pr_type_code_3,
                 pr_template_number:oMaster.pr_template_number,
-                pr_create_system_code: "SPPCAP",
+                pr_create_system_code: oMaster.pr_create_system_code,
                 requestor_empno: oMaster.requestor_empno,
                 requestor_name: oMaster.requestor_name,
                 requestor_department_code: oMaster.requestor_department_code,
                 requestor_department_name: oMaster.requestor_department_name,
-                request_date: new Date(),
+                request_date: sRrequestDate,
                 pr_create_status_code: oMaster.pr_create_status_code,
                 pr_header_text: oMaster.pr_header_text,
                 approval_flag: false,
@@ -568,13 +580,12 @@ sap.ui.define([
                 erp_interface_flag: false,
                 erp_pr_type_code: oMaster.erp_pr_type_code,
                 erp_pr_number: oMaster.erp_pr_number,
-                local_create_dtm: oMaster.local_create_dtm,
-                local_update_dtm: oMaster.local_update_dtm,
                 pr_template_name: oMaster.pr_template_name,
                 pr_type_name: oMaster.pr_type_name,
                 pr_type_name_2: oMaster.pr_type_name_2,
                 pr_type_name_3: oMaster.pr_type_name_3,
                 pr_desc: oMaster.pr_desc,
+                update_user_id: "A60264",
                 details: []
             };
 

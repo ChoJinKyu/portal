@@ -90,6 +90,7 @@ public class PrCreateV4 implements EventHandler {
         .append("REQUESTOR_NAME NVARCHAR(50),")
         .append("REQUESTOR_DEPARTMENT_CODE NVARCHAR(50),")
         .append("REQUESTOR_DEPARTMENT_NAME NVARCHAR(240),")
+        .append("REQUEST_DATE DATE,")
         .append("PR_CREATE_STATUS_CODE NVARCHAR(30), ")
         .append("PR_HEADER_TEXT NVARCHAR(200),")
         .append("APPROVAL_CONTENTS NCLOB,")
@@ -123,13 +124,10 @@ public class PrCreateV4 implements EventHandler {
         .append("UPDATE_USER_ID NVARCHAR(255)")
         .append(")"); 
 
-        // String v_sql_truncateTableM = "TRUNCATE TABLE #LOCAL_TEMP_M";   
-        // String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_D";  
+        String v_sql_dropTableM = "DROP TABLE #LOCAL_TEMP_M";   
+        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_D";  
 
-        String v_sql_truncateTableM = "DROP TABLE #LOCAL_TEMP_M";   
-        String v_sql_truncateTableD = "DROP TABLE #LOCAL_TEMP_D";  
-
-        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -166,6 +164,7 @@ public class PrCreateV4 implements EventHandler {
             if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
                 for(PrCreateSaveType v_indata : v_inMultiData) {
                     log.info("###"+v_indata.getTenantId()+"###"+v_indata.getCompanyCode()+"###"+v_indata.getPrNumber()+"###"+v_indata.getPrCreateStatusCode());
+                    log.info("##### ApprovalContents: " + v_indata.getApprovalContents());
 
                     values = new Object[] {
                         (String)v_indata.get("tenant_id"),
@@ -181,10 +180,11 @@ public class PrCreateV4 implements EventHandler {
                         v_indata.getRequestorName(),
                         v_indata.getRequestorDepartmentCode(),
                         v_indata.getRequestorDepartmentName(),
+                        v_indata.getRequestDate(),
                         v_indata.getPrCreateStatusCode(),
                         v_indata.getPrHeaderText(),
                         v_indata.getApprovalContents(),
-                        "A60264"
+                        v_indata.getUpdateUserId()
                     };
                     batchH.add(values);
 
@@ -262,8 +262,8 @@ public class PrCreateV4 implements EventHandler {
             }
 
             // Local Temp Table DROP
-            jdbc.execute(v_sql_truncateTableM);
-            jdbc.execute(v_sql_truncateTableD);
+            jdbc.execute(v_sql_dropTableM);
+            jdbc.execute(v_sql_dropTableD);
 
             context.setResult(v_result);
             context.setCompleted();

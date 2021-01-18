@@ -202,6 +202,7 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
+            console.log(this._oTPC);
             this._oTPC.openDialog();
         },
 
@@ -235,7 +236,7 @@ sap.ui.define([
 		 * @public
 		 */
         onBackToList: function (){
-            if(!appThis == undefined){
+            if(appThis){
                 appThis.byId("pageSearchButton").firePress();
             }
         },
@@ -963,7 +964,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-            
+            console.log(aSearchFilters);
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -1130,6 +1131,9 @@ sap.ui.define([
         },
         
         _doInitTablePerso: function () {
+            var oTable = this.byId("mainTable");
+            console.log(oTable);
+            console.log(oTable.getColumns());
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),

@@ -31,7 +31,7 @@ sap.ui.define([
         },
 
         createSearchFilters: function(){
-            this.oTenantId = this.getMetadata()._mProperties.aggregations.appData.filters[0].value1;
+            //this.oTenantId = this.getMetadata()._mProperties.aggregations.appData.filters[0].value1;
 
             this.oSearchCode = new Input({ placeholder: "Search"});
             this.oSearchDesc = new Input({ placeholder: "Search"});
@@ -96,7 +96,7 @@ sap.ui.define([
                 sDesc = this.oSearchDesc.getValue(),
                 sSpec = this.oSearchSpec.getValue(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, this.oTenantId)
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ];
 
             if(sCode){

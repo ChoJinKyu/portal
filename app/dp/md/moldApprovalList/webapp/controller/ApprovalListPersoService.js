@@ -5,35 +5,71 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "moldApprovalList-mainTable-mainColumnApprovalCategory",
+                id: "moldApprovalList-approvalList-mainColumnApprovalCategory",
                 order: 0,
                 text: "Approval Category",
                 visible: true
             },
             {
-                id: "moldApprovalList-mainTable-mainColumnCompany",
+                id: "moldApprovalList-approvalList-mainColumnCompany",
                 order: 1,
                 text: "Company",
-                visible: false
+                visible: true
             },
             {
-                id: "moldApprovalList-mainTable-mainColumnPlant",
-                order: 4,
-                text: "Plant",
-                visible: false
-            },
-            {
-                id: "moldApprovalList-mainTable-mainColumnApprovalNo",
+                id: "moldApprovalList-approvalList-mainColumnPlant",
                 order: 2,
                 text: "Contents",
                 visible: true
             },
             {
-                id: "moldApprovalList-mainTable-mainColumnSubject",
+                id: "moldApprovalList-approvalList-mainColumnApprovalNo",
                 order: 3,
                 text: "Type",
                 visible: true
-            }
+            },
+            {
+                id: "moldApprovalList-approvalList-mainColumnSubject",
+                order: 4,
+                text: "Plant",
+                visible: true
+            },
+            {
+                id: "moldApprovalList-approvalList-mainColumnRequestor",
+                order: 5,
+                text: "Plant",
+                visible: true
+            },
+            {
+                id: "moldApprovalList-approvalList-mainColumnRequestDate",
+                order: 6,
+                text: "Plant",
+                visible: false
+            },
+            {
+                id: "moldApprovalList-approvalList-mainColumnStatus",
+                order: 7,
+                text: "Plant",
+                visible: true
+            },
+            {
+                id: "moldApprovalList-approvalList-mainColumnEmail",
+                order: 8,
+                text: "Plant",
+                visible: false
+            },
+            {
+                id: "moldApprovalList-approvalList-mainColumnModel",
+                order: 9,
+                text: "Plant",
+                visible: false
+            },
+            {
+                id: "moldApprovalList-approvalList-mainColumnMoldNumber",
+                order: 10,
+                text: "Plant",
+                visible: false
+            }       
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!

@@ -266,16 +266,16 @@ sap.ui.define([
                 }
             }
 
-           var ref = this.getModel("referer");
-           this.getView().setModel(new ManagedModel(), "refererPreview");
+        //    var ref = this.getModel("referer");
+        //    this.getView().setModel(new ManagedModel(), "refererPreview");
 
-           var rArr = [];
-           if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
-                ref.getData().Referers.forEach(function(item){
-                    rArr.push(item.referer_empno); 
-                });
-            }
-            this.getModel("refererPreview").setProperty("/refArr", rArr);
+        //    var rArr = [];
+        //    if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
+        //         ref.getData().Referers.forEach(function(item){
+        //             rArr.push(item.referer_empno); 
+        //         });
+        //     }
+        //     this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
 
@@ -292,13 +292,15 @@ sap.ui.define([
 
             this._oDialogPrev.then(function (oDialog) {
                 oDialog.open();
+                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens()); // 미리보기 레퍼러 
             });
 
         },
         onPrvClosePress : function(){ 
+             var oView = this.getView();
              if (this._oDialogPrev) {
                 this._oDialogPrev.then(function (oDialog) {
-                    // console.log(" oDialog.close >>> ", oDialog.close);
+                    oView.byId('referMulti').setTokens(oView.byId("referMultiPrev").getTokens()); // 이거 안하면 본화면에 표시가 안됨 
                     oDialog.close();
                     oDialog.destroy();
                 });
@@ -354,6 +356,7 @@ sap.ui.define([
             
             if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
                 return;
             }
           

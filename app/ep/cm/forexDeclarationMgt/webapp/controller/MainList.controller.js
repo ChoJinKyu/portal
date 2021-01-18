@@ -23,10 +23,11 @@ sap.ui.define([
     "sap/m/Text",
     "sap/m/Label",
     "sap/m/Input",
-    "sap/m/VBox"
+    "sap/m/VBox",
+    "sap/ui/core/mvc/Controller"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, Controller) {
     "use strict";
 
     var oTransactionManager;
@@ -61,7 +62,6 @@ sap.ui.define([
             this.enableMessagePopover();
 
             // var today = new Date();
-
             // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
@@ -284,13 +284,74 @@ sap.ui.define([
             this._goDetailView(oEvent);
         },
 
+
+        onSummaryChartButtonPress: function(oEvent) {
+            console.log("chart popup");
+            this._goChartlView(oEvent);
+        },
+
+        _goChartlView: function(oEvent){
+            
+            console.log(" _goChartlView oEvent :: ", oEvent);
+            var oView = this.getView();
+            var oTable = oView.byId("mainTable"),
+                oModel = this.getView().getModel("list");
+
+
+            this._chartDialog = Fragment.load({
+                id: oView.getId(),
+                name: "ep.cm.forexDeclarationMgt.view.SummaryChart",
+                controller: this
+            }).then(function (_chartDialog) {
+                oView.addDependent(_chartDialog);
+                
+                //console.log("_chartDialog :::: " , oView);
+                return _chartDialog;
+            }.bind(this));
+
+
+            console.log("_chartDialog :::: " , oView);
+
+            this._chartDialog.then(function (_chartDialog) {
+                _chartDialog.open();
+
+                // if(forexDeclareStatusName == "작성대기" || forexDeclareStatusName == "신고진행중"){
+                //     oView.byId("poNumber").setText(rowData.po_number);
+                //     oView.byId("poName").setText(rowData.po_name);
+                //     oView.byId("receiptScheduledDate").setText(that.getFormatDate(rowData.receipt_scheduled_date));
+                //     oView.byId("declareScheduledDate").setDateValue(rowData.declare_scheduled_date);
+                //     oView.byId("declareDate").setDateValue(rowData.declare_date);
+                //     oView.byId("processedCompleteDate").setText(that.getFormatDate(rowData.processed_complete_date));
+                //     oView.byId("remark").setValue(rowData.remark);
+                // }else{
+                //     oView.byId("poNumber").setText(rowData.po_number);
+                //     oView.byId("poName").setText(rowData.po_name);
+                //     oView.byId("receiptScheduledDate").setText(that.getFormatDate(rowData.receipt_scheduled_date));
+                //     oView.byId("declareScheduledDate").setText(that.getFormatDate(rowData.declare_scheduled_date));
+                //     oView.byId("declareDate").setText(that.getFormatDate(rowData.declare_date));
+                //     oView.byId("processedCompleteDate").setText(that.getFormatDate(rowData.processed_complete_date));
+                //     oView.byId("remark").setText(rowData.remark);
+                // }
+                 
+            });
+        },
+
+
+        press: function (oEvent) {
+			MessageToast.show("The interactive bar chart is pressed.");
+		},
+
+		selectionChanged: function (oEvent) {
+			var oBar = oEvent.getParameter("bar");
+			MessageToast.show("The selection changed: " + oBar.getLabel() + " " + ((oBar.getSelected()) ? "selected" : "deselected"));
+		},
         
 
         _goDetailView: function(oEvent){
             
-            console.log("111111111111111111", oEvent);
+            console.log("oEvent :: ", oEvent);
 
-             var oView = this.getView();
+            var oView = this.getView();
             var oTable = oView.byId("mainTable"),
                 oModel = this.getView().getModel("list");
             var rowData = oEvent.getParameter('rowBindingContext').getObject();
@@ -299,7 +360,7 @@ sap.ui.define([
             var input = {};
             var saveForexDtl = [];
             var poNumber = rowData.po_number;
-            console.log("####po_number====", poNumber);
+            console.log("po_number :: ", poNumber);
             if (poNumber !== '' && poNumber != null && poNumber !== undefined) {
                 
                 var tenantId = rowData.tenant_id;
@@ -328,8 +389,6 @@ sap.ui.define([
                     forexDeclareStatusCode = "920030";
                 }
 
-
-
                 var forexItems = {
                             "po_number": poNumber,
                             "tenant_id": tenantId,
@@ -348,19 +407,13 @@ sap.ui.define([
                 return;
             }
 
-            console.log("####saveForexDtl111====", saveForexDtl);
+            console.log("####saveForexDtl(1)====", saveForexDtl);
 
             input.forexItems = saveForexDtl;
             this.getModel("forexDtl").setData(input);
-            console.log("####forexDtl2222====", this.getModel("forexDtl").getData());
 
-            // pTenantId = rowData.tenant_id;
-            // pOrg_code  = rowData.org_code;
-            // pOperation_unit_code = rowData.operation_unit_code;
-            // pTemp_type = rowData.temp_type;
-
-             
-            console.log("rowData --------------------> ", rowData);
+            console.log("####forexDtl(2)====", this.getModel("forexDtl").getData());
+            console.log("rowData :: ", rowData);
             
             /* 신고진행상태
             920010	작성대기
@@ -369,8 +422,6 @@ sap.ui.define([
             */			
 
             var forexDeclareStatusName = rowData.forex_declare_status_name;
-
-            console.log("forexDeclareStatusName --------------------> ", forexDeclareStatusName);
             var pageVal = "";
             // if(forexDeclareStatusName == "920010" || forexDeclareStatusName == "920020"){
             //     pageVal = "ep.cm.forexDeclarationMgt.view.forexDetail_Edit"
@@ -379,29 +430,22 @@ sap.ui.define([
             // }
 
             if(forexDeclareStatusName == "작성대기" || forexDeclareStatusName == "신고진행중"){
-                console.log("edit :: ");
                 pageVal = "ep.cm.forexDeclarationMgt.view.forexDetail_Edit"
             }else{
-                console.log("show :: ");
                 pageVal = "ep.cm.forexDeclarationMgt.view.forexDetail_Show"
             }
 
 
-            //if (!this._forexDialog) {
-//oView.removeAllDependents();
- //this._forexDialog.destroy(); 
-
-                this._forexDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: pageVal,
-                    controller: this
-                }).then(function (_forexDialog) {
-                    oView.addDependent(_forexDialog);
-                    
-                    //console.log("_forexDialog :::: " , oView);
-                    return _forexDialog;
-                }.bind(this));
-            //}
+            this._forexDialog = Fragment.load({
+                id: oView.getId(),
+                name: pageVal,
+                controller: this
+            }).then(function (_forexDialog) {
+                oView.addDependent(_forexDialog);
+                
+                //console.log("_forexDialog :::: " , oView);
+                return _forexDialog;
+            }.bind(this));
 
             this._forexDialog.then(function (_forexDialog) {
                 _forexDialog.open();
@@ -424,11 +468,7 @@ sap.ui.define([
                     oView.byId("remark").setText(rowData.remark);
                 }
                  
-
             });
-
-            console.log("end :: ");
-
         },
 
 
@@ -443,19 +483,16 @@ sap.ui.define([
 		 */
         onForexSave: function (flag) {
 
-            console.log("save ::");
             var oView = this.getView(),
                 that = this;
 
-             /* 신고진행상태
+            /* 신고진행상태
             920010	작성대기
             920020	신고진행중
             920030	신고완료
             */	
             var statusCode = "920010";
             var statusChange = "";
-            
-            
             
             if (flag == "S") {
                 statusCode = "920010";
@@ -470,7 +507,7 @@ sap.ui.define([
             }
 
             var forexDtlModel = this.getModel("forexDtl");
-            console.log("forexDtlModel.getData()1==" + JSON.stringify(forexDtlModel.getData()));
+            console.log("forexDtlModel.getData()1234==" + JSON.stringify(forexDtlModel.getData()));
 
             if(statusCode == "920010" || statusCode == "920020"){
                 forexDtlModel.getData()["forexItems"].map(d => {
@@ -494,11 +531,6 @@ sap.ui.define([
 
             console.log("forexDtlModel.getData()2==" + JSON.stringify(forexDtlModel.getData()));
 
-            //if (this.validator.validate(this.byId("dialogForex")) !== true) return;
-
-            // console.log("####oTransactionManager====", oTransactionManager);
-            // console.log("####oDataModel====", oMasterModel.getData());
-
             var url = "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/SavePoForexDeclarationProc";
 
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -517,12 +549,6 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
 
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-
-                                // if(data.value.rsltCnt > 0) {
-                                //     MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
-                                // }else {
-                                //     MessageToast.show(that.getModel("I18N").getText("/NCM01005"));
-                                // }
                                 that.onExitForex();
                                 that.byId("pageSearchButton").firePress();
                             },
@@ -533,7 +559,6 @@ sap.ui.define([
                     };
                 }
             });
-
         },
 
         /**
@@ -541,22 +566,6 @@ sap.ui.define([
          */
         onExitForex: function () {
             this.byId("dialogForex").close();
-        },
-
-
-        onTableSupplierSelectionPress: function (oEvent) {
-            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
-                oRecord = this.getModel("list").getProperty(sPath);
-
-            this.getRouter().navTo("selectionPage", {
-                //layout: oNextUIState.layout,
-                tenantId: oRecord.tenant_id,
-                companyCode: oRecord.company_code,
-                loiWriteNumber: oRecord.loi_write_number,
-                loiItemNumber: oRecord.loi_item_number,
-                loiSelectionNumber: oRecord.loi_selection_number,
-                loiNumber: oRecord.loi_number
-            }, true);
         },
 
         // _doInitTablePerso: function(){
