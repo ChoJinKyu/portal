@@ -28,7 +28,7 @@
             <form:content>
 				<!-- Purchase Order Item Table -->
 				<table:Table id="poItemTable"
-                    selectionMode="None"
+                    selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}"
                     visibleRowCountMode="Auto"
                     rows="{purOrderItem>/PurchaseOrderItems}"
                     cellClick=".onCellClick"

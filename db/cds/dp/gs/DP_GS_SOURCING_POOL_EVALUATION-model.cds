@@ -15,6 +15,8 @@
   7. entity description : Global Sourcing Pool Evaluation
   8. history
   -. 2020.12.28 : 최미희 최초작성
+  -. 2021.01.16 : 최미희 컬럼추가 및 Key 변경
+        SOURCING_SUPPLIER_ID
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
@@ -22,7 +24,8 @@ using { dp as Category } from './DP_GS_SOURCING_POOL_CATEGORY-model';
 
 entity Gs_Sourcing_Pool_Evaluation {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
-  key sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
+  key sourcing_supplier_id : Integer64  not null @title: '소싱공급업체ID' ;	
+      sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
   key company_code : String(10)  not null @title: '회사코드' ;	
   key org_type_code : String(2)  not null @title: '조직유형코드' ;	
   key org_code : String(10)  not null @title: '조직코드' ;	
@@ -30,7 +33,7 @@ entity Gs_Sourcing_Pool_Evaluation {
 
     parent: Association to Category.Gs_Sourcing_Pool_Category
         on parent.tenant_id = tenant_id 
-        and parent.sourcing_supplier_nickname = sourcing_supplier_nickname
+        and parent.sourcing_supplier_id = sourcing_supplier_id
         and parent.company_code = company_code
         and parent.org_type_code = org_type_code
         and parent.org_code = org_code

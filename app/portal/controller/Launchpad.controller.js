@@ -21,6 +21,12 @@ sap.ui.define([
         return BaseController.extend("spp.portal.controller.Launchpad", {
 
             onInit: function () {
+                /*
+                // subscribe spp.portal.crossApplicationNavigation event
+                var oEventBus = sap.ui.getCore().getEventBus();
+                oEventBus.subscribe("spp.portal.crossApplicationNavigation", this.onCrossApplicationNavigation, this);
+                */
+
                 // var oMenuModel = new JSONModel(sap.ui.require.toUrl("spp/portal/mockdata") + "/menu.json");
                 // this.getView().setModel(oMenuModel, "menu");
 
@@ -72,6 +78,9 @@ sap.ui.define([
                 // this.onUserSettingPress();
             },
 
+            onExit : function(oEvent){
+                // sap.ui.getCore().getEventBus().unsubscribe("spp.portal.crossApplicationNavigation", this.onCrossApplicationNavigation, this);
+            },
 
             onSideNavButtonPress: function(){
                 var oToolPage = this.byId("toolPage");
@@ -167,6 +176,38 @@ sap.ui.define([
                 //     url: sUrl
                 // }));
                 // console.log("oToolPage",oToolPage)
+            },
+
+            onCrossApplicationNavigation : function(sChannelId, sEventId, oData){
+                var oToolPage = this.byId("toolPage");
+                var sComponent = oData.sMenuPath;
+                var sUrl = oData.sMenuUrl;
+                var oCustomData = oData.oCustomData;
+                
+                Component.create({
+                    name: sComponent,
+                    url: sUrl,
+                    id : this.getView().createId(new Date().getTime() + ""),
+                    componentData : oCustomData
+                }).then(function(oComponent) {
+                    var oNewContainer;                
+                    var oOldContainer = oToolPage.getMainContents()[0];
+                    if(!oOldContainer.getLifecycle){
+                        oNewContainer = new ComponentContainer({
+                            id : oComponent.getId() + "--container"
+                        });
+
+                        oNewContainer.setComponent(oComponent);
+                    }else{
+                        oOldContainer.getComponentInstance().destroy();
+                        oOldContainer.setComponent(oComponent);
+                    }                                  
+                    
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oNewContainer ? oNewContainer : oOldContainer);
+                }).catch(function(e){
+                    MessageToast.show("등록된 메뉴 경로가 올바르지 않습니다.");
+                })
             },
 
             onTilePress: function(oEvent){

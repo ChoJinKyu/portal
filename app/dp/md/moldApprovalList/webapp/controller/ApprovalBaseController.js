@@ -19,11 +19,16 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    "./ApprovalList.controller",
+    "./ApprovalList.controller", 
+    "sap/ui/model/Sorter",
+    "dp/md/util/controller/EmployeeDialog",
+    "sap/m/Token",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
-
+    , Sorter 
+    , EmployeeDialog 
+     , Token
 ) {
     "use strict";
 
@@ -81,9 +86,9 @@ sap.ui.define([
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
             for (var sPropertyName in this._oFragments) {
-                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] == null) {
+                /*if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] === null) {
                     return;
-                }
+                }*/
                
                 //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
@@ -93,6 +98,14 @@ sap.ui.define([
                 this.approvalList.onBackToList();
             }
 
+            /*
+            var oEnabledA = this.getView().getControlsByFieldGroupId("ge");
+            oEnabledA.forEach(function(oCon){
+                if(oCon.setEditable){
+                    oCon.setEditable(false);
+                }
+            });
+            */
             //this.byId("pageApprovalLineSection").destroy();
             /*this.generalInfoFragment.destroy();
             this.attachmentsFragment.destroy();
@@ -388,6 +401,21 @@ sap.ui.define([
 
             approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
+
+                var referMulti = this.byId("referMulti");
+                var tokens = [] ;
+               
+                var refer = this.getModel("referer");
+                if(refer.getData().Referers != undefined && refer.getData().Referers.length > 0){
+                    refer.getData().Referers.forEach(function(item){ 
+                        console.log("item>>> " , item);
+                        var oToken = new Token();
+                        oToken.setKey(item.referer_empno);
+                        oToken.setText(item.referer_name);
+                        tokens.push(oToken);
+                    });
+                    referMulti.setTokens(tokens);
+                }
             }.bind(this));
         },
 
@@ -435,19 +463,45 @@ sap.ui.define([
             }.bind(this));
 
             console.log(" Approvers >>> ", approvalNumber);
-            var refererMultiCB = this.getModel('refererMultiCB');
+           // var refererMultiCB = this.getModel('refererMultiCB');
+           
+            var oView = this.getView();
             this._bindView("/Referers", "referer", filter, function (oData) {
-                if (oData.results.length > 0) {
-                    var rList = [];
-                    oData.results.forEach(function (item) {
-                        rList.push(item.referer_empno);
-                        // this.getView().byId("refererMultiCB").mProperties.selectedKeys.push(item.referer_empno);
-                    }.bind(this));
-                    refererMultiCB.setProperty("/refer", rList);
-                }
+            //     if (oData.results.length > 0) {
+            //       //  var rList = [];
+                   
+            //         oData.results.forEach(function (item) { 
+   
+            //           //  rList.push(item.referer_empno); 
+            //             // this.getView().byId("refererMultiCB").mProperties.selectedKeys.push(item.referer_empno);
+            //         }.bind(this));
+                  
+            //   //  refererMultiCB.setProperty("/refer", rList);
+            //     }
             }.bind(this));
 
             oTransactionManager.setServiceModel(this.getModel());
+        },
+
+       onMultiInputWithCodeValuePress: function(){ 
+          
+            if(!this.oEmployeeMultiSelectionValueHelp){
+               this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                    title: "Choose Referer",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2600")
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
+                 
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("referMulti").getTokens());
         },
 
         _loadFragment: function (sFragmentName, oHandler) {
@@ -954,7 +1008,7 @@ sap.ui.define([
                 "trashShow": false
             }, "/Approvers");
         },
-
+/*
         handleSelectionChangeReferer: function (oEvent) { // Referrer 
             var referModel = this.getModel('referer');
             var changedItem = oEvent.getParameter("changedItem");
@@ -998,7 +1052,7 @@ sap.ui.define([
         handleSelectionFinishReferer: function (oEvent) { // Referrer 
             oEvent.getParameter("selectedItems");
         },
-
+*/ 
         /**
          * today
          * @private
@@ -1015,12 +1069,27 @@ sap.ui.define([
         },
 
         _commonDataSettingAndSubmit: function () {
+            var that = this;
+             
+            this.setModel(new ManagedListModel(),'referer');
+            var referModel = this.getModel('referer');
+            var multi = this.byId("referMulti").getTokens();
+            if(multi != undefined && multi.length > 0){
+                multi.forEach(function(item){ 
+                    console.log(item);
+                    referModel.addRecord({
+                        "referer_empno": item.getKey(),
+                        "approval_number": that.approval_number,
+                        "tenant_id": that.tenant_id
+                    }, "/Referers");
+                });
+            }
 
             var mst = this.getModel("appMaster").getData(),
                 apr = this.getModel("approver").getData(),
                 ref = this.getModel("referer").getData();
             var data = {};
-            var that = this;
+            
             var approvalMaster = {
                 tenant_id: this.tenant_id
                 , approval_number: this.approval_number

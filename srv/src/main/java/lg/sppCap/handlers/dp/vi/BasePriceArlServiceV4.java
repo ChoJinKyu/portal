@@ -1,0 +1,582 @@
+package lg.sppCap.handlers.dp.vi;
+
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+// Java Util
+import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.math.BigDecimal;
+
+// Log
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+// Java Sql
+import java.sql.SQLException;
+
+import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.EventContext;
+import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.ErrorStatuses;
+import com.sap.cds.services.handler.annotations.Before;
+import com.sap.cds.services.handler.annotations.On;
+import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.request.ParameterInfo;
+import com.sap.cds.services.request.UserInfo;
+
+import lg.sppCap.frame.handler.BaseEventHandler;
+import lg.sppCap.handlers.dp.vi.BasePriceArlValidationV4;
+import lg.sppCap.util.TimezoneUtil;
+
+import cds.gen.dp.basepricearlv4service.*;
+
+@Component
+@ServiceName(BasePriceArlV4Service_.CDS_NAME)
+public class BasePriceArlServiceV4 extends BaseEventHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(BasePriceArlServiceV4.class);
+
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    @Autowired
+    UserInfo userInfo;
+
+    @Autowired
+    ParameterInfo parameterInfo;
+
+    @Autowired
+    BasePriceArlValidationV4 validator;
+
+    @Transactional(rollbackFor = SQLException.class)
+    @Before(event=DpViBasePriceArlProcContext.CDS_NAME)
+    public void beforeBasePriceArlProcContext(DpViBasePriceArlProcContext context) {
+        log.info("#### beforeBasePriceArlProcContext");
+
+        // Cmd Validation
+        String cmdString = context.getInputData().getCmd().toLowerCase();
+
+        if (!cmdString.equals("insert") && !cmdString.equals("upsert") && !cmdString.equals("delete")) {
+                String msg = super.getLanguageCode(context).equals("KO") ? "처리할 수 없는 요청입니다.\n[insert], [upsert], [delete]  명령어만 사용할 수 있습니다."
+                                                                         : "This request cannot be processed.\nOnly commands [insert], [upsert], and [delete] can be used.";
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
+        }
+
+        String userID = (userInfo.getId() == null) ? "anonymous" : userInfo.getId();
+        // ZonedDateTime localNow = TimezoneUtil.getZonedNow();
+        Instant localNow = TimezoneUtil.getZonedNow().toInstant();
+
+        String sql = "";
+
+        Collection<BasePriceArlMstType> basePriceArlMasters = context.getInputData().getBasePriceArlMst();
+
+        // // [Reference] If no input, error processing
+        // if (basePriceArlMasters.isEmpty() || basePriceArlMasters.size() < 1) {
+        //     String msg = super.getLanguageCode(context).equals("KO") ? "입력 값 형식이 올바르지 않습니다." : "The input value format is invalid.";
+        //     throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
+        // }
+
+        for (BasePriceArlMstType basePriceArlMaster : basePriceArlMasters) {
+            // default value settings
+            String tenant_id =  basePriceArlMaster.getTenantId();
+            tenant_id = (tenant_id == null || tenant_id.equals("")) ? "L2100" : tenant_id;
+
+            basePriceArlMaster.setTenantId(tenant_id);
+            basePriceArlMaster.setChainCode("DP");
+
+            // approval_number value settings
+            String approval_number = "";
+            
+            if (basePriceArlMaster.getApprovalNumber() == null || basePriceArlMaster.getApprovalNumber().equals("")) {
+                sql = "SELECT DP_APPROVAL_NUMBER_FUNC(?) FROM DUMMY";
+                approval_number = jdbc.queryForObject(sql, new Object[] { tenant_id }, String.class);
+                basePriceArlMaster.setApprovalNumber(approval_number);
+            } else {
+                approval_number = basePriceArlMaster.getApprovalNumber();
+            }
+
+            basePriceArlMaster.setLocalCreateDtm(localNow);
+            basePriceArlMaster.setLocalUpdateDtm(localNow);
+            basePriceArlMaster.setCreateUserId(userID);
+            basePriceArlMaster.setUpdateUserId(userID);
+
+            /** 
+             * BasePriceArlApproverType
+            */
+            if (basePriceArlMaster.getApprovers() == null) {
+                Collection<BasePriceArlApproverType> basePriceArlApprovers = new ArrayList<>();
+                basePriceArlMaster.setApprovers(basePriceArlApprovers);
+
+                // if null value, error handling
+            } else {
+                Collection<BasePriceArlApproverType> basePriceArlApprovers = basePriceArlMaster.getApprovers();
+
+                for (BasePriceArlApproverType basePriceArlApprover : basePriceArlApprovers) {
+                    // default value settings
+                    basePriceArlApprover.setTenantId(tenant_id);
+                    basePriceArlApprover.setApprovalNumber(approval_number);
+
+                    basePriceArlApprover.setLocalCreateDtm(localNow);
+                    basePriceArlApprover.setLocalUpdateDtm(localNow);
+                    basePriceArlApprover.setCreateUserId(userID);
+                    basePriceArlApprover.setUpdateUserId(userID);
+                }
+            }
+
+            /** 
+             * BasePriceArlRefererType
+            */
+            if (basePriceArlMaster.getReferers() == null) {
+                Collection<BasePriceArlRefererType> basePriceArlReferers = new ArrayList<>();
+                basePriceArlMaster.setReferers(basePriceArlReferers);
+
+                // if null value, error handling
+            } else {
+                Collection<BasePriceArlRefererType> basePriceArlReferers = basePriceArlMaster.getReferers();
+
+                for (BasePriceArlRefererType basePriceArlReferer : basePriceArlReferers) {
+                    // default value settings
+                    basePriceArlReferer.setTenantId(tenant_id);
+                    basePriceArlReferer.setApprovalNumber(approval_number);
+
+                    basePriceArlReferer.setLocalCreateDtm(localNow);
+                    basePriceArlReferer.setLocalUpdateDtm(localNow);
+                    basePriceArlReferer.setCreateUserId(userID);
+                    basePriceArlReferer.setUpdateUserId(userID);
+                }                
+            }
+
+            /** 
+             * BasePriceArlDetailType
+            */
+            if (basePriceArlMaster.getDetails() == null) {
+                Collection<BasePriceArlDtlType> basePriceArlDetails = new ArrayList<>();
+                basePriceArlMaster.setDetails(basePriceArlDetails);
+
+                // if null value, error handling
+            } else {
+                BigDecimal increament = new BigDecimal("1");
+
+                Collection<BasePriceArlDtlType> basePriceArlDetails = basePriceArlMaster.getDetails();
+
+                for (BasePriceArlDtlType basePriceArlDetail : basePriceArlDetails) {
+                    // default value settings
+                    basePriceArlDetail.setTenantId(tenant_id);
+                    basePriceArlDetail.setApprovalNumber(approval_number);
+
+                    basePriceArlDetail.setLocalCreateDtm(localNow);
+                    basePriceArlDetail.setLocalUpdateDtm(localNow);
+                    basePriceArlDetail.setCreateUserId(userID);
+                    basePriceArlDetail.setUpdateUserId(userID);
+
+                    // item_sequence value settings
+                    BigDecimal item_sequence = new BigDecimal(1);
+
+                    if (basePriceArlDetail.getItemSequence() == null) {
+                        sql = "SELECT DP_ITEM_SEQUENCE_FUNC(?, ?, ?) FROM DUMMY";
+                        item_sequence = jdbc.queryForObject(sql, new Object[] { tenant_id, approval_number, increament }, BigDecimal.class);
+                        basePriceArlDetail.setItemSequence(item_sequence);
+                        increament = increament.add(new BigDecimal("1"));
+                    } else {
+                        item_sequence = basePriceArlDetail.getItemSequence();
+                    }
+
+                    /** 
+                     * BasePriceArlPriceType
+                    */
+                    if (basePriceArlDetail.getPrices() == null) {
+                        Collection<BasePriceArlPriceType> basePriceArlPrices = new ArrayList<>();
+                        basePriceArlDetail.setPrices(basePriceArlPrices);
+
+                        // if null value, error handling
+                    } else {
+                        Collection<BasePriceArlPriceType> basePriceArlPrices = basePriceArlDetail.getPrices();
+
+                        for (BasePriceArlPriceType basePriceArlPrice : basePriceArlPrices) {
+                            // default value settings
+                            basePriceArlPrice.setTenantId(tenant_id);
+                            basePriceArlPrice.setApprovalNumber(approval_number);
+                            basePriceArlPrice.setItemSequence(item_sequence);
+
+                            basePriceArlPrice.setLocalCreateDtm(localNow);
+                            basePriceArlPrice.setLocalUpdateDtm(localNow);
+                            basePriceArlPrice.setCreateUserId(userID);
+                            basePriceArlPrice.setUpdateUserId(userID);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event=DpViBasePriceArlProcContext.CDS_NAME)
+    public void onBasePriceArlProcContext(DpViBasePriceArlProcContext context) {
+        log.info("#### onBasePriceArlProcContext");
+
+        validator.validationBasePriceArlMaster(context, context.getInputData().getBasePriceArlMst());
+
+        // DDL 실행시 auto-commit OFF 설정
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+        jdbc.execute(v_sql_commitOption);
+
+        // 01. Tempory Table Create
+        this.makeTable();
+
+        // 02. Tempory Data Insert
+        Collection<BasePriceArlMstType> basePriceArlMasters = context.getInputData().getBasePriceArlMst();
+        this.createTempData(basePriceArlMasters);
+
+        // 03. execute stored-procedure by cmd parameter
+        String cmdString = context.getInputData().getCmd().toLowerCase();
+
+        switch (cmdString) {
+            case "insert" :
+                System.out.println("insert");
+                break;
+            case "upsert" :
+                System.out.println("upsert");
+                break;
+            case "delete" :
+                System.out.println("delete");
+                break;
+            default :
+                String msg = super.getLanguageCode(context).equals("KO") ? "처리할 수 없는 요청입니다.\n[insert], [upsert], [delete]  명령어만 사용할 수 있습니다."
+                                                                         : "This request cannot be processed.\nOnly commands [insert], [upsert], and [delete] can be used.";
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
+        }
+
+        // 04. Tempory Table Drop
+        this.destoryTable();
+
+        // return value regist
+        OutputDataType v_result = OutputDataType.create();
+
+        v_result.setReturnCode("200");
+        v_result.setReturnMsg("Success!");
+        v_result.setReturnRs(context.getInputData().getBasePriceArlMst());
+
+        context.setResult(v_result);
+        context.setCompleted();
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    private void makeTable() {
+        log.info("## makeTable Method Started....");
+
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함  
+        // 1. BasePriceArlMstType 관련 테이블    
+        StringBuffer v_sql_createTable_BasePriceArlMaster = new StringBuffer();
+        v_sql_createTable_BasePriceArlMaster.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MASTER (");
+        v_sql_createTable_BasePriceArlMaster.append("  TENANT_ID                NVARCHAR(5),");
+        v_sql_createTable_BasePriceArlMaster.append("  APPROVAL_NUMBER          NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlMaster.append("  CHAIN_CODE               NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlMaster.append("  APPROVAL_TYPE_CODE       NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlMaster.append("  APPROVAL_TITLE           NVARCHAR(300),");
+        v_sql_createTable_BasePriceArlMaster.append("  APPROVAL_CONTENTS        NCLOB,");
+        v_sql_createTable_BasePriceArlMaster.append("  APPROVE_STATUS_CODE      NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlMaster.append("  REQUESTOR_EMPNO          NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlMaster.append("  REQUEST_DATE             NVARCHAR(8),");
+        v_sql_createTable_BasePriceArlMaster.append("  ATTCH_GROUP_NUMBER       NVARCHAR(100),");
+        v_sql_createTable_BasePriceArlMaster.append("  LOCAL_CREATE_DTM         SECONDDATE,");
+        v_sql_createTable_BasePriceArlMaster.append("  LOCAL_UPDATE_DTM         SECONDDATE,");
+        v_sql_createTable_BasePriceArlMaster.append("  CREATE_USER_ID           NVARCHAR(255),");
+        v_sql_createTable_BasePriceArlMaster.append("  UPDATE_USER_ID           NVARCHAR(255)");
+        v_sql_createTable_BasePriceArlMaster.append(")");
+        jdbc.execute(v_sql_createTable_BasePriceArlMaster.toString());
+
+        // 2. BasePriceArlApproverType 관련 테이블    
+        StringBuffer v_sql_createTable_BasePriceArlApprover = new StringBuffer();
+        v_sql_createTable_BasePriceArlApprover.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_APPROVER (");
+        v_sql_createTable_BasePriceArlApprover.append("  TENANT_ID              NVARCHAR(5),");
+        v_sql_createTable_BasePriceArlApprover.append("  APPROVAL_NUMBER        NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlApprover.append("  APPROVE_SEQUENCE       NVARCHAR(10),");
+        v_sql_createTable_BasePriceArlApprover.append("  APPROVER_EMPNO         NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlApprover.append("  APPROVER_TYPE_CODE     NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlApprover.append("  APPROVE_STATUS_CODE    NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlApprover.append("  LOCAL_CREATE_DTM       SECONDDATE,");
+        v_sql_createTable_BasePriceArlApprover.append("  LOCAL_UPDATE_DTM       SECONDDATE,");
+        v_sql_createTable_BasePriceArlApprover.append("  CREATE_USER_ID         NVARCHAR(255),");
+        v_sql_createTable_BasePriceArlApprover.append("  UPDATE_USER_ID         NVARCHAR(255)");
+        v_sql_createTable_BasePriceArlApprover.append(")");
+        jdbc.execute(v_sql_createTable_BasePriceArlApprover.toString());
+
+        // 3. BasePriceArlRefererType 관련 테이블    
+        StringBuffer v_sql_createTable_BasePriceArlReferer = new StringBuffer();
+        v_sql_createTable_BasePriceArlReferer.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_REFERER (");
+        v_sql_createTable_BasePriceArlReferer.append("  TENANT_ID               NVARCHAR(5),");
+        v_sql_createTable_BasePriceArlReferer.append("  APPROVAL_NUMBER         NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlReferer.append("  REFERER_EMPNO           NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlReferer.append("  LOCAL_CREATE_DTM        SECONDDATE,");
+        v_sql_createTable_BasePriceArlReferer.append("  LOCAL_UPDATE_DTM        SECONDDATE,");
+        v_sql_createTable_BasePriceArlReferer.append("  CREATE_USER_ID          NVARCHAR(255),");
+        v_sql_createTable_BasePriceArlReferer.append("  UPDATE_USER_ID          NVARCHAR(255)");
+        v_sql_createTable_BasePriceArlReferer.append(")");
+        jdbc.execute(v_sql_createTable_BasePriceArlReferer.toString());
+
+        // 4. BasePriceArlDtlType 관련 테이블    
+        StringBuffer v_sql_createTable_BasePriceArlDetail = new StringBuffer();
+        v_sql_createTable_BasePriceArlDetail.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_DETAIL (");
+        v_sql_createTable_BasePriceArlDetail.append("  TENANT_ID               NVARCHAR(5),");
+        v_sql_createTable_BasePriceArlDetail.append("  APPROVAL_NUMBER         NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlDetail.append("  ITEM_SEQUENCE           DECIMAL(34),");
+        v_sql_createTable_BasePriceArlDetail.append("  COMPANY_CODE            NVARCHAR(10),");
+        v_sql_createTable_BasePriceArlDetail.append("  ORG_TYPE_CODE           NVARCHAR(2),");
+        v_sql_createTable_BasePriceArlDetail.append("  ORG_CODE                NVARCHAR(10),");
+        v_sql_createTable_BasePriceArlDetail.append("  AU_CODE                 NVARCHAR(10),");
+        v_sql_createTable_BasePriceArlDetail.append("  MATERIAL_CODE           NVARCHAR(40),");
+        v_sql_createTable_BasePriceArlDetail.append("  SUPPLIER_CODE           NVARCHAR(10),");
+        v_sql_createTable_BasePriceArlDetail.append("  BASE_DATE               DATE,");
+        v_sql_createTable_BasePriceArlDetail.append("  BASE_PRICE_GROUND_CODE  NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlDetail.append("  LOCAL_CREATE_DTM        SECONDDATE,");
+        v_sql_createTable_BasePriceArlDetail.append("  LOCAL_UPDATE_DTM        SECONDDATE,");
+        v_sql_createTable_BasePriceArlDetail.append("  CREATE_USER_ID          NVARCHAR(255),");
+        v_sql_createTable_BasePriceArlDetail.append("  UPDATE_USER_ID          NVARCHAR(255)");
+        v_sql_createTable_BasePriceArlDetail.append(")");
+        jdbc.execute(v_sql_createTable_BasePriceArlDetail.toString());
+
+        // 5. BasePriceArlPriceType 관련 테이블    
+        StringBuffer v_sql_createTable_BasePriceArlPrice = new StringBuffer();
+        v_sql_createTable_BasePriceArlPrice.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_PRICE (");
+        v_sql_createTable_BasePriceArlPrice.append("  TENANT_ID                         NVARCHAR(5),");
+        v_sql_createTable_BasePriceArlPrice.append("  APPROVAL_NUMBER                   NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlPrice.append("  ITEM_SEQUENCE                     DECIMAL(34),");
+        v_sql_createTable_BasePriceArlPrice.append("  MARKET_CODE                       NVARCHAR(30),");
+        v_sql_createTable_BasePriceArlPrice.append("  NEW_BASE_PRICE                    DECIMAL(19,4),");
+        v_sql_createTable_BasePriceArlPrice.append("  NEW_BASE_PRICE_CURRENCY_CODE      NVARCHAR(3),");
+        v_sql_createTable_BasePriceArlPrice.append("  CURRENT_BASE_PRICE                DECIMAL(19,4),");
+        v_sql_createTable_BasePriceArlPrice.append("  CURRENT_BASE_PRICE_CURRENCY_CODE  NVARCHAR(3),");
+        v_sql_createTable_BasePriceArlPrice.append("  FIRST_PURCHASING_NET_PRICE        DECIMAL(19,4),");
+        v_sql_createTable_BasePriceArlPrice.append("  FIRST_PUR_NETPRICE_CURR_CD        NVARCHAR(3),");
+        v_sql_createTable_BasePriceArlPrice.append("  FIRST_PUR_NETPRICE_STR_DT         DATE,");
+        v_sql_createTable_BasePriceArlPrice.append("  LOCAL_CREATE_DTM                  SECONDDATE,");
+        v_sql_createTable_BasePriceArlPrice.append("  LOCAL_UPDATE_DTM                  SECONDDATE,");
+        v_sql_createTable_BasePriceArlPrice.append("  CREATE_USER_ID                    NVARCHAR(255),");
+        v_sql_createTable_BasePriceArlPrice.append("  UPDATE_USER_ID                    NVARCHAR(255)");
+        v_sql_createTable_BasePriceArlPrice.append(")");
+        jdbc.execute(v_sql_createTable_BasePriceArlPrice.toString());
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    private void createTempData(Collection<BasePriceArlMstType> basePriceArlMasters) {
+        log.info("## createTempData Method Started....");
+
+        String v_sql_insert_BasePriceArlMaster   = "INSERT INTO #LOCAL_TEMP_MASTER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insert_BasePriceArlApprover = "INSERT INTO #LOCAL_TEMP_APPROVER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insert_BasePriceArlReferer  = "INSERT INTO #LOCAL_TEMP_REFERER VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insert_BasePriceArlDetail   = "INSERT INTO #LOCAL_TEMP_DETAIL VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insert_BasePriceArlPrice    = "INSERT INTO #LOCAL_TEMP_PRICE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        List<Object[]> v_batchInsert_BasePriceArlMaster   = new ArrayList<Object[]>();
+        List<Object[]> v_batchInsert_BasePriceArlApprover = new ArrayList<Object[]>();
+        List<Object[]> v_batchInsert_BasePriceArlReferer  = new ArrayList<Object[]>();
+        List<Object[]> v_batchInsert_BasePriceArlDetail   = new ArrayList<Object[]>();
+        List<Object[]> v_batchInsert_BasePriceArlPrice    = new ArrayList<Object[]>();
+
+        // Creating a temporary dataset : #LOCAL_TEMP_MASTER
+        for (BasePriceArlMstType basePriceArlMaster : basePriceArlMasters) {
+            // System.out.println("# tenant_id : " + basePriceArlMaster.getTenantId()); // Loop Data Check
+
+            Object[] objMaster = new Object[] {
+                basePriceArlMaster.get("tenant_id"),
+                basePriceArlMaster.get("approval_number"),
+                basePriceArlMaster.get("chain_code"),
+                basePriceArlMaster.get("approval_type_code"),
+                basePriceArlMaster.get("approval_title"),
+                basePriceArlMaster.get("approval_contents"),
+                basePriceArlMaster.get("approve_status_code"),
+                basePriceArlMaster.get("requestor_empno"),
+                basePriceArlMaster.get("request_date"),
+                basePriceArlMaster.get("attch_group_number"),
+                basePriceArlMaster.get("local_create_dtm"),
+                basePriceArlMaster.get("local_update_dtm"),
+                basePriceArlMaster.get("create_user_id"),
+                basePriceArlMaster.get("update_user_id")
+            };
+            v_batchInsert_BasePriceArlMaster.add(objMaster);
+
+            /** 
+             * BasePriceArlApproverType
+            */
+            if (basePriceArlMaster.getApprovers() != null) {
+                Collection<BasePriceArlApproverType> basePriceArlApprovers = basePriceArlMaster.getApprovers();
+
+                // Creating a temporary dataset : #LOCAL_TEMP_APPROVER
+                for (BasePriceArlApproverType basePriceArlApprover : basePriceArlApprovers) {
+                    // System.out.println("\t# approver_empno : " + basePriceArlApprover.getApproverEmpno()); // Loop Data Check
+
+                    Object[] objApprover = new Object[] {
+                        basePriceArlApprover.get("tenant_id"),
+                        basePriceArlApprover.get("approval_number"),
+                        basePriceArlApprover.get("approve_sequence"),
+                        basePriceArlApprover.get("approver_empno"),
+                        basePriceArlApprover.get("approver_type_code"),
+                        basePriceArlApprover.get("approve_status_code"),
+                        basePriceArlApprover.get("local_create_dtm"),
+                        basePriceArlApprover.get("local_update_dtm"),
+                        basePriceArlApprover.get("create_user_id"),
+                        basePriceArlApprover.get("update_user_id")
+                    };
+                    v_batchInsert_BasePriceArlApprover.add(objApprover);
+                }
+            }
+
+            /** 
+             * BasePriceArlRefererType
+            */
+            if (basePriceArlMaster.getReferers() != null) {
+                Collection<BasePriceArlRefererType> basePriceArlReferers = basePriceArlMaster.getReferers();
+
+                // Creating a temporary dataset : #LOCAL_TEMP_REFERER
+                for (BasePriceArlRefererType basePriceArlReferer : basePriceArlReferers) {
+                    // System.out.println("\t# referer_empno : " + basePriceArlReferer.getRefererEmpno()); // Loop Data Check
+
+                    Object[] objReferer = new Object[] {
+                        basePriceArlReferer.get("tenant_id"),
+                        basePriceArlReferer.get("approval_number"),
+                        basePriceArlReferer.get("referer_empno"),
+                        basePriceArlReferer.get("local_create_dtm"),
+                        basePriceArlReferer.get("local_update_dtm"),
+                        basePriceArlReferer.get("create_user_id"),
+                        basePriceArlReferer.get("update_user_id")
+                    };
+                    v_batchInsert_BasePriceArlReferer.add(objReferer);
+                }
+            }
+
+            /** 
+             * BasePriceArlDetailType
+            */
+            if (basePriceArlMaster.getDetails() != null) {
+                Collection<BasePriceArlDtlType> basePriceArlDetails = basePriceArlMaster.getDetails();
+
+                // Creating a temporary dataset : #LOCAL_TEMP_DETAIL
+                for (BasePriceArlDtlType basePriceArlDetail : basePriceArlDetails) {
+                    // System.out.println("\t# item_sequence : " + basePriceArlDetail.getItemSequence()); // Loop Data Check
+
+                    Object[] objDetail = new Object[] {
+                        basePriceArlDetail.get("tenant_id"),
+                        basePriceArlDetail.get("approval_number"),
+                        basePriceArlDetail.get("item_sequence"),
+                        basePriceArlDetail.get("company_code"),
+                        basePriceArlDetail.get("org_type_code"),
+                        basePriceArlDetail.get("org_code"),
+                        basePriceArlDetail.get("au_code"),
+                        basePriceArlDetail.get("material_code"),
+                        basePriceArlDetail.get("supplier_code"),
+                        basePriceArlDetail.get("base_date"),
+                        basePriceArlDetail.get("base_price_ground_code"),
+                        basePriceArlDetail.get("local_create_dtm"),
+                        basePriceArlDetail.get("local_update_dtm"),
+                        basePriceArlDetail.get("create_user_id"),
+                        basePriceArlDetail.get("update_user_id")
+                    };
+                    v_batchInsert_BasePriceArlDetail.add(objDetail);
+
+                    /** 
+                     * BasePriceArlPriceType
+                    */
+                    if (basePriceArlDetail.getPrices() != null) {
+                        Collection<BasePriceArlPriceType> basePriceArlPrices = basePriceArlDetail.getPrices();
+
+                        // Creating a temporary dataset : #LOCAL_TEMP_PRICE
+                        for (BasePriceArlPriceType basePriceArlPrice : basePriceArlPrices) {
+                            // System.out.println("\t\t# market_code : " + basePriceArlPrice.getMarketCode()); // Loop Data Check
+
+                            Object[] objPrice = new Object[] {
+                                basePriceArlPrice.get("tenant_id"),
+                                basePriceArlPrice.get("approval_number"),
+                                basePriceArlPrice.get("item_sequence"),
+                                basePriceArlPrice.get("company_code"),
+                                basePriceArlPrice.get("org_type_code"),
+                                basePriceArlPrice.get("org_code"),
+                                basePriceArlPrice.get("au_code"),
+                                basePriceArlPrice.get("material_code"),
+                                basePriceArlPrice.get("supplier_code"),
+                                basePriceArlPrice.get("base_date"),
+                                basePriceArlPrice.get("base_price_ground_code"),
+                                basePriceArlPrice.get("local_create_dtm"),
+                                basePriceArlPrice.get("local_update_dtm"),
+                                basePriceArlPrice.get("create_user_id"),
+                                basePriceArlPrice.get("update_user_id")
+                            };
+                            v_batchInsert_BasePriceArlPrice.add(objPrice);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * SQL batch execution
+        */
+
+        // 01. #LOCAL_TEMP_MASTER
+        int[] returnCntMaster = jdbc.batchUpdate(v_sql_insert_BasePriceArlMaster, v_batchInsert_BasePriceArlMaster);
+        // System.out.println("# [#LOCAL_TEMP_MASTER] Insertion Count : " + this.getIntArraySum(returnCntMaster) + " / " + Arrays.toString(returnCntMaster));
+
+        // 02. #LOCAL_TEMP_APPROVER
+        int[] returnCntApprover = jdbc.batchUpdate(v_sql_insert_BasePriceArlApprover, v_batchInsert_BasePriceArlApprover);
+        // System.out.println("# [#LOCAL_TEMP_APPROVER] Insertion Count : " + this.getIntArraySum(returnCntApprover) + " / " + Arrays.toString(returnCntApprover));
+
+        // 03. #LOCAL_TEMP_REFERER
+        int[] returnCntReferer = jdbc.batchUpdate(v_sql_insert_BasePriceArlReferer, v_batchInsert_BasePriceArlReferer);
+        // System.out.println("# [#LOCAL_TEMP_REFERER] Insertion Count : " + this.getIntArraySum(returnCntReferer) + " / " + Arrays.toString(returnCntReferer));
+
+        // 04. #LOCAL_TEMP_DETAIL
+        int[] returnCntDetail = jdbc.batchUpdate(v_sql_insert_BasePriceArlDetail, v_batchInsert_BasePriceArlDetail);
+        // System.out.println("# [#LOCAL_TEMP_DETAIL] Insertion Count : " + this.getIntArraySum(returnCntDetail) + " / " + Arrays.toString(returnCntDetail));
+
+        // 05. #LOCAL_TEMP_PRICE
+        int[] returnCntPrice = jdbc.batchUpdate(v_sql_insert_BasePriceArlPrice, v_batchInsert_BasePriceArlPrice);
+        // System.out.println("# [#LOCAL_TEMP_PRICE] Insertion Count : " + this.getIntArraySum(returnCntPrice) + " / " + Arrays.toString(returnCntPrice));
+        
+    }
+
+    private int getIntArraySum(int[] iCnt) {
+        int sum = 0;
+
+        if (iCnt == null || iCnt.length < 0) return sum;
+        
+        for (int i = 0; i < iCnt.length; i++) {
+            sum += iCnt[i];
+        }
+
+        return sum;
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    private void destoryTable() {
+        log.info("## destoryTable Method Started....");
+
+        // 1. BasePriceArlMstType 관련 테이블
+        String v_sql_dropTable_BasePriceArlMaster = "DROP TABLE #LOCAL_TEMP_MASTER";
+        jdbc.execute(v_sql_dropTable_BasePriceArlMaster);
+
+        // 2. BasePriceArlApproverType 관련 테이블
+        String v_sql_dropTable_BasePriceArlApprover = "DROP TABLE #LOCAL_TEMP_APPROVER";
+        jdbc.execute(v_sql_dropTable_BasePriceArlApprover);
+
+        // 3. BasePriceArlRefererType 관련 테이블
+        String v_sql_dropTable_BasePriceArlReferer = "DROP TABLE #LOCAL_TEMP_REFERER";
+        jdbc.execute(v_sql_dropTable_BasePriceArlReferer);
+
+        // 4. BasePriceArlDtlType 관련 테이블
+        String v_sql_dropTable_BasePriceArlDetail = "DROP TABLE #LOCAL_TEMP_DETAIL";
+        jdbc.execute(v_sql_dropTable_BasePriceArlDetail);
+
+        // 5. BasePriceArlPriceType 관련 테이블
+        String v_sql_dropTable_BasePriceArlPrice = "DROP TABLE #LOCAL_TEMP_PRICE";
+        jdbc.execute(v_sql_dropTable_BasePriceArlPrice);
+    }
+
+}
+

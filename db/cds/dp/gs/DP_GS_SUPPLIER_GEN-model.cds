@@ -23,8 +23,8 @@ using util from '../../cm/util/util-model';
 
 entity Gs_Supplier_Gen {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
-  key sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
-    sourcing_supplier_id : Integer64   @title: '소싱공급업체ID' ;	
+  key sourcing_supplier_id : Integer64  not null @title: '소싱공급업체ID' ;	
+    sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
     email_address : String(100)  not null @title: '이메일주소' ;	
     develop_date : Date  not null @title: '발굴일자' ;	
     developer_empno : String(30)  not null @title: '발굴자사번' ;	
@@ -35,7 +35,7 @@ entity Gs_Supplier_Gen {
     product_desc : String(300)   @title: '제품설명' ;	
     an_profile : String(100)   @title: 'Ariba Network 프로파일' ;	     	
     tax_id : String(16)   @title: '세금등록번호' ;	
-    sourcing_contents : LargeBinary   @title: '소싱내용' ;
+    sourcing_contents : LargeString   @title: '소싱내용' ;
     remark : String(3000)   @title: '비고' ;	
     attch_group_number : String(100)   @title: '첨부파일그룹번호' ;	
 }

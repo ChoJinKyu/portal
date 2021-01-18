@@ -354,6 +354,7 @@ sap.ui.define([
             
             if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
                 return;
             }
           

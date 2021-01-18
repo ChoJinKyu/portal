@@ -243,6 +243,21 @@ public class MdCategoryService implements EventHandler {
             CqnDelete delete = Delete.from(MdCategoryLng_.CDS_NAME).matching(filter);
             Result rslt = mdCategoryService.run(delete);
         }
+/*
+        List<MdCategory> v_results = new ArrayList<MdCategory>();
+        MdCategory v_result = MdCategory.create();
+        
+        v_result.setTenantId((String) param.get("tenant_id"));
+        v_result.setCompanyCode((String) param.get("company_code"));
+        v_result.setOrgTypeCode((String) param.get("org_type_code"));
+        v_result.setOrgCode((String) param.get("org_code"));
+        v_result.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+
+        v_results.add(v_result);
+
+        context.setResult(v_results);
+        context.setCompleted();
+*/
         log.info("###[LOG-11]=> ["+iCnt+"]");
     }
 
@@ -408,7 +423,23 @@ public class MdCategoryService implements EventHandler {
             mdCategoryService.run(delete);
 
         }
-		log.info("###[LOG-11]=> ["+iCnt+"]");
+/*        
+        List<MdCategoryItem> v_results = new ArrayList<MdCategoryItem>();
+        MdCategoryItem v_result = MdCategoryItem.create();
+        
+        v_result.setTenantId((String) param.get("tenant_id"));
+        v_result.setCompanyCode((String) param.get("company_code"));
+        v_result.setOrgTypeCode((String) param.get("org_type_code"));
+        v_result.setOrgCode((String) param.get("org_code"));
+        v_result.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+        v_result.setSpmdCharacterCode((String) param.get("spmd_character_code"));
+
+        v_results.add(v_result);
+
+        context.setResult(v_results);
+        context.setCompleted();
+*/
+        log.info("###[LOG-11]=> ["+iCnt+"]");
     }
 
     

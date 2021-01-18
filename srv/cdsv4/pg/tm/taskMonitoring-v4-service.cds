@@ -127,21 +127,25 @@ service TaskMonitoringV4Service {
 
     type UpsertOutType : {
         returncode    : String(2);
-        returnmessage : String(500);
+        returnmessage : String(5000);
     };
 
-    type DeleteInputType : {
+    type DeleteInputParameters : {
         tenant_id            : String(5);
         scenario_number      : Integer64;
     };
 
+    type DeleteInputType : {
+        sourcParameters : array of DeleteInputParameters;
+    };
+
     type DeleteOutType : {
         returncode    : String(2);
-        returnmessage : String(500);
+        returnmessage : String(5000);
     };
 
     action upsertTaskMonitoringMasterProc(InputData : UpsertInputType) returns array of UpsertOutType;
 
-    action deleteTaskMonitoringMasterProc(InputData : DeleteInputType) returns array of DeleteOutType;
+    action deleteTaskMonitoringMasterProc(InputData : array of DeleteInputType) returns array of DeleteOutType;
 
 }

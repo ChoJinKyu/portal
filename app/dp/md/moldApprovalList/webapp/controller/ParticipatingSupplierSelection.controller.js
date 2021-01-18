@@ -438,9 +438,11 @@ sap.ui.define([
                 MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
                 return;
             }
-            if(!(appNum === undefined) ){
+            if(status == "AR"){
                 if(bModel.getData().ParticipatingSupplier == undefined || bModel.getData().ParticipatingSupplier.length == 0){
                     MessageToast.show("item 을 하나 이상 추가하세요.");
+                    // 벨리데이션 발생시 결제상태를 임시저장으로 원복시킴
+                    this.getModel("appMaster").setProperty("/approve_status_code", "DR");
                     return;
                 }
             }

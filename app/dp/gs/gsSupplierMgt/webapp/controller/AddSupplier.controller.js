@@ -65,7 +65,10 @@ sap.ui.define([
 			// between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
-					delay : 0
+                    delay : 0,
+                    screen: "",
+                    editMode: true,
+                    showMode: true
 				});
 			this.getRouter().getRoute("suppliePage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "addSupplierView");
@@ -257,15 +260,13 @@ sap.ui.define([
                 oDetailsModel2 = this.getModel("SupplierSal"),
                 email = this.getView().byId("eidtEmail").getValue(),
                 that = this;
-
-            if (this._sTenantId !== "new"){
-                if(!oMasterModel.isChanged() && !oDetailsModel.isChanged() && !oDetailsModel2.isChanged()) {
+            
+            if(!oMasterModel.isChanged() && !oDetailsModel.isChanged() && !oDetailsModel2.isChanged()) {
                     MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                     return;
-                }
             }
                 
-            if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if(this.validator.validate(this.byId("pageSubSection1")) !== true) return;
             if(this.validator.validate(this.byId("finTable")) !== true) return;
             if(this.validator.validate(this.byId("salTable")) !== true) return;
 
@@ -294,7 +295,7 @@ sap.ui.define([
 					};
 				}
             });
-            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("pageSubSection1"));
             this.validator.clearValueState(this.byId("finTable"));
             this.validator.clearValueState(this.byId("salTable"));
         },
@@ -303,7 +304,7 @@ sap.ui.define([
 
             var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
 
-            if(!reg_email.test(str)) {                            
+            if(!reg_email.test(str)) {
 
                 return false;         
 
@@ -315,11 +316,17 @@ sap.ui.define([
         },
 
         onLiveChange: function(oEvent){
-           var _oInput = oEvent.getSource();
+            var _oInput = oEvent.getSource();
             var val = _oInput.getValue();
-            val = val.replace(/[^\d]/g, '');
+                val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val);
-        },		
+        },
+
+        onInputChange: function(oEvent){
+            console.log(oEvent)
+            // if(this.isValNull(oEvent.mParameters.newValue))
+                
+        },
 		
 		/**
 		 * Event handler for cancel page editing
@@ -394,7 +401,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onRoutedThisPage: function(oEvent){
+		_onRoutedThisPage: function(oEvent){                 
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
@@ -480,8 +487,9 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
+            var oAddSupplierView = this.getView().getModel("addSupplierView");            
 			var FALSE = false;
-            this._showFormFragment('AddSupplier_Edit');
+            // this._showFormFragment('AddSupplier_Edit');
 			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
@@ -500,11 +508,13 @@ sap.ui.define([
             this.byId("salTable").setMode(sap.m.ListMode.MultiSelect);
             this._bindMidTable(this.oEditableTemplate, "Edit");
             this._bindMidTable2(this.oEditableTemplate2, "Edit");
+            oAddSupplierView.setProperty("/editMode", true);            
 		},
 
 		_toShowMode: function(){
+            var oAddSupplierView = this.getView().getModel("addSupplierView");
 			var TRUE = true;
-			this._showFormFragment('AddSupplier_Show');
+			// this._showFormFragment('AddSupplier_Show');
 			this.byId("suppliePage").setSelectedSection("pageSectionMain");
 			// this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
@@ -523,6 +533,8 @@ sap.ui.define([
             this.byId("salTable").setMode(sap.m.ListMode.None);
             this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
             this._bindMidTable2(this.oReadOnlyTemplate2, "Navigation");
+            oAddSupplierView.setProperty("/editMode", false);
+            
 		},
 
 		_initTableTemplates: function(){
@@ -737,7 +749,10 @@ sap.ui.define([
                             path: 'SupplierSal>sales_weight'                            
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        change: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)                        
                     })
 				]
             });
@@ -761,28 +776,28 @@ sap.ui.define([
 			}).setKeyboardMode(sKeyboardMode);
 		},
 
-		_oFragments: {},
-		_showFormFragment : function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function(oFragment){
-				oPageSubSection.removeAllBlocks();
-				oPageSubSection.addBlock(oFragment);
-			})
-        },
-        _loadFragment: function (sFragmentName, oHandler) {
-			if(!this._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "dp.gs.gsSupplierMgt.view." + sFragmentName,
-					controller: this
-				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this._oFragments[sFragmentName]);
-			}
-        },
+		// _oFragments: {},
+		// _showFormFragment : function (sFragmentName) {
+        //     var oPageSubSection = this.byId("pageSubSection1");
+        //     this._loadFragment(sFragmentName, function(oFragment){
+		// 		oPageSubSection.removeAllBlocks();
+		// 		oPageSubSection.addBlock(oFragment);
+		// 	})
+        // },
+        // _loadFragment: function (sFragmentName, oHandler) {
+		// 	if(!this._oFragments[sFragmentName]){
+		// 		Fragment.load({
+		// 			id: this.getView().getId(),
+		// 			name: "dp.gs.gsSupplierMgt.view." + sFragmentName,
+		// 			controller: this
+		// 		}).then(function(oFragment){
+		// 			this._oFragments[sFragmentName] = oFragment;
+		// 			if(oHandler) oHandler(oFragment);
+		// 		}.bind(this));
+		// 	}else{
+		// 		if(oHandler) oHandler(this._oFragments[sFragmentName]);
+		// 	}
+        // },
 
         _doInitTablePerso: function(){
 			// init and activate controller

@@ -235,7 +235,7 @@ sap.ui.define([
 		 * @public
 		 */
         onBackToList: function (){
-            if(!appThis == undefined){
+            if(appThis){
                 appThis.byId("pageSearchButton").firePress();
             }
         },
@@ -963,7 +963,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-            
+            console.log(aSearchFilters);
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);

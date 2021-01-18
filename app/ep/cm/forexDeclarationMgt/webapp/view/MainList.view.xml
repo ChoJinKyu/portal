@@ -38,7 +38,6 @@
                     <form:content>
                         <VBox>
                             <Label text="PO번호:" labelFor="searchPoNumber"></Label>
-                            <!-- group by 추가(일단 view에서 추가)-->
                             <MultiInput width="100%"
                                     id="searchPoNumber"
                                     suggestionItems="{
@@ -61,7 +60,6 @@
                             </VBox>
                         <VBox>
                             <Label text="담당부서 :" labelFor="searchPurchasingDepartmentName"></Label>
-                            <!-- <Input id="searchPurchasingDepartmentName" placeholder=""></Input> -->
                             <lib-m:CodePicker id="searchPurchasingDepartmentName"
                                 placeholder="Enter a department name"
                                 keyField="department_id"
@@ -83,7 +81,6 @@
                         </VBox>
                         <VBox>
                             <Label text="담당자 :" labelFor="searchBuyerName"></Label>
-                            <!-- <Input id="searchBuyerName" placeholder=""></Input> -->
                             <lib-m:CodePicker id="searchBuyerName"
                                 placeholder="Enter a Employee name"
                                 keyField="employee_number"
@@ -171,7 +168,7 @@
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                 <Title text="외화신고대상 목록 : {= ${list>/ForexDeclarationView}.length > 0 ? '(' + ${list>/ForexDeclarationView}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
-                <Button text="Summary Chart" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
+                <Button text="Summary Chart" id="RfqButton" press=".onSummaryChartButtonPress" type="Transparent"/>
                 <ToolbarSeparator/>
                 <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                     <layoutData>
@@ -183,7 +180,7 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <t:Column id="mainPoNumber" width="6rem">
+                <t:Column id="mainPoNumber" width="6rem" >
                 <Label text="PO번호" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_number}"/>

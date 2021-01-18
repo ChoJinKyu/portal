@@ -1,6 +1,9 @@
-using {dp as arlMaster} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_MST-model';
-using {dp as arlDetail} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
-using {dp as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
+using {cm.Approval_Mst as arlMasterSuper} from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
+using {cm.Approver as arlApprover} from '../../../../../db/cds/cm/CM_APPROVER-model';
+using {cm.Referer as arlReferer} from '../../../../../db/cds/cm/CM_REFERER-model';
+using {dp.VI_Base_Price_Arl_Mst as arlMaster} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_MST-model';
+using {dp.VI_Base_Price_Arl_Dtl as arlDetail} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
+using {dp.VI_Base_Price_Arl_Price as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
@@ -16,9 +19,34 @@ namespace dp;
 
 @path : '/dp.BasePriceArlService'
 service BasePriceArlService {
-    entity Base_Price_Arl_Master as projection on arlMaster.VI_Base_Price_Arl_Mst;
-    entity Base_Price_Arl_Detail as projection on arlDetail.VI_Base_Price_Arl_Dtl;
-    entity Base_Price_Arl_Price  as projection on arlPrice.VI_Base_Price_Arl_Price;
+    // entity Base_Price_Arl_Main as projection on arlMasterSuper;
+
+    entity Base_Price_Arl_Main as select from arlMasterSuper { * } where approval_type_code like 'VI%';
+
+    // entity Base_Price_Arl_Main as 
+    //     select from arlMasterSuper sup inner join arlMaster sub on sup.tenant_id = sub.tenant_id and sup.approval_number = sub.approval_number
+    //     {
+    //         key sub.tenant_id,
+    //         key sub.approval_number,
+    //             sup.legacy_approval_number,
+    //             sup.company_code,
+    //             sup.org_type_code,
+    //             sup.org_code,
+    //             sup.chain_code,
+    //             sup.approval_type_code,
+    //             sup.approval_title,
+    //             sup.approval_contents,
+    //             sup.approve_status_code,
+    //             sup.requestor_empno,
+    //             sup.request_date,
+    //             sup.attch_group_number
+    //     };
+
+    entity Base_Price_Arl_Master as projection on arlMaster;
+    entity Base_Price_Arl_Approver as projection on arlApprover;
+    entity Base_Price_Arl_Referer as projection on arlReferer;
+    entity Base_Price_Arl_Detail as projection on arlDetail;
+    entity Base_Price_Arl_Price  as projection on arlPrice;
 
     @readonly
     entity Base_Price_Arl_Config as

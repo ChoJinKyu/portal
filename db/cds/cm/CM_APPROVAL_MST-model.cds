@@ -1,6 +1,9 @@
 namespace cm;
 
 using util from './util/util-model';
+using {cm.Approver as arlApprover} from './CM_APPROVER-model';
+using {cm.Referer as arlReferer} from './CM_REFERER-model';
+using {cm.Code_Dtl as code} from './CM_CODE_DTL-model';
 
 entity Approval_Mst {
     key tenant_id              : String(5) not null   @title : '테넌트ID';
@@ -17,6 +20,18 @@ entity Approval_Mst {
         requestor_empno        : String(30)           @title : '요청자사번';
         request_date           : String(8)            @title : '요청일자';
         attch_group_number     : String(100)          @title : '첨부파일그룹번호';
+
+        approvers              : Composition of many arlApprover
+                                     on  approvers.tenant_id       = tenant_id
+                                     and approvers.approval_number = approval_number;
+        referers               : Composition of many arlReferer
+                                     on  referers.tenant_id       = tenant_id
+                                     and referers.approval_number = approval_number;
+                                     
+        approve_status_code_fk : Association to code
+                                     on  approve_status_code_fk.tenant_id  = tenant_id
+                                     and approve_status_code_fk.group_code = 'CM_APPROVE_STATUS'
+                                     and approve_status_code_fk.code       = approve_status_code;
 }
 
 extend Approval_Mst with util.Managed;

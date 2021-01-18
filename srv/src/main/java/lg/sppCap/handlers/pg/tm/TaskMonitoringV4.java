@@ -527,7 +527,7 @@ public class TaskMonitoringV4 implements EventHandler {
 		// append: end
 		v_sql_callProc.append(")");
 /*********************************************************************************************************************/
-		DeleteInputType v_inParmeters = context.getInputData();
+        Collection<DeleteInputType> v_inParmeters = context.getInputData();
 		Collection<DeleteOutType> v_result = new ArrayList<>();
 /*********************************************************************************************************************/
         // Commit Option
@@ -539,11 +539,13 @@ public class TaskMonitoringV4 implements EventHandler {
 		// insert local temp table
         List<Object[]> batch_delete = new ArrayList<Object[]>();
         if(!v_inParmeters.isEmpty() && v_inParmeters.size() > 0){
-            Object[] values = new Object[] {
-                v_inParmeters.get("tenant_id"),
-                v_inParmeters.get("scenario_number")
-            };
-            batch_delete.add(values);
+            for(DeleteInputType v_inRow : v_inParmeters){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("scenario_number")};
+
+                batch_delete.add(values);
+                }
         }
 
         int[] updateCounts_delete = jdbc.batchUpdate(v_sql_inserTable.toString(), batch_delete);

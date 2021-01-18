@@ -273,13 +273,21 @@ sap.ui.define([
                 //2020/12/19 - 2020/12/21
                 if(filter_create_date.length > 0){
                     console.log(filter_create_date);
-                    var a = filter_create_date.replaceAll(" ", "");
-                    var fromDate = new Date( a.substring(0, 10) );
-                    var toDate = new Date( a.substring(11, 22) );
-                    console.log(toDate);
+                    // var a = filter_create_date.replaceAll(" ", "");
+                    // var fromDate = new Date( a.substring(0, 10) );
+                    // var toDate = new Date( a.substring(11, 22) );
+                    // console.log(toDate);
 
-                    var inputDate = toDate.getDate();
-                    toDate.setDate(inputDate + 1);
+                    // var inputDate = toDate.getDate();
+                    // toDate.setDate(inputDate + 1);
+
+                    this.byId("smartFilterBar").getControlByKey("system_create_dtm").getFrom().setHours("09","00","00","00");  
+                    this.byId("smartFilterBar").getControlByKey("system_create_dtm").getTo().setHours("09","00","00","00");  
+
+                    var fromDate = this.byId("smartFilterBar").getControlByKey("system_create_dtm").getFrom();  
+                    var toDate = this.byId("smartFilterBar").getControlByKey("system_create_dtm").getTo();
+
+                    console.log("fromData ~ toDate", fromDate, " ~ ", toDate);
 
                     oFilters.push(new Filter("system_create_dtm", FilterOperator.BT, fromDate, toDate));
                 }

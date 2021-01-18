@@ -893,6 +893,19 @@ sap.ui.define([
                 filters: aTableSearchState,
                 success: function (oData) {
                     this.validator.clearValueState(this.byId("moldMstTable"));
+                    var oRows = this.byId("moldMstTable").getRows();
+                    oRows.forEach(function (oRow, idx) {
+                        var oCells = oRow.getCells();
+                        
+                        
+                        if(oData.results[idx].set_progress_status === 'DEV_REQ' || oData.results[idx].set_progress_status === 'DEV_RCV'){
+                            oCells.forEach(function (oCell, jdx) {
+                                if(jdx > 8 && jdx !== 15){
+                                    oCell.removeStyleClass("readonlyField");
+                                }
+                            });
+                        }
+                    });
                     oView.setBusy(false);
                 }.bind(this)
             });

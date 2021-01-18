@@ -19,14 +19,14 @@
 
         <form:content>
             <VBox>
-                <Label text="* 요청명" required="true"/>
+                <Label text="요청명" required="true" design="Bold" class="sapMLabelNoText"/>
                 <Input value="{master>/loi_request_title}" editable="true" required="true"/>
                 <layoutData>
                     <layout:GridData span="L12 M12 S12" />
                 </layoutData>
             </VBox>
             <VBox>
-                <Label text="* 목적" required="true"/>
+                <Label text="목적" required="true" design="Bold" class="sapMLabelNoText"/>
                 <TextArea value="{master>/loi_publish_purpose_desc}" rows="2" width="100%"  editable="true" required="true"/>
                 <layoutData>
                     <layout:GridData span="L12 M12 S12" />
@@ -48,7 +48,8 @@
                     <layoutData>
                         <layout:GridData span="XL12 L12 M12 S12" />
                     </layoutData>
-                </VBox>      
+                </VBox>     
+                 
         </form:content>                            
 	</form:SimpleForm>
 </core:FragmentDefinition>

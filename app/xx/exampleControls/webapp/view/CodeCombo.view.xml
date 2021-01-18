@@ -434,6 +434,26 @@
                         <layout:GridData span="XL2 L3 M5 S10" />
                     </layoutData>
                 </VBox>
+                <VBox>
+                    <Label text="MaterialMaster (dp.util.control.ui.MaterialMasterDialog): " labelFor="searchMultiMaterialMasterFromDialog"></Label>
+                    <MultiInput id="searchMultiMaterialMasterFromDialog"
+                        placeholder="Choose codes from the ValueHelp"
+                        showValueHelp="true" valueHelpRequest=".onMaterialMasterMultiDialogPress">
+                    </MultiInput>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M5 S10" />
+                    </layoutData>
+                </VBox>
+                <VBox>
+                    <Label text="MaterialOrg (dp.util.control.ui.MaterialOrgDialog): " labelFor="searchMultiMaterialOrgFromDialog"></Label>
+                    <MultiInput id="searchMultiMaterialOrgFromDialog"
+                        placeholder="Choose codes from the ValueHelp"
+                        showValueHelp="true" valueHelpRequest=".onMaterialOrgMultiDialogPress">
+                    </MultiInput>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M5 S10" />
+                    </layoutData>
+                </VBox>
             </form:content>
             </form:SimpleForm>
         </content>

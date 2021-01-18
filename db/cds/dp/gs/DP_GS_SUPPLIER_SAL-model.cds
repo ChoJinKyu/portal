@@ -15,6 +15,8 @@
   7. entity description : Global Sourcing Supplier Sales Info
   8. history
   -. 2020.12.21 : 최미희 최초작성
+  -. 2021.01.16 : 최미희 컬럼추가 및 Key 변경
+        SOURCING_SUPPLIER_ID
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
@@ -22,13 +24,13 @@ using { dp as General } from './DP_GS_SUPPLIER_GEN-model';
 
 entity Gs_Supplier_Sal {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
-  key sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
+  key sourcing_supplier_id : Integer64  not null @title: '소싱공급업체ID' ;
 
         parent: Association to General.Gs_Supplier_Gen
         on parent.tenant_id = tenant_id 
-        and parent.sourcing_supplier_nickname = sourcing_supplier_nickname
-        ;
+        and parent.sourcing_supplier_id = sourcing_supplier_id;
 
+      sourcing_supplier_nickname : String(100)  not null @title: '소싱공급업체별칭' ;	
   key txn_year : String(4)  not null @title: '거래년도' ;	
   key customer_english_name : String(240)  not null @title: '고객영문명' ;	
     customer_local_name : String(240)   @title: '고객로컬명' ;	
