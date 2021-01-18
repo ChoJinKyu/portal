@@ -379,17 +379,6 @@ sap.ui.define([
                 }
             }
 
-            var ref = this.getModel("referer");
-            this.getView().setModel(new ManagedModel(), "refererPreview");
-
-            var rArr = [];
-            if (ref.getData().Referers != undefined && ref.getData().Referers.length > 0) {
-                ref.getData().Referers.forEach(function (item) {
-                    rArr.push(item.referer_empno);
-                });
-            }
-            this.getModel("refererPreview").setProperty("/refArr", rArr);
-
             var oView = this.getView();
 
             if (!this._oDialogPrev) {
@@ -404,14 +393,16 @@ sap.ui.define([
             }
 
             this._oDialogPrev.then(function (oDialog) {
-                oDialog.open();
+                oDialog.open(); 
+                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens()); // ㅔpri
             });
 
         },
-        onPrvClosePress: function () {
+        onPrvClosePress: function () { 
+            var oView = this.getView();
             if (this._oDialogPrev) {
                 this._oDialogPrev.then(function (oDialog) {
-                    console.log(" oDialog.close >>> ", oDialog.close);
+                    oView.byId('referMulti').setTokens(oView.byId("referMultiPrev").getTokens());
                     oDialog.close();
                     oDialog.destroy();
                 });
