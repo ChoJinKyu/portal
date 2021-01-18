@@ -17,9 +17,10 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
+    "ext/cm/util/control/ui/EmployeeDialog"
     // @ts-ignore
 ], function (BaseController, History, MessageBox, MessageToast, Filter, FilterOperator, FilterType, Sorter, JSONModel, ColumnListItem,
-    Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel) {
+    Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel, EmployeeDialog) {
     "use strict";
 
 
@@ -44,7 +45,7 @@ sap.ui.define([
             this.oRouter = oOwnerComponent.getRouter();
             this.oRouter.getRoute("detail").attachPatternMatched(this._onDetailMatched, this);
 
-            //signal 테이블 edit/show 모드 설정
+            //테이블 edit/show 모드 설정
             this._initTableTemplates();
 
             //주기 text
@@ -53,10 +54,6 @@ sap.ui.define([
                 text: "{=${monitoring_cycle_name}.replaceAll(';', ', ')}",
             });
 
-            //담당자
-            this.managerText = new sap.m.Text({
-                text: "{=${monitoring_cycle_name}.replaceAll(';', ', ')}",
-            });
 
             //주기 multicombobox
             // @ts-ignore
@@ -74,7 +71,7 @@ sap.ui.define([
                 }
             });
 
-           
+
             // I18N 모델 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -87,9 +84,11 @@ sap.ui.define([
             var oView = this.getView();
             oView.getModel().refresh(true);
             this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
-                this.tenant_id = oEvent.getParameter("arguments")["tenant_id"];
-            this.company_code = oEvent.getParameter("arguments")["company_code"],
-                this.bizunit_code = oEvent.getParameter("arguments")["bizunit_code"];
+                this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
+                this.company_code = oEvent.getParameter("arguments")["company_code"],
+                this.bizunit_code = oEvent.getParameter("arguments")["bizunit_code"],
+                this.manager = oEvent.getParameter("arguments")["manager"],
+                this.manager_local_name = oEvent.getParameter("arguments")["manager_local_name"];
 
             //senario_number max view
             oView.getModel().read("/TaskMonitoringMaxScenarioNumberView", {
@@ -102,7 +101,6 @@ sap.ui.define([
             //필수입력항목 검사 결과 초기화
             this.validator.clearValueState(sap.ui.getCore().byId("simpleform_edit"));
 
-
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
                 this.getModel("DetailView").setProperty("/isCreate", true);
@@ -113,10 +111,28 @@ sap.ui.define([
             } else {
                 this.getModel("DetailView").setProperty("/isEditMode", false);
                 this.getModel("DetailView").setProperty("/isCreate", false);
-                var scenario_number = this.scenario_number.split('l');
-                this.bindPath = "/TaskMonitoringMasterView(scenario_number=" + this.scenario_number + ",tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',bizunit_code='" + this.bizunit_code + "')";
+                var scenario_number = this.scenario_number + "l";
+                this.bindPath = "/TaskMonitoringMasterView(scenario_number=" + scenario_number + ",tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',bizunit_code='" + this.bizunit_code + "')";
                 oView.bindElement(this.bindPath);
-                var detail_info_Path = "/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + ")";
+
+                //담당자 조회
+                var managerNames = this.manager_local_name.split(';');
+                var managerCodes = this.manager.split(';');
+                var oTokens = [];
+                if (managerNames[0] !== " ") {
+                    for (var i = 0; i < managerNames.length; i++) {
+                        var defToken = new sap.m.Token({
+                            key: managerCodes[i],
+                            text: managerNames[i]
+                        });
+                        oTokens.push(defToken);
+                    };
+                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oTokens);
+                } else {
+                    this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
+                }
+
+                var detail_info_Path = "/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + "l" + ")";
                 var monitoringVBox = this.byId("monitoringVBox");
                 var scenarioVBox = this.byId("scenarioVBox");
                 var systemVBox = this.byId("systemVBox");
@@ -126,7 +142,7 @@ sap.ui.define([
 
                 this._toShowMode();
 
-                oView.getModel().read("/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + ")", {
+                oView.getModel().read("/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + "l" + ")", {
                     success: function (oData) {
                         this.detailData = oData;
                         this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
@@ -146,20 +162,29 @@ sap.ui.define([
             }
 
         },
-        //remove
+
         removeRichTextEditorValue: function () {
-            this.byId("reMonitoringPurpose").setValue(null);
-            this.byId("reMonitoringScenario").setValue(null);
-            this.byId("reSourceSystemDetail").setValue(null);
-
-
+            this._defaultSetting("reMonitoringPurpose");
+            this._defaultSetting("reMonitoringScenario");
+            this._defaultSetting("reSourceSystemDetail");
+            this.byId("reMonitoringPurpose").setValue("");
+            this.byId("reMonitoringScenario").setValue("");
+            this.byId("reSourceSystemDetail").setValue("");
         },
 
         removeFormattedTextValue: function () {
             this.byId("PurposeFormattedText").setHtmlText("");
             this.byId("ScenarioDescFormattedText").setHtmlText("");
             this.byId("ReSourceSystemFormattedText").setHtmlText("");
+        },
 
+        _defaultSetting: function (Id) {
+            var fontId = this.byId(Id).getAggregation("_toolbarWrapper").getAggregation("_toolbar").getAggregation("content")[5].getId();
+            this.byId(Id).getAggregation("_toolbarWrapper").getAggregation("_toolbar").getAggregation("content")[5].setSelectedItemId(fontId + "Verdana");
+            var fontSizeId = this.byId(Id).getAggregation("_toolbarWrapper").getAggregation("_toolbar").getAggregation("content")[6].getId();
+            this.byId(Id).getAggregation("_toolbarWrapper").getAggregation("_toolbar").getAggregation("content")[6].setSelectedItemId(fontSizeId + "2");
+            this.byId(Id).getAggregation("_toolbarWrapper").getAggregation("_toolbar").getAggregation("content")[7].setIconColor("black");
+            // this.byId(Id).getAggregation("_toolbarWrapper").getAggregation("_toolbar").getAggregation("content")[8].setActiveIconColor("white");
 
         },
 
@@ -175,7 +200,7 @@ sap.ui.define([
         onSignalListAddRow: function (oEvent) {
             var obj = {
                 tenant_id: this.tenant_id,
-                scenario_number: this.scenario_number.split('l')[0],
+                scenario_number: this.scenario_number,
                 monitoring_indicator_id: "",
                 monitoring_indicator_sequence: "",
                 monitoring_ind_number_cd: "",
@@ -200,7 +225,7 @@ sap.ui.define([
             var lisItemForTable = this.oEditableTemplate.clone();
             lisItemForTable.setBindingContext(retContext);
             var signalTable = this.byId("signalList");
-            lisItemForTable.getAggregation("cells")[0].setText("C");
+            lisItemForTable.getAggregation("cells")[0].setIcon("sap-icon://add");
             signalTable.addItem(lisItemForTable);
         },
 
@@ -219,10 +244,10 @@ sap.ui.define([
                     if (sAction === MessageBox.Action.OK) {
                         var oItems = oTable.getSelectedItems();
                         for (var i = 0; i < oItems.length; i++) {
-                            if (oItems[i].getAggregation("cells")[0].getText() === "C") {
+                            if (oItems[i].getAggregation("cells")[0].getIcon() === "sap-icon://add") {
                                 oTable.removeItem(oItems[i]);
                             }
-                            oItems[i].getAggregation("cells")[0].setText("D");
+                            oItems[i].getAggregation("cells")[0].setIcon("sap-icon://decline");
                             oItems[i].bindProperty("selected", "false");
 
                         }
@@ -236,12 +261,12 @@ sap.ui.define([
 
         /**
          * view item 삭제
-         * @private
+ 
          */
         onDelete: function () {
             console.group("onDelete-");
             var that = this;
-            console.log(this.bindPath);
+
             var odata = this.getView().getModel().oData[this.bindPath.replace('/', '')];
             var oModel = this.getView().getModel();
             oModel.setDeferredGroups(["DeleteGroup"]);
@@ -255,13 +280,13 @@ sap.ui.define([
                         //TaskMonitoringMaster 마스터
                         var masterPath = "/TaskMonitoringMaster(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ")";
                         oModel.remove(masterPath, { groupId: "DeleteGroup" });
-                        console.log(masterPath);
+
                         //TaskMonitoringTypeCodeLanguage 구분
                         for (var i = 0; i < language_code.length; i++) {
                             var typePath = "/TaskMonitoringTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ",monitoring_type_code='" + odata.monitoring_type_code +
                                 "',language_code='" + language_code[i] + "')";
                             oModel.remove(typePath, { groupId: "DeleteGroup" });
-                            console.log(typePath);
+
                         }
                         //TaskMonitoringPurchasingTypeCodeLanguage 유형
                         var purchasing_types = odata.monitoring_purchasing_type_code.split(';');
@@ -270,28 +295,25 @@ sap.ui.define([
                                 var purchasingTypePath = "/TaskMonitoringPurchasingTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number +
                                     ",monitoring_purchasing_type_code='" + purchasing_types[i] + "',language_code='" + language_code[m] + "')"
                                 oModel.remove(purchasingTypePath, { groupId: "DeleteGroup" });
-                                console.log(purchasingTypePath);
+
                             }
                         }
                         //TaskMonitoringSenarioNumberLanguage 시나리오
                         for (i = 0; i < language_code.length; i++) {
                             var scenarioPath = "/TaskMonitoringSenarioNumberLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ",language_code='" + language_code[i] + "')";
                             oModel.remove(scenarioPath, { groupId: "DeleteGroup" });
-                            console.log(scenarioPath);
                         }
                         //TaskMonitoringCompanyCode 법인
                         var companyItems = odata.company_code.split(';');
                         companyItems.forEach(function (item) {
                             var companyPath = "/TaskMonitoringCompanyCode(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ",company_code='" + item + "')";
                             oModel.remove(companyPath, { groupId: "DeleteGroup" });
-                            console.log(companyPath);
                         });
                         //TaskMonitoringBizunitCode 사업본부
                         var bizunitItems = odata.bizunit_code.split(';');
                         bizunitItems.forEach(function (item) {
                             var bizunitPath = "/TaskMonitoringBizunitCode(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ",bizunit_code='" + item + "')";
                             oModel.remove(bizunitPath, { groupId: "DeleteGroup" });
-                            console.log(bizunitPath);
                         });
                         //TaskMonitoringOperationModeLanguage 운영방식
                         var operation_mode_code_arr = [];
@@ -312,7 +334,6 @@ sap.ui.define([
                                 for (m = 0; m < language_code.length; m++) {
                                     var operationPath = "/TaskMonitoringOperationModeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number +
                                         ",monitoring_operation_mode_code='" + operation_mode_code_arr[i] + "',language_code='" + language_code[m] + "')";
-                                    console.log(operationPath);
                                     oModel.remove(operationPath, { groupId: "DeleteGroup" });
                                 }
                             }
@@ -325,7 +346,6 @@ sap.ui.define([
                                 for (m = 0; m < language_code.length; m++) {
                                     var cyclePath = "/TaskMonitoringCycleCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number +
                                         ",monitoring_cycle_code='" + cycleItems[i] + "',language_code='" + language_code[m] + "')";
-                                    console.log(cyclePath);
                                     oModel.remove(cyclePath, { groupId: "DeleteGroup" });
                                 }
                             }
@@ -337,7 +357,6 @@ sap.ui.define([
                             var managerItems = odata.manager.split(';');
                             managerItems.forEach(function (manager) {
                                 var managerPath = "/TaskMonitoringManagerDetail(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ",monitoring_manager_empno='" + manager + "')";
-                                console.log(managerPath);
                                 oModel.remove(managerPath, { groupId: "DeleteGroup" });
                             });
 
@@ -374,35 +393,35 @@ sap.ui.define([
             var that = this;
             var language_code = ["KO", "EN"];
             if (entitySet == "TaskMonitoringCompanyCode") {
-                var keyPath = "/TaskMonitoringCompanyCode(tenant_id='" + this.tenant_id + "',scenario_number=" + String(this.scenario_number.split('l')[0]) + ",company_code='" + deleteCode + "')";
+                var keyPath = "/TaskMonitoringCompanyCode(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + "l" + ",company_code='" + deleteCode + "')";
             }
             if (entitySet == "TaskMonitoringBizunitCode") {
-                keyPath = "/TaskMonitoringBizunitCode(tenant_id='" + this.tenant_id + "',scenario_number=" + String(this.scenario_number.split('l')[0]) + ",bizunit_code='" + deleteCode + "')";
+                keyPath = "/TaskMonitoringBizunitCode(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + "l" + ",bizunit_code='" + deleteCode + "')";
             }
             if (entitySet == "TaskMonitoringManagerDetail") {
-                keyPath = "/TaskMonitoringManagerDetail(tenant_id='" + this.tenant_id + "',scenario_number=" + String(this.scenario_number.split('l')[0]) + ",monitoring_manager_empno='" + deleteCode + "')";
+                keyPath = "/TaskMonitoringManagerDetail(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + "l" + ",monitoring_manager_empno='" + deleteCode + "')";
             }
             if (entitySet == "TaskMonitoringCycleCodeLanguage") {
                 language_code.forEach(function (code) {
-                    keyPath = "/TaskMonitoringCycleCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_cycle_code='" + deleteCode + "',language_code='" + code + "')";
+                    keyPath = "/TaskMonitoringCycleCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + "l" + ",monitoring_cycle_code='" + deleteCode + "',language_code='" + code + "')";
                     oModel.remove(keyPath, { "groupId": "UpdateGroup" });
                 });
             }
             else if (entitySet == "TaskMonitoringTypeCodeLanguage") {
                 language_code.forEach(function (code) {
-                    keyPath = "/TaskMonitoringTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_type_code='" + deleteCode + "',language_code='" + code + "')";
+                    keyPath = "/TaskMonitoringTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + "l" + ",monitoring_type_code='" + deleteCode + "',language_code='" + code + "')";
                     oModel.remove(keyPath, { "groupId": "UpdateGroup" });
                 });
             }
             else if (entitySet == "TaskMonitoringOperationModeLanguage") {
                 language_code.forEach(function (code) {
-                    keyPath = "/TaskMonitoringOperationModeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_operation_mode_code='" + deleteCode + "',language_code='" + code + "')";
+                    keyPath = "/TaskMonitoringOperationModeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + "l" + ",monitoring_operation_mode_code='" + deleteCode + "',language_code='" + code + "')";
                     oModel.remove(keyPath, { "groupId": "UpdateGroup" });
                 });
             }
             else if (entitySet == "TaskMonitoringPurchasingTypeCodeLanguage") {
                 language_code.forEach(function (code) {
-                    keyPath = "/TaskMonitoringPurchasingTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_purchasing_type_code='" + deleteCode + "',language_code='" + code + "')";
+                    keyPath = "/TaskMonitoringPurchasingTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + "l" + ",monitoring_purchasing_type_code='" + deleteCode + "',language_code='" + code + "')";
                     oModel.remove(keyPath, { "groupId": "UpdateGroup" });
                 });
             }
@@ -419,7 +438,7 @@ sap.ui.define([
             var oModel = this.getView().getModel();
             var language_code = ["KO", "EN"];
             oItem.tenant_id = this.tenant_id;
-            oItem.scenario_number = String(this.scenario_number.split('l')[0]);
+            oItem.scenario_number = this.scenario_number;
             oItem.local_create_dtm = new Date();
             oItem.local_update_dtm = new Date();
             oItem.create_user_id = "Admin";
@@ -432,12 +451,10 @@ sap.ui.define([
             };
             if (entitySet == "TaskMonitoringCompanyCode") {
                 oItem.company_code = createCode;
-                console.log(b);
 
             }
             if (entitySet == "TaskMonitoringBizunitCode") {
                 oItem.bizunit_code = createCode;
-                console.log(b);
             }
             if (entitySet == "TaskMonitoringCycleCodeLanguage") {
                 oItem.monitoring_cycle_code = createCode;
@@ -445,7 +462,6 @@ sap.ui.define([
                 language_code.forEach(function (code) {
                     oItem.language_code = code;
                     oItem.monitoring_cycle_name = odata.code_name;
-                    console.log(b);
                     oModel.createEntry("/" + entitySet, b);
                 });
             } else if (entitySet == "TaskMonitoringTypeCodeLanguage") {
@@ -454,7 +470,6 @@ sap.ui.define([
                 oItem.monitoring_type_name = odata.code_name;
                 for (var i = 0; i < language_code.length; i++) {
                     oItem.language_code = language_code[i];
-                    console.log(b);
                     oModel.createEntry("/" + entitySet, b);
                 }
             } else if (entitySet == "TaskMonitoringPurchasingTypeCodeLanguage") {
@@ -463,7 +478,6 @@ sap.ui.define([
                 oItem.monitoring_purchasing_type_name = odata.code_name;
                 for (var i = 0; i < language_code.length; i++) {
                     oItem.language_code = language_code[i];
-                    console.log(b);
                     oModel.createEntry("/" + entitySet, b);
                 }
             }
@@ -471,7 +485,6 @@ sap.ui.define([
                 oItem.monitoring_operation_mode_code = createCode;
                 language_code.forEach(function (code) {
                     oItem.language_code = code;
-                    console.log(b);
                     oModel.createEntry("/" + entitySet, b);
                 });
             } else {
@@ -501,13 +514,11 @@ sap.ui.define([
                 }
             }
 
-            console.log(resultBefore); // after배열에 없는 before값들 -> 삭제될 값들  
-            console.log(resultAfter); //  before배열에 없는 after값들 -> 생성될 값들  
 
         },
 
         onChangeAuthorityFlag: function (oEvent) {
-            oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+            oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
         },
         /**
         * 시나리오 저장 기능
@@ -521,9 +532,6 @@ sap.ui.define([
                 onClose: function (sAction) {
                     if (sAction === MessageBox.Action.OK) {
                         that._SaveScenario();
-                        //법인, 사업본부 아이템 remove
-                        // that.removeFormattedTextValue();
-                        // that.removeRichTextEditorValue();
 
 
                     }
@@ -567,7 +575,7 @@ sap.ui.define([
                     system_create_dtm: new Date(),
                     system_update_dtm: new Date()
                 }
-                console.log(masterObj);
+
                 var createMaster = {
                     "groupId": "CreateGroup",
                     "properties": masterObj
@@ -590,7 +598,7 @@ sap.ui.define([
                         "system_create_dtm": new Date(),
                         "system_update_dtm": new Date()
                     }
-                    console.log(typeObj);
+
 
                     var createType = {
                         "groupId": "CreateGroup",
@@ -618,7 +626,7 @@ sap.ui.define([
                             system_create_dtm: new Date(),
                             system_update_dtm: new Date()
                         }
-                        console.log(purchasingTypeObj);
+
 
                         var createPurchasingType = {
                             "groupId": "CreateGroup",
@@ -643,7 +651,7 @@ sap.ui.define([
                         "system_create_dtm": new Date(),
                         "system_update_dtm": new Date()
                     }
-                    console.log(scenarioObj);
+
 
                     var createScenario = {
                         "groupId": "CreateGroup",
@@ -668,7 +676,6 @@ sap.ui.define([
                         system_create_dtm: new Date(),
                         system_update_dtm: new Date()
                     }
-                    console.log(companyObj);
 
                     var createCompany = {
                         "groupId": "CreateGroup",
@@ -693,7 +700,6 @@ sap.ui.define([
                         system_create_dtm: new Date(),
                         system_update_dtm: new Date()
                     }
-                    console.log(bizunitObj);
 
                     var createBizunit = {
                         "groupId": "CreateGroup",
@@ -708,14 +714,14 @@ sap.ui.define([
                 // 담당자 TaskMonitoringManagerDetail
                 var managerItems = this.byId("managerListTable").getItems();
                 managerItems.forEach(function (manager) {
-                    var managerCode = manager.getAggregation("cells")[1].getProperty("text");
-                    console.log(manager.getAggregation("cells")[6].getSelectedKey());
+                    var managerCode = manager.getBindingContext().getProperty("employee_number");
+
                     var sPath = "/TaskMonitoringManagerDetail(tenant_id='" + tenant_id + "', scenario_number=" + senario_number + ",monitoring_manager_empno='" + managerCode + "')";
                     var managerObj = {
                         tenant_id: tenant_id,
                         scenario_number: senario_number,
                         monitoring_manager_empno: managerCode,
-                        monitoring_super_authority_flag: manager.getAggregation("cells")[6].getSelectedKey() === 'Yes' ? true : false,
+                        monitoring_super_authority_flag: manager.getAggregation("cells")[5].getSelectedKey() === 'Yes' ? true : false,
                         local_create_dtm: new Date(),
                         local_update_dtm: new Date(),
                         create_user_id: "Admin",
@@ -723,19 +729,16 @@ sap.ui.define([
                         system_create_dtm: new Date(),
                         system_update_dtm: new Date()
                     }
-                    if (manager.getAggregation("cells")[0].getProperty("text") === "C") {
-                        console.log("CreateObj");
-                        console.log(managerObj);
+                    if (manager.getAggregation("cells")[0].getProperty("text") === "sap-icon://add") {
+
                         var createManager = {
                             "groupId": "CreateGroup",
                             "properties": managerObj
                         };
                         oModel.createEntry("/TaskMonitoringManagerDetail", createManager);
-                    } else if (manager.getAggregation("cells")[0].getProperty("text") === "D") {
-                        console.log("DeleteObj");
-                        console.log(managerObj);
+                    } else if (manager.getAggregation("cells")[0].getProperty("icon") === "sap-icon://decline") {
+
                         oModel.remove(sPath, { groupId: "DeleteGroup" });
-                        console.log(sPath);
                     }
                 });
 
@@ -775,7 +778,6 @@ sap.ui.define([
                             system_create_dtm: new Date(),
                             system_update_dtm: new Date()
                         }
-                        console.log(operationObj);
                         var createOperation = {
                             "groupId": "CreateGroup",
                             "properties": operationObj
@@ -798,7 +800,6 @@ sap.ui.define([
                             local_create_dtm: new Date(),
                             local_update_dtm: new Date()
                         }
-                        console.log(cycleObj);
                         var createCycle = {
                             "groupId": "CreateGroup",
                             "properties": cycleObj
@@ -828,7 +829,7 @@ sap.ui.define([
 
             } else {
                 tenant_id = this.tenant_id;
-                senario_number = String(this.scenario_number.split('l')[0]);
+                senario_number = this.scenario_number;
 
                 //Update 
                 //마스터 테이블
@@ -850,7 +851,7 @@ sap.ui.define([
                     method: "PUT"
                 });
                 //구분
-                var odata = this.getView().getModel().oData[this.bindPath.replace('/', '')];
+                var odata = this.getView().getModel().getProperty(this.bindPath);
                 this._deleteEntry("TaskMonitoringTypeCodeLanguage", odata.monitoring_type_code);
                 this._createEntry("TaskMonitoringTypeCodeLanguage", selectedTypeCode);
                 //구매유형
@@ -898,10 +899,10 @@ sap.ui.define([
                 //담당자 
                 var managerTableItems = this.byId("managerListTable").getItems();
                 for (var m = 0; m < managerTableItems.length; m++) {
-                    var statusText = managerTableItems[m].getAggregation("cells")[0].getText();
-                    var managerCode = managerTableItems[m].getAggregation("cells")[1].getText();
-                    var authorityFlagValue = managerTableItems[m].getAggregation("cells")[6].getSelectedKey();
-                    if (statusText === "C") {
+                    var statusIcon = managerTableItems[m].getAggregation("cells")[0].getIcon();
+                    var managerCode = managerTableItems[m].getBindingContext().getProperty("employee_number");
+                    var authorityFlagValue = managerTableItems[m].getAggregation("cells")[5].getSelectedKey();
+                    if (statusIcon === "sap-icon://add") {
                         var managerCreateObj = {
                             tenant_id: tenant_id,
                             scenario_number: senario_number,
@@ -920,10 +921,10 @@ sap.ui.define([
                         };
                         oModel.createEntry("TaskMonitoringManagerDetail", b);
 
-                    } else if (statusText === "U") {
+                    } else if (statusIcon === "sap-icon://accept") {
                         var manager_uPath = "/TaskMonitoringManagerDetail(tenant_id='" + tenant_id + "',scenario_number=" + senario_number + ",monitoring_manager_empno='" + managerCode + "')";
                         var managerUpdateObj = {
-                            monitoring_super_authority_flag: managerTableItems[m].getAggregation("cells")[6].getSelectedKey() === 'Yes' ? true : false,
+                            monitoring_super_authority_flag: managerTableItems[m].getAggregation("cells")[5].getSelectedKey() === 'Yes' ? true : false,
                             local_update_dtm: new Date(),
                             update_user_id: "Admin",
                             system_update_dtm: new Date()
@@ -932,7 +933,7 @@ sap.ui.define([
                             async: false,
                             method: "PUT"
                         });
-                    } else if (statusText === "D") {
+                    } else if (statusIcon === "sap-icon://decline") {
                         this._deleteEntry("TaskMonitoringManagerDetail", managerCode);
                     }
 
@@ -947,18 +948,15 @@ sap.ui.define([
                 oModel.submitChanges({
                     groupId: "UpdateGroup",
                     success: function () {
-                        console.log("update success");
                         sap.m.MessageToast.show(i18nModel.getText("/NPG00008"));
                         that.getRouter().navTo("main", {}, true);
                         //refresh
                         oModel.refresh(true);
 
                     }, error: function () {
-                        console.log("update failed");
                         sap.m.MessageToast.show(i18nModel.getText("/EPG00002"));
                     }
                 });
-                console.log(masterUpdateObj);
 
             }
 
@@ -1000,20 +998,16 @@ sap.ui.define([
                             } else {
                                 that.getRouter().navTo("main", {}, true);
                             }
-                            //법인, 사업본부 아이템 remove
+
+                            that.getView().getModel().refresh(true);
                             that.removeFormattedTextValue();
                             that.removeRichTextEditorValue();
-                            that.getView().getModel().refresh(true);
                         }
 
                     }
                 });
 
             }
-
-
-
-
 
         },
 
@@ -1064,96 +1058,6 @@ sap.ui.define([
         },
 
         /**
-         * 담당자 테이블 Add button (담당자 선택 popup open)
-         * @public
-         */
-        onPressManagerAdd: function () {
-            if (!this._isAddPersonalPopup) {
-                this._ManagerDialog = sap.ui.xmlfragment("dialog_manager", "pg.tm.tmMonitoring.view.ManagerDialog", this);
-                this.getView().addDependent(this._ManagerDialog);
-                this._isAddPersonalPopup = true;
-            }
-
-            this._ManagerDialog.open();
-
-            //초기 필터
-            var oTable = sap.ui.getCore().byId("dialog_manager--managerDialogTable");
-            oTable.getBinding("items").filter([new Filter("tenant_id", FilterOperator.Contains, "L2100")]);
-
-        },
-
-
-        /**
-        * 담당자 search 기능
-        * @public
-        */
-        onSearchManager: function (oEvent) {
-            // @ts-ignore
-            var manager_input = sap.ui.getCore().byId("dialog_manager--manager_input").getValue(),
-                // @ts-ignore
-                jobTitle_input = sap.ui.getCore().byId("dialog_manager--jobTitle_input").getValue(),
-                // @ts-ignore
-                phoneNumber_input = sap.ui.getCore().byId("dialog_manager--phoneNumber_input").getValue(),
-                // @ts-ignore
-                department_input = sap.ui.getCore().byId("dialog_manager--department_input").getValue();
-            var aFilter = [];
-            if (manager_input.length > 0) {
-                aFilter.push(new Filter("employee_name", FilterOperator.Contains, manager_input));
-            }
-            if (jobTitle_input.length > 0) {
-                aFilter.push(new Filter("job_title", FilterOperator.Contains, jobTitle_input));
-            }
-            if (phoneNumber_input.length > 0) {
-                aFilter.push(new Filter("mobile_phone_number", FilterOperator.Contains, phoneNumber_input));
-            }
-            if (department_input.length > 0) {
-                aFilter.push(new Filter("department_id", FilterOperator.Contains, department_input));
-            }
-            // @ts-ignore
-            var oTable = sap.ui.getCore().byId("dialog_manager--managerDialogTable");
-            // var oBinding = oTable.getBinding("rows");
-            var oBinding = oTable.getBinding("items");
-
-            // @ts-ignore
-            oBinding.filter(aFilter);
-
-        },
-
-        /**
-         * 담당자 search 기능
-         * @public
-         */
-        onPressManagerDialogClose: function (oEvent) {
-            //Search Input 값 reset
-            // sap.ui.getCore().byId("dialog_manager").getModel().refresh(true);
-            sap.ui.getCore().byId("dialog_manager--manager_input").setValue("");
-            sap.ui.getCore().byId("dialog_manager--jobTitle_input").setValue("");
-            sap.ui.getCore().byId("dialog_manager--phoneNumber_input").setValue("");
-            sap.ui.getCore().byId("dialog_manager--department_input").setValue("");
-            //selection reset
-            var oTable = sap.ui.getCore().byId("dialog_manager--managerDialogTable");
-            oTable.removeSelections();
-
-            this._ManagerDialog.close();
-        },
-
-        /**
-        * 담당자 테이블에서 selectionChange 이벤트가 발생할 때 담당자 popup Save 버튼 활성화 상태 변경
-        * 담당자를 선택한 row가 있을 때만 Save 버튼 활성화 
-        * @public
-        */
-        onSelectionChange: function (oEvent) {
-            var oTable = sap.ui.getCore().byId("dialog_manager--managerDialogTable");
-            var oItems = oTable.getSelectedItems();
-            if (oItems.length !== 0) {
-                sap.ui.getCore().byId("dialog_manager--managerSaveBtn").setVisible(true);
-            } else if (oItems.length === 0) {
-                sap.ui.getCore().byId("dialog_manager--managerSaveBtn").setVisible(false);
-            }
-        },
-
-
-        /**
         * 담당자 popup Save 기능
         * 선택한 담당자가 담당자 테이블에 추가됨
         * @public
@@ -1166,7 +1070,7 @@ sap.ui.define([
             var managerId = [];
             var managerNames = [];
             managers.forEach(function (manager) {
-                if (manager.getAggregation("cells")[0].getProperty("text") !== "D") {
+                if (manager.getAggregation("cells")[0].getProperty("icon") !== "sap-icon://decline") {
                     managerId.push(manager.getAggregation("cells")[1].getProperty("text"));
                     managerNames.push(manager.getAggregation("cells")[2].getProperty("text"));
                 }
@@ -1186,11 +1090,11 @@ sap.ui.define([
                     var lisItemForTable = new sap.m.ColumnListItem({
                         cells: [
                             new sap.m.Text({
-                                text: "C"
+                                text: "sap-icon://add"
                             }),
-                            new sap.m.Text({
-                                text: data.employee_number
-                            }),
+                            // new sap.m.Text({
+                            //     text: data.employee_number
+                            // }),
                             // @ts-ignore
                             new sap.m.Text({
                                 text: data.employee_name
@@ -1234,18 +1138,7 @@ sap.ui.define([
         */
         onPressManagerDelete: function () {
             var managerTable = this.byId("managerListTable"); //담당자 테이블
-            var managers = managerTable.getItems();
-            var managerName = [];
-            managers.forEach(function (manager) {
-                if (manager.getAggregation("cells")[0].getProperty("text") !== "D") {
-                    managerName.push(manager.getAggregation("cells")[2].getProperty("text"));
-                }
-
-            });
-            // var managerValue = this.byId("managerInput").getValue();
-            // managerValue = managerValue.split(',');
             var that = this;
-            var managerDeleteNM = [];
             MessageBox.confirm(i18nModel.getText("/NCM00003"), {
                 actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                 emphasizedAction: MessageBox.Action.OK,
@@ -1253,19 +1146,22 @@ sap.ui.define([
                     if (sAction === MessageBox.Action.OK) {
                         var oItems = managerTable.getSelectedItems();
                         for (var i = 0; i < oItems.length; i++) {
-                            if (oItems[i].getAggregation("cells")[0].getText() === "C") {
+                            var empNo = oItems[i].getBindingContext().getProperty("employee_number");
+                            var tokens = that.byId("multiInputWithEmployeeValueHelp").getTokens();
+                            tokens.forEach(function (token) {
+                                if (token.getProperty("key") === empNo) {
+                                    that.byId("multiInputWithEmployeeValueHelp").removeToken(token);
+                                }
+                            });
+                            if (oItems[i].getAggregation("cells")[0].getIcon() === "sap-icon://add") {
                                 managerTable.removeItem(oItems[i]);
                             }
-                            oItems[i].getAggregation("cells")[0].setText("D");
+                            oItems[i].getAggregation("cells")[0].setIcon("sap-icon://decline");
                             oItems[i].bindProperty("selected", "false");
-                            var deleteManagerNM = oItems[i].getAggregation("cells")[2].getProperty("text");
-                            if (managerName.indexOf(deleteManagerNM) !== -1) {
-                                managerName.splice(managerName.indexOf(deleteManagerNM), 1);
-                            }
+
 
                         }
-                        that.byId("managerInput").setValue(managerName);
-                        // MessageToast.show("삭제가 완료되었습니다.");
+
                     }
 
 
@@ -1296,7 +1192,6 @@ sap.ui.define([
 
         /**
         * Edit모드일 때 설정 
-        * @private
         */
         _toEditMode: function () {
             this.getModel("DetailView").setProperty("/isEditMode", true);
@@ -1331,6 +1226,7 @@ sap.ui.define([
             if (this.scenario_number === "New") {
                 this.removeRichTextEditorValue();
             } else {
+                this.removeRichTextEditorValue();
                 //richTextEditor
                 this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText === '' ? null : this.PurposeFormattedText);
                 this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText === '' ? null : this.ScenarioDescFormattedText);
@@ -1341,7 +1237,6 @@ sap.ui.define([
 
         /**
          * Show모드일 때 설정 
-         * @private
          */
         _toShowMode: function () {
             this.getModel("DetailView").setProperty("/isEditMode", false);
@@ -1366,15 +1261,14 @@ sap.ui.define([
 
         /**
         * signal 테이블 template 
-        * @private4
         */
         _initTableTemplates: function () {
             var that = this;
             //지표 테이블
             this.oReadOnlyTemplate = new ColumnListItem({
                 cells: [
-                    new sap.m.Text({
-                        text: "",
+                    new sap.m.ObjectStatus({
+                        icon: "",
                         width: "10%"
                     }),
                     // @ts-ignore
@@ -1409,8 +1303,8 @@ sap.ui.define([
 
             this.oEditableTemplate = new ColumnListItem({
                 cells: [
-                    new sap.m.Text({
-                        text: ""
+                    new sap.m.ObjectStatus({
+                        icon: ""
                     }),
                     // @ts-ignore
                     new sap.m.ComboBox({
@@ -1425,9 +1319,9 @@ sap.ui.define([
                             })
                         },
                         selectionChange: function (oEvent) {
-                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getText();
-                            if (status !== "C") {
-                                oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
+                            if (status !== "sap-icon://add") {
+                                oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
                             if (oEvent.getSource().getSelectedKey() === "TKMTINC002") {
                                 oEvent.getSource().getParent().getAggregation("cells")[6].setSelectedKey("%");
@@ -1457,7 +1351,7 @@ sap.ui.define([
                             })
                         },
                         selectionChange: function (oEvent) {
-                            oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                         }
                     }),
                     // @ts-ignore
@@ -1466,7 +1360,7 @@ sap.ui.define([
                         type: "Text",
                         value: "{monitoring_indicator_start_value}",
                         liveChange: function (oEvent) {
-                            oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                         }
                     }),
                     // @ts-ignore
@@ -1475,8 +1369,8 @@ sap.ui.define([
                         type: "Text",
                         value: "{monitoring_indicator_last_value}",
                         liveChange: function (oEvent) {
-                            oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
-                            console.log(oEvent.getSource().getValue());
+                            oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
+
                         }
                     }),
                     // @ts-ignore
@@ -1492,7 +1386,7 @@ sap.ui.define([
                             })
                         },
                         selectionChange: function (oEvent) {
-                            oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
 
                         }
                         // ,
@@ -1511,7 +1405,7 @@ sap.ui.define([
                             })
                         },
                         selectionChange: function (oEvent) {
-                            oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                         }
                         // ,
                         // required: true
@@ -1525,13 +1419,13 @@ sap.ui.define([
             this.oReadOnlyManagerTemplate = new ColumnListItem({
                 cells: [
                     //status
-                    new sap.m.Text({
-                        text: ""
+                    new sap.m.ObjectStatus({
+                        icon: ""
                     }),
-                    // @ts-ignore
-                    new sap.m.Text({
-                        text: "{employee_number}"
-                    }),
+                    // // @ts-ignore
+                    // new sap.m.Text({
+                    //     text: "{employee_number}"
+                    // }),
                     // @ts-ignore
                     new sap.m.Text({
                         text: "{employee_name}"
@@ -1563,13 +1457,13 @@ sap.ui.define([
             this.oEditableManagerTemplate = new ColumnListItem({
                 cells: [
                     //status
-                    new sap.m.Text({
-                        text: ""
+                    new sap.m.ObjectStatus({
+                        icon: ""
                     }),
-                    // @ts-ignore
-                    new sap.m.Text({
-                        text: "{employee_number}"
-                    }),
+                    // // @ts-ignore
+                    // new sap.m.Text({
+                    //     text: "{employee_number}"
+                    // }),
                     // @ts-ignore
                     new sap.m.Text({
                         text: "{employee_name}"
@@ -1591,9 +1485,9 @@ sap.ui.define([
                         items: [segmentItemYes, segmentItemNo],
                         selectedKey: "{=${monitoring_super_authority_flag} === true? 'Yes' : 'No'}",
                         selectionChange: function (oEvent) {
-                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getText();
-                            if (status !== "C") {
-                                oEvent.getSource().getParent().getAggregation("cells")[0].setText("U");
+                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
+                            if (status !== "sap-icon://add") {
+                                oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
                         }
                     })
@@ -1603,7 +1497,6 @@ sap.ui.define([
 
         /**
         * 지표 테이블, 담당자 테이블 bindItems
-        * @private
         */
         _bindMidTable: function (oTemplate, sKeyboardMode) {
             if (oTemplate === this.oReadOnlyTemplate || oTemplate === this.oEditableTemplate) {
@@ -1611,7 +1504,7 @@ sap.ui.define([
                     path: "/TaskMonitoringIndicatorNumberView",
                     filters: [
                         new Filter("tenant_id", FilterOperator.Contains, this.tenant_id),
-                        new Filter("scenario_number", FilterOperator.EQ, Number(this.scenario_number.split('l')[0]))
+                        new Filter("scenario_number", FilterOperator.EQ, this.scenario_number)
                     ],
                     template: oTemplate
                 }).setKeyboardMode(sKeyboardMode);
@@ -1620,7 +1513,7 @@ sap.ui.define([
                     path: "/TaskMonitoringManagerView",
                     filters: [
                         new Filter("tenant_id", FilterOperator.Contains, this.tenant_id),
-                        new Filter("scenario_number", FilterOperator.EQ, Number(this.scenario_number.split('l')[0]))
+                        new Filter("scenario_number", FilterOperator.EQ, this.scenario_number)
                     ],
                     template: oTemplate
                 }).setKeyboardMode(sKeyboardMode);
@@ -1629,8 +1522,7 @@ sap.ui.define([
         },
 
         /**
-        * Detail_Edit, Detail_Show Fragment load  
-        * @private
+        * Detail_Edit, Detail_Show Fragment load 
         */
         _oFragments: {},
         _showFormFragment: function (sFragmentName) {
@@ -1666,7 +1558,125 @@ sap.ui.define([
             hbox.setVisible(!hbox.getVisible());
             var btn = this.byId("managerTableBtn");
             btn.setIcon(hbox.getVisible() === false ? "sap-icon://expand-all" : "sap-icon://collapse-all");
+        },
+
+        onMultiInputWithEmployeeValuePress: function () {
+            if (!this.oEmployeeMultiSelectionValueHelp) {
+                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                    title: "Choose Employees",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                    var defToken = this.byId("multiInputWithEmployeeValueHelp").getTokens();
+                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
+
+                    var afterToken = oEvent.getSource().getTokens();
+                    var selectedItems = oEvent.getParameter("items");
+                    //삭제
+                    var tableItems = this.byId("managerListTable").getItems();
+                    var resultDelete = defToken.filter(function (each1) {
+                        return selectedItems.every(function (each2) {
+                            return each1.getProperty("key") !== each2.employee_number;
+                        });
+                    });
+                    resultDelete.forEach(function (deleteItem) {
+                        tableItems.forEach(function (tableItem) {
+                            if (tableItem.getBindingContext().getProperty("employee_number") === deleteItem.getProperty("key")) {
+                                tableItem.getAggregation("cells")[0].setIcon("sap-icon://decline");
+                            }
+                        });
+
+                    });
+
+                    //생성
+                    var resultAdd = selectedItems.filter(function (each1) {
+                        return defToken.every(function (each2) {
+                            return each1.employee_number !== each2.getProperty("key");
+                        });
+                    });
+
+                    resultAdd.forEach(function (item) {
+                        var segmentItemYes = new sap.m.SegmentedButtonItem({ text: "Yes", key: "Yes" });
+                        var segmentItemNo = new sap.m.SegmentedButtonItem({ text: "No", key: "No" });
+                        var lisItemForTable = new sap.m.ColumnListItem({
+                            cells: [
+                                new sap.m.ObjectStatus({
+                                    icon: "sap-icon://add"
+                                }),
+                                // @ts-ignore
+                                new sap.m.Text({
+                                    text: item.user_local_name
+                                }),
+                                // @ts-ignore
+                                new sap.m.Text({
+                                    text: ""
+                                }),
+                                // @ts-ignore
+                                new sap.m.Text({
+                                    text: ""
+                                }),
+                                // @ts-ignore
+                                new sap.m.Text({
+                                    text: item.department_id
+                                }),
+                                new sap.m.SegmentedButton({
+                                    items: [segmentItemYes, segmentItemNo],
+                                    selectedKey: "No"
+                                })
+                            ]
+
+                        });
+                        var managerObj = {
+                            tenant_id: "L2100",
+                            scenario_number: this.scenario_number,
+                            employee_number: item.employee_number,
+                            employee_name: "No",
+                            job_title: new Date(),
+                            mobile_phone_number: "",
+                            department_id: "",
+                            monitoring_super_authority_flag: false,
+                            local_update_dtm: "2021-01-15T16:28:03Z",
+                            create_user_id: "Admin",
+                            update_user_id: "Admin",
+                            system_create_dtm: "2021-01-15T16:28:03Z",
+                            system_update_dtm: "2021-01-15T16:28:03Z"
+
+                        }
+                        var retContext = this.getView().getModel().createEntry("/TaskMonitoringManagerView", {
+                            properties: managerObj,
+                            success: function () { },
+                            error: function () { }
+                        });
+
+                        this.byId("managerListTable").addItem(lisItemForTable);
+                        lisItemForTable.setBindingContext(retContext);
+
+                    }.bind(this));
+
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
         }
+        // onTokenUpdate: function (oEvent) {
+        //     var removedTokens = oEvent.getParameter("removedTokens");
+        //     var tableItems = this.byId("managerListTable").getItems();
+
+        //     tableItems.forEach(function (tableItem) {
+        //         if (tableItem.getBindingContext().getProperty("employee_number") === removedTokens.getProperty("key")) {
+        //             if (tableItem.getAggregation("cells")[0].getIcon() === "sap-icon://add") {
+        //                 tableItem.getAggregation("cells")[0].setIcon("sap-icon://decline");
+        //             }
+
+        //         }
+        //     });
+
+        // }
 
     });
 });

@@ -8,6 +8,7 @@
                                 text="{= ${activate_flag} === true? '이 시나리오는 활성화 상태입니다.' : '이 시나리오는 비활성화 상태입니다.'}"
                                 showIcon="true"
                                 showCloseButton="false"
+                                type="{= ${activate_flag} === true? 'Information' : 'Warning'}"
                                 >
                         </MessageStrip>
                             <f:SimpleForm

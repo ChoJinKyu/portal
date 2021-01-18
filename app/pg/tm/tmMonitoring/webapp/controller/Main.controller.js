@@ -133,24 +133,21 @@ sap.ui.define([
             onNavToDetail: function (oEvent) {
                 // @ts-ignore
                 var itemPath = oEvent.getSource().getBindingContext().getPath();
+                // var masterObj = this.getView().getModel().getProperty(itemPath);
+
                 // /MonitoringMasterView(scenario_number=1l,tenant_id='L2100',company_code='LGCKR',bizunit_code='L210000000')
-                // this.getModel().read(itemPath, {
-                //     success: function (oData, response) {
-
-                //     }.bind(this)
-                // });
-                var key = itemPath.substring(itemPath.indexOf("(") + 1, itemPath.indexOf(")"));
-                var key_arr = key.split(",");
-                var scenario_number = key_arr[0].substring(key_arr[0].indexOf("=") + 1).replaceAll("'", "")
-                var tenant_id = key_arr[1].substring(key_arr[1].indexOf("=") + 1).replaceAll("'", "");
-                var company_code = key_arr[2].substring(key_arr[2].indexOf("=") + 1).replaceAll("'", "");
-                var bizunit_code = key_arr[3].substring(key_arr[3].indexOf("=") + 1).replaceAll("'", "");
-                this.getRouter().navTo("detail", {
-                    scenario_number: scenario_number,
-                    tenant_id: tenant_id,
-                    company_code: company_code,
-                    bizunit_code: bizunit_code
-
+                this.getModel().read(itemPath, {
+                    success: function (oData, response) {
+                        var masterObj = oData;
+                        this.getRouter().navTo("detail", {
+                            scenario_number: masterObj.scenario_number,
+                            tenant_id: masterObj.tenant_id,
+                            company_code: masterObj.company_code,
+                            bizunit_code: masterObj.bizunit_code,
+                            manager: masterObj.manager === '' ? ' ' : masterObj.manager,
+                            manager_local_name: masterObj.manager_local_name === '' ? ' ' : masterObj.manager_local_name
+                        });
+                    }.bind(this)
                 });
             },
 
@@ -202,7 +199,9 @@ sap.ui.define([
                     scenario_number: "New",
                     tenant_id: " ",
                     company_code: " ",
-                    bizunit_code: " "
+                    bizunit_code: " ",
+                    manager: " ",
+                    manager_local_name: " "
                 });
 
             }
