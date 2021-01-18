@@ -746,32 +746,10 @@ sap.ui.define([
         
         onSelectionChange : function (oEvent) {
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
-            var colName = oEvent.getSource().sId.split('--')[2].split('-')[0];
+            var combo, colName = oEvent.getSource().sId.split('--')[2].split('-')[0],
+                key = this.getModel("list").getProperty(oEvent.getSource().getBindingInfo("selectedKey").binding.getContext().getPath()).mold_item_type_code;
 
-                if(colName === "mold_item_type_code"){/*
-                var filter = new Filter({
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_TYPE'),
-                        new Filter("parent_code", FilterOperator.EQ, oEvent.getSource().mProperties.selectedKey)
-                    ],
-                    and: true
-                });
-
-                var bindItemInfo = {
-                    path: 'util>/Code',
-                    filters: filter,
-                    template: new Item({
-                        key: "{util>code}", text: "{util>code_name}"
-                    })
-                };
-                oEvent.getSource().getParent().getCells()[12].bindItems(bindItemInfo);
-                console.log(this.getView().byId("searchDivisionS"));
-                console.log(oEvent.getSource().getParent().getCells()[12]);
-*/
-console.log(oEvent.getParameters().selectedItem.getKey());
-console.log(oEvent.getParameters());
-                var combo, key = oEvent.getParameters().selectedItem.getKey();
+            if(colName === "mold_item_type_code"){
                 combo = oEvent.getSource().getParent().getCells()[12];
                 combo.setSelectedKey(null); 
                 combo.bindItems({
@@ -786,24 +764,19 @@ console.log(oEvent.getParameters());
                     })
                 });
             }else if(colName === "mold_type_code"){
-                var filter1 = new Filter({
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_STRUCTURE'),
-                        new Filter("parent_code", FilterOperator.EQ, oEvent.getSource().mProperties.selectedKey)
-                    ],
-                    and: true
-                });
-
-                var bindItemInfo1 = {
+                combo = oEvent.getSource().getParent().getCells()[17];
+                combo.setSelectedKey(null); 
+                combo.bindItems({
                     path: 'util>/Code',
-                    filters: filter1,
+                    filters: [
+                        new Filter('tenant_id', FilterOperator.EQ, 'L2600'),
+                        new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_STRUCTURE'),
+                        new Filter("parent_code", FilterOperator.EQ, key)
+                    ],
                     template: new Item({
                         key: "{util>code}", text: "{util>code_name}"
                     })
-                };
-                oEvent.getSource().getParent().getCells()[17].bindItems(bindItemInfo1);
-                
+                });
             }
         },
         

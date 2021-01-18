@@ -435,7 +435,7 @@
                             <Text text="{list>set_id}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldFamilyFlagColumn" width="6em" hAlign="Center">
+                    <table:Column id="moldFamilyFlagColumn" width="6.3em" hAlign="Center">
                         <Label text="Family Y/N" wrapping="true"/>
                         <table:template>
                             <!--<ComboBox id="family_flag" selectedKey="{list>family_flag}" selectionChange="familyFlagChange"
@@ -443,7 +443,7 @@
                                 <core:Item key="Y" text="Yes"/>
                                 <core:Item key="N" text="No"/>
                             </ComboBox>-->
-                            <ComboBox   id="family_flag"    
+                            <Select   id="family_flag"    
                                 selectedKey="{list>family_flag}"
                                 items="{
                                             path : 'util>/Code',
@@ -454,15 +454,15 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField"
-                                selectionChange="familyFlagChange">
+                                change="familyFlagChange">
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldProductionTypeColumn" width="12em" hAlign="Center">
+                    <table:Column id="moldProductionTypeColumn" width="8em" hAlign="Center">
                         <Label text="Production Type" required="true" wrapping="true"/>
                         <table:template>
-                            <ComboBox   id="mold_production_type_code"
+                            <Select   id="mold_production_type_code"
                                 selectedKey="{list>mold_production_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -472,17 +472,17 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" selectionChange="inputFieldChange"
+                                required="true" change="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldItemTypeColumn" width="10em" hAlign="Center">
+                    <table:Column id="moldItemTypeColumn" width="9em" hAlign="Center">
                         <Label text="Item Type" required="true" wrapping="true"/>
                         <table:template>
                             <Select   id="mold_item_type_code"
-                                selectedItemId="{list>mold_item_type_code}"
+                                selectedKey="{list>mold_item_type_code}"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -500,7 +500,7 @@
                     <table:Column id="moldTypeColumn" width="10em" hAlign="Center">
                         <Label text="Mold Type" required="true" wrapping="true"/>
                         <table:template><!--{path : 'parent_code', operator : 'EQ', value1 : ${list>mold_item_type_code}}-->
-                            <ComboBox   id="mold_type_code"
+                            <Select   id="mold_type_code"
                                 selectedKey="{list>mold_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -510,17 +510,17 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" selectionChange=".onSelectionChange"
+                                required="true" change=".onSelectionChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
                                 class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldEDTypeColumn" width="10em" hAlign="Center">
+                    <table:Column id="moldEDTypeColumn" width="8em" hAlign="Center">
                         <Label text="Export/Domestic Type" required="true" wrapping="true"/>
                         <table:template>
-                            <ComboBox   id="mold_location_type_code"
+                            <Select   id="mold_location_type_code"
                                 selectedKey="{list>mold_location_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -530,16 +530,16 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" selectionChange="inputFieldChange"
+                                required="true" change="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldTestUseFlagColumn" width="7em" hAlign="Center">
                         <Label text="Mold Cost Analysis Type" wrapping="true"/>
                         <table:template>
-                            <ComboBox   id="mold_cost_analysis_type_code"    
+                            <Select   id="mold_cost_analysis_type_code"    
                                 selectedKey="{list>mold_cost_analysis_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -549,10 +549,10 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                selectionChange="inputFieldChange"
+                                change="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldTestAttachColumn" width="8em" hAlign="Center">
@@ -567,12 +567,12 @@
                             </core:Icon>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldProcessTypeColumn" width="8em" hAlign="Center">
+                    <table:Column id="moldProcessTypeColumn" width="7em" hAlign="Center">
                         <Label text="Process Type" wrapping="true"/>
                         <table:template>
                             <!--<Text id="mold_purchasing_type_code" text="{list>mold_purchasing_type_code}"/>-->
                             
-                            <ComboBox   id="mold_purchasing_type_code"    
+                            <Select   id="mold_purchasing_type_code"    
                                 selectedKey="{list>mold_purchasing_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -582,16 +582,16 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                selectionChange="inputFieldChange"
+                                change="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldStructureColumn" width="10em" hAlign="Center">
+                    <table:Column id="moldMoldStructureColumn" width="9em" hAlign="Center">
                         <Label text="Mold Structure" required="true" wrapping="true"/>
                         <table:template>
-                            <ComboBox   id="die_form"    
+                            <Select   id="die_form"    
                                 selectedKey="{list>die_form}"
                                 items="{
                                             path : 'util>/Code',
@@ -601,16 +601,16 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                selectionChange="inputFieldChange"
+                                change="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldSizeColumn" width="10em" hAlign="Center">
+                    <table:Column id="moldSizeColumn" width="8em" hAlign="Center">
                         <Label text="Size" required="true" wrapping="true"/>
                         <table:template>
-                            <ComboBox   id="mold_size"    
+                            <Select   id="mold_size"    
                                 selectedKey="{list>mold_size}"
                                 items="{
                                             path : 'util>/Code',
@@ -620,10 +620,10 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                selectionChange="inputFieldChange"
+                                change="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldCreationDateColumn" width="10em" hAlign="Center">
@@ -675,31 +675,31 @@
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(1)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
+                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(2)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
+                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(3)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
+                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(4)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
+                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
                         <Label text="Family Part No(5)" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" class="readonlyField" />
+                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                 </table:columns>
