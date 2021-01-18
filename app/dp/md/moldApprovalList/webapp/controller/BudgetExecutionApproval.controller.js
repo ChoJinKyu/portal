@@ -173,6 +173,7 @@ sap.ui.define([
          */
         onBCompanyChange: function (oEvent) {
             var company_code = this.getModel("mdCommon").getData().import_company_code;
+            console.log("oEvent >>>> " , oEvent);
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
