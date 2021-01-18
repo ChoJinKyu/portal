@@ -31,30 +31,31 @@ sap.ui.define([
         },
 
         createSearchFilters: function(){
-            //this.oTenantId = this.getMetadata()._mProperties.aggregations.appData.filters[0].value1;
-
-            this.oSearchCode = new Input({ placeholder: "Search"});
-            this.oSearchDesc = new Input({ placeholder: "Search"});
-            this.oSearchSpec = new Input({ placeholder: "Search"});
+            this.oSearchCode = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
+            this.oSearchDesc = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
+            this.oSearchSpec = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")});
+            this.oSearchCode.attachEvent("change", this.loadData.bind(this));
+            this.oSearchDesc.attachEvent("change", this.loadData.bind(this));
+            this.oSearchSpec.attachEvent("change", this.loadData.bind(this));
 
             return [
                 new VBox({
                     items: [
-                        new Label({ text: "자재코드"}),
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE") }),   // 자재코드
                         this.oSearchCode
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "자재내역"}),
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_DESC") }),   // 자재설명
                         this.oSearchDesc
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "자재스펙"}),
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}), // 자재스펙
                         this.oSearchSpec
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -67,25 +68,25 @@ sap.ui.define([
                 new Column({
                     width: "20%",
                     hAlign: "Center",
-                    label: new Label({text: "자재코드"}),
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE")}),  // 자재코드
                     template: new Text({text: "{material_code}"})
                 }),
                 new Column({
-                    width: "30%",
+                    width: "25%",
                     hAlign: "Center",
-                    label: new Label({text: "자재내역", textAlign:"Center"}),
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),  // 자재설명
                     template: new Text({text: "{material_desc}", textAlign:"Begin"})
                 }),
                 new Column({
                     width: "45%",
                     hAlign: "Center",
-                    label: new Label({text: "자재스펙"}),
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}),
                     template: new Text({text: "{material_spec}"})
                 }),
                 new Column({
-                    width: "5%",
+                    width: "10%",
                     hAlign: "Center",
-                    label: new Label({text: "단위"}),
+                    label: new Label({text: this.getModel("I18N").getText("/BASE_UOM_CODE")}),  // 단위
                     template: new Text({text: "{base_uom_code}"})
                 })
             ];
@@ -100,15 +101,15 @@ sap.ui.define([
                 ];
 
             if(sCode){
-                aFilters.push(new Filter("material_code", FilterOperator.Contains, sCode));
+                aFilters.push(new Filter("tolower(material_code)", FilterOperator.Contains, "'" + sCode.toLowerCase().replace("'","''") + "'"));
             }
 
             if(sDesc){
-                aFilters.push(new Filter("material_desc", FilterOperator.Contains, sDesc));
+                aFilters.push(new Filter("tolower(material_desc)", FilterOperator.Contains, "'" + sDesc.toLowerCase().replace("'","''") + "'"));
             }
             
             if(sSpec){
-                aFilters.push(new Filter("material_spec", FilterOperator.Contains, sSpec));
+                aFilters.push(new Filter("tolower(material_spec)", FilterOperator.Contains, "'" + sSpec.toLowerCase().replace("'","''") + "'"));
             }
 
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialMstView", {
