@@ -609,6 +609,7 @@ sap.ui.define([
                 loiItemNumber: oRecord.loi_item_number,
                 loiSelectionNumber: oRecord.loi_selection_number,
                 loiNumber: oRecord.loi_number
+                // existRfq: (oRecord.quotation_number ? true : false)
             }, true);
         },
 
@@ -640,7 +641,9 @@ sap.ui.define([
 
             //RFQ 번호,상태에 따라 이동가능 여부 체크  
             var canSelect = true;
+            var existRfq = true;
             var quotationNumberrArr = [];
+            var loiNumberArr = [];
 
             if (oSelected.length > 0) {
                 oSelected.some(function (chkIdx, index) {
@@ -676,8 +679,8 @@ sap.ui.define([
                         견적번호가 없으면 링크불가
                     */
                     if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
-                        MessageToast.show("견적번호가 없습니다.");
-                        canSelect = false;
+                        //MessageToast.show("견적번호가 없습니다.");
+                        existRfq = false;
                         return true;
                     }
 
@@ -698,26 +701,43 @@ sap.ui.define([
                         RFQ 상태가 모두 완료이면 신규 등록화면 이동 - 견적테이블 조회
                     */
 
-                    //업체선정상태코드에 따라 loiSelectionNumber 설정(신규/수정/조회)
-                    // var loiSelectionStatusCode = oModel.getData().LOIPublishItemView[chkIdx].loi_selection_status_code;
-                    // //업체선정상태가 진행중/결재반려 이면 수정화면 이동
-                    // if(loiSelectionStatusCode === "122030" || loiSelectionStatusCode === "122050") {
-                    //     linkType = "U";
-                    // }
-                    // //업체선정상태가 결재진행중/업체선정완료 이면 조회화면 이동
-                    // else if(loiSelectionStatusCode === "122040" || loiSelectionStatusCode === "122060") {
-                    //     linkType = "V";
-                    // }
-                    // else {
-                    //     linkType = "C";
-                    //     sLoiSelectionNumber = "new";
-                    // }
+                    //LOI번호 동일체크
+                    var loiNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_number;
+                    // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
+                    if (index > 0 && !loiNumberArr.includes(loiNumber)) {
+                        MessageToast.show("LOI번호가 동일하지 않습니다.");
+                        canSelect = false;
+                        return true;
+                    }
+                    loiNumberArr.push(oModel.getData().LOIPublishItemView[chkIdx].loi_number);
 
                 });
             } else {
                 canSelect = false;
                 MessageToast.show("한개이상 선택해주세요.");
             }
+
+            // if(!existRfq) {
+            //     if(confirm(this.getModel("I18N").getText("/NEP00004"))) {
+            //         canSelect = true;
+            //     }else {
+            //         canSelect = false;
+            //     }
+            // }
+
+            // MessageBox.confirm(this.getModel("I18N").getText("/NEP00004"), {
+            //     title: this.getModel("I18N").getText("/CONFIRM"),
+            //     initialFocus: MessageBox.Action.CANCEL,
+            //     onClose: function (sButton) {
+            //         console.log("sButton===", sButton);
+            //         return;
+            //         // if (sButton === MessageBox.Action.OK) {
+            //         //     canSelect = true;
+            //         // }else {
+            //         //     canSelect = false;
+            //         // }
+            //     }
+            // });            
 
             //업체선정번호가 없으면 신규저장모드
             if (!sLoiSelectionNumber) {
@@ -738,6 +758,7 @@ sap.ui.define([
                     loiItemNumber: sLoiItemNumber,
                     loiSelectionNumber: sLoiSelectionNumber,
                     loiNumber: sLoiNumber
+                    // existRfq: existRfq
                 }, true);
 
                 // if (oNextUIState.layout === "TwoColumnsMidExpanded") {

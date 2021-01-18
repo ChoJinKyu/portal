@@ -134,6 +134,7 @@ sap.ui.define([
                         oDetailModel.setProperty("/pr_number", oArgs.pr_number);                       
                         oDetailModel.setProperty("/company_code", oArgs.company_code);
                         oDetailModel.setProperty("/tenantId", oArgs.tenantId);
+                        oDetailModel.setProperty("/pr_create_status_code", data.results[0].pr_create_status_code );
           
                         //oCodeMasterTable.setBusy(false);
                     },
@@ -268,6 +269,91 @@ sap.ui.define([
             // store index of the item clicked, which can be used later in the columnResize event
             //this.iIndex = oParent.indexOfItem(oItem);
         },
+         onPageDeleteButtonPress: function () {
+
+            var oDetailModel = this.getModel('detailModel');
+            var oView = this.getView();
+            var that = this;
+
+            var sendData = {}, aInputData=[];
+
+
+            var oDeletingKey = {
+                tenant_id: oDetailModel.getProperty("/tenantId"),
+                company_code:oDetailModel.getProperty("/company_code"),
+                pr_number: oDetailModel.getProperty("/pr_number"),      
+                pr_create_status_code: oDetailModel.getProperty("/pr_create_status_code")                
+            } ;
+
+
+            aInputData.push(oDeletingKey);
+            sendData.inputData = aInputData;
+
+
+            MessageBox.confirm("Are you sure to delete?", {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						// me.getView().getBindingContext().delete('$direct').then(function () {
+						// 		me.onNavBack();
+						// 	}, function (oError) {
+						// 		MessageBox.error(oError.message);
+                        // 	});
+                        
+                         // Call ajax
+                        that._fnCallAjax(
+                            sendData,
+                            "DeletePrProc",
+                            function(result){
+                                oView.setBusy(false);
+                                if(result && result.value && result.value.length > 0 && result.value[0].return_code === "0000") {
+                                    that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    that.onNavigationBackPress();
+                                }
+                            }
+                        );
+					};
+				}
+            });
+
+
+            // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
+            //     this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            // }
+
+            //var oItem = oEvent.getSource();
+            //oItem.setNavigated(true);
+            //var oParent = oItem.getParent();
+            // store index of the item clicked, which can be used later in the columnResize event
+            //this.iIndex = oParent.indexOfItem(oItem);
+        },
+
+        _fnCallAjax: function (sendData, targetName , callback) {            
+            var that = this;            
+            var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/op.PrDeleteV4Service/" + targetName;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(sendData),
+                contentType: "application/json",
+                success: function (result){                     
+                    if(result && result.value && result.value.length > 0) {
+                        if(result.value[0].return_code === "0000") {
+                            MessageToast.show(that.getModel("I18N").getText("/" + result.value[0].return_code));
+                        }
+                        MessageToast.show(result.value[0].return_msg);                        
+                    }
+                    callback(result);
+                },
+                error: function(e){
+                    MessageToast.show("Call ajax failed");
+                    callback(e);
+                }
+            });
+        },
+
        
        
 

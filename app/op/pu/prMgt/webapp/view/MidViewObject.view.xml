@@ -342,7 +342,9 @@
 			    <Button type="Emphasized" id="Btn_Cancel"  text="{I18N>/CLOSE}"   press=".onNavigationBackPress" />
 				<Button type="Transparent"  id="Btn_PageEdit"  
                     visible="{= ${detailModel>/mst/pr_create_status_code}==='10'?true:false }"  text="{I18N>/EDIT}"     press=".onPageEditButtonPress"/>
-                <Button type="Transparent" id="Btn_Copy"  text="{I18N>/COPY}"   press=".onPageCopyButtonPress" />    
+                <Button type="Transparent" id="Btn_Copy"  text="{I18N>/COPY}"   press=".onPageCopyButtonPress" />
+                <Button type="Transparent"  id="Btn_PageDelete"  
+                    visible="{= ${detailModel>/mst/pr_create_status_code}==='10'?true:false }"  text="{I18N>/DELETE}"     press=".onPageDeleteButtonPress"/>    
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

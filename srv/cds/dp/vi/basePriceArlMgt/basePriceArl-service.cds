@@ -21,9 +21,14 @@ namespace dp;
 service BasePriceArlService {
     // entity Base_Price_Arl_Main as projection on arlMasterSuper;
 
-    entity Base_Price_Arl_Main as select from arlMasterSuper { * } where approval_type_code like 'VI%';
+    entity Base_Price_Arl_Main     as
+        select from arlMasterSuper {
+            *
+        }
+        where
+            approval_type_code like 'VI%';
 
-    // entity Base_Price_Arl_Main as 
+    // entity Base_Price_Arl_Main as
     //     select from arlMasterSuper sup inner join arlMaster sub on sup.tenant_id = sub.tenant_id and sup.approval_number = sub.approval_number
     //     {
     //         key sub.tenant_id,
@@ -42,46 +47,40 @@ service BasePriceArlService {
     //             sup.attch_group_number
     //     };
 
-    entity Base_Price_Arl_Master as projection on arlMaster;
+    entity Base_Price_Arl_Master   as projection on arlMaster;
     entity Base_Price_Arl_Approver as projection on arlApprover;
-    entity Base_Price_Arl_Referer as projection on arlReferer;
-    entity Base_Price_Arl_Detail as projection on arlDetail;
-    entity Base_Price_Arl_Price  as projection on arlPrice;
+    entity Base_Price_Arl_Referer  as projection on arlReferer;
+    entity Base_Price_Arl_Detail   as projection on arlDetail;
+    entity Base_Price_Arl_Price    as projection on arlPrice;
 
     @readonly
-    entity Base_Price_Arl_Config as
+    entity Base_Price_Arl_Config   as
         select from controlDtl m {
             key tenant_id,
-            key control_option_level_val,
+            key control_option_code,
                 case
                     when
-                        control_option_level_val =  'COMPANY_EDITABLE_FLAG'
-                        and control_option_val   is null
+                        control_option_code =  'DP_VI_COMPANY_EDITABLE_FLAG' and control_option_val   is null
                     then
                         'N'
                     when
-                        control_option_level_val =  'SUPPLY_DISPLAY_FLAG'
-                        and control_option_val   is null
+                        control_option_code =  'DP_VI_SUPPLY_DISPLAY_FLAG' and control_option_val   is null
                     then
                         'N'
                     when
-                        control_option_level_val =  'PURORG_DISPLAY_NM'
-                        and control_option_val   is null
+                        control_option_code =  'DP_VI_PURORG_DISPLAY_NM' and control_option_val   is null
                     then
                         'Pur Org'
                     when
-                        control_option_level_val =  'MARKETCODE0_DISPLAY_FLAG'
-                        and control_option_val   is null
+                        control_option_code =  'DP_VI_MARKETCODE0_DISPLAY_FLAG' and control_option_val   is null
                     then
                         'N'
                     when
-                        control_option_level_val =  'MARKETCODE1_DISPLAY_FLAG'
-                        and control_option_val   is null
+                        control_option_code =  'DP_VI_MARKETCODE1_DISPLAY_FLAG' and control_option_val   is null
                     then
                         'N'
                     when
-                        control_option_level_val =  'MARKETCODE2_DISPLAY_FLAG'
-                        and control_option_val   is null
+                        control_option_code =  'DP_VI_MARKETCODE2_DISPLAY_FLAG' and control_option_val   is null
                     then
                         'N'
                     else
@@ -89,13 +88,16 @@ service BasePriceArlService {
                 end as control_option_val : String(100)
         }
         where
-                control_option_code       =       'DP_VI_BASE_PRICE_ARL_DISPLAY'
+                control_option_code       in      (
+                'DP_VI_COMPANY_EDITABLE_FLAG', 'DP_VI_SUPPLY_DISPLAY_FLAG', 'DP_VI_PURORG_DISPLAY_NM', 'DP_VI_MARKETCODE0_DISPLAY_FLAG', 'DP_VI_MARKETCODE1_DISPLAY_FLAG', 'DP_VI_MARKETCODE2_DISPLAY_FLAG'
+            )
             and control_option_level_code =       'T'
             and org_type_code             =       '*'
+            and control_option_level_val  =       'Default'
             and $now                      between start_date and end_date;
 
     @readonly
-    entity Code_Dtl              as
+    entity Code_Dtl                as
         select from codeDtl as d {
             key tenant_id,
             key group_code,
@@ -115,22 +117,37 @@ service BasePriceArlService {
             $now between start_date and end_date;
 
     @readonly
-    entity Org_Tenant            as projection on tenant;
+    entity Org_Tenant              as projection on tenant;
 
     @readonly
-    entity Org_Company           as projection on comp;
+    entity Org_Company             as projection on comp;
 
     @readonly
-    entity Pur_Operation_Org     as projection on org;
+    entity Pur_Operation_Org       as projection on org;
 
     @readonly
-    entity Hr_Employee           as projection on employee;
+    entity Hr_Employee             as projection on employee;
 
     @readonly
-    entity Supplier_Mst          as projection on supplierMst;
+    entity Supplier_Mst            as projection on supplierMst;
 
     @readonly
-    entity Material_Vw           as
+    entity Material_Mst            as
+        select from masterialMst {
+            tenant_id,
+            material_code,
+            material_type_code,
+            material_desc,
+            ifnull(
+                material_spec, ''
+            ) as material_spec : String(1000),
+            base_uom_code,
+            purchasing_uom_code,
+            commodity_code
+        };
+
+    @readonly
+    entity Material_Vw             as
         select from masterialMst m
         left outer join masterialOrg o
             on  m.tenant_id     = o.tenant_id
@@ -148,21 +165,6 @@ service BasePriceArlService {
                 o.material_status_code
         };
 
-@readonly
-entity Material_Mst          as
-    select from masterialMst {
-        tenant_id,
-        material_code,
-        material_type_code,
-        material_desc,
-        ifnull(
-            material_spec, ''
-        ) as material_spec : String(1000),
-        base_uom_code,
-        purchasing_uom_code,
-        commodity_code
-    };
-
-// @readonly
-// entity Material_Org          as projection on masterialOrg;
+    // @readonly
+    // entity Material_Org          as projection on masterialOrg;
 }

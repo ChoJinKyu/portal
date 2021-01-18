@@ -8,10 +8,11 @@
     xmlns:lib-m="ext.lib.m"
     xmlns:table="sap.ui.table"
     height="100%">
-	<App id="app">
+
         <f:DynamicPage id="page"
             headerExpanded="{mainListView>/headerExpanded}" 
-            toggleHeaderOnTitleClick="true">
+            toggleHeaderOnTitleClick="true"
+            >
             <!-- DynamicPage Title -->
             <f:title>
                 <f:DynamicPageTitle>
@@ -129,7 +130,7 @@
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <VBox>
+                <VBox height ="100%">
                     <table:TreeTable
                                 id="midTreeTable"
                                selectionMode="Single"
@@ -137,6 +138,7 @@
 	                            selectionBehavior="Row"                  
                                 enableColumnReordering="false"
                                 expandFirstLevel="true"
+                                visibleRowCountMode="Auto"
                                 rows="{
                                     path : 'tree>/vpTreeLngView',
                                     parameters : {
@@ -238,5 +240,5 @@
             </f:content>
             <!-- DynamicPage Footer -->
         </f:DynamicPage>
-	</App>
+
 </mvc:View>
