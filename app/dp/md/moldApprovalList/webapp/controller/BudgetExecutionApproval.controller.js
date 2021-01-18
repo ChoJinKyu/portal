@@ -63,6 +63,7 @@ sap.ui.define([
                 delay: 0
             });
             this.getView().setModel(new ManagedListModel(), "importCompany");
+            this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
         },
@@ -113,7 +114,7 @@ sap.ui.define([
                     md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
                     that._bindComboPlant(oData.results[0].import_company_code);
                 } else {
-                    md.setProperty("/investment_ecst_type_code", "");
+                    md.setProperty("/investment_ecst_type_code", "I");
                     md.setProperty("/investment_ecst_type_code_nm", "");
                     md.setProperty("/acq_department_code", "");
                     md.setProperty("/acq_department_code_nm", "");
@@ -146,7 +147,21 @@ sap.ui.define([
                 }
             });
         },
+        _searchAssetType : function(){ // 목록의 combo 조회 
+            // this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type 
+            var oView = this.getView(),
+                oModel = this.getModel("assetTypeCodeList");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("budget"));
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
 
+        },
         _searchImportCompany: function () {
             var nFilter = [
                 new Filter("tenant_id", FilterOperator.EQ, 'L2600')
@@ -174,6 +189,7 @@ sap.ui.define([
         onBCompanyChange: function (oEvent) {
             var company_code = this.getModel("mdCommon").getData().import_company_code;
             console.log("oEvent >>>> " , oEvent);
+            console.log("getForceSelection >>>> " , this.byId('importCompany').getSelectedItem());
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },

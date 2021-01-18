@@ -6,7 +6,7 @@ curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePri
         "basePriceArlMst" : [
             { 
                 "approval_type_code": "VI10", "approve_status_code": "DR",
-                "approval_title": "개발VI 신규 품의서 제목", "approval_contents": "개발VI 신규 품의서 내용",
+                "approval_title": "Approval Title", "approval_contents": "Approval Contents",
                 "requestor_empno": "5459", "request_date": "20201210",
                 "Approvers" : [
                     { "approve_sequence": "1", "approver_empno": "5460", "approver_type_code": "APP" },

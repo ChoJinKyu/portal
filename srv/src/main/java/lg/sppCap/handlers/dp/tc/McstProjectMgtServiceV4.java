@@ -334,7 +334,7 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                 Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
                     @Override
                     public CallableStatement createCallableStatement(Connection con) throws SQLException {
-                        CallableStatement stmt = con.prepareCall(v_sql_callProcProject.toString());
+                        CallableStatement stmt = con.prepareCall(v_sql_callProcAdd.toString());
                         stmt.setObject(1, v_inRowAdd.get("tenant_id"));
                         stmt.setObject(2, v_inRowAdd.get("project_code"));
                         stmt.setObject(3, v_inRowAdd.get("model_code"));
@@ -373,12 +373,12 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
             //paramList.add(oDTable);
 
-            for(TcProjectAdditionInfoType v_inRowBase : v_inAddInfo){
+            for(TcProjectBaseExrateType v_inRowBase : v_inBaseExtract){
 
                 Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
                     @Override
                     public CallableStatement createCallableStatement(Connection con) throws SQLException {
-                        CallableStatement stmt = con.prepareCall(v_sql_callProcProject.toString());
+                        CallableStatement stmt = con.prepareCall(v_sql_callProcBaseExt.toString());
                         stmt.setObject(1, v_inRowBase.get("tenant_id"));
                         stmt.setObject(2, v_inRowBase.get("project_code"));
                         stmt.setObject(3, v_inRowBase.get("model_code"));
@@ -411,9 +411,12 @@ public class McstProjectMgtServiceV4 implements EventHandler {
 
                     for(UpdateSimilarModelInputData v_inSimModel : similarModelList) {
                         Object[] values = new Object[] {
-                            v_inRow.get("similar_model_code"),
-                            v_inRow.get("code_desc"),
-                            v_inRow.get("direct_register_flag")
+                            //v_inRow.get("similar_model_code"),
+                            //v_inRow.get("code_desc"),
+                            //v_inRow.get("direct_register_flag")
+                            v_inSimModel.get("similar_model_code"),
+                            v_inSimModel.get("code_desc"),
+                            v_inSimModel.get("direct_register_flag")
                         };
                         batch_similarmodel.add(values);
                     }
@@ -429,8 +432,10 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                 SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputData>(){
                     @Override
                     public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                        //v_result.setReturnCode(v_rs.getString("return_code"));
+                        //v_result.setReturnMsg(v_rs.getString("v_inSimilarModel :: " + "return_msg"));
                         v_result.setReturnCode(v_rs.getString("return_code"));
-                        v_result.setReturnMsg(v_rs.getString("v_inSimilarModel :: " + "return_msg"));
+                        v_result.setReturnMsg(v_rs.getString("return_msg"));
                         return v_result;
                     }
                 });

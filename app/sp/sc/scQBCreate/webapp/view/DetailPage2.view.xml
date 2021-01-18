@@ -520,6 +520,109 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
             <!-- Control End -->
+            <!-- Non Price Start -->
+			<uxap:ObjectPageSection titleUppercase="false" title="Non Price">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <Panel id="panel_NonPrice" expandable="true" expanded="true" headerText="Non Price Content">
+                            <t:Table id="tableNonPrice"
+                                rows="{/list}"
+                                cellClick="mTableOnCellClick"
+                                selectionMode="MultiToggle"
+                                ariaLabelledBy="title">
+                                <t:extension>
+                                    <OverflowToolbar>
+                                        <!-- <Button  text="일괄 Supplier 추가" type="Transparent" press=".onSupplierAllButton"  />
+                                        <Button  text="Exclude Supplier From Vender Pool" type="Transparent" press=".onMidTableDeleteButtonPress" /> -->
+                                        <ToolbarSpacer/>
+                                        
+                                        <!-- <Button  text="Vendor Pool Change" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                        <Button  text="Simple Change" type="Transparent" press=".onMidTableAddButtonPress"  /> -->
+                                        <Button  text="Add" type="Transparent" press=".onAddNonPrice" />
+                                        <Button  text="Delete" type="Transparent" press=".onDeleteNonPrice" />
+
+
+                                        <!-- <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
+                                            buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/> -->
+                                        
+                                        <!-- <MenuButton id="button_Export2" buttonMode="Split" useDefaultActionOnly="true" type="Default"
+                                                    icon="sap-icon://excel-attachment" defaultAction=".onExport"> 
+                                            <menu> -->
+                                                <!-- <Menu itemSelected="onMenuAction">
+                                                    <MenuItem text="basic" icon="sap-icon://chalkboard">
+                                                        <items>
+                                                            <MenuItem text="add" icon="sap-icon://add" />
+                                                            <MenuItem text="subtract" icon="sap-icon://less" />
+                                                            <MenuItem text="multiply" icon="sap-icon://decline" />
+                                                        </items>
+                                                    </MenuItem>
+                                                    <MenuItem text="complex" icon="sap-icon://display">
+                                                        <items>
+                                                            <MenuItem text="square" icon="sap-icon://status-completed" />
+                                                        </items>
+                                                    </MenuItem>
+                                                </Menu> -->
+                                            <!-- </menu>
+                                        </MenuButton> -->
+                                    </OverflowToolbar>
+                                </t:extension>
+
+                                <!-- visible="{= ${/propInfo/outCome} === '' }" -->
+                                <t:columns>
+                                    <t:Column width="" hAlign="Center" >
+                                        <Label text="평가항목 유형" />
+                                        <t:template>
+                                            <!-- <Button 
+                                                icon="sap-icon://account" press="onSupplierButtonPress" >
+                                            </Button> -->
+                                            <Text text=""/>
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="" hAlign="Center">
+                                        <Label text="요구사항" />
+                                        <t:template>
+                                            <Label text="{col2}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="" hAlign="Center">
+                                        <Label text="비고" />
+                                        <t:template>
+                                           <Label text="{col3}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="" hAlign="Center">
+                                        <Label text="평가속성"  required="true" />
+                                        <t:template>
+                                            <!-- <Input id="abc" showValueHelp="true" valueHelpRequest="."></Input> -->
+                                            <Text text="" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width=""  hAlign="Center">
+                                        <Label text="점수 산정 방법"  required="true" />
+                                        <t:template>
+                                            <!-- <Input id="inputPartNo" showValueHelp="true" valueHelpRequest=".onPartNoPress" ></Input> -->
+                                            <Text text="" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width=""  hAlign="Center">
+                                        <Label text="Target Score" required="true" />
+                                        <t:template>
+                                            <Label text="{col6}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column width="" hAlign="Center">
+                                        <Label text="상세 설정" required="true" />
+                                        <t:template>
+                                            <Label text="{col1}"/>
+                                        </t:template>
+                                    </t:Column>
+                                </t:columns>
+                            </t:Table>                   
+                        </Panel>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+            <!-- Non Price End -->
             <!-- Line Start -->
 			<uxap:ObjectPageSection titleUppercase="false" title="Line">
 				<uxap:subSections>
