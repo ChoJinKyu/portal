@@ -1,0 +1,187 @@
+<!-- <core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:uxap="sap.uxap" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.suite.ui.microchart"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:layout="sap.ui.layout">
+
+<Dialog id="dialogForexChart" class="sapUiSmallMargin" title="외화신고대상 차트" contentWidth="35%" afterClose="dialogAfterclose">
+	<layout:Grid defaultSpan="XL6 L6 M6 S12">
+
+		<m:Text
+			text="Absolute and Percentage values" class="sapUiSmallMargin">
+			<m:layoutData>
+				<layout:GridData span="XL12 L12 M12 S12"/>
+			</m:layoutData>
+		</m:Text>
+		<m:FlexBox width="20rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+			<m:items>
+				<InteractiveBarChart labelWidth="25%" selectionChanged="selectionChanged" press="press">
+					<bars>
+						<InteractiveBarChartBar label="Product 1" value="10"/>
+						<InteractiveBarChartBar label="Product 2" value="20"/>
+						<InteractiveBarChartBar label="Product 3" value="70"/>
+					</bars>
+				</InteractiveBarChart>
+			</m:items>
+		</m:FlexBox>
+		<m:FlexBox width="20rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+			<m:items>
+				<InteractiveBarChart labelWidth="25%" selectionChanged="selectionChanged" press="press">
+					<bars>
+						<InteractiveBarChartBar label="Product 1" value="10" displayedValue="10%"/>
+						<InteractiveBarChartBar label="Product 2" value="20" displayedValue="20%"/>
+						<InteractiveBarChartBar label="Product 3" value="70" displayedValue="70%"/>
+					</bars>
+				</InteractiveBarChart>
+			</m:items>
+		</m:FlexBox>
+
+		<layout:VerticalLayout>
+			<layout:layoutData>
+				<layout:GridData span="XL12 L12 M12 S12"/>
+			</layout:layoutData>
+			<m:Text text="Positive and Negative values" class="sapUiSmallMargin"/>
+			<m:FlexBox width="20rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+				<m:items>
+					<InteractiveBarChart labelWidth="25%" selectionChanged="selectionChanged" press="press">
+						<bars>
+							<InteractiveBarChartBar label="Product 1" value="25"/>
+							<InteractiveBarChartBar label="Product 2" value="-50"/>
+							<InteractiveBarChartBar label="Product 3" value="-100"/>
+						</bars>
+					</InteractiveBarChart>
+				</m:items>
+			</m:FlexBox>
+		</layout:VerticalLayout>
+
+		<layout:VerticalLayout>
+			<layout:layoutData>
+				<layout:GridData span="XL12 L12 M12 S12"/>
+			</layout:layoutData>
+			<m:Text text="Preselected values" class="sapUiSmallMargin"/>
+			<m:FlexBox width="20rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+				<m:items>
+					<InteractiveBarChart labelWidth="25%" selectionChanged="selectionChanged" press="press">
+						<bars>
+							<InteractiveBarChartBar label="Product 1" value="10"/>
+							<InteractiveBarChartBar label="Product 2" value="20"/>
+							<InteractiveBarChartBar label="Product 3" value="70" selected="true"/>
+						</bars>
+					</InteractiveBarChart>
+				</m:items>
+			</m:FlexBox>
+		</layout:VerticalLayout>
+
+		<m:Text
+			text="Small value, no value is displayed as N/A" class="sapUiSmallMargin">
+			<m:layoutData>
+				<layout:GridData span="XL12 L12 M12 S12"/>
+			</m:layoutData>
+		</m:Text>
+		<m:FlexBox width="12rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+			<m:items>
+				<InteractiveBarChart selectionChanged="selectionChanged" press="press">
+					<bars>
+						<InteractiveBarChartBar label="Product 1" value="1"/>
+						<InteractiveBarChartBar label="Product 2" value=""/>
+						<InteractiveBarChartBar label="Product 3" value="75"/>
+					</bars>
+				</InteractiveBarChart>
+			</m:items>
+		</m:FlexBox>
+		<m:FlexBox width="12rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+			<m:items>
+				<InteractiveBarChart selectionChanged="selectionChanged" press="press">
+					<bars>
+						<InteractiveBarChartBar label="Product 1" value="-1"/>
+						<InteractiveBarChartBar label="Product 2" value=""/>
+						<InteractiveBarChartBar label="Product 3" value="-75"/>
+					</bars>
+				</InteractiveBarChart>
+			</m:items>
+		</m:FlexBox>
+
+		<m:Text
+			text="Automatically scaled and manually scaled from min 50 to max 100" class="sapUiSmallMargin">
+			<m:layoutData>
+				<layout:GridData span="XL12 L12 M12 S12"/>
+			</m:layoutData>
+		</m:Text>
+		<m:FlexBox width="12rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+			<m:items>
+				<InteractiveBarChart selectionChanged="selectionChanged" press="press">
+					<bars>
+						<InteractiveBarChartBar label="Product 1" value="30"/>
+						<InteractiveBarChartBar label="Product 2" value="50"/>
+						<InteractiveBarChartBar label="Product 3" value="75"/>
+					</bars>
+				</InteractiveBarChart>
+			</m:items>
+		</m:FlexBox>
+		<m:FlexBox width="12rem" height="10rem" alignItems="Center" class="sapUiSmallMargin">
+			<m:items>
+				<InteractiveBarChart min="50" max="100" selectionChanged="selectionChanged" press="press">
+					<bars>
+						<InteractiveBarChartBar label="Product 1" value="30"/>
+						<InteractiveBarChartBar label="Product 2" value="50"/>
+						<InteractiveBarChartBar label="Product 3" value="75"/>
+					</bars>
+				</InteractiveBarChart>
+			</m:items>
+		</m:FlexBox>
+	</layout:Grid>
+    </Dialog>
+</core:FragmentDefinition> -->
+
+
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:uxap="sap.uxap" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout">
+    <Dialog id="dialogForexChart" class="sapUiSmallMargin" title="외화신고대상 차트" contentWidth="35%" afterClose="dialogAfterclose">
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm
+                editable="false"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="3"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="4"
+                emptySpanM="0"
+                emptySpanS="0"
+                singleContainerFullSize="false" >
+                    
+                    <form:content>
+                        <VBox>
+                            <Label text = "PO번호 : "/> 
+                             <Text id="poNumber" width="100%"/> 
+
+                             <layoutData>
+                                <layout:GridData span="XL6 L12 M6 S6" />
+                            </layoutData> 
+                        </VBox>
+                        
+                        
+                       </form:content>
+                    
+                  </form:SimpleForm>
+            </VBox>       
+      
+         <ToolbarSpacer/>
+        <HBox alignItems="Center" justifyContent="Center" >
+            <Button text="Cancel" class="sapUiSmallMargin" type="Transparent" press=".onExitForex"/>
+            <Button text="Cancel Complete" class="sapUiSmallMargin" type="Emphasized" press=".onForexSave('N')"/>
+        </HBox>
+
+    </Dialog>
+</core:FragmentDefinition>
