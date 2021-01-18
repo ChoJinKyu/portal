@@ -744,7 +744,7 @@ sap.ui.define([
             }
         },
         
-        onSelectionChange : function (oEvent) {
+        onSelectChange : function (oEvent) {
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
             var combo, colName = oEvent.getSource().sId.split('--')[2].split('-')[0],
                 key = this.getModel("list").getProperty(oEvent.getSource().getBindingInfo("selectedKey").binding.getContext().getPath()).mold_item_type_code;

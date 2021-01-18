@@ -462,7 +462,7 @@
                     <table:Column id="moldProductionTypeColumn" width="8em" hAlign="Center">
                         <Label text="Production Type" required="true" wrapping="true"/>
                         <table:template>
-                            <Select   id="mold_production_type_code"
+                            <Select   id="mold_production_type_code" width="8em"
                                 selectedKey="{list>mold_production_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -491,7 +491,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" change=".onSelectionChange"
+                                required="true" change=".onSelectChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
@@ -500,7 +500,7 @@
                     <table:Column id="moldTypeColumn" width="10em" hAlign="Center">
                         <Label text="Mold Type" required="true" wrapping="true"/>
                         <table:template><!--{path : 'parent_code', operator : 'EQ', value1 : ${list>mold_item_type_code}}-->
-                            <Select   id="mold_type_code"
+                            <Select   id="mold_type_code" width="10em"
                                 selectedKey="{list>mold_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -510,7 +510,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" change=".onSelectionChange"
+                                required="true" change=".onSelectChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
                                 class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -591,7 +591,7 @@
                     <table:Column id="moldMoldStructureColumn" width="9em" hAlign="Center">
                         <Label text="Mold Structure" required="true" wrapping="true"/>
                         <table:template>
-                            <Select   id="die_form"    
+                            <Select   id="die_form" width="9em"
                                 selectedKey="{list>die_form}"
                                 items="{
                                             path : 'util>/Code',
