@@ -442,19 +442,23 @@ sap.ui.define([
 
             if (this.validator.validate(this.byId("generalInfoLayout")) !== true) {
                 MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
+                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
                 return;
             }
 
             if (this.validator.validate(this.byId("account")) !== true) {
-                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002')); 
+                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
                 return;
             }
 
-            if (bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0) {
+            if (bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0) { 
+                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;
             }
-            if (this.validator.validate(this.byId("budgetExecutionTable")) !== true) {
+            if (this.validator.validate(this.byId("budgetExecutionTable")) !== true) { 
+                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
                 MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
             }

@@ -381,18 +381,16 @@ sap.ui.define([
         _toEditMode: function(){
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageEditButton").setEnabled(false);
-			// this.byId("pageDeleteButton").setEnabled(false);
+            this.byId("pageEditButton").setEnabled(false);
+            this.byId("pageCancelButton").setEnabled(true);
 			this.byId("pageNavBackButton").setEnabled(false);
 		},
 
 		_toShowMode: function(){
 			this._showFormFragment('MidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			// this.byId("pageDeleteButton").setEnabled(true);
+            this.byId("pageEditButton").setEnabled(true);
+            this.byId("pageCancelButton").setEnabled(false);
 			this.byId("pageNavBackButton").setEnabled(true);
 		},
 
