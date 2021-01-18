@@ -28,8 +28,7 @@
                                                     path: 'org>/Org_Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                    ],
-                                                    sorter: { path: 'org>company_code'}
+                                                    ]
                                                 }">
                                         <items>
                                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
@@ -44,8 +43,7 @@
                                                 path: 'org>/organization',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                ],
-                                                sorter: { path: 'org>code'}
+                                                ]
                                             }"
                                             selectionFinish="handleSelectionFinishComp">
                                         <items>
@@ -80,8 +78,7 @@
                                                     path: 'org>/Org_Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                    ],
-                                                    sorter: { path: 'org>company_code'}
+                                                    ]
                                                 }">
                                         <items>
                                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
@@ -96,8 +93,7 @@
                                                 path: 'org>/organization',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                ],
-                                                sorter: { path: 'org>code'}
+                                                ]
                                             }"
                                             selectionFinish="handleSelectionFinishComp">
                                         <items>
@@ -215,8 +211,7 @@
                     fixedColumnCount="7"
                     rows="{path: 'list>/SpNetpriceView'}"
                     cellClick=".onCellClick"
-                    rowSelectionChange=".onCheck"
-                    visibleRowCountMode="Auto">
+                    rowSelectionChange=".onCheck">
                         <table:extension>
                             <OverflowToolbar>
                                 <Title text="List ({= ${list>/SpNetpriceView}.length || 0})" level="H2"/>
