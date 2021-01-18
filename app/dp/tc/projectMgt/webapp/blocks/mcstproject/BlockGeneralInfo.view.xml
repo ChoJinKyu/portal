@@ -529,7 +529,7 @@
                 </layoutData>
             </Label>
             <HBox>
-                <Input value="{=${detailModel>/mcst_yield_rate} || 0}" width="95%"/>
+                <Input value="{detailModel>/mcst_yield_rate}" width="95%"/>
                 <Text text="%" width="100%" class="sapUiLargeMarginEnd"/>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />

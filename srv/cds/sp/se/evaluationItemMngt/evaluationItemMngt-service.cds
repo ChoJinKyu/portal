@@ -30,13 +30,30 @@ service EvaluationItemMngtService {
     AND    cm_org.org_type_code = mng.org_type_code
     AND    cm_org.org_code      = mng.org_code    ;
 
-    /* User's Evaluation Type. (Condition) */
-    view UserEvalTypeView as
+    /* User's Evaluation Unit. (Condition) */
+    view UserEvalUnitView as
     SELECT key mng.tenant_id,
            key mng.company_code,
            key mng.org_type_code,
            key mng.org_code,
            key mng.evaluation_operation_unit_code,
+           org.evaluation_operation_unit_name,
+           key mng.evaluation_op_unt_person_empno
+    FROM   opUnitManager mng
+          ,opUnitMst     org
+    WHERE  mng.tenant_id = org.tenant_id
+    AND    mng.company_code = org.company_code
+    AND    mng.org_type_code = org.org_type_code
+    AND    mng.org_code = org.org_code
+    AND    mng.evaluation_operation_unit_code = org.evaluation_operation_unit_code;
+    
+    /*view UserEvalTypeView as
+    SELECT key mng.tenant_id,
+           key mng.company_code,
+           key mng.org_type_code,
+           key mng.org_code,
+           key mng.evaluation_operation_unit_code,
+           org.evaluation_operation_unit_name,
            key mng.evaluation_op_unt_person_empno,
            MAX(CASE WHEN et.evaluation_type_code = 'EVAL001' THEN 'Y' ELSE 'N' END) actual_eval: String(1),
            MAX(CASE WHEN et.evaluation_type_code = 'EVAL002' THEN 'Y' ELSE 'N' END) competitive_eval: String(1)
@@ -58,7 +75,9 @@ service EvaluationItemMngtService {
             ,mng.org_type_code
             ,mng.org_code
             ,mng.evaluation_operation_unit_code
+            ,org.evaluation_operation_unit_name
             ,mng.evaluation_op_unt_person_empno;
+    */
 
     /* User's Operation Unit */
     entity UserOperationUnit as projection on opUnitMst;
@@ -115,7 +134,8 @@ service EvaluationItemMngtService {
            etv.hierarchy_level,           /*현재node의 Level*/
            etv.hierarchy_root_rank,       /*root node의 순번*/
            etv.hierarchy_is_cycle,        /*순환구조여부(0:False, 1:True)*/
-           etv.hierarchy_is_orphan        /*전개후 연결이 끊어진 노드여부(0:False, 1:True)*/
+           etv.hierarchy_is_orphan,       /*전개후 연결이 끊어진 노드여부(0:False, 1:True)*/
+           CASE WHEN etv.evaluation_article_lvl_attr_cd = 'ITEM' AND etv.hierarchy_tree_size = 1 THEN 'Y' ELSE 'N' END AS reaf_flag : String(1)
     FROM  exportTreeView etv
           INNER JOIN opUnitMst oum
           ON   etv.tenant_id     = oum.tenant_id

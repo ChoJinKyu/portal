@@ -7,7 +7,8 @@ sap.ui.define([
         "sap/ui/model/json/JSONModel",
         "../controller/SupplierSelection",
         // "dp/util/control/ui/MaterialMasterDialog"
-        "../controller/MaterialMasterDialog"
+        "../controller/MaterialMasterDialog",
+        // "../contorller/NonPriceInf"
 
 	],
 	/**
@@ -160,6 +161,19 @@ sap.ui.define([
                 this.getView().setModel( new JSON(temp) );
                 this.getView().setModel( new JSON(temp.propInfo), "propInfo");
                 this.getView().setModel( new JSON(temp.sTable), "sTable");
+
+                var NPHeader = [  ];
+                this._NPHeaderTemp = {  h1 : "1",
+                                    h2 : "RFQ",
+                                    h3 : "",
+                                    h4 : "",
+                                    h5 : "",
+                                    h6 : "",
+                                    h7 : "",
+                                    Item : [  ],
+                                        };                        
+                this._NPItemTemp = { v1 : "", v2 : "", v3 : "" };
+                this.getView().setModel( new JSON(NPHeader), "NPHeader");
                 
             },
             onNavBack: function(e){
@@ -487,6 +501,56 @@ sap.ui.define([
 
                 }
                 this.oSearchMultiMaterialMasterDialog.open();
+                
+            },
+            onAddNonPrice(e){
+                if (!this._NonPriceInfPopup) {
+                    this._NonPriceInfPopup = sap.ui.xmlfragment("NonPriceInf", "sp.sc.scQBCreate.view.NonPriceInf", this);
+                    var NPInfPopupUtil = new JSON({ type : "1" });
+                    this.getView().setModel(NPInfPopupUtil, "NPInfPopupUtil");
+                    
+                    var ApplyButton = new sap.m.Button({type: sap.m.ButtonType.Emphasized,
+                                                                text: "Apply",
+                                                                press: function () {
+                                                                    this.onNonPriceInfApplyPress();
+                                                                    this._NonPriceInfPopup.close();
+                                                                }.bind(this)});
+                    var CloseButton = new sap.m.Button({type: sap.m.ButtonType.Emphasized,
+                                                                text: "Close",
+                                                                press: function () {
+                                                                    this._NonPriceInfPopup.close();
+                                                                }.bind(this)});
+                    this._NonPriceInfPopup.setBeginButton(ApplyButton);
+                    this._NonPriceInfPopup.setEndButton(CloseButton);
+                    this.getView().addDependent(this._NonPriceInfPopup);
+                    // this._isAddPersonalPopup = true;
+                }
+
+                this._NonPriceInfPopup.open();
+                
+            },
+            onDeleteNonPrice(e){
+                
+            },
+            onNonPriceInfCancel(e){
+                this._NonPriceInfPopup.close();
+            },
+            onNonPriceInfApplyPress(e){
+                alert("1");
+            },
+            selectNPTypeChange(e){
+                var NPHeaderModel = this.getView().getModel("NPHeader");
+                var NPHeader = this._NPHeaderTemp;
+                var NPItem = this._NPItemTemp;
+                NPHeaderModel.setData(NPHeader);
+
+                var typeFlagModel = this.getView().getModel("NPInfPopupUtil");
+                // var typeFlag = typeFlagModel.oData.type;
+                var oKey = e.getParameters().selectedItem.mProperties.key;
+                var typeFlag = {type : oKey};
+                typeFlagModel.setData(typeFlag);
+
+                
                 
             }
 		});

@@ -1,14 +1,16 @@
-PROCEDURE DP_VI_BASE_PRICE_ARL_PROC (IN I_PROJECT DP_VI_BASE_PRICE_ARL_MST_TYPE
-                                    ,IN I_SIMILAR_MODEL DP_VI_BASE_PRICE_ARL_DTL_TYPE
-                                    ,IN I_ADD_INFO DP_VI_BASE_PRICE_ARL_PRICE_TYPE
+PROCEDURE DP_VI_BASE_PRICE_ARL_INSERT_PROC (IN I_MASTER DP_VI_BASE_PRICE_ARL_MST_TYPE
+                                    ,IN I_APPROVER DP_VI_BASE_PRICE_ARL_APPROVER_TYPE
+                                    ,IN I_REFERER DP_VI_BASE_PRICE_ARL_REFERER_TYPE
+                                    ,IN I_DETAIL DP_VI_BASE_PRICE_ARL_DTL_TYPE
+                                    ,IN I_PRICE DP_VI_BASE_PRICE_ARL_PRICE_TYPE
                                     ,OUT O_MSG DP_VI_BASE_PRICE_ARL_OUT_TYPE)
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
-Scrum          : DP/VI/품의서 작성 및 수정
-Procedure Name : DP_VI_BASE_PRICE_ARL_MERGE_PROC
+Scrum          : DP/VI/품의서 등록
+Procedure Name : DP_VI_BASE_PRICE_ARL_INSERT_PROC
 Creator        : Han Ki Ho
-Description    : 신규/변경 개발VI 품의서 작성 및 수정
+Description    : 신규/변경 개발VI 품의서 등록
 History        : 2021-01-19 initial creation
 ***************************************************************************/
 AS

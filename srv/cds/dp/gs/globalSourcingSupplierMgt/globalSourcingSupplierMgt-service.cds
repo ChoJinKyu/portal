@@ -39,8 +39,8 @@ service GsSupplierMgtService {
 
     view SupplierGenView as
     select key gen.tenant_id,
-           key gen.sourcing_supplier_nickname,
-           gen.sourcing_supplier_id,
+           key gen.sourcing_supplier_id,
+           gen.sourcing_supplier_nickname,
            gen.develop_date,
            gen.developer_empno,
            emp.user_local_name  as developer_empname,

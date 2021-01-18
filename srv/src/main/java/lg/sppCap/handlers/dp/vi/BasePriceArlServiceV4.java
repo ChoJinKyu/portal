@@ -222,25 +222,29 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
     public void onBasePriceArlProcContext(DpViBasePriceArlProcContext context) {
         log.info("#### onBasePriceArlProcContext");
 
-        validator.validationBasePriceArlMaster(context, context.getInputData().getBasePriceArlMst());
+        validator.validationBasePriceArlMaster(context, context.getInputData().getBasePriceArlMst(), false);
+
+        // Sql Paragraph Display Flag
+        boolean isDisplaySql = false;
 
         // DDL 실행시 auto-commit OFF 설정
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
         jdbc.execute(v_sql_commitOption);
 
         // 01. Tempory Table Create
-        this.makeTable();
+        this.makeTable(isDisplaySql);
 
         // 02. Tempory Data Insert
         Collection<BasePriceArlMstType> basePriceArlMasters = context.getInputData().getBasePriceArlMst();
-        this.createTempData(basePriceArlMasters);
+        this.createTempData(basePriceArlMasters, isDisplaySql);
 
         // 03. execute stored-procedure by cmd parameter
         String cmdString = context.getInputData().getCmd().toLowerCase();
 
         switch (cmdString) {
             case "insert" :
-                System.out.println("insert");
+                // System.out.println("insert");
+                this.insertProcedure();
                 break;
             case "upsert" :
                 System.out.println("upsert");
@@ -255,7 +259,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         }
 
         // 04. Tempory Table Drop
-        this.destoryTable();
+        this.destoryTable(isDisplaySql);
 
         // return value regist
         OutputDataType v_result = OutputDataType.create();
@@ -269,7 +273,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
     }
 
     @Transactional(rollbackFor = SQLException.class)
-    private void makeTable() {
+    private void makeTable(boolean isDisplaySql) {
         log.info("## makeTable Method Started....");
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함  
@@ -363,11 +367,23 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         v_sql_createTable_BasePriceArlPrice.append("  UPDATE_USER_ID                    NVARCHAR(255)");
         v_sql_createTable_BasePriceArlPrice.append(")");
         jdbc.execute(v_sql_createTable_BasePriceArlPrice.toString());
+
+        if (isDisplaySql) {
+            System.out.println(v_sql_createTable_BasePriceArlMaster + ";");
+            System.out.println(v_sql_createTable_BasePriceArlApprover + ";");
+            System.out.println(v_sql_createTable_BasePriceArlReferer + ";");
+            System.out.println(v_sql_createTable_BasePriceArlDetail + ";");
+            System.out.println(v_sql_createTable_BasePriceArlPrice + ";");
+        } else {
+            log.info("## makeTable Method : Finish");
+        }
     }
 
     @Transactional(rollbackFor = SQLException.class)
-    private void createTempData(Collection<BasePriceArlMstType> basePriceArlMasters) {
+    private void createTempData(Collection<BasePriceArlMstType> basePriceArlMasters, boolean isDisplaySql) {
         log.info("## createTempData Method Started....");
+
+        String v_sql_batchInsert = "";
 
         String v_sql_insert_BasePriceArlMaster   = "INSERT INTO #LOCAL_TEMP_MASTER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insert_BasePriceArlApprover = "INSERT INTO #LOCAL_TEMP_APPROVER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -403,6 +419,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
             };
             v_batchInsert_BasePriceArlMaster.add(objMaster);
 
+            v_sql_batchInsert = v_sql_batchInsert + "INSERT INTO #LOCAL_TEMP_MASTER VALUES (" + Arrays.toString(objMaster) + ");\n";
+
             /** 
              * BasePriceArlApproverType
             */
@@ -426,6 +444,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                         basePriceArlApprover.get("update_user_id")
                     };
                     v_batchInsert_BasePriceArlApprover.add(objApprover);
+
+                    v_sql_batchInsert = v_sql_batchInsert + "INSERT INTO #LOCAL_TEMP_APPROVER VALUES (" + Arrays.toString(objApprover) + ");\n";
                 }
             }
 
@@ -449,6 +469,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                         basePriceArlReferer.get("update_user_id")
                     };
                     v_batchInsert_BasePriceArlReferer.add(objReferer);
+
+                    v_sql_batchInsert = v_sql_batchInsert + "INSERT INTO #LOCAL_TEMP_REFERER VALUES (" + Arrays.toString(objReferer) + ");\n";
                 }
             }
 
@@ -481,6 +503,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                     };
                     v_batchInsert_BasePriceArlDetail.add(objDetail);
 
+                    v_sql_batchInsert = v_sql_batchInsert + "INSERT INTO #LOCAL_TEMP_DETAIL VALUES (" + Arrays.toString(objDetail) + ");\n";
+
                     /** 
                      * BasePriceArlPriceType
                     */
@@ -495,20 +519,22 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                                 basePriceArlPrice.get("tenant_id"),
                                 basePriceArlPrice.get("approval_number"),
                                 basePriceArlPrice.get("item_sequence"),
-                                basePriceArlPrice.get("company_code"),
-                                basePriceArlPrice.get("org_type_code"),
-                                basePriceArlPrice.get("org_code"),
-                                basePriceArlPrice.get("au_code"),
-                                basePriceArlPrice.get("material_code"),
-                                basePriceArlPrice.get("supplier_code"),
-                                basePriceArlPrice.get("base_date"),
-                                basePriceArlPrice.get("base_price_ground_code"),
+                                basePriceArlPrice.get("market_code"),
+                                basePriceArlPrice.get("new_base_price"),
+                                basePriceArlPrice.get("new_base_price_currency_code"),
+                                basePriceArlPrice.get("current_base_price"),
+                                basePriceArlPrice.get("current_base_price_currency_code"),
+                                basePriceArlPrice.get("first_purchasing_net_price"),
+                                basePriceArlPrice.get("first_pur_netprice_curr_cd"),
+                                basePriceArlPrice.get("first_pur_netprice_str_dt"),
                                 basePriceArlPrice.get("local_create_dtm"),
                                 basePriceArlPrice.get("local_update_dtm"),
                                 basePriceArlPrice.get("create_user_id"),
                                 basePriceArlPrice.get("update_user_id")
                             };
                             v_batchInsert_BasePriceArlPrice.add(objPrice);
+
+                            v_sql_batchInsert = v_sql_batchInsert + "INSERT INTO #LOCAL_TEMP_PRICE VALUES (" + Arrays.toString(objPrice) + ");\n";
                         }
                     }
                 }
@@ -539,6 +565,16 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         int[] returnCntPrice = jdbc.batchUpdate(v_sql_insert_BasePriceArlPrice, v_batchInsert_BasePriceArlPrice);
         // System.out.println("# [#LOCAL_TEMP_PRICE] Insertion Count : " + this.getIntArraySum(returnCntPrice) + " / " + Arrays.toString(returnCntPrice));
         
+        if (isDisplaySql) {
+            // v_sql_batchInsert.replace("[", "(").replace(", ", "','").replace("]", "");
+            System.out.println(v_sql_batchInsert + "\n");
+
+            System.out.println("SELECT * FROM #LOCAL_TEMP_MASTER;");
+            System.out.println("SELECT * FROM #LOCAL_TEMP_APPROVER;");
+            System.out.println("SELECT * FROM #LOCAL_TEMP_REFERER;");
+            System.out.println("SELECT * FROM #LOCAL_TEMP_DETAIL;");
+            System.out.println("SELECT * FROM #LOCAL_TEMP_PRICE;\n");
+        }
     }
 
     private int getIntArraySum(int[] iCnt) {
@@ -553,8 +589,47 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         return sum;
     }
 
+    private void insertProcedure() {
+        log.info("## insertProcedure Method Started....");
+
+        StringBuffer v_sql_callProc = new StringBuffer();
+        v_sql_callProc.append("CALL DP_VI_BASE_PRICE_ARL_INSERT_PROC(");        
+        v_sql_callProc.append("     I_MASTER => #LOCAL_TEMP_MASTER,");        
+        v_sql_callProc.append("     I_APPROVER => #LOCAL_TEMP_APPROVER,");        
+        v_sql_callProc.append("     I_REFERER => #LOCAL_TEMP_REFERER, ");        
+        v_sql_callProc.append("     I_DETAIL => #LOCAL_TEMP_DETAIL,");        
+        v_sql_callProc.append("     I_PRICE => #LOCAL_TEMP_PRICE,");        
+        v_sql_callProc.append("     O_MSG => ?)"); 
+
+        System.out.println(v_sql_callProc);
+
+        // //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+        // SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<TcProcOutType>(){
+        //     @Override
+        //     public TcProcOutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+        //         //TcProcOutType v_row = TcProcOutType.create();
+        //         v_result.setReturnCode(v_rs.getString("return_code"));
+        //         v_result.setReturnMsg(v_rs.getString("return_msg"));
+        //         return v_result;
+        //     }
+        // });
+
+        // List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        // //paramList.add(new SqlParameter("USER_ID", Types.VARCHAR));
+        // paramList.add(oTable);
+
+        // Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+        //     @Override
+        //     public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+        //         CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+        //         callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
+        //         return callableStatement;
+        //     }
+        // }, paramList);
+    }
+
     @Transactional(rollbackFor = SQLException.class)
-    private void destoryTable() {
+    private void destoryTable(boolean isDisplaySql) {
         log.info("## destoryTable Method Started....");
 
         // 1. BasePriceArlMstType 관련 테이블
@@ -576,6 +651,14 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         // 5. BasePriceArlPriceType 관련 테이블
         String v_sql_dropTable_BasePriceArlPrice = "DROP TABLE #LOCAL_TEMP_PRICE";
         jdbc.execute(v_sql_dropTable_BasePriceArlPrice);
+
+        if (isDisplaySql) {
+            System.out.println(v_sql_dropTable_BasePriceArlMaster + ";");
+            System.out.println(v_sql_dropTable_BasePriceArlApprover + ";");
+            System.out.println(v_sql_dropTable_BasePriceArlReferer + ";");
+            System.out.println(v_sql_dropTable_BasePriceArlDetail + ";");
+            System.out.println(v_sql_dropTable_BasePriceArlPrice + ";");
+        }
     }
 
 }
