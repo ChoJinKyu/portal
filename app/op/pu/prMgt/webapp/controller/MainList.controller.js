@@ -127,8 +127,8 @@ sap.ui.define([
                 aIndices = [];
 
             var that = this;
-            console.log("checkBoxs ::::", checkBoxs);
 
+            //console.log("checkBoxs ::::", checkBoxs);
             //checkBoxs[0].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()
             // for (var i = 0; i < checkBoxs.length; i++) {
             //     if (checkBoxs[i].getSelected() === true )
@@ -136,13 +136,25 @@ sap.ui.define([
             //         aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
             //     }
             // }
+
+            var sendData = {}, aInputData=[];
+            
             aItems.forEach(function(oItem){
                 if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "10" )
                 {
                 //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
                  aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
+                 var oDeletingKey = {
+                        tenant_id: oItem.getBindingContext("list").getProperty("tenant_id"),
+                        company_code: oItem.getBindingContext("list").getProperty("company_code"),
+                        pr_number: oItem.getBindingContext("list").getProperty("pr_number"),
+                        pr_create_status_code: oItem.getBindingContext("list").getProperty("pr_create_status_code")           
+                    } ;    
+                 aInputData.push(oDeletingKey);
                 }
             });
+
+            sendData.inputData = aInputData;
 
             console.log("delPrList >>>>", aIndices);
 
@@ -155,8 +167,18 @@ sap.ui.define([
                         aIndices = aIndices.sort(function(a, b){return b-a;});
                         aIndices.forEach(function(nIndex){                            
                             oModel.removeRecord(nIndex);
-                            //oModel.markRemoved(nIndex);
                         });
+
+                        that._fnCallAjax(
+                            sendData,
+                            "DeletePrProc",
+                            function(result){
+                                oView.setBusy(false);
+                                if(result && result.value && result.value.length > 0 && result.value[0].return_code === "0000") {                                    
+                                    that.byId("pageSearchButton").firePress();
+                                }
+                            }
+                        );
 
                         } else if (sButton === MessageBox.Action.CANCEL) { 
 
@@ -167,6 +189,32 @@ sap.ui.define([
             } else {
                 MessageBox.error("선택된 임시저장 요청이 없습니다.");
             }
+        },
+
+
+         _fnCallAjax: function (sendData, targetName , callback) {            
+            var that = this;            
+            var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/op.PrDeleteV4Service/" + targetName;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(sendData),
+                contentType: "application/json",
+                success: function (result){                     
+                    if(result && result.value && result.value.length > 0) {
+                        if(result.value[0].return_code === "0000") {
+                            MessageToast.show(that.getModel("I18N").getText("/" + result.value[0].return_code));
+                        }
+                        MessageToast.show(result.value[0].return_msg);                        
+                    }
+                    callback(result);
+                },
+                error: function(e){
+                    MessageToast.show("Call ajax failed");
+                    callback(e);
+                }
+            });
         },
 
 
