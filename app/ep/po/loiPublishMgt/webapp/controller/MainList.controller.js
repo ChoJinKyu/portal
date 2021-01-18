@@ -6,7 +6,6 @@ sap.ui.define([
     "ext/lib/util/Validator",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
-    // "sap/m/TablePersoController",
     "sap/ui/table/TablePersoController",
     "./MainListPersoService",
     "sap/ui/core/Fragment",
@@ -34,9 +33,7 @@ sap.ui.define([
     return BaseController.extend("ep.po.loiPublishMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
-
         numberFormatter: NumberFormatter,
-
         validator: new Validator(),
 
         /* =========================================================== */
@@ -51,17 +48,11 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
-            this.setModel(new JSONModel(), "mainListViewModel");
+            //this.setModel(new JSONModel(), "mainListViewModel");
 
-            // var oJsonData = {};
-            // var oJsonModel = new JSONModel(oJsonData);
             this.setModel(new JSONModel(), "loiVos");
             this.setModel(new JSONModel(), "loiRfq");
             this.setModel(new JSONModel(), "loiRmk");
-
-            oTransactionManager = new TransactionManager();
-            // oTransactionManager.addDataModel(this.getModel("loiDtl"));    
-            // oTransactionManager.setServiceModel(this.getOwnerComponent().getModel());        
 
             // oMultilingual.attachEvent("ready", function(oEvent){
             // 	var oi18nModel = oEvent.getParameter("model");
@@ -74,10 +65,6 @@ sap.ui.define([
 
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-            //this._doInitTablePerso();
-
-            //console.log("NCM0004=======", this.getModel("I18N").getText("/NCM0004"));
-
             this._oTPC = new TablePersoController({
                 customDataKey: "loiPublishMgt",
                 persoService: MainListPersoService
@@ -89,8 +76,8 @@ sap.ui.define([
 
             // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            //this.getView().byId("searchBuyer").setValue("(9586) **민");
-            //this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
+            // this.getView().byId("searchBuyer").setValue("(9586) **민");
+            // this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
         },
 
         onRenderedFirst: function () {
@@ -163,9 +150,7 @@ sap.ui.define([
 
             var loiVosModel = this.getModel("loiVos");
             console.log("saveSupplierOpinion=====", oView.byId("saveSupplierOpinion").getValue());
-            console.log("loiVosModel.getData()1==" + JSON.stringify(loiVosModel.getData()));
             loiVosModel.getData().supplier_opinion = oView.byId("saveSupplierOpinion").getValue();
-            console.log("loiVosModel.getData()2==" + JSON.stringify(loiVosModel.getData()));
 
             //JsonModel이 변경되었는지 체크로직 구현
             // if(loiRfqModel.getChanges().length === 0) {
@@ -174,9 +159,6 @@ sap.ui.define([
             // }
 
             if (this.validator.validate(this.byId("dialogVos")) !== true) return;
-
-            // console.log("####oTransactionManager====", oTransactionManager);
-            // console.log("####oDataModel====", oMasterModel.getData());
 
             var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiVosProc";
 
@@ -227,12 +209,6 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            // console.log("####tenant_id====", oRecord.tenant_id);
-            // console.log("####company_code====", oRecord.company_code);
-            // console.log("####loi_write_number====", oRecord.loi_write_number);
-            // console.log("####loi_item_number====", oRecord.loi_item_number);
-            // console.log("####supplier_opinion====", oRecord.supplier_opinion);
-
             var saveLoiVos = {
                 "tenant_id": oRecord.tenant_id,
                 "company_code": oRecord.company_code,
@@ -273,9 +249,7 @@ sap.ui.define([
 
             var loiRmkModel = this.getModel("loiRmk");
             console.log("saveRemark=====", oView.byId("saveRemark").getValue());
-            console.log("loiRmkModel.getData()1==" + JSON.stringify(loiRmkModel.getData()));
             loiRmkModel.getData().remark = oView.byId("saveRemark").getValue();
-            console.log("loiRmkModel.getData()2==" + JSON.stringify(loiRmkModel.getData()));
 
             //JsonModel이 변경되었는지 체크로직 구현
             // if(loiRfqModel.getChanges().length === 0) {
@@ -284,9 +258,6 @@ sap.ui.define([
             // }
 
             if (this.validator.validate(this.byId("dialogRmk")) !== true) return;
-
-            // console.log("####oTransactionManager====", oTransactionManager);
-            // console.log("####oDataModel====", oMasterModel.getData());
 
             var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRmkProc";
 
@@ -336,12 +307,6 @@ sap.ui.define([
 
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-            console.log("####sPath====", sPath);
-            // console.log("####tenant_id====", oRecord.tenant_id);
-            // console.log("####company_code====", oRecord.company_code);
-            // console.log("####loi_write_number====", oRecord.loi_write_number);
-            // console.log("####loi_item_number====", oRecord.loi_item_number);
-            console.log("####supplier_opinion====", oRecord.remark);
 
             var saveLoiRmk = {
                 "tenant_id": oRecord.tenant_id,
@@ -351,7 +316,6 @@ sap.ui.define([
                 "remark": ""
             }
             this.getModel("loiRmk").setData(saveLoiRmk);
-            console.log("####loiRmk====", this.getModel("loiRmk"));
 
             var oView = this.getView();
             if (!this._rmkDialog) {
@@ -368,7 +332,6 @@ sap.ui.define([
             this._rmkDialog.then(function (rmkDialog) {
                 rmkDialog.open();
                 oView.byId("saveRemark").setValue(oRecord.remark);
-                console.log("#saveRemark=", oView.byId("saveRemark").getValue());
             });
 
         },
@@ -383,19 +346,12 @@ sap.ui.define([
                 that = this;
 
             var loiRfqModel = this.getModel("loiRfq");
-            console.log("saveQuotationNumber=====", oView.byId("saveQuotationNumber").getValue());
-            console.log("saveQuotationItemNumber=====", oView.byId("saveQuotationItemNumber").getValue());
-            console.log("loiRfq.getData()1==" + JSON.stringify(loiRfqModel.getData()));
 
             loiRfqModel.getData()["inputData"].map(d => {
                 d["quotation_number"] = oView.byId("saveQuotationNumber").getValue();
                 d["quotation_item_number"] = oView.byId("saveQuotationItemNumber").getValue();
                 return d;
             });
-
-            console.log("loiRfq.getData()2==" + JSON.stringify(loiRfqModel.getData()));
-            // loiVosModel.getData().supplier_opinion = oView.byId("saveSupplierOpinion").getValue();
-            // console.log("loiVosModel.getData()2=="+JSON.stringify(loiRfqModel.getData())); 
 
             //JsonModel이 변경되었는지 체크로직 구현
             // if(loiRfqModel.getChanges().length === 0) {
@@ -404,9 +360,6 @@ sap.ui.define([
             // }
 
             if (this.validator.validate(this.byId("dialogRfq")) !== true) return;
-
-            // console.log("####oTransactionManager====", oTransactionManager);
-            // console.log("####oDataModel====", oMasterModel.getData());
 
             var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiQuotationNumberProc";
 
@@ -422,17 +375,9 @@ sap.ui.define([
                             data: JSON.stringify(loiRfqModel.getData()),
                             contentType: "application/json",
                             success: function (data) {
-
                                 console.log("#########Success#####", data.value);
-
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.validator.clearValueState(that.byId("dialogRfq"));
-
-                                // if(data.value.rsltCnt > 0) {
-                                //     MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
-                                // }else {
-                                //     MessageToast.show(that.getModel("I18N").getText("/NCM01005"));
-                                // }
                                 that.onExitRfq();
                                 that.byId("pageSearchButton").firePress();
                             },
@@ -451,7 +396,6 @@ sap.ui.define([
          */
         onExitRfq: function () {
             this.byId("dialogRfq").close();
-            // this.byId("dialogRfq").destroy();
         },
 
 		/**
@@ -466,18 +410,6 @@ sap.ui.define([
             var oTable = this.byId("mainTable"),
                 oModel = this.getView().getModel("list"),
                 oSelected = oTable.getSelectedIndices();
-
-            // var selectedEntries = [];
-            // var tableData = oTable.getModel().getData();
-            // for(var index= 0;index<oSelected.length;index++){
-            //     var tableIndex = oSelected[index];
-            //     console.log("tableIndex==", tableIndex);
-            //     console.log("modelData==", oTable.getModel().oData);
-            //     var tableRow = tableData.oData[tableIndex];
-            //     console.log("tableRow==", tableRow.uid);
-            //     selectedEntries.push( tableRow.uid );
-            // }                
-
 
             var loiNumberArr = [];
 
@@ -622,7 +554,8 @@ sap.ui.define([
 
             var oTable = this.byId("mainTable"),
                 oModel = this.getView().getModel("list"),
-                oSelected = oTable.getSelectedIndices();
+                oSelected = oTable.getSelectedIndices(),
+                that = this;
             console.log("oSelected=", oSelected);
             console.log("oModel=", oModel.getData());
 
@@ -632,12 +565,6 @@ sap.ui.define([
                 sLoiItemNumber = "",
                 sLoiSelectionNumber = "",
                 sLoiNumber = "";
-            // '122010'	'RFQ진행중'
-            // '122020'	'RFQ완료'
-            // '122030'	'작성중'
-            // '122040'	'결재진행중'
-            // '122050'	'결재반려'
-            // '122060'	'업체선정완료'         
 
             //RFQ 번호,상태에 따라 이동가능 여부 체크  
             var canSelect = true;
@@ -647,10 +574,6 @@ sap.ui.define([
 
             if (oSelected.length > 0) {
                 oSelected.some(function (chkIdx, index) {
-                    console.log("aaaaaaaaaa=", oModel.getData().LOIPublishItemView[chkIdx].loi_number);
-                    console.log("oSelected.length=", oSelected.length);
-                    console.log("chkIdx=", chkIdx);
-                    //oModel.getData().LOIPublishItemView[idx].loi_number
                     sTenantId += oModel.getData().LOIPublishItemView[chkIdx].tenant_id + (oSelected.length == index + 1 ? "" : ",");
                     sCompanyCode += oModel.getData().LOIPublishItemView[chkIdx].company_code + (oSelected.length == index + 1 ? "" : ",");
                     sLoiWriteNumber += oModel.getData().LOIPublishItemView[chkIdx].loi_write_number + (oSelected.length == index + 1 ? "" : ",");
@@ -681,7 +604,6 @@ sap.ui.define([
                     if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
                         //MessageToast.show("견적번호가 없습니다.");
                         existRfq = false;
-                        return true;
                     }
 
                     //견적번호 동일한지 체크
@@ -725,20 +647,6 @@ sap.ui.define([
             //     }
             // }
 
-            // MessageBox.confirm(this.getModel("I18N").getText("/NEP00004"), {
-            //     title: this.getModel("I18N").getText("/CONFIRM"),
-            //     initialFocus: MessageBox.Action.CANCEL,
-            //     onClose: function (sButton) {
-            //         console.log("sButton===", sButton);
-            //         return;
-            //         // if (sButton === MessageBox.Action.OK) {
-            //         //     canSelect = true;
-            //         // }else {
-            //         //     canSelect = false;
-            //         // }
-            //     }
-            // });            
-
             //업체선정번호가 없으면 신규저장모드
             if (!sLoiSelectionNumber) {
                 sLoiSelectionNumber = "new";
@@ -748,22 +656,46 @@ sap.ui.define([
             console.log("canSelect=", canSelect);
 
             if (canSelect) {
-                console.log("sTenantId=", sTenantId);
-                var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-                this.getRouter().navTo("selectionPage", {
-                    //layout: oNextUIState.layout,
-                    tenantId: sTenantId,
-                    companyCode: sCompanyCode,
-                    loiWriteNumber: sLoiWriteNumber,
-                    loiItemNumber: sLoiItemNumber,
-                    loiSelectionNumber: sLoiSelectionNumber,
-                    loiNumber: sLoiNumber
-                    // existRfq: existRfq
-                }, true);
+                if (!existRfq) {
+                    MessageBox.confirm(this.getModel("I18N").getText("/NEP00004"), {
+                        title: this.getModel("I18N").getText("/CONFIRM"),
+                        initialFocus: MessageBox.Action.CANCEL,
+                        onClose: function (sButton) {
+                            console.log("sButton===", sButton);
+                            if (sButton === MessageBox.Action.OK) {
+                                if (canSelect) {
+                                    console.log("sTenantId=", sTenantId);
+                                    var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
+                                    that.getRouter().navTo("selectionPage", {
+                                        //layout: oNextUIState.layout,
+                                        tenantId: sTenantId,
+                                        companyCode: sCompanyCode,
+                                        loiWriteNumber: sLoiWriteNumber,
+                                        loiItemNumber: sLoiItemNumber,
+                                        loiSelectionNumber: sLoiSelectionNumber,
+                                        loiNumber: sLoiNumber
+                                        // existRfq: existRfq
+                                    }, true);
 
-                // if (oNextUIState.layout === "TwoColumnsMidExpanded") {
-                //     this.getView().getModel("mainListViewModel").setProperty("/headerExpanded", false);
-                // }
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    console.log("sTenantId=", sTenantId);
+                    var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+                    this.getRouter().navTo("selectionPage", {
+                        //layout: oNextUIState.layout,
+                        tenantId: sTenantId,
+                        companyCode: sCompanyCode,
+                        loiWriteNumber: sLoiWriteNumber,
+                        loiItemNumber: sLoiItemNumber,
+                        loiSelectionNumber: sLoiSelectionNumber,
+                        loiNumber: sLoiNumber
+                        // existRfq: existRfq
+                    }, true);
+                }
+
             }
 
         },
@@ -804,12 +736,6 @@ sap.ui.define([
                 sLoiSelectionStatusCode = "",
                 sLoiPublishNumber = "",
                 sLoiNumber = "";
-            // 123010	작성중			
-            // 123020	결재진행중			
-            // 123030	결재반려			
-            // 123040	결재완료			
-            // 123050	발행완료			
-            // 123060	서명완료         
 
             //RFQ 번호,상태에 따라 이동가능 여부 체크  
             var canSelect = true;
@@ -817,10 +743,6 @@ sap.ui.define([
 
             if (oSelected.length > 0) {
                 oSelected.some(function (chkIdx, index) {
-                    console.log("aaaaaaaaaa=", oModel.getData().LOIPublishItemView[chkIdx].loi_number);
-                    console.log("oSelected.length=", oSelected.length);
-                    console.log("chkIdx=", chkIdx);
-                    //oModel.getData().LOIPublishItemView[idx].loi_number
                     sTenantId += oModel.getData().LOIPublishItemView[chkIdx].tenant_id + (oSelected.length == index + 1 ? "" : ",");
                     sCompanyCode += oModel.getData().LOIPublishItemView[chkIdx].company_code + (oSelected.length == index + 1 ? "" : ",");
                     sLoiWriteNumber += oModel.getData().LOIPublishItemView[chkIdx].loi_write_number + (oSelected.length == index + 1 ? "" : ",");
@@ -844,7 +766,6 @@ sap.ui.define([
                     }
 
                     console.log("canSelect====", canSelect);
-
 
                     /*
                          업체선정완료가 아니면 링크불가
@@ -889,10 +810,6 @@ sap.ui.define([
                     loiPublishNumber: sLoiPublishNumber,
                     loiNumber: sLoiNumber
                 }, true);
-
-                // if (oNextUIState.layout === "TwoColumnsMidExpanded") {
-                //     this.getView().getModel("mainListViewModel").setProperty("/headerExpanded", false);
-                // }
             }
 
         },
@@ -907,7 +824,7 @@ sap.ui.define([
 		 * @private
 		 */
         _onRoutedThisPage: function () {
-            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+            //this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
             this.byId("pageSearchButton").firePress();
         },
 
@@ -951,24 +868,8 @@ sap.ui.define([
                 sRequestor = this.getView().byId("searchRequestor").getValue(),
                 sLoiPublishStatus = this.getView().byId("searchLoiPublishStatus").getSelectedKeys();
 
-            // var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
-            //     requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
-
-            // var requestDate = this.getView().byId("searchRequestDate").getValue();   
-
-            // console.log(requestDate);
-            // var a = requestDate.replaceAll(" ", "");
-            // var requestFromDate = new Date(a.substring(0, 10));
-            // var requestToDate = new Date(a.substring(11, 22)); 
-
-            // var createFromDate = this.getView().byId("searchSystemCreateDate").getDateValue(),
-            //     createToDate = this.getView().byId("searchSystemCreateDate").getSecondDateValue();
-
             var createFromDate = this.byId("searchSystemCreateDate").getValue().substring(0, 10).replaceAll(" ", ""),
                 createToDate = this.byId("searchSystemCreateDate").getValue().substring(13).replaceAll(" ", "");
-
-            // var publishFromDate = this.getView().byId("searchPublishDate").getDateValue(),
-            //     publishToDate = this.getView().byId("searchPublishDate").getSecondDateValue();
 
             var publishFromDate = this.byId("searchPublishDate").getValue().substring(0, 10).replaceAll(" ", ""),
                 publishToDate = this.byId("searchPublishDate").getValue().substring(13).replaceAll(" ", "");
@@ -994,19 +895,19 @@ sap.ui.define([
                 sBuyer = found4[1];
             }
 
-            console.log("sLoiNumber==", sLoiNumber);
-            console.log("requestFromDate==", requestFromDate);
-            console.log("requestToDate==", requestToDate);
-            console.log("sRequestDepartment==", sRequestDepartment);
-            console.log("sRequestor==", sRequestor);
-            console.log("sLoiPublishStatus==", sLoiPublishStatus);
-            console.log("createFromDate==", createFromDate);
-            console.log("createToDate==", createToDate);
-            console.log("publishFromDate==", publishFromDate);
-            console.log("publishToDate==", publishToDate);
-            console.log("sPurchasingDepartment==", sPurchasingDepartment);
-            console.log("sBuyer==", sBuyer);
-            console.log("sLoiPoStatus==", sLoiPoStatus);
+            // console.log("sLoiNumber==", sLoiNumber);
+            // console.log("requestFromDate==", requestFromDate);
+            // console.log("requestToDate==", requestToDate);
+            // console.log("sRequestDepartment==", sRequestDepartment);
+            // console.log("sRequestor==", sRequestor);
+            // console.log("sLoiPublishStatus==", sLoiPublishStatus);
+            // console.log("createFromDate==", createFromDate);
+            // console.log("createToDate==", createToDate);
+            // console.log("publishFromDate==", publishFromDate);
+            // console.log("publishToDate==", publishToDate);
+            // console.log("sPurchasingDepartment==", sPurchasingDepartment);
+            // console.log("sBuyer==", sBuyer);
+            // console.log("sLoiPoStatus==", sLoiPoStatus);
 
             var aSearchFilters = [];
             if (sLoiNumber.length > 0) {
@@ -1038,7 +939,6 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 sLoiPublishStatus.forEach(function (item, idx, arr) {
-                    //console.log("loi_publish_status_code=", item);
                     _tempFilters.push(new Filter("loi_publish_status_code", FilterOperator.EQ, item));
                 });
 
@@ -1086,26 +986,7 @@ sap.ui.define([
             aSorter.push(new Sorter("system_create_dtm", true));
             //var aSorter = new Sorter("system_create_dtm", true);    
             return aSorter;
-        },
-
-        // _doInitTablePerso: function(){
-        // 	// init and activate controller
-        // 	this._oTPC = new TablePersoController({
-        // 		table: this.byId("mainTable"),
-        // 		componentName: "loiPublishMgt",
-        // 		persoService: MainListPersoService,
-        // 		hasGrouping: true
-        //     }).activate();
-
-        //     // //this.getView().setModel(new ManagedListModel(), "list");
-        //     // // 개인화 - UI 테이블의 경우만 해당
-        //     // this._oTPC = new TablePersoController({
-        //     // customDataKey: "loiPublishMgt",
-        //     // persoService: MainListPersoService
-        //     // }).setTable(this.byId("mainTable"));            
-
-        // }
-
+        }
 
     });
 });
