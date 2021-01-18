@@ -24,11 +24,11 @@
 # for LG spp Dev Server
 @cookie = 
 
-### Ping Test
+### Ping Test : Deployed Server(DEV)
 GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
 Cookie: {{cookie}}
 
-### Ping Test
+### Ping Test : Localhost
 GET http://localhost:8080/odata/v4/sp.sourcingTest01V4Service/$metadata
 
 ### Get Metadata for Service
