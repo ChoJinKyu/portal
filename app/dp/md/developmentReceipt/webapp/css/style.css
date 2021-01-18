@@ -6,6 +6,9 @@
 .readonlyField>div>input{
     padding-left: 0 !important;
 }
+.readonlyField>select{
+    padding-left: 0 !important;
+}
 * {
     outline: none !important;
 }

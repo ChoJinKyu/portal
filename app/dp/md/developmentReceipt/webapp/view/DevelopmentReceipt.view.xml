@@ -481,8 +481,8 @@
                     <table:Column id="moldItemTypeColumn" width="10em" hAlign="Center">
                         <Label text="Item Type" required="true" wrapping="true"/>
                         <table:template>
-                            <ComboBox   id="mold_item_type_code"
-                                selectedKey="{list>mold_item_type_code}"
+                            <Select   id="mold_item_type_code"
+                                selectedItemId="{list>mold_item_type_code}"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -491,10 +491,10 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" selectionChange="inputFieldChange"
+                                required="true" change=".onSelectionChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </Select>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldTypeColumn" width="10em" hAlign="Center">
@@ -510,7 +510,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" selectionChange="inputFieldChange"
+                                required="true" selectionChange=".onSelectionChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
                                 class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
