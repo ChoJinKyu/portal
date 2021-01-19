@@ -46,14 +46,14 @@
                         text="{master>/funding_notify_number}"/>
                     <ObjectStatus
                         title="{I18N>/WRITER}"
-                        text="{master>/create_user_id}"/>
+                        text="{master>/create_user_name}"/>
                     <ObjectStatus
                         title="{I18N>/WRITE_DATE}"
                         text="{
-                            path:'master>/system_create_dtm',
+                            path:'master>/local_create_dtm',
                             type:'sap.ui.model.odata.type.DateTime',
                             formatOptions: {
-                                pattern: 'yyyy-MM-dd'
+                                UTC: true, format: 'yMd'
                             }
                         }"/>
                     <layoutData>
