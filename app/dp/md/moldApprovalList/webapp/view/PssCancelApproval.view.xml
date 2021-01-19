@@ -160,12 +160,12 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-                <Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{mode>/btnEditFlag}"/>
-                <Button type="Transparent" text="Cancel"    press=".onPageCancelEditButtonPress" visible="{mode>/btnCancelFlag}" />
-				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/btnDraftFlag}" />
+                <Button type="Transparent" text="{I18N>/EDIT}"      press=".onPageEditButtonPress" visible="{mode>/btnEditFlag}"/>
+                <Button type="Transparent" text="{I18N>/CANCEL}"    press=".onPageCancelEditButtonPress" visible="{mode>/btnCancelFlag}" />
+				<Button type="Transparent" text="{I18N>/DRAFT}"     press=".onPageDraftButtonPress"   visible="{mode>/btnDraftFlag}" />
                 <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"  visible="{mode>/btnRequestCancelFlag}"/>
-				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  />
-				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress" visible="{mode>/btnRequestFlag}"/>
+				<Button type="Transparent" text="{I18N>/PREVIEW}"   press=".onPagePreviewButtonPress"  />
+				<Button type="Emphasized"  text="{I18N>/REQUEST}"   press=".onPageRequestButtonPress" visible="{mode>/btnRequestFlag}"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
