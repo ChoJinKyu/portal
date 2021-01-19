@@ -185,7 +185,7 @@ sap.ui.define([
             });
 
             var aPriceResult = [];
-            $.each(aPriceData.datas, function(idx, oPrice) {
+            /*$.each(aPriceData.datas, function(idx, oPrice) {
                 if(oData.hasOwnProperty(oPrice.addition_type_code.toLowerCase())) {
                     var aAddition = oData[oPrice.addition_type_code.toLowerCase()].results;
                     $.each(Object.keys(oPrice), function(idx2, sKey) {
@@ -206,6 +206,21 @@ sap.ui.define([
                         });
                     })
                 }
+            });*/
+            aPriceData.datas.forEach(function(oPrice, idx) {
+                var aKeys = Object.keys(oPrice);
+                aKeys.forEach(function(sKey, idx2) {
+                    if($.isNumeric(sKey)) {
+                        var oNewPriceObj = {};
+                        oNewPriceObj['tenant_id'] = oData.tenant_id;
+                        oNewPriceObj['project_code'] = oData.project_code;
+                        oNewPriceObj['model_code'] = oData.model_code;
+                        oNewPriceObj['addition_type_code'] = oPrice.addition_type_code;
+                        oNewPriceObj['period_code'] = sKey;
+                        oNewPriceObj['addition_type_value'] = oPrice[sKey];
+                        aPriceResult.push(oNewPriceObj);
+                    }
+                });
             });
 
             var aBaseExtractResult = [];

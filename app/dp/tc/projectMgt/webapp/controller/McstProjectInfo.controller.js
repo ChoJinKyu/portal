@@ -22,7 +22,7 @@ sap.ui.define([
         }
 
         , onAfterRendering: function () {
-            debugger;
+            //debugger;
             let sId = this.byId("oplProjectInfo").getHeaderContent()[0].getParent().sId;
             jQuery("#"+sId).removeClass("sapFDynamicPageHeaderWithContent");
         }
@@ -63,7 +63,7 @@ sap.ui.define([
                 filters : aFilters,
                 urlParameters : { "$expand" : sExpand },
                 success : function(data){
-                    debugger;
+                    //debugger;
                     oView.setBusy(false);
                     console.log("McstProjectInfo.Controller", data);
 
@@ -192,33 +192,27 @@ sap.ui.define([
                 similarModel         : aSimilarModel,
                 user_id              : me.oUerInfo.user_id
             }
-            
             var aPriceResult = [];
-            $.each(aPriceData.datas, function(idx, oPrice) {
-                if(oData.hasOwnProperty(("mcst_"+oPrice.addition_type_code).toLowerCase())) {
-                    var aAddition = oData["mcst_" + oPrice.addition_type_code.toLocaleLowerCase()].results;
-                    $.each(Object.keys(oPrice), function(idx2, sKey) {
-                        $.each(aAddition, function(idx3, oAddition) {
-                            if(!oAddition.addition_type_code) {
-                                    return true;
-                            } else if(oAddition.period_code === sKey) {
-                                aPriceResult.push({
-                                    tenant_id           : oAddition.tenant_id,
-                                    project_code        : oAddition.project_code,
-                                    model_code          : oAddition.model_code,
-                                    version_number      : oData.version_number,
-                                    addition_type_code  : oAddition.addition_type_code,
-                                    period_code         : oAddition.period_code,
-                                    addition_type_value : oPrice[sKey],
-                                    user_id             : me.oUerInfo.user_id
-                                });
-                                return false;
-                            }
-                        });
-                    });
-                }
-            });
+            
 
+            aPriceData.datas.forEach(function(oPrice, idx) {
+                var aKeys = Object.keys(oPrice);
+                aKeys.forEach(function(sKey, idx2) {
+                    if($.isNumeric(sKey)) {
+                        var oNewPriceObj = {};
+                        oNewPriceObj['tenant_id'] = oData.tenant_id;
+                        oNewPriceObj['project_code'] = oData.project_code;
+                        oNewPriceObj['model_code'] = oData.model_code;
+                        oNewPriceObj['version_number'] = oData.version_number;
+                        oNewPriceObj['addition_type_code'] = oPrice.addition_type_code;
+                        oNewPriceObj['period_code'] = sKey;
+                        oNewPriceObj['addition_type_value'] = oPrice[sKey];
+                        oNewPriceObj['user_id'] = me.oUerInfo.user_id;
+                        aPriceResult.push(oNewPriceObj);
+                    }
+                });
+            });
+            
             var aBaseExtractResult = [];
             $.each(aExchangeData.datas, function(idx, oTableData) {
                 //debugger;
@@ -247,7 +241,7 @@ sap.ui.define([
                     user_id           : me.oUerInfo.user_id                 
                 }
             };
-            debugger;
+            //debugger;
             this._sendSaveData(oSendData);
         }
 
