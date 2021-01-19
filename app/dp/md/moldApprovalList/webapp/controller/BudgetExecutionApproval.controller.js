@@ -113,7 +113,9 @@ sap.ui.define([
                     md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
                     md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
                     that._bindComboPlant(oData.results[0].import_company_code); 
-                    that._searchAssetType(oData.results[0].investment_ecst_type_code);
+                    that._searchAssetType(oData.results[0].investment_ecst_type_code, function(oData){
+                        console.log(oData);
+                    });
                 } else {
                     md.setProperty("/investment_ecst_type_code", "I");
                     md.setProperty("/investment_ecst_type_code_nm", "");
@@ -150,7 +152,9 @@ sap.ui.define([
             });
         },
         onBudgetChange : function ( oEvent ){
-            this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'));
+            this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'), function(oData){
+                console.log(oData);
+            });
         } ,
         _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회 
             // this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type 
