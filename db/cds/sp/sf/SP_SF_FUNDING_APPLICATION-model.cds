@@ -30,7 +30,7 @@ entity Sf_Funding_Application {
         company_code                  : String(10) not null @title : '회사코드';
         org_type_code                 : String(2) not null  @title : '조직유형코드';
         org_code                      : String(10) not null @title : '조직코드';
-        funding_appl_date             : Date(8)             @title : '자금지원신청일자';
+        funding_appl_date             : Date                @title : '자금지원신청일자';
         purchasing_department_name    : String(100)         @title : '구매부서명';
         pyear_sales_amount            : Decimal             @title : '전년매출금액';
         main_bank_name                : String(100)         @title : '주요은행명';
@@ -43,8 +43,8 @@ entity Sf_Funding_Application {
         funding_reason_code           : String(30)          @title : '자금지원사유코드';
         collateral_type_code          : String(30)          @title : '담보구분코드';
         collateral_amount             : Decimal             @title : '담보금액';
-        collateral_start_date         : Date(8)             @title : '담보시작일자';
-        collateral_end_date           : Date(8)             @title : '담보종료일자';
+        collateral_start_date         : Date                @title : '담보시작일자';
+        collateral_end_date           : Date                @title : '담보종료일자';
         collateral_attch_group_number : String(100)         @title : '담보첨부파일그룹번호';
         funding_step_code             : String(30) not null @title : '자금지원단계코드';
         funding_status_code           : String(30) not null @title : '자금지원상태코드';

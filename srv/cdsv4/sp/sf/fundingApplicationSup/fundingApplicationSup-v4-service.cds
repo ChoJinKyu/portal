@@ -13,10 +13,8 @@ using sp.Sf_Funding_Invest_Plan_Dtl from '../../../../../db/cds/sp/sf/SP_SF_FUND
 using { cm.Pur_Operation_Org as cm_pur_operation_org } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';          //조직정보
 using { cm.Pur_Org_Type_Mapping as cm_pur_org_type_mapping } from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model'; //프로세스타입 정보
 
-//공통코드
-using { cm.Code_Mst as cm_code_mst } from '../../../../../db/cds/cm/CM_CODE_MST-model'; //
-using { cm.Code_Dtl as cm_code_dtl } from '../../../../../db/cds/cm/CM_CODE_DTL-model'; //
-using { cm.Code_Lng as cm_code_lng } from '../../../../../db/cds/cm/CM_CODE_LNG-model'; //
+// 공통코드 뷰
+using { cm as CodeView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 
 
 
@@ -61,24 +59,20 @@ service FundingApplicationSupV4Service {
         ;
 
 
-    //----------------------공통코드 쿼리
-    view ComCodeListView (tenant_id: String, chain_code: String, group_code: String, language_cd: String) as
+    //----------------------공통코드
+    view ComCodeListView (tenant_id: String
+                        , group_code: String
+                        , chain_code: String
+                        , language_cd: String) as 
         select 
-            mst.group_code
-            ,dtl.code
-            ,ifnull(lng.code_name, dtl.code_description) as code_name: String
-        from cm_code_mst as mst
-        inner join cm_code_dtl as dtl on mst.tenant_id = dtl.tenant_id
-        and mst.group_code = dtl.group_code
-        and mst.tenant_id = :tenant_id
-        and mst.chain_code = :chain_code
-        and mst.group_code = :group_code
-        left join cm_code_lng as lng on mst.tenant_id = lng.tenant_id
-        and mst.group_code = lng.group_code
-        and dtl.code = lng.code
-        and lng.language_cd = :language_cd
-        order by mst.group_code, dtl.sort_no
-        ;
-
+              tenant_id
+             ,group_code
+             ,code
+             ,code_name
+        from CodeView.Code_View
+        where tenant_id = :tenant_id
+        and group_code = :group_code
+        and language_cd = :language_cd
+        ; 
 
 }
