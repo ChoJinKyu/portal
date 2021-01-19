@@ -297,7 +297,7 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnChkBox" width="4em" >
-                            <CheckBox selected="false" select=".onColumnChecBox" text=""/> 
+                            <CheckBox selected="false" select=".onColumnChecBox" text=" "/> 
                         </Column>
                         <Column id="mainColumnApprovalCategory" >
                             <!-- <Text text="Approval&#10;Category" /> -->
@@ -331,17 +331,15 @@
                             <!-- <Text text="Status" /> -->
                             <Text text="{path:'I18N>/APPROVE_STATUS_CODE', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column visible="false" id="mainColumnEmail"  >
+                        <!-- <Column visible="false" id="mainColumnEmail" >
                             <Text text="Email"/>
                         </Column>
                         <Column visible="false" id="mainColumnModel"  >
-                            <!-- <Text text="Status" /> -->
                             <Text text="Model"/>
                         </Column>
                         <Column visible="false" id="mainColumnMoldNumber"  >
-                            <!-- <Text text="Status" /> -->
                             <Text text="Mold Number"/>
-                        </Column>
+                        </Column> -->
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
@@ -358,9 +356,9 @@
                                 <!-- <ObjectIdentifier text="{list>request_date}" /> -->
                                 <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <Text text="{list>approve_status}" />
-                                <Text text="{list>email_id}" />
+                                <!-- <Text text="{list>email_id}" />
                                 <Text text="{list>model}" />
-                                <Text text="{list>mold_number}" />
+                                <Text text="{list>mold_number}" /> -->
                                 <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
                                 
 
