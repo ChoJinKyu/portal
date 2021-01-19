@@ -29,8 +29,6 @@ import cds.gen.pg.taskmonitoringv4service.*;
 @ServiceName(TaskMonitoringV4Service_.CDS_NAME)
 public class TaskMonitoringV4 implements EventHandler {
 
-	// private static final Logger log = LogManager.getLogger();
-
     @Autowired
     private JdbcTemplate jdbc;
 
@@ -166,9 +164,7 @@ public class TaskMonitoringV4 implements EventHandler {
 		v_sql_createTable_operation.append("system_update_dtm timestamp ");
         v_sql_createTable_operation.append(")");
 
-        System.out.println("create temp table");
-/*********************************************************************************************************************/
-        String v_sql_dropTableTenant =          "drop table #local_temp_tenant";
+        // // drop temp table:
         String v_sql_dropTableMaster =          "drop table #local_temp_master";
         String v_sql_dropTableMScenario =       "drop table #local_temp_scenario";
         String v_sql_dropTableCompany =         "drop table #local_temp_company";
@@ -177,8 +173,7 @@ public class TaskMonitoringV4 implements EventHandler {
         String v_sql_dropTableMTypeCode =       "drop table #local_temp_typecode";
         String v_sql_dropTableManager =         "drop table #local_temp_manager";
         String v_sql_dropTableOperation =       "drop table #local_temp_operation";
-        System.out.println("drop temp table");
-/*********************************************************************************************************************/
+
 		// insert temp table: master
         StringBuffer v_sql_insertTable_master= new StringBuffer();
 		v_sql_insertTable_master.append("insert into #local_temp_master values ");
@@ -218,13 +213,12 @@ public class TaskMonitoringV4 implements EventHandler {
         StringBuffer v_sql_insertTable_operation= new StringBuffer();
 		v_sql_insertTable_operation.append("insert into #local_temp_operation values ");
         v_sql_insertTable_operation.append("(?,?,?,?,?,?,?,?,?,?,?)");
-        System.out.println("insert temp table");
-/*********************************************************************************************************************/
+
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
 		v_sql_callProc.append("call pg_tm_ust_master_proc(");
         // append: in table => local temp table
-        v_sql_callProc.append("i_tenant_id => (select tenant_id from #local_temp_tenant), ");
+        v_sql_callProc.append("i_tenant_id => ?, ");
         v_sql_callProc.append("i_table_master => #local_temp_master, ");
 		v_sql_callProc.append("i_table_scenario => #local_temp_scenario, ");
 		v_sql_callProc.append("i_table_company => #local_temp_company, ");
@@ -237,13 +231,11 @@ public class TaskMonitoringV4 implements EventHandler {
 		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
         v_sql_callProc.append(")");
-        System.out.println("call procedure");
-        System.out.println(v_sql_callProc);
-/*********************************************************************************************************************/
+       
         // commit option
         jdbc.execute(v_sql_commitOption);
 
-        // create local temp table
+        // execute create local temp table
 		jdbc.execute(v_sql_createTable_master.toString());
 		jdbc.execute(v_sql_createTable_scenario.toString());
 		jdbc.execute(v_sql_createTable_company.toString());
@@ -252,9 +244,7 @@ public class TaskMonitoringV4 implements EventHandler {
 		jdbc.execute(v_sql_createTable_typecode.toString());
 		jdbc.execute(v_sql_createTable_manager.toString());
 		jdbc.execute(v_sql_createTable_operation.toString());
-/*********************************************************************************************************************/
 
-		// Collection<UpsertInputType>	v_inMultiData	= context.getInputData();
 		Collection<UpsertOutType>	v_result		= new ArrayList<>();
 
 		Collection<TaskMonitoringMaster>			v_inMaster			= context.getInputData().getSourceMaster();
@@ -265,8 +255,8 @@ public class TaskMonitoringV4 implements EventHandler {
 		Collection<TaskMonitoringTypeCode>          v_inTypeCode		= context.getInputData().getSourceTypeCode();
 		Collection<TaskMonitoringManager>			v_inManager			= context.getInputData().getSourceManager();
 		Collection<TaskMonitoringOperation>         v_inOperation		= context.getInputData().getSourceOperation();
-/*********************************************************************************************************************/
-		// insert local temp table : master
+        
+        // insert local temp table : master
         List<Object[]> batch_master = new ArrayList<Object[]>();
         if(!v_inMaster.isEmpty() && v_inMaster.size() > 0){
             for(TaskMonitoringMaster v_inRow : v_inMaster){
@@ -456,7 +446,7 @@ public class TaskMonitoringV4 implements EventHandler {
 
 		// procedure call
 		List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-		paramList.add(new SqlParameter("tenant_id", Types.VARCHAR));
+		paramList.add(new SqlParameter("i_tenant_id", Types.NVARCHAR));
 
         SqlReturnResultSet oReturn = new SqlReturnResultSet("o_table_message", new RowMapper<UpsertOutType>(){
             @Override
@@ -474,13 +464,12 @@ public class TaskMonitoringV4 implements EventHandler {
             @Override
             public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                 CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-                callableStatement.setString("tenant_id", context.getInputData().getTenantId());
+                callableStatement.setString("i_tenant_id", context.getInputData().getTenantId());
                 return callableStatement;
             }
         }, paramList);
-/*********************************************************************************************************************/
-        // drop local temp table
-		jdbc.execute(v_sql_dropTableTenant);
+
+        // execute drop local temp table
 		jdbc.execute(v_sql_dropTableMaster);
 		jdbc.execute(v_sql_dropTableMScenario);
 		jdbc.execute(v_sql_dropTableCompany);
@@ -496,44 +485,45 @@ public class TaskMonitoringV4 implements EventHandler {
 	}
 
     // Execute Delete Task Monitoring Master Data Procedure
+    @Transactional(rollbackFor = SQLException.class)
     @On(event = DeleteTaskMonitoringMasterProcContext.CDS_NAME)
     public void onDeleteTaskMonitoringMasterProc(DeleteTaskMonitoringMasterProcContext context) {
 
         // local temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "set transaction autocommit ddl off;";
-/*********************************************************************************************************************/
+
 		// create temp table: local_temp
         StringBuffer v_sql_createTable = new StringBuffer();
-		v_sql_createTable.append("create local temporary column table #local_temp ( ");
+		v_sql_createTable.append("create local temporary column table #local_temp (");
 		v_sql_createTable.append("tenant_id nvarchar(5), ");
-		v_sql_createTable.append("scenario_number bigint ");
-		v_sql_createTable.append(")");
-/*********************************************************************************************************************/
-		String v_sql_dropTable = "drop table #local_temp";
-/*********************************************************************************************************************/
-		// insert table
+		v_sql_createTable.append("scenario_number bigint");
+        v_sql_createTable.append(")");
+        
+        // drop temp table: local_temp
+        String v_sql_dropTable = "drop table #local_temp";
+        
+		// insert temp table: local_temp
         StringBuffer v_sql_inserTable= new StringBuffer();
 		v_sql_inserTable.append("insert into #local_temp values ");
-		v_sql_inserTable.append("(?,?)");
-/*********************************************************************************************************************/
+        v_sql_inserTable.append("(?,?)");
+        
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
 		v_sql_callProc.append("call pg_tm_del_master_proc(");
 		// append: in table => local temp table
-		v_sql_callProc.append("i_tenant_id =>  (select tenant_id from #local_temp), ");
-		v_sql_callProc.append("i_scenario_number => (select scenario_number from #local_temp), ");
+		v_sql_callProc.append("i_table_parameters => #local_temp, ");
 		// append: out table => local temp table
 		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
-		v_sql_callProc.append(")");
-/*********************************************************************************************************************/
+        v_sql_callProc.append(")");
+        
         Collection<DeleteInputType> v_inParmeters = context.getInputData();
-		Collection<DeleteOutType> v_result = new ArrayList<>();
-/*********************************************************************************************************************/
+        Collection<DeleteOutType> v_result = new ArrayList<>();
+        
         // Commit Option
         jdbc.execute(v_sql_commitOption);
 
-		// create local temp table
+		// execute create local temp table
 		jdbc.execute(v_sql_createTable.toString());
 
 		// insert local temp table
@@ -543,7 +533,6 @@ public class TaskMonitoringV4 implements EventHandler {
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id"),
                     v_inRow.get("scenario_number")};
-
                 batch_delete.add(values);
                 }
         }
@@ -573,7 +562,7 @@ public class TaskMonitoringV4 implements EventHandler {
             }
         }, paramList);
 
-        // drop local temp table
+        // execute drop local temp table
         jdbc.execute(v_sql_dropTable);
 
         context.setResult(v_result);
