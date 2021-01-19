@@ -383,6 +383,8 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("pageEditButton").setEnabled(false);
             this.byId("pageCancelButton").setEnabled(true);
+            this.byId("pageDraftButton").setEnabled(true);
+            this.byId("pageConfirmButton").setEnabled(true);
 			this.byId("pageNavBackButton").setEnabled(false);
 		},
 
@@ -391,6 +393,8 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("pageEditButton").setEnabled(true);
             this.byId("pageCancelButton").setEnabled(false);
+            this.byId("pageDraftButton").setEnabled(false);
+            this.byId("pageConfirmButton").setEnabled(false);
 			this.byId("pageNavBackButton").setEnabled(true);
 		},
 
