@@ -30,6 +30,13 @@
         "settings": {
           "odataVersion": "2.0"
         }
+      },
+      "vpSearchService": {
+        "uri": "srv-api/odata/v2/pg.vendorPoolSearchService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -81,9 +88,25 @@
           "bundleName": "pg.md.mdVpItemList.i18n.i18n"
         }
       },
+      "listModel": {
+            "type": "sap.ui.model.json.JSONModel",
+            "settings": {
+                "defaultBindingMode": "TwoWay"
+            }
+        },
 
       "util": {
         "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "vpSearch": {
+        "dataSource": "vpSearchService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

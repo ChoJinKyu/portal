@@ -20,7 +20,7 @@ sap.ui.define([
         },
 
         convToJsonTree: function (oData) {
-            var tree = {}, data = oData.results;
+            var tree = {}, data = oData.results || oData.value;
             data.map(function (d) {
                 d["level"] = d.path.split("/").length - 1;
                 d["nodes"] = [];
