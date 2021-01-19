@@ -145,7 +145,10 @@ sap.ui.define([
 
             var input = {};
             var inputData = {};
-            var detailData = this._sLoiDtlArrr;
+            var detailData = this._sLoiDtlArr;
+
+            console.log("detailData===", detailData[0]);
+            console.log("detailData===", detailData);
 
             inputData = {
                 "tenant_id": oMasterModel.getData().tenant_id,
@@ -219,7 +222,7 @@ sap.ui.define([
 
             var input = {};
             var inputData = {};
-            var detailData = this._sLoiDtlArrr;
+            var detailData = this._sLoiDtlArr;
             var tenantId = oMasterModel.getData().tenant_id;
             if (tenantId.indexOf(",") > -1) {
                 tenantId = tenantId.split(",")[0];
@@ -389,7 +392,7 @@ sap.ui.define([
 
             console.log("loiDtlArr==", loiDtlArr);
 
-            this._sLoiDtlArrr = loiDtlArr;
+            this._sLoiDtlArr = loiDtlArr;
 
             //품목조회
             if(this._sExistRfq) {
@@ -479,31 +482,11 @@ sap.ui.define([
                         console.log("oData====", oData.loi_selection_status_code);
                         oView.setBusy(false);
                         loi_status = oData.loi_selection_status_code;
-                        // if (loi_status == "122030") {
-                        //     that._toEditMode();
-                        // } else {
-                        //     that._toShowMode();
-                        // }
+                        that._toShowMode();
+
                     }
                 });
-                //console.log("loi_status====", loi_status);
-                // var oDetailsModel = this.getModel("details");
-                // oDetailsModel.setTransactionModel(this.getModel());
-                // oDetailsModel.read("/LOIPublishItemView", {
-                // 	filters: [
-                // 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                //         new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                //         new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber),
-                //         new Filter("loi_item_number", FilterOperator.EQ, this._sLoiItemNumber)
-                // 	],
-                // 	success: function(oData){
-                // 		oView.setBusy(false);
-                // 	}
-                // });
-                this._toShowMode();
             }
-
-            //oTransactionManager.setServiceModel(this.getModel());
         },
 
         _toEditMode: function () {
