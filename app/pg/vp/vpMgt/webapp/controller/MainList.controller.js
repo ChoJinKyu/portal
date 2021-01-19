@@ -1570,7 +1570,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/vPSearchView", {
+            oModel.read("/vpSearchOrderView", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     // oDataLen = oData.results.length;
@@ -1663,6 +1663,8 @@ sap.ui.define([
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
             var aSearchFilters = [];
+
+            aSearchFilters.push(new Filter("language_cd", FilterOperator.EQ, "EN"));
 
             if (sSurffix === "S") {
                 var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();

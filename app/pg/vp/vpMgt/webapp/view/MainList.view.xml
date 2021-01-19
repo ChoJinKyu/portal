@@ -243,10 +243,9 @@
                         fixedColumnCount="4"
 
                         rows="{
-                            path: 'list>/vPSearchView',
-                            filters: [
-                            {path: 'language_cd', operator: 'EQ', value1: 'KO'}
-                            ]
+                            path: 'list>/vpSearchOrderView',
+                            sorter: { path: 'vendor_pool_path_name'}
+                            
                         }"
 
                         cellClick=".onCellClick"
@@ -258,7 +257,7 @@
                         <!-- visibleRowCountMode="Auto"> -->
                     <table:extension>
                         <OverflowToolbar>
-                            <Title text="List ({= ${list>/vPSearchView}.length || 0})" level="H2"/>
+                            <Title text="List ({= ${list>/vpSearchOrderView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableCreateButton"          type="Emphasized" text="{I18N>/CREATE_LEVEL}"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
                             <!-- Add the Personalization button -->
