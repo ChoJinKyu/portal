@@ -85,6 +85,12 @@ sap.ui.define([
             this.oDialog.attachEvent("cancel", function(oEvent){
                 this.fireEvent("cancel");
             }.bind(this));
+
+            if(this.openWasRequested){
+                this.open();
+                if(this.aTokens && this.aTokens.length > 0)
+                    this.oDialog.setTokens(this.aTokens);
+            }
         },
 
         createSearchFilters: function(){
@@ -120,19 +126,19 @@ sap.ui.define([
         },
 
         setTokens: function(aTokens){
-            return this.oDialog.setTokens(aTokens);
+            if(this.oDialog)
+                this.oDialog.setTokens(aTokens);
+            else
+                this.aTokens = aTokens;
         },
 
         extractBindingInfo(oValue, oScope){
             if(oValue && (oValue.serviceName || oValue.serviceUri) && oValue.entityName){
                 var oParam = jQuery.extend(true, {}, oValue);
 
-                delete oValue.filters;
-                delete oValue.sorters;
-                delete oValue.parameters;
-                delete oValue.serviceName;
-                delete oValue.serviceUri;
-                delete oValue.entityName;
+                this.aFilters = oValue.filters;
+                this.aSorters = oValue.sorters;
+                this.aParameters = oValue.parameters;
 
                 this.oServiceModel = oParam.serviceName ? 
                     ODataV2ServiceProvider.getService(oParam.serviceName) : ODataV2ServiceProvider.getServiceByUrl(oParam.serviceUri);
@@ -142,14 +148,19 @@ sap.ui.define([
                         this.oDialog.setData(aRecords, false);
                     }.bind(this)
                 });
+
             }else{
                 return Parent.prototype.extractBindingInfo.call(this, oValue, oScope);
             }
         },
 
+        getServiceParameters: function(){
+            return jQuery.extend(true, {}, this.oServiceParam);
+        },
+
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                oParam = jQuery.extend(true, {}, this.oServiceParam);
+                oParam = this.getServiceParameters();
             if(sKeyword){
                 oParam.filters.push(
                     new Filter({
@@ -165,6 +176,10 @@ sap.ui.define([
         },
         
         open: function(){
+            if(!this.oDialog) {
+                this.openWasRequested = true;
+                return;
+            }
             this.loadData();
             this.oDialog.open();
         }
