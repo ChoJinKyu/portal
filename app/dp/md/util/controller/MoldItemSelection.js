@@ -14,7 +14,8 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
-    "ext/lib/model/ManagedModel",
+    "ext/lib/model/ManagedModel", 
+    "ext/lib/util/Multilingual",
 ], function (
     Controller, ODataModel, Dialog, Renderer,
     Sorter, Filter, FilterOperator,
@@ -22,6 +23,7 @@ sap.ui.define([
     , ManagedListModel
     , JSONModel
     , ManagedModel 
+    , Multilingual 
 ) {
     "use strict";
 
@@ -62,6 +64,11 @@ sap.ui.define([
      * @date   2020.12.02 
      */
     return Controller.extend("dp.md.util.controller.MoldItemSelection", {
+
+         onInit: function () { 
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+         } ,
 
         /**
          * @param vThis : view page의 this 
