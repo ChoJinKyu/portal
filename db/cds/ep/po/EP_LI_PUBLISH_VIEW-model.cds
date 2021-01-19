@@ -14,7 +14,7 @@ entity Li_Publish_View {
         supplier_code              : String(15)          @title : '공급업체코드';
         contract_format_id         : String(100)         @title : '계약서식ID';
         offline_flag               : Boolean             @title : '오프라인여부';
-        contract_date              : String(8)           @title : '계약일자';
+        contract_date              : String(10)           @title : '계약일자';
         additional_condition_desc  : String(1000)        @title : '부대조건설명';
         special_note               : LargeString         @title : '특기사항';
         attch_group_number         : String(100)         @title : '첨부파일그룹번호';
