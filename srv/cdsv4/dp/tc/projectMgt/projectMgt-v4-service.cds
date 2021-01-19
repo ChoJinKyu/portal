@@ -5,8 +5,8 @@ using {dp as pjtView} from '../../../../../db/cds/dp/tc/DP_TC_PROJECT_VIEW-model
 @path : '/dp.ProjectMgtV4Service'
 service ProjectMgtV4Service {
 
-    view ProjectView(language_code: String) as
-        select from pjtView.TC_Project_View(language_code: :language_code);
+    view ProjectView(language_cd: String) as
+        select from pjtView.TC_Project_View(language_cd: :language_cd);
 
     type TcProjectType : {
         tenant_id               : String(5);
