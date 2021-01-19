@@ -35,39 +35,73 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new ManagedListModel(), "list");
-            this.setModel(new JSONModel(), "mainListViewModel");
-            this.setModel(new JSONModel(), "excelModel");
+            this.setModel(new Multilingual().getModel(), "I18N");
+            this.setModel(new JSONModel({
+                tenant_id: "L2100",
+                company_code: null,
+                pr_type_code: [],
+                pr_number: null,
+                pr_item_number: null,
+                org_type_code: null,
+                org_code: [],
+                material_code: null,
+                material_group_code: null,
+                pr_desc: null,
+                pr_quantity: null,
+                pr_unit: null,
+                requestor_empno: null,
+                requestor_name: null,
+                request_date: [null, null],
+                accept_date: [null, null],
+                delivery_request_date: null,
+                buyer_empno: null,
+                purchasing_group_code: null,
+                estimated_price: null,
+                currency_code: null,
+                price_unit: null,
+                pr_progress_status_code: [],
+                remark: null,
+                attch_group_number: null,
+                delete_flag: null,
+                closing_flag: null,
+                item_category_code: null,
+                account_assignment_category_code: null,
+                sloc_code: null
+            }), "jSearch");
+            //this.setModel(new ManagedListModel(), "list");
+            // this.setModel(new JSONModel(), "mainListViewModel");
+            // this.setModel(new JSONModel(), "excelModel");
 
-            var today = new Date();
-            this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
-            this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            // var today = new Date();
+            // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
+            // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
-            oMultilingual.attachEvent("ready", function (oEvent) {
-                var oi18nModel = oEvent.getParameter("model");
-                this.addHistoryEntry({
-                    title: oi18nModel.getText("/prReviewMgt"),   //구매..
-                    icon: "sap-icon://table-view",
-                    intent: "#Template-display"
-                }, true);
-            }.bind(this));
+            // oMultilingual.attachEvent("ready", function (oEvent) {
+            //     var oi18nModel = oEvent.getParameter("model");
+            //     this.addHistoryEntry({
+            //         title: oi18nModel.getText("/prReviewMgt"),   //구매..
+            //         icon: "sap-icon://table-view",
+            //         intent: "#Template-display"
+            //     }, true);
+            // }.bind(this));
 
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            // this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-            this._doInitTablePerso();
-            this.enableMessagePopover();
+            // this._doInitTablePerso();
+            // this.enableMessagePopover();
         },
 
         onRenderedFirst: function () {
-            this.byId("pageSearchButton").firePress();
+            //this.byId("pageSearchButton").firePress();
         },
 
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
-
+        onDateRangeSelectionChange: function() {
+            var [event] = arguments;
+            //this.byId("closingDate").setDateValue(oEvent.getParameters().to);
+        },
 		/**
 		 * Triggered by the table's 'updateFinished' event: after new table
 		 * data is available, this handler method updates the table counter.
@@ -463,7 +497,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
 		 */
-        onPageSearchButtonPress: function (oEvent) {
+        onSearch: function (oEvent) {
             if (oEvent.getParameters().refreshButtonPressed) {
                 // Search field's 'refresh' button has been pressed.
                 // This is visible if you select any master list item.
@@ -471,9 +505,63 @@ sap.ui.define([
                 // refresh the list binding.
                 this.onRefresh();
             } else {
-                var aSearchFilters = this._getSearchStates();
-                this._applySearch(aSearchFilters);
+                // var aSearchFilters = this._getSearchStates();
+                // this._applySearch(aSearchFilters);
             }
+
+            // Call Service
+            (function(){
+                var oDeferred = new $.Deferred();
+                var jSearch = this.getModel("jSearch").getData();
+                this.getView()
+                    .setBusy(true)
+                    .getModel().read("/Pr_ReviewListView", $.extend({
+                        filters: Object.keys(jSearch)
+                            // EQ, BT 만 해당
+                            .filter(
+                                path => 
+                                    // Primitive
+                                    typeof jSearch[path] == "boolean" || typeof jSearch[path] == "number" ||
+                                    (jSearch[path] && typeof jSearch[path] == "string") || 
+                                    // Array 형태
+                                    (jSearch[path] instanceof Array && jSearch[path].length > 0 && (jSearch[path][0] || jSearch[path][1])) ||
+                                    // Object (연산자필드포함)
+                                    (jSearch[path] && jSearch[path]["Contains"])
+                            )
+                            .reduce(function(acc, path) {
+                                console.log(">>>>>>>>>>>>> cond", path, jSearch[path], acc);
+                                if (path == "request_date") {
+                                    console.log(">>>>>>>>>>>>> 0", jSearch[path][0], typeof jSearch[path][0], jSearch[path][0] instanceof Date, (jSearch[path][0]).getTime(), (jSearch[path][1]).getTime());
+                                }
+                                return [
+                                    ...acc, 
+                                    jSearch[path] instanceof Array
+                                    ? new Filter(path, FilterOperator.BT, (jSearch[path][0]).getTime(), (jSearch[path][1]).getTime())
+                                    : (jSearch[path] && jSearch[path]["Contains"])
+                                    ? new Filter(path, FilterOperator.Contains, jSearch[path])
+                                    : new Filter(path, FilterOperator.EQ, jSearch[path])
+                                ]
+                            }, []),
+                    }, {
+                        success: oDeferred.resolve,
+                        error: oDeferred.reject
+                    }));
+                    return oDeferred.promise();
+                }).call(this)
+                // 성공시
+                .done((function (oData) {
+                    console.log(">>>>>>>>>>> oData", oData);
+                    // this.getView().setModel(new JSONModel({
+                    //     "Pr_ReviewListView": oData.results
+                    // }), "list");
+                }).bind(this))
+                // 실패시
+                .fail(function (oError) {
+                })
+                // 모래시계해제
+                .always((function () {
+                    this.getView().setBusy(false);
+                }).bind(this));
         },
 
 		/**

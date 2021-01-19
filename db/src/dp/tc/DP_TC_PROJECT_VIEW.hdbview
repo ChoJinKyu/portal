@@ -1,9 +1,11 @@
-view DP_TC_PROJECT_VIEW as
+view DP_TC_PROJECT_VIEW (
+            IN LANGUAGE_CD NVARCHAR(4)
+        ) AS
 select pjt.tenant_id                  /*테넌트ID*/
      , pjt.project_code               /*프로젝트코드*/
      , pjt.model_code                 /*모델코드*/
-     , pjt.model_name                 /*모델명*/
      , pjt.project_name               /*프로젝트명*/
+     , pjt.model_name                 /*모델명*/
      , pjt.company_code               /*회사코드*/
      , pjt.org_type_code              /*조직유형코드*/
      , pjt.org_code                   /*조직코드*/
@@ -31,98 +33,75 @@ select pjt.tenant_id                  /*테넌트ID*/
      , pjt.mcst_excl_flag             /*재료비제외여부*/
      , pjt.mcst_excl_reason           /*재료비제외사유*/
      , pjt.direct_register_flag       /*직접등록여부*/
-     , (select ccl.code_name
-          from cm_code_lng ccl
-         where ccl.tenant_id = pjt.tenant_id
-           and ccl.group_code = 'DC_TC_PRODUCT_GROUP_CODE'
-           and ccl.code = pjt.product_group_code
-           and ccl.language_cd = 'KO') AS product_group_text        /*제품군명*/
-     , (select ccl.code_name
-          from cm_code_lng ccl
-         where ccl.tenant_id = pjt.tenant_id
-           and ccl.group_code = 'DP_TC_PROJECT_GRADE_CODE'
-           and ccl.code = pjt.project_grade_code
-           and ccl.language_cd = 'KO') AS project_grade_text        /*프로젝트등급명*/
-     , (select ccl.code_name
-          from cm_code_lng ccl
-         where ccl.tenant_id = pjt.tenant_id
-           and ccl.group_code = 'DP_TC_SOURCE_TYPE_CODE'
-           and ccl.code = pjt.source_type_code
-           and ccl.language_cd = 'KO') AS source_type_text          /*출처구분명(용도)*/
-     , (select ccl.code_name
-          from cm_code_lng ccl
-         where ccl.tenant_id = pjt.tenant_id
-           and ccl.group_code = 'DP_TC_BOM_TYPE_CODE'
-           and ccl.code = pjt.bom_type_code
-           and ccl.language_cd = 'KO') AS bom_type_text             /*자재명세서유형명*/
-     , (select ccl.code_name
-          from cm_code_lng ccl
-         where ccl.tenant_id = pjt.tenant_id
-           and ccl.group_code = 'DP_TC_PROJECT_STATUS_CODE'
-           and ccl.code = pjt.project_status_code
-           and ccl.language_cd = 'KO') AS project_status_text        /*프로젝트상태명*/  
-     , (select emp.user_local_name || ' ' || emp.job_title || '/' || dept.department_local_name
-          from cm_hr_employee emp
-             , cm_hr_department dept
-         where emp.tenant_id = pjt.tenant_id
-           and emp.tenant_id = dept.tenant_id
-           and emp.employee_number = pjt.project_creator_empno
-           and emp.department_id = dept.department_id) AS project_creator_info     /*프로젝트생성자이름부서*/
-     , (select emp.user_local_name || ' ' || emp.job_title
-          from cm_hr_employee emp
-         where emp.tenant_id = pjt.tenant_id
-           and emp.employee_number = pjt.project_leader_empno) AS project_leader_name            /*프로젝트리더이름*/
-     , (select emp.user_local_name || ' ' || emp.job_title || '/' || dept.department_local_name
-          from cm_hr_employee emp
-             , cm_hr_department dept
-         where emp.tenant_id = pjt.tenant_id
-           and emp.tenant_id = dept.tenant_id
-           and emp.employee_number = pjt.project_leader_empno
-           and emp.department_id = dept.department_id) AS project_leader_info      /*프로젝트리더이름부서*/
-     , (select emp.user_local_name || ' ' || emp.job_title
-          from cm_hr_employee emp
-         where emp.tenant_id = pjt.tenant_id
-           and emp.employee_number = pjt.buyer_empno) AS buyer_name                /*재료비총괄이름*/
-     , (select emp.user_local_name || ' ' || emp.job_title || '/' || dept.department_local_name
-          from cm_hr_employee emp
-             , cm_hr_department dept
-         where emp.tenant_id = pjt.tenant_id
-           and emp.tenant_id = dept.tenant_id
-           and emp.employee_number = pjt.buyer_empno
-           and emp.department_id = dept.department_id) AS buyer_info               /*재료비총괄이름부서*/
-     , (select emp.user_local_name || ' ' || emp.job_title
-          from cm_hr_employee emp
-         where emp.tenant_id = pjt.tenant_id
-           and emp.employee_number = pjt.marketing_person_empno) AS marketing_person_name          /*마케팅담당자이름*/
-     , (select emp.user_local_name || ' ' || emp.job_title || '/' || dept.department_local_name
-          from cm_hr_employee emp
-             , cm_hr_department dept
-         where emp.tenant_id = pjt.tenant_id
-           and emp.tenant_id = dept.tenant_id
-           and emp.employee_number = pjt.marketing_person_empno
-           and emp.department_id = dept.department_id) AS marketing_person_info     /*마케팅담당자이름부서*/
-     , (select emp.user_local_name || ' ' || emp.job_title
-          from cm_hr_employee emp
-         where emp.tenant_id = pjt.tenant_id
-           and emp.employee_number = pjt.planning_person_empno) AS planning_person_name          /*기획담당자이름*/
-     , (select emp.user_local_name || ' ' || emp.job_title || '/' || dept.department_local_name
-          from cm_hr_employee emp
-             , cm_hr_department dept
-         where emp.tenant_id = pjt.tenant_id
-           and emp.tenant_id = dept.tenant_id
-           and emp.employee_number = pjt.planning_person_empno
-           and emp.department_id = dept.department_id) AS planning_person_info     /*기획담당자이름부서*/
-     , pjt.develope_event_code
-     , to_varchar(current_date, 'yyyy-mm-dd') AS last_register_date    /*최종 재료비 등록일 로직 넣어야 함*/
-     , '접수' AS estimate_status_name                                   /*각 재료비 정보 조회 로직 넣어야 함*/
-     , 'ACCEPT' AS estimate_status_code
-     , 'Confirmed(1차)' AS target_status_name
-     , 'CONFIRMED' AS target_status_code
-     , 'Draft(2차)' AS forecast_status_name
-     , 'DRAFT' AS forecast_status_code
+     , pjt.develope_event_code     
+     , CM_GET_CODE_NAME_FUNC (pjt.tenant_id
+                             ,'DC_TC_PRODUCT_GROUP_CODE'
+                             ,pjt.product_group_code
+                             ,:LANGUAGE_CD
+                             ) AS product_group_text        /*제품군명*/
+     , CM_GET_CODE_NAME_FUNC (pjt.tenant_id
+                             ,'DP_TC_PROJECT_GRADE_CODE'
+                             ,pjt.project_grade_code
+                             ,:LANGUAGE_CD
+                             ) AS project_grade_text        /*프로젝트등급명*/
+     , CM_GET_CODE_NAME_FUNC (pjt.tenant_id
+                             ,'DP_TC_BOM_TYPE_CODE'
+                             ,pjt.bom_type_code
+                             ,:LANGUAGE_CD
+                             ) AS bom_type_text              /*자재명세서유형명*/
+     , CM_GET_CODE_NAME_FUNC (pjt.tenant_id
+                             ,'DP_TC_PROJECT_STATUS_CODE'
+                             ,pjt.project_status_code
+                             ,:LANGUAGE_CD
+                             ) AS project_status_text        /*프로젝트상태명*/
+     , DP_TC_GET_USER_INFO_FUNC (pjt.tenant_id
+	                            ,pjt.project_leader_empno
+	                            ,'N'
+                                ) AS project_leader_name     /*프로젝트리더이름*/
+     , DP_TC_GET_USER_INFO_FUNC (pjt.tenant_id
+	                            ,pjt.buyer_empno
+	                            ,'N'
+                                ) AS buyer_name              /*재료비총괄이름*/
      , (select cod.bizdivision_name
           from cm_org_division cod
          where cod.tenant_id = pjt.tenant_id
-           and cod.bizdivision_code = pjt.bizdivision_code) AS bizdivision_text     /*사업부명*/     
+           and cod.bizdivision_code = pjt.bizdivision_code) AS bizdivision_text     /*사업부명*/ 
+     , DP_TC_GET_MCST_LAST_REG_DATE_FUNC (pjt.tenant_id
+	                                     ,pjt.project_code
+	                                     ,pjt.model_code
+                                         ) AS last_register_date
+     , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (pjt.tenant_id
+	                                           ,pjt.project_code
+	                                           ,pjt.model_code
+	                                           ,'QUOTATION'  /*견적*/
+	                                           ,:LANGUAGE_CD
+	                                           ) AS quotation_status_name
+     , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (pjt.tenant_id
+	                                           ,pjt.project_code
+	                                           ,pjt.model_code
+	                                           ,'QUOTATION'  /*견적*/
+	                                       ) AS quotation_status_code
+     , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (pjt.tenant_id
+	                                       ,pjt.project_code
+	                                       ,pjt.model_code
+	                                       ,'TARGET'  /*목표*/
+	                                       ,:LANGUAGE_CD
+	                                       ) AS target_status_name
+     , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (pjt.tenant_id
+	                                           ,pjt.project_code
+	                                           ,pjt.model_code
+	                                           ,'TARGET'  /*목표*/
+	                                           ) AS target_status_code
+     , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (pjt.tenant_id
+	                                       ,pjt.project_code
+	                                       ,pjt.model_code
+	                                       ,'ESTIMATE'  /*예상*/
+	                                       ,:LANGUAGE_CD
+	                                       ) AS estimate_status_name
+     , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (pjt.tenant_id
+	                                           ,pjt.project_code
+	                                           ,pjt.model_code
+	                                           ,'ESTIMATE'  /*예상*/
+	                                           ) AS estimate_status_code
   from dp_tc_project pjt
   ;

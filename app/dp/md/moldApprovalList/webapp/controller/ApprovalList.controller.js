@@ -202,7 +202,6 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
-            console.log(this._oTPC);
             this._oTPC.openDialog();
         },
 
@@ -1133,14 +1132,15 @@ sap.ui.define([
         _doInitTablePerso: function () {
             var oTable = this.byId("mainTable");
             console.log(oTable);
-            console.log(oTable.getColumns());
+            console.log(oTable.getColumns());      
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
                 componentName: "moldApprovalList",
                 persoService: ApprovalListPersoService,
-                hasGrouping: true
+                hasGrouping: true,
             }).activate();
+            
         }
         
     });

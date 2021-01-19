@@ -23,7 +23,7 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -33,135 +33,268 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
-                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" 
-                                        emptySpanL="0" emptySpanM="0" 
-                                        columnsL="2" columnsM="2" >
+                <form:SimpleForm 
+                    id="pageSearchForm" 
+                    maxContainerCols="2" 
+                    editable="true" 
+                    layout="ResponsiveGridLayout" 
+                    adjustLabelSpan="false" 
+                    labelSpanL="4" labelSpanM="4" 
+                    emptySpanL="0" emptySpanM="0" 
+                    columnsL="2" columnsM="2"
+                >
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/PR_REQUEST_DATE}" labelFor="searchRequestDate" required="true"></Label>
-                            <DateRangeSelection id="searchRequestDate" width="100%" change="handleChange"/>
-                            <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchPr_create_status" required="false"></Label>
+                            <!-- 구매요청 생성일자 -->
+                            <Label text="{I18N>/PR_CREATION_DATE}"/>
+                            <DateRangeSelection 
+                                editable="{midObjectView>/editMode}"
+                                width="100%"
+                                value="{
+                                    parts: [
+                                        {path: 'jSearch>/request_date/0'}, 
+                                        {path: 'jSearch>/request_date/1'}
+                                    ], 
+                                    type: 'sap.ui.model.type.DateInterval',
+                                    formatOptions: { UTC: true, format: 'yMd' }
+                                }" 
+                                placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                                change=".onDateRangeSelectionChange($event)"
+                            />
+                            <!-- 구매요청 진행상태 -->
+                            <Label text="{I18N>/PR_PROGRESS_STATUS}"/>
                             <MultiComboBox
-                              id="SearchPr_create_status"
-                              showSecondaryValues="false"
-                              width="100%"
-                              items="{
-                                path: 'util>/Code',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
-                                ]
-                              }">
-                              <items>
-                                <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
-                              </items>
-                            </MultiComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="{I18N>/PR_TYPE_CODE}" labelFor="searchPR_TYPE_CODE" required="false"></Label>
-                            <MultiComboBox
-                              id="searchPR_TYPE_CODE"
-                              showSecondaryValues="false"
-                              width="100%"
-                              items="{
-                                path: 'util>/Code',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
-                                ]
-                              }">
-                              <items>
-                                <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
-                              </items>
-                            </MultiComboBox>
-                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="searchRequestDepartmentS"></Label>
-                                <!-- <Input id="searchRequestDepartment" placeholder="Input data"></Input> -->
-                                <lib-m:CodePicker id="searchRequestDepartmentS"
-                                    placeholder="Enter a department name"
-                                    keyField="department_id"
-                                    textField="department_local_name"
-                                    suggestionItems="{
-                                        path: '/',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                        ],
-                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                        entityName: 'Department'
-                                    }">
-                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
-                                        keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
-                                </lib-m:CodePicker>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="{I18N>/PR_TEMPLATE_NUMBER}" labelFor="searchPR_TEMPLATE_NUMBER"></Label>
-                            <MultiComboBox 
-                                id="searchPR_TEMPLATE_NUMBER" 
+                                selectedKeys="{jSearch>/pr_progress_status_code}"
+                                placeholder="All"
                                 showSecondaryValues="false"
-                                width="100%" 
+                                width="100%"
                                 items="{
-                                        path: '/Pr_TLng',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'language_code', operator: 'EQ', value1: 'KO'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:ListItem key="{pr_template_number}" text="{pr_template_name}"  
-                                            additionalText="{pr_template_number}" />
-                                    </items>
-                                </MultiComboBox>
-                                <Label text="{I18N>/REQUESTOR_NAME}" labelFor="multiInputWithEmployeeValueHelp"></Label>
-                                <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
-                                <MultiInput id="multiInputWithEmployeeValueHelp"
-                                    placeholder="Choose employees from the ValueHelp"
-                                    showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
-                                </MultiInput>    
+                                    path: 'util>/Code',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
+                                    ]
+                                }"
+                            >
+                                <items>
+                                    <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
+                                </items>
+                            </MultiComboBox>
+                            <!-- 구매요청 생성자 -->
+                            <Label text="{I18N>/PR_CREATOR}"/>
+                            <lib-m:CodePicker 
+                                placeholder="(미정)구매요청생성자"
+                                keyField="requestor_empno"
+                                textField="requestor_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }"
+                            >
+                                <lib-m:CodePickerValueHelp 
+                                    title="(미정)구매요청 생성자를 선택하세요."
+                                    contentWidth="500px"
+                                    keyFieldHeaderText="(미정)구매요청 생성자 아이디" 
+                                    textFieldHeaderText="(미정)구매요청 생성자명"
+                                />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        
                         <VBox>
-                            <Label text="{I18N>/PR_NUMBER}" labelFor="searchPrNumber" ></Label>
-                            <Input id="searchPrNumber" placeholder="Search"></Input>
-                            <Label text="{I18N>/PR_DESC}" labelFor="searchPr_desc" ></Label>
-                            <Input id="searchPr_desc" placeholder="Search"></Input>
+                            <!-- 구매요청 접수일자 -->
+                            <Label text="(미정)구매요청 접수일자" required="true"/>
+                            <DateRangeSelection 
+                                width="100%"
+                                value="{
+                                    parts: [
+                                        {path: 'jSearch>/request_date/0'}, 
+                                        {path: 'jSearch>/request_date/0'}
+                                    ], 
+                                    type: 'sap.ui.model.type.DateInterval',
+                                    formatOptions: { UTC: true, format: 'yMd' }
+                                }" 
+                                placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                                change=".onDateRangeSelectionChange($event)"
+                            />
+                            <!-- 구매요청 유형 -->
+                            <Label text="{I18N>/PR_TYPE_CODE}"/>
+                            <MultiComboBox
+                                selectedKeys="{jSearch>/pr_type_code}"
+                                placeholder="All"
+                                showSecondaryValues="false"
+                                width="100%"
+                                items="{
+                                    path: 'util>/Code',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
+                                </items>
+                            </MultiComboBox>
+                            <!-- 구매요청자 부서 -->
+                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}"/>
+                            <lib-m:CodePicker 
+                                placeholder="(미정)부서명을 입력하세요"
+                                keyField="requestor_department_code"
+                                textField="requestor_department_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp 
+                                    title="(미정)부서를 선택하세요"
+                                    contentWidth="500px"
+                                    keyFieldHeaderText="(미정)부서코드" 
+                                    textFieldHeaderText="(미정)부서명"
+                                />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
-                            
-                        </VBox>                      
-                            
+                        </VBox>
+                        <VBox>
+                            <!-- 구매요청 번호 -->
+                            <Label text="{I18N>/PR_NUMBER}"/>
+                            <Input 
+                                placeholder="Search"
+                                value="{path: 'jSearch>/pr_number'}"
+                            />
+                            <!-- 구매요청 품명 -->
+                            <Label text="{I18N>/PR_ITEM_NAME}"/>
+                            <Input 
+                                placeholder="(미정)품명을 입력하세요"
+                                value="{path: 'jSearch>/pr_desc'}"
+                            />
+                            <!-- 구매담당자 -->
+                            <Label text="{I18N>/BUYER}"/>
+                            <lib-m:CodePicker 
+                                placeholder="(미정)구매담당자를 입력하세요"
+                                keyField="buyer_empno"
+                                textField="buyer_empno"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp 
+                                    title="(미정)담당자를 선택하세요"
+                                    contentWidth="500px"
+                                    keyFieldHeaderText="(미정)담당자 사번" 
+                                    textFieldHeaderText="(미정)담당자 명"
+                                />
+                            </lib-m:CodePicker>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <!-- 조직코드 -->
+                            <Label text="{I18N>/ORG_CODE}"/>
+                            <MultiComboBox
+                                selectedKeys="{jSearch>/org_code}"
+                                placeholder="All"
+                                showSecondaryValues="false"
+                                width="100%"
+                                items="{
+                                    path: 'util>/Code',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
+                                    ]
+                                }"
+                            >
+                                <items>
+                                    <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
+                                </items>
+                            </MultiComboBox>
+                            <!-- 자재코드 -->
+                            <Label text="{I18N>/MATERIAL_CODE}"/>
+                            <lib-m:CodePicker 
+                                placeholder="(미정)자재정보를 입력하세요."
+                                keyField="material_code"
+                                textField="material_code"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp 
+                                    title="(미정)자재를 선택하세요."
+                                    contentWidth="500px"
+                                    keyFieldHeaderText="(미정)자재코드" 
+                                    textFieldHeaderText="(미정)자재명"
+                                />
+                            </lib-m:CodePicker>
+                            <!-- 구매담당자 부서 -(미정) 부서정보-->
+                            <Label text="(미정)구매담당자 부서" labelFor="searchRequestDepartmentS"/>
+                            <lib-m:CodePicker 
+                                placeholder="(미정)구매담당자 부서명을 입력하세요."
+                                keyField="buyer_empno"
+                                textField="buyer_empno"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp 
+                                    title="(미정)부서를 선택하세요"
+                                    contentWidth="500px"
+                                    keyFieldHeaderText="(미정)부서코드" 
+                                    textFieldHeaderText="(미정)부서명"
+                                />
+                            </lib-m:CodePicker>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
             <VBox>
-                <Table id="mainTable" 
-                        sticky="HeaderToolbar,ColumnHeaders" 
-                        inset="false" 
-                        growing="true"
-                        mode="MultiSelect"
-                        growingThreshold="10"
-                        class="sapFDynamicPageAlignContent" 
-                        updateFinished=".onMainTableUpdateFinished"
-                        items="{
-                                    path : 'list>/Pr_MstView',
-                                    sorter: {
-                                        path: 'pr_number',
-                                        descending: true
-                                    }
-                                }"                        
-                        width="auto">
-                        <!-- mode="MultiSelect"  -->
+                <Table 
+                    id="mainTable" 
+                    visible="false"
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    inset="false" 
+                    growing="true"
+                    mode="MultiSelect"
+                    growingThreshold="10"
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onMainTableUpdateFinished"
+                    items="{
+                        path : 'list>/Pr_MstView',
+                        sorter: {
+                            path: 'pr_number',
+                            descending: true
+                        }
+                    }"                        
+                    width="auto"
+                >
+                    <!-- mode="MultiSelect"  -->
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_MstView}.length || 0})" level="H2"/>
@@ -182,77 +315,66 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <!-- <Column id="mainColumnCHK" width="2.5em" minScreenWidth="Desktop" >
-                            <CheckBox selected="false" select=".onColumnChecBox"/>
-                        </Column> -->
-                        <!-- 구매요청 유형 -->
-                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center"  width="auto">
-                            <Text text="{I18N>/PR_TYPE_CODE}" />
-                        </Column>
                         <!-- 구매요청 번호 -->
-                        <Column id="mainColumnPR_NUMBER"   hAlign="Center" width="auto">
+                        <Column id="mainColumnPR_NUMBER" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
                         <!-- 품목 번호 -->
-                        <Column id="mainColumnPR_NUMBER"   hAlign="Center" width="auto">
-                            <Text text="{I18N>/PR_NUMBER}" />
+                        <Column id="mainColumnITEM_NUMBER" hAlign="Center" width="auto">
+                            <Text text="{I18N>/ITEM_NUMBER}" />
                         </Column>
-                        pr_item_number
                         <!-- 조직코드 -->
-                        org_code
+                        <Column id="mainColumnORG_CODE" hAlign="Center" width="auto">
+                            <Text text="{I18N>/ORG_CODE}" />
+                        </Column>
                         <!-- 자재코드 -->
-                        material_code
+                        <Column id="mainColumnMATERIAL_CODE" hAlign="Center" width="auto">
+                            <Text text="{I18N>/MATERIAL_CODE}" />
+                        </Column>
                         <!-- 구매요청 품명 -->
-                        <Column id="mainColumnPR_DESC"  demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
-                            <Text text="{I18N>/PR_DESC}" />
+                        <Column id="mainColumnITEM_NAME" demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
+                            <Text text="{I18N>/ITEM_NAME}" />
                         </Column>
                         <!-- 단위 -->
-                        pr_unit
+                        <Column id="mainColumnUNIT" hAlign="Center" width="auto">
+                            <Text text="{I18N>/UNIT}" />
+                        </Column>
                         <!-- 요청수량 -->
-                        pr_quantity
+                        <Column id="mainColumnREQUEST_QUANTITY" hAlign="Center" width="auto">
+                            <Text text="{I18N>/REQUEST_QUANTITY}" />
+                        </Column>
                         <!-- 잔여수량 -->
+                        <Column id="mainColumnSTOCK_QUANTITY" Align="Center" width="auto">
+                            <Text text="{I18N>/STOCK_QUANTITY}" />
+                        </Column>
                         <!-- 납품요청 일자 -->
-                        delivery_request_date
+                        <Column id="mainColumnDELIVERY_REQUEST_DATE" Align="Center" width="auto">
+                            <Text text="{I18N>/DELIVERY_REQUEST_DATE}" />
+                        </Column>
                         <!-- 금액 -->
+                        <Column id="mainColumnAMOUNT" Align="Center" width="auto">
+                            <Text text="{I18N>/AMOUNT}" />
+                        </Column>
                         <!-- 통화 -->
-                        currency_code
+                        <Column id="mainColumnCURRENCY" hAlign="Center" width="auto">
+                            <Text text="{I18N>/CURRENCY}" />
+                        </Column>
                         <!-- 구매담당자 -->
-                        buyer_empno
-                        <!-- 구매그룹 -->
-                        purchasing_group_code
+                        <Column id="mainColumnBUYER" hAlign="Center" width="auto">
+                            <Text text="{I18N>/BUYER}" />
+                        </Column>
                         <!-- 구매요청자 -->
-                        requestor_empno, requestor_name
+                        <Column id="mainColumnPR_REQUESTOR" hAlign="Center" width="auto">
+                            <Text text="{I18N>/PR_REQUESTOR}" />
+                        </Column>
                         <!-- 구매요청 일자 -->
-                        request_date
-
-                        <Column id="mainColumnERP_PR_NUMBER"   minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="{I18N>/ERP_PR_NUMBER}" />
-                        </Column>        
-                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center" width="12em">
-                            <Text text="{I18N>/PR_TEMPLATE_NUMBER}" />
+                        <Column id="mainColumnPR_DATE" hAlign="Center" width="auto">
+                            <Text text="{I18N>/PR_DATE}" />
                         </Column>
-                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
-                        </Column>
-                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="{I18N>/REQUESTOR_NAME}" />
-                        </Column>                        
-                        <Column id="mainColumnREQUEST_DATET" minScreenWidth="Desktop" hAlign="Center"  width="auto">
-                            <Text text="{I18N>/PR_REQUEST_DATE}" />
-                        </Column>
-                        <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="auto">
-                            <Text text="{I18N>/PR_COUNT}" />
-                        </Column>
-                        <Column id="mainColumnPR_CREATE_STATUS_CODE"  hAlign="Center"  width="auto">
-                            <Text text="{I18N>/PR_CREATE_STATUS_CODE}" />
-                        </Column>
-                       
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>             
-                                <!-- <CheckBox fieldGroupIds="{= ${list>pr_create_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>pr_create_status_code}==='DR'? true:false }" select=".onCheck" />   -->
-                                <Text text="{list>pr_type_name}" vAlign="Left"/>
                                 <Text text="{list>pr_number}" vAlign="Left" />
                                 <Text text="{list>pr_item_number}" vAlign="Left"/>
                                 <Text text="{list>org_code}"/>
@@ -260,10 +382,12 @@
                                 <Text text="{list>pr_desc}"/> 
                                 <Text text="{list>pr_unit}"/>                                                                                                
                                 <Text text="{list>pr_quantity}"/>
+                                <!-- 잔여수량 -->
+                                <Text text="{list>pr_quantity}"/>
                                 <Text text="{list>delivery_request_date}"/>
+                                <Text text="{list>estimated_price}"/>
                                 <Text text="{list>currency_code}"/>
                                 <Text text="{list>buyer_empno}"/>
-                                <Text text="{list>purchasing_group_code}"/>
                                 <Text text="{list>requestor_name}"/>
                                 <Text text="{list>request_date}"/>
                             </cells>
