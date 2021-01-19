@@ -28,7 +28,8 @@ using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/CM_CODE_LNG-model';
 //Unit Code
 using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/CM_CURRENCY_LNG-model';
-using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasureLangu} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+using {dp.Mm_Unit_Of_Measure as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 
 namespace pg;
 
@@ -219,13 +220,18 @@ service marketIntelligenceService {
     // Unit of Measure View
     view UnitOfMeasureView @(title : '수량단위코드 View') as
         select
-            key tenant_id, //회사코드
-            key uom_code, //수량단위코드
-            key language_code, //언어코드
-                uom_name //수량단위코드명
-        from UnitOfMeasure
+            key uom.tenant_id          as tenant_id, //회사코드
+            key uom.uom_code           as uom_code, //수량단위코드
+            key uom_lang.language_code as language_code, //언어코드
+                uom_lang.uom_name      as uom_name //수량단위코드명
+        from UnitOfMeasure as uom
+        left join UnitOfMeasureLangu as uom_lang
+            on  uom.tenant_id = uom_lang.tenant_id
+            and uom.uom_code  = uom_lang.uom_code
         where
-            language_code = 'KO'
+                uom_lang.language_code =  'KO'
+            and uom.tenant_id          =  'L2100'
+            and uom.uom_class_code     in ('VOLUME', 'WEIGHT', 'MASS')
         ;
 
     // MI Material Category List View
@@ -344,29 +350,4 @@ service marketIntelligenceService {
             supplier_code
         ;
 
-// Procedure 사용
-/*type MiMaterialPriceManagementPtype{
-    cud_flag : String(1);
-    tenant_id : String(5);
-    company_code : String(10);
-    org_type_code : String(30);
-    org_code : String(10);
-    mi_material_code : String(40);
-    mi_material_code_text : String(240);
-category : String(40);
-category_text : String(240);
-use_flag : Boolean;
-exchange : String(10);
-currency_unit : String(30);
-quantity_unit : String(10);
-exchange_unit : String(40);
-terms : String(10);
-sourcing_group : String(10);
-delivery_month : String(10);
-mi_date : Date;
-amount : Decimal(17, 3);
-};
-
-action MiMaterialPriceManagement (value : array of MiMaterialPriceManagementPtype) returns String;
-*/
 }
