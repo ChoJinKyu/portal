@@ -207,7 +207,9 @@ service VpMappingService {
                 mst.hierarchy_parent_rank,
                 mst.hierarchy_level,
                 mst.hierarchy_root_rank,
-                mst.drill_state
+                mst.drill_state,
+                mst.vendor_pool_path_code,
+                mst.vendor_pool_path_name
         from   vpTreeView.Vp_Vendor_Pool_Tree_View mst
         where  mst.language_cd = 'EN'
         ;  
