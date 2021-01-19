@@ -8,7 +8,6 @@ using {cm as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm as orgDiv} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
-using {dp as mcstPjtView} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJECT_VIEW-model';
 
 namespace dp;
 
@@ -19,7 +18,6 @@ service McstProjectMgtService {
     entity McstProjectExrate       as projection on mcstPjtExrate.Tc_Mcst_Project_Base_Exrate;
     entity McstProjectSimilarModel as projection on mcstPjtSimilarModel.Tc_Mcst_Project_Similar_Model;
     entity McstProjectAddInfo      as projection on mcstPjtAddInfo.Tc_Mcst_Project_Addition_Info;
-    //view McstProjectView @(title : 'Mcst Project View') as select from mcstPjtView.TC_Mcst_Project_View;
 
     @readonly
     entity Code_Dtl                as
