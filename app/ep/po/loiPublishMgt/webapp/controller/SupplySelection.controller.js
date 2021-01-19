@@ -238,10 +238,10 @@ sap.ui.define([
                 "special_note": oMasterModel.getData().special_note,
                 "attch_group_number": oMasterModel.getData().attch_group_number,
                 "approval_number": oMasterModel.getData().approval_number,
-                // "buyer_empno": oMasterModel.getData().buyer_empno,
-                // "purchasing_department_code": oMasterModel.getData().purchasing_department_code,
-                "buyer_empno": '9586',
-                "purchasing_department_code": '50008948',
+                "buyer_empno": oMasterModel.getData().buyer_empno,
+                "purchasing_department_code": oMasterModel.getData().purchasing_department_code,
+                // "buyer_empno": '9586',
+                // "purchasing_department_code": '50008948',
                 "remark": oMasterModel.getData().remark,
                 "org_type_code": oMasterModel.getData().org_type_code,
                 "org_code": oMasterModel.getData().org_code,
@@ -440,7 +440,7 @@ sap.ui.define([
                 var day = ("0" + date.getDate()).slice(-2);
                 var toDate = year + "-" + month + "-" + day;
 
-                this.getView().byId("createDate").setText(toDate);
+                //this.getView().byId("createDate").setText(toDate);
 
                 var oMasterModel = this.getModel("master");
                 oMasterModel.setData({
@@ -453,7 +453,10 @@ sap.ui.define([
                     "attch_group_number": "",
                     "approval_number": "",
                     "buyer_empno": "9586",
+                    "buyer_name": "**민",
                     "purchasing_department_code": "50008948",
+                    "purchasing_department_name": "첨단소재.구매2.공사구매팀(청주P)",
+                    "supplier_selection_date": date,
                     "remark": "",
                     "org_type_code": "",
                     "org_code": "",

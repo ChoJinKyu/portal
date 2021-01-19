@@ -57,7 +57,7 @@
                     <ObjectStatus
                         id="createUser"         
                         title="작성자"
-                        text="**민"/>
+                        text="{master>/buyer_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -72,7 +72,7 @@
                     <ObjectStatus
                         id="createDepartment"
                         title="작성부서"
-                        text="첨단소재.구매2.공사구매팀(청주P)"/>
+                        text="{master>/purchasing_department_name}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -112,7 +112,7 @@
 					<uxap:ObjectPageSubSection id="pageSubSection1">
                     <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
-                            <Label  text="* 품의명" 
+                            <!-- <Label  text="* 품의명" 
                                     required="{midObjectViewModel>/isEditMode}"
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" />
@@ -122,9 +122,9 @@
                                 constraints: {
                                     maxLength: 50
                                 }
-                            }" class="sapMLabelNoText" required="{midObjectViewModel>/isEditMode}" width="98%" editable="{midObjectViewModel>/isEditMode}"/>
+                            }" class="sapMLabelNoText" required="{midObjectViewModel>/isEditMode}" width="98%" editable="{midObjectViewModel>/isEditMode}"/> -->
                    
-                            <!-- <Label  text="* 품의명" 
+                            <Label  text="* 품의명" 
                                     required="true"
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{midObjectViewModel>/isEditMode}"/>
@@ -138,7 +138,7 @@
                             <Label  text="* 품의명" 
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
-                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/> -->
+                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>
 
                             <Label  text="* 업체선정결과" 
                                     design="Bold" 

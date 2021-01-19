@@ -11,13 +11,7 @@
         <form:SimpleForm id="publishForm1Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
                 <Label text="* 품의명" design="Bold" class="sapMLabelNoText"/>
-                <Input value="{
-                    path: 'master>/loi_publish_title',
-                    type: 'sap.ui.model.type.String',
-                    constraints: {
-                        maxLength: 50
-                    }
-                }" editable="false" width="100%"/>
+                <Text text="{master>/loi_publish_title}" width="100%"/>
             </VBox>
         </form:SimpleForm>
 
@@ -25,13 +19,7 @@
         
             <VBox alignContent="Center">
                 <Label text="* 협력사명" textAlign="left" design="Bold" class="sapMLabelNoText" />
-                <Input value="{
-                        path: 'master>/supplier_code',
-                        type: 'sap.ui.model.type.String',
-                        constraints: {
-                            maxLength: 50
-                        }
-                    }" editable="false"/>
+                <Text text="{master>/supplier_code}" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>    
@@ -39,12 +27,7 @@
 
             <VBox alignContent="Center">
                 <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
-                <Select selectedKey="{master>/contract_format_id}" editable="false">
-                    <items>
-                        <core:Item key="K" text="구매의향서(국문)" />
-                        <core:Item key="E" text="구매의향서(영문)" />
-                    </items>
-                </Select>            
+                <Text text="{= ${master>/contract_format_id} === 'K' ? '구매의향서(국문)' : '구매의향서(영문)' }" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -52,7 +35,7 @@
 
             <VBox alignContent="Center">
                 <Label text="* 계약일자" design="Bold" class="sapMLabelNoText"/>
-                <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" editable="false" value="{master>/contract_date}" placeholder="Date" />   
+                <Text text="{master>/contract_date}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -60,12 +43,7 @@
             
             <VBox alignContent="Center">
                 <Label text="* 서명방식" design="Bold" class="sapMLabelNoText"/>
-                <SegmentedButton enabled="false" class="sapUiSmallMarginBottom" selectedKey="{master>/offline_flag}">                                            
-                    <items>
-                        <SegmentedButtonItem text="온라인" key="false" />
-                        <SegmentedButtonItem text="오프라인" key="true" />
-                    </items>
-                </SegmentedButton>   
+                <Text text="{= ${master>/offline_flag} === true ? '오프라인' : '온라인' }" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -78,7 +56,7 @@
                 <Label  text="* 부대조건" 
                             design="Bold" 
                             class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
-                <TextArea editable="false" value="{master>/additional_condition_desc}" rows="8" width="98%" />     
+                <Text text="{master>/additional_condition_desc}" />            
             </VBox>
         </form:SimpleForm>
 

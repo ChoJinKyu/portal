@@ -50,6 +50,8 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list");
             //this.setModel(new JSONModel(), "mainListViewModel");
 
+            this.setModel(new JSONModel(), "listModel");
+
             this.setModel(new JSONModel(), "loiVos");
             this.setModel(new JSONModel(), "loiRfq");
             this.setModel(new JSONModel(), "loiRmk");
@@ -837,6 +839,37 @@ sap.ui.define([
             var oView = this.getView(),
                 oModel = this.getModel("list"),
                 that = this;
+
+            //var oRootModel = this.getModel();  
+
+            // oModel.read("/Base_Price_Arl_Detail", {
+            //     filters : filtersParam,
+            //     urlParameters: {
+            //         "$expand": "approval_number_fk,prices,material_code_fk,company_code_fk,org_code_fk"
+            //     },
+            //     success : function(data){
+            //         oView.setBusy(false);
+
+            //         oView.getModel("listModel").setData(data);
+            //     },
+            //     error : function(data){
+            //         oView.setBusy(false);
+            //         console.log("error", data);
+            //     }
+            // });            
+
+            // oView.setBusy(true);
+            // oRootModel.read("/LOIPublishItemView", {
+            //     filters: aSearchFilters,
+            //     sorters: aSorter,
+            //     success: function (oData) {
+            //         console.log("oData111====", oData);
+            //         oView.getModel("listModel").setData(oData);
+            //         console.log("listModel====333", oView.getModel("listModel").getData());
+            //         oView.setBusy(false);
+            //     }
+            // });
+
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
             oModel.read("/LOIPublishItemView", {
