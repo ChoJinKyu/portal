@@ -75,4 +75,52 @@ service FundingApplicationSupV4Service {
         and language_cd = :language_cd
         ; 
 
+
+    //----------------------신청서 마스터 데이터 조회
+    //sp.Sf_Funding_Application
+    view fundingApplDataView(funding_appl_number: String) as 
+        select
+             fa.funding_appl_number             //자금지원 신청 번호
+            ,fa.funding_notify_number           //자금지원 공고 번호
+            ,fa.supplier_code                   //공급업체 코드
+            ,fa.tenant_id                       //
+            ,fa.company_code                    //
+            ,fa.org_type_code                   //
+            ,fa.org_code                        //
+            ,fa.funding_appl_date               //자금지원 신청 일자
+            ,fa.purchasing_department_name      //구매부서명(LG구매팀)
+            ,fa.pyear_sales_amount              //전년매출금액
+            ,fa.main_bank_name                  //주거래은행
+            ,fa.funding_appl_amount             //자금지원 신청 금액
+            ,fa.funding_hope_yyyymm             //자금지원 희망 년월
+            ,fa.repayment_method_code           //상환방법 코드
+            ,fa.appl_user_name                  //신청자 명 
+            ,fa.appl_user_tel_number            //신청자 전화번호
+            ,fa.appl_user_email_address         //신청자 email
+            ,fa.funding_reason_code             //지원 사유 코드
+            ,fa.collateral_type_code            //담보구분 코드
+            ,fa.collateral_amount               //담보 금액
+            ,fa.collateral_start_date           //담보 시작일자
+            ,fa.collateral_end_date             //담보 종료일자
+            ,fa.collateral_attch_group_number   //담보 약식확인서 첨부파일 그룹번호
+            ,fa.funding_step_code               //자금지원 단계 코드
+            ,fa.funding_status_code             //자금지원 상태 코드
+        from sp.Sf_Funding_Application fa
+        where 1=1
+        and fa.funding_appl_number = :funding_appl_number
+        ;
+
+
+    //----------------------투자계획 마스터 데이터 조회
+    //sp.Sf_Funding_Application
+    /*
+    view investPlanMstView(funding_appl_number: String) as 
+        select
+             *
+        from sp.Sf_Funding_Invest_Plan_Mst pm
+        where 1=1
+        and pm.funding_appl_number = :funding_appl_number
+        ;  
+    */ 
+         
 }

@@ -50,7 +50,9 @@ entity Sf_Funding_Application {
         funding_status_code           : String(30) not null @title : '자금지원상태코드';
 
         //투자계획 정보
-        invMstList                    : Composition of many invPlanMst.Sf_Funding_Invest_Plan_Mst on invMstList.funding_appl_number = funding_appl_number;
+        invMstList                    : Association to many invPlanMst.Sf_Funding_Invest_Plan_Mst 
+                                            on invMstList.funding_appl_number = funding_appl_number;
+
 }
 
 extend Sf_Funding_Application with util.Managed;
