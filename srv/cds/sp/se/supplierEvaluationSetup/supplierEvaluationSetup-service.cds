@@ -27,6 +27,7 @@ service SupEvalSetupService {
                operationOrg org
         where  org.tenant_id = ma.tenant_id
         and    org.company_code = ma.company_code
+        and    org.org_type_code = ma.org_type_code
         and    ma.process_type_code = 'SP08'
         ;
 
