@@ -218,7 +218,7 @@ entity Sc_EmailAddresses {
 
 entity Sc_Foo { emails: many String; }
 entity Sc_Bar { emails: many { kind:String; address:String; }; }
-entity Sc_Car1 { emails: many Sc_Same_EmailAddress; }
-entity Sc_Car2 { emails: Sc_Same_EmailAddresses; }
-type Sc_Same_EmailAddresses : many { kind:String; address:String; }
-type Sc_Same_EmailAddress : { kind:String; address:String; }
+entity Sc_Car1 { emails: many { kind:String; address:String; }; }
+entity Sc_Car2 { emails: { kind:String; address:String; }; }
+//type Sc_Same_EmailAddresses : many { kind:String; address:String; }
+//type Sc_Same_EmailAddress : { kind:String; address:String; }
