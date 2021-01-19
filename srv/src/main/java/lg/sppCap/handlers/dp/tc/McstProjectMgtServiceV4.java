@@ -214,8 +214,7 @@ public class McstProjectMgtServiceV4 implements EventHandler {
         v_sql_callProcSimilar.append("I_VERSION_NUMBER => ?,");
         v_sql_callProcSimilar.append("I_TABLE => #LOCAL_TEMP_SIMILAR_MODEL,");   
         v_sql_callProcSimilar.append("I_USER_ID => ?,");
-        v_sql_callProcSimilar.append("O_RETURN_CODE => ?,");
-        v_sql_callProcSimilar.append("O_RETURN_MSG => ?)");   
+        v_sql_callProcSimilar.append("O_MSG => ?)");  
 
         Collection<TcProjectType> v_inPrj = context.getInputData().getTcPjt();
         Collection<UpdateSimilarModelInputDataType> v_inSimilarModel = context.getInputData().getTcPjtSimilarModel();
@@ -360,9 +359,8 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                         stmt.setObject(6, v_inRowAdd.get("period_code"));
                         stmt.setObject(7, v_inRowAdd.get("addition_type_value"));
                         stmt.setObject(8, v_inRowAdd.get("user_id"));
-                        stmt.setObject(10, v_inRowAdd.get("user_id"));
-                        stmt.registerOutParameter(11, Types.NCHAR);
-                        stmt.registerOutParameter(12, Types.NCHAR);
+                        stmt.registerOutParameter(9, Types.NCHAR);
+                        stmt.registerOutParameter(10, Types.NCHAR);
                         return stmt;
                     }
                 }, paramList);
@@ -396,6 +394,8 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             paramList.add(new SqlParameter("I_PERIOD_CODE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_EXRATE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_CODE", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_MSG", Types.NVARCHAR));
             //paramList.add(oDTable);
 
             for(TcProjectBaseExrateType v_inRowBase : v_inBaseExtract){
@@ -412,6 +412,8 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                         stmt.setObject(6, v_inRowBase.get("period_code"));
                         stmt.setObject(7, v_inRowBase.get("exrate"));
                         stmt.setObject(8, v_inRowBase.get("user_id"));
+                        stmt.registerOutParameter(9, Types.NCHAR);
+                        stmt.registerOutParameter(10, Types.NCHAR);
                         return stmt;
                     }
                 }, paramList);

@@ -50,10 +50,22 @@ sap.ui.define([
 
             let oDataModel = this.getModel("mcstProjectMgtModel");//McstProjectMgtService V2 OData Service
             let aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oParam.tenant_id));
-            aFilters.push(new Filter("project_code", FilterOperator.EQ, oParam.project_code));
-            aFilters.push(new Filter("model_code", FilterOperator.EQ, oParam.model_code));
-            aFilters.push(new Filter("version_number", FilterOperator.EQ, oParam.version_number));
+            let sTenantId, sProjectCode, sModelCode, sVersionNumber;
+            if(oParam) {
+                sTenantId = oParam.tenant_id;
+                sProjectCode = oParam.project_code;
+                sModelCode = oParam.model_code;
+                sVersionNumber = oParam.version_number;  
+            } else {
+                sTenantId = this.getModel("detailModel").getProperty("/tenant_id");
+                sProjectCode = this.getModel("detailModel").getProperty("/project_code");
+                sModelCode = this.getModel("detailModel").getProperty("/model_code");
+                sVersionNumber = this.getModel("detailModel").getProperty("/version_number");
+            }
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
+            aFilters.push(new Filter("project_code", FilterOperator.EQ, sProjectCode));
+            aFilters.push(new Filter("model_code", FilterOperator.EQ, sModelCode));
+            aFilters.push(new Filter("version_number", FilterOperator.EQ, sVersionNumber));
 
             oView.setBusy(true);
             var sExpand  = "mcst_events,mcst_similar_model,mcst_base_extra,mcst_mtlmob,mcst_sales_price,mcst_prcs_cost,mcst_sgna";
