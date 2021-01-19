@@ -221,8 +221,27 @@ sap.ui.define([
             oModel.setTransactionModel(this.getModel("purOrg"));
             oModel.read("/Pur_Operation_Org", {
                 filters: aFilter,
-                success: function (oData) {
-                    oView.setBusy(false);
+                success: function (oData) { 
+                    console.log(" Pur_Operation_Org " , oData);
+                    oView.setBusy(false); 
+                    
+                   /* oModel.addRecord({
+                       affiliate_code: ""
+                        ,au_code: ""
+                        ,bizdivision_code: ""
+                        ,bizunit_code: ""
+                        ,company_code: ""
+                        ,create_user_id: ""
+                        ,hq_au_code: ""
+                        ,org_code: ""
+                        ,org_name: ""
+                        ,org_type_code: ""
+                        ,plant_code: ""
+                        ,purchase_org_code: ""
+                        ,tenant_id: "L2600"
+                        ,update_user_id: ""
+                   },"/Pur_Operation_Org",0); 
+                   */ 
                 }
             });
         },

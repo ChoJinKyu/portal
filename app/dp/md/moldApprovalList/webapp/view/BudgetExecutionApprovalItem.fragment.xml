@@ -86,7 +86,7 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/IMPORT_COMPANY', formatter:'I18NFormatter'}"/>
                     <!-- edit Mode -->
-					<Select  editable="{mode>/editFlag}" 
+					<ComboBox  editable="{mode>/editFlag}" 
                               class="readonlyField"
                               width="100%" 
                               id="importCompany" 
@@ -101,7 +101,7 @@
                                         sorter: { path: 'company_code'}
                               }">
 						<core:Item key="{importCompany>company_code}" text="[{importCompany>company_code}] {importCompany>company_name}" />
-					</Select>
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -125,7 +125,7 @@
 				</VBox>
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/IMPORT_PLANT', formatter:'I18NFormatter'}" />
-					<Select width="100%" 
+					<ComboBox width="100%" 
                               editable="{mode>/editFlag}" 
                               class="readonlyField"
                               id="importPlant" 
@@ -135,7 +135,7 @@
                                   path: 'importPlant>/Pur_Operation_Org'
                               }">
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
-					</Select>
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
