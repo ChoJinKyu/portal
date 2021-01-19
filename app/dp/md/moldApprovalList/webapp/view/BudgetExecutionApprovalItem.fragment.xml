@@ -36,7 +36,8 @@
                     <VBox height="6em">
 					<!-- Budget Type -->
 					<Label text="{path:'I18N>/BUDGET_TYPE', formatter:'I18NFormatter'}" required="true"/>
-					<SegmentedButton enabled="{mode>/editFlag}"
+					<SegmentedButton enabled="{mode>/editFlag}" 
+                                     selectionChange=".onBudgetChange"
                                      id="segInspection" 
                                      selectedKey="{mdCommon>/investment_ecst_type_code}" 
                                      width="100%" 
@@ -305,20 +306,16 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
-								<ComboBox id="b_asset_type_code" 
+								<Select id="b_asset_type_code" 
                                         required="true" 
                                         editable="{mode>/editFlag}" 
                                         class="readonlyField"
                                         selectedKey="{mdItemMaster>asset_type_code}" 
-                                        items="{ path : 'util>/Code',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
-                                        ],
-                                        sorter: { path: 'sort_no'}
+                                        items="{ path : 'assetTypeCodeList>/CodeView',
+                                                sorter: { path: 'sort_no'}
                                     }">
-									<core:Item key="{util>code}" text="{util>code_name}"/>
-								</ComboBox>
+									<core:Item key="{assetTypeCodeList>code}" text="{assetTypeCodeList>code_name}"/>
+								</Select>
                                
 							</table:template>
 						</table:Column>
