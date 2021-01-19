@@ -63,7 +63,7 @@
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
                         title="{I18N>/REQUESTOR}"
-                        text="[{appMaster>/requestor_empno}]{appMaster>/user_local_name}"/>
+                        text="[{appMaster>/user_english_name}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
                         title="{I18N>/REQUEST_DATE}"
                         text="{appMaster>/request_date}"/>
