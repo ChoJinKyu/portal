@@ -159,8 +159,8 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
-            // refererMultiCB 
-            this.getView().setModel(new ManagedModel(), "refererMultiCB");
+            // refererMultiCB  사용 안함 
+           //  this.getView().setModel(new ManagedModel(), "refererMultiCB");
 
             var oArgs = oEvent.getParameter("arguments");
             console.log(oArgs);
