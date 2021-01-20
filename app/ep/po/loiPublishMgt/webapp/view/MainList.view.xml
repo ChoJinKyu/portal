@@ -47,8 +47,7 @@
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'company_code', operator: 'EQ', value1: 'C100'}
                                     ],         
-                                    sorter: { path: 'loi_number' },
-                                    length : 5
+                                    sorter: { path: 'loi_number' }
                                 }"
                                 showValueHelp="false" placeholder="" submit=".onPageSearchButtonPress">
                                 <core:Item key="{loi_number}" text="{loi_number}" />

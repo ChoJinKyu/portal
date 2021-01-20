@@ -148,26 +148,23 @@ service BudgetExecutionApprovalService {
         
         ; 
 
+        /**
+            @description 조회조건으로 parent_code 가 들어가야 해서 공통서비스 사용 못하고 신규로 만듬 
+        */
         @readonly 
         view CodeView as 
-            select 
-              key  dtl.tenant_id 
-            , key  dtl.group_code 
-            , l.code_name 
-            , dtl.sort_no 
-            , key dtl.code 
-            , dtl.parent_code 
-        from codeDtl.Code_Dtl dtl 
-        join codeLng.Code_Lng l ON dtl.group_code = l.group_code and dtl.tenant_id = l.tenant_id and dtl.code = l.code 
+        select 
+              key d.tenant_id 
+            , key d.group_code 
+            , key d.code 
+            , l.code_name as code_name : String(240)
+            , d.sort_no 
+            , d.parent_code 
+        from codeDtl.Code_Dtl d 
+        join codeLng.Code_Lng l ON d.group_code = l.group_code and d.tenant_id = l.tenant_id and d.code = l.code 
         where l.language_cd = 'KO'
        /* and dtl.group_code = 'DP_MD_ASSET_TYPE' 
         and l.tenant_id = 'L2600' 
         and dtl.parent_code = 'I' */ 
-        order by dtl.sort_no 
         ;
-
-
-
-
-
 }

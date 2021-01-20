@@ -112,29 +112,29 @@
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column id="mainColumnstat" minScreenWidth="Tablet" hAlign="Center" width="1.5rem" />
-                    <Column id="mainColumnBizUnit" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnstat" minScreenWidth="Tablet" hAlign="Left" width="1.5rem" />
+                    <Column id="mainColumnBizUnit" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="사업본부" />
                     </Column>
-                    <Column id="mainColumnPAC" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnPAC" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="Product Activity Code" />
                     </Column>
-                    <Column id="mainColumnPACN" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnPACN" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="Product Activity Code명" />
                     </Column>
-                    <Column id="mainColumnDependency" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnDependency" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="종속유형" />
                     </Column>
-                    <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="Activity Code" />
                     </Column>
-                    <Column id="mainColumnACN" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnACN" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="Activity Code명" />
                     </Column>
-                    <Column id="mainColumnUDT" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnUDT" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="수정일자" />
                     </Column>
-                    <Column id="mainColumnUDU" minScreenWidth="Tablet" hAlign="Center" >
+                    <Column id="mainColumnUDU" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="수정자" />
                     </Column>
                 </columns>

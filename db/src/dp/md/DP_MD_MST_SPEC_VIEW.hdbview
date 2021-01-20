@@ -21,6 +21,11 @@ SELECT
     	end) inspection_date_plan
     ,ifnull(a.production_complete_date, (select production_complete_date from dp_md_schedule where mold_id=a.mold_id and mold_develope_date_type_code='P')) production_complete_date_plan
 
+    -- SP_SM_SUPPLIER_MST 에 L2600 등 데이터가 없어 임시로 L2100 으로 함
+    ,(select SUPPLIER_LOCAL_NAME from SP_SM_SUPPLIER_MST where tenant_id='L2100' and SUPPLIER_CODE=a.mold_mfger_code) mold_mfger_name
+    ,(select SUPPLIER_LOCAL_NAME from SP_SM_SUPPLIER_MST where tenant_id='L2100' and SUPPLIER_CODE=a.supplier_code) supplier_name
+    ,(select SUPPLIER_LOCAL_NAME from SP_SM_SUPPLIER_MST where tenant_id='L2100' and SUPPLIER_CODE=a.production_supplier_code) production_supplier_name
+
     ,a.tenant_id                       
     ,a.company_code                    
     ,a.org_type_code                   

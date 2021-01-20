@@ -27,7 +27,7 @@
                     
                     <form:content>
                         <VBox>
-                            <Label text = "Company" required="true"/> 
+                            <Label text = "{I18N>/COMPANY}" required="true"/> 
                             <ComboBox id="moldItemPopCompany"  width="100%" selectedKey="{moldItemPop>/company_code}" 
                                         enabled="false" items="{ path: 'moldSelectionCompanyPopList>/Org_Company' }">
                                 <items>
@@ -39,7 +39,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Plant" required="true"/> 
+                            <Label text = "{I18N>/PLANT}" required="true"/> 
                             <ComboBox id="moldItemPopPlant"  width="100%" selectedKey="{moldItemPop>/org_code}" 
                                     enabled="false" items="{ path: 'moldSelectionPlantPopList>/Pur_Operation_Org'}">
                                 <items>
@@ -51,13 +51,13 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Button id="btnMoldItemPopSearch" text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
+                            <Button id="btnMoldItemPopSearch" text="{I18N>/SEARCH}" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
                                <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Model"/> 
+                            <Label text = "{I18N>/MODEL}"/> 
                              <Input id="moldItemPopModel" width="100%"/>
                              <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
@@ -93,7 +93,7 @@
                                 <Text text="mold_id" />
                             </Column>
                             <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center"   >
-                                <Text text="Model" />
+                                <Text text="{I18N>/MODEL}" />
                             </Column>
                             <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" >
                                 <Text text="Model Part No" />
@@ -189,8 +189,8 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="End" justifyContent="End" >
-            <Button text="Cancel" type="Transparent" class="sapUiSmallMarginEnd" press=".onExit"/>
-            <Button text="Apply" class="sapUiSmallMarginEnd" type="Emphasized" press=".onMoldItemSelectionApply"/>
+            <Button text="{I18N>/CANCEL}" type="Transparent" class="sapUiSmallMarginEnd" press=".onExit"/>
+            <Button text="{I18N>/APPLY}" class="sapUiSmallMarginEnd" type="Emphasized" press=".onMoldItemSelectionApply"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

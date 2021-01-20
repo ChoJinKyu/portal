@@ -124,7 +124,7 @@
               ]
           },
           {
-              "pattern": "addSupplier/{layout}/{tenantId}/{ssn}/{mode}",
+              "pattern": "addSupplier/{layout}/{tenantId}/{ssi}/{ssn}/{mode}",
               "name": "suppliePage",
               "target": [                 
                   "addSupplier"

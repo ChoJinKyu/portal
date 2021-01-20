@@ -362,7 +362,6 @@ sap.ui.define([
             this._sLoiNumber = oArgs.loiNumber;
             this.getModel("midObjectViewModel").setProperty("/viewLoiNumber", oArgs.loiNumber);
 
-
             console.log("##getOwnerComponent==", this.getOwnerComponent().getRootControl().byId("fcl"));
 
             console.log("##oArgs.tenantId==", oArgs.tenantId);
@@ -429,30 +428,6 @@ sap.ui.define([
                 filters: [
                     new Filter(orFilter, false)
                 ],
-
-                // filters: [
-                //     new Filter({
-                //         and: true,
-                //         filters: [
-                //             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                //             new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                //             new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber),
-                //             new Filter("loi_item_number", FilterOperator.EQ, this._sLoiItemNumber
-                //         ]}),
-                //     new Filter({
-                //         and: true,
-                //         filters: [
-                //         new Filter("property3", FilterOperator.Contains, sQuery),
-                //         new Filter("property4", FilterOperator.Contains, sQuery)
-                //         ]}),
-                //     new Filter({
-                //         and: true,
-                //         filters: [
-                //         new Filter("property5", FilterOperator.Contains, sQuery),
-                //         new Filter("property6", FilterOperator.Contains, sQuery)
-                //         ]})
-                // ]});
-
                 success: function (oData) {
                     oView.setBusy(false);
                     console.log("details=====", oData);
@@ -514,18 +489,10 @@ sap.ui.define([
                         console.log("oData====", oData.loi_publish_status_code);
                         oView.setBusy(false);
                         that._toShowMode();
-                        // loi_status = oData.loi_publish_status_code;
-                        // if (loi_status == "122030") {
-                        //     that._toEditMode();
-                        // } else {
-                        //     that._toShowMode();
-                        // }
                     }
                 });
 
             }
-
-            //oTransactionManager.setServiceModel(this.getModel());
         },
 
         _toEditMode: function () {

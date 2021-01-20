@@ -36,7 +36,8 @@
                     <VBox height="6em">
 					<!-- Budget Type -->
 					<Label text="{path:'I18N>/BUDGET_TYPE', formatter:'I18NFormatter'}" required="true"/>
-					<SegmentedButton enabled="{mode>/editFlag}"
+					<SegmentedButton enabled="{mode>/editFlag}" 
+                                     selectionChange=".onBudgetChange"
                                      id="segInspection" 
                                      selectedKey="{mdCommon>/investment_ecst_type_code}" 
                                      width="100%" 
@@ -85,7 +86,7 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/IMPORT_COMPANY', formatter:'I18NFormatter'}"/>
                     <!-- edit Mode -->
-					<Select  editable="{mode>/editFlag}" 
+					<ComboBox  editable="{mode>/editFlag}" 
                               class="readonlyField"
                               width="100%" 
                               id="importCompany" 
@@ -100,7 +101,7 @@
                                         sorter: { path: 'company_code'}
                               }">
 						<core:Item key="{importCompany>company_code}" text="[{importCompany>company_code}] {importCompany>company_name}" />
-					</Select>
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -124,7 +125,7 @@
 				</VBox>
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/IMPORT_PLANT', formatter:'I18NFormatter'}" />
-					<Select width="100%" 
+					<ComboBox width="100%" 
                               editable="{mode>/editFlag}" 
                               class="readonlyField"
                               id="importPlant" 
@@ -134,7 +135,7 @@
                                   path: 'importPlant>/Pur_Operation_Org'
                               }">
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
-					</Select>
+					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -305,20 +306,16 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
-								<ComboBox id="b_asset_type_code" 
+								<Select id="b_asset_type_code" 
                                         required="true" 
                                         editable="{mode>/editFlag}" 
                                         class="readonlyField"
                                         selectedKey="{mdItemMaster>asset_type_code}" 
-                                        items="{ path : 'util>/Code',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
-                                        ],
-                                        sorter: { path: 'sort_no'}
+                                        items="{ path : 'assetTypeCodeList>/CodeView',
+                                                sorter: { path: 'sort_no'}
                                     }">
-									<core:Item key="{util>code}" text="{util>code_name}"/>
-								</ComboBox>
+									<core:Item key="{assetTypeCodeList>code}" text="{assetTypeCodeList>code_name}"/>
+								</Select>
                                
 							</table:template>
 						</table:Column>

@@ -187,7 +187,8 @@ sap.ui.define([
 			var oTable = this.byId("finTable"),
 				oDetailsModel = this.getModel("SupplierFin");
 			oDetailsModel.addRecord({
-				"tenant_id": this._sTenantId,
+                "tenant_id": this._sTenantId,
+                "sourcing_supplier_id": this._sSsi,
 				"sourcing_supplier_nickname": this._sSsn,
 				"fiscal_year": "",
 				"fiscal_quarter": "",
@@ -207,7 +208,8 @@ sap.ui.define([
 			var oTable = this.byId("salTable"),
 				oDetailsModel = this.getModel("SupplierSal");
 			oDetailsModel.addRecord({
-				"tenant_id": this._sTenantId,
+                "tenant_id": this._sTenantId,
+                "sourcing_supplier_id": this._sSsi,
 				"sourcing_supplier_nickname": this._sSsn,
 				"txn_year": "",
 				"customer_english_name": "",
@@ -258,7 +260,7 @@ sap.ui.define([
                 oMasterModel = this.getModel("SupplierGen"),
                 oDetailsModel = this.getModel("SupplierFin"),
                 oDetailsModel2 = this.getModel("SupplierSal"),
-                email = this.getView().byId("eidtEmail").getValue(),
+                email = this.getView().byId("editEmail").getValue(),
                 that = this;
             
             if(!oMasterModel.isChanged() && !oDetailsModel.isChanged() && !oDetailsModel2.isChanged()) {
@@ -299,6 +301,45 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("finTable"));
             this.validator.clearValueState(this.byId("salTable"));
         },
+
+        _fnUpdateCodeDetail : function(){
+            var oViewModel = this.getModel("SupplierGen");
+            var oParam = oViewModel.getProperty("/detailDetail");
+            var oKey = {
+                tenant_id : oParam.tenant_id,
+                group_code : oParam.group_code,
+                code : oParam.code
+            }
+
+            var oModel = this.getModel();
+            var sCreatePath = oModel.createKey("/CodeDetails", oKey);
+            oModel.update(sCreatePath, oParam, {
+                success: function(data){
+                    this._fnReadDetails(oParam.tenant_id, oParam.group_code);
+
+                    var oLangModel = this.getModel("languages");
+                    oLangModel.getProperty("/CodeLanguages").forEach(function(item, i){
+                        if(item["tenant_id"] === ""){
+                            oLangModel.setProperty("/CodeLanguages/"+i+"/tenant_id", oParam.tenant_id);
+                            oLangModel.setProperty("/CodeLanguages/"+i+"/group_code", oParam.group_code);
+                            oLangModel.setProperty("/CodeLanguages/"+i+"/code", oParam.code);
+                        }                        
+                    })
+
+                    oLangModel.submitChanges({
+                        groupId: "CodeLanguages",
+                        success: function (data) {
+                            this._fnSetReadMode();
+                            MessageToast.show("Success to update.");
+                        }.bind(this)
+                    });
+
+                }.bind(this),
+                error: function(data){
+                    console.log('error',data)
+                }
+            });
+        },
         
         CheckEmail: function (str) {                                                 
 
@@ -323,8 +364,10 @@ sap.ui.define([
         },
 
         onInputChange: function(oEvent){
-            console.log(oEvent)
-            // if(this.isValNull(oEvent.mParameters.newValue))
+            // String upperCaseOnly = "^[A-Z]*$";
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+            _oInput.setValue(val.toUpperCase());                      
                 
         },
 		
@@ -340,7 +383,7 @@ sap.ui.define([
                 this.onPageNavBackButtonPress();
             }else if (sMode !== "edit"){                
                
-                this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
+                this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_id=" + this._sSsi + ")");
 				oView.setBusy(true);
                 var oDetailsModel = this.getModel("SupplierFin");
                 var oDetailsModel2 = this.getModel("SupplierSal");
@@ -349,7 +392,7 @@ sap.ui.define([
                 oDetailsModel.read("/SupplierFin", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                        new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                        new Filter("sourcing_supplier_id", FilterOperator.EQ, this._sSsi),
                     ],
                     success: function(oData){
                         oView.setBusy(false);
@@ -358,7 +401,7 @@ sap.ui.define([
                 oDetailsModel2.read("/SupplierSal", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                        new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                        new Filter("sourcing_supplier_id", FilterOperator.EQ, this._sSsi),
                     ],
                     success: function(oData){
                         oView.setBusy(false);
@@ -404,10 +447,12 @@ sap.ui.define([
 		_onRoutedThisPage: function(oEvent){                 
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
-			this._sTenantId = oArgs.tenantId;
+            this._sTenantId = oArgs.tenantId;
+            this._sSsi = oArgs.ssi;
             this._sSsn = oArgs.ssn;
             this._sMode = oArgs.mode;
-            this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')");
+            
+            this._bindView("/SupplierGen(tenant_id='" + this._sTenantId + "',sourcing_supplier_id=" + this._sSsi + ")");
             
             var oDetailsModel = this.getModel("SupplierFin");
             var oDetailsModel2 = this.getModel("SupplierSal");
@@ -418,7 +463,7 @@ sap.ui.define([
             oDetailsModel.read("/SupplierFin", {
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                    new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                    new Filter("sourcing_supplier_id", FilterOperator.EQ, this._sSsi),
                 ],
                 success: function(oData){
                     
@@ -427,13 +472,13 @@ sap.ui.define([
             oDetailsModel2.read("/SupplierSal", {
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                    new Filter("sourcing_supplier_nickname", FilterOperator.EQ, this._sSsn),
+                    new Filter("sourcing_supplier_id", FilterOperator.EQ, this._sSsi),
                 ],
                 success: function(oData){
                    
                 }
             });            
-            oDetailsModel3.read("/SupplierGenView(tenant_id='" + this._sTenantId + "',sourcing_supplier_nickname='" + this._sSsn + "')", {
+            oDetailsModel3.read("/SupplierGenView(tenant_id='" + this._sTenantId + "',sourcing_supplier_id=" + this._sSsi + ")", {
                 success: function (oData) {
                     
                 }
@@ -452,7 +497,7 @@ sap.ui.define([
             oFcl.to(sThisViewId);
 
             //ScrollTop
-            this.byId("suppliePage").setSelectedSection("pageSectionMain");
+            //this.byId("suppliePage").setSelectedSection("pageSectionMain");
             var oObjectPageLayout = this.getView().byId("suppliePage");
             var oFirstSection = oObjectPageLayout.getSections()[0];
             oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
@@ -508,7 +553,8 @@ sap.ui.define([
             this.byId("salTable").setMode(sap.m.ListMode.MultiSelect);
             this._bindMidTable(this.oEditableTemplate, "Edit");
             this._bindMidTable2(this.oEditableTemplate2, "Edit");
-            oAddSupplierView.setProperty("/editMode", true);            
+            oAddSupplierView.setProperty("/editMode", true);
+            oAddSupplierView.setProperty("/showMode", false);            
 		},
 
 		_toShowMode: function(){
@@ -534,6 +580,7 @@ sap.ui.define([
             this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
             this._bindMidTable2(this.oReadOnlyTemplate2, "Navigation");
             oAddSupplierView.setProperty("/editMode", false);
+            oAddSupplierView.setProperty("/showMode", true);
             
 		},
 

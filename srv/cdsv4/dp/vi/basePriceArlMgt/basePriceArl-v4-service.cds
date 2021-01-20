@@ -95,6 +95,7 @@ service BasePriceArlV4Service {
     type InputDataType : {
         cmd               : CmdType;
         basePriceArlMst   : array of BasePriceArlMstType;
+        debug             : Boolean;
     }
 
     type OutputDataType : {

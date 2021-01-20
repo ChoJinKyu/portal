@@ -23,14 +23,14 @@
             width="100%"
             selectedKey="{master>/chain_code}"
             items="{
-                path: 'util>/CodeDetails',
+                path: 'util>/Code',
                 filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                     {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                 ]
             }">
         <items>
-            <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+            <core:Item key="{util>code}" text="{util>code}: {util>code_name}" />
         </items>
         </ComboBox>
 

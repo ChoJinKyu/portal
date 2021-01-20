@@ -7,14 +7,13 @@ PROCEDURE DP_TC_UPDATE_MCST_SIMILAR_MODEL_PROC (I_TENANT_ID NVARCHAR(5)
                                                                 ,DIRECT_REGISTER_FLAG BOOLEAN
                                                                 )
                                                ,IN I_USER_ID NVARCHAR(255)
-                                               ,OUT O_RETURN_CODE NVARCHAR(10)
-                                               ,OUT O_RETURN_MSG NVARCHAR(3000)
+                                               ,OUT O_MSG DP_TC_PROC_OUT_TYPE
 ) 
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_UPDATE_MCST_SIMILAR_MODEL_PROC
+Program Name   : DP_TC_UPDATE_MCST_SIMILAR_MODEL_PROC
 Creator        : Jeong Jeong Ho
 Description    : 재료비 프로젝트 유사모델 생성(delete/insert)
 History        : 2021-01-05 initial creation
@@ -35,8 +34,7 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             EXEC (:var_rollback);
-            O_RETURN_CODE := ::SQL_ERROR_CODE;
-            O_RETURN_MSG := ::SQL_ERROR_MESSAGE;            
+            O_MSG = SELECT 'NG' RETURN_CODE, ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE RETURN_MSG FROM DUMMY;            
             --SELECT 'NG' RETURN_CODE, ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE RETURN_MSG FROM DUMMY;
         END;
   
@@ -99,8 +97,7 @@ BEGIN
         END;
     END FOR;
     
-    O_RETURN_CODE := 'OK';
-    O_RETURN_MSG := 'Success';
+    O_MSG = SELECT 'OK' RETURN_CODE, 'Success' RETURN_MSG FROM DUMMY;
     --SELECT 'OK' RETURN_CODE, 'Success' RETURN_MSG FROM DUMMY;
     
 END;

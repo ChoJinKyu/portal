@@ -88,6 +88,7 @@ sap.ui.define(["jquery.sap.global"],
                 }
                 var oBundle = this._oBundle;
                 oDeferred.resolve(oBundle);
+                console.log(oBundle);
                 return oDeferred.promise();
             },
 
@@ -107,7 +108,7 @@ sap.ui.define(["jquery.sap.global"],
 
                 //set personalization
                 this._oBundle = oInitialData;
-
+                console.log("this._oBundle >>>>", this._oBundle);
                 oDeferred.resolve();
                 return oDeferred.promise();
             },
@@ -125,15 +126,14 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                
-                if (sId.indexOf("moldProductionTypeColumn") != -1 ||
-                    sId.indexOf("mainColumnCompany") != -1 ||
-                    sId.indexOf("mainColumnPlant") != -1 ||
-                    sId.indexOf("mainColumnApprovalNo") != -1 ||
-                    sId.indexOf("mainColumnSubject") != -1) {
-                    return "Primary Group";
-                }
-                return "Others";
+                // if (sId.indexOf("moldProductionTypeColumn") != -1 ||
+                //     sId.indexOf("mainColumnCompany") != -1 ||
+                //     sId.indexOf("mainColumnPlant") != -1 ||
+                //     sId.indexOf("mainColumnApprovalNo") != -1 ||
+                //     sId.indexOf("mainColumnSubject") != -1) {
+                //     return "Primary Group";
+                // }
+                // return "";
             }
         };
 

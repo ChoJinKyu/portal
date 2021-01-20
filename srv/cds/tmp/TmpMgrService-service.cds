@@ -8,8 +8,8 @@ service TmpMgrService {
     entity prjt as projection on TMP_PRJT.prjt;
 
     type SampleType{
-        result : LargeString;
+        TEMPLATE_PATH : String;
     };
     
-    action SampleLogicTransition(TENANT_ID : String) returns SampleType;
+    action SampleLogicTransition(TENANT_ID : String, TEMPLATE_ID: String) returns SampleType;
 }

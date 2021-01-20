@@ -124,11 +124,13 @@ public class McstProjectMgtServiceV4 implements EventHandler {
 
     /**
      * Mcst Project Update
+     * 
      * @param context
+     * @throws Exception
      */
     @Transactional(rollbackFor = SQLException.class)
-    @On(event=TcUpdateMcstProjectProcContext.CDS_NAME)
-    public void onTcUpdateMcstProjectProc(TcUpdateMcstProjectProcContext context) {
+    @On(event = TcUpdateMcstProjectProcContext.CDS_NAME)
+    public void onTcUpdateMcstProjectProc(TcUpdateMcstProjectProcContext context) throws Exception {
 
         log.info("### TcUpdateMcstProjectProcContext 처리 [On] ###");
 
@@ -212,8 +214,7 @@ public class McstProjectMgtServiceV4 implements EventHandler {
         v_sql_callProcSimilar.append("I_VERSION_NUMBER => ?,");
         v_sql_callProcSimilar.append("I_TABLE => #LOCAL_TEMP_SIMILAR_MODEL,");   
         v_sql_callProcSimilar.append("I_USER_ID => ?,");
-        v_sql_callProcSimilar.append("O_RETURN_CODE => ?,");
-        v_sql_callProcSimilar.append("O_RETURN_MSG => ?)");   
+        v_sql_callProcSimilar.append("O_MSG => ?)");  
 
         Collection<TcProjectType> v_inPrj = context.getInputData().getTcPjt();
         Collection<UpdateSimilarModelInputDataType> v_inSimilarModel = context.getInputData().getTcPjtSimilarModel();
@@ -230,14 +231,17 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             log.info("-----> v_inPrj");
 
             
-            SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
+            /*SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
                 @Override
                 public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                    v_result.setReturnCode(v_rs.getString("returncode"));
-                    v_result.setReturnMsg("v_inPrj :: "+v_rs.getString("returnmessage"));
+                    log.info("==> return_code in PRJ : "+v_rs.getString("O_RETURN_CODE"));
+                    log.info("==> return_msg in PRJ : "+v_rs.getString("O_RETURN_MSG"));
+                    v_result.setReturnCode(v_rs.getString("O_RETURN_CODE"));
+                    v_result.setReturnMsg(v_rs.getString("O_RETURN_MSG"));
                     return v_result;
                 }
-            });
+            });*/
+            
             List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
             paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
@@ -265,8 +269,10 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             paramList.add(new SqlParameter("I_BOM_TYPE_CODE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_PROJECT_CREATE_DATE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_CODE", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_MSG", Types.NVARCHAR));
 
-            paramList.add(oDTable);
+            //paramList.add(oDTable);
 
             for(TcProjectType v_inRow : v_inPrj){
 
@@ -299,24 +305,32 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                         stmt.setObject(23, v_inRow.get("bom_type_code"));
                         stmt.setObject(24, v_inRow.get("project_create_date"));
                         stmt.setObject(25, v_inRow.get("user_id"));
+                        stmt.registerOutParameter(26, Types.NVARCHAR);
+                        stmt.registerOutParameter(27, Types.NVARCHAR);
+
                         return stmt;
                     }
-                }, paramList);
+                }, paramList);              
+
+                log.info("--------> v_inPrj O_RETURN_CODE :: "+ resultMap.get("O_RETURN_CODE"));
+                log.info("--------> v_inPrj O_RETURN_MSG :: "+ resultMap.get("O_RETURN_MSG"));
+                if(!"OK".equals(resultMap.get("O_RETURN_CODE"))) {
+                    throw new Exception((String) resultMap.get("O_RETURN_MSG"));
+                }
             }
         }
-
 
         if(!v_inAddInfo.isEmpty() && v_inAddInfo.size() > 0){
             log.info("-----> v_inAddInfo");
 
-            SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
+            /*SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
                 @Override
                 public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                     v_result.setReturnCode(v_rs.getString("returncode"));
                     v_result.setReturnMsg(v_rs.getString("v_inAddInfo :: "+"returnmessage"));
                     return v_result;
                 }
-            });
+            });*/
             List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
             paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
@@ -327,6 +341,8 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             paramList.add(new SqlParameter("I_PERIOD_CODE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_ADDITION_TYPE_VALUE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_CODE", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_MSG", Types.NVARCHAR));
             //paramList.add(oDTable);
 
             for(TcProjectAdditionInfoType v_inRowAdd : v_inAddInfo){
@@ -343,24 +359,31 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                         stmt.setObject(6, v_inRowAdd.get("period_code"));
                         stmt.setObject(7, v_inRowAdd.get("addition_type_value"));
                         stmt.setObject(8, v_inRowAdd.get("user_id"));
+                        stmt.registerOutParameter(9, Types.NCHAR);
+                        stmt.registerOutParameter(10, Types.NCHAR);
                         return stmt;
                     }
                 }, paramList);
 
+                log.info("--------> v_inAddInfo O_RETURN_CODE :: "+ resultMap.get("O_RETURN_CODE"));
+                log.info("--------> v_inAddInfo O_RETURN_MSG :: "+ resultMap.get("O_RETURN_MSG"));
+                if(!"OK".equals(resultMap.get("O_RETURN_CODE"))) {
+                    throw new Exception((String) resultMap.get("O_RETURN_MSG"));
+                }                
             }
         }
 
         if(!v_inBaseExtract.isEmpty() && v_inBaseExtract.size() > 0){
             log.info("-----> v_inBaseExtract");
 
-            SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
+            /*SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
                 @Override
                 public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                     v_result.setReturnCode(v_rs.getString("returncode"));
                     v_result.setReturnMsg(v_rs.getString("v_inBaseExtract :: "+"returnmessage"));
                     return v_result;
                 }
-            });
+            });*/
             List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
             paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
@@ -371,6 +394,8 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             paramList.add(new SqlParameter("I_PERIOD_CODE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_EXRATE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_CODE", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_MSG", Types.NVARCHAR));
             //paramList.add(oDTable);
 
             for(TcProjectBaseExrateType v_inRowBase : v_inBaseExtract){
@@ -387,10 +412,17 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                         stmt.setObject(6, v_inRowBase.get("period_code"));
                         stmt.setObject(7, v_inRowBase.get("exrate"));
                         stmt.setObject(8, v_inRowBase.get("user_id"));
+                        stmt.registerOutParameter(9, Types.NCHAR);
+                        stmt.registerOutParameter(10, Types.NCHAR);
                         return stmt;
                     }
                 }, paramList);
 
+                log.info("--------> v_inBaseExtract O_RETURN_CODE :: "+ resultMap.get("O_RETURN_CODE"));
+                log.info("--------> v_inBaseExtract O_RETURN_MSG :: "+ resultMap.get("O_RETURN_MSG"));
+                if(!"OK".equals(resultMap.get("O_RETURN_CODE"))) {
+                    throw new Exception((String) resultMap.get("O_RETURN_MSG"));
+                } 
             }
         }
 
@@ -428,12 +460,12 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             //}            
 
             for(UpdateSimilarModelInputDataType v_inRowSim : v_inSimilarModel){
-
+                
                 SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputData>(){
                     @Override
                     public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                        //v_result.setReturnCode(v_rs.getString("return_code"));
-                        //v_result.setReturnMsg(v_rs.getString("v_inSimilarModel :: " + "return_msg"));
+                        log.info("-----> v_inRowSim return_code :: " + v_rs.getString("return_code"));
+                        log.info("-----> v_inRowSim return_msg :: " + v_rs.getString("return_msg"));
                         v_result.setReturnCode(v_rs.getString("return_code"));
                         v_result.setReturnMsg(v_rs.getString("return_msg"));
                         return v_result;

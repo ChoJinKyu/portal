@@ -9,7 +9,7 @@ select
     supplier_code,
     contract_format_id,
     offline_flag,
-    contract_date,
+    to_char(contract_date, 'YYYY-MM-DD') as contract_date,
     additional_condition_desc,
     special_note,
     attch_group_number,

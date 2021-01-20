@@ -33,14 +33,37 @@ using {
     sap
 } from '@sap/cds/common';
 
+using {cm.Hr_Employee as hrEmployee} from '../../cm/CM_HR_EMPLOYEE-model.cds';
 entity Sc_Nego_Headers_Test01 : managed {
         // key tenant_id                       : String(5) not null  @title : '테넌트ID';
-    key tenant_id              : Association to orgTenant.Org_Tenant @title : '테넌트ID';
+    // key tenant_id              : Association to orgTenant.Org_Tenant @title : '테넌트ID';
+    key tenant              : Association to orgTenant.Org_Tenant{tenant_id as id} @title : '테넌트ID';
     key nego_header_id         : Integer64 not null                  @title : '협상헤더ID';
-        operation_unit_code    : String(30) not null                 @title : '운영단위코드';
         currency_code          : Currency not null                   @title : '환율코드';
         response_currency_code : Currency not null                   @title : '응답환율코드';
+        reference_nego_header_id        : Integer64                            @title : '참조협상헤더ID';
+        previous_nego_header_id         : Integer64                            @title : '이존협상헤더ID';
+        operation_unit_code             : String(30)                           @title : '운영단위코드';
+        reference_nego_document_number  : Integer                              @title : '참조협상문서번호';
+        nego_document_round             : Integer                              @title : '협상문서회차';
+        nego_document_number            : String(50)                           @title : '협상문서번호';
+        nego_document_title             : String(300)                          @title : '협상문서제목';
+        nego_document_desc              : String(4000)                         @title : '협상문서설명';
+        nego_progress_status_code       : String(30)                           @title : '협상진행상태코드';
+        award_progress_status_code      : String(25)                           @title : '낙찰진행상태코드';
+        //    award_date : Date   @title: '낙찰일자' ;
+        reply_times                     : Integer                              @title : '회신횟수';
+        supplier_count                  : Integer                              @title : '공급업체개수';
+        nego_type_code                  : String(25)                           @title : '협상유형코드';
+        //    purchasing_order_type_code : String(30)   @title: '구매주문유형코드' ;
+        negotiation_output_class_code   : String(100)                          @title : '협상산출물분류코드';
+        buyer_empno                     : type of hrEmployee : employee_number @title : '구매담당자사번';
+        buyer_empno_1                    : Association to hrEmployee  on buyer_empno_1.tenant_id = $self.tenant.tenant_id and buyer_empno_1.employee_number = $self.buyer_empno;
+        pr                              : Association to hrEmployee {tenant_id, employee_number as buyer_empno } @title : '구매담당자사번_navi';
+        buyer_empno_2                    : Association to hrEmployee { user_status_code as user_status_code } @title : '유저상태_navi';
+        hrEmployee_ : association to hrEmployee  @assert.integrity:false;
 }
+
 
 
 // type Language : Association to sap.common.Languages;
@@ -157,3 +180,45 @@ entity Sc_Nego_Headers_Test04 {
         nego_document_round             : Integer             @title : '협상문서회차';
 }
 extend Sc_Nego_Headers_Test04 with util.Managed;
+
+
+
+
+aspect Sc_CodeList @(
+cds.autoexpose,
+cds.persistence.skip : 'if-unused'
+) {
+name  : localized String(255)  @title : '{i18n>Name}';
+descr : localized String(1000) @title : '{i18n>Description}';
+}
+entity Sc_Nego_Outcom : Sc_CodeList {
+  key outcom   : String(30);
+}
+// view Sc_salesOrderCountryOwnAndGer as select from Sc_Nego_Headers_Test01 {pr.employee_number} ;
+
+entity Sc_Contacts {
+  key ID : UUID;
+  name : String;
+  emails : Composition of many Sc_EmailAddresses on emails.contact=$self;
+}
+entity Sc_EmailAddresses {
+  key contact : Association to Sc_Contacts;
+  key ID  : UUID;
+  kind    : String;
+  address : String;
+  primary : Boolean;
+}
+
+// https://cap.cloud.sap/docs/guides/domain-models#verticalization
+// entity ChangeNotes { // Fail
+//   key subject : Association to many { ID: UUID };
+//   key at : DateTime;
+//   note : String(666);
+// }
+
+entity Sc_Foo { emails: many String; }
+entity Sc_Bar { emails: many { kind:String; address:String; }; }
+entity Sc_Car1 { emails: many { kind:String; address:String; }; }
+entity Sc_Car2 { emails: { kind:String; address:String; }; }
+type Sc_Same_EmailAddresses : many { kind:String; address:String; }
+type Sc_Same_EmailAddress : { kind:String; address:String; }

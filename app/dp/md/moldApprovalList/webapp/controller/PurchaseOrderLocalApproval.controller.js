@@ -332,6 +332,8 @@ sap.ui.define([
                 }
             }
             
+            var oView = this.getView();
+
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: this.getView().getId(),
@@ -345,12 +347,20 @@ sap.ui.define([
 
             this._oDialogPrev.then(function (oDialog) {
                 oDialog.open();
+                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens());
             });
 
         },
         onPrvClosePress : function(){
-             this.byId("purchaseOrderLocalPreview").close();
-            // this.byId("purchaseOrderLocalPreview").destroy();
+            var oView = this.getView();
+            if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
+                    oView.byId('referMulti').setTokens(oView.byId("referMultiPrev").getTokens());
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialogPrev = undefined;
+            }
         },
 
         onPageDraftButtonPress : function () {

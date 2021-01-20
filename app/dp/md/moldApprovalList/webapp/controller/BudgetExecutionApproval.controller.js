@@ -112,7 +112,10 @@ sap.ui.define([
                     md.setProperty("/account_code", oData.results[0].account_code);
                     md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
                     md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
-                    that._bindComboPlant(oData.results[0].import_company_code);
+                    that._bindComboPlant(oData.results[0].import_company_code); 
+                    that._searchAssetType(oData.results[0].investment_ecst_type_code, function(oData){
+                        console.log(oData);
+                    });
                 } else {
                     md.setProperty("/investment_ecst_type_code", "I");
                     md.setProperty("/investment_ecst_type_code_nm", "");
@@ -126,7 +129,8 @@ sap.ui.define([
                     md.setProperty("/import_company_org_code_nm", "");
                     md.setProperty("/account_code", "");
                     md.setProperty("/account_code_nm", "");
-                    md.setProperty("/provisional_budget_amount", "");
+                    md.setProperty("/provisional_budget_amount", ""); 
+                    that._searchAssetType("I");
                 }
 
             });
@@ -147,13 +151,22 @@ sap.ui.define([
                 }
             });
         },
-        _searchAssetType : function(){ // 목록의 combo 조회 
+        onBudgetChange : function ( oEvent ){
+            this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'), function(oData){
+                console.log(oData);
+            });
+        } ,
+        _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회 
             // this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type 
+           var aFilter = [new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_TYPE' )
+                , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                , new Filter("parent_code", FilterOperator.EQ, parent_code)
+            ];
             var oView = this.getView(),
                 oModel = this.getModel("assetTypeCodeList");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel("budget"));
-            oModel.read(sObjectPath, {
+            oModel.read("/CodeView", {
                 filters: aFilter,
                 success: function (oData) {
                     oView.setBusy(false);
@@ -208,8 +221,27 @@ sap.ui.define([
             oModel.setTransactionModel(this.getModel("purOrg"));
             oModel.read("/Pur_Operation_Org", {
                 filters: aFilter,
-                success: function (oData) {
-                    oView.setBusy(false);
+                success: function (oData) { 
+                    console.log(" Pur_Operation_Org " , oData);
+                    oView.setBusy(false); 
+                    
+                   /* oModel.addRecord({
+                       affiliate_code: ""
+                        ,au_code: ""
+                        ,bizdivision_code: ""
+                        ,bizunit_code: ""
+                        ,company_code: ""
+                        ,create_user_id: ""
+                        ,hq_au_code: ""
+                        ,org_code: ""
+                        ,org_name: ""
+                        ,org_type_code: ""
+                        ,plant_code: ""
+                        ,purchase_org_code: ""
+                        ,tenant_id: "L2600"
+                        ,update_user_id: ""
+                   },"/Pur_Operation_Org",0); 
+                   */ 
                 }
             });
         },
