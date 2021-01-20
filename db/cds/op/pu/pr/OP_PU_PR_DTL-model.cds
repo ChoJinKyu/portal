@@ -41,6 +41,7 @@ entity Pu_Pr_Dtl {
             request_date    : Date              @title: '요청일자' ;	
             delivery_request_date : Date        @title: '납품요청일자' ;	
             buyer_empno     : String(30)        @title: '구매담당자사번' ;	
+            buyer_department_code : String(30)  @title: '구매부서코드' ;
             purchasing_group_code : String(3)   @title: '구매그룹코드' ;	
             estimated_price : Decimal           @title: '예상가격' ;	
             currency_code   : String(3)         @title: '통화코드' ;	
