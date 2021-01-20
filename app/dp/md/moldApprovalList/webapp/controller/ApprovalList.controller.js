@@ -42,9 +42,9 @@ sap.ui.define([
      */
      
     var toggleButtonId = "";
-    var dialogId = "";
     var path = '';
     var approvalTarget ='';
+    // this를 변수로 담기 위해 선언함
     var appThis;
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         
@@ -97,12 +97,18 @@ sap.ui.define([
             this._doInitTablePerso();
 
         },
-        onPageReload: function(){
-            console.log(window);
-            window.location.reload();
-        },
-       
         
+        /**
+		 * @description 각 품의서에 돌아올때 재조회 기능
+		 * @param {sap.ui.base.Event} oEvent the button press event
+		 * @public
+		 */
+        onBackToList: function (){
+            if(appThis){
+                appThis.byId("pageSearchButton").firePress();
+            }
+        },
+               
         /**
          * @private
          * @see init 이후 바로 실행됨
@@ -202,7 +208,19 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
+            
+            var oTable = this.byId("mainTable");
+            // 모든 컬럼의 정보를 변수에 담음
+            var columns = oTable.getColumns();
+            //  Perso Dialog에서 노출시키지 않기 위해 실제로 테이블에서 체크박스 컬럼을 삭제함
+            oTable.removeColumn(this.byId("mainColumnChkBox"));
             this._oTPC.openDialog();
+            // 다이알로그 오픈이후 컬럼배치를 원복하기 위해 모든 컬럼 삭제후 다시 투입
+            oTable.removeAllColumns();
+            columns.forEach(function(item){
+                oTable.addColumn(item);
+            });
+
         },
 
 		/**
@@ -229,16 +247,7 @@ sap.ui.define([
             console.log("aSearchFilters :::", aSearchFilters);
             this._applySearch(aSearchFilters);
         },
-        /**
-		 * @description 각 품의서에 돌아올때 재조회 기능
-		 * @param {sap.ui.base.Event} oEvent the button press event
-		 * @public
-		 */
-        onBackToList: function (){
-            if(appThis){
-                appThis.byId("pageSearchButton").firePress();
-            }
-        },
+        
 
 		/**
 		 * Event handler when pressed the item of table 
@@ -1131,8 +1140,11 @@ sap.ui.define([
         
         _doInitTablePerso: function () {
             var oTable = this.byId("mainTable");
-            console.log(oTable);
-            console.log(oTable.getColumns());      
+            // 모든 컬럼의 정보를 변수에 담음
+            var columns = oTable.getColumns();
+            //  Perso Dialog에서 노출시키지 않기 위해 실제로 테이블에서 체크박스 컬럼을 삭제함
+            oTable.removeColumn(this.byId("mainColumnChkBox"));
+
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
@@ -1140,7 +1152,12 @@ sap.ui.define([
                 persoService: ApprovalListPersoService,
                 hasGrouping: true,
             }).activate();
-            
+            // 컬럼들 재배치 하기위해 전부 삭제하고 다시 그려준다.
+            oTable.removeAllColumns();
+            columns.forEach(function(item){
+                oTable.addColumn(item);
+            });
+
         }
         
     });

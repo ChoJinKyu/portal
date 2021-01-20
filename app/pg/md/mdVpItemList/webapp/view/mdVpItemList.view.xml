@@ -136,254 +136,259 @@
                             <Text text="{list>confirmed_status_code}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성1">    
+                    <t:Column label="관리특성1" id="attrItem1" visible="false">    
                         <t:template>
-                            <Text id="attrItem1" text="{list>spmd_attr_info_001}" wrapping="false" />
+                            <Text text="{list>attrItemName1}" wrapping="false" />
+                            <!-- <Text text="{list>spmd_attr_info_001}" wrapping="false" /> -->
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성2">    
+                    <t:Column label="관리특성2" id="attrItem2" visible="false">    
                         <t:template>
-                            <Text id="attrItem2" wrapping="false" />
+                            <Text text="{list>attrItemName2}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성3">    
+                    <t:Column label="관리특성3" id="attrItem3" visible="false">    
                         <t:template>
-                            <Text id="attrItem3" wrapping="false" />
+                            <Text text="{list>attrItemName3}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성4">    
+                    <t:Column label="관리특성4" id="attrItem4" visible="false">    
                         <t:template>
-                            <Text id="attrItem4" wrapping="false" />
+                            <Text text="{list>attrItemName4}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성5">    
+                    <t:Column label="관리특성5" id="attrItem5" visible="false">    
                         <t:template>
-                            <Text id="attrItem5" wrapping="false" />
+                            <Text text="{list>attrItemName5}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성6">    
+                    <t:Column label="관리특성6" id="attrItem6" visible="false">    
                         <t:template>
-                            <Text id="attrItem6" wrapping="false" />
+                            <Text text="{list>attrItemName6}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성7">    
+                    <t:Column label="관리특성7" id="attrItem7" visible="false">    
                         <t:template>
-                            <Text id="attrItem7" wrapping="false" />
+                            <Text text="{list>attrItemName7}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성8">    
+                    <t:Column label="관리특성8" id="attrItem8" visible="false">    
                         <t:template>
-                            <Text id="attrItem8" wrapping="false" />
+                            <Text text="{list>attrItemName8}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성9">    
+                    <t:Column label="관리특성9" id="attrItem9" visible="false">    
                         <t:template>
-                            <Text id="attrItem9" wrapping="false" />
+                            <Text text="{list>attrItemName9}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성10">    
+                    <t:Column label="관리특성10" id="attrItem10" visible="false">    
                         <t:template>
-                            <Text id="attrItem10" wrapping="false" />
+                            <Text text="{list>attrItemName10}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성11">    
+                    
+                    <t:Column label="관리특성11" id="attrItem11" visible="false">    
                         <t:template>
-                            <Text id="attrItem11" wrapping="false" />
+                            <Text text="{list>attrItemName11}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성12">    
+                    <t:Column label="관리특성12" id="attrItem12" visible="false">    
                         <t:template>
-                            <Text id="attrItem12" wrapping="false" />
+                            <Text text="{list>attrItemName12}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성13">    
+                    <t:Column label="관리특성13" id="attrItem13" visible="false">    
                         <t:template>
-                            <Text id="attrItem13" wrapping="false" />
+                            <Text text="{list>attrItemName13}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성14">    
+                    <t:Column label="관리특성14" id="attrItem14" visible="false">    
                         <t:template>
-                            <Text id="attrItem14" wrapping="false" />
+                            <Text text="{list>attrItemName14}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성15">    
+                    <t:Column label="관리특성15" id="attrItem15" visible="false">    
                         <t:template>
-                            <Text id="attrItem15" wrapping="false" />
+                            <Text text="{list>attrItemName15}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성16">    
+                    <t:Column label="관리특성16" id="attrItem16" visible="false">    
                         <t:template>
-                            <Text id="attrItem16" wrapping="false" />
+                            <Text text="{list>attrItemName16}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성17">    
+                    <t:Column label="관리특성17" id="attrItem17" visible="false">    
                         <t:template>
-                            <Text id="attrItem17" wrapping="false" />
+                            <Text text="{list>attrItemName17}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성18">    
+                    <t:Column label="관리특성18" id="attrItem18" visible="false">    
                         <t:template>
-                            <Text id="attrItem18" wrapping="false" />
+                            <Text text="{list>attrItemName18}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성19">    
+                    <t:Column label="관리특성19" id="attrItem19" visible="false">    
                         <t:template>
-                            <Text id="attrItem19" wrapping="false" />
+                            <Text text="{list>attrItemName19}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성20">    
+                    <t:Column label="관리특성20" id="attrItem20" visible="false">    
                         <t:template>
-                            <Text id="attrItem20" wrapping="false" />
+                            <Text text="{list>attrItemName20}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성21">    
+
+                    <t:Column label="관리특성21" id="attrItem21" visible="false">    
                         <t:template>
-                            <Text id="attrItem21" wrapping="false" />
+                            <Text text="{list>attrItemName21}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성22">    
+                    <t:Column label="관리특성22" id="attrItem22" visible="false">    
                         <t:template>
-                            <Text id="attrItem22" wrapping="false" />
+                            <Text text="{list>attrItemName22}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성23">    
+                    <t:Column label="관리특성23" id="attrItem23" visible="false">    
                         <t:template>
-                            <Text id="attrItem23" wrapping="false" />
+                            <Text text="{list>attrItemName23}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성24">    
+                    <t:Column label="관리특성24" id="attrItem24" visible="false">    
                         <t:template>
-                            <Text id="attrItem24" wrapping="false" />
+                            <Text text="{list>attrItemName24}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성25">    
+                    <t:Column label="관리특성25" id="attrItem25" visible="false">    
                         <t:template>
-                            <Text id="attrItem25" wrapping="false" />
+                            <Text text="{list>attrItemName25}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성26">    
+                    <t:Column label="관리특성26" id="attrItem26" visible="false">    
                         <t:template>
-                            <Text id="attrItem26" wrapping="false" />
+                            <Text text="{list>attrItemName26}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성27">    
+                    <t:Column label="관리특성27" id="attrItem27" visible="false">    
                         <t:template>
-                            <Text id="attrItem27" wrapping="false" />
+                            <Text text="{list>attrItemName27}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성28">    
+                    <t:Column label="관리특성28" id="attrItem28" visible="false">    
                         <t:template>
-                            <Text id="attrItem28" wrapping="false" />
+                            <Text text="{list>attrItemName28}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성29">    
+                    <t:Column label="관리특성29" id="attrItem29" visible="false">    
                         <t:template>
-                            <Text id="attrItem29" wrapping="false" />
+                            <Text text="{list>attrItemName29}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성30">    
+                    <t:Column label="관리특성30" id="attrItem30" visible="false">    
                         <t:template>
-                            <Text id="attrItem30" wrapping="false" />
+                            <Text text="{list>attrItemName30}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성31">    
+                    
+                    <t:Column label="관리특성31" id="attrItem31" visible="false">    
                         <t:template>
-                            <Text id="attrItem31" wrapping="false" />
+                            <Text text="{list>attrItemName31}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성32">    
+                    <t:Column label="관리특성32" id="attrItem32" visible="false">    
                         <t:template>
-                            <Text id="attrItem32" wrapping="false" />
+                            <Text text="{list>attrItemName32}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성33">    
+                    <t:Column label="관리특성33" id="attrItem33" visible="false">    
                         <t:template>
-                            <Text id="attrItem33" wrapping="false" />
+                            <Text text="{list>attrItemName33}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성34">    
+                    <t:Column label="관리특성34" id="attrItem34" visible="false">    
                         <t:template>
-                            <Text id="attrItem34" wrapping="false" />
+                            <Text text="{list>attrItemName34}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성35">    
+                    <t:Column label="관리특성35" id="attrItem35" visible="false">    
                         <t:template>
-                            <Text id="attrItem35" wrapping="false" />
+                            <Text text="{list>attrItemName35}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성36">    
+                    <t:Column label="관리특성36" id="attrItem36" visible="false">    
                         <t:template>
-                            <Text id="attrItem36" wrapping="false" />
+                            <Text text="{list>attrItemName36}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성37">    
+                    <t:Column label="관리특성37" id="attrItem37" visible="false">    
                         <t:template>
-                            <Text id="attrItem37" wrapping="false" />
+                            <Text text="{list>attrItemName37}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성38">    
+                    <t:Column label="관리특성38" id="attrItem38" visible="false">    
                         <t:template>
-                            <Text id="attrItem38" wrapping="false" />
+                            <Text text="{list>attrItemName38}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성39">    
+                    <t:Column label="관리특성39" id="attrItem39" visible="false">    
                         <t:template>
-                            <Text id="attrItem39" wrapping="false" />
+                            <Text text="{list>attrItemName39}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성40">    
+                    <t:Column label="관리특성40" id="attrItem40" visible="false">    
                         <t:template>
-                            <Text id="attrItem40" wrapping="false" />
+                            <Text text="{list>attrItemName40}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성41">    
+                    
+                    <t:Column label="관리특성41" id="attrItem41" visible="false">    
                         <t:template>
-                            <Text id="attrItem41" wrapping="false" />
+                            <Text text="{list>attrItemName41}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성42">    
+                    <t:Column label="관리특성42" id="attrItem42" visible="false">    
                         <t:template>
-                            <Text id="attrItem42" wrapping="false" />
+                            <Text text="{list>attrItemName42}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성43">    
+                    <t:Column label="관리특성43" id="attrItem43" visible="false">    
                         <t:template>
-                            <Text id="attrItem43" wrapping="false" />
+                            <Text text="{list>attrItemName43}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성44">    
+                    <t:Column label="관리특성44" id="attrItem44" visible="false">    
                         <t:template>
-                            <Text id="attrItem44" wrapping="false" />
+                            <Text text="{list>attrItemName44}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성45">    
+                    <t:Column label="관리특성45" id="attrItem45" visible="false">    
                         <t:template>
-                            <Text id="attrItem45" wrapping="false" />
+                            <Text text="{list>attrItemName45}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성46">    
+                    <t:Column label="관리특성46" id="attrItem46" visible="false">    
                         <t:template>
-                            <Text id="attrItem46" wrapping="false" />
+                            <Text text="{list>attrItemName46}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성47">    
+                    <t:Column label="관리특성47" id="attrItem47" visible="false">    
                         <t:template>
-                            <Text id="attrItem47" wrapping="false" />
+                            <Text text="{list>attrItemName47}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성48">    
+                    <t:Column label="관리특성48" id="attrItem48" visible="false">    
                         <t:template>
-                            <Text id="attrItem48" wrapping="false" />
+                            <Text text="{list>attrItemName48}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성49">    
+                    <t:Column label="관리특성49" id="attrItem49" visible="false">    
                         <t:template>
-                            <Text id="attrItem49" wrapping="false" />
+                            <Text text="{list>attrItemName49}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="관리특성50">    
+                    <t:Column label="관리특성50" id="attrItem50" visible="false">    
                         <t:template>
-                            <Text id="attrItem50" wrapping="false" />
+                            <Text text="{list>attrItemName50}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                 </t:columns>

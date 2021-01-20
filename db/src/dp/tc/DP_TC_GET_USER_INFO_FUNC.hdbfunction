@@ -6,7 +6,7 @@ RETURNS O_RETURN NVARCHAR(100)
 LANGUAGE SQLSCRIPT
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_GET_USER_NAME_FUNC
+Program Name   : DP_TC_GET_USER_NAME_FUNC
 Creator        : Jeong Jeong Ho
 Description    : 사용자 정보 반환
                  I_ENCLUDE_DEPT = Y : 홍길동책임/HW양산구매1팀
@@ -16,7 +16,6 @@ History        : 2021-01-05 initial creation
 AS
 
 BEGIN
-    DECLARE v_department_id NVARCHAR(100);
     
     begin
 		declare no_data_found condition for sql_error_code 1299;

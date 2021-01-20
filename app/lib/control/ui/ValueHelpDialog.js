@@ -156,7 +156,7 @@ sap.ui.define([
                     columnsM: 2,
                     content: [new VBox({
                         items: [
-                            new Label({ text: "Selected Items"}),
+                            new Label({ text: this.getModel("I18N").getText("/SELECTED_ITEMS")}),
                             oMultiInput
                         ],
                         layoutData: new GridData({ span: "XL12 L12 M12 S12"})

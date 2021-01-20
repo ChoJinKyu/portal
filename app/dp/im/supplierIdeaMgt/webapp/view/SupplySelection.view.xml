@@ -66,51 +66,198 @@
                         title="{I18N>/IDEA} {I18N>/WRITE_DATE}: "
                         text="{master>/idea_date}"/>
 				</layout:VerticalLayout>
+                
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
+                    <sc:MicroProcessFlow>
+                        <sc:content>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task-2" stepWidth="3em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
+                        </sc:content>
+                    </sc:MicroProcessFlow>
+                    <layout:HorizontalLayout>
+                        <Text text="PR" width="4em" textAlign="Center"/>
+                        <Text text="Budget" width="4em" textAlign="Center"/>
+                        <Text text="RFQ" width="5em" textAlign="Center"/>
+                        <Text text="Mold Spec" width="5em" textAlign="Center"/>
+                        <Text text="Purchase Contract" width="5em" textAlign="Center"/>
+                        <Text text="PO" width="5em" textAlign="Center"/>
+                    </layout:HorizontalLayout>
+                </layout:VerticalLayout>
+                
 			</FlexBox>
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
                     <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
-                            <Label  text="* 품의명" 
-                                    required="{midObjectViewModel>/isEditMode}"
-                                    design="Bold" 
-                                    class="sapUiSmallMarginBottom" />
-                            <Input value="{
-                                path: 'master>/loi_selection_title',
-                                type: 'sap.ui.model.type.String',
-                                constraints: {
-                                    maxLength: 50
-                                }
-                            }" class="sapMLabelNoText" required="{midObjectViewModel>/isEditMode}" width="98%" editable="{midObjectViewModel>/isEditMode}"/>
-                   
-                            <!-- <Label  text="* 품의명" 
-                                    required="true"
-                                    design="Bold" 
-                                    class="sapUiSmallMarginBottom" visible="{midObjectViewModel>/isEditMode}"/>
-                            <Input value="{
-                                path: 'master>/loi_selection_title',
-                                type: 'sap.ui.model.type.String',
-                                constraints: {
-                                    maxLength: 50
-                                }
-                            }" class="sapMLabelNoText" required="true" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
-                            <Label  text="* 품의명" 
-                                    design="Bold" 
-                                    class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
-                            <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/> -->
+                            <HBox>
+                                <VBox>
+                                    <Label text="{I18N>/COMPANY}: " labelFor="ideaCompany"  required="true"></Label>
+                                    <ComboBox id="ideaCompany" width="250em" editable="false"
+                                        selectedKey="{master>/company_code}"
+                                        items="{
+                                            path: 'org>/Company',
+                                            sorter: { path: 'company_code' }
+                                        }">
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </ComboBox>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/BUSINESS_UNIT}: " labelFor="ideaBizUnit" ></Label>
+                                    <ComboBox id="ideaBizUnit" width="250em" editable="true"
+                                        selectedKey="{master>/bizunit_code}"
+                                        items="{
+                                            path: 'org>/Unit',
+                                            sorter: { path: 'bizunit_code' }
+                                        }">
+                                        <core:Item key="{org>bizunit_code}" text="[{org>bizunit_code}] {org>bizunit_name}" />
+                                    </ComboBox>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/PRODUCT_GROUP}: " labelFor="ideaGroupCode" ></Label>
+                                    <ComboBox id="ideaGroupCode" width="250em" editable="true"
+                                        selectedKey="{master>/idea_product_group_code}"
+                                        items="{
+                                        path: 'common>/Code',
+                                        parameters: {
+                                            tenant_id : 'L2100'
+                                            , group_code : 'DP_IM_IDEA_PRODUCT_GROUP'
+                                        },
+                                        filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_PRODUCT_GROUP'}],
+                                        sorter: { path: 'sort_no'}
+                                        }">
+                                        <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                    </ComboBox>
+                                </VBox>
+                            </HBox>
+                            <Label
+                                text="{I18N>/IDEA} {I18N>/NAME}: "
+                                labelFor="ideaName">
+                            </Label>
+                            <Input id="ideaName"  width="80%" 
+                                placeholder="{I18N>/IDEA} {I18N>/NAME}" value="{master>/idea_title}"/>
 
-                            <Label  text="* 업체선정결과" 
-                                    design="Bold" 
-                                    class="sapUiSmallMarginTop"/>
+                            <HBox>
+                                <VBox>
+                                    <Label text="{I18N>/IDEA} {I18N>/TYPE}: " labelFor="ideaType" ></Label>
+                                    <ComboBox id="ideaType" width="250em" editable="true"
+                                        selectedKey="{master>/idea_product_group_code}"
+                                        items="{
+                                        path: 'common>/Code',
+                                        parameters: {
+                                            tenant_id : 'L2100'
+                                            , group_code : 'DP_IM_IDEA_TYPE'
+                                        },
+                                        filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_TYPE'}],
+                                        sorter: { path: 'sort_no'}
+                                        }">
+                                        <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                    </ComboBox>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/IDEA} {I18N>/PERIOD}: " labelFor="ideaPeriod" ></Label>
+                                    <ComboBox id="ideaPeriod" width="250em" editable="true"
+                                        selectedKey="{master>/idea_period_code}"
+                                        items="{
+                                        path: 'common>/Code',
+                                        parameters: {
+                                            tenant_id : 'L2100'
+                                            , group_code : 'DP_IM_IDEA_PERIOD'
+                                        },
+                                        filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_PERIOD'}],
+                                        sorter: { path: 'sort_no'}
+                                        }">
+                                        <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                    </ComboBox>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/IDEA} {I18N>/MANAGER} : " labelFor="ideaManager" required="true"></Label>
+                                    <Input id="ideaManager"
+                                        placeholder="All"
+                                        showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
+                                                        liveChange=".onNameChk" value="{master>/idea_manager_local_name}" >
+                                    </Input>
+                                    <Input id="ideaManagerId"  visible="false" ></Input>
+                                </VBox>
+                            </HBox>
+                            <Label
+                                text="{I18N>/PART} {I18N>/NAME}: "
+                                labelFor="partName">
+                            </Label>
+                            <Input id="partName"  width="80%" 
+                                placeholder="{I18N>/PART} {I18N>/NAME}" value="{master>/idea_part_desc}"/>
+                            <Label
+                                text="{I18N>/IDEA} {I18N>/CONTENTS}({I18N>/ASIS}): "
+                                labelFor="ideaContentsAsis">
+                            </Label>
+                            <Input id="ideaContentsAsis"  width="80%" 
+                                placeholder="{I18N>/IDEA} {I18N>/CONTENTS}" value="{master>/current_proposal_contents}"/>
+                            <Label
+                                text="{I18N>/IDEA} {I18N>/CONTENTS}({I18N>/TOBE}): "
+                                labelFor="ideaContentsTobe">
+                            </Label>
+                            <Input id="ideaContentsTobe"  width="80%" 
+                                placeholder="{I18N>/IDEA} {I18N>/CONTENTS}" value="{master>/change_proposal_contents}"/>
+
+                      
+                        </VBox>
+                        </form:SimpleForm>                    
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <!-- 첨부파일 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- File Upload 시작-->
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <!-- File Upload 끝-->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 첨부파일 끝 -->
+
+			<uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="개선효과">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection2">
+                    <form:SimpleForm id="midObjectForm2" editable="{midObjectViewModel>/isEditMode}">                    
+                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
                             <Table id="tableAttachments" 
                                 sticky="HeaderToolbar,ColumnHeaders" 
                                 inset="false" 
                                 class="sapFDynamicPageAlignContent" 
                                 mode="None"
+                                items="{
+                                path: 'list>/SupplierPerform'
+                                }"
                                 width="98%">
                                 <columns>
                                      <Column minScreenWidth="Tablet" hAlign="Center"  >
@@ -195,54 +342,12 @@
                                     </ColumnListItem>
                                 </items>
                             </Table>
-
-                            <Label  text="* 특기사항" 
-                                        design="Bold" 
-                                        class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
-                            <richtexteditor:RichTextEditor
-                                editorType="TinyMCE4"
-                                width="98%"
-                                height="200px"
-                                editable="{midObjectViewModel>/isEditMode}"
-                                customToolbar="true"
-                                showGroupFont="true"
-                                showGroupLink="true"
-                                showGroupInsert="true"
-                                value="{master>/special_note}">
-                            </richtexteditor:RichTextEditor>                            
                         </VBox>
                         </form:SimpleForm>                    
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                            <!-- File Upload 시작-->
-                            <UploadCollection
-                                id="UploadCollection"
-                                maximumFilenameLength="55"
-                                maximumFileSize="10"
-                                multiple="true"
-                                sameFilenameAllowed="true"
-                                instantUpload="false"
-                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                change="onChange"
-                                fileDeleted="onFileDeleted"
-                                filenameLengthExceed="onFilenameLengthExceed"
-                                fileSizeExceed="onFileSizeExceed"
-                                typeMissmatch="onTypeMissmatch"
-                                uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
-                            <!-- File Upload 끝-->
-						</uxap:blocks>
-					</uxap:ObjectPageSubSection>
-                </uxap:subSections>
-            </uxap:ObjectPageSection>
-            <!-- 첨부파일 끝 -->
 
             <!-- 결재라인 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">

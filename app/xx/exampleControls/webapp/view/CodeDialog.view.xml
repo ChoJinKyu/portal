@@ -33,6 +33,18 @@
                                 <layout:GridData span="XL5 L5 M5 S10" />
                             </layoutData>
                         </VBox>
+
+                        <VBox>
+                            <Label text="CM Input with Dialog (Code): " labelFor="inputWithCodeValueHelp"></Label>
+                            <Input id="cmInputWithCodeValueHelp"
+                                placeholder="Choose a code from the ValueHelp"
+                                value="{/tenant_id}"
+                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
                         
                         <VBox>
                             <Label text="MultiInput with Dialog (Code): " labelFor="multiInputWithCodeValueHelp"></Label>
@@ -144,6 +156,7 @@
 			<OverflowToolbar>
 				<ToolbarSpacer/>
 				<Button type="Transparent" text="Open Code Dialog" press=".onCodeDialogPress"/>
+                <Button type="Transparent" text="Open CompanyDetail Dialog" press=".onCompanyDetailDialogPress"/>
 			</OverflowToolbar>
 		</footer>
         

@@ -6,10 +6,11 @@ sap.ui.define([
 	"ext/lib/control/ui/CodeValueHelp",
     "cm/util/control/ui/EmployeeDialog",
     "cm/util/control/ui/CompanyDetailDialog",
+    "cm/util/control/ui/CmDialogHelp",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
-], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, EmployeeDialog, CompanyDetailDialog,
+], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, EmployeeDialog, CompanyDetailDialog, CmDialogHelp,
         Filter, FilterOperator, Sorter) {
 	"use strict";
 
@@ -51,6 +52,29 @@ sap.ui.define([
             this.oCodeValueHelp.open();
         },
 
+        onCmInputWithCodeValuePress: function(){
+            if(!this.oCmDialogHelp){
+                this.oCmDialogHelp = new CmDialogHelp({
+                    title: "{I18N>/PLANT_NAME}",
+                    keyFieldLabel : "{I18N>/PLANT_CODE}",
+                    textFieldLabel : "{I18N>/PLANT_NAME}",
+                    keyField : "bizdivision_code",
+                    textField : "bizdivision_name",
+                    items: {
+                        sorters: [
+                            new Sorter("bizdivision_name", false)
+                        ],
+                        serviceName: "cm.util.OrgService",
+                        entityName: "Division"
+                    }
+                });
+                this.oCmDialogHelp.attachEvent("apply", function(oEvent){
+                    this.byId("cmInputWithCodeValueHelp").setValue(oEvent.getParameter("item").bizdivision_code);
+                }.bind(this));
+            }
+            this.oCmDialogHelp.open();
+        },
+
         onMultiInputWithCodeValuePress: function(){
             if(!this.oCodeMultiSelectionValueHelp){
                 this.oCodeMultiSelectionValueHelp = new CodeValueHelp({
@@ -74,6 +98,10 @@ sap.ui.define([
             }
             this.oCodeMultiSelectionValueHelp.open();
             this.oCodeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCodeValueHelp").getTokens());
+        },
+
+        onCompanyDetailDialogPress: function() {
+            this.byId("CompanyDetailDialog").open();
         },
 
         onInputWithCompanyDetailValuePress: function(){
