@@ -246,46 +246,6 @@ sap.ui.define([
                 }
             }
 
-            var requireFlag = false;
-            detail.getData()["LOIRequestDetailView"].map(r => {
-                console.log(" plant_code:_state_::: " + r["plant_code"]);
-                //if (r["plant_code"] == '') {
-                if (r["plant_code"] === '' || r["plant_code"] == null || r["plant_code"] === undefined) {
-                    MessageBox.alert("플랜트는 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                if (r["item_desc"] === '' || r["item_desc"] == null || r["item_desc"] === undefined) {
-                    MessageBox.alert("품명은 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                if (r["unit"] === '' || r["unit"] == null || r["unit"] === undefined) {
-                    MessageBox.alert("단위는 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                if (r["request_quantity"] === '' || r["request_quantity"] == null || r["request_quantity"] === undefined) {
-                    MessageBox.alert("수량은 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                // if (r["buyer_empno"] === '' || r["buyer_empno"] == null || r["buyer_empno"] === undefined) {
-                //     MessageBox.alert("구매담당자는 필수값입니다.");
-                //     requireFlag = true;
-                //     return;
-                // }
-
-            })
-
-            if(requireFlag){
-                return;
-            }
-
             var input = {
                 inputData: {
                     savedHeaders: [],
@@ -425,6 +385,7 @@ sap.ui.define([
 
 
             if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if (this.validator.validate(this.byId("midTable")) !== true) return;
 
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";
 
