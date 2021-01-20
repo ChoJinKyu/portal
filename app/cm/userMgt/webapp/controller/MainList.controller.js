@@ -41,7 +41,7 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "mainListView");
             this.getModel("mainListView").setProperty("/headerExpanded", true);
 
-            this._doInitTablePerso();
+            //this._doInitTablePerso();
         },
 
         onRenderedFirst: function () {
@@ -124,7 +124,8 @@ sap.ui.define([
              */
         onMainTableItemPress: function (oEvent) {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-            sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            //sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            sPath = oEvent.mParameters.rowContext.sPath,
             oRecord = this.getModel("list").getProperty(sPath);
 
             this.getRouter().navTo("midPage", {
@@ -136,11 +137,6 @@ sap.ui.define([
                 this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
             }
 
-            var oItem = oEvent.getSource();
-            oItem.setNavigated(true);
-            var oParent = oItem.getParent();
-            // store index of the item clicked, which can be used later in the columnResize event
-            this.iIndex = oParent.indexOfItem(oItem);
         },
 
         /* =========================================================== */
@@ -176,15 +172,43 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var aSearchFilters = [];
-            if (!!this.byId("searchTenantCombo").getSelectedKey()) aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey()));
-            if (!!this.byId("searchOrgCombo").getSelectedKey()) aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()));
+            var oSearchTenantCombo = this.byId("searchTenantCombo").getSelectedKey(),
+                oSearchOrgCombo = this.byId("searchOrgCombo").getSelectedKey(),
+                oSearchUserId = this.byId("searchUserId").getValue(),
+                oSearchUserName = this.byId("searchUserName").getValue(),
+                oSearchEmail = this.byId("searchEmail").getValue(),
+                oSearchUseflag = this.byId("searchUseflag").getSelectedKey(),
+                aSearchFilters = [];
 
-            if (!!this.byId("searchUserId").getValue()) aSearchFilters.push(new Filter("user_id", FilterOperator.EQ, this.byId("searchUserId").getValue()));
-            if (!!this.byId("searchUserName").getValue()) aSearchFilters.push(new Filter("user_name", FilterOperator.EQ, this.byId("searchUserName").getValue()));
-            if (!!this.byId("searchEngName").getValue()) aSearchFilters.push(new Filter("user_eng_name", FilterOperator.EQ, this.byId("searchEngName").getValue()));
-            if (!!this.byId("searchEmail").getValue()) aSearchFilters.push(new Filter("email", FilterOperator.EQ, this.byId("searchEmail").getValue()));
-            if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
+            if (oSearchTenantCombo && oSearchTenantCombo.length > 0) {
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSearchTenantCombo));
+            }
+
+            if (oSearchOrgCombo && oSearchOrgCombo.length > 0) {
+                aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, oSearchOrgCombo));
+            }
+
+            if (oSearchUserId && oSearchUserId.length > 0) {
+                aSearchFilters.push(new Filter("user_id", FilterOperator.EQ, oSearchUserId));
+            }
+
+            if (oSearchUserName && oSearchUserName.length > 0) {
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        new Filter("employee_name", FilterOperator.Contains, oSearchUserName),
+                        new Filter("english_employee_name", FilterOperator.Contains, oSearchUserName)
+                    ],
+                    and: false
+                }));
+            }
+
+            if (oSearchEmail && oSearchEmail.length > 0) {
+                aSearchFilters.push(new Filter("email", FilterOperator.Contains, oSearchEmail));
+            }
+
+            if (oSearchUseflag && oSearchUseflag.length > 0) {
+                aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, oSearchUseflag));
+            }
 
             return aSearchFilters;
         },
@@ -216,7 +240,7 @@ sap.ui.define([
                 persoService: MainListPersoService,
                 hasGrouping: true
             }).activate();
-            }
+        }
 
     });
 });

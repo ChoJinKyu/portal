@@ -146,7 +146,7 @@
                                             selectedKey="{details>role_group_code}"
                                             width="100%"
                                             items="{
-                                                path: 'roleGroup>/RoleGroupMgr',
+                                                path: 'roleGroup>/RoleGroupMgt',
                                                 filters: [
                                                 ]
                                             }"

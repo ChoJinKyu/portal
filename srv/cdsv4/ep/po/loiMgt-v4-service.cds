@@ -183,8 +183,11 @@ service LoiMgtV4Service {
         ep_item_code               : String;
         item_desc                  : String;
         unit                       : String;
+        request_net_price          : String;
         request_quantity           : String;
         currency_code              : String;
+        spec_desc                  : String;
+        delivery_request_date      : String;
         request_amount             : String;
         supplier_code              : String;
         buyer_empno                : String;

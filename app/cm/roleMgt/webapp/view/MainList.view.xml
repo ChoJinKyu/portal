@@ -32,7 +32,18 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:SimpleForm
+                    id="pageSearchForm"
+                    maxContainerCols="2"
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    adjustLabelSpan="false"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="2"
+                    columnsM="2">
                     <form:content>
                         <VBox>
                             <!-- 테넌트 -->
@@ -60,14 +71,14 @@
                             <ComboBox id="searchChainCombo" width="100%" 
                                 selectedKey="CM" 
                                 items="{
-                                    path: 'util>/CodeDetails',
+                                    path: 'util>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    <core:Item key="{util>code}" text="{util>code}: {util>code_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>

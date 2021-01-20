@@ -4,12 +4,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.core.CallableStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.Connection;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
 
 // Java Util
 import java.time.ZonedDateTime;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +30,8 @@ import org.slf4j.LoggerFactory;
 
 // Java Sql
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.EventContext;
@@ -96,11 +107,19 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
             String approval_number = "";
             
             if (basePriceArlMaster.getApprovalNumber() == null || basePriceArlMaster.getApprovalNumber().equals("")) {
-                sql = "SELECT DP_APPROVAL_NUMBER_FUNC(?) FROM DUMMY";
+                sql = "SELECT DP_VI_APPROVAL_NUMBER_FUNC(?) FROM DUMMY";
                 approval_number = jdbc.queryForObject(sql, new Object[] { tenant_id }, String.class);
                 basePriceArlMaster.setApprovalNumber(approval_number);
             } else {
                 approval_number = basePriceArlMaster.getApprovalNumber();
+            }
+
+            // delete 요청이 아니면서 승인요청시(AR) 요청일자 설정
+            if (!cmdString.equals("delete") && basePriceArlMaster.getApproveStatusCode().equals("AR")) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                Date toDay = Date.from(localNow);
+                // System.out.println("RequestDate : " + dateFormat.format(toDay));
+                basePriceArlMaster.setRequestDate(dateFormat.format(toDay));
             }
 
             basePriceArlMaster.setLocalCreateDtm(localNow);
@@ -181,7 +200,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                     BigDecimal item_sequence = new BigDecimal(1);
 
                     if (basePriceArlDetail.getItemSequence() == null) {
-                        sql = "SELECT DP_ITEM_SEQUENCE_FUNC(?, ?, ?) FROM DUMMY";
+                        sql = "SELECT DP_VI_ITEM_SEQUENCE_FUNC(?, ?, ?) FROM DUMMY";
                         item_sequence = jdbc.queryForObject(sql, new Object[] { tenant_id, approval_number, increament }, BigDecimal.class);
                         basePriceArlDetail.setItemSequence(item_sequence);
                         increament = increament.add(new BigDecimal("1"));
@@ -222,7 +241,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
     public void onBasePriceArlProcContext(DpViBasePriceArlProcContext context) {
         log.info("#### onBasePriceArlProcContext");
 
-        validator.validationBasePriceArlMaster(context, context.getInputData().getBasePriceArlMst(), false);
+        Boolean isDebug = (context.getInputData().getDebug() == null) ? false : context.getInputData().getDebug();
+        validator.validationBasePriceArlMaster(context, context.getInputData().getBasePriceArlMst(), isDebug);
 
         // Sql Paragraph Display Flag
         boolean isDisplaySql = false;
@@ -241,16 +261,19 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         // 03. execute stored-procedure by cmd parameter
         String cmdString = context.getInputData().getCmd().toLowerCase();
 
+        Map<String, Object> resultMap = null;
+
         switch (cmdString) {
             case "insert" :
                 // System.out.println("insert");
-                this.insertProcedure();
+                resultMap = this.insertProcedure(context, isDisplaySql);
                 break;
             case "upsert" :
                 System.out.println("upsert");
                 break;
             case "delete" :
-                System.out.println("delete");
+                // System.out.println("delete");
+                resultMap = this.deleteProcedure(context, isDisplaySql);
                 break;
             default :
                 String msg = super.getLanguageCode(context).equals("KO") ? "처리할 수 없는 요청입니다.\n[insert], [upsert], [delete]  명령어만 사용할 수 있습니다."
@@ -261,12 +284,57 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         // 04. Tempory Table Drop
         this.destoryTable(isDisplaySql);
 
-        // return value regist
+        // 05. Return Value : Processing
+        // for (String key : resultMap.keySet()) { 
+        //     System.out.println("key : " + key + " / value : " + resultMap.get(key).toString()); 
+        // }
+
+        ArrayList<OutputDataType> returnDBParam = (ArrayList)resultMap.get("O_TABLE");
+        OutputDataType returnDBValue = (OutputDataType)returnDBParam.get(0);
+        String returnCode = returnDBValue.getReturnCode();
+        String returnMsg = returnDBValue.getReturnMsg();
+        // System.out.println("Return Code : " + returnCode);
+        // System.out.println("Return Message : " + returnMsg);
+
+        switch (returnCode) {
+            case "200" :
+                System.out.println(cmdString + " Success");
+                break;
+            case "500" :
+                System.out.println("중복키 오류");
+                break;
+            case "510" :
+                System.out.println("해당 데이터 없슴");
+                break;
+            default :
+                System.out.println("알 수 없는 오류 발생");
+                break;
+        }
+
+        // 06. Return Value : Regist
         OutputDataType v_result = OutputDataType.create();
 
-        v_result.setReturnCode("200");
-        v_result.setReturnMsg("Success!");
-        v_result.setReturnRs(context.getInputData().getBasePriceArlMst());
+        v_result.setReturnCode(returnCode);
+
+        switch (cmdString) {
+            case "insert" :
+                v_result.setReturnMsg("Insert Success!");
+                v_result.setReturnRs(context.getInputData().getBasePriceArlMst());
+                break;
+            case "upsert" :
+                v_result.setReturnMsg("Upsert Success!");
+                v_result.setReturnRs(context.getInputData().getBasePriceArlMst());
+                break;
+            case "delete" :
+                v_result.setReturnMsg("Delete Success!");
+                Collection<BasePriceArlMstType> basePriceArlMstType = new ArrayList<>();
+                v_result.setReturnRs(basePriceArlMstType);
+                break;
+            default :
+                String msg = super.getLanguageCode(context).equals("KO") ? "처리할 수 없는 요청입니다.\n[insert], [upsert], [delete]  명령어만 사용할 수 있습니다."
+                                                                         : "This request cannot be processed.\nOnly commands [insert], [upsert], and [delete] can be used.";
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
+        }
 
         context.setResult(v_result);
         context.setCompleted();
@@ -545,6 +613,13 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
          * SQL batch execution
         */
 
+        // try {
+        //     int[] returnCntMaster = jdbc.batchUpdate(v_sql_insert_BasePriceArlMaster, v_batchInsert_BasePriceArlMaster);
+        // } catch (Exception e) {
+        //     String msg = "입력 데이터에 오류가 있습니다.";
+        //     throw new ServiceException(ErrorStatuses.BAD_REQUEST, msg);
+        // }
+
         // 01. #LOCAL_TEMP_MASTER
         int[] returnCntMaster = jdbc.batchUpdate(v_sql_insert_BasePriceArlMaster, v_batchInsert_BasePriceArlMaster);
         // System.out.println("# [#LOCAL_TEMP_MASTER] Insertion Count : " + this.getIntArraySum(returnCntMaster) + " / " + Arrays.toString(returnCntMaster));
@@ -589,7 +664,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         return sum;
     }
 
-    private void insertProcedure() {
+    @Transactional(rollbackFor = SQLException.class)
+    private Map<String, Object> insertProcedure(DpViBasePriceArlProcContext context, boolean isDisplaySql) {
         log.info("## insertProcedure Method Started....");
 
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -601,33 +677,78 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         v_sql_callProc.append("     I_PRICE => #LOCAL_TEMP_PRICE,");        
         v_sql_callProc.append("     O_MSG => ?)"); 
 
-        System.out.println(v_sql_callProc);
+        if (isDisplaySql) {
+            System.out.println("\n" + v_sql_callProc);
+        }
 
-        // //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
-        // SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<TcProcOutType>(){
-        //     @Override
-        //     public TcProcOutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-        //         //TcProcOutType v_row = TcProcOutType.create();
-        //         v_result.setReturnCode(v_rs.getString("return_code"));
-        //         v_result.setReturnMsg(v_rs.getString("return_msg"));
-        //         return v_result;
-        //     }
-        // });
+        OutputDataType v_result = OutputDataType.create();
 
-        // List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-        // //paramList.add(new SqlParameter("USER_ID", Types.VARCHAR));
-        // paramList.add(oTable);
+        //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+        SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputDataType>(){
+            @Override
+            public OutputDataType mapRow(ResultSet rs, int rowNum) throws SQLException {
+                v_result.setReturnCode(rs.getString("return_code"));
+                v_result.setReturnMsg(rs.getString("return_msg"));
+                return v_result;
+            }
+        });
 
-        // Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
-        //     @Override
-        //     public CallableStatement createCallableStatement(Connection connection) throws SQLException {
-        //         CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-        //         callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
-        //         return callableStatement;
-        //     }
-        // }, paramList);
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        //paramList.add(new SqlParameter("USER_ID", Types.VARCHAR));
+        paramList.add(oTable);
+
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                // callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
+                return callableStatement;
+            }
+        }, paramList);
+
+        return resultMap;
     }
 
+    @Transactional(rollbackFor = SQLException.class)
+    private Map<String, Object> deleteProcedure(DpViBasePriceArlProcContext context, boolean isDisplaySql) {
+        log.info("## deleteProcedure Method Started....");
+
+        StringBuffer v_sql_callProc = new StringBuffer();
+        v_sql_callProc.append("CALL DP_VI_BASE_PRICE_ARL_DELETE_PROC(");        
+        v_sql_callProc.append("     I_MASTER => #LOCAL_TEMP_MASTER,");        
+        v_sql_callProc.append("     O_MSG => ?)"); 
+
+        if (isDisplaySql) {
+            System.out.println("\n" + v_sql_callProc);
+        }
+
+        OutputDataType v_result = OutputDataType.create();
+
+        //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
+        SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputDataType>(){
+            @Override
+            public OutputDataType mapRow(ResultSet rs, int rowNum) throws SQLException {
+                v_result.setReturnCode(rs.getString("return_code"));
+                v_result.setReturnMsg(rs.getString("return_msg"));
+                return v_result;
+            }
+        });
+
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        //paramList.add(new SqlParameter("USER_ID", Types.VARCHAR));
+        paramList.add(oTable);
+
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                return callableStatement;
+            }
+        }, paramList);
+
+        return resultMap;
+    }
+    
     @Transactional(rollbackFor = SQLException.class)
     private void destoryTable(boolean isDisplaySql) {
         log.info("## destoryTable Method Started....");

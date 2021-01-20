@@ -12,9 +12,12 @@ select
     dtl.item_desc,
     dtl.unit,
     dtl.request_quantity,
+    dtl.request_net_price,
     dtl.currency_code,
     dtl.currency_code as currency_name,
     dtl.request_amount,
+    dtl.spec_desc,
+    dtl.delivery_request_date,
     (select STRING_AGG(vd.supplier_code,','ORDER BY vd.supplier_code DESC) AS result 
         from ep_li_supplier as vd
     where vd.tenant_id        = dtl.tenant_id
