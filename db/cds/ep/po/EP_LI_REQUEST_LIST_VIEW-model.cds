@@ -18,7 +18,7 @@ entity Li_Request_List_View {
         buyer_empno                : String(30)             @title : '구매자사번';
         buyer_name                 : String(30)             @title : '구매자이름';
         publish_date               : Date                   @title : '발행일자';
-        supplier_code              : String(15)             @title : '공급업체코드';
+        supplier_code              : String(10)             @title : '공급업체코드';
         special_note               : LargeString            @title : '특기사항';
         requestor_empno            : String(30)             @title : '요청자사번';
         requestor_name             : String(50)             @title : '요청자명';

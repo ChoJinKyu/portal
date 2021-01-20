@@ -15,7 +15,7 @@ entity Li_Publish {
 
         loi_publish_title          : String(100);
         loi_publish_status_code    : String(30);
-        supplier_code              : String(15);
+        supplier_code              : String(10);
         contract_format_id         : String(100);
         offline_flag               : Boolean;
         contract_date              : String(8);

@@ -21,11 +21,12 @@ entity Li_Dtl {
         item_desc                       : String(200);
         request_quantity                : Decimal;
         unit                            : String(3);
+        request_net_price               : Decimal;
         request_amount                  : Decimal;
         currency_code                   : String(15);
         spec_desc                       : String(1000);
         plant_code                      : String(10);
-        delivery_request_date           : String(8);
+        delivery_request_date           : Date;
         buyer_empno                     : String(30);
         purchasing_department_code      : String(50);
         loi_selection_number            : String(50);
@@ -43,12 +44,10 @@ entity Li_Dtl {
 
         quotation_number                : Decimal;
         quotation_item_number           : Decimal;
-        // contract_number                 : String(50);
-        // contract_item_number            : String(10);
-        // purchasing_approval_number      : String(50);
-        // purchasing_approval_item_number : String(50);
-        // po_number                       : String(50);
-        // po_item_number                  : String(10);
+        offline_selection_supplier_code : String(10);
+        offline_quotation_amount        : Decimal;
+        offline_quotation_due_date      : Date;
+        offline_quotation_remark        : String(500);
         supplier_opinion                : String(3000);
         remark                          : String(3000);
 }

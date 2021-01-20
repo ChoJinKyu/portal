@@ -11,7 +11,7 @@ entity Li_Publish_View {
         loi_publish_title          : String(100)         @title : 'LOI발행제목';
         loi_publish_status_code    : String(30)          @title : 'LOI발행상태코드';
         loi_publish_status_name    : String(240)         @title : 'LOI발행상태명';
-        supplier_code              : String(15)          @title : '공급업체코드';
+        supplier_code              : String(10)          @title : '공급업체코드';
         contract_format_id         : String(100)         @title : '계약서식ID';
         offline_flag               : Boolean             @title : '오프라인여부';
         contract_date              : String(10)           @title : '계약일자';

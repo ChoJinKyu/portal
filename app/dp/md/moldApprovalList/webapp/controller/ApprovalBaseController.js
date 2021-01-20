@@ -79,13 +79,17 @@ sap.ui.define([
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
             for (var sPropertyName in this._oFragments) {
+                if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] === null) {
+                    return;
+                }
+                
                 //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
-                //}
-                this.approvalList.onBackToList();
-            }
+                    //}
+                }
+            this.approvalList.onBackToList();
         },
 
         onPageEditButtonPress: function () { // Edit 버튼 
@@ -225,6 +229,8 @@ sap.ui.define([
 
             this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
+
+            //this.byId("pageGeneralInfoSection").focus();
         },
 
         _toEditMode: function () {
