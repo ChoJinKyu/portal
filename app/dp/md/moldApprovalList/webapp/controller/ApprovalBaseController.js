@@ -83,9 +83,9 @@ sap.ui.define([
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
                     console.log(sPropertyName);
-                //}
-                this.approvalList.onBackToList();
-            }
+                    //}
+                }
+            this.approvalList.onBackToList();
         },
 
         onPageEditButtonPress: function () { // Edit 버튼 
@@ -225,6 +225,8 @@ sap.ui.define([
 
             this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
+
+            //this.byId("pageGeneralInfoSection").focus();
         },
 
         _toEditMode: function () {
