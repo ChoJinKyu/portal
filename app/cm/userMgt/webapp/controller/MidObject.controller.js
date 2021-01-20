@@ -399,23 +399,25 @@ sap.ui.define([
       this.byId("page").setSelectedSection("pageSectionMain");
       this.byId("page").setProperty("showFooter", !FALSE);
       this.byId("pageEditButton").setEnabled(FALSE);
-      this.byId("pageDeleteButton").setEnabled(FALSE);
-      this.byId("pageNavBackButton").setEnabled(FALSE);
+      this.byId("pageDeleteButton").setEnabled(!FALSE);
+      this.byId("pageCancButton").setEnabled(!FALSE);
+      this.byId("pageSaveButton").setEnabled(!FALSE);
 
       this.byId("midTableAddButton").setEnabled(!FALSE);
       this.byId("midTableDeleteButton").setEnabled(!FALSE);
 
       //this._bindMidTable(this.oEditableTemplate, "Edit");
     },
-
+ 
     _toShowMode: function () {
       var TRUE = true;
       this._showFormFragment('MidObject_Show');
       this.byId("page").setSelectedSection("pageSectionMain");
-      this.byId("page").setProperty("showFooter", !TRUE);
+      this.byId("page").setProperty("showFooter", TRUE);
       this.byId("pageEditButton").setEnabled(TRUE);
       this.byId("pageDeleteButton").setEnabled(TRUE);
-      this.byId("pageNavBackButton").setEnabled(TRUE);
+      this.byId("pageCancButton").setEnabled(!TRUE);
+      this.byId("pageSaveButton").setEnabled(!TRUE);
 
       this.byId("midTableAddButton").setEnabled(!TRUE);
       this.byId("midTableDeleteButton").setEnabled(!TRUE);

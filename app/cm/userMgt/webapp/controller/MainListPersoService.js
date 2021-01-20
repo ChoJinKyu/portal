@@ -126,8 +126,10 @@ sap.ui.define(["jquery.sap.global"],
             //this caption callback will modify the TablePersoDialog' entry for the 'Weight' column
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
-                if (oColumn.mAggregations.label._sOwnerId === "container-userMgt") {
-                    return "UserMgt (Important!)";
+                if (oColumn.getHeader() && oColumn.getHeader().getText) {
+                    if (oColumn.getHeader().getText() === "UserMgt") {
+                        return "UserMgt (Important!)";
+                    }
                 }
                 return null;
             },
