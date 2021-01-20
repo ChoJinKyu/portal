@@ -14,7 +14,7 @@ LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_UPDATE_MCST_BASE_EXRATE_PROC
+Program Name   : DP_TC_UPDATE_MCST_BASE_EXRATE_PROC
 Creator        : Jeong Jeong Ho
 Description    : 재료비 프로젝트 환율 수정
 History        : 2021-01-05 initial creation

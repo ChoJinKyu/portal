@@ -7,7 +7,7 @@ RETURNS O_RETURN NVARCHAR(30)
 LANGUAGE SQLSCRIPT
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC
+Program Name   : DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC
 Creator        : Jeong Jeong Ho
 Description    : 재료비 프로젝트 정보 생성
 History        : 2021-01-05 initial creation
