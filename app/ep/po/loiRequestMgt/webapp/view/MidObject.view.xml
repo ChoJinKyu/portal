@@ -192,20 +192,29 @@
 								<Column id="midItemCodeColumn" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="품목코드" />
 								</Column>
-								<Column id="midItemDescColumn" minScreenWidth="Tablet" hAlign="Center"  width="200px">
+								<Column id="midItemDescColumn" minScreenWidth="Tablet" hAlign="Center"  width="150px">
 									<Text text="품명" />
 								</Column>
-                                <Column id="midUnitColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
+                                <Column id="midSpecDesc" minScreenWidth="Tablet" hAlign="Center"  width="50px">
+									<Text text="규격" />
+								</Column>
+                                <Column id="midUnitColumn" minScreenWidth="Tablet" hAlign="Center"  width="60px" >
 									<Text text="단위" />
 								</Column>
                                 <Column id="midRequestQuantityColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
 									<Text text="수량" />
 								</Column>
-                                <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
+                                <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="70px">
 									<Text text="통화" />
+								</Column>
+                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="단가" />
 								</Column>
                                 <Column id="midRequestAmountColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="금액" />
+								</Column>
+                                <Column id="midDeliveryRequestDate" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="납기일자" />
 								</Column>
                                 <Column id="midSupplierCodeColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="수행업체" />
@@ -260,13 +269,18 @@
                                         </HBox> -->
 
                                         <HBox>  
-                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
+                                            <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
                                             <Input value="{details>plant_code}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
                                             <Text   text="{details>plant_code}"
-                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+                                                    visible="{midObjectView>/isShowMode}"/>    
+                                             <!-- <Label  text="{details>plant_code}" design="Bold"
+                                                        visible="{midObjectView>/isShowMode}"
+                                                        textAlign="Right" 
+                                                        width="50px"                                                              
+                                                        class="sapUiLargeMarginEnd"/>                                                        -->
 
                                         </HBox>    
 
@@ -281,7 +295,7 @@
                                         </HBox>  
 
                                         <HBox>  
-                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
+                                            <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
                                             <Input value="{details>item_desc}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
@@ -292,21 +306,68 @@
                                         </HBox>  
 
                                         <HBox>  
-                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
-                                            <Input value="{details>unit}" 
+                                            <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
+                                            <Input value="{details>spec_desc}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
-                                                width="100%"/> 
+                                                width="100%"/>  
+                                            <Text   text="{details>spec_desc}"
+                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+
+                                        </HBox>  
+
+                                        <HBox>  
+                                            <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
+                                            <!-- <Input value="{details>unit}" 
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                width="100%"/>  -->
+                                            <ComboBox
+                                                id="comboBox_unit"                                                     
+                                                items ="{
+                                                    path : '/UnitOfMeasureView',
+                                                    filters : [
+                                                            {   path : 'tenant_id', 
+                                                                operator : 'EQ', 
+                                                                value1 : 'L2100'
+                                                            },
+                                                            {   path : 'language_code', 
+                                                                operator : 'EQ', 
+                                                                value1 : 'KO'
+                                                            }
+                                                    ]
+                                                }"
+                                                selectedKey="{details>unit}"                                       
+                                                placeholder="{I18N>/OPTION}"
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                            >
+                                            <core:Item key="{uom_code}" text="{uom_code} : {uom_name}" />
+                                            </ComboBox>
                                             <Text   text="{details>unit}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
 
                                          <HBox> 
-                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
-                                            <Input value="{details>request_quantity}" 
+                                            <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
+                                            <Input 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
+                                                type = "Number"
+                                                placeholder="Number" 
+                                                liveChange=".onLiveChange"
+                                          
+                                                textAlign="Right" 
+                                                
+                                                value="{
+                                                            path : '{details>request_quantity}',
+                                                            type : 'sap.ui.model.type.Integer',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 10
+                                                            }
+                                                        }"
                                                 width="100%"/> 
                                             <Text   text="{details>request_quantity}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
@@ -338,7 +399,7 @@
                                         </ComboBox> -->
 
                                     <HBox> 
-                                        <ComboBox
+                                        <!-- <ComboBox
                                             showSecondaryValues= "true"
                                             width="100%" 
                                             selectedKey="{details>currency_code}"  
@@ -350,20 +411,101 @@
                                                     key="{details>currency_code}" 
                                                     text="{currency_code}" />
                                             </items>
-                                        </ComboBox>
+                                        </ComboBox> -->
+                                        <ComboBox
+                                                id="comboBox_currency_code"                                                     
+                                                items ="{
+                                                    path : '/CurrencyUnitView',
+                                                    filters : [
+                                                            {   path : 'tenant_id', 
+                                                                operator : 'EQ', 
+                                                                value1 : 'L2100'
+                                                            },
+                                                            {   path : 'language_code', 
+                                                                operator : 'EQ', 
+                                                                value1 : 'KO'
+                                                            }
+                                                    ]
+                                                }"
+                                                selectedKey="{details>currency_code}"                                       
+                                                placeholder="{I18N>/OPTION}"
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                            >
+                                            <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" />
+                                            </ComboBox>
                                         <Text   text="{details>currency_code}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
+                                    </HBox>  
+
+                                    <HBox> 
+                                        <Input visible="{=!${midObjectView>/isShowMode}}"
+                                            required="{=!${midObjectView>/isShowMode}}"
+                                            type = "Number"
+                                            placeholder="Number" 
+                                            liveChange="._onLiveChange"
+                                            value="{
+                                                            path : '{details>request_net_price}',
+                                                            type : 'sap.ui.model.type.Integer',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 10
+                                                            }
+                                                        }"
+                                                width="100%"/> 
+                                        
+
+                                        <Text   text="{details>request_net_price}"
+                                                visible="{midObjectView>/isShowMode}"/>                                                          
+
                                     </HBox>  
 
                                     <HBox> 
                                         <Input value="{details>request_amount}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
                                             required="{=!${midObjectView>/isShowMode}}"
+                                            textAlign="Right" 
                                             width="100%"/> 
+                                        
+
+                                        <!-- <ObjectNumber number="{
+                                            parts:[
+                                                {path:'details>request_amount'}
+                                            ],
+                                            type: 'sap.ui.model.type.Currency',
+                                            formatOptions: {showMeasure: false}
+                                        }" unit="{details>currency_code}" textAlign="End" /> -->
+
                                         <Text   text="{details>request_amount}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
 
+                                    </HBox> 
+
+                                    <HBox>   
+                                        <!-- <Input value="{details>delivery_request_date}" 
+                                            visible="{=!${midObjectView>/isShowMode}}"
+                                            required="{=!${midObjectView>/isShowMode}}"
+                                            width="100%"/>   -->
+                                         <DatePicker value="{ path: 'details>delivery_request_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" 
+                                         visible="{=!${midObjectView>/isShowMode}}"
+                                         required="{=!${midObjectView>/isShowMode}}"
+                                         />
+
+                                        <!-- <Text   text="{details>delivery_request_date}"
+                                                visible="{midObjectView>/isShowMode}"/> -->
+                                        <Label text="{
+                                            path: 'details>delivery_request_date',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                                pattern: 'yyyy/MM/dd'
+                                            }                                        
+                                        }"  
+                                        class="sapUiTinyMarginBegin"  
+                                        visible="{midObjectView>/isShowMode}"
+                                        design="Bold"/> 
+
                                     </HBox>  
+
                                     <HBox>   
                                         <Input value="{details>supplier_code}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
@@ -401,15 +543,17 @@
 
                                         <!-- <Input id="inputWithEmployeeValueHelp" value="{details>buyer_empno}"
                                             placeholder="Choose a employee from the ValueHelp"
-                                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress($event, 'tenant_id')">
                                         </Input> -->
 
                                         <HBox> 
-                                            <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/>
-                                            <Input value="{details>buyer_empno}" 
+                                            <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
+                                            <Input id="inputWithEmployeeValueHelp" value="{details>buyer_empno}"
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
-                                                width="100%"/>  
+                                                placeholder="Choose a employee from the ValueHelp"
+                                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress($event, 'tenant_id')">
+                                            </Input>
                                             <Text   text="{details>buyer_empno}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
@@ -420,7 +564,7 @@
 
 
                                         <HBox> 
-                                            <Input value="{details>remark}" 
+                                            <Input id = "remark_" value="{details>remark}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
@@ -476,11 +620,12 @@
             press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
+                <Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('S')" />
+                <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
                 <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
-				<Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('S')" />
                 <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
                 <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
-				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+				
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
