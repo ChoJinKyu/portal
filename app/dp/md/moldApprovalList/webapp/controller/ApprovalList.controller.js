@@ -234,20 +234,28 @@ sap.ui.define([
         },
 
 
-		/**
-		 * Event handler when a search button pressed
-		 * @param {sap.ui.base.Event} oEvent the button press event
-		 * @public
-		 */
-        onPageSearchButtonPress: function (oEvent) {
-            this.validator.validate( this.byId('pageSearchFormE'));
-            if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+        _doInitTablePerso: function () {
+            var oTable = this.byId("mainTable");
+            // 모든 컬럼의 정보를 변수에 담음
+            var columns = oTable.getColumns();
+            //  Perso Dialog에서 노출시키지 않기 위해 실제로 테이블에서 체크박스 컬럼을 삭제함
+            oTable.removeColumn(this.byId("mainColumnChkBox"));
 
-            var aSearchFilters = this._getSearchStates();
-            console.log("aSearchFilters :::", aSearchFilters);
-            this._applySearch(aSearchFilters);
+            // init and activate controller
+            this._oTPC = new TablePersoController({
+                table: this.byId("mainTable"),
+                componentName: "moldApprovalList",
+                persoService: ApprovalListPersoService,
+                hasGrouping: true,
+            }).activate();
+            // dialog display이후 컬럼 재배치 하기위해 전부 삭제하고 다시 그려준다.
+            oTable.removeAllColumns();
+            columns.forEach(function(item){
+                oTable.addColumn(item);
+            });
+
         },
-        
+
 
 		/**
 		 * Event handler when pressed the item of table 
@@ -534,7 +542,6 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
-            
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
                 console.log("aSelectionSet ::::", aSelectionSet);
@@ -965,29 +972,25 @@ sap.ui.define([
             this.getModel("approvalListView").setProperty("/headerExpanded", true);
             this.setModel(new ManagedListModel(), "orgMap");
         },
-
-		/**
-		 * Internal helper method to apply both filter and search state together on the list binding
-		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
-		 * @private
+        
+        /**
+		 * Event handler when a search button pressed
+		 * @param {sap.ui.base.Event} oEvent the button press event
+		 * @public
 		 */
-        _applySearch: function (aSearchFilters) {
-            console.log(aSearchFilters);
-            var oView = this.getView(),
-                oModel = this.getModel("list");
-            oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel());
-            oModel.read("/Approvals", {
-                filters: aSearchFilters,
-                success: function (oData) {
-                    oView.setBusy(false);
-                }
-            });
-           
-            
- 
+        onPageSearchButtonPress: function (oEvent) {
+            this.validator.validate( this.byId('pageSearchFormE'));
+            if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+
+            var aSearchFilters = this._getSearchStates();
+            console.log("aSearchFilters :::", aSearchFilters);
+            this._applySearch(aSearchFilters);
         },
 
+        /**
+        * @public
+        * @see List search 할 값 필터링 관련 메소드 
+        */
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
@@ -1114,11 +1117,34 @@ sap.ui.define([
             return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         },
 
+		/**
+		 * Internal helper method to apply both filter and search state together on the list binding
+		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
+		 * @private
+		 */
+        _applySearch: function (aSearchFilters) {
+            console.log(aSearchFilters);
+            var oView = this.getView(),
+                oModel = this.getModel("list");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
+            oModel.read("/Approvals", {
+                filters: aSearchFilters,
+                success: function (oData) {
+                    oView.setBusy(false);
+                }
+            });
+           
+            
+ 
+        },
+
         ///////////////////// List search section End //////////////////////////
-
-        ///////////////////// Excel export Start //////////////////////////
-      
-
+        
+        /**
+        * @public
+        * @see 사용처 : 리스트에서 Excel Export 버튼 클릭시
+        */
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
@@ -1136,29 +1162,7 @@ sap.ui.define([
                 table: oTable,
                 data: oData
             });
-        },
-        
-        _doInitTablePerso: function () {
-            var oTable = this.byId("mainTable");
-            // 모든 컬럼의 정보를 변수에 담음
-            var columns = oTable.getColumns();
-            //  Perso Dialog에서 노출시키지 않기 위해 실제로 테이블에서 체크박스 컬럼을 삭제함
-            oTable.removeColumn(this.byId("mainColumnChkBox"));
-
-            // init and activate controller
-            this._oTPC = new TablePersoController({
-                table: this.byId("mainTable"),
-                componentName: "moldApprovalList",
-                persoService: ApprovalListPersoService,
-                hasGrouping: true,
-            }).activate();
-            // 컬럼들 재배치 하기위해 전부 삭제하고 다시 그려준다.
-            oTable.removeAllColumns();
-            columns.forEach(function(item){
-                oTable.addColumn(item);
-            });
-
-        }
+        }    
         
     });
 });
