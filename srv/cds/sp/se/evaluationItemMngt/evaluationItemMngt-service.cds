@@ -89,7 +89,7 @@ service EvaluationItemMngtService {
     entity EvalitemScle as projection on evalItemOpt;
 
     /* Eval Item List View */
-    view EvalItemList as
+    view EvalItemListView as
     SELECT etv.parent_id,
            etv.node_id,
            key etv.tenant_id,
