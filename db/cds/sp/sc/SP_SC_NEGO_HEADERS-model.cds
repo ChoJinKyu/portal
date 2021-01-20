@@ -4,6 +4,7 @@ using util from '../../cm/util/util-model';
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
 using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
+using {cm.Hr_Employee as hrEmployee} from '../../cm/CM_HR_EMPLOYEE-model.cds';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 
@@ -31,7 +32,8 @@ entity Sc_Nego_Headers {
         nego_type_code                  : String(25)         @title : '협상유형코드';
         //    purchasing_order_type_code : String(30)   @title: '구매주문유형코드' ;
         negotiation_output_class_code   : String(100)        @title : '협상산출물분류코드';
-        buyer_empno                     : String(30)         @title : '구매담당자사번';
+        // buyer_empno                     : String(30)         @title : '구매담당자사번';
+        buyer_empno                     : type of hrEmployee : employee_number @title : '구매담당자사번';
         buyer_department_code           : String(10)         @title : '구매담당자부서코드';
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;

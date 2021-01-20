@@ -148,6 +148,9 @@ service BudgetExecutionApprovalService {
         
         ; 
 
+        /**
+            @description 조회조건으로 parent_code 가 들어가야 해서 공통서비스 사용 못하고 신규로 만듬 
+        */
         @readonly 
         view CodeView as 
         select 

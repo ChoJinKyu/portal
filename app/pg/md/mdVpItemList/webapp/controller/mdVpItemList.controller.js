@@ -44,32 +44,123 @@ sap.ui.define([
         },
 
         onSearch:function () {
-            var oView = this.getView();
+            var oView = this.getView().
+                that = this;
             this.mainTreeListModel = this.mainTreeListModel || new TreeListModel(this.getView().getModel("list"), { returnType: "Array" });
+            
+            // this.filters = [];
+            // if(!!this.getView().byId("search_Vp_Code").getValue()){
+            //     this.filters.push(new Filter({
+            //         path: 'keyword', 
+            //         filters: [
+            //             new Filter("menu_code", FilterOperator.Contains, this.byId("searchKeyword").getValue()),
+            //             new Filter("menu_name", FilterOperator.Contains, this.byId("searchKeyword").getValue())
+            //         ],
+            //         and: false
+            //     }));
+            // }
+
 
             jQuery.ajax({
                 url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set", 
                 contentType: "application/json",
+                // filters: predicates,
                 sorters: [new Sorter("hierarchy_rank")],
                 success: function(oData){ 
-                    //TreeListModel.js : || oData.value;
-                    //treeList
-                    var treeData = this.mainTreeListModel.convToJsonTree(oData); 
-                    this.getView().setModel(new JSONModel({
-                        "MdVpItemList": {
-                            "nodes": treeData[0]
-                        }
-                    }),"list");
+                    
+                    this.setItemList(oData);
 
-                    //itemList
-                    if(oData.value.length>0){
-                        var itemCnt = oData.value[0].max_mapping_cnt;
-                    }
-                }.bind(this)                        
+                }.bind(this)   
+                                     
             });
             
         },
 
+        setItemList: function (oData) {
+            var dataArr = oData.value
+
+            debugger;
+
+            //treeList-item visible
+            if(oData.value.length>0){
+                var itemMaxCnt = oData.value[0].max_mapping_cnt;
+                for(var i=1; i<=itemMaxCnt; i++){
+                    this.byId("attrItem"+i).setVisible(true);
+                }
+            }  
+
+            //treeList-item mapping
+            if(dataArr.length>0){
+                var itemArr;
+                for(var i=0; i<dataArr.length; i++){
+
+                    var itemCnt = dataArr[i].vendor_pool_item_mapping_cnt;
+                    var leafNode = dataArr[i].drill_state;
+                    if(leafNode != "leaf"){
+                        //select:false
+                        
+                    }
+                    if(itemCnt != 0){ //itemArr != null ){
+                            // debugger;
+                        for(var j=1; j<=itemCnt; j++){
+                            if(j<10){
+                                itemArr = dataArr[i]["spmd_attr_info_00"+j];
+                            }else if(j<100){
+                                itemArr = dataArr[i]["spmd_attr_info_0"+j];
+                            }else{
+                                itemArr = dataArr[i]["spmd_attr_info_"+j];
+                            }
+                            var item = JSON.parse(itemArr);
+                            var index = "attrItemName"+j;
+                            dataArr[i][index]= item.itemName; 
+
+                            //테이블에 넣는게 아니고 모델에 넣는 방향으로
+                            // this.getModel("list").setProperty("/MdVpItemList/"+i+"/"+index , item.itemName);
+                            // oTreeTable.getRows()[i].getCells()[2+j].setText(item.itemName);
+                        }
+                        
+                    }
+                }
+            }
+
+            //treeList-filter:Vendor Pool
+            // var filters = this.filters;
+            // // 검색조건 및 결과가 없는 경우 종료
+            // // if (filters.filter(function(f) { return f.sPath === 'keyword' }).length <= 0
+            // //     ||
+            // //     !oData || !(oData.value) || oData.value.length <= 0) {
+            // //     return this.convToJsonTree(oData);
+            // // }
+            // // Hierachy 관련 node_id만을 필터링한다.
+            // var predicates = oData.value
+            //     // PATH를 분리한다.
+            //     .reduce(function (acc, e) {
+            //         return [...acc, ...((e["path"]).split("/"))];
+            //     }, [])
+            //     // 중복을 제거한다.
+            //     .reduce(function (acc, e) {
+            //         return acc.includes(e) ? acc : [...acc, e];
+            //     }, [])
+            //     .reduce(function (acc, e) {
+            //         return [...acc, new Filter({
+            //             path: 'node_id', operator: FilterOperator.EQ, value1: e
+            //         })];
+            //     }, [
+            //         // new Filter({
+            //         //     path: 'language_code', operator: FilterOperator.EQ, value1: 'KO'
+            //         // })
+            //     ]);
+
+
+            //treeList-treeModel
+            var treeData = this.mainTreeListModel.convToJsonTree(oData); 
+            this.getView().setModel(new JSONModel({
+                "MdVpItemList": {
+                    "nodes": treeData[0]
+                }
+            }),"list");
+
+        },
 
 
         onDialogTreeSearch: function (event) {
@@ -127,7 +218,6 @@ sap.ui.define([
             // this.getView().byId("search_Vp_Code").setValue(tree_vpCode);
             this.getView().byId("search_Vp_Name").setValue(row.vendor_pool_local_name);
             this.getView().byId("search_Vp_Code").setValue(row.vendor_pool_code);
-
 
             this.byId("treepop_vendor_pool_local_name").setValue("");
 

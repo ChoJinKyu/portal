@@ -159,17 +159,12 @@ sap.ui.define([
 		onMainTableItemPress: function(oEvent) {
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext("list").getPath(),
-				oRecord = this.getModel("list").getProperty(sPath);
-
-			// this.getRouter().navTo("midPage", {
-			// 	layout: LayoutType.OneColumn,
-			// 	tenantId: oRecord.tenant_id,
-			// 	uomCode: oRecord.uom_code
-            // });
+				oRecord = this.getModel("list").getProperty(sPath);			
             
             this.getRouter().navTo("suppliePage", {
 				layout: LayoutType.OneColumn,
-				tenantId: oRecord.tenant_id,
+                tenantId: oRecord.tenant_id,
+                ssi: oRecord.sourcing_supplier_id,
                 ssn: oRecord.sourcing_supplier_nickname,
                 mode: "show"
 			});
@@ -185,10 +180,7 @@ sap.ui.define([
 			this.iIndex = oParent.indexOfItem(oItem);
         },
 
-        onEditSupplierPress: function(oEvent) {
-			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-			// 	sPath = oEvent.getSource().getBindingContext("list").getPath(),
-            //     oRecord = this.getModel("list").getProperty(sPath);	
+        onEditSupplierPress: function(oEvent) {			
 
             var oItem= this.byId("mainTable").getSelectedItem();
 
@@ -201,7 +193,8 @@ sap.ui.define([
             
             this.getRouter().navTo("suppliePage", {
 				layout: LayoutType.OneColumn,
-				tenantId: oEntry.tenant_id,
+                tenantId: oEntry.tenant_id,
+                ssi: oEntry.sourcing_supplier_id,
                 ssn: oEntry.sourcing_supplier_nickname,
                 mode: "show"
 			});
@@ -214,21 +207,21 @@ sap.ui.define([
             
         },
         
-        onExportPress: function (_oEvent) {
-            var sTableId = _oEvent.getSource().getParent().getParent().getId();
-            if (!sTableId) { return; }
+        // onExportPress: function (_oEvent) {
+        //     var sTableId = _oEvent.getSource().getParent().getParent().getId();
+        //     if (!sTableId) { return; }
 
-            var oTable = this.byId(sTableId);
-            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
-            var sFileName = "Unit Of Measure";
-            var oData = this.getModel("list").getProperty("/Uom"); //binded Data
-            // var oData = oTable.getModel().getProperty("/Uom");
-            ExcelUtil.fnExportExcel({
-                fileName: sFileName || "SpreadSheet",
-                table: oTable,
-                data: oData
-            });
-        },
+        //     var oTable = this.byId(sTableId);
+        //     //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+        //     var sFileName = "Unit Of Measure";
+        //     var oData = this.getModel("list").getProperty("/Uom"); //binded Data
+        //     // var oData = oTable.getModel().getProperty("/Uom");
+        //     ExcelUtil.fnExportExcel({
+        //         fileName: sFileName || "SpreadSheet",
+        //         table: oTable,
+        //         data: oData
+        //     });
+        // },
 
         /**
         * @public
@@ -239,8 +232,7 @@ sap.ui.define([
 
             var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-                    "tenant_id": "L2100",
-                    "sourcing_supplier_nickname": ""                    
+                    "tenant_id": "L2100"                    
                 }, "/SupplierGen");
             oTransactionManager.setServiceModel(this.getModel());            
 
@@ -303,18 +295,17 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
 						oTransactionManager.submit({						
-							success: function(ok){
+							success: function(oData){
                                 that.byId("inputWithEmployeeValueHelp").setValue("");
                                 that.DupChkFlag = false;								
-                                oView.setBusy(false);
-                                // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                oView.setBusy(false);                                
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                     that.byId("dialogAddSupplier").close();
-                                    that.byId("pageSearchButton").firePress();
-                                    // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+                                    that.byId("pageSearchButton").firePress();                                    
                                     that.getRouter().navTo("suppliePage", {
                                         layout: LayoutType.OneColumn,
                                         tenantId: tenantId,
+                                        ssi: oData.__batchResponses[0].__changeResponses[0].data.sourcing_supplier_id,
                                         ssn: ssn,
                                         mode: "edit"
                                     });
@@ -325,10 +316,18 @@ sap.ui.define([
             });
             this.validator.clearValueState(this.byId("dialogAddSupplier"));                        
             
-        },     
+        },
+        
+        onUpperChange: function(oEvent){
+            
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+            _oInput.setValue(val.toUpperCase());                      
+                
+        },
         
         onDupChk: function () {            
-            // MessageBox.alert("준비중입니다.");
+            
             var iTenantId = "L2100",
                 iSn = this.byId("ssn").getValue().trim();
             if(this.isValNull(iSn)) {
@@ -442,21 +441,5 @@ sap.ui.define([
 				hasGrouping: true
 			}).activate();
         }
-        
-        // onMainTableFilterPress: function() {
-        //     this._MainTableApplyFilter();
-        // },
-
-        // _MainTableApplyFilter: function() {
-
-        //     var oView = this.getView(),
-		// 		sValue = oView.byId("mainTableSearchField").getValue(),
-		// 		oFilter = new Filter("uom_code", FilterOperator.Contains, sValue);
-
-		// 	oView.byId("mainTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
-
-        // }
-
-
 	});
 });

@@ -32,6 +32,9 @@ using {dp as Project_Event} from './DP_TC_PROJECT_EVENT-model';
 using {dp as Project_Similar_Model} from './DP_TC_PROJECT_SIMILAR_MODEL-model';
 using {dp as Project_Base_Exrate} from './DP_TC_PROJECT_BASE_EXRATE-model';
 using {dp as Project_Addition_Info} from './DP_TC_PROJECT_ADDITION_INFO-model';
+using {cm as Code_Dtl} from '../../cm/CM_CODE_DTL-model';
+using {cm as hrEmp} from '../../cm/CM_HR_EMPLOYEE-model';
+using {cm as orgDiv} from '../../cm/CM_ORG_DIVISION-model';
 
 entity Tc_Project {
     key tenant_id               : String(5) not null  @title : '테넌트ID';
@@ -108,6 +111,50 @@ entity Tc_Project {
                                       and sgna.project_code       = project_code
                                       and sgna.model_code         = model_code
                                       and sgna.addition_type_code = 'SGNA'; //판관비
+
+        product_group_text      : Association to Code_Dtl.Code_Dtl
+                                      on  product_group_text.tenant_id  = tenant_id
+                                      and product_group_text.group_code = 'DC_TC_PRODUCT_GROUP_CODE'
+                                      and product_group_text.code       = product_group_code; //제품군명
+
+        project_grade_text      : Association to Code_Dtl.Code_Dtl
+                                      on  project_grade_text.tenant_id  = tenant_id
+                                      and project_grade_text.group_code = 'DP_TC_PROJECT_GRADE_CODE'
+                                      and project_grade_text.code       = project_grade_code; //프로젝트등급명
+
+        bom_type_text           : Association to Code_Dtl.Code_Dtl
+                                      on  bom_type_text.tenant_id  = tenant_id
+                                      and bom_type_text.group_code = 'DP_TC_BOM_TYPE_CODE'
+                                      and bom_type_text.code       = bom_type_code; //자재명세서유형명
+
+        project_status_text     : Association to Code_Dtl.Code_Dtl
+                                      on  project_status_text.tenant_id  = tenant_id
+                                      and project_status_text.group_code = 'DP_TC_PROJECT_STATUS_CODE'
+                                      and project_status_text.code       = project_status_code; //프로젝트상태명
+
+        project_creator_info    : Association to hrEmp.Hr_Employee
+                                      on  project_creator_info.tenant_id       = tenant_id
+                                      and project_creator_info.employee_number = project_creator_empno; //프로젝트 생성자
+
+        project_leader_info     : Association to hrEmp.Hr_Employee
+                                      on  project_leader_info.tenant_id       = tenant_id
+                                      and project_leader_info.employee_number = project_leader_empno; //프로젝트리더
+
+        buyer_info              : Association to hrEmp.Hr_Employee
+                                      on  buyer_info.tenant_id       = tenant_id
+                                      and buyer_info.employee_number = buyer_empno; //재료비총괄
+
+        marketing_person_info   : Association to hrEmp.Hr_Employee
+                                      on  marketing_person_info.tenant_id       = tenant_id
+                                      and marketing_person_info.employee_number = marketing_person_empno; //마케팅담당자
+
+        planning_person_info    : Association to hrEmp.Hr_Employee
+                                      on  planning_person_info.tenant_id       = tenant_id
+                                      and planning_person_info.employee_number = planning_person_empno; //기획담당자
+
+        bizdivision_text        : Association to orgDiv.Org_Division
+                                      on  bizdivision_text.tenant_id        = tenant_id
+                                      and bizdivision_text.bizdivision_code = bizdivision_code; //사업부명
 
 }
 

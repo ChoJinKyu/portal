@@ -15,7 +15,40 @@
         xmlns:lib-m="ext.lib.m" 
          core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
         >
-
+    <VBox class="sapUiSmallMargin">
+        <form:SimpleForm
+                editable="true" 
+                layout="ResponsiveGridLayout" 
+                labelSpanXL="2" 
+                labelSpanL="2" 
+                labelSpanM="2" 
+                labelSpanS="2" 
+                adjustLabelSpan="false" 
+                emptySpanXL="0" 
+                emptySpanL="0" 
+                emptySpanM="0" 
+                emptySpanS="0" 
+                columnsXL="2" 
+                columnsL="1" 
+                columnsM="1" 
+                width="70%"
+                singleContainerFullSize="true"
+        >
+            <form:content>
+                <HBox>
+                    <VBox class="sapUiSmallMargin">
+                        <Label text="{I18N>/COMPANY}"/>
+                        <ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
+                    </VBox>
+                    <VBox class="sapUiSmallMargin">
+                        <Label text="{I18N>/PLANT}"/>
+                        <ObjectStatus text="[{plant>/org_code}] {plant>/org_name}" state="Error"/>
+                    </VBox>
+                </HBox>
+          </form:content>
+    </form:SimpleForm>
+    <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+       <form:content>
       	<!-- moldItem Recepit Table -->
 		<table:Table id="moldRecepitTable" 
                         selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
@@ -176,5 +209,8 @@
 
 					</table:columns>
 				</table:Table>
-	
+	    </form:content>
+        </form:SimpleForm>
+    </VBox>
+  
 </core:FragmentDefinition>

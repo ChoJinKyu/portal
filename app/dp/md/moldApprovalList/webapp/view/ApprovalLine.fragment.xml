@@ -126,7 +126,7 @@
                     <HBox alignItems="End" justifyContent="End" >
                         <Label text="Adress Book" class=""/>
                         <core:Icon 
-                            src="sap-icon://contacts"
+                            src="sap-icon://address-book"
                             class="size2 sapUiSmallMarginBeginEnd" 
                             >
                         </core:Icon>

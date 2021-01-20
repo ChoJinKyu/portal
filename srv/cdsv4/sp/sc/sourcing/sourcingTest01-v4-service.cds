@@ -4,7 +4,10 @@ using {sp.Sc_Nego_Suppliers as negoSuppliers} from '../../../../../db/cds/sp/sc/
 using {sp.Sc_Nego_Headers_New_Record_View as negoHeadersNewRecordView} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
 
 using {
-    sp.Sc_Tester00 as tester00,
+    sp.Sc_Nego_Outcom as scNegoOutcom,
+    // sp.Sc_salesOrderCountryOwnAndGer as scSalesOrderCountryOwnAndGer,
+    sp.Sc_Contacts as scContacts,
+    sp.Sc_Tester00 as scTester00,
     sp.Sc_Nego_Headers_Test01 as negoHeadersTest01,
     sp.Sc_Nego_Headers_Test04 as negoHeadersTest04
 } from '../../../../../db/cds/sp/sc/SP_SC_00TESTER-model';
@@ -13,6 +16,11 @@ namespace sp;
 
 @path : '/sp.sourcingTest01V4Service'
 service SourcingTest01V4Service {
+
+    entity Contacts @(title : '아웃컴테스트')                 as projection on scContacts;
+    // entity SalesOrderCountryOwnAndGer @(title : '아웃컴테스트')                 as projection on scSalesOrderCountryOwnAndGer;
+    entity ScNegoOutcom @(title : '아웃컴테스트')                 as projection on scNegoOutcom;
+    entity NegoHeadersTest01                                  as projection on negoHeadersTest01;
 
     /* 협상에 대한 헤더 정보(네고종류, 네고산출물, Award유형, 개설일자, 마감일자, 오리엔테이션정보 등)를 관리한다. */
     // @odata.draft.enabled
@@ -25,8 +33,7 @@ service SourcingTest01V4Service {
     /* 협상에 대한 헤더 정보의 신규 레코드 초기 값 레코드를 생성한다. */
     entity NegoHeadersNewRecordView @(title : '협상헤더정보-신규레코드') as projection on negoHeadersNewRecordView;
     //** Test - Begin **/
-    entity Tester00                                           as projection on tester00;
-    entity NegoHeadersTest01                                  as projection on negoHeadersTest01;
+    entity Tester00                                           as projection on scTester00;
 
     @odata.draft.enabled
     entity NegoHeadersTest04                                  as projection on negoHeadersTest04;

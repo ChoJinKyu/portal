@@ -7,10 +7,4 @@ service TemplateV4Service {
 
     entity Message as projection on message;
 
-    view MessageTest as 
-      select
-        a.message_code,
-        a.message_type
-      from message a;
-
 }

@@ -25,7 +25,7 @@ entity Li_Publish_Item_View {
         quotation_item_number      : Decimal             @title : '견적품목번호';
         supplier_name              : String(50)          @title : '협력사명';
         publish_date               : Date                @title : '발행일자';
-        delivery_request_date      : String(8)           @title : '납기일자';
+        delivery_request_date      : Date                @title : '납기일자';
         request_quantity           : Decimal             @title : '요청수량';
         unit                       : String(3)           @title : '단위';
         request_amount             : Decimal             @title : '요청금액';
