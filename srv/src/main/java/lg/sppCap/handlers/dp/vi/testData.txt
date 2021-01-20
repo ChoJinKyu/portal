@@ -1,3 +1,7 @@
+## LGCNS HANA DB 배포
+cds deploy --to hana:sppDb_hdi_dev --no-save
+
+## 프로시저 등록
 curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePriceArlProc \
 -H "Content-Type: application/json" \
 -d '{
@@ -26,5 +30,21 @@ curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePri
                 ]
             }
         ]
+        , "debug" : false
+    } 
+}'
+
+## 프로시저 삭제
+curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePriceArlProc \
+-H "Content-Type: application/json" \
+-d '{
+    "inputData" : { 
+        "cmd" : "delete",
+        "basePriceArlMst" : [
+            { 
+                "approval_number": "202101200001"
+            }
+        ]
+        , "debug" : false
     } 
 }'
