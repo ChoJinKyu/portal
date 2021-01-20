@@ -67,14 +67,14 @@ BEGIN
             , CONTRACT_DATE
             , ADDITIONAL_CONDITION_DESC
             , SPECIAL_NOTE
-            -- , ATTCH_GROUP_NUMBER 
+            , ATTCH_GROUP_NUMBER 
             , APPROVAL_NUMBER 
             , BUYER_EMPNO 
             , PURCHASING_DEPARTMENT_CODE 
             , PUBLISH_DATE
             , REMARK 
-            -- , ORG_TYPE_CODE
-            -- , ORG_CODE 
+            , ORG_TYPE_CODE
+            , ORG_CODE 
             , LOCAL_CREATE_DTM
             , LOCAL_UPDATE_DTM
             , CREATE_USER_ID
@@ -94,14 +94,14 @@ BEGIN
             , :I_CONTRACT_DATE
             , :I_ADDITIONAL_CONDITION_DESC              
             , :I_SPECIAL_NOTE
-            -- , :I_ATTCH_GROUP_NUMBER 
-            , '1234' 
-            , '9586'
-            , '50008948'
+            , :I_ATTCH_GROUP_NUMBER 
+            , :I_APPROVAL_NUMBER 
+            , :I_BUYER_EMPNO
+            , :I_PURCHASING_DEPARTMENT_CODE
             , CURRENT_TIMESTAMP
             , :I_REMARK 
-            -- , :I_ORG_TYPE_CODE
-            -- , :I_ORG_CODE 
+            , :I_ORG_TYPE_CODE
+            , :I_ORG_CODE 
             , CURRENT_TIMESTAMP
             , CURRENT_TIMESTAMP
             , :I_USER_ID

@@ -29,7 +29,7 @@
                                 constraints: {
                                     maxLength: 100
                                 }
-                            }" required="true">
+                            }" required="true" liveChange="onUpperChange">
                             <layoutData>
                                 <layout:GridData span="XL9 L9 M9 S9" />
                             </layoutData></Input>

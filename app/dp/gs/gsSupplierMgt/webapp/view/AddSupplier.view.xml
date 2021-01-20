@@ -91,71 +91,120 @@
                             columnsL="1"
                             columnsM="1" >
                             
-                            <form:content>            
-                                <Label text="{I18N>/SOURCING_SUPPLIER_LOCAL_NAME}"/>
-                                <Input value="{
-                                        path: 'SupplierGen>/sourcing_supplier_local_name',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 240
-                                        }
-                                    }" editable="{addSupplierView>/editMode}"></Input>			
-                                <Label text="{I18N>/SOURCING_SUPPLIER_ENGLISH_NAME}"/>
-                                <Input value="{
-                                        path: 'SupplierGen>/sourcing_supplier_english_name',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 240
-                                        }
-                                    }" editable="{addSupplierView>/editMode}"></Input>			
-                                <Label text="{I18N>/LOCAL_FULL_ADDRESS}"/>
-                                <Input value="{
-                                        path: 'SupplierGen>/local_full_address',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 1000
-                                        }
-                                    }" editable="{addSupplierView>/editMode}"></Input>			
-                                <Label text="{I18N>/ENGLISH_FULL_ADDRESS}"/>
-                                <Input value="{
-                                        path: 'SupplierGen>/english_full_address',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 1000
-                                        }
-                                    }" editable="{addSupplierView>/editMode}"></Input>			
-                                <Label text="{I18N>/PRODUCT_DESC}"/>
-                                <Input value="{
-                                        path: 'SupplierGen>/product_desc',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 300
-                                        }
-                                    }" editable="{addSupplierView>/editMode}"></Input>			
-                                <Label text="{I18N>/EMAIL_ADDRESS}"/>
-                                <Input id="eidtEmail"  value="{
-                                        path: 'SupplierGen>/email_address',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 100
-                                        }
-                                    }" editable="{addSupplierView>/editMode}" required="true"></Input>			
-                                <Label text="{I18N>/AN_PROFILE}"/>
-                                <Input value="{
-                                        path: 'SupplierGen>/an_profile',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 100
-                                        }
-                                    }" editable="{addSupplierView>/editMode}"></Input>
-                                <Label text="{I18N>/TAX_ID}"/>
-                                <Input value="{
-                                        path: 'SupplierGen>/tax_id',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 16
-                                        }
-                                    }" editable="{addSupplierView>/editMode}"></Input>			
+                            <form:content>
+                                <VBox>            
+                                    <Label text="{I18N>/SOURCING_SUPPLIER_LOCAL_NAME}"/>
+                                    <Input value="{
+                                            path: 'SupplierGen>/sourcing_supplier_local_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 240
+                                            }
+                                        }" editable="{addSupplierView>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/SOURCING_SUPPLIER_ENGLISH_NAME}"/>
+                                    <Input value="{
+                                            path: 'SupplierGen>/sourcing_supplier_english_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 240
+                                            }
+                                        }" editable="{addSupplierView>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/LOCAL_FULL_ADDRESS}"/>
+                                    <Input value="{
+                                            path: 'SupplierGen>/local_full_address',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 1000
+                                            }
+                                        }" editable="{addSupplierView>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/ENGLISH_FULL_ADDRESS}"/>
+                                    <Input value="{
+                                            path: 'SupplierGen>/english_full_address',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 1000
+                                            }
+                                        }" editable="{addSupplierView>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/PRODUCT_DESC}"/>
+                                    <Input value="{
+                                            path: 'SupplierGen>/product_desc',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 300
+                                            }
+                                        }" editable="{addSupplierView>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/EMAIL_ADDRESS}"/>
+                                    <Input id="editEmail"  value="{
+                                            path: 'SupplierGen>/email_address',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }" editable="{addSupplierView>/editMode}" required="true"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/AN_PROFILE}"/>
+                                    <Link text="{SupplierGen>/an_profile}" target="_blank" href="{SupplierGen>/an_profile}" visible="{addSupplierView>/showMode}"/>
+                                    <Input value="{
+                                            path: 'SupplierGen>/an_profile',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }" editable="{addSupplierView>/editMode}" visible="{addSupplierView>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/TAX_ID}"/>
+                                    <Input value="{
+                                            path: 'SupplierGen>/tax_id',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 16
+                                            }
+                                        }" editable="{addSupplierView>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>			
                                 <!-- <Label text="{I18N>/REMARK}"/>
                                 <Input id="iRemark"
                                     value="{
@@ -165,18 +214,24 @@
                                             maxLength: 3000
                                         }
                                     }" editable="true"></Input> -->
-                                <Label text="{I18N>/SOURCING}{I18N>/CONTENTS}"/>            
-                                <richtexteditor:RichTextEditor
-                                    editorType="TinyMCE4"
-                                    width="100%"
-                                    height="400px"
-                                    editable="{addSupplierView>/editMode}"
-                                    customToolbar="true"
-                                    showGroupFont="true"
-                                    showGroupLink="true"
-                                    showGroupInsert="true"
-                                    value="{SupplierGen>/sourcing_contents}">
-                                </richtexteditor:RichTextEditor> 
+                                <VBox>
+                                    <Label text="{I18N>/SOURCING}{I18N>/CONTENTS}"/>            
+                                    <richtexteditor:RichTextEditor
+                                        editorType="TinyMCE4"
+                                        width="100%"
+                                        height="400px"
+                                        editable="{addSupplierView>/editMode}"
+                                        customToolbar="true"
+                                        showGroupFont="true"
+                                        showGroupLink="true"
+                                        showGroupInsert="true"
+                                        value="{SupplierGen>/sourcing_contents}">
+                                    </richtexteditor:RichTextEditor>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox> 
                             </form:content>
                         </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
