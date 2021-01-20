@@ -39,7 +39,7 @@ SELECT parent_id
       ,hierarchy_rank            /*현재node의 순번(sibling order by에 의한)*/
       ,hierarchy_tree_size       /*현재node포함 하위node 갯수(1이면 leaf node(마지막node))*/
       ,hierarchy_parent_rank     /*부모node의 순번*/
-      ,hierarchy_level           /*현재node의 Level*/
+      ,hierarchy_level - 1 AS hierarchy_level           /*현재node의 Level*/
       ,hierarchy_root_rank       /*root node의 순번*/
       ,hierarchy_is_cycle        /*순환구조여부(0:False, 1:True)*/
       ,hierarchy_is_orphan       /*전개후 연결이 끊어진 노드여부(0:False, 1:True)*/
