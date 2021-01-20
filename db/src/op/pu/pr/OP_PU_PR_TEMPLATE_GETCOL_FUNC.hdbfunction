@@ -1,0 +1,48 @@
+/************************************************
+  1. namespace
+  - 모듈코드 소문자로 작성
+  - 소모듈 존재시 대모듈.소모듈 로 작성
+  2. entity
+  - 대문자로 작성
+  - 테이블명 생성을 고려하여 '_' 추가
+  3. 컬럼(속성)
+  - 소문자로 작성
+  4. .hdbview, .hdbfunction 등으로 이미 생성된 DB Object 사용시
+  entity 위에 @cds.persistence.exists 명시  
+  
+  5. namespace : op
+  6. Function  : OP_PU_PR_DELETE_FUNC
+  7. Function description : 
+  8. history
+  -. 
+  -.  
+*************************************************/
+FUNCTION OP_PU_PR_TEMPLATE_GETCOL_FUNC ( I_PR_TEMPLATE_NUMBER NVARCHAR(10),
+                                         I_TXN_TYPE_CODE NVARCHAR(30),
+                                         I_TABLE_NAME NVARCHAR(50),        
+                                         I_COLUMN_NAME NVARCHAR(50) )
+
+RETURNS OUT_PR_NUMBER NVARCHAR(240)
+	LANGUAGE SQLSCRIPT
+AS
+BEGIN 
+    DECLARE LCNT INTEGER ;
+    LCNT = 5;
+
+    WHILE :LCNT > 0 DO 
+    /* 무한실행 방지.. */
+    LCNT := :LCNT - 1;
+
+   
+
+
+    IF :LCNT = 3 THEN
+     RETURN;
+    END IF;
+
+
+    OUT_PR_NUMBER := :LCNT;
+
+    END WHILE;
+
+END ;

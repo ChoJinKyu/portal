@@ -212,7 +212,7 @@ sap.ui.define([
             var aSorter = [];
             aSorter.push(new Sorter("funding_notify_number", true));
             
-            oModel.read("/SfFundingNotify", {
+            oModel.read("/SfFundingNotifyView", {
                 filters: aSearchFilters,
                 sorters : aSorter,
                 success: function (oData) {

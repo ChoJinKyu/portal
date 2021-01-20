@@ -324,13 +324,13 @@ sap.ui.define([
                 oView.setBusy(true);
                 var oMasterModel = this.getModel("master");
                 //oDetailsModel.setTransactionModel(this.getModel());
-                oMasterModel.read("/SfFundingNotify", {
+                oMasterModel.read("/SfFundingNotifyView", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                         new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber),
                     ],
                     success: function (oData) {
-                        this.getModel("master").setData(oData.results[0]);
+                         this.getModel("master").setData(oData.results[0]);
                         oView.setBusy(false);
                     }.bind(this)
                 });

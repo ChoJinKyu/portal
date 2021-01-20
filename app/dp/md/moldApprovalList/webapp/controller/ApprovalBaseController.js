@@ -32,13 +32,6 @@ sap.ui.define([
 ) {
     "use strict";
 
-    var oTransactionManager;
-    //var oRichTextEditor;
-    var generalInfoFragment, 
-        attachmentsFragment,
-        approvalLineFragment,
-        itemFragment;
-
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
         dateFormatter: DateFormatter,
@@ -86,10 +79,6 @@ sap.ui.define([
             this.getRouter().navTo("approvalList", {}, true); // X 버튼 누를시 묻지도 따지지도 않고 리스트로 감 
 
             for (var sPropertyName in this._oFragments) {
-                /*if (!this._oFragments.hasOwnProperty(sPropertyName) || this._oFragments[sPropertyName] === null) {
-                    return;
-                }*/
-               
                 //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
@@ -97,29 +86,6 @@ sap.ui.define([
                 //}
                 this.approvalList.onBackToList();
             }
-
-            /*
-            var oEnabledA = this.getView().getControlsByFieldGroupId("ge");
-            oEnabledA.forEach(function(oCon){
-                if(oCon.setEditable){
-                    oCon.setEditable(false);
-                }
-            });
-            */
-            //this.byId("pageApprovalLineSection").destroy();
-            /*this.generalInfoFragment.destroy();
-            this.attachmentsFragment.destroy();
-            this.approvalLineFragment.destroy();
-            this.itemFragment.destroy();*/
-            //  this.approvalList.onPageReload();
-            /*
-            var sPreviousHash = History.getInstance().getPreviousHash();
-            if (sPreviousHash !== undefined) {
-                // eslint-disable-next-line sap-no-history-manipulation
-                history.go(-1);
-            } else {
-                this.getRouter().navTo("approvalList", {}, true);
-            }*/
         },
 
         onPageEditButtonPress: function () { // Edit 버튼 
@@ -193,15 +159,8 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
-            // refererMultiCB 
-            this.getView().setModel(new ManagedModel(), "refererMultiCB");
-
-            oTransactionManager = new TransactionManager();
-            oTransactionManager.aDataModels.length = 0;
-            oTransactionManager.addDataModel(this.getModel("moldMaster"));
-            oTransactionManager.addDataModel(this.getModel("appMaster"));
-            oTransactionManager.addDataModel(this.getModel("approver"));
-            oTransactionManager.addDataModel(this.getModel("referer"));
+            // refererMultiCB  사용 안함 
+           //  this.getView().setModel(new ManagedModel(), "refererMultiCB");
 
             var oArgs = oEvent.getParameter("arguments");
             console.log(oArgs);
@@ -385,21 +344,21 @@ sap.ui.define([
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection"); 
             console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
             oPageGeneralInfoSection.removeAllBlocks();
-            generalInfoFragment = this._loadFragment("GeneralInfo", function (oFragment) {
+            this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
             }.bind(this))
         
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
             oPageAttachmentsSection.removeAllBlocks();
 
-            attachmentsFragment = this._loadFragment("Attachments", function (oFragment) {
+            this._loadFragment("Attachments", function (oFragment) {
                 oPageAttachmentsSection.addBlock(oFragment);
             }.bind(this))
 
             var oPageApprovalLineSection = this.byId("pageApprovalLineSection");
             oPageApprovalLineSection.removeAllBlocks();
 
-            approvalLineFragment = this._loadFragment("ApprovalLine", function (oFragment) {
+            this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
 
                 var referMulti = this.byId("referMulti");
@@ -424,7 +383,7 @@ sap.ui.define([
             var oPageItemSection = this.byId("pageItemSection");
             oPageItemSection.removeAllBlocks();
 
-            itemFragment = this._loadFragment(fragmentFileName, function (oFragment) {
+            this._loadFragment(fragmentFileName, function (oFragment) {
                 oPageItemSection.addBlock(oFragment);
                 
                 /*if (this.approval_number === "New") {
@@ -479,8 +438,6 @@ sap.ui.define([
             //   //  refererMultiCB.setProperty("/refer", rList);
             //     }
             }.bind(this));
-
-            oTransactionManager.setServiceModel(this.getModel());
         },
 
        onMultiInputWithCodeValuePress: function(){ 
@@ -1229,42 +1186,5 @@ sap.ui.define([
             this._onApprovalPage();
             this._toShowMode();
         }
-
-        /*
-
-        onPageDraftButtonPress: function () {
-            var oView = this.getView(),
-                verModel = this.getModel("approver");
-
-            MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
-                title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        oView.setBusy(true);
-
-                        var approverData = verModel.getData().Approvers;
-
-                        for (var jdx = 0; jdx < approverData.length; jdx++) {
-                            delete approverData[jdx].arrowUp;
-                            delete approverData[jdx].arrowDown;
-                            delete approverData[jdx].editMode;
-                            delete approverData[jdx].trashShow;
-                        }
-                        verModel.removeRecord(approverData.length - 1)
-
-                        oTransactionManager.submit({
-                            success: function (ok) {
-                                oView.setBusy(false);
-                                MessageToast.show("Success to save.");
-                            }
-                        });
-                    };
-                }
-            });
-            
-
-        }
-        */
     });
 });

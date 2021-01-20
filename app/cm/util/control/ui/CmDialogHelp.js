@@ -14,34 +14,36 @@ sap.ui.define([
 ], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-    var EmployeeDialog = Parent.extend("cm.util.control.ui.EmployeeDialog", {
+    var CmDialogHelp = Parent.extend("cm.util.control.ui.CmDialogHelp", {
 
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
-                keyField: { type: "string", group: "Misc", defaultValue: "employee_number" },
-                textField: { type: "string", group: "Misc", defaultValue: "user_local_name" }
+                keyFieldLabel: { type: "string", group: "Misc", defaultValue: "" },
+                textFieldLabel: { type: "string", group: "Misc", defaultValue: "" },
+                keyField: { type: "string", group: "Misc", defaultValue: "" },
+                textField: { type: "string", group: "Misc", defaultValue: "" }
             }
         },
 
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oEmployee = new Input({ placeholder: "EMPLOYEE Name."});
-            this.oSearchKeyword.setPlaceholder("EMPLOYEE Number.");
+            this.oEmployee = new Input({ placeholder: this.getProperty("textFieldLabel")});
+            this.oSearchKeyword.setPlaceholder(this.getProperty("keyFieldLabel"));
             this.oEmployee.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE_NUMBER")}),
+                        new Label({ text: this.getProperty("keyFieldLabel")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE_NAME")}),
+                        new Label({ text: this.getProperty("textFieldLabel")}),
                         this.oEmployee
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -52,40 +54,31 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
-                    width: "13%",
+                    width: "25%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/EMPLOYEE_NUMBER")}),
+                    label: new Label({text: this.getProperty("keyFieldLabel")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 }),
                 new Column({
-                    width: "10%",
-                    label: new Label({text: this.getModel("I18N").getText("/EMPLOYEE_NAME")}),
+                    width: "75%",
+                    label: new Label({text: this.getProperty("textFieldLabel")}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
-                }),
-                new Column({
-                    width: "45%",
-                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT")}),
-                    template: new Text({text: "{department_local_name}"})
-                }),
-                new Column({
-                    label: new Label({text: this.getModel("I18N").getText("/EMAIL")}),
-                    template: new Text({text: "{email_id}"})
                 })
+                
             ];
         },
 
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
                 sEmployee = this.oEmployee.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
+                aDefaultFilters = this.mAggregations.items[0].oParent.oServiceParam.filters,
+                aFilters = [];
+                aDefaultFilters ? aFilters.push(aDefaultFilters) : aDefaultFilters;
             if(sKeyword){
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter(this.getProperty("keyField"), FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
-                            // new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                            new Filter(this.getProperty("keyField"), FilterOperator.Contains, sKeyword)
                         ],
                         and: false
                     })
@@ -95,17 +88,21 @@ sap.ui.define([
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter(this.getProperty("textField"), FilterOperator.Contains, "'" + sEmployee.toLowerCase().replace("'","''") + "'")
-                            // new Filter("tolower(department_id)", FilterOperator.Contains, "'" + sEmployee.toLowerCase().replace("'","''") + "'")
+                            new Filter(this.getProperty("textField"), FilterOperator.Contains, sEmployee)
                         ],
                         and: false
                     })
                 );
             }
-            ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
+            var oEntityName = this.mAggregations.items[0].oParent.oServiceParam.entityName,
+                oServicename = this.mAggregations.items[0].oParent.oServiceParam.serviceName,
+                sPath = this.mAggregations.items[0].oParent.oServiceParam.sorters[0].sPath,
+                bDescending = this.mAggregations.items[0].oParent.oServiceParam.sorters[0].bDescending;
+
+            ODataV2ServiceProvider.getService(oServicename).read("/"+oEntityName, {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("user_local_name", false)
+                    new Sorter(sPath, bDescending)
                 ],
                 success: function(oData){
                     var aRecords = oData.results;
@@ -116,5 +113,5 @@ sap.ui.define([
 
     });
 
-    return EmployeeDialog;
+    return CmDialogHelp;
 }, /* bExport= */ true);
