@@ -81,8 +81,6 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "mdCommon");
             this.getView().setModel(new ManagedListModel(), "importPlant");
 
-            //  console.log(" this.approval_number "  ,  this.approval_number);
-
             this._searchImportCompany();
 
             var schFilter = [];
