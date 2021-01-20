@@ -18,7 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "employee_number" },
                 textField: { type: "string", group: "Misc", defaultValue: "user_local_name" }
             }
@@ -27,22 +27,21 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oEmployee = new Input({ placeholder: "EMPLOYEE Name."});
-            this.oSearchKeyword.setPlaceholder("EMPLOYEE Number.");
-            this.oEmployee.attachEvent("change", this.loadData.bind(this));
+            this.oDepartment = new Input({ placeholder: "Department Name or No."});
+            this.oDepartment.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE_NUMBER")}),
+                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE_NAME")}),
-                        this.oEmployee
+                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT")}),
+                        this.oDepartment
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
@@ -52,31 +51,30 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
-                    width: "13%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/EMPLOYEE_NUMBER")}),
-                    template: new Text({text: "{"+this.getProperty("keyField")+"}"})
-                }),
-                new Column({
-                    width: "10%",
-                    label: new Label({text: this.getModel("I18N").getText("/EMPLOYEE_NAME")}),
+                    label: new Label({text: "Name"}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 }),
                 new Column({
-                    width: "45%",
-                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT")}),
+                    label: new Label({text: "e-Mail"}),
+                    template: new Text({text: "{email_id}"})
+                }),
+                new Column({
+                    width: "50%",
+                    label: new Label({text: "Department"}),
                     template: new Text({text: "{department_local_name}"})
                 }),
                 new Column({
-                    label: new Label({text: this.getModel("I18N").getText("/EMAIL")}),
-                    template: new Text({text: "{email_id}"})
+                    width: "15%",
+                    hAlign: "Center",
+                    label: new Label({text: "Employee No."}),
+                    template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 })
             ];
         },
 
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                sEmployee = this.oEmployee.getValue(),
+                sDepartment = this.oDepartment.getValue(),
                 aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ];
@@ -84,19 +82,19 @@ sap.ui.define([
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter(this.getProperty("keyField"), FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
-                            // new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                            new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
+                            new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
                         ],
                         and: false
                     })
                 );
             }
-            if(sEmployee){
+            if(sDepartment){
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter(this.getProperty("textField"), FilterOperator.Contains, "'" + sEmployee.toLowerCase().replace("'","''") + "'")
-                            // new Filter("tolower(department_id)", FilterOperator.Contains, "'" + sEmployee.toLowerCase().replace("'","''") + "'")
+                            new Filter("tolower(department_local_name)", FilterOperator.Contains, "'" + sDepartment.toLowerCase().replace("'","''") + "'"),
+                            new Filter("tolower(department_id)", FilterOperator.Contains, "'" + sDepartment.toLowerCase().replace("'","''") + "'")
                         ],
                         and: false
                     })
@@ -105,7 +103,7 @@ sap.ui.define([
             ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("user_local_name", false)
+                    new Sorter("user_local_name", true)
                 ],
                 success: function(oData){
                     var aRecords = oData.results;
