@@ -1,3 +1,8 @@
+/**
+ * @Deprecated
+ * 
+ */
+
 sap.ui.define([
     "sap/m/Dialog",
     "sap/m/DialogRenderer",

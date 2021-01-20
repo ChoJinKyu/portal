@@ -14,6 +14,8 @@ service HrService {
             key e.employee_number,
                 e.user_local_name,
                 e.email_id,
+                e.mobile_phone_number, 
+                e.job_title,
                 d.department_local_name,
                 d.department_id
         from employee as e

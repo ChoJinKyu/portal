@@ -27,6 +27,9 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
+            this.oSearchKeyword = new Input({ placeholder: "Keyword"});
+            this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
+
             this.oDepartment = new Input({ placeholder: "Department Name or No."});
             this.oDepartment.attachEvent("change", this.loadData.bind(this));
             
@@ -64,10 +67,16 @@ sap.ui.define([
                     template: new Text({text: "{department_local_name}"})
                 }),
                 new Column({
-                    width: "15%",
+                    width: "10%",
                     hAlign: "Center",
                     label: new Label({text: "Employee No."}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
+                }),
+                new Column({
+                    width: "10%",
+                    hAlign: "Center",
+                    label: new Label({text: "Job Title"}),
+                    template: new Text({text: "{job_title}"})
                 })
             ];
         },
@@ -75,9 +84,9 @@ sap.ui.define([
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
                 sDepartment = this.oDepartment.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
+                oParam = this.getServiceParameters(),
+                aFilters = oParam.filters || [],
+                aSorters = oParam.sorters || [];
             if(sKeyword){
                 aFilters.push(
                     new Filter({
@@ -100,14 +109,12 @@ sap.ui.define([
                     })
                 );
             }
+            aSorters.push(new Sorter("user_local_name", true));
             ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
                 filters: aFilters,
-                sorters: [
-                    new Sorter("user_local_name", true)
-                ],
+                sorters: aSorters,
                 success: function(oData){
-                    var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
+                    this.oDialog.setData(oData.results, false);
                 }.bind(this)
             });
         }

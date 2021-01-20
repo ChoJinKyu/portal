@@ -27,7 +27,7 @@ service fundingNotifyService {
                 ) as create_user_name : String
                 */
                 ,'홍길동' as create_user_name : String  //작성자 명
-                ,case when now() between fnd.funding_notify_start_date and fnd.funding_notify_end_date then 'Y'
+                ,case when CURRENT_DATE between fnd.funding_notify_start_date and fnd.funding_notify_end_date then 'Y'
                     else 'N'
                 end writable_yn : String(1)     //작성가능 여부: 오늘 날짜가 공고기간 안에 포함되어 있으면 작성 가능
                 /*
