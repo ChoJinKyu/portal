@@ -62,6 +62,7 @@
                             <Button id="testButton2" text="카테고리Code채번테스트" type="Transparent" press=".callNewCategoryCode" />
                             <Button id="testButton3" text="VP매핑Multi테스트" type="Transparent" press=".onMainTableMappMultiProcButtonPress" />
                             <Button id="testButton4" text="VP상태Multi테스트" type="Transparent" press=".onMainTableMultiProcButtonPress" />
+                            <Button id="testButton5" text="VP3별Mapping목록조회테스트" type="Transparent" press=".getMdMappingItemViewProcList" />
                             <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
                             <!-- <Button text="행삭제" type="Transparent" press=".onMainTableDelButtonPress" /> -->
                             <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />

@@ -172,6 +172,31 @@ sap.ui.define([
 
         table.removeSelections(true);
         },
+        // VP3별Mapping 목록 조회 테스트
+        getMdMappingItemViewProcList: function(oEvent){
+            var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemViewProc";
+							
+			var param = {};
+			var params = {"language_code":"EN"};
+            param.params = params; // param.params 변수명은 변경불가함 handler에서 사용하기 때문
+			$.ajax({
+				url: url,
+				type: "POST",
+				//datatype: "json",
+				data : JSON.stringify(param),
+				contentType: "application/json",
+				success: function(data){
+                    alert("Reslt Value => ["+JSON.stringify(data.titles)+"]  ["+JSON.stringify(data.records)+"] ");
+                    console.log("Title 출력");
+                    console.log(JSON.stringify(data.titles));
+                    console.log("BODY Record 출력");
+                    console.log(JSON.stringify(data.records));
+				},
+				error: function(req){
+					alert("Ajax Error => "+req.status);
+				}
+			});
+        },
         //카테고리 채번 V4호출 처리
         callNewCategoryItemCode: function(oEvent){
             var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
