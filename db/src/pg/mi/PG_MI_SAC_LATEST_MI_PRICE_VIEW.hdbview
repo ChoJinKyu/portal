@@ -19,7 +19,7 @@ VIEW  PG_MI_SAC_LATEST_MI_PRICE_VIEW  AS
             ,'LATEST'							AS  NET_PRICE_CONFIRMED_TYPE
             ,'#'								AS	PLANT
             ,'PG0102_00030' 					AS  MI_MEASURE
-            ,A.AMOUNT							AS	"VALUE"
+            ,A.PRICE							AS	"VALUE"
     FROM	 PG_MI_MATERIAL_PRICE_MANAGEMENT  A
     		INNER  JOIN  (
     			SELECT
@@ -59,7 +59,7 @@ VIEW  PG_MI_SAC_LATEST_MI_PRICE_VIEW  AS
             ,'SPECIFIC'							AS  NET_PRICE_CONFIRMED_TYPE
             ,'#'								AS	PLANT
             ,'PG0102_00030' 					AS  MI_MEASURE
-            ,A.AMOUNT							AS	"VALUE"
+            ,A.PRICE							AS	"VALUE"
     FROM	 PG_MI_MATERIAL_PRICE_MANAGEMENT  A
     		INNER  JOIN  (
     			SELECT

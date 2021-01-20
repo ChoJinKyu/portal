@@ -3,11 +3,11 @@
         {
             "dialect": "SAPHana",
             "port": 443,
-            "server": "528d4fec-ca15-4ad2-9a28-f22e9ffbcc43.hana.prod-jp10.hanacloud.ondemand.com",
+            "server": "70a17eb4-b47d-487c-97f6-c9a91288dff2.hana.prod-jp10.hanacloud.ondemand.com",
             "name": "sppDb_hdi_dev",
-            "database": "997F8D5A04E2433AA7341CADC74AF683",
-            "username": "997F8D5A04E2433AA7341CADC74AF683_AWX430GNEBLXD7TDI8FA9J58I_DT",
-            "password": "Mc5_ZSN-y5y.JlzK-4dAfkbHrmKIdz3ZhWx9ySA0Y-G-yK3D8-bYWfIFibNn0ZXT4eqibFAER2L9W1guxoRrAh4TIWP-CodunHSKOFJYxGP5wrr4w9Dv93noECCaz2-U"
+            "database": "8BF87896D3244B1B999EDBA857B1C829",
+            "username": "8BF87896D3244B1B999EDBA857B1C829_60XG2IY1OIPW1C6MGAVC3UL5N_DT",
+            "password": "Ac2oIHLF6MMV90.L1tuWf6JroI6UZ3i40yVZ7UaaRIBOGtKhJuMx7Q-swtuei.qttVUN8HE5xzr5RJREi38ESmQdvUPDeiRGaRfFniCdYyAHyGf3DL9W0Ggy.PxzUwmU"
         }
     ],
     "actions": [],
@@ -16,5 +16,6 @@
     "CDS graphical modeler.Automatic Key Generation": "on",
     "CDS graphical modeler.Automatic Sorting": false,
     "cds.checkDevKitInstalled": false,
-    "wattFeature.calculationViewEditor.performanceAnalysisAlwaysOn": true
+    "wattFeature.calculationViewEditor.performanceAnalysisAlwaysOn": true,
+    "welcome.showOnStartup": true
 }

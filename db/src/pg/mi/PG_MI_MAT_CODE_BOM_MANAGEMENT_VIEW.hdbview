@@ -18,7 +18,7 @@ view pg_MI_Mat_Code_Bom_Management_View as
 			item.reqm_quantity_unit			as reqm_quantity_unit,
 			item.reqm_quantity				as reqm_quantity,
 			item.currency_unit				as currency_unit,
-			item.reqm_quantity*1000			as mi_base_reqm_quantity,
+			item.reqm_quantity*0.001		as mi_base_reqm_quantity,
 			item.quantity_unit				as quantity_unit,
 			item.exchange					as exchange,
 			item.termsdelv					as termsdelv,
