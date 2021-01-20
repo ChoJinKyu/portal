@@ -3,17 +3,19 @@ sap.ui.define([
   "ext/lib/util/Multilingual",
   "ext/lib/model/ManagedListModel",
   "ext/lib/formatter/DateFormatter",
+  "ext/lib/util/Validator",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/ui/core/Item",
   "sap/m/TablePersoController",
   "./MainListPersoService",
-], function (BaseController, Multilingual, ManagedListModel, DateFormatter, Filter, FilterOperator, Item, TablePersoController, MainListPersoService) {
+], function (BaseController, Multilingual, ManagedListModel, DateFormatter, Validator, Filter, FilterOperator, Item, TablePersoController, MainListPersoService) {
   "use strict";
 
     return BaseController.extend("cm.userMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+        validator: new Validator(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -41,7 +43,7 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "mainListView");
             this.getModel("mainListView").setProperty("/headerExpanded", true);
 
-            //this._doInitTablePerso();
+            this._doInitTablePerso();
         },
 
         onRenderedFirst: function () {
@@ -113,6 +115,21 @@ sap.ui.define([
                 this.onRefresh();
             } else {
                 var aSearchFilters = this._getSearchStates();
+
+                if(this.byId("searchTenantCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchTenantCombo")) !== true) {
+                    sap.m.MessageToast.show("테넌트는 필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchTenantCombo"));
+                }
+
+                if(this.byId("searchOrgCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchOrgCombo")) !== true) {
+                    sap.m.MessageToast.show("회사는 필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchOrgCombo"));
+                }
+
                 this._applySearch(aSearchFilters);
             }
         },
@@ -124,8 +141,8 @@ sap.ui.define([
              */
         onMainTableItemPress: function (oEvent) {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-            //sPath = oEvent.getSource().getBindingContext("list").getPath(),
-            sPath = oEvent.mParameters.rowContext.sPath,
+            sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            //sPath = oEvent.mParameters.rowContext.sPath,
             oRecord = this.getModel("list").getProperty(sPath);
 
             this.getRouter().navTo("midPage", {
@@ -136,6 +153,12 @@ sap.ui.define([
             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
                 this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
             }
+
+            var oItem = oEvent.getSource();
+            oItem.setNavigated(true);
+            var oParent = oItem.getParent();
+            // store index of the item clicked, which can be used later in the columnResize event
+            this.iIndex = oParent.indexOfItem(oItem);
 
         },
 
