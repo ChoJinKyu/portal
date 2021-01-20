@@ -13,7 +13,7 @@ LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_UPDATE_MCST_ADD_INFO_PROC
+Program Name   : DP_TC_UPDATE_MCST_ADD_INFO_PROC
 Creator        : Jeong Jeong Ho
 Description    : 재료비 프로젝트 물동(MTLMOB)/판가(SALE_PRICE)/가공비(PROCESSING_COST)/판관비(SGNA) 수정
 History        : 2021-01-05 initial creation

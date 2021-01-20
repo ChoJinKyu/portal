@@ -16,9 +16,12 @@ entity Li_Request_Detail_View {
         ep_item_code               : String(50)          @title : '설비공사용품목코드';
         item_desc                  : String(200)         @title : '품명';
         unit                       : String(3)           @title : '단위';
+        request_net_price          : Decimal             @title : '요청단가';
         request_quantity           : Decimal             @title : '요청수량';
         currency_code              : String(15)          @title : '통화코드';
         currency_name              : String(15)          @title : '통화';
+        spec_desc                  : String(1000)        @title : '규격설명';
+        delivery_request_date      : Date                @title : '납품요청일자';
         request_amount             : Decimal             @title : '요청금액';
         supplier_code              : String(100)         @title : '공급업체코드';
         supplier_name              : String(100)         @title : '공급업체';

@@ -11,6 +11,10 @@ using { ep as loiPubView } from '../../../../db/cds/ep/po/EP_LI_PUBLISH_VIEW-mod
 
 //Unit Code
 using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/CM_CURRENCY_LNG-model';
+using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+
+//Supplier
+using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 
 namespace ep;
 
@@ -46,5 +50,30 @@ service LoiMgtService {
          from CurrencyLanguage
          where
              language_code = 'KO';
+
+        // Unit of Measure View
+    view UnitOfMeasureView @(title : '수량단위코드 View') as
+        select
+            key tenant_id, //회사코드
+            key uom_code, //수량단위코드
+            key language_code, //언어코드
+                uom_name //수량단위코드명
+        from UnitOfMeasure
+        where
+            language_code = 'KO'
+        ;
+
+        // // Supplier View
+    view SupplierView @(title : '공급업체 조회 View') as
+        select distinct
+            key tenant_id, //회사코드
+            key supplier_code, //공급업체코드
+                supplier_local_name, //공급업체로컬명
+                supplier_english_name //공급업체영어명
+        from SupplierMaster
+        order by
+            tenant_id,
+            supplier_code
+        ;
 
 }

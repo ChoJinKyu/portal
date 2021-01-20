@@ -45,6 +45,7 @@ service SupplierIdeaMgtService {
             key idea.company_code,
             key idea.idea_number,
             idea.idea_title,
+            idea.idea_date,
             idea.idea_progress_status_code,
             (select cd.code_name 
              from Code.Code_View cd
@@ -129,7 +130,7 @@ service SupplierIdeaMgtService {
              from BizUnit.Org_Unit out 
              where out.tenant_id = isi.tenant_id
              and out.bizunit_code = isi.bizunit_code
-             ) as bizunit_ame : String(240) ,
+             ) as bizunit_name : String(240) ,
             isi.idea_product_group_code,
             (select cd.code_name 
              from Code.Code_View cd

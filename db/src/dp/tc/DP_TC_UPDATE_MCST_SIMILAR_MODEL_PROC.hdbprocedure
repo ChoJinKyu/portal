@@ -13,7 +13,7 @@ LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_UPDATE_MCST_SIMILAR_MODEL_PROC
+Program Name   : DP_TC_UPDATE_MCST_SIMILAR_MODEL_PROC
 Creator        : Jeong Jeong Ho
 Description    : 재료비 프로젝트 유사모델 생성(delete/insert)
 History        : 2021-01-05 initial creation
