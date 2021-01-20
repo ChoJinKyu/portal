@@ -22,7 +22,7 @@ entity Po_Forex_Declaration_View {
         currency_name               : String(15)            @title : '통화코드';
         po_amount                   : Decimal               @title : 'PO금액';
         prepay_amount               : Decimal               @title : '선급금액';
-        supplier_code               : String(15)            @title : '공급업체코드';
+        supplier_code               : String(10)            @title : '공급업체코드';
         supplier_name               : String(240)           @title : '공급업체로컬명';	
         po_date                     : Date                  @title : 'PO일자';	
         prepay_date                 : Date                  @title : '선급금지급일자';			
