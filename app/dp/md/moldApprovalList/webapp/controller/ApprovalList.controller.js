@@ -206,10 +206,10 @@ sap.ui.define([
             var oTable = this.byId("mainTable");
             // 모든 컬럼의 정보를 변수에 담음
             var columns = oTable.getColumns();
-            // 체크박스 컬럼을 Perso Dialog에서 노출시키지 않기 위해 실제로 테이블에서 삭제함
+            //  Perso Dialog에서 노출시키지 않기 위해 실제로 테이블에서 체크박스 컬럼을 삭제함
             oTable.removeColumn(this.byId("mainColumnChkBox"));
             this._oTPC.openDialog();
-            // 다이알로그 오픈이후 컬럼순서를 원복하기 위해 모든 컬럼 삭제후 다시 투입
+            // 다이알로그 오픈이후 컬럼배치를 원복하기 위해 모든 컬럼 삭제후 다시 투입
             oTable.removeAllColumns();
             columns.forEach(function(item){
                 oTable.addColumn(item);
