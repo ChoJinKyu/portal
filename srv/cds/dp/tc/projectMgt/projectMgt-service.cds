@@ -49,7 +49,7 @@ service ProjectMgtService {
     entity Org_Division            as projection on orgDiv.Org_Division;
 
 
-    view projectView as
+    view ProjectView as
         select key tp.tenant_id                  /*테넌트ID*/
             , key tp.project_code               /*프로젝트코드*/
             , key tp.model_code                 /*모델코드*/
