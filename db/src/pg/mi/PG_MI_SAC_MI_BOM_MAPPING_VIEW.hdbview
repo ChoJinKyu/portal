@@ -2,22 +2,23 @@ VIEW PG_MI_SAC_MI_BOM_MAPPING_VIEW AS
     SELECT
              DISTINCT 
 			 'Actual'                                                                           AS  VERSION
-            ,'PG0102_00011'                                                                     AS  MI_MEASURE_CODE
+            ,'PG0102_00011'                                                                     AS  MI_MEASURE
             ,'202001'                                                                           AS  "DATE"
             ,'20200101'                                                                         AS  LATEST_MI_DATE
             ,'20200101'                                                                         AS  LATEST_NET_PRICE_CFM_DATE
-            ,A.TENANT_ID
-            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'BU'  THEN  B.ORG_CODE  ELSE  C.BIZUNIT_CODE  END  AS  BIZUNIT_CODE
-            ,B.COMPANY_CODE||'-'||B.ORG_TYPE_CODE||'-'||B.ORG_CODE||'-'||B.VENDOR_POOL_CODE     AS  VENDOR_POOL_MST
-            ,A.MATERIAL_CODE
-            ,A.SUPPLIER_CODE
-            ,'#'                                                                                AS  CURRENCY_CODE
-            ,'#'                                                                                AS  UOM_CODE
-            ,'#'                                                                                AS  MI_MATERIAL_CODE
-            ,'#'                                                                                AS  TERMSDELV_CODE
-            ,'#'                                                                                AS  EXCHANGE_CODE
-            ,'#'                                                                                AS  PRICE_CONFIRMED_CODE
-            ,'#'                                                                                AS  LOCAL_CURRENCY_CODE
+            ,A.TENANT_ID                                                                        AS  TENANT
+            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'BU'  THEN  B.ORG_CODE  ELSE  C.BIZUNIT_CODE  END  AS  BIZUNIT
+            ,B.COMPANY_CODE||'-'||B.ORG_TYPE_CODE||'-'||B.ORG_CODE||'-'||B.VENDOR_POOL_CODE     AS  VENDOR_POOL
+            ,A.MATERIAL_CODE                                                                    AS  MATERIAL
+            ,A.SUPPLIER_CODE                                                                    AS  SUPPLIER
+            ,'#'                                                                                AS  SOURCE_CURRENCY
+            ,'#'                                                                                AS  UOM
+            ,'#'                                                                                AS  MI_MATERIAL
+            ,'#'                                                                                AS  MI_INCOTERMS
+            ,'#'                                                                                AS  EXCHANGE
+            ,'#'                                                                                AS  NET_PRICE_CONFIRMED_TYPE
+            ,'#'                                                                                AS  TARGET_CURRENCY
+            ,'#'                                                                                AS  PLANT
             ,1                                                                                  AS  VALUE
     FROM     PG_MI_MATERIAL_CODE_BOM_MNGT_HEADER         A
                 INNER  JOIN  PG_VP_VENDOR_POOL_ITEM_DTL  B
