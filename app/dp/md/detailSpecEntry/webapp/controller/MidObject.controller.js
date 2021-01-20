@@ -196,10 +196,24 @@ sap.ui.define([
 
          onSuppValueHelpRequested: function(oEvent){
 
-            var sCompanyCode  = this.getModel('master').getProperty('/company_code')
-            var sPlantCode = this.getModel('master').getProperty('/org_code')
+            var oInput = oEvent.getSource();
+            var companyCode  = this.getModel('master').getProperty('/company_code');
+            var orgCode = this.getModel('master').getProperty('/org_code');
+
+            var param = {
+                'oThis':this,
+                'oEvent':oEvent,
+                'companyCode':companyCode,
+                'orgCode':orgCode,
+                'isMulti':false
+            }
             
-            this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
+            this.supplierSelection.showSupplierSelection(param, function(tokens){
+
+                var suppCode = tokens[0].getKey();
+                oInput.setValue(tokens[0].getKey());
+                oInput.setDescription( tokens[0].getText().replace(' ('+suppCode+')', '') );
+            });
         },
 
 		/* =========================================================== */
