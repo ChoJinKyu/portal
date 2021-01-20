@@ -124,12 +124,16 @@ sap.ui.define([
                     new Filter("company_code"   , FilterOperator.EQ, oArgs.company_code),
                     new Filter("pr_number"      , FilterOperator.EQ, oArgs.pr_number)
                 ];           
+            
+            var sExpand  = "dtls,tplm";
 
             var oServiceModel = this.getModel();
                 oServiceModel.read("/Pr_MstView",{
                     filters : aFilters,
+                    //urlParameters : { "$expand" : sExpand },                    
                     success : function(data){
-                        //oDetailModel.setProperty(data.results[0], "detailModel"); 
+                        //debugger;
+                        //oDetailModel.setData( data.results[0]);
                         oDetailModel.setProperty("/mst" , data.results[0]);    
                         oDetailModel.setProperty("/pr_number", oArgs.pr_number);                       
                         oDetailModel.setProperty("/company_code", oArgs.company_code);
