@@ -36,5 +36,4 @@ entity Tc_Gt_Pjt_Addition_Info {
     addition_type_code   : String(30)  @title : '추가유형코드';
     period_code          : String(30)  @title : '기간코드';
     addition_type_value  : String(10)  @title : '추가유형값';
-
 }

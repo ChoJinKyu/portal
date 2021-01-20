@@ -1,7 +1,8 @@
 namespace dp;
 
+
 @path : '/dp.ProjectMgtV4Service'
-service ProjectMgtV4Service {
+service ProjectMgtV4Service_test {
 
     type TcProjectType : {
         tenant_id               : String(5);

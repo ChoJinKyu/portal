@@ -17,7 +17,8 @@ sap.ui.define([
   "sap/m/Input",
   "sap/m/ComboBox",
   "sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+  "ext/lib/util/Multilingual",
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Multilingual) {
     
     "use strict";
 
@@ -55,6 +56,9 @@ sap.ui.define([
       });
       this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
       this.setModel(oViewModel, "midObjectView");
+
+        var oMultilingual = new Multilingual();
+      this.setModel(oMultilingual.getModel(), "I18N");
 
       this.setModel(new ManagedModel(), "master");
       this.setModel(new ManagedListModel(), "details");
@@ -230,9 +234,9 @@ sap.ui.define([
       }
 
       this._onMasterDataChanged();
-
-      MessageBox.confirm("Are you sure ?", {
-        title: "Comfirmation",
+      //this.getModel("I18N").getText("/NCM00001")
+      MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+        title: this.getModel("I18N").getText("/SAVE"),
         initialFocus: sap.m.MessageBox.Action.CANCEL,
         onClose: function (sButton) {
           if (sButton === MessageBox.Action.OK) {
@@ -242,7 +246,7 @@ sap.ui.define([
                 that._toShowMode();
                 view.setBusy(false);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                MessageToast.show("Success to save.");
+                sap.m.MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
               }
             });
           };
@@ -395,23 +399,25 @@ sap.ui.define([
       this.byId("page").setSelectedSection("pageSectionMain");
       this.byId("page").setProperty("showFooter", !FALSE);
       this.byId("pageEditButton").setEnabled(FALSE);
-      this.byId("pageDeleteButton").setEnabled(FALSE);
-      this.byId("pageNavBackButton").setEnabled(FALSE);
+      this.byId("pageDeleteButton").setEnabled(!FALSE);
+      this.byId("pageCancButton").setEnabled(!FALSE);
+      this.byId("pageSaveButton").setEnabled(!FALSE);
 
       this.byId("midTableAddButton").setEnabled(!FALSE);
       this.byId("midTableDeleteButton").setEnabled(!FALSE);
 
       //this._bindMidTable(this.oEditableTemplate, "Edit");
     },
-
+ 
     _toShowMode: function () {
       var TRUE = true;
       this._showFormFragment('MidObject_Show');
       this.byId("page").setSelectedSection("pageSectionMain");
-      this.byId("page").setProperty("showFooter", !TRUE);
+      this.byId("page").setProperty("showFooter", TRUE);
       this.byId("pageEditButton").setEnabled(TRUE);
       this.byId("pageDeleteButton").setEnabled(TRUE);
-      this.byId("pageNavBackButton").setEnabled(TRUE);
+      this.byId("pageCancButton").setEnabled(!TRUE);
+      this.byId("pageSaveButton").setEnabled(!TRUE);
 
       this.byId("midTableAddButton").setEnabled(!TRUE);
       this.byId("midTableDeleteButton").setEnabled(!TRUE);
@@ -431,7 +437,7 @@ sap.ui.define([
           new ComboBox({
             selectedKey: "{details>role_group_code}",
             items: {
-              path: 'roleGroup>/RoleGroupMgr',
+              path: 'roleGroup>/RoleGroupMgt',
               filters: [
               ],
               template: new Item({
@@ -495,6 +501,7 @@ sap.ui.define([
             this.getModel("org");
             var combo = this.byId("searchOrgCombo");
             combo.bindItems({
+                selectedKey: 'LGCKR',
                 path: 'org>/Org_Company',
                 filters: [
                     new Filter('tenant_id', FilterOperator.EQ, oEvent.getSource().getSelectedKey())
@@ -509,7 +516,7 @@ sap.ui.define([
             this.getModel("roleGroup");
             var combo = this.byId("roleGroupCombo");
             combo.bindItems({
-                path: 'roleGroup>/RoleGroupMgr',
+                path: 'roleGroup>/RoleGroupMgt',
                 filters: [
                     new Filter('role_group_code', FilterOperator.NE, oEvent.getSource().getSelectedKey())
                 ],

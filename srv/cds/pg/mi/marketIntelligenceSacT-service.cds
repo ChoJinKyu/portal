@@ -1,6 +1,9 @@
 //Table
 //View
 using {pg as MiBom} from '../../../../db/cds/pg/mi/PG_MI_SAC_MI_BOM_MAPPING_VIEW-model';    //시황BOM Mapping
+using {pg as MatBom} from '../../../../db/cds/pg/mi/PG_MI_SAC_MAT_BOM_MAPPING_VIEW-model';  //자재-시황자재 Mapping
+using {pg as MiPrice} from '../../../../db/cds/pg/mi/PG_MI_SAC_LATEST_MI_PRICE_VIEW-model'; //시황자재별 최근 시황금액
+using {pg as ReqmQty} from '../../../../db/cds/pg/mi/PG_MI_SAC_REQM_QUANTITY_VIEW-model';   //자재별 시황자재 소요량
 using {pg as ExchRate} from '../../../../db/cds/pg/mi/PG_MI_SAC_EXCH_RATE_VIEW-model';      //환율
 
 namespace pg;
@@ -10,7 +13,10 @@ service marketIntelligenceSacTService {
 
     // Entity List
     // View List
-    view MiSacMiBomMappingView @(title : '시황BOM Mapping View') as select from MiBom.Mi_Sac_Mi_Bom_Mapping_View;       //시황BOM Mapping
-    view MiSacExchRateView @(title : '환율 View') as select from ExchRate.Mi_Sac_Exch_Rate_View;                        //환율
+    view MiSacMiBomMappingView @(title : '시황BOM Mapping View') as select from MiBom.Mi_Sac_Mi_Bom_Mapping_View;             //시황BOM Mapping
+    view MiSacMatBomMappingView @(title : '자재-시황자재 Mapping View') as select from MatBom.Mi_Sac_Mat_Bom_Mapping_View;     //자재-시황자재 Mapping
+    view MiSacLatestMiPriceView @(title : '시황자재별 최근 시황금액 View') as select from MiPrice.Mi_Sac_Latest_Mi_Price_View;  //시황자재별 최근 시황금액
+    view MiSacReqmQuantityView @(title : '자재별 시황자재 소요량 View') as select from ReqmQty.Mi_Sac_Reqm_Quantity_View;       //자재별 시황자재 소요량
+    view MiSacExchRateView @(title : '환율 View') as select from ExchRate.Mi_Sac_Exch_Rate_View;                               //환율
 
 }

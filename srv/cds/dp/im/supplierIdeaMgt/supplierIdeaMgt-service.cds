@@ -62,7 +62,7 @@ service SupplierIdeaMgtService {
              from BizUnit.Org_Unit out 
              where out.tenant_id = idea.tenant_id
              and out.bizunit_code = idea.bizunit_code
-             ) as bizunit_ame : String(240) ,
+             ) as bizunit_name : String(240) ,
             idea.idea_product_group_code,
             (select cd.code_name 
              from Code.Code_View cd
