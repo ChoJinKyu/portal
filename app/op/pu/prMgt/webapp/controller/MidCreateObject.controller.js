@@ -67,6 +67,10 @@ sap.ui.define([
 
             this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
             this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
+
+            // 텍스트 에디터
+            this._fnSetRichEditor();
+
             
             
             //this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
@@ -88,10 +92,7 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) { 
             var oArgs = oEvent.getParameter("arguments");
-            
-            // 텍스트 에디터
-            this._fnSetRichEditor();
-
+                        
             if(oArgs.tenantId && oArgs.tenantId !== ""){
                 this.tenantId = oArgs.tenantId;
             }else{
@@ -230,17 +231,58 @@ sap.ui.define([
                             oPrMstData.pr_type_name =  oPrTemplateData.pr_type_name;
                             oPrMstData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
                             oPrMstData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
+                            oPrMstData.pr_template_numbers = oPrTemplateData.pr_template_numbers;
                             oViewModel.setProperty("/PrMst",oPrMstData);
                             return true;
                         }
+                        console.log("pr_template_number : " + oPrMstData.pr_template_number);
+                    });
+
+                    that._fnReadPrTemplateDetail();
+
+                },
+                error: function (oErrorData) {
+                }
+            });
+        },
+
+        /**
+         * 템플릿상세정보 조회
+         */
+        _fnReadPrTemplateDetail: function(){
+            var that = this,
+                oView = this.getView(),
+                oServiceModel = this.getModel(),
+                oContModel = this.getModel('contModel'),
+                oViewModel = this.getModel('viewModel');
+            var oPrMstData = oViewModel.getProperty("/PrMst");  
+                        
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oPrMstData.tenant_id));
+
+            // 조회 대상 PR 템플릿번호
+            var aPrTemplateNumber=[];   
+            if(oPrMstData.pr_template_numbers && oPrMstData.pr_template_numbers != ""){
+                aPrTemplateNumber = oPrMstData.pr_template_numbers.split(",");
+            }
+            if(aPrTemplateNumber.length > 0){
+                aPrTemplateNumber.forEach(function(item, idx){
+                    aFilters.push(new Filter("pr_template_number", FilterOperator.EQ, item));
+                });          
+            }
+
+            oServiceModel.read("/Pr_TDtl", {
+                filters: aFilters,
+                success: function (oData) {
+                    // PR 템플릿 상세 정보
+                    oData.results.forEach(function(oPrTempDtlData){                        
+                        console.log("oPrTempDtlData : " + oPrTempDtlData);
                     });
                 },
                 error: function (oErrorData) {
                 }
             });
-
         },
-
 
         /**
          * 신규 생성 시 초기 데이터 세팅  
@@ -285,6 +327,9 @@ sap.ui.define([
             // 템플릿 리스트 조회
             this._fnGetPrTemplateList();
 
+            // 템플릿번호 리스트 조회
+            //this._fnGetPrTemplateNumbers();
+
             // 항목 Visible setting
             this._fnSetVisible();
         },
@@ -317,8 +362,13 @@ sap.ui.define([
 
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
+
+                        // 템플릿번호 리스트 조회
+                        //that._fnGetPrTemplateNumbers();
+
                         // 항목 Visible setting
                         that._fnSetVisible();
+
                         // 화면 Edit Mode setting
                         that._fnSetEditMode();
                     }
@@ -646,6 +696,7 @@ sap.ui.define([
             // Call ajax
             that._fnCallAjax(
                 sendData,
+                "op.PrCreateV4Service",
                 "SavePrCreateProc",
                 function(result){
                     oView.setBusy(false);
@@ -659,9 +710,9 @@ sap.ui.define([
         /**
          * Ajax 호출 함수
          */
-        _fnCallAjax: function (sendData, targetName , callback) {            
+        _fnCallAjax: function (sendData, serviceName, targetName , callback) {            
             var that = this;            
-            var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/op.PrCreateV4Service/" + targetName;
+            var url = "/op/pu/prMgt/webapp/srv-api/odata/v4/" + serviceName + "/" + targetName;
 
             $.ajax({
                 url: url,
