@@ -18,7 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "company_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "company_name" }
             }
@@ -81,7 +81,7 @@ sap.ui.define([
                     template: new Text({text: "{language_code}"})
                 }),
                 new Column({
-                    width: "10%",
+                    width: "12%",
                     hAlign: "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/AFFILIATE_CODE")}),
                     template: new Text({text: "{affiliate_code}"})
