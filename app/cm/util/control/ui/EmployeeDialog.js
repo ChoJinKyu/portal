@@ -18,7 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "employee_number" },
                 textField: { type: "string", group: "Misc", defaultValue: "user_local_name" }
             }
@@ -27,24 +27,22 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oSearchKeyword = new Input({ placeholder: "Keyword"});
-            this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
-
-            this.oDepartment = new Input({ placeholder: "Department Name or No."});
-            this.oDepartment.attachEvent("change", this.loadData.bind(this));
+            this.oEmployee = new Input({ placeholder: "EMPLOYEE Name."});
+            this.oSearchKeyword.setPlaceholder("EMPLOYEE Number.");
+            this.oEmployee.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE")}),
+                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE_NUMBER")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT")}),
-                        this.oDepartment
+                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE_NAME")}),
+                        this.oEmployee
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
@@ -54,67 +52,64 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
-                    label: new Label({text: "Name"}),
-                    template: new Text({text: "{"+this.getProperty("textField")+"}"})
-                }),
-                new Column({
-                    label: new Label({text: "e-Mail"}),
-                    template: new Text({text: "{email_id}"})
-                }),
-                new Column({
-                    width: "50%",
-                    label: new Label({text: "Department"}),
-                    template: new Text({text: "{department_local_name}"})
-                }),
-                new Column({
-                    width: "10%",
+                    width: "13%",
                     hAlign: "Center",
-                    label: new Label({text: "Employee No."}),
+                    label: new Label({text: this.getModel("I18N").getText("/EMPLOYEE_NUMBER")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 }),
                 new Column({
                     width: "10%",
-                    hAlign: "Center",
-                    label: new Label({text: "Job Title"}),
-                    template: new Text({text: "{job_title}"})
+                    label: new Label({text: this.getModel("I18N").getText("/EMPLOYEE_NAME")}),
+                    template: new Text({text: "{"+this.getProperty("textField")+"}"})
+                }),
+                new Column({
+                    width: "45%",
+                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT")}),
+                    template: new Text({text: "{department_local_name}"})
+                }),
+                new Column({
+                    label: new Label({text: this.getModel("I18N").getText("/EMAIL")}),
+                    template: new Text({text: "{email_id}"})
                 })
             ];
         },
 
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                sDepartment = this.oDepartment.getValue(),
-                oParam = this.getServiceParameters(),
-                aFilters = oParam.filters || [],
-                aSorters = oParam.sorters || [];
+                sEmployee = this.oEmployee.getValue(),
+                aFilters = [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                ];
             if(sKeyword){
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
-                            new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                            new Filter(this.getProperty("keyField"), FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                            // new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
                         ],
                         and: false
                     })
                 );
             }
-            if(sDepartment){
+            if(sEmployee){
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("tolower(department_local_name)", FilterOperator.Contains, "'" + sDepartment.toLowerCase().replace("'","''") + "'"),
-                            new Filter("tolower(department_id)", FilterOperator.Contains, "'" + sDepartment.toLowerCase().replace("'","''") + "'")
+                            new Filter(this.getProperty("textField"), FilterOperator.Contains, "'" + sEmployee.toLowerCase().replace("'","''") + "'")
+                            // new Filter("tolower(department_id)", FilterOperator.Contains, "'" + sEmployee.toLowerCase().replace("'","''") + "'")
                         ],
                         and: false
                     })
                 );
             }
-            aSorters.push(new Sorter("user_local_name", true));
             ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
                 filters: aFilters,
-                sorters: aSorters,
+                sorters: [
+                    new Sorter("user_local_name", false)
+                ],
                 success: function(oData){
-                    this.oDialog.setData(oData.results, false);
+                    var aRecords = oData.results;
+                    this.oDialog.setData(aRecords, false);
                 }.bind(this)
             });
         }
