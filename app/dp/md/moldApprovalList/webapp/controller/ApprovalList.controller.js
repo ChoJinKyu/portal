@@ -202,7 +202,19 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
+            
+            var oTable = this.byId("mainTable");
+            // 모든 컬럼의 정보를 변수에 담음
+            var columns = oTable.getColumns();
+            // 체크박스 컬럼을 Perso Dialog에서 노출시키지 않기 위해 실제로 테이블에서 삭제함
+            oTable.removeColumn(this.byId("mainColumnChkBox"));
             this._oTPC.openDialog();
+            // 다이알로그 오픈이후 컬럼순서를 원복하기 위해 모든 컬럼 삭제후 다시 투입
+            oTable.removeAllColumns();
+            columns.forEach(function(item){
+                oTable.addColumn(item);
+            });
+
         },
 
 		/**
@@ -1130,9 +1142,6 @@ sap.ui.define([
         },
         
         _doInitTablePerso: function () {
-            var oTable = this.byId("mainTable");
-            console.log(oTable);
-            console.log(oTable.getColumns());      
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
@@ -1140,7 +1149,7 @@ sap.ui.define([
                 persoService: ApprovalListPersoService,
                 hasGrouping: true,
             }).activate();
-            
+
         }
         
     });
