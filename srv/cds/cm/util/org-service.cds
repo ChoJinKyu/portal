@@ -4,6 +4,7 @@ using {cm.Org_Purchasing as Org_Purchasing} from '../../../../db/cds/cm/CM_ORG_P
 using {cm.Org_Plant as Org_Plant} from '../../../../db/cds/cm/CM_ORG_PLANT-model';
 using {cm.Org_Division as Org_Division} from '../../../../db/cds/cm/CM_ORG_DIVISION-model';
 using {cm.Org_Unit as Org_Unit} from '../../../../db/cds/cm/CM_ORG_UNIT-model';
+using {cm.Pur_Operation_Org as Pur_Operation_Org} from '../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
 namespace cm.util;
 
@@ -21,5 +22,14 @@ service OrgService {
 
     @readonly
     entity Unit   as projection on Org_Unit;
+
+    @readonly
+    entity Purchasing   as projection on Org_Purchasing;
+
+    @readonly
+    entity Division   as projection on Org_Division;
+
+    @readonly
+    entity Pur_Operation as projection on Pur_Operation_Org;
 
 }

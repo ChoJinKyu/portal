@@ -19,8 +19,11 @@ PROCEDURE EP_PO_LOI_REQUEST_HD_SAVE_PROC (
                             , EP_ITEM_CODE NVARCHAR(50)
                             , ITEM_DESC NVARCHAR(200) 
                             , UNIT NVARCHAR(3)
+                            , REQUEST_NET_PRICE DECIMAL
                             , REQUEST_QUANTITY DECIMAL
                             , CURRENCY_CODE NVARCHAR(15)
+                            , SPEC_DESC NVARCHAR(1000)
+                            , DELIVERY_REQUEST_DATE NVARCHAR(50)
                             , REQUEST_AMOUNT DECIMAL
                             , SUPPLIER_CODE NVARCHAR(100)
                             , BUYER_EMPNO NVARCHAR(30)
@@ -48,8 +51,11 @@ PROCEDURE EP_PO_LOI_REQUEST_HD_SAVE_PROC (
                             , EP_ITEM_CODE NVARCHAR(50)
                             , ITEM_DESC NVARCHAR(200) 
                             , UNIT NVARCHAR(3)
+                            , REQUEST_NET_PRICE DECIMAL
                             , REQUEST_QUANTITY DECIMAL
                             , CURRENCY_CODE NVARCHAR(15)
+                            , SPEC_DESC NVARCHAR(1000)
+                            , DELIVERY_REQUEST_DATE NVARCHAR(50)
                             , REQUEST_AMOUNT DECIMAL
                             , SUPPLIER_CODE NVARCHAR(100)
                             , BUYER_EMPNO NVARCHAR(30)
@@ -172,8 +178,11 @@ BEGIN
                         ,ITEM.EP_ITEM_CODE
                         ,ITEM.ITEM_DESC
                         ,ITEM.UNIT
+                        ,ITEM.REQUEST_NET_PRICE
                         ,ITEM.REQUEST_QUANTITY
                         ,ITEM.CURRENCY_CODE
+                        ,ITEM.SPEC_DESC
+                        ,ITEM.DELIVERY_REQUEST_DATE
                         ,ITEM.REQUEST_AMOUNT
                         ,ITEM.SUPPLIER_CODE
                         ,ITEM.BUYER_EMPNO
@@ -196,8 +205,11 @@ BEGIN
            ,EP_ITEM_CODE                    = :O_D_TABLE.EP_ITEM_CODE
            ,ITEM_DESC                       = :O_D_TABLE.ITEM_DESC
            ,UNIT                            = :O_D_TABLE.UNIT
+           ,REQUEST_NET_PRICE               = :O_D_TABLE.REQUEST_NET_PRICE
            ,REQUEST_QUANTITY                = :O_D_TABLE.REQUEST_QUANTITY
            ,CURRENCY_CODE                   = :O_D_TABLE.CURRENCY_CODE
+           ,SPEC_DESC                       = :O_D_TABLE.SPEC_DESC
+           ,DELIVERY_REQUEST_DATE           = TO_DATE(:O_D_TABLE.DELIVERY_REQUEST_DATE)
            ,REQUEST_AMOUNT                  = :O_D_TABLE.REQUEST_AMOUNT
            ,BUYER_EMPNO                     = :O_D_TABLE.BUYER_EMPNO
            ,PURCHASING_DEPARTMENT_CODE      = :O_D_TABLE.PURCHASING_DEPARTMENT_CODE
@@ -219,8 +231,11 @@ BEGIN
             , EP_ITEM_CODE
             , ITEM_DESC
             , UNIT
+            , REQUEST_NET_PRICE
             , REQUEST_QUANTITY
             , CURRENCY_CODE
+            , SPEC_DESC
+            , DELIVERY_REQUEST_DATE
             , REQUEST_AMOUNT
             , BUYER_EMPNO
             , PURCHASING_DEPARTMENT_CODE
@@ -241,8 +256,11 @@ BEGIN
             , :O_D_TABLE.EP_ITEM_CODE
             , :O_D_TABLE.ITEM_DESC
             , :O_D_TABLE.UNIT
+            , :O_D_TABLE.REQUEST_NET_PRICE
             , :O_D_TABLE.REQUEST_QUANTITY
             , :O_D_TABLE.CURRENCY_CODE
+            , :O_D_TABLE.SPEC_DESC
+            , TO_DATE(:O_D_TABLE.DELIVERY_REQUEST_DATE)
             , :O_D_TABLE.REQUEST_AMOUNT
             , :O_D_TABLE.BUYER_EMPNO
             , :O_D_TABLE.PURCHASING_DEPARTMENT_CODE

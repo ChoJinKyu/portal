@@ -52,10 +52,8 @@ public class BasePriceArlValidationV4 {
      * @param context
      * @param basePriceArlMasters
      */
-    public void validationBasePriceArlMaster(DpViBasePriceArlProcContext context, Collection<BasePriceArlMstType> basePriceArlMasters, boolean isDebug) {
+    public void validationBasePriceArlMaster(EventContext context, Collection<BasePriceArlMstType> basePriceArlMasters, boolean isDebug) {
         log.info("## validationBasePriceArlMaster Method Started....");
-
-        String cmdString = context.getInputData().getCmd().toLowerCase();
 
         if (!basePriceArlMasters.isEmpty() && basePriceArlMasters.size() > 0){
             for (BasePriceArlMstType basePriceArlMst : basePriceArlMasters) {
@@ -78,18 +76,7 @@ public class BasePriceArlValidationV4 {
                     System.out.println("# --------------------------------------------------------------------------------------------");
                 }
 
-                validMandatory(basePriceArlMst.getTenantId(), context, this.getMessage("TENANT_ID", context));
-
-                if (cmdString.equals("upsert") || cmdString.equals("delete"))
-                    validMandatory(basePriceArlMst.getApprovalNumber(), context, this.getMessage("APPROVAL_NUMBER", context));
-
-                if (cmdString.equals("insert") || cmdString.equals("upsert")) {
-                    validMandatory(basePriceArlMst.getApprovalTitle(), context, this.getMessage("APPROVAL_TITLE", context));
-                    validMandatory(basePriceArlMst.getChainCode(), context, this.getMessage("CHAIN_CODE", context));
-                    validMandatory(basePriceArlMst.getApprovalTypeCode(), context, this.getMessage("APPROVAL_TYPE_CODE", context));
-                    validMandatory(basePriceArlMst.getApproveStatusCode(), context, this.getMessage("APPROVE_STATUS_CODE", context));
-                    validMandatory(basePriceArlMst.getRequestorEmpno(), context, this.getMessage("REQUESTOR_EMPNO", context));
-                }
+                validMandatory(basePriceArlMst.getApprovalTitle(), context, this.getMessage("APPROVAL_TITLE", context));
 
                 // 결재라인이 있으면
                 if (basePriceArlMst.getApprovers() == null) {
@@ -116,10 +103,8 @@ public class BasePriceArlValidationV4 {
      * @param context
      * @param basePriceArlApprovers
      */
-    public void validationBasePriceArlApprover(DpViBasePriceArlProcContext context, Collection<BasePriceArlApproverType> basePriceArlApprovers, boolean isDebug) {
+    public void validationBasePriceArlApprover(EventContext context, Collection<BasePriceArlApproverType> basePriceArlApprovers, boolean isDebug) {
         log.info("## validationBasePriceArlApprover Method Started....");
-
-        String cmdString = context.getInputData().getCmd().toLowerCase();
         
         if (!basePriceArlApprovers.isEmpty() && basePriceArlApprovers.size() > 0){
             for (BasePriceArlApproverType basePriceArlApprover : basePriceArlApprovers) {
@@ -154,11 +139,9 @@ public class BasePriceArlValidationV4 {
      * @param context
      * @param basePriceArlReferers
      */
-    public void validationBasePriceArlReferer(DpViBasePriceArlProcContext context, Collection<BasePriceArlRefererType> basePriceArlReferers, boolean isDebug) {
+    public void validationBasePriceArlReferer(EventContext context, Collection<BasePriceArlRefererType> basePriceArlReferers, boolean isDebug) {
         log.info("## validationBasePriceArlReferer Method Started....");
         
-        String cmdString = context.getInputData().getCmd().toLowerCase();
-
         if (!basePriceArlReferers.isEmpty() && basePriceArlReferers.size() > 0){
             for (BasePriceArlRefererType basePriceArlReferer : basePriceArlReferers) {
                 if (isDebug) {
@@ -189,10 +172,8 @@ public class BasePriceArlValidationV4 {
      * @param context
      * @param basePriceArlDetails
      */
-    public void validationBasePriceArlDetail(DpViBasePriceArlProcContext context, Collection<BasePriceArlDtlType> basePriceArlDetails, boolean isDebug) {
+    public void validationBasePriceArlDetail(EventContext context, Collection<BasePriceArlDtlType> basePriceArlDetails, boolean isDebug) {
         log.info("## validationBasePriceArlDetail Method Started....");
-
-        String cmdString = context.getInputData().getCmd().toLowerCase();
         
         if (!basePriceArlDetails.isEmpty() && basePriceArlDetails.size() > 0){
             for (BasePriceArlDtlType basePriceArlDetail : basePriceArlDetails) {
@@ -235,10 +216,8 @@ public class BasePriceArlValidationV4 {
      * @param context
      * @param basePriceArlPrices
      */
-    public void validationBasePriceArlPrice(DpViBasePriceArlProcContext context, Collection<BasePriceArlPriceType> basePriceArlPrices, boolean isDebug) {
+    public void validationBasePriceArlPrice(EventContext context, Collection<BasePriceArlPriceType> basePriceArlPrices, boolean isDebug) {
         log.info("## validationBasePriceArlPrice Method Started....");
-
-        String cmdString = context.getInputData().getCmd().toLowerCase();
  
         if (!basePriceArlPrices.isEmpty() && basePriceArlPrices.size() > 0){
             for (BasePriceArlPriceType basePriceArlPrice : basePriceArlPrices) {
