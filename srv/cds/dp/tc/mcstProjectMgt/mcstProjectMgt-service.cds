@@ -8,6 +8,7 @@ using {cm as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm as orgDiv} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
+using {dp as unitOfMeasure} from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 
 namespace dp;
 
@@ -47,6 +48,19 @@ service McstProjectMgtService {
 
     @readonly
     entity Org_Division            as projection on orgDiv.Org_Division;
+
+    @readonly
+    entity MM_UOM                as
+        select from unitOfMeasure.Mm_Unit_Of_Measure as d {
+            key tenant_id,
+            key uom_code,
+                uom_name,
+                uom_desc
+        }
+        where tenant_id = 'L2100'
+          and uom_class_code = 'AAAADL'
+          and uom_desc is not null
+          and disable_date is null;
 
 // type InputDataType {
 //     tenant_id    : String(5);

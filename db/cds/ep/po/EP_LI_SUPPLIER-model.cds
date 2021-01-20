@@ -15,7 +15,7 @@ entity Li_Supplier {
                                and item.loi_write_number = loi_write_number
                                and item.loi_item_number  = loi_item_number;
 
-    key supplier_code    : String(15) not null;
+    key supplier_code    : String(10) not null;
         vendor_pool_code : String(20);
         remark           : String(3000);
 }
