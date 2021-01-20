@@ -68,7 +68,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Mold Supplier"/>
-                <Text text="{master>/mold_mfger_code}"></Text>
+                <Text text="[{master>/mold_mfger_code}] {mstSpecView>/mold_mfger_name}"></Text>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -77,7 +77,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Order Supplier"/>
-                <Text text="{master>/supplier_code}"></Text>
+                <Text text="[{master>/supplier_code}] {mstSpecView>/supplier_name}"></Text>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -86,7 +86,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Production Supplier"/>
-                <Text text="{master>/production_supplier_code}"></Text>
+                <Text text="[{master>/production_supplier_code}] {mstSpecView>/production_supplier_name}"></Text>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />

@@ -11,14 +11,6 @@ sap.ui.define([
 ], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token, Filter, FilterOperator, Item) {
     "use strict";
 
-    // var oServiceModel = new ODataModel({
-    //     serviceUrl: "srv-api/odata/v2/dp.util.SupplierSelectionService/",
-    //     defaultBindingMode: "OneWay",
-    //     defaultCountMode: "Inline",
-    //     refreshAfterChange: false,
-    //     useBatch: true
-    // });
-
     var oInput, oSuppValueHelpDialog, gIsMulti, gCallback;
     
     var SupplierSelection = EventProvider.extend("dp.util.SupplierSelection", {
@@ -26,7 +18,7 @@ sap.ui.define([
         self: null,
 
         oServiceModel: new ODataModel({
-            serviceUrl: "srv-api/odata/v2/dp.util.SupplierSelectionService/",
+            serviceUrl: "srv-api/odata/v2/sp.supplierMasterService/",
             defaultBindingMode: "OneWay",
             defaultCountMode: "Inline",
             refreshAfterChange: false,
@@ -49,7 +41,14 @@ sap.ui.define([
             useBatch: true
         }),
 
-        showSupplierSelection: function(oThis, oEvent, sCompanyCode, sPlantCode, callback){
+        showSupplierSelection: function(oParam, callback){
+
+            var oThis = oParam.oThis;
+            var oEvent = oParam.oEvent;
+            var companyCode = oParam.companyCode;
+            var orgCode = oParam.orgCode;
+            gIsMulti =  oParam.isMulti;
+            gCallback = callback;
 
             oThis.getView().setModel(this.oServiceModel, 'supplierModel');
             oThis.getView().setModel(this.oDSEServiceModel, 'dseModel');
@@ -57,14 +56,7 @@ sap.ui.define([
             
             self = this;
             oInput = oEvent.getSource();
-            gCallback = callback;
-
-            if(oInput.getMetadata().getName().indexOf('MultiInput') > -1 || callback){
-                gIsMulti = true;
-            }else{
-                gIsMulti = false;
-            }
-
+            
             oSuppValueHelpDialog = sap.ui.xmlfragment("dp.md.util.view.SupplierSelection", oThis);
 
             oSuppValueHelpDialog.setSupportMultiselect(gIsMulti);
@@ -82,17 +74,6 @@ sap.ui.define([
             // oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
             oFilterBar.attachSearch(this.onFilterBarSuppSearch);
-
-            if (oInput.getMetadata().getName().indexOf('Input') > -1) {
-                oInput.bindAggregation("suggestionItems", {
-                    path: "supplierModel>/Suppliers",
-                    template: new sap.ui.core.Item({
-                        key: "{supplierModel>supplier_code}",
-                        // text: "[{supplierModel>supplier_code}] {supplierModel>supplier_local_name}",
-                        text: "{supplierModel>supplier_code}"
-                    })
-                });
-            }
 
             var oColModel = new JSONModel({
                 "cols": [
@@ -116,16 +97,16 @@ sap.ui.define([
             oThis.getView().addDependent(oSuppValueHelpDialog);
 
             oSuppValueHelpDialog.getTableAsync().then(function (oTable) {
-                
+
                 oTable.setModel(this.oServiceModel);
                 oTable.setModel(oColModel, "columns");
 
                 if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", '/Suppliers');
+                    oTable.bindAggregation("rows", '/supplierMaster');
                 }
 
                 if (oTable.bindItems) {
-                    oTable.bindAggregation("items", '/Suppliers', function () {
+                    oTable.bindAggregation("items", '/supplierMaster', function () {
                         return new ColumnListItem({
                             cells: aCols.map(function (column) {
                                 return new Label({ text: "{" + column.template + "}" });
@@ -142,7 +123,7 @@ sap.ui.define([
             oSuppValueHelpDialog.open();
             
             //company, plant 값을 세팅해야한다..
-            this.setCompPlantVal(oThis, sCompanyCode, sPlantCode);
+            this.setCompOrgVal(oThis, companyCode, orgCode);
         },
 
         setChosenSupplier: function(oSuppValueHelpDialog, oInput){
@@ -161,17 +142,17 @@ sap.ui.define([
 
         },
 
-        setCompPlantVal: function(oThis, companyCodes, plantCodes){
+        setCompOrgVal: function(oThis, companyCodes, orgCodes){
 
             if(typeof companyCodes == 'string'){
                 companyCodes = [].concat([companyCodes]);
             }
 
             sap.ui.getCore().byId("supplierCompany").setSelectedKeys(companyCodes);
-            this.setPlant(companyCodes, plantCodes);
+            this.setOrg(companyCodes, orgCodes);
         },
 
-        setPlant: function(companyCodes, plantCodes){
+        setOrg: function(companyCodes, orgCodes){
 
             var companyFilters = [];
             companyCodes.forEach(function(item){
@@ -201,29 +182,16 @@ sap.ui.define([
                 }
             )
 
-            if(typeof plantCodes == 'string'){
-                plantCodes = [].concat([plantCodes]);
+            if(typeof orgCodes == 'string'){
+                orgCodes = [].concat([orgCodes]);
             }
 
-            sap.ui.getCore().byId("supplierPlant").setSelectedKeys(plantCodes);
+            sap.ui.getCore().byId("supplierPlant").setSelectedKeys(orgCodes);
         },
 
         onValueHelpSuppOkPress: function (oEvent) {
-
-            var aTokens = oEvent.getParameter("tokens");
-
-            if(gCallback && typeof gCallback == 'function'){
-                gCallback(aTokens.map(function(item){
-                    return item.mProperties;
-                }));
-            }else{
-                if(gIsMulti){
-                    oInput.setTokens(aTokens);
-                }else{
-                    oInput.setSelectedKey(aTokens[0].getKey());
-                }
-            }
-
+            var tokens = oEvent.getParameter("tokens");
+            gCallback(tokens);
             oSuppValueHelpDialog.close();
         },
         

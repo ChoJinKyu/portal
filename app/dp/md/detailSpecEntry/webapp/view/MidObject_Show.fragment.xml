@@ -65,13 +65,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Mold Supplier"/>
-                <Input  
-                        value="{master>/mold_mfger_code}" 
-                        showValueHelp="true"
-                        valueHelpOnly="true"
-                        valueHelpRequest=".onSuppValueHelpRequested"
-                        editable="false" class="readonlyField"
-                />
+                <Text text="[{master>/mold_mfger_code}] {mstSpecView>/mold_mfger_name}"></Text>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -80,7 +74,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Order Supplier"/>
-                <Text text="{master>/supplier_code}"></Text>
+                <Text text="[{master>/supplier_code}] {mstSpecView>/supplier_name}"></Text>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -89,13 +83,7 @@
 
             <VBox height="3.5rem">
                 <Label text="Production Supplier"/>
-                <Input 
-                        value="{master>/production_supplier_code}" 
-                        showValueHelp="true"
-                        valueHelpOnly="true"
-                        valueHelpRequest=".onSuppValueHelpRequested"
-                        editable="false" class="readonlyField"
-                />
+                <Text text="[{master>/production_supplier_code}] {mstSpecView>/production_supplier_name}"></Text>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />

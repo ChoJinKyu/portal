@@ -352,16 +352,34 @@ sap.ui.define([
 
             var companyCodes, plantCodes;
             var row = oEvent.getSource().getParent();
+            
             if(row && row.sParentAggregationName == 'rows'){
+                //table 의 supplier
                 companyCodes = row.getCells()[0].getText();
                 plantCodes = row.getCells()[1].getText();
             }else{
+                //조회 조건의 supplier
                 var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
                 companyCodes = this.getView().byId("searchCompany"+sSurffix).getSelectedKeys();
                 plantCodes = this.getView().byId("searchDivision"+sSurffix).getSelectedKeys();
             }
 
-            this.supplierSelection.showSupplierSelection(this, oEvent, companyCodes, plantCodes);
+            var oInput = oEvent.getSource();
+
+            var param = {
+                'oThis':this,
+                'oEvent':oEvent,
+                'companyCode':companyCodes,
+                'orgCode':plantCodes,
+                'isMulti':false
+            }
+            
+            this.supplierSelection.showSupplierSelection(param, function(tokens){
+
+                // var suppCode = tokens[0].getKey();
+                oInput.setValue(tokens[0].getKey());
+                // oInput.setDescription( tokens[0].getText().replace(' ('+suppCode+')', '') );
+            });
         },
 
         onTestSuppBtnPress: function(oEvent){
