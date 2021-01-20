@@ -5,7 +5,8 @@ using {op.Pu_Pr_Mst_View as prMstView} from '../../../../../db/cds/op/pu/pr/OP_P
 using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
 using {op.Pu_Pr_Template_Mst as prTMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MST-model';
 using {op.Pu_Pr_Template_Map as prTMap} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
-using {op.Pu_Pr_Template_Lng as prTLng} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
+using {op.Pu_Pr_Template_Lng as prTLng}         from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
+using {op.Pu_Pr_Template_Numbers_Func as prTNums}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_NUMBERS_FUNC-model';
 using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
@@ -152,6 +153,10 @@ service PrMgtService {
                         and prTLng.language_code   = 'KO'
                         and map.pr_template_number = prTLng.pr_template_number
                 ) as pr_template_name : String(30)
+                 ,
+
+                OP_PU_PR_TEMPLATE_NUMBERS_FUNC( map.tenant_id, map.pr_template_number ) as  pr_template_numbers1: String(1000)
+
 
         from prTMap as map;
 }
