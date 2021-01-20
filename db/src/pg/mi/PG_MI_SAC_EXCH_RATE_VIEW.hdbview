@@ -3,8 +3,9 @@ VIEW PG_MI_SAC_EXCH_RATE_VIEW AS
 		     A.TENANT_ID
 		    ,A.SOURCE_CURRENCY_CODE
 		    ,A.TARGET_CURRENCY_CODE
-		    ,TO_CHAR(A.EXRATE_START_DATE,  'YYYYMM')  AS  "DATE"
-		    ,AVG(A.EXCHANGE_RATE)                     AS  MI_MEASURE
+            ,TO_CHAR(A.EXRATE_START_DATE,  'YYYYMM')  AS  "DATE"
+            ,'PG0102_00050'                           AS  MI_MEASURE
+		    ,AVG(A.EXCHANGE_RATE)                     AS  "VALUE"
     FROM	 PG_IT_MST_EXCH_RATE      A
 		    INNER  JOIN  CM_CODE_DTL  B
 		        ON  A.TENANT_ID         =  B.TENANT_ID
