@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/op.pu.prMgtService/",
+        "uri": "srv-api/odata/v2/op.prReviewMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
