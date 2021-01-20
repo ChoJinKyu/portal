@@ -854,9 +854,9 @@ sap.ui.define([
 
         familyFlagChange: function (oEvent) {
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
-            var sSelectedKey = oEvent.getSource().getSelectedKey();
-            console.log(sSelectedKey);
-            if (sSelectedKey === 'Y') {
+            
+            var sSelectedKey = this.getModel("list").getProperty(oEvent.getSource().getBindingInfo("selectedKey").binding.getContext().getPath()).family_flag;
+            if (sSelectedKey === 'N') {
                 oEvent.getSource().getParent().getCells()[25].setValue(null);
                 oEvent.getSource().getParent().getCells()[26].setValue(null);
                 oEvent.getSource().getParent().getCells()[27].setValue(null);

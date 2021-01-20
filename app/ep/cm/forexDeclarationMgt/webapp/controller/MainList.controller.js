@@ -476,6 +476,10 @@ sap.ui.define([
             this.byId("dialogForex").destroy();
         },
 
+        dialogChartAfterclose: function() {
+            this.byId("dialogForexChart").destroy();
+        },
+
 
         /**
 		 * Event handler for saving page changes

@@ -246,46 +246,6 @@ sap.ui.define([
                 }
             }
 
-            var requireFlag = false;
-            detail.getData()["LOIRequestDetailView"].map(r => {
-                console.log(" plant_code:_state_::: " + r["plant_code"]);
-                //if (r["plant_code"] == '') {
-                if (r["plant_code"] === '' || r["plant_code"] == null || r["plant_code"] === undefined) {
-                    MessageBox.alert("플랜트는 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                if (r["item_desc"] === '' || r["item_desc"] == null || r["item_desc"] === undefined) {
-                    MessageBox.alert("품명은 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                if (r["unit"] === '' || r["unit"] == null || r["unit"] === undefined) {
-                    MessageBox.alert("단위는 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                if (r["request_quantity"] === '' || r["request_quantity"] == null || r["request_quantity"] === undefined) {
-                    MessageBox.alert("수량은 필수값입니다.");
-                    requireFlag = true;
-                    return;
-                }
-
-                // if (r["buyer_empno"] === '' || r["buyer_empno"] == null || r["buyer_empno"] === undefined) {
-                //     MessageBox.alert("구매담당자는 필수값입니다.");
-                //     requireFlag = true;
-                //     return;
-                // }
-
-            })
-
-            if(requireFlag){
-                return;
-            }
-
             var input = {
                 inputData: {
                     savedHeaders: [],
@@ -374,9 +334,12 @@ sap.ui.define([
                         ep_item_code: r["ep_item_code"],
                         item_desc: r["item_desc"],
                         unit: r["unit"],
-                        request_quantity: r["request_quantity"],
+                        request_net_price:String( r["request_net_price"]).replace(",",""),
+                        request_quantity: String(r["request_quantity"]).replace(",",""),
                         currency_code: r["currency_code"],
-                        request_amount: r["request_amount"],
+                        spec_desc: r["spec_desc"],
+                        delivery_request_date: that.getFormatDate(r["delivery_request_date"]),
+                        request_amount: String(r["request_amount"]).replace(",",""),
                         supplier_code: r["supplier_code"],
                         buyer_empno: r["buyer_empno"],
                         purchasing_department_code: "50008948",
@@ -422,6 +385,7 @@ sap.ui.define([
 
 
             if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if (this.validator.validate(this.byId("midTable")) !== true) return;
 
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";
 
@@ -1086,14 +1050,7 @@ sap.ui.define([
                 oPageSubSection.addBlock(oFragment);
             })
         },
-        _showFormFragment2: function (sFragmentName) {
-            console.log(" _showFormFragment2 --->")
-            var oPageSubSection = this.byId("pageSubSection2");
-            this._loadFragment2(sFragmentName, function (oFragment) {
-                oPageSubSection.removeAllBlocks();
-                oPageSubSection.addBlock(oFragment);
-            })
-        },
+
         _loadFragment: function (sFragmentName, oHandler) {
             if (!this._oFragments[sFragmentName]) {
                 Fragment.load({
@@ -1113,23 +1070,62 @@ sap.ui.define([
             }
         },
 
-        _loadFragment2: function (sFragmentName, oHandler) {
-            if (!this._oFragments[sFragmentName]) {
-                Fragment.load({
-                    id: this.getView().getId(),
-                    name: "ep.po.loiRequestMgt.view." + sFragmentName,
-                    controller: this
-                }).then(function (oFragment) {
-                    this._oFragments[sFragmentName] = oFragment;
-                    if (oHandler) oHandler(oFragment);
-                    this.byId("page").setSelectedSection("pageSectionDetail");
-                    this.byId("pageSectionDetail").setSelectedSubSection("pageSubSection2");
-                }.bind(this));
-            } else {
-                if (oHandler) oHandler(this._oFragments[sFragmentName]);
-                this.byId("page").setSelectedSection("pageSectionDetail");
-                this.byId("pageSectionDetail").setSelectedSubSection("pageSubSection2");
+         onLiveChange: function(oEvent){
+            
+            console.log("onLiveChange -->" , oEvent);
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+                val = val.replace(/[^\d]/g, '');
+            //_oInput.setValue(val);
+
+            this.quantity_val = val;
+            console.log("this.quantity_val" , this.quantity_val);
+
+            var sum_val = 0;
+            if(this.quantity_val > 0 && this.price_val > 0){
+                sum_val = this.quantity_val * this.price_val;
             }
+
+            var sPath = oEvent.getSource().getBindingContext("details").getPath();
+            var index = sPath.substr(sPath.length-1);
+            console.log(" index obj ----------------->" , index); 
+
+            var oDetailsModel = this.getModel("details");
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_quantity", this.numberFormatter.toNumberString(val));
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_amount", this.numberFormatter.toNumberString(sum_val));
+
+        },
+
+        _onLiveChange: function(oEvent){
+            
+            console.log("_onLiveChange -->" , oEvent);
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+                val = val.replace(/[^\d]/g, '');
+            _oInput.setValue(val);
+
+            this.price_val = val;
+            console.log("this.price_val" , this.price_val);
+
+            var sum_val = 0;
+            if(this.quantity_val > 0 && this.price_val > 0){
+                sum_val = this.quantity_val * this.price_val;
+            }
+
+            var sPath = oEvent.getSource().getBindingContext("details").getPath();
+            var index = sPath.substr(sPath.length-1);
+            console.log(" index obj ----------------->" , index); 
+
+            var oDetailsModel = this.getModel("details");
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_net_price", this.numberFormatter.toNumberString(val));
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_amount", this.numberFormatter.toNumberString(sum_val));
+
+        },
+
+        onInputChange: function(oEvent){
+            console.log("onInputChange --> " , oEvent);
+            // if(this.isValNull(oEvent.mParameters.newValue))
+                
         },
 
         formattericon: function (sState) {
@@ -1149,7 +1145,14 @@ sap.ui.define([
          
 
         onInputWithEmployeeValuePress: function(oEvent){
-            console.log(" empl ----------------->", oEvent); 
+            console.log(" empl abc----------------->", oEvent); 
+
+            var sPath = oEvent.getSource().getBindingContext("details").getPath(),
+            oRecord = this.getModel("details").getProperty(sPath);
+            var index = sPath.substr(sPath.length-1);
+
+            console.log(" index obj ----------------->" , index); 
+            this.onInputWithEmployeeValuePress["row"] = index;
 
             this.byId("employeeDialog").open();
         },
@@ -1157,33 +1160,29 @@ sap.ui.define([
  
 
         onEmployeeDialogApplyPress: function(oEvent){
-            var that= this;
+
             this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
             var sDepNo = oEvent.getParameter("item").employee_number;
             var oDetailsModel = this.getModel("details");
-            console.log(" oDetailsModel ----------------->" , oDetailsModel); 
-           console.log(" sDepNo ----------------->" , sDepNo); 
-           console.log(" name ----------------->" , oEvent.getParameter("item").user_local_name); 
+            var rowIndex = this.onInputWithEmployeeValuePress["row"];
+            console.log("row ::: " ,this.onInputWithEmployeeValuePress["row"]);
 
-
-            //  var sPath = oEvent.getSource().getParent().getParent().getBindingContext("details").getPath(),
-            // oRecord = this.getModel("details").getProperty(sPath);
-
-            // var index = sPath.substr(sPath.length-1);
-
-           //console.log(" obj ----------------->" , obj); 
-
-           
-
-                // var oDetailsData = oDetailsModel.getData();
-				// oDetailsData.LOIRequestDetailView.forEach(function(oItem, nIndex){
-				// 	oDetailsModel.setProperty("/LOIRequestDetailView/"+0+"/buyer_empno", oEvent.getParameter("item").user_local_name);
-				// 	oDetailsModel.setProperty("/LOIRequestDetailView/"+nIndex+"/remark", "test");
-                // });  
-
-
-                oDetailsModel.setProperty("/LOIRequestDetailView/"+0+"/buyer_empno", oEvent.getParameter("item").user_local_name);
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/buyer_empno", oEvent.getParameter("item").user_local_name);
                
+        },
+
+        getFormatDate: function (date) {
+
+            if (!date) {
+                return '';
+            }
+
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         },
 
         _findFragmentControlId : function (fragmentID, controlID) {
