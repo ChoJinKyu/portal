@@ -209,7 +209,7 @@ sap.ui.define([
             });
 
             var appModel = this.getModel("appType");
-            appModel.setTransactionModel(this.getModel("util"));
+            appModel.setTransactionModel(this.getModel("dpMdUtil"));
             appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
                 filters: [],
                 success: function (oData) {
