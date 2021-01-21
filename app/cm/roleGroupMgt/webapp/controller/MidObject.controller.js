@@ -307,7 +307,8 @@ sap.ui.define([
 
         oDetailsModel.read("/RoleGroupMap", {
           filters: [
-            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId)
+            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+            new Filter("role_group_code", FilterOperator.EQ, this._sRoleGroupCode)
           ],
           success: function (oData) {
             console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);

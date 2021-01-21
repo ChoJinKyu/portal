@@ -4,6 +4,7 @@ sap.ui.define([
   "sap/ui/model/json/JSONModel",
   "ext/lib/model/ManagedListModel",
   "ext/lib/formatter/DateFormatter",
+  "ext/lib/util/Validator",
   "sap/m/TablePersoController",
   "./MainListPersoService",
   "sap/ui/model/Filter",
@@ -15,14 +16,16 @@ sap.ui.define([
   "sap/m/Text",
   "sap/m/Input",
   "sap/m/ComboBox",
-  "sap/ui/core/Item"
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter,
-    FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+  "sap/ui/core/Item",
+  "ext/lib/util/Multilingual",
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter,
+    FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Multilingual) {
   "use strict";
 
     return BaseController.extend("cm.roleMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+        validator: new Validator(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -34,29 +37,27 @@ sap.ui.define([
              */
         
         onInit: function () {
-            var oViewModel, oResourceBundle = this.getResourceBundle();
-
-            // Model used to manipulate control states
-            oViewModel = new JSONModel({
-                headerExpanded: true,
-                mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
-                tableNoDataText: oResourceBundle.getText("tableNoDataText")
-            });
-            this.setModel(oViewModel, "mainListView");
-
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
 
-            this.addHistoryEntry({
-                title: oResourceBundle.getText("/ROLE_MANAGEMENT"),
-                icon: "sap-icon://table-view",
-                intent: "#Template-display"
-            }, true);
-        
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/ROLE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+            }.bind(this));
+
+            this.setModel(new ManagedListModel(), "mainListView");
+            this.getModel("mainListView").setProperty("/headerExpanded", true);
+
+            this._doInitTablePerso();
         },
 
         onRenderedFirst: function () {
-        //this.byId("pageSearchButton").firePress();
+            this.byId("searchTenantCombo").fireChange();
         },
 
         /* =========================================================== */
@@ -75,18 +76,18 @@ sap.ui.define([
         
         onMainTableUpdateFinished: function (oEvent) {
             // update the mainList's object counter after the table update
-            var sTitle,
-            oTable = oEvent.getSource(),
-            iTotalItems = oEvent.getParameter("total");
-            // only update the counter if the length is final and
-            // the table is not empty
-            if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-                sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-            } else {
-                sTitle = this.getResourceBundle().getText("mainListTableTitle");
-            }
+            // var sTitle,
+            // oTable = oEvent.getSource(),
+            // iTotalItems = oEvent.getParameter("total");
+            // // only update the counter if the length is final and
+            // // the table is not empty
+            // if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
+            //     sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
+            // } else {
+            //     sTitle = this.getResourceBundle().getText("mainListTableTitle");
+            // }
 
-            this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
+            // this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
             
         },
 
@@ -107,8 +108,8 @@ sap.ui.define([
              */
 
         onMainTablePersoRefresh: function () {
-            MainListPersoService.resetPersData();
-            this._oTPC.refresh();
+            // MainListPersoService.resetPersData();
+            // this._oTPC.refresh();
         },
 
             /**
@@ -141,6 +142,14 @@ sap.ui.define([
                 this.onRefresh();
             } else {
                 var aSearchFilters = this._getSearchStates();
+
+                if(this.byId("searchTenantCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchTenantCombo")) !== true) {
+                    sap.m.MessageToast.show("테넌트는 필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchTenantCombo"));
+                }
+
                 this._applySearch(aSearchFilters);
             }
         },
@@ -181,9 +190,9 @@ sap.ui.define([
              * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
              * @private
              */
-        _onRoutedThisPage: function () {
-            this.getModel("mainListView").setProperty("/headerExpanded", true);
-        },
+        // _onRoutedThisPage: function () {
+        //     this.getModel("mainListView").setProperty("/headerExpanded", true);
+        // },
 
             /**
              * Internal helper method to apply both filter and search state together on the list binding
@@ -214,6 +223,16 @@ sap.ui.define([
             if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
 
             return aSearchFilters;
+        },
+
+        _doInitTablePerso: function () {
+            // init and activate controller
+            this._oTPC = new TablePersoController({
+                table: this.byId("mainTable"),
+                componentName: "RoleMgt",
+                persoService: MainListPersoService,
+                hasGrouping: true
+            }).activate();
         }
 
     });

@@ -167,7 +167,7 @@
                         <!-- 성명 -->
                         <Text text="{I18N>/NAME}" />
                     </Column>
-                    <Column id="mainEngNameColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainEngNameColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 성명(영문) -->
                         <Text text="{I18N>/ENG_NAME}" />
                     </Column>
@@ -175,36 +175,36 @@
                         <!-- 이메일 -->
                         <Text text="{I18N>/EMAIL}" />
                     </Column>
-                    <Column id="mainSystemStartDtmColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainSystemStartDtmColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 시작일 -->
                         <Text text="{I18N>/START_DATE}" />
                     </Column>
-                    <Column id="mainSystemEndDtmColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainSystemEndDtmColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 종료일 -->
                         <Text text="{I18N>/END_DATE}" />
                     </Column>
-                    <Column id="mainOrgColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainOrgColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 회사 -->
                         <Text text="{I18N>/COMPANY}" />
                     </Column>
-                    <Column id="mainLanguageColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainLanguageColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 언어 -->
                         <Text text="{I18N>/LANGUAGE}" />
                     </Column>
-                    <Column id="mainTimeZoneColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainTimeZoneColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 타임존 -->
                         <!-- <Text text="{I18N>/TIMEZONE}" /> -->
                         <Text text="타임존" />
                     </Column>
-                    <Column id="mainDateFormatColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainDateFormatColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 날짜형식 -->
                         <Text text="{I18N>/DATE_FORMAT}" />
                     </Column>
-                    <Column id="mainNumberFormatColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainNumberFormatColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 숫자형식 -->
                         <Text text="{I18N>/NUMBER_FORMAT}" />
                     </Column>
-                    <Column id="mainCurrencyColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainCurrencyColumn" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 기본통화 -->
                         <Text text="{I18N>/CURRENCY}" />
                     </Column>
