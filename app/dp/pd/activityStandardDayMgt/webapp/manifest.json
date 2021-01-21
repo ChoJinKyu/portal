@@ -1,31 +1,26 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "pg.md.mdVpItemList",
+    "id": "dp.pd.activityStandardDayMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
     "applicationVersion": {
       "version": "1.0.0"
     },
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
+    "ach": "set-ach",
     "resources": "resources.json",
-    "ach": "ach",
-    "sourceTemplate": {
-      "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
-      "version": "1.40.12"
-    },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/pg.MdCategoryService/",
+        "uri": "srv-api/odata/v2/dp.activityStandardDayService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
+          "odataVersion": "2.0"
         }
       },
       "orgService": {
-        "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+        "uri": "srv-api/odata/v2/cm.util.OrgService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -38,23 +33,23 @@
           "odataVersion": "2.0"
         }
       },
-      "vpSearchService": {
-        "uri": "srv-api/odata/v2/pg.vendorPoolSearchService/",
+      "activityMappingV4Service": {
+        "uri": "srv-api/odata/v4/dp.ActivityMappingV4Service/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0"
+        "odataVersion": "4.0"
         }
       }
     }
   },
-  "sap.cloud": {
-    "public": true,
-    "service": "sppCap_ui_dev"
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
   },
   "sap.ui": {
     "technology": "UI5",
     "icons": {
-      "icon": "",
+      "icon": "sap-icon://task",
       "favIcon": "",
       "phone": "",
       "phone@2": "",
@@ -69,39 +64,31 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "pg.md.mdVpItemList.view.App",
+      "viewName": "dp.pd.activityStandardDayMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
     },
     "dependencies": {
-      "minUI5Version": "1.60.1",
+      "minUI5Version": "1.66.0",
       "libs": {
         "sap.ui.core": {},
         "sap.m": {},
-        "sap.ui.layout": {},
-        "sap.f": {},
-        "sap.uxap": {}
+        "sap.f": {}
       }
     },
     "contentDensities": {
       "compact": true,
       "cozy": true
     },
+    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "pg.md.mdVpItemList.i18n.i18n"
+          "bundleName": "dp.pd.activityStandardDayMgt.i18n.i18n"
         }
       },
-      "listModel": {
-            "type": "sap.ui.model.json.JSONModel",
-            "settings": {
-                "defaultBindingMode": "TwoWay"
-            }
-        },
-
       "util": {
         "dataSource": "commonUtilService",
         "preload": true,
@@ -121,41 +108,30 @@
           "refreshAfterChange": false,
           "useBatch": true
         }
-      },  
-      "category": {
-        "dataSource": "mainService",
-        "preload": true,
+      },
+      "activityMapping": {
+        "dataSource": "activityMappingV4Service",
+        "preload": false,
         "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      }, 
-      "vpSearch": {
-        "dataSource": "vpSearchService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
+            "synchronizationMode": "None",
+            "operationMode": "Server",
+            "autoExpandSelect": false
         }
       },
-      "tblModel": {
-                "type": "sap.ui.model.json.JSONModel",
-                "settings": {
-                    "defaultBindingMode": "TwoWay"
-                }
-        },
+      "contModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {
+            "defaultBindingMode": "TwoWay"
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
         }
       }
     },
@@ -167,35 +143,58 @@
       ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../../lib"
+      "ext.lib": "../../../../lib",
+      "dp.util": "../../../util"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "async": true,
-        "viewPath": "pg.md.mdVpItemList.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
+        "viewPath": "dp.pd.activityStandardDayMgt.view",
+        "controlId": "fcl",
+		"transition": "slide",
+        "bypassed": {
+          "target": [
+            "notFound"
+          ]
+        },
+        "async": true
       },
       "routes": [
-        {
-            "pattern": "",
-            "name": "mdVpItemList",
-            "target": [
-                "mdVpItemList"
-            ]
-        }
+          {
+              "pattern": ":layout:",
+              "name": "mainPage",
+              "target": [
+                  "mainObject"
+              ]
+          },
+          {
+              "pattern": "midObject/{layout}/{tenantId}/{uomCode}",
+              "name": "midPage",
+              "target": [
+                  "mainObject",
+                  "midObject"
+              ]
+          }
       ],
       "targets": {
-        "mdVpItemList": {
-          "viewId": "mdVpItemList",
-          "viewName": "mdVpItemList",
-          "viewLevel": 1,
-          "title": "{i18n>mainListViewTitle}"
-        }
+          "mainObject": {
+              "viewName": "MainList",
+              "controlAggregation": "beginColumnPages"
+          },
+          "midObject": {
+              "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "notFound": {
+            "viewName": "MidObjectNotFound",
+            "viewId": "notFound"
+          }
       }
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "sppCap_ui_dev"
   }
 }

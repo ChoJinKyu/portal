@@ -3,6 +3,7 @@ sap.ui.define([
 	"ext/lib/util/Multilingual",
 	"sap/ui/model/json/JSONModel",
     "ext/lib/model/TreeListModel",
+    "ext/lib/model/TransactionManager",
     'sap/ui/model/Sorter',
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -13,11 +14,13 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/MenuItem",
-    "sap/ui/core/util/MockServer"
+    "sap/ui/core/util/MockServer",
+	"./Utils"
 ],
-  function (BaseController, Multilingual, JSONModel, TreeListModel, Sorter, Filter, FilterOperator, ManagedListModel, TablePersoController, 
-    jQuery, Fragment, MessageBox, MessageToast, MenuItem, MockServer) {
+  function (BaseController, Multilingual, JSONModel, TreeListModel, TransactionManager, Sorter, Filter, FilterOperator, ManagedListModel, TablePersoController, 
+    jQuery, Fragment, MessageBox, MessageToast, MenuItem, MockServer, Utils) {
     "use strict";
+    var oTransactionManager;
 
     return BaseController.extend("pg.md.mdVpItemList.controller.mdVpItemList", {
 
@@ -30,7 +33,6 @@ sap.ui.define([
                 MdVpItemList : {}
             });
             this.getView().setModel(this.viewModel, "list");
-            
             
             // 개인화 - UI 테이블의 경우만 해당
             this._oTPC = new TablePersoController({
@@ -74,13 +76,47 @@ sap.ui.define([
         onMenuAction: function (oEvent){ 
             var oSelectedkey = oEvent.getParameters().item.getKey(); //"C001.."
             var category_combo = this.getView().byId("searchCategory"); 
-            debugger;             
-            //팝업열기      
+            //debugger;             
+            //팝업열기  
+            this.onOpenCategoryItemPage();    
         },
 
         onMainTableItemMappingButtonPress: function () {
             //List 선택후 클릭시 Mapping화면 (1-3) pop-up호출
             
+            var oView = this.getView(),
+                oTable = this.byId("treeTable"),         
+                that = this;
+
+            var items = oTable.getSelectedIndices();
+            if(items.length>1){
+                MessageToast.show("한 건만 선택해주세요.");
+                return;
+            }
+            var nSelIdx = oTable.getSelectedIndex();
+            var oContext = oTable.getContextByIndex(nSelIdx);
+            var sPath = oContext.getPath();
+            var oData = oTable.getBinding().getModel().getProperty(sPath);
+            var level = oData.level_path.trim().split(">");
+
+            if (!this.pDialog) {
+                this.pDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "pg.md.mdVpItemList.view.mdVpItemMapping",
+                    controller: this
+                }).then(function (oDialog) {
+                    // connect dialog to the root view of this component (models, lifecycle)
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }
+            this.pDialog.then(function (oDialog) {
+                oDialog.open();
+                that.onDialogMappingSearch(level[0].trim(),
+                                        level[1].trim(),
+                                        level[2].trim(),
+                                        oData.vendor_pool_code);
+            });
         },
 
         onSearch:function () {
@@ -175,45 +211,12 @@ sap.ui.define([
                             var index = "attrItemName"+j;
                             dataArr[i][index]= item.itemName; 
 
-                            //테이블에 넣는게 아니고 모델에 넣는 방향으로
-                            // this.getModel("list").setProperty("/MdVpItemList/"+i+"/"+index , item.itemName);
-                            // oTreeTable.getRows()[i].getCells()[2+j].setText(item.itemName);
                         }
                         
                     }
                 }
             }
 
-            //treeList-filter:Vendor Pool
-            // var filters = this.filters;
-            // // 검색조건 및 결과가 없는 경우 종료
-            // // if (filters.filter(function(f) { return f.sPath === 'keyword' }).length <= 0
-            // //     ||
-            // //     !oData || !(oData.value) || oData.value.length <= 0) {
-            // //     return this.convToJsonTree(oData);
-            // // }
-            // // Hierachy 관련 node_id만을 필터링한다.
-
-            // var predicates = oData.value
-            //     // PATH를 분리한다.
-            //     .reduce(function (acc, e) {
-            //         return [...acc, ...((e["path"]).split("/"))];
-            //     }, [])
-            //     // 중복을 제거한다.
-            //     .reduce(function (acc, e) {
-            //         return acc.includes(e) ? acc : [...acc, e];
-            //     }, [])
-            //     .reduce(function (acc, e) {
-            //         return [...acc, new Filter({
-            //             path: 'node_id', operator: FilterOperator.EQ, value1: e
-            //         })];
-            //     }, [
-            //         // new Filter({
-            //         //     path: 'language_code', operator: FilterOperator.EQ, value1: 'KO'
-            //         // })
-            //     ]);
-
-            // console.log([...predicates]);
             
 
             //treeList-treeModel
@@ -225,6 +228,10 @@ sap.ui.define([
             }),"list");
 
         },
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////Popup - Vendor Pool////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         onDialogTreeSearch: function (event) {
 
@@ -318,6 +325,115 @@ sap.ui.define([
             this.byId("ceateVpCategorytree").close();
         },
 
+        
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////Popup - Item Mapping///////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        onDialogMappingSearch: function (vpName1,vpName2,vpName3,vpCode3) {
+            this.getView().byId("vpCode1").setText(vpName1);
+            this.getView().byId("vpCode2").setText(vpName2);
+            this.getView().byId("vpCode3").setText(vpName3+" ("+vpCode3+")");
+
+            jQuery.ajax({
+                url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set", 
+                contentType: "application/json",
+                success: function(oData){ 
+                    // debugger;
+                    this.getModel("tblModel").setProperty("/left",oData.value);
+                    
+                    jQuery.ajax({
+                        url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set?$orderby=spmd_category_sort_sequence asc,spmd_character_sort_seq asc&$filter=trim(vendor_pool_code) eq '"+vpCode3+"'", 
+                        contentType: "application/json",
+                        success: function(oData2){ 
+                            this.getModel("tblModel").setProperty("/right",oData2.value);
+                            this.vendor_pool_code = vpCode3;
+                            //setTimeout(this.onSetColor(), 3000); 
+                        }.bind(this)                        
+                    });
+                    
+                }.bind(this)                        
+            });
+        },
+
+        //Save
+        selectMappingItems: function () {
+            var oSelectedItemsTable = Utils.getSelectedItemsTable(this);
+			//var oItemsModel = oSelectedItemsTable.getModel();
+			var oModel = this.getModel("tblModel");
+            var oView = this.getView();
+            var that = this;
+
+            var selectedItems = this.getModel("tblModel").getProperty("/right");
+            //this.byId("table").getSelectedContextPaths();
+            debugger;
+            if(selectedItems.length > 0 ){
+                var param = {};
+                var items = [];
+                for(var i = 0 ; i < selectedItems.length; i++){
+                    
+                    items.push({
+                        tenant_id: selectedItems[i].tenant_id,
+                        company_code: selectedItems[i].company_code,
+                        org_type_code: selectedItems[i].org_type_code,
+                        org_code: selectedItems[i].org_code,
+                        spmd_category_code: selectedItems[i].spmd_category_code,
+                        spmd_character_code: selectedItems[i].spmd_character_code,
+                        spmd_character_serial_no: Number(selectedItems[i].spmd_character_serial_no),
+                        vendor_pool_code: this.vendor_pool_code  // TODO:Mapping 페이지에 선택 되어있는 VendorPool Lavel3 코드값 으로 셋팅바람.
+                    });
+
+                }
+
+                param.items = items;
+                var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemMultiProc";
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data : JSON.stringify(param),
+                    contentType: "application/json",
+                    success: function(data){
+                        if(data.rsltCd=="000"){
+                            MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                            that.mappingPopupClose();
+                            that.onSearch();
+                        }else{
+                            alert("["+data.rsltCd+"] ["+data.rsltMesg+"]");
+                        }
+					    //alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
+                        
+                    },
+                    error: function(req){
+					    alert("Ajax Error => "+req.status);
+                    }
+                });
+
+            }
+        },
+
+		moveToAvailableItemsTable: function() {
+			this.getView().byId("selectedItems").getController().moveToAvailableItemsTable();
+		},
+
+		moveToSelectedItemsTable: function() {
+			this.getView().byId("availableItems").getController().moveToSelectedItemsTable();
+		},
+
+        mappingPopupClose: function (oEvent) {
+            console.log(oEvent);
+            this.byId("mappingVpItem").close();
+        },
+        
+        
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////Popup - Category////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		onOpenCategoryItemPage: function(){
+			window.open("https://lgcommondev-workspaces-ws-2dmr2-app2.jp10.applicationstudio.cloud.sap/pg/md/mdCategoryItem/webapp/index.html","_blank");
+        }
+        
     });
   }
 );
