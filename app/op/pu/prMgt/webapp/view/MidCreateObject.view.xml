@@ -9,6 +9,7 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
+    xmlns:richtexteditor="sap.ui.richtexteditor"
     xmlns="sap.m"
 	height="100%">
 
@@ -119,9 +120,20 @@
                                     labelFor="input"/>
                             </HBox>
                             <HBox alignItems="Center">
-                                <layout:VerticalLayout id="approvalLayout" class="sapUiContentPadding" width="100%">
-                                </layout:VerticalLayout>
+                                <Label text="{I18N>/SOURCING}{I18N>/CONTENTS}"/>
+                                <richtexteditor:RichTextEditor
+                                    editorType="TinyMCE4"
+                                    width="100%"
+                                    height="200px"
+                                    editable="true"
+                                    customToolbar="true"
+                                    showGroupFont="true"
+                                    showGroupLink="true"
+                                    showGroupInsert="true"
+                                    value="{viewModel>/PrMst/approval_contents}">
+                                </richtexteditor:RichTextEditor>
                             </HBox>
+                            
                         </layout:VerticalLayout> 						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -166,7 +178,7 @@
                                             valueHelpRequest=".onOpenOrgcodeDialog" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/Pr_Dtl/material_code}" >
+                                <table:Column width="10em" hAlign="Center" visible="{= !${contModel>/OP_PU_PR_DTL/MATERIAL_CODE/hide_column_flag} }" >
                                     <Label text="자재코드" required="true"/>           
                                     <table:template>
                                         <Input id="i_material_code"

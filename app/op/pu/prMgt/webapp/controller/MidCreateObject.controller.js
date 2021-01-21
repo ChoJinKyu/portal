@@ -69,7 +69,7 @@ sap.ui.define([
             this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
 
             // 텍스트 에디터
-            this._fnSetRichEditor();
+            //this._fnSetRichEditor();
 
             
             
@@ -235,7 +235,6 @@ sap.ui.define([
                             oViewModel.setProperty("/PrMst",oPrMstData);
                             return true;
                         }
-                        console.log("pr_template_number : " + oPrMstData.pr_template_number);
                     });
 
                     that._fnReadPrTemplateDetail();
@@ -259,6 +258,8 @@ sap.ui.define([
                         
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oPrMstData.tenant_id));
+            aFilters.push(new Filter("txn_type_code", FilterOperator.EQ, "CREATE"));
+            aFilters.push(new Filter("use_flag", FilterOperator.EQ, true));
 
             // 조회 대상 PR 템플릿번호
             var aPrTemplateNumber=[];   
@@ -275,12 +276,33 @@ sap.ui.define([
                 filters: aFilters,
                 success: function (oData) {
                     // PR 템플릿 상세 정보
-                    oData.results.forEach(function(oPrTempDtlData){                        
-                        console.log("oPrTempDtlData : " + oPrTempDtlData);
-                    });
+                    if(oData.results){
+                        that._fnSetVisibleModel(oData.results);
+                    }
                 },
                 error: function (oErrorData) {
                 }
+            });
+        },
+
+        /**
+         * Template 항목 Visible model 세팅
+         */
+        _fnSetVisibleModel: function(oTemplateData) {
+            var that = this,
+                oView = this.getView(),
+                oServiceModel = this.getModel(),
+                oContModel = this.getModel('contModel');
+            //var oPrMstData = oContModel.getProperty("/PrMst");
+
+            oTemplateData.forEach(function(item, idx){
+                var oSetData = {
+                    "display_column_flag" : item.display_column_flag,
+                    "hide_column_flag" : item.hide_column_flag,
+                    "input_column_flag" : item.input_column_flag,
+                    "mandatory_column_flag" : item.mandatory_column_flag
+                };
+                oContModel.setProperty("/" + item.table_name + "/" + item.column_name, oSetData);
             });
         },
 
@@ -355,10 +377,10 @@ sap.ui.define([
                         oViewModel.setProperty("/PrMst", data.results[0]);
 
                         // 품의내용
-                        if(that.oApprovalRichTextEditor){
-                            var approval_contents = data.results[0].approval_contents;
-                            that.oApprovalRichTextEditor.setValue(approval_contents);
-                        }
+                        // if(that.oApprovalRichTextEditor){
+                        //     var approval_contents = data.results[0].approval_contents;
+                        //     that.oApprovalRichTextEditor.setValue(approval_contents);
+                        // }
 
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
@@ -589,8 +611,8 @@ sap.ui.define([
             oViewData.PrMst.pr_desc = pr_desc;
                         
             //품의내용
-            var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            oViewData.PrMst.approval_contents = approvalContents;
+            //var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            //oViewData.PrMst.approval_contents = approvalContents;
             
             
 
