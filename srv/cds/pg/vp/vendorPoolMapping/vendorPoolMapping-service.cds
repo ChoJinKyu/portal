@@ -22,7 +22,7 @@
   3. history
     -. 2020.11.28 : 이상재 최초작성
 *************************************************/
-using { pg as vpTreeView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_TREE_VIEW-model';
+using { pg as vpTreeView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_TREE_LNG_VIEW-model';
 using { pg as vpDetailView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_DETAIL_VIEW-model';
 using { pg as vpSupplierDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_VIEW-model';
 using { pg as vpMaterialDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
@@ -37,7 +37,7 @@ namespace pg;
 @path : '/pg.vendorPoolMappingService'
 service VpMappingService {
     
-    entity VpTreeView @(title : '협력사풀 Tree View') as projection on vpTreeView.Vp_Vendor_Pool_Tree_View;
+    //entity VpTreeView @(title : '협력사풀 Tree View') as projection on vpTreeView.Vp_Vendor_Pool_Tree_View;
 
     entity VpDetailView @(title : '협력사풀 공급업체 View') as projection on vpDetailView.Vp_Vendor_Pool_Detail_View;
 
@@ -211,8 +211,9 @@ service VpMappingService {
                 mst.drill_state,
                 mst.vendor_pool_path_code,
                 mst.vendor_pool_path_name
-        from   vpTreeView.Vp_Vendor_Pool_Tree_View mst
-        where  mst.language_cd = 'EN'
+        from   vpTreeView.Vp_Vendor_Pool_Tree_Lng_View(
+                    p_language_code: 'KO'
+                ) mst        
         ;  
 
         @readonly

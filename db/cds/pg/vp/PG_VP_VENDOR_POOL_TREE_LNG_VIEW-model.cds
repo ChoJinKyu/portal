@@ -1,7 +1,7 @@
 namespace pg;	
  
 @cds.persistence.exists
-entity Vp_Vendor_Pool_Tree_View {
+entity Vp_Vendor_Pool_Tree_Lng_View (p_language_code: String){
     key language_cd : String(2) @title: '언어코드';
     key tenant_id : String(5)  not null @title: '테넌트ID';
     key company_code : String(10)  not null @title: '회사코드';
