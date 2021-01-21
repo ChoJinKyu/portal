@@ -12,7 +12,7 @@
     height="100%">
 
 <f:DynamicPage id="page" 
-    toggleHeaderOnTitleClick="false" 
+    toggleHeaderOnTitleClick="ture" 
     headerExpanded="true" 
     fitContent="true">
       <!--DynamicPage Title -->
@@ -20,7 +20,71 @@
         <f:DynamicPageTitle>
           <f:heading>
             <Title text="{i18n>appTitle}" />
-          </f:heading>
+          </f:heading>  
+        <f:snappedContent>
+        </f:snappedContent>        
+        <f:expandedContent>
+            <form:SimpleForm id="pageSearchForm" 
+                            maxContainerCols="2" 
+                            editable="true" 
+                            layout="ResponsiveGridLayout" 
+                            adjustLabelSpan="false" 
+                            labelSpanL="4" 
+                            labelSpanM="4" 
+                            emptySpanL="0" 
+                            emptySpanM="0" 
+                            columnsL="2" 
+                            columnsM="2">
+                <form:content>
+                    <VBox>
+                        <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                        <ComboBox id="searchTenantCombo" width="100%" items="{
+                                path: 'org>/Org_Tenant',
+                                filters: []
+                            }"
+                            selectionChange="onChangeTenant">
+                            <items>
+                                <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData> 
+                    </VBox>
+                    <VBox>   
+                        <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
+                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
+                        <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
+                                path: 'org>/Org_Unit',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }"> -->
+                            <items>
+                                <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData> 
+                    </VBox>
+                    <VBox>
+                        <Label text= "Vendor Pool" labelFor="search_Vp_Name" required="true"></Label>
+                        <HBox>
+                            <SearchField id="search_Vp_Name"
+                                        search=".onDialogTreeCreate" 
+
+                                        />
+                            <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
+                        </HBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>                              
+
+                    </form:content>
+                </form:SimpleForm>
+            </f:expandedContent>
           <!-- 조회 -->
           <!-- <f:actions>
             <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" visible="false"/>
@@ -30,31 +94,8 @@
 
       <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                    <form:content>
-
-                        <VBox>
-                            <Label text= "Vendor Pool" labelFor="search_Vp_Name"></Label>
-                            <HBox>
-                                <SearchField id="search_Vp_Name"
-                                            search=".onDialogTreeCreate" 
-
-                                            />
-                                <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
-                            </HBox>
-                            <!-- <Label text="Vendor Pool" labelFor="search_Vp_Code"></Label>
-                            <HBox>
-                                <ComboBox id="search_Vp_lvc" selectedKey="" change=".onDialogTreeCreate"  width="8em">
-                                    <core:Item key="0" text="1Level"/>
-                                    <core:Item key="1" text="2Level"/>                                                            
-                                    <core:Item key="2" text="3Level"/>
-                                </ComboBox>  
-                                <Input id="search_Vp_Code" placeholder="Input data"></Input>
-                            </HBox> -->
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
 
                         <VBox>
                             <Label text="대표부서코드"></Label>
@@ -78,6 +119,28 @@
                             </layoutData> 
                         </VBox>
 
+                        <VBox>
+                            <Label
+                                text="상태"
+                                labelFor="search_codeGroupStatusflag">
+                            </Label>
+                            <SegmentedButton 
+                                id="search_statusflag"
+                                selectedKey="" 
+                                width="100%">
+                                <items>
+                                    <SegmentedButtonItem text="All" width="3em"/>
+                                    <SegmentedButtonItem text="신규" width="3em" key="100"/>
+                                    <SegmentedButtonItem text="저장" width="3em" key="200"/>
+                                    <SegmentedButtonItem text="확정" width="3em" key="300"/>
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
                             <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
                             <layoutData>
@@ -86,7 +149,7 @@
                         </FlexBox>
 
                     </form:content>
-                </form:SimpleForm>                        
+                </form:SimpleForm>                       
             </f:DynamicPageHeader> 
       </f:header>    
          
@@ -111,11 +174,21 @@
                 }">
                 <t:extension>
                     <OverflowToolbar>
-                        <Title id="title" text="Vendor Pool별 관리특성 List ({= ${list>/MdVpItemList}.length})" level="H2"/> 
+                        <Title id="title" level="H2"/> 
                         <ToolbarSpacer/>
-                        <Button id="mainTableCreate1Button" text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press=".onMainTableCreate1ButtonPress"  />
-                        <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress"/>
+                        <MenuButton  text=" 특성 설정 ">
+                            <menu>
+                                <Menu itemSelected="onMenuAction" id="searchCategory" items="{category>/MdCategory}">
+                                    <items> 
+                                        <MenuItem key="{category>spmd_category_code}" text="{category>spmd_category_code}: {category>spmd_category_code_name}"/>
+                                    </items>
+                                </Menu>
+                            </menu>
+                        </MenuButton>
                         <ToolbarSeparator/>
+                        <Button id="mainTableItemMappingButton" text="항목 Mapping" type="Transparent" press=".onMainTableItemMappingButtonPress"  />
+                        <Button id="mainTableDeleteButton" text="Creation Request" type="Emphasized" press=".onMainTableDeleteButtonPress"/>
+                        
                     </OverflowToolbar>
                 </t:extension>
                 
