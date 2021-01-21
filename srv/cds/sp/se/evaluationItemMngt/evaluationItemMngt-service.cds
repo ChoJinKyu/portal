@@ -73,7 +73,7 @@ service EvaluationItemMngtService {
            oum.evaluation_operation_unit_name,     /*운영단위명*/
            key etv.evaluation_type_code,               /*평가유형코드*/
            sset.evaluation_type_name,              /*평가유형명*/
-           etv.evaluation_article_code,            /*평가항목코드*/
+           key etv.evaluation_article_code,            /*평가항목코드*/
            etv.evaluation_article_name,            /*평가항목*/
            etv.parent_evaluation_article_code,     /*상위평가항목*/
            etv.evaluation_execute_mode_code,       /*평가수행방식코드*/

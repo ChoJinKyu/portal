@@ -21,7 +21,7 @@ entity MI_Mat_Code_BOM_Management_View {
         reqm_quantity_unit    : String(10)    @title : '소요수량단위';
         reqm_quantity         : Decimal(17, 3)@title : '소요수량';
         currency_unit         : String(30)    @title : '통화단위';
-        mi_base_reqm_quantity : Decimal(17, 3)@title : '시황자재기준소요수량';
+        mi_base_reqm_quantity : Decimal(28, 5)@title : '시황자재기준소요수량';
         quantity_unit         : String(10)    @title : '수량단위';
         exchange              : String(10)    @title : '거래소';
         termsdelv             : String(10)    @title : '인도조건';

@@ -54,7 +54,7 @@ sap.ui.define([
         },
 
         createDialog: function(){
-            this.oSearchKeyword = new Input({ placeholder: "Keyword"});
+            this.oSearchKeyword = new Input({ placeholder: this.getModel("I18N").getText("/KEYWORD")});
             this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
 
             this.oDialog = new ValueHelpDialog({
@@ -97,7 +97,7 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: "Keyword"}),
+                        new Label({ text: this.getModel("I18N").getText("/KEYWORD")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -109,13 +109,13 @@ sap.ui.define([
             return [
                 new Column({
                     width: "75%",
-                    label: new Label({text: "Text"}),
+                    label: new Label({text: this.getModel("I18N").getText("/VALUE")}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 }),
                 new Column({
                     width: "25%",
                     hAlign: "Center",
-                    label: new Label({text: "Code"}),
+                    label: new Label({text: this.getModel("I18N").getText("/CODE")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 })
             ];

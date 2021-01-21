@@ -15,6 +15,10 @@
                         <m:OverflowToolbarLayoutData priority="NeverOverflow" />
                     </m:layoutData>
                 </m:Button>
+                <m:Image 
+                    ariaDetails="detailsActiveImage" 
+                    src="./portal/image/logo_procurement.svg"
+                    class="sapUiSmallMarginEnd"/>
                 <m:IconTabHeader
                     id="toolPageTabHeader"
                     select=".onMenuPress"

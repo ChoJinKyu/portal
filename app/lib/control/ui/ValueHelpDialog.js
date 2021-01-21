@@ -16,7 +16,6 @@ sap.ui.define([
 ], function (Parent, Renderer, Multilingual, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem) {
     "use strict";
 
-    //TODO : Localization (Buttons - apply, cancel, search, table no-data, multiInput title)
     var ValueHelpDialog = Parent.extend("ext.lib.control.ui.ValueHelpDialog", {
 
         renderer: Renderer,
@@ -125,6 +124,7 @@ sap.ui.define([
             oForm.addContent(oSearchButton);
 
             var oTable = new Table({
+                noData: this.getModel("I18N").getText("/NCM01004"),
                 selectionMode: isMultiSelection ? "MultiToggle" : "Single",
                 columns: this.getAggregation("columns"),
                 rows: {

@@ -2,22 +2,26 @@ sap.ui.define([
 		"sap/ui/core/mvc/Controller",						
         "sap/ui/model/Filter",			
         "sap/m/MessageBox",
-        "sap/ui/model/json/JSONModel"
+        "ext/lib/util/Multilingual"
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON) {
+	function (Controller, Filter, MessageBox, Multilingual) {
         "use strict";
         
 		return Controller.extend("sp.se.evaluationItemMngt.controller.Detail", {
 
 			onInit: function () {
+                var oView,oMultilingual;
                 
+                oView = this.getView();
+                oMultilingual = new Multilingual();
+                oView.setModel(oMultilingual.getModel(), "I18N");
+
                 this.getOwnerComponent().getRouter().getRoute("Detail").attachPatternMatched(this._onPatternMatched, this);
                 
             },
-asdasd
 
 
             _onPatternMatched: function (e) {

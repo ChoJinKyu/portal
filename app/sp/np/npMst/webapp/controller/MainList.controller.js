@@ -31,6 +31,8 @@ sap.ui.define([
     "ext/lib/util/ControlUtil",
     "ext/dp/util/control/ui/MaterialMasterDialog",
     "ext/pg/util/control/ui/VendorPoolDialog",
+    "ext/pg/util/control/ui/SupplierDialog",
+    "ext/pg/util/control/ui/MatrialDialog",
     "ext/lib/util/Validator"
 ],
 	/**
@@ -69,6 +71,8 @@ sap.ui.define([
         ControlUtil,
         MaterialMasterDialog,
         VendorPoolDialog,
+        SupplierDialog,
+        MatrialDialog,
         Validator
     ) {
         "use strict";
@@ -310,8 +314,10 @@ sap.ui.define([
                 this.oSearchMultiMaterialMasterDialog.open();
             },
 
-            vhVendorPoolCode: function() {
+            vhVendorPoolCode: function(oEvent) {
                 var vendorPoolCode;
+                var oSearchValue = this.byId(oEvent.getSource().sId).getValue();
+
                 if (!this.oSearchVendorPollDialog) {
                     this.oSearchVendorPollDialog = new VendorPoolDialog({
                         title: "Choose VendorPool",
@@ -323,14 +329,26 @@ sap.ui.define([
                         }
                     });
 
-                    this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
-                        vendorPoolCode = oEvent.mParameters.item;
-                        //console.log("materialItem : ", materialItem);
-                        that.byId("search_material_code").setValue(vendorPoolCode.material_code);
+                    //여기에 다가 받을 아이디를 셋팅한다. searchField면 아이디를 그리드 아이탬이면 sPath의 경로의 셀 번호를 지정해주면됨다.
+                    /*
+                        그리드의 경우
+                        function에서 받은 oEvent를 활용하여 셋팅
+                        var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                        sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item);
+                    */                    
+                    // this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
+                    //     vendorPoolCode = oEvent.mParameters.item;
+                    //     //console.log("materialItem : ", materialItem);
+                    //     that.byId("search_material_code").setValue(vendorPoolCode.material_code);
 
-                    }.bind(this));
+                    // }.bind(this));
                 }
-                this.oSearchVendorPollDialog.open();
+
+                //searObject : 태넌트아이디, 검색 인풋아이디
+                var sSearchObj = {};
+                sSearchObj.tanent_id = "L2100";
+                sSearchObj.vendor_pool_code = oSearchValue;
+                this.oSearchVendorPollDialog.open(sSearchObj);
             },
 
             cvtSupplier: function (oEvent) {
