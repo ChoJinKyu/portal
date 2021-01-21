@@ -39,7 +39,7 @@
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
-                        mode="None"
+                        mode="SingleSelectMaster"
                         width="auto"
                         items="{approver>/Approvers}" 
                         >
@@ -78,11 +78,12 @@
                         </Column>
                     </columns>
                     <dragDropConfig>
-                        <dnd:DragInfo groupName="itemsgroup" 
-                            sourceAggregation="items"
-                             dragStart="onDragStart"
-                            />
-                        <dnd:DropInfo groupName="dragdrop" drop="onDragDrop"/>
+                        <dnd:DragDropInfo
+                            sourceAggregation="items" 
+                            targetAggregation="items" 
+                            dropPosition="Between" 
+                            dragStart="onDragStartTable"
+                            drop="onDragDropTable"   /> 
                     </dragDropConfig>					
                     <items>
                         <ColumnListItem>
