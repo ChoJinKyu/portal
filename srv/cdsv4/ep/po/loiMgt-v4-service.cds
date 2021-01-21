@@ -96,6 +96,47 @@ service LoiMgtV4Service {
     //LOI업체선정 등록
     action SaveLoiSupplySelectionProc(inputData : saveLoiSelectionType) returns array of OutType;
 
+    type loiRfqType : {
+        quotation_number      : Decimal;
+        quotation_item_number : Decimal;
+    }
+
+    type loiRfqDtlInType {
+        loiRfqType : array of loiRfqType;
+        loiDtlType : array of loiDtlType;
+    }
+
+    type loiRfqDtlOutType {
+        tenant_id                       : String;
+        company_code                    : String;
+        loi_write_number                : String;
+        loi_item_number                 : String;
+        item_sequence                   : Decimal;
+        offline_flag                    : Boolean;
+        plant_code                      : String;
+        plant_name                      : String;
+        item_desc                       : String;
+        spec_desc                       : String;
+        unit                            : String;
+        request_quantity                : Decimal;
+        currency_code                   : String;
+        request_amount                  : Decimal;
+        selection_result                : String;
+        supplier_code                   : String;
+        supplier_name                   : String;
+        quotation_amount                : Decimal;
+        delivery_request_date           : Date;
+        quotation_due_date              : Date;
+        quotation_remark                : String;
+        offline_selection_supplier_code : String;
+        offline_selection_supplier_name : String;
+        offline_quotation_amount        : Decimal;
+        offline_quotation_due_date      : Date;
+        offline_quotation_remark        : String;
+    }
+
+    action SupplySelectionResult(inputData : loiRfqDtlInType) returns array of loiRfqDtlOutType;
+
     type delLoiSelectionType {
         tenant_id            : String;
         company_code         : String;
@@ -229,8 +270,6 @@ service LoiMgtV4Service {
     }
 
     action SaveLoiRequestMultiEntitylProc(inputData : saveReturnType) returns saveReturnType;
-
-
     //LOI 발행요청 MST & DTL 삭제
     action DeleteLoiMulEntityProc(tenant_id : String(5), company_code : String(10), loi_write_number : String(50)) returns String;
 
@@ -246,6 +285,5 @@ service LoiMgtV4Service {
     }
 
     action SupplierMulEntityProc(inputData : array of SavedSuppliers) returns String;
-
 
 }

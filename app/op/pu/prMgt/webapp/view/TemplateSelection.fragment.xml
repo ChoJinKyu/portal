@@ -7,10 +7,10 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogTemplateSelection" class="sapUiSmallMargin" title="Select Template" contentWidth="35%" 
+    <Dialog id="dialogTemplateSelection" class="sapUiSmallMargin" title="{I18N>/PURCHASE_REQUISITION} {I18N>/CREATE}" contentWidth="35%" 
         afterOpen=".onDialogOpen">
         <VBox class="sapUiSmallMargin" >
-            <form:SimpleForm  title="구매요청 생성"     
+            <form:SimpleForm  title="{I18N>/REQUEST_TYPE_SELECT}"     
                 editable="false"
                 layout="ResponsiveGridLayout"
                 labelSpanXL="4"
@@ -25,7 +25,7 @@
                 singleContainerFullSize="false" >                    
                     <form:content >                      
                         <VBox>
-                            <Label text = "품목그룹" labelFor="SelectionPR_TYPE2" required="false"/> 
+                            <Label text = "{I18N>/PR_TYPE_CODE_2}" labelFor="SelectionPR_TYPE2" required="false"/> 
                             <ComboBox
                               id="SelectionPR_TYPE2"
                               width="100%"
@@ -49,7 +49,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Category" labelFor="SelectionPR_TYPE3" required="false"/> 
+                            <Label text = "{I18N>/PR_TYPE_CODE_3}" labelFor="SelectionPR_TYPE3" required="false"/> 
                              <ComboBox
                               id="SelectionPR_TYPE3"
                               showSecondaryValues= "false"
@@ -62,7 +62,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "구매요청 유형" labelFor="SelectionPR_TYPE" required="false"/>
+                            <Label text = "{I18N>/PR_TYPE_CODE}" labelFor="SelectionPR_TYPE" required="false"/>
                             <ComboBox
                               id="SelectionPR_TYPE"
                               showSecondaryValues= "false"
@@ -77,7 +77,7 @@
                        </form:content>
                    
                   </form:SimpleForm>
-                  <form:SimpleForm  title="Template 선택"             
+                  <form:SimpleForm  title="{I18N>/TEMPLATE} {I18N>/SELECT}"             
                     editable="false"
                     layout="ResponsiveGridLayout"
                     labelSpanXL="1"

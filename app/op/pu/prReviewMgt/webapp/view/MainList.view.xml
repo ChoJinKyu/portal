@@ -82,17 +82,19 @@
                             </MultiComboBox>
                             <!-- 구매요청 생성자 -->
                             <Label text="{I18N>/REQUESTOR}"/>
+                            <!-- keyField="requestor_empno"
+                            textField="requestor_name" -->
                             <lib-m:CodePicker 
                                 placeholder="(미정)구매요청생성자"
-                                keyField="requestor_empno"
-                                textField="requestor_name"
+                                keyField="employee_number"
+                                textField="user_local_name"
                                 suggestionItems="{
                                     path: '/',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
                                     serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Department'
+                                    entityName: 'Employee'
                                 }"
                             >
                                 <lib-m:CodePickerValueHelp 
@@ -107,7 +109,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <!-- 구매요청 접수일자 -->
+                            <!-- 구매요청 접수일자 (미정) -->
                             <Label text="{I18N>/PR_RECEIPT_DATE}"/>
                             <DateRangeSelection 
                                 width="100%"
@@ -142,10 +144,12 @@
                             </MultiComboBox>
                             <!-- 구매요청자 부서 -->
                             <Label text="{I18N>/REQUESTOR_DEPARTMENT}"/>
+                            <!-- keyField="requestor_department_code"
+                            textField="requestor_department_name" -->
                             <lib-m:CodePicker 
                                 placeholder="(미정)부서명을 입력하세요"
-                                keyField="requestor_department_code"
-                                textField="requestor_department_name"
+                                keyField="department_id"
+                                textField="department_local_name"
                                 suggestionItems="{
                                     path: '/',
                                     filters: [
@@ -180,17 +184,19 @@
                             />
                             <!-- 구매담당자 -->
                             <Label text="{I18N>/BUYER}"/>
+                            <!-- keyField="buyer_empno"
+                            textField="buyer_empno" -->
                             <lib-m:CodePicker 
                                 placeholder="(미정)구매담당자를 입력하세요"
-                                keyField="buyer_empno"
-                                textField="buyer_empno"
+                                keyField="employee_number"
+                                textField="user_local_name"
                                 suggestionItems="{
                                     path: '/',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
                                     serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Department'
+                                    entityName: 'Employee'
                                 }">
                                 <lib-m:CodePickerValueHelp 
                                     title="(미정)구매담당자를 선택하세요"
@@ -246,10 +252,12 @@
                             </lib-m:CodePicker>
                             <!-- 구매담당자 부서 -(미정) 부서정보-->
                             <Label text="{I18N>/BUYER_DEPARTMENT}" labelFor="searchRequestDepartmentS"/>
+                            <!-- keyField="buyer_empno"
+                            textField="buyer_empno" -->
                             <lib-m:CodePicker 
                                 placeholder="(미정)구매담당자 부서명을 입력하세요."
-                                keyField="buyer_empno"
-                                textField="buyer_empno"
+                                keyField="department_id"
+                                textField="department_local_name"
                                 suggestionItems="{
                                     path: '/',
                                     filters: [
@@ -277,7 +285,7 @@
             <VBox>
                 <Table 
                     id="mainTable" 
-                    visible="false"
+                    visible="true"
                     sticky="HeaderToolbar,ColumnHeaders" 
                     inset="false" 
                     growing="true"
@@ -286,7 +294,7 @@
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onMainTableUpdateFinished"
                     items="{
-                        path : 'list>/Pr_MstView',
+                        path : 'list>/Pr_ReviewListView',
                         sorter: {
                             path: 'pr_number',
                             descending: true
@@ -316,59 +324,59 @@
                     </headerToolbar>
                     <columns>
                         <!-- 구매요청 번호 -->
-                        <Column id="mainColumnPR_NUMBER" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
                         <!-- 품목 번호 -->
-                        <Column id="mainColumnITEM_NUMBER" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/ITEM_NUMBER}" />
                         </Column>
                         <!-- 조직코드 -->
-                        <Column id="mainColumnORG_CODE" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/ORG_CODE}" />
                         </Column>
                         <!-- 자재코드 -->
-                        <Column id="mainColumnMATERIAL_CODE" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/MATERIAL_CODE}" />
                         </Column>
                         <!-- 구매요청 품명 -->
-                        <Column id="mainColumnITEM_NAME" demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
+                        <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
                             <Text text="{I18N>/ITEM_NAME}" />
                         </Column>
                         <!-- 단위 -->
-                        <Column id="mainColumnUNIT" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/UNIT}" />
                         </Column>
                         <!-- 요청수량 -->
-                        <Column id="mainColumnREQUEST_QUANTITY" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/REQUEST_QUANTITY}" />
                         </Column>
                         <!-- 잔여수량 -->
-                        <Column id="mainColumnSTOCK_QUANTITY" Align="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/STOCK_QUANTITY}" />
                         </Column>
                         <!-- 납품요청 일자 -->
-                        <Column id="mainColumnDELIVERY_REQUEST_DATE" Align="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/DELIVERY_REQUEST_DATE}" />
                         </Column>
                         <!-- 금액 -->
-                        <Column id="mainColumnAMOUNT" Align="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/AMOUNT}" />
                         </Column>
                         <!-- 통화 -->
-                        <Column id="mainColumnCURRENCY" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/CURRENCY}" />
                         </Column>
                         <!-- 구매담당자 -->
-                        <Column id="mainColumnBUYER" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/BUYER}" />
                         </Column>
                         <!-- 구매요청자 -->
-                        <Column id="mainColumnPR_REQUESTOR" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_REQUESTOR}" />
                         </Column>
                         <!-- 구매요청 일자 -->
-                        <Column id="mainColumnPR_DATE" hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_DATE}" />
                         </Column>
                     </columns>

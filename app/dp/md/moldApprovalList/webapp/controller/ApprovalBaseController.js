@@ -23,12 +23,16 @@ sap.ui.define([
     "sap/ui/model/Sorter",
     "dp/md/util/controller/EmployeeDialog",
     "sap/m/Token",
+    "sap/ui/core/dnd/DragInfo",
+	"sap/ui/core/dnd/DropInfo",
+	"sap/ui/core/dnd/DropPosition",
+	"sap/ui/core/dnd/DropLayout",
+	"sap/f/dnd/GridDropInfo",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
-    , Sorter 
-    , EmployeeDialog 
-     , Token
+    , Sorter , EmployeeDialog , Token 
+    , DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
 ) {
     "use strict";
 
@@ -209,7 +213,7 @@ sap.ui.define([
             });
 
             var appModel = this.getModel("appType");
-            appModel.setTransactionModel(this.getModel("util"));
+            appModel.setTransactionModel(this.getModel("dpMdUtil"));
             appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
                 filters: [],
                 success: function (oData) {
@@ -230,6 +234,36 @@ sap.ui.define([
 
             //this.byId("pageGeneralInfoSection").focus();
         },
+        onDragStart : function (oEvent){
+  console.log("//// onDragStart" , oEvent ); 
+  console.log("//// target" , oEvent.getParameter("target") ); 
+
+            var oDraggedRow = oEvent.getParameter("target");
+			var oDragSession = oEvent.getParameter("dragSession");
+			
+            oDragSession.setComplexData("draggedRowContext", oDraggedRow.getBindingContext("approver"));
+        },
+        /**
+         * 드래그엔드랍 
+         */
+       onDragDrop: function (oEvent) { 
+           console.log("//// onDragDrop" , oEvent );
+          //  var oSwap = this.byId("ApproverTable").getSelectedItems();
+	        var oDragSession = oEvent.getParameter("dragSession");
+			var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
+			if (!oDraggedRowContext) {
+				return;
+            }
+            
+            var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath());
+            var arr = this.getModel("approver").getProperty("/right");
+            var idx = oDraggedRowContext.getPath().split("/")[2];
+                       
+            arr.splice(idx,1);
+            this.getModel("approver").setProperty("/right",arr);
+        },
+
+
 
         _toEditMode: function () {
             this._onEditApproverRow();
@@ -338,10 +372,7 @@ sap.ui.define([
                     oUiModel.setProperty("/btnRequestFlag", false);
                 }  
             }
-
-
        } ,
-
 
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 

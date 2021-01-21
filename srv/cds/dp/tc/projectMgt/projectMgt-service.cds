@@ -8,6 +8,9 @@ using {cm as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm as orgDiv} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
+using {dp as unitOfMeasure} from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
+using {cm as currency} from '../../../../../db/cds/cm/CM_CURRENCY-model';
+using {cm as purOperOrg} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
 namespace dp;
 
@@ -43,10 +46,42 @@ service ProjectMgtService {
     entity Hr_Employee             as projection on hrEmployee.Hr_Employee;
 
     @readonly
-    entity Hr_Department            as projection on hrDept.Hr_Department;    
+    entity Hr_Department            as projection on hrDept.Hr_Department; 
+
+    view Org_Division as
+        select distinct key cpo.tenant_id
+             , key cpo.company_code
+             , cod.bizdivision_name
+             , cod.bizdivision_code
+          from purOperOrg.Pur_Operation_Org cpo
+     left join orgDiv.Org_Division cod
+            on cpo.tenant_id = cod.tenant_id
+           and cpo.bizdivision_code = cod.bizdivision_code
+         where cpo.bizdivision_code is not null
+      order by cod.bizdivision_code;
+    //entity Org_Division            as projection on orgDiv.Org_Division;
 
     @readonly
-    entity Org_Division            as projection on orgDiv.Org_Division;
+    entity MM_UOM                as
+        select from unitOfMeasure.Mm_Unit_Of_Measure as d {
+            key tenant_id,
+            key uom_code,
+                uom_name,
+                uom_desc
+        }
+        where tenant_id = 'L2100'
+          and uom_class_code = 'AAAADL'
+          and uom_desc is not null
+          and disable_date is null;
+
+    @readonly
+    entity Currency as
+        select from currency.Currency as c{
+            key tenant_id,
+            key currency_code
+        }
+        where tenant_id = 'L2100'
+          and use_flag = true;    
 
 
     view ProjectView as
@@ -106,11 +141,11 @@ service ProjectMgtService {
             , DP_TC_GET_USER_INFO_FUNC (tp.tenant_id
                                         ,tp.project_leader_empno
                                         ,'N'
-                                        ) AS project_leader_name: String(240)     /*프로젝트리더이름*/
+                                        ) AS project_leader_name: String(100)     /*프로젝트리더이름*/
             , DP_TC_GET_USER_INFO_FUNC (tp.tenant_id
                                         ,tp.buyer_empno
                                         ,'N'
-                                        ) AS buyer_name: String(240)              /*재료비총괄이름*/
+                                        ) AS buyer_name: String(100)              /*재료비총괄이름*/
             , (select cod.bizdivision_name
                  from orgDiv.Org_Division cod
                 where cod.tenant_id = tp.tenant_id
@@ -118,40 +153,42 @@ service ProjectMgtService {
             , DP_TC_GET_MCST_LAST_REG_DATE_FUNC (tp.tenant_id
                                                 ,tp.project_code
                                                 ,tp.model_code
-                                                ) AS last_register_date: String(20)
+                                                ) AS last_register_date: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (tp.tenant_id
                                                     ,tp.project_code
                                                     ,tp.model_code
                                                     ,'QUOTATION'  /*견적*/
                                                     ,'KO'
-                                                    ) AS quotation_status_name: String(240)
+                                                    ) AS quotation_status_name: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (tp.tenant_id
                                                     ,tp.project_code
                                                     ,tp.model_code
                                                     ,'QUOTATION'  /*견적*/
-                                                ) AS quotation_status_code: String(10)
+                                                ) AS quotation_status_code: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (tp.tenant_id
                                                 ,tp.project_code
                                                 ,tp.model_code
                                                 ,'TARGET'  /*목표*/
                                                 ,'KO'
-                                                ) AS target_status_name: String(240)
+                                                ) AS target_status_name: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (tp.tenant_id
                                                     ,tp.project_code
                                                     ,tp.model_code
                                                     ,'TARGET'  /*목표*/
-                                                    ) AS target_status_code: String(10)
+                                                    ) AS target_status_code: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (tp.tenant_id
                                                 ,tp.project_code
                                                 ,tp.model_code
                                                 ,'ESTIMATE'  /*예상*/
                                                 ,'KO'
-                                                ) AS estimate_status_name: String(240)
+                                                ) AS estimate_status_name: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (tp.tenant_id
                                                     ,tp.project_code
                                                     ,tp.model_code
                                                     ,'ESTIMATE'  /*예상*/
-                                                    ) AS estimate_status_code: String(10)
-        from pjt.Tc_Project tp;     
+                                                    ) AS estimate_status_code: String(30)
+
+
+        from pjt.Tc_Project tp;
     
 }

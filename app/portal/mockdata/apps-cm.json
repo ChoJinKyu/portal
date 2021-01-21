@@ -84,8 +84,8 @@
         },
         {
           "name": "역할그룹관리",
-          "url": ".",
-          "component": ""
+          "url": "../cm/roleGroupMgt/webapp",
+          "component": "cm.roleGroupMgt"
         },
         {
           "name": "역할관리",

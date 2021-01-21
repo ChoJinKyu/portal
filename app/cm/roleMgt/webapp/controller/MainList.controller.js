@@ -15,9 +15,9 @@ sap.ui.define([
   "sap/m/Text",
   "sap/m/Input",
   "sap/m/ComboBox",
-  "sap/ui/core/Item",
-  "3rd/lib/lodash/lodash"
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+  "sap/ui/core/Item"
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter,
+    FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
   "use strict";
 
     return BaseController.extend("cm.roleMgt.controller.MainList", {

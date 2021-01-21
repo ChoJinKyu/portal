@@ -157,7 +157,7 @@ sap.ui.define([
 			var oTable = this.byId("mainTable"),
 				oModel = this.getModel("list");
 			oModel.addRecord({
-                "amount": "",
+                "price": "",
                 "category_code": "",
                 "category_name": "",
                 "currency_unit": "",
@@ -234,19 +234,19 @@ sap.ui.define([
 
                         var oList = oModel.getChanges();
                         oList.forEach( function (oRow) {
-                            if( oRow["amount"] == null || oRow["amount"].length == 0 ) {
+                            if( oRow["price"] == null || oRow["price"].length == 0 ) {
                                 MessageToast.show(that.getModel("I18N").getText("/ECM01010"))
                                 return;
                             }
 
-                            // ["amount", "category_code", "category_name", "currency_unit", "delivery_mm", "exchange", "exchange_unit", "mi_date", "mi_material_code", "mi_material_name", "quantity_unit", "sourcing_group_code", "termsdelv", "__entity", "_row_state_"]
+                            // ["price", "category_code", "category_name", "currency_unit", "delivery_mm", "exchange", "exchange_unit", "mi_date", "mi_material_code", "mi_material_name", "quantity_unit", "sourcing_group_code", "termsdelv", "__entity", "_row_state_"]
                             var aKeys = Object.keys(oRow);
                             if( oRow["_row_state_"] == "C" ){
 
                                 delete oRow["_row_state_"];
 
                                 var oItem = {
-                                    "amount":  parseFloat(oRow["amount"] ),
+                                    "price":  parseFloat(oRow["price"] ),
                                     "currency_unit": oRow["currency_unit"],
                                     "delivery_mm": oRow["delivery_mm"],
                                     "exchange": oRow["exchange"],
@@ -327,7 +327,7 @@ sap.ui.define([
                                 delete oRow["_row_state_"];
 
                                 var oItem = {
-                                    "amount":  parseFloat(oRow["amount"] ),
+                                    "price":  parseFloat(oRow["price"] ),
                                     "currency_unit": oRow["currency_unit"],
                                     "delivery_mm": oRow["delivery_mm"],
                                     "exchange": oRow["exchange"],
@@ -458,9 +458,11 @@ sap.ui.define([
                 //combobox value
                 // var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
                 var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKeys();
-                var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
-                var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
-                var oExchange = oSmtFilter.getControlByKey("exchange").getValue();    
+                var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();       
+                oSmtFilter.getControlByKey("mi_material_name").setValue(oMi_material_name.toUpperCase());       
+                var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKeys();    
+                var oExchange = oSmtFilter.getControlByKey("exchange").getSelectedKeys();    
+                var oTermsdelv = oSmtFilter.getControlByKey("termsdelv").getSelectedKeys();    
                 var oMi_date = oSmtFilter.getControlByKey("mi_date").getValue();    
                 
                 if (oMi_material_code.length > 0) {
@@ -476,24 +478,42 @@ sap.ui.define([
                 }
     
                 if (oCategory_code.length > 0) {
-                    var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code);
-                    aTableSearchState.push(oCategory_codeFilter);
+                    for( var i = 0; i < oCategory_code.length ; i ++ ) {
+                        var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code[i]);
+                        aTableSearchState.push(oCategory_codeFilter);
+                    }
                 }
                 
                 if (oExchange.length > 0) {
-                    var oExchangeFilter = new Filter("exchange", FilterOperator.Contains, oExchange);
-                    aTableSearchState.push(oExchangeFilter);
+                    for( var i = 0; i < oExchange.length ; i ++ ) {
+                        var oExchangeFilter = new Filter("exchange", FilterOperator.EQ, oExchange[i]);
+                        aTableSearchState.push(oExchangeFilter);
+                    }
                 }  
                 
-                if (oMi_date.length > 0 ) {
-                    // var oDateFormat = sap.ui.core.format.DateFormat.getInstance({
-                    //     pattern: "yyyy-MM-ddTHH:mm:ss"
-                    // });
-                    // var oDate = oDateFormat.format(oDateFormat.parse(oMi_date));
-    
-                    var oMi_dateFilter = new Filter("mi_date", FilterOperator.EQ, new Date(oMi_date));
+                if (oTermsdelv.length > 0) {
+                    for( var i = 0; i < oTermsdelv.length ; i ++ ) {
+                        var oTermsdelvFilter = new Filter("termsdelv", FilterOperator.EQ, oTermsdelv[i]);
+                        aTableSearchState.push(oTermsdelvFilter);
+                    }
+                } 
+
+                if(oMi_date.length > 0){
+                    console.log(oMi_date);
+
+                    oSmtFilter.getControlByKey("mi_date").getFrom().setHours("09","00","00","00");  
+                    oSmtFilter.getControlByKey("mi_date").getTo().setHours("09","00","00","00");  
+
+                    var fromDate = oSmtFilter.getControlByKey("mi_date").getFrom();  
+                    var toDate = oSmtFilter.getControlByKey("mi_date").getTo();
+                    
+                    console.log("fromDate:"+fromDate+" \ntoDate:"+toDate);
+
+                    var oMi_dateFilter = new Filter("mi_date", FilterOperator.BT, fromDate, toDate);
                     aTableSearchState.push(oMi_dateFilter);
+
                 }
+
             }
 			return aTableSearchState;
 		},
@@ -668,70 +688,70 @@ sap.ui.define([
         createColumnConfig: function() {
 			return [
 				{
-					label: '시황자재코드',
+					label: this.getModel("I18N").getText("/MI_MATERIAL_CODE"),
 					property: 'mi_material_code',
 					width: '15'
 				},
 				{
-					label: '시황자재명',
+					label: this.getModel("I18N").getText("/MI_MATERIAL_NAME"),
 					property: 'mi_material_name',
 					width: '25'
 				},
 				{
-					label: '카테고리코드',
+					label: this.getModel("I18N").getText("/CATEGORY_CODE"),
 					property: 'category_code',
 					width: '15'
 				},
 				{
-					label: '카체고리명',
+					label: this.getModel("I18N").getText("/CATEGORY_NAME"),
 					property: 'category_name',
 					width: '15'
                 },
                 {
-					label: '화폐단위',
+					label: this.getModel("I18N").getText("/CURRENCY_UNIT"),
 					property: 'currency_unit',
 					width: '15'
                 },
                 {
-					label: '수량단위',
+					label: this.getModel("I18N").getText("/QUANTITY_UNIT"),
 					property: 'quantity_unit',
 					width: '15'
                 },
                 {
-					label: '거래소단위',
+					label: this.getModel("I18N").getText("/EXCHANGE_UNIT"),
 					property: 'exchange_unit',
 					width: '15'
                 },
                 {
-					label: '거래소',
+					label: this.getModel("I18N").getText("/EXCHANGE_CODE"),
 					property: 'exchange',
 					width: '15'
                 },
                 {
-					label: '인도조건',
+					label: this.getModel("I18N").getText("/TERMS_OF_DELIVERY"),
 					property: 'termsdelv',
 					width: '15'
                 },
                 {
-					label: '소싱그룹코드',
+					label: this.getModel("I18N").getText("/SOURCING_GROUP_CODE"),
 					property: 'sourcing_group_code',
 					width: '15'
                 },
 				{
-					label: '인도월',
+					label: this.getModel("I18N").getText("/DELIVERY_MM"),
 					property: 'delivery_mm',
 					width: '15'
                 },
                 {
-					label: '시황일자',
+					label: this.getModel("I18N").getText("/MI_DATE"),
 					property: 'mi_date',
                     type: EdmType.Date,
                     format: 'yyyy/mm/dd',
 					width: '15'
                 },
                  {
-					label: '금액',
-					property: 'amount',
+					label: this.getModel("I18N").getText("/PRICE"),
+					property: 'price',
                     type: EdmType.Number,
                     scale: 3,
 					width: '15'

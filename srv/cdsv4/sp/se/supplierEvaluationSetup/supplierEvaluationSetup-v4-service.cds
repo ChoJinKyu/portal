@@ -98,7 +98,7 @@ service SupEvalSetupV4Service {
     };
 
     type evalGrade : {
-        ransaction_code: String(1);
+        tansaction_code: String(1);
         tenant_id: String(10);
         company_code: String(10);
         org_type_code: String(2);
