@@ -5,6 +5,7 @@ using { sp.Se_Eval_Type as evalType } from '../../../../../db/cds/sp/se/SP_SE_EV
 using { sp.Se_Operation_Unit_Mst as opUnitMst } from '../../../../../db/cds/sp/se/SP_SE_OPERATION_UNIT_MST-model';
 using { sp.Se_Eval_Item_Export_Tree_View as exportTreeView} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_EXPORT_TREE_VIEW-model';
 using { sp.Se_Eval_Item_Opt as evalItemOpt} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_OPT-model';
+using { sp.Se_Quantitative_Item as qttiveItem} from '../../../../../db/cds/sp/se/SP_SE_QUANTITATIVE_ITEM-model';
 
 namespace sp;
 @path : '/sp.evaluationItemMngtService'
@@ -47,38 +48,6 @@ service EvaluationItemMngtService {
     AND    mng.org_type_code = org.org_type_code
     AND    mng.org_code = org.org_code
     AND    mng.evaluation_operation_unit_code = org.evaluation_operation_unit_code;
-    
-    /*view UserEvalTypeView as
-    SELECT key mng.tenant_id,
-           key mng.company_code,
-           key mng.org_type_code,
-           key mng.org_code,
-           key mng.evaluation_operation_unit_code,
-           org.evaluation_operation_unit_name,
-           key mng.evaluation_op_unt_person_empno,
-           MAX(CASE WHEN et.evaluation_type_code = 'EVAL001' THEN 'Y' ELSE 'N' END) actual_eval: String(1),
-           MAX(CASE WHEN et.evaluation_type_code = 'EVAL002' THEN 'Y' ELSE 'N' END) competitive_eval: String(1)
-    FROM   opUnitManager mng
-          ,opUnitMst     org
-          ,evalType      et
-    WHERE  mng.tenant_id = org.tenant_id
-    AND    mng.company_code = org.company_code
-    AND    mng.org_type_code = org.org_type_code
-    AND    mng.org_code = org.org_code
-    AND    mng.evaluation_operation_unit_code = org.evaluation_operation_unit_code
-    AND    et.tenant_id = org.tenant_id
-    AND    et.company_code = org.company_code
-    AND    et.org_type_code = org.org_type_code
-    AND    et.org_code = org.org_code
-    AND    et.evaluation_operation_unit_code = org.evaluation_operation_unit_code
-    GROUP BY mng.tenant_id
-            ,mng.company_code
-            ,mng.org_type_code
-            ,mng.org_code
-            ,mng.evaluation_operation_unit_code
-            ,org.evaluation_operation_unit_name
-            ,mng.evaluation_op_unt_person_empno;
-    */
 
     /* User's Operation Unit */
     entity UserOperationUnit as projection on opUnitMst;
@@ -87,6 +56,9 @@ service EvaluationItemMngtService {
     entity UserEvalType as projection on evalType;
     /*Scale */
     entity EvalitemScle as projection on evalItemOpt;
+    
+    /*Quantitative Calc Code*/
+    entity QttiveItemCode as projection on qttiveItem;
 
     /* Eval Item List View */
     view EvalItemListView as
@@ -115,6 +87,13 @@ service EvaluationItemMngtService {
            etv.evaluation_article_lvl_attr_cd,     /*Node 유형*/
            etv.qttive_item_uom_code,               /*단위*/
            etv.qttive_eval_article_calc_formula,   /*정량항목산식*/
+           sp_se_get_qttive_eval_calc_item_name_func(etv.tenant_id
+                                                    ,etv.company_code
+                                                    ,etv.org_type_code
+                                                    ,etv.org_code
+                                                    ,etv.evaluation_operation_unit_code
+                                                    ,etv.qttive_eval_article_calc_formula
+                                                    )  AS qttive_eval_article_calc_formula_name : String(3000), /*정량항목산식_명 */
            etv.writer,                             /*작성자*/
            etv.write_tm,                           /*작성일자*/
            etv.sort_sequence,
@@ -140,7 +119,8 @@ service EvaluationItemMngtService {
            etv.hierarchy_root_rank,       /*root node의 순번*/
            etv.hierarchy_is_cycle,        /*순환구조여부(0:False, 1:True)*/
            etv.hierarchy_is_orphan,       /*전개후 연결이 끊어진 노드여부(0:False, 1:True)*/
-           CASE WHEN etv.evaluation_article_lvl_attr_cd = 'ITEM' AND etv.hierarchy_tree_size = 1 THEN 'Y' ELSE 'N' END AS reaf_flag : String(1)
+           CASE WHEN etv.hierarchy_tree_size = 1 THEN 'leaf' ELSE 'expanded' END AS drill_state : String(10),
+           CASE WHEN etv.evaluation_article_lvl_attr_cd = 'ITEM' AND etv.hierarchy_tree_size = 1 THEN 'Y' ELSE 'N' END AS leaf_flag : String(1)
     FROM  exportTreeView etv
           INNER JOIN opUnitMst oum
           ON   etv.tenant_id     = oum.tenant_id
