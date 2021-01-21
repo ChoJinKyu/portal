@@ -18,16 +18,16 @@ entity VI_Base_Price_Arl_Price {
         first_pur_netprice_curr_cd       : String(3);
         first_pur_netprice_str_dt        : Date;
 
-        item_sequence_fk                 : Association to detail
-                                               on  item_sequence_fk.tenant_id       = tenant_id
-                                               and item_sequence_fk.approval_number = approval_number
-                                               and item_sequence_fk.item_sequence   = item_sequence;
-        market_code_fk                   : Association to code
-                                               on  market_code_fk.tenant_id  = tenant_id
-                                               and market_code_fk.group_code = 'DP_VI_MARKET_CODE'
-                                               and market_code_fk.code       = market_code;
-        tenant_id_fk                     : Association to tenant
-                                               on tenant_id_fk.tenant_id = tenant_id;
+        // item_sequence_fk                 : Association to detail
+        //                                        on  item_sequence_fk.tenant_id       = tenant_id
+        //                                        and item_sequence_fk.approval_number = approval_number
+        //                                        and item_sequence_fk.item_sequence   = item_sequence;
+        // market_code_fk                   : Association to code
+        //                                        on  market_code_fk.tenant_id  = tenant_id
+        //                                        and market_code_fk.group_code = 'DP_VI_MARKET_CODE'
+        //                                        and market_code_fk.code       = market_code;
+        // tenant_id_fk                     : Association to tenant
+        //                                        on tenant_id_fk.tenant_id = tenant_id;
 }
 
 extend VI_Base_Price_Arl_Price with util.Managed;
