@@ -13,6 +13,16 @@ using {cm as codeLng} from '../../cm/CM_CODE_LNG-model';
 // # NegoType: 속성관리 필요(견적/입찰여부|가격/비가격여부) //예: RFQ/RFP/입찰/2step입찰
 
 
+entity Sc_Outcome_Code2 {
+
+    key tenant_id        : String(5) not null   @title : '테넌트ID';
+    key nego_type_code   : String(30) not null  @title : '협상타입코드';
+    key outcome_code     : String(30) not null  @title : '아웃컴코드';
+        sort_no          : Decimal not null     @title : '정렬번호';
+        nego_type_name   : localized String(240)@title : 'Title';
+// nego_type_descr  : localized String(1000)@title : 'Description';
+};
+
 entity Sc_Outcome_Code {
 
     key tenant_id        : String(5) not null   @title : '테넌트ID';
