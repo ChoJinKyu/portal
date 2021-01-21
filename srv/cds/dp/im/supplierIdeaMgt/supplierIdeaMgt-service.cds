@@ -18,6 +18,7 @@
 *************************************************/
 // 협력사제안관리
 using { dp as Idea } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA-model';
+using { dp as Status } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_STATUS-model';
 using { dp as Performance } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_PERFORMANCE-model';
 using { dp as ideaMgtView } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_LIST_VIEW-model';
 // Supplier 
@@ -36,6 +37,8 @@ service SupplierIdeaMgtService {
 
     entity SupplierIdea as projection on Idea.Im_Supplier_Idea;
     entity SupplierPerform as projection on Performance.Im_Supplier_Idea_Performance;
+    entity IdeaStatus  as projection on Status.Im_Supplier_Idea_Status;
+
  
     
     view IdeaMgtView as select from ideaMgtView.Im_Supplier_Idea_List_View;
