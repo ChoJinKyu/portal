@@ -1,0 +1,194 @@
+<mvc:View 
+    controllerName="sp.se.evaluationItemMngt.controller.Master"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:t="sap.ui.table"
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:suiteCom="sap.suite.ui.commons"
+    height="100%"
+>
+    
+    <f:DynamicPage 
+        id="page"
+        headerExpanded="true" 
+        toggleHeaderOnTitleClick="true"
+    >
+        
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="평가 항목 관리" />
+                </f:heading>
+                
+                <f:actions>
+                    <Button text="조회" type="Emphasized"/>
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header> 
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm 
+                    layout="ResponsiveGridLayout"
+                >
+                    <VBox>
+                        <Label text="평가조직" />
+                        <ComboBox 
+                            id="orgCode" 
+                            width="100%" 
+                            showSecondaryValues="true"
+                            selectionChange=""
+                        />
+                        <layoutData>
+                            <layout:GridData span="L2 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <VBox>
+                        <Label text="평가운영단위" />
+                        <ComboBox 
+                            id="unitCode" 
+                            width="100%" 
+                            showSecondaryValues="true"
+                            selectionChange=""
+                        />
+                        <layoutData>
+                            <layout:GridData span="L2 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <VBox>
+                        <Label text="평가유형" />
+                        <SegmentedButton id="evaluType" />
+                            <!-- <items>
+                                <SegmentedButtonItem text="실적평가" key="kids" />
+                                <SegmentedButtonItem text="경쟁력평가" />
+                            </items>
+                        </SegmentedButton> -->
+                        <layoutData>
+                            <layout:GridData span="L2 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <VBox>
+                        <Label text="평가항목구분" />
+                        <SegmentedButton id="evaluExecuteMode" />
+                        <layoutData>
+                            <layout:GridData span="L2 M6 S12" linebreak="true"/>
+                        </layoutData>
+                    </VBox>
+                    <VBox>
+                        <Label text="평가항목명" />
+                        <Input />
+                        <layoutData>
+                            <layout:GridData span="L2 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- <suiteCom:CalculationBuilder
+                        allowStringLiterals="true"
+                        id="builder"
+                        layoutType="VisualOnly"
+                        expression="(AssetTurnover + ProfitMargin) * (Reference3)"
+                        readOnly="false"
+                        allowComparisonOperators="true"
+                        allowLogicalOperators="true"
+                        validateFunction="validateFunction"
+                        afterValidation="afterValidation"
+                        title="정량 항목 산식"
+                    > -->
+                        <!-- variables="{/variables}" -->
+                        <!-- <suiteCom:variables>
+                            <suiteCom:CalculationBuilderVariable key="{key}" label="{label}"/>
+                        </suiteCom:variables> -->
+
+                        <!-- <suiteCom:layoutData>
+                            <layout:GridData span="L12 M12 S12" linebreak="true"/>
+                        </suiteCom:layoutData>
+                    </suiteCom:CalculationBuilder> -->
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <t:TreeTable 
+                id="treeTable"
+                visibleRowCountMode="Auto"
+                enableSelectAll="false"
+                minAutoRowCount="16"
+                enableColumnReordering="false"
+                class="sapFDynamicPageAlignContent" 
+                rowSelectionChange="treeTableSelection"
+                cellClick="treeTableCellClick"
+                rows="{
+                    path : '/EvalItemListView',
+                    parameters : {
+                        countMode: 'Inline',
+                        treeAnnotationProperties : {
+                            hierarchyLevelFor : 'hierarchy_level',
+                            hierarchyNodeFor : 'evaluation_article_code',
+                            hierarchyParentNodeFor : 'parent_evaluation_article_code',
+                            hierarchyDrillStateFor : 'drillstate'
+                        }
+                    }
+                }"
+                >
+                <t:extension>
+                    <OverflowToolbar>
+                        <Title id="title" text="Category" level="H2"/> 
+                        <ToolbarSpacer/>
+                        <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" />
+                        <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" />
+                        <Button text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" />
+                        <Button text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" />
+                        <ToolbarSeparator/>
+                    </OverflowToolbar>
+                </t:extension>
+                
+                <t:columns>
+                    <t:Column label="{I18N>/CATEGORY_CODE}">    
+                        <t:template>
+                            <Text text="{evaluation_article_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/CATEGORY_NAME}">    
+                        <t:template>
+                            <Text text="{category_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/USE_FLAG}">    
+                        <t:template>
+                            <Text text="{= ${use_flag} === true ? 'Yes' : 'No'}"/>
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/WRITER}">    
+                        <t:template>
+                            <Text text="{create_user_id}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/WRITE_DATE}">    
+                        <t:template>
+                            <Text text="{path: 'system_create_dtm',
+                            type: 'sap.ui.model.type.Date'}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+
+                    <t:Column label="" width="2rem" >
+                        <t:template>
+                            <ObjectStatus icon="sap-icon://feeder-arrow"   />
+                        </t:template>
+                    </t:Column>
+                </t:columns>
+            </t:TreeTable>
+        </f:content>
+        
+        
+        <!-- <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer> -->
+    </f:DynamicPage>
+    
+</mvc:View>
