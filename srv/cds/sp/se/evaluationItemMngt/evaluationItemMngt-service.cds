@@ -30,7 +30,8 @@ service EvaluationItemMngtService {
     AND    cm_org.tenant_id     = mng.tenant_id
     AND    cm_org.company_code  = mng.company_code
     AND    cm_org.org_type_code = mng.org_type_code
-    AND    cm_org.org_code      = mng.org_code    ;
+    AND    cm_org.org_code      = mng.org_code    
+    AND    mng.evaluation_execute_role_code = 'MAIN';
 
     /* User's Evaluation Unit. (Condition) */
     view UserEvalUnitView as
