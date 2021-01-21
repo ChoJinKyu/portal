@@ -4,7 +4,7 @@ using { sp.Se_Operation_Unit_Manager as opUnitManager } from '../../../../../db/
 using { sp.Se_Eval_Type as evalType } from '../../../../../db/cds/sp/se/SP_SE_EVAL_TYPE-model';
 using { sp.Se_Operation_Unit_Mst as opUnitMst } from '../../../../../db/cds/sp/se/SP_SE_OPERATION_UNIT_MST-model';
 using { sp.Se_Eval_Item_Export_Tree_View as exportTreeView} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_EXPORT_TREE_VIEW-model';
-using { sp.Se_Eval_Item_Opt as evalItemOpt} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_OPT-model';
+//using { sp.Se_Eval_Item_Opt as evalItemOpt} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_OPT-model';
 using { sp.Se_Quantitative_Item as qttiveItem} from '../../../../../db/cds/sp/se/SP_SE_QUANTITATIVE_ITEM-model';
 
 namespace sp;
@@ -55,7 +55,7 @@ service EvaluationItemMngtService {
     /* User's Eval Type */
     entity UserEvalType as projection on evalType;
     /*Scale */
-    entity EvalitemScle as projection on evalItemOpt;
+    //entity EvalitemScle as projection on evalItemOpt;
     
     /*Quantitative Calc Code*/
     entity QttiveItemCode as projection on qttiveItem;
