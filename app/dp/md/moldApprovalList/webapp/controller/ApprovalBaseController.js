@@ -258,28 +258,34 @@ sap.ui.define([
  
                console.log(" *** oDragSession" , oDragSession );
                console.log(" *** getDropControl" , oDragSession.getDropControl() );
-               console.log(" *** getDropControl" , oDragSession.getDropControl().mAggregations );
                console.log(" *** getDropInfo" , oDragSession.getDropInfo() );
+               console.log(" *** getTextData" , oDragSession.getTextData() );
+               console.log(" *** getDropControl" , oDragSession.getDropControl().mAggregations );
+               console.log(" *** getDropPosition" , oDragSession.getDropPosition() );
                console.log(" *** draggedRowContext" ,  oDragSession.getComplexData("draggedRowContext") );
 
-  
+  // After 
 			var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
 			if (!oDraggedRowContext) {
 				return;
             }
 
             var data = oDragSession.getDropControl().mAggregations.cells;
-            var  parent = {
+            var dropPosition = {
                 approver_empno : data[0].mProperties.text 
                 , approve_sequence : data[1].mProperties.text
                 , approver_type_code : data[2].mProperties.text
                 , approver_name : data[3].mProperties.text
                 , approve_status_code : data[4].mProperties.text
-                , approve_comment : data[4].mProperties.text
+                , approve_comment : data[5].mProperties.text
             };
 
             var approver = this.getView().getModel('approver');
             var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath()); // 내가 선택한 아이템 
+
+            console.log("dropPosition >>>> " , dropPosition);
+            console.log("item >>>> " , item);
+
 
             var sequence = 0;
             for(var i = 0 ; i < approver.getData().Approvers.length ; i++){ 
@@ -289,9 +295,12 @@ sap.ui.define([
             }
 
             for(var i = 0 ; i < approver.getData().Approvers.length ; i++){
-                if(approver.getData().Approvers[i] == undefined) {continue;} 
-                else if(approver.getData().Approvers[i].approve_sequence == parent.approve_sequence){ // 드래그가 도착한 위치의 상단 시퀀스  
-                    sequence = i+1;
+                 if(approver.getData().Approvers[i].approve_sequence == dropPosition.approve_sequence){ // 드래그가 도착한 위치의 상단 시퀀스  
+                    if(oDragSession.getDropPosition() == 'After'){
+                        sequence = i+1;
+                    }else{
+                         sequence = i;
+                    }
                 }  
             }
 

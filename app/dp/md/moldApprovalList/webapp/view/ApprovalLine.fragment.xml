@@ -84,6 +84,7 @@
                             dropPosition="Between" 
                             dragStart="onDragStartTable"
                             drop="onDragDropTable"   /> 
+                          
                     </dragDropConfig>					
                     <items>
                         <ColumnListItem>
