@@ -11,17 +11,17 @@
   entity 위에 @cds.persistence.exists 명시  
   
   5. namespace : db
-  6. service : supplierRole
-  7. service description : supplierRole 서비스
+  6. service : supplierAttrCtrl
+  7. service description : supplierAttrCtrl 서비스
   8. history
   -. 2021.01.21 : 정병훈 최초작성
 *************************************************/
-using { sp as supplierRole } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_ROLE-model.cds';
+using { sp as supplierAttrCtrl } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_ATTR_CTRL-model.cds';
 namespace sp; 
-@path : '/sp.supplierRoleService'
+@path : '/sp.supplierAttrCtrlService'
 
-service supplierRoleService {
+service supplierAttrCtrlService {
 
-    entity supplierRole as projection on sp.Sm_Supplier_Role;
+    entity supplierAttrCtrl as projection on sp.Sm_Supplier_Attr_Ctrl;
 
 }
