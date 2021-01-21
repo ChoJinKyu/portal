@@ -29,7 +29,9 @@ sap.ui.define([
     "ext/lib/util/ValidatorUtil",
     "sap/f/library",
     "ext/lib/util/ControlUtil",
-    "ext/dp/util/control/ui/MaterialMasterDialog"
+    "ext/dp/util/control/ui/MaterialMasterDialog",
+    "ext/pg/util/control/ui/VendorPoolDialog",
+    "ext/lib/util/Validator"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -65,12 +67,16 @@ sap.ui.define([
         ValidatorUtil,
         library,
         ControlUtil,
-        MaterialMasterDialog
+        MaterialMasterDialog,
+        VendorPoolDialog,
+        Validator
     ) {
         "use strict";
         var that;
         return BaseController.extend("sp.np.npMst.controller.MainList", {
             //dateFormatter: DateFormatter,
+            validator: new Validator(),
+
             onInit: function () {
                 console.log("MainList Init!!!");
                 var oViewModel,
@@ -96,6 +102,8 @@ sap.ui.define([
                 this.setModel(new ManagedListModel(), "list");
                 this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
                 that = this;
+
+                //this.fnSearch();
             },
 
             _onRoutedThisPage: function () {
@@ -147,7 +155,9 @@ sap.ui.define([
 
             fnSearch: function () {
 
-                that.mainTable.clearSelection();
+                this.validator.validate(this.byId('pageSearchFormE'));
+                if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
+
                 var status = "";
                 var oFilter = [];
                 var aFilter = [];
@@ -224,45 +234,46 @@ sap.ui.define([
                 oModel.read("/SpNetpriceView", {
                     filters: oFilter,
                     success: function (oData) {
-                        oDataLen = oData.results.length;
+                        // oDataLen = oData.results.length;
 
-                        that.mainTable.setVisibleRowCount(0);
-                        var oColumn = that.mainTable.getColumns()[0];
-                        that.mainTable.sort(oColumn);
-                        console.log(oDataLen);
+                        // that.mainTable.setVisibleRowCount(0);
+                        // var oColumn = that.mainTable.getColumns()[0];
+                        // that.mainTable.sort(oColumn);
+                        // console.log(oDataLen);
 
-                        that.mainTable.onAfterRendering = function () {
-                            sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
-                            var aRows = that.mainTable.getRows();
-                            if (aRows && aRows.length > 0) {
-                                var pRow = {};
-                                for (var i = 0; i < aRows.length; i++) {
-                                    if (i > 0) {
-                                        var pCell = pRow.getCells()[0],
-                                            cCell = aRows[i].getCells()[0];
-                                        console.log(cCell.getText(), pCell.getText());
-                                        if (cCell.getText() === pCell.getText()) {
-                                            $("#" + cCell.getId()).css("visibility", "hidden");
-                                            $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
-                                        }
+                        // that.mainTable.onAfterRendering = function () {
+                        //     sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
+                        //     var aRows = that.mainTable.getRows();
+                        //     if (aRows && aRows.length > 0) {
+                        //         var pRow = {};
+                        //         for (var i = 0; i < aRows.length; i++) {
+                        //             if (i > 0) {
+                        //                 var pCell = pRow.getCells()[0],
+                        //                     cCell = aRows[i].getCells()[0];
+                        //                 console.log(cCell.getText(), pCell.getText());
+                        //                 if (cCell.getText() === pCell.getText()) {
+                        //                     $("#" + cCell.getId()).css("visibility", "hidden");
+                        //                     $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
+                        //                 }
 
-                                        var pCell1 = pRow.getCells()[1],
-                                            cCell1 = aRows[i].getCells()[1];
-                                        console.log(cCell.getText(), pCell.getText());
-                                        if (cCell1.getText() === pCell1.getText()) {
-                                            $("#" + cCell1.getId()).css("visibility", "hidden");
-                                            $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
-                                        }
+                        //                 var pCell1 = pRow.getCells()[1],
+                        //                     cCell1 = aRows[i].getCells()[1];
+                        //                 console.log(cCell.getText(), pCell.getText());
+                        //                 if (cCell1.getText() === pCell1.getText()) {
+                        //                     $("#" + cCell1.getId()).css("visibility", "hidden");
+                        //                     $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
+                        //                 }
 
 
-                                    }
-                                    pRow = aRows[i];
-                                }
-                            }
-                            console.log(oDataLen);
-                            that.mainTable.setVisibleRowCount(oDataLen);
-                            oView.setBusy(false);
-                        };
+                        //             }
+                        //             pRow = aRows[i];
+                        //         }
+                        //     }
+                        //     //console.log(oDataLen);
+                        //     that.mainTable.setVisibleRowCount(oDataLen);
+                        //     oView.setBusy(false);
+                        // };
+                        oView.setBusy(false);
                     }
                 });
             },
@@ -299,16 +310,39 @@ sap.ui.define([
                 this.oSearchMultiMaterialMasterDialog.open();
             },
 
+            vhVendorPoolCode: function() {
+                var vendorPoolCode;
+                if (!this.oSearchVendorPollDialog) {
+                    this.oSearchVendorPollDialog = new VendorPoolDialog({
+                        title: "Choose VendorPool",
+                        MultiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", "L2100")
+                            ]
+                        }
+                    });
+
+                    this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
+                        vendorPoolCode = oEvent.mParameters.item;
+                        //console.log("materialItem : ", materialItem);
+                        that.byId("search_material_code").setValue(vendorPoolCode.material_code);
+
+                    }.bind(this));
+                }
+                this.oSearchVendorPollDialog.open();
+            },
+
             cvtSupplier: function (oEvent) {
                 console.log(oEvent);
             },
 
             /**
-                 * Rounds the number unit value to 2 digits
-                 * @public
-                 * @param {string} sValue the number string to be rounded
-                 * @returns {string} sValue with 2 digits rounded
-                 */
+             * Rounds the number unit value to 2 digits
+             * @public
+             * @param {string} sValue the number string to be rounded
+             * @returns {string} sValue with 2 digits rounded
+            */
             numberUnit: function (sValue) {
                 if (!sValue) {
                     return "";
@@ -321,6 +355,69 @@ sap.ui.define([
             comma: function (str) {
                 str = String(str);
                 return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+            },
+
+            ///////////////////// Multi Combo box event Start //////////////////////////
+            /**
+            * @private 
+            * @see (멀티박스)Company와 Plant 부분 연관성 포함함
+            */
+            handleSelectionFinishComp: function (oEvent) {
+
+                //this.copyMultiSelected(oEvent);
+
+                var params = oEvent.getParameters();
+                var plantFilters = [];
+
+                if (params.selectedItems.length > 0) {
+                    params.selectedItems.forEach(function (item, idx, arr) {
+                        //console.log(item.getKey());
+                        plantFilters.push(new Filter({
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                                new Filter("company_code", FilterOperator.EQ, item.getKey())
+                            ],
+                            and: true
+                        }));
+                    });
+                } else {
+                    plantFilters.push(
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
+                    );
+                }
+
+                var filter = new Filter({
+                    filters: plantFilters,
+                    and: false
+                });
+
+                var bindInfo = {
+                    path: 'purOrg>/Pur_Operation_Org',
+                    filters: filter,
+                    template: new Item({
+                        key: "{purOrg>org_code}", text: "[{purOrg>org_code}] {purOrg>org_name}"
+                    })
+                };
+
+                this.getView().byId("search_operation_org_s").bindItems(bindInfo);
+                this.getView().byId("search_operation_org_e").bindItems(bindInfo);
+            },
+            ///////////////////// Multi Combo box event End //////////////////////////
+
+            //아래 정규식 둘중에 하나 골라서 쓰면 됩니다. 
+            chkReplaceChange: function (oEvent) {
+                console.log("livechange!!");
+                //var regex = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi;     // 특수문자 제거 (한글 영어 숫자만)
+                var regex = /[^a-zA-Z0-9]/gi;                   // 특수문자 제거 (영어 숫자만)
+                //test Str ===> var regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;  //한글 제거 11/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g%^&*()_+|<
+                
+                var newValue = oEvent.getParameter("newValue");
+                //$(this).val(v.replace(regexp,''));
+                if (newValue !== "") {
+                    newValue = newValue.replace(regex,"");
+                    oEvent.oSource.setValue(null);
+                    oEvent.oSource.setValue(newValue);
+                }
             }
         });
     });
