@@ -3,12 +3,13 @@ SELECT pca.tenant_id,
        pca.company_code,
        pca.org_type_code,
        pca.org_code,
+       pca.category_group_code,
        pca.category_code,
-       pc.code_name as category_name,
 	   pca.part_project_type_code,
-	   ccl.code_name as part_project_type_name,
        pca.activity_code,
-       pa.code_name as activity_name,
+       cname.code_name as category_name,
+	   a.code_name as part_project_type_name,
+       aname.code_name as activity_name,
        pca.s_grade_standard_days,
        pca.a_grade_standard_days,
        pca.b_grade_standard_days,
@@ -17,21 +18,16 @@ SELECT pca.tenant_id,
        pca.active_flag,
        pca.update_user_id,
        pca.local_update_dtm
-  FROM DP_PD_PART_CATEGORY_ACTIVITY pca
-    LEFT JOIN DP_CODE_LNG pa
-      ON  pca.tenant_id = pa.tenant_id
-      AND pca.activity_code = pa.code
-      AND pa.group_code = 'PD_ACTIVITY'
-      AND pa.language_cd = 'KO'
-    LEFT JOIN DP_CODE_LNG pc
-      ON  pca.tenant_id = pc.tenant_id
-      AND pca.activity_code = pc.code
-      AND pc.group_code = 'PD_CATEGORY'
-      AND pc.language_cd = 'KO'
-    JOIN CM_CODE_LNG ccl
-      ON  pca.tenant_id = ccl.tenant_id
-      AND pca.part_project_type_code = ccl.code
-      AND ccl.group_code = 'DP_PART_PJT_TYPE'
-      AND ccl.language_cd = 'KO'
-      AND pca.tenant_id = 'L2100'
-;
+  FROM DP_PD_PART_CATEGORY_ACTIVITY pca, DP_PD_ACTIVITY_CODE_LNG aname, DP_PD_PART_CATEGORY_LNG cname, 
+	(select code, code_name, tenant_id from CM_CODE_LNG where group_code='DP_PART_PJT_TYPE' and LANGUAGE_CD='KO') a
+ WHERE cname.category_group_code = pca.category_group_code
+   and cname.category_code = pca.category_code
+   and aname.LANGUAGE_CD='KO'
+   and cname.LANGUAGE_CD='KO'
+   AND aname.activity_type_code='PART'
+   and aname.activity_code = pca.activity_code
+   AND cname.tenant_id = pca.tenant_id
+   AND aname.tenant_id = pca.tenant_id
+   AND a.tenant_id = pca.tenant_id
+   and a.code = pca.part_project_type_code
+   ;
