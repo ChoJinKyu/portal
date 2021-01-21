@@ -32,13 +32,14 @@ using util from '../../cm/util/util-model';
 using {dp as Mcst_Project} from './DP_TC_MCST_PROJECT-model';
 
 entity Tc_Mcst_Project_Addition_Info {
-    key tenant_id            : String(5) not null  @title : '테넌트ID';
-    key project_code         : String(30) not null @title : '프로젝트코드';
-    key model_code           : String(40) not null @title : '모델코드';
-    key version_number       : String(30) not null @title : '버전번호';
-    key addition_type_code   : String(30) not null @title : '추가유형코드';
-    key period_code          : String(30) not null @title : '기간코드';
-        addition_type_value  : String(10)          @title : '추가유형값';
+    key tenant_id               : String(5) not null  @title : '테넌트ID';
+    key project_code            : String(30) not null @title : '프로젝트코드';
+    key model_code              : String(40) not null @title : '모델코드';
+    key version_number          : String(30) not null @title : '버전번호';
+    key addition_type_code      : String(30) not null @title : '추가유형코드';
+    key period_code             : String(30) not null @title : '기간코드';
+        addition_type_unit_code : String(30)          @title : '추가유형단위코드';
+        addition_type_value     : String(10)          @title : '추가유형값';
 /*
         mcst_mtlmob_ref      : Association[0.. * ] to Mcst_Project.Tc_Mcst_Project
                                    on  mcst_mtlmob_ref.tenant_id      = tenant_id
