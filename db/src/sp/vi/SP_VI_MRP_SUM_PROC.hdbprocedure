@@ -1,0 +1,117 @@
+PROCEDURE sp_vi_mrp_sum_proc( IN p_tenant_id NVARCHAR(5)
+                                              , IN p_plant_code NVARCHAR(10)
+                                              , IN p_txn_yyyymm NVARCHAR(6)
+                                              , OUT o_ret_code NVARCHAR(10)
+                                              , OUT o_ret_msg NVARCHAR(500) )
+	LANGUAGE SQLSCRIPT AS
+/**
+ * * * *
+ *
+ * 1. Name : sp_vi_mrp_sum_proc
+ *
+ * 2. Description : MRP Summary Creation (IF TABLE -> SUMMARY TABLE)
+ *
+ * 3. history -. 2021.01.13 : 이경상 최초작성
+ *
+ * * * *
+ */	
+BEGIN
+
+	-- v_tenant_id = select tenant_id   from cm_org_plant t where 1=1 ;
+	DECLARE v_user NVARCHAR(30) = 'SYSTEM USER'; -- for testing
+	DECLARE v_cnt INT  = 0;
+	DECLARE v_curr_date SECONDDATE = CURRENT_TIMESTAMP;
+	
+	DECLARE CURSOR c_mrp FOR
+	    SELECT AFFILIATE_CODE,
+	           PRODUCTION_ORGANIZATION_CODE AS ORG_CODE,
+	           PART_NO                      AS MATERIAL_CODE,
+	           FLXFLD1_INVENTORY_QTY        AS STOCK_QTY,
+	           FLXFLD1_GROSS_REQ_QTY        AS MM_1_REQ_QTY,
+	           FLXFLD2_GROSS_REQ_QTY        AS MM_2_REQ_QTY,
+	           FLXFLD3_GROSS_REQ_QTY        AS MM_3_REQ_QTY,
+	           FLXFLD4_GROSS_REQ_QTY        AS MM_4_REQ_QTY,
+	           FLXFLD5_GROSS_REQ_QTY        AS MM_5_REQ_QTY,
+	           FLXFLD6_GROSS_REQ_QTY        AS MM_6_REQ_QTY,
+	           FLXFLD7_GROSS_REQ_QTY        AS MM_7_REQ_QTY,
+	           FLXFLD8_GROSS_REQ_QTY        AS MM_8_REQ_QTY,
+	           FLXFLD9_GROSS_REQ_QTY        AS MM_9_REQ_QTY,
+	           FLXFLD10_GROSS_REQ_QTY       AS MM_10_REQ_QTY,
+	           FLXFLD11_GROSS_REQ_QTY       AS MM_11_REQ_QTY,
+	           FLXFLD12_GROSS_REQ_QTY       AS MM_12_REQ_QTY,
+	           SOURCE_TYPE_CODE
+	      FROM SP_VI_MRP_R_IF
+	     WHERE 1 = 1
+	       AND PRODUCTION_ORGANIZATION_CODE = :P_PLANT_CODE
+	       AND PROCESS_FLAG = 'P' -- processing
+	    --and mrp_excution_date >= 
+	    --and mrp_excution_date < 
+	    ;
+
+
+   DECLARE EXIT HANDLER FOR SQLEXCEPTION
+   SELECT ::SQL_ERROR_CODE, ::SQL_ERROR_MESSAGE INTO o_ret_code , o_ret_msg  FROM DUMMY;
+
+    BEGIN
+        -- 기존 데이터 삭제
+        DELETE FROM sp_vi_mrp_summary
+         WHERE 1=1
+           AND tenant_id = :p_tenant_id
+           AND plant_code = :p_plant_code
+           AND txn_yyyymm = :p_txn_yyyymm;
+    END;
+
+	BEGIN
+	   -- i/f 테이블의 신규 데이터에 대해 Processing으로 변경.
+		UPDATE SP_VI_MRP_R_IF
+		   SET process_flag = 'P'
+	 	 WHERE 1 = 1
+		   AND production_organization_code = :p_plant_code
+		   AND process_flag = 'N';
+	END;
+	
+	FOR c_mrp_rec AS c_mrp DO
+		BEGIN
+			INSERT INTO sp_vi_mrp_summary 
+			     VALUES(:p_tenant_id
+			          , :p_plant_code
+			          , :p_txn_yyyymm
+			          , c_mrp_rec.material_code
+			          , c_mrp_rec.source_type_code
+			          , c_mrp_rec.stock_qty
+			          , c_mrp_rec.mm_1_req_qty
+			          , c_mrp_rec.mm_2_req_qty
+			          , c_mrp_rec.mm_3_req_qty
+			          , c_mrp_rec.mm_4_req_qty
+			          , c_mrp_rec.mm_5_req_qty
+			          , c_mrp_rec.mm_6_req_qty
+			          , c_mrp_rec.mm_7_req_qty
+			          , c_mrp_rec.mm_8_req_qty
+			          , c_mrp_rec.mm_9_req_qty
+			          , c_mrp_rec.mm_10_req_qty
+			          , c_mrp_rec.mm_11_req_qty
+			          , c_mrp_rec.mm_12_req_qty
+			          , v_curr_date, v_curr_date
+			          , v_user
+			          , v_user
+			          , v_curr_date
+			          , v_curr_date);
+			 v_cnt = v_cnt + 1;
+		END;
+	END FOR;
+	
+	BEGIN
+	    -- 완료건에 대해 Complete 으로 변경
+		UPDATE SP_VI_MRP_R_IF
+		   SET process_flag = 'C'
+			  ,local_update_dtm = v_curr_date
+			  ,update_user_id = v_user
+			  ,system_update_dtm = v_curr_date
+		 WHERE 1 = 1
+	 	   AND production_organization_code = :p_plant_code
+		   AND process_flag = 'P';
+	END;	
+	
+	SELECT 'S' o_ret_code , :v_cnt||' Rows Created' o_ret_msg FROM DUMMY;
+
+END;
