@@ -15,7 +15,7 @@ sap.ui.define([
 ], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
     "use strict";
 
-    var vendorPoolDialog = Parent.extend("pg.util.control.ui.VendorPoolDialog", {
+    var martrialDialog = Parent.extend("pg.util.control.ui.MartrialDialog", {
 
         metadata: {
             properties: {
@@ -28,37 +28,18 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function () {
-            this.oVendorPoolCode = new SearchField({ placeholder: this.getModel("I18N").getText("/VENDOR_POOL_CODE") });
-            //this.oBizunitCode = new SearchField({ placeholder: this.getModel("I18N").getText("/BIZUNIT_CODE") });
-            //this.oLocalUserName = new SearchField({ placeholder: this.getModel("I18N").getText("/LOCAL_USER_NAME") });
+            this.oMaterialCode = new SearchField({ placeholder: this.getModel("I18N").getText("/SUPPLIER_CODE") });
 
-            this.oVendorPoolCode.attachEvent("change", this.loadData.bind(this));
-            //this.oBizunitCode.attachEvent("change", this.loadData.bind(this));
-            //this.oLocalUserName.attachEvent("change", this.loadData.bind(this));
+            this.oMaterialCode.attachEvent("change", this.loadData.bind(this));
 
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
-                        this.oVendorPoolCode
+                        new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
+                        this.oMaterialCode
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
                 })
-                //,
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/BIZUNIT_CODE") }),
-                //         this.oBizunitCode
-                //     ],
-                //     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
-                // }),
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/LOCAL_USER_NAME") }),
-                //         this.oLocalUserName
-                //     ],
-                //     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
-                // })
             ];
         },
 
@@ -76,36 +57,37 @@ sap.ui.define([
                 }),
                 new Column({
                     width: "55%",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_LOCAL_NAME") }),
-                    template: new Text({ text: "{level_path}" })
+                    label: new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE") }),
+                    template: new Text({ text: "{material_code}" })
                 })
             ];
         },
 
         loadData: function () {
-            if (this.oSearchObj.vendor_pool_code) {
-                this.oVendorPoolCode.setValue(this.oSearchObj.vendor_pool_code);
+            if (this.oSearchObj.material_code) {
+                this.oMaterialCode.setValue(this.oSearchObj.material_code);
             }
-            var sVendorPoolCode = this.oVendorPoolCode.getValue();
+            var sMaterialCode = this.oMaterialCode.getValue();
             var aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanent_id)
+                new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanent_id),
+                new Filter("vendor_pool_code", FilterOperator.EQ, this.oSearchObj.vendor_pool_code)
             ];
 
-            if (sVendorPoolCode) {
+            if (sSupplierCode) {
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("vendor_pool_path_code", FilterOperator.Contains, "'" + sVendorPoolCode.toUpperCase() + "'")
+                            new Filter("material_code", FilterOperator.Contains, "'" + sMaterialCode.toUpperCase() + "'")
                         ],
                         and: false
                     })
                 );
             }
             
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpInfoLeafView", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpMaterialDtlView", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("vendor_pool_code", true)
+                    new Sorter("material_code", true)
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -127,5 +109,5 @@ sap.ui.define([
 
     });
 
-    return vendorPoolDialog;
+    return martrialDialog;
 }, /* bExport= */ true);
