@@ -10,14 +10,9 @@ namespace cm.util;
 @path : '/cm.util.CommonService'
 service CommonService {
 
-    @deprecation
-    entity CodeDetails as projection on codeDetail;
-
     @readonly
     entity Message as projection on message;
     
-    view CodeView as select from codeView.Code_View;
-
     @readonly
     view Code as
         select

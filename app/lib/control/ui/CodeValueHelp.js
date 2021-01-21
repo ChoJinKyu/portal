@@ -165,8 +165,18 @@ sap.ui.define([
                 oParam.filters.push(
                     new Filter({
                         filters: [
-                            new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
-                            new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                            new Filter({
+                                path: this.getProperty("keyField"),
+                                operator: FilterOperator.Contains,
+                                value1: sKeyword,
+                                caseSensitive: false
+                            }),
+                            new Filter({
+                                path: this.getProperty("textField"),
+                                operator: FilterOperator.Contains,
+                                value1: sKeyword,
+                                caseSensitive: false
+                            })
                         ],
                         and: false
                     })

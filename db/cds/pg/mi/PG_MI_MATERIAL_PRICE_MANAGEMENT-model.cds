@@ -38,7 +38,7 @@ entity MI_Material_Price_Management {
         sourcing_group_code : String(10)          @title : '소싱그룹코드';
         delivery_mm         : String(10)          @title : '인도월';
     key mi_date             : Date not null       @title : '시황일자';
-        amount              : Decimal(17, 3)      @title : '금액';
+        price               : Decimal(28, 5)      @title : '가격';
         status              : String(1)           @title : '구분';
 }
 

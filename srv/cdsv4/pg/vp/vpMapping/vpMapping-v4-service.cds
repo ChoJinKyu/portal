@@ -108,7 +108,7 @@ service VpMappingV4Service {
         vpItem     : array of VpItemType;
         vpManager  : array of VpManagerType;
         user_id    : String(255);
-        user_no    : String(255)
+        user_no    : String(255);
     }
 
     action VpMappingChangeProc(inputData : ProcInputType) returns array of VpOutType;

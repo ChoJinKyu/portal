@@ -18,8 +18,7 @@
   -.  
 *************************************************/
 FUNCTION OP_PU_PR_TEMPLATE_NUMBERS_FUNC ( I_TENANT_ID NVARCHAR(10),
-                                         I_PR_TEMPLATE_NUMBER NVARCHAR(30),
-                                         I_ERP_INTERFACE_FLAG BOOLEAN )
+                                         I_PR_TEMPLATE_NUMBER NVARCHAR(30) )
 
 RETURNS OUT_PR_NUMBER NVARCHAR(1000)
 	LANGUAGE SQLSCRIPT
@@ -39,8 +38,7 @@ BEGIN
                             DEFAULT NULL
                             FROM OP_PU_PR_TEMPLATE_MST
                             WHERE   TENANT_ID = :I_TENANT_ID
-                            AND  PR_TEMPLATE_NUMBER = :O_PR_TEMPLATE_NUMBER
-                            AND  ERP_INTERFACE_FLAG = :I_ERP_INTERFACE_FLAG ;
+                            AND  PR_TEMPLATE_NUMBER = :O_PR_TEMPLATE_NUMBER ;
 
         IF :P_PR_TEMPLATE_NUMBER IS NULL THEN
             RETURN ;

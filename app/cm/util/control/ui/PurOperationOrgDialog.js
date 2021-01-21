@@ -21,12 +21,7 @@ sap.ui.define([
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "org_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "org_name" },
-                filters: {
-                    type: "sap.ui.core.Control"
-                },
-                sorters: {
-                    type: "sap.ui.core.Control"
-                }
+                items: { type: "sap.ui.core.Control"}
             }
         },
         
@@ -66,8 +61,8 @@ sap.ui.define([
 
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                aFilters = this.getProperty("filters"),
-                aSorters = this.getProperty("sorters");
+                aFilters = this.getProperty("items").filters || [],
+                aSorters = this.getProperty("items").sorters || [];
             if(sKeyword){
                 aFilters.push(
                     new Filter({
@@ -79,7 +74,7 @@ sap.ui.define([
                     })
                 );
             }
-            ODataV2ServiceProvider.getService("cm.util.OrgService").read("/Pur_Operation", {
+            ODataV2ServiceProvider.getService("cm.orgProcOrgTypeMgtService").read("/PurOrgTypeView", {
                 
                 filters: aFilters,
                 sorters: aSorters,

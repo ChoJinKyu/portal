@@ -4,6 +4,7 @@ using { sp.Se_Operation_Unit_Manager as opUnitManager } from '../../../../../db/
 using { sp.Se_Eval_Type as evalType } from '../../../../../db/cds/sp/se/SP_SE_EVAL_TYPE-model';
 using { sp.Se_Operation_Unit_Mst as opUnitMst } from '../../../../../db/cds/sp/se/SP_SE_OPERATION_UNIT_MST-model';
 using { sp.Se_Eval_Item_Export_Tree_View as exportTreeView} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_EXPORT_TREE_VIEW-model';
+using { sp.Se_Eval_Item_Opt as evalItemOpt} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_OPT-model';
 
 namespace sp;
 @path : '/sp.evaluationItemMngtService'
@@ -84,9 +85,11 @@ service EvaluationItemMngtService {
 
     /* User's Eval Type */
     entity UserEvalType as projection on evalType;
+    /*Scale */
+    entity EvalitemScle as projection on evalItemOpt;
 
-    /* Eval Item List */
-    view EvalItemList as
+    /* Eval Item List View */
+    view EvalItemListView as
     SELECT etv.parent_id,
            etv.node_id,
            key etv.tenant_id,
@@ -109,7 +112,9 @@ service EvaluationItemMngtService {
            etv.evaluation_result_input_type_cd,    /*Scale유형코드*/
            cv_scle.code_name AS evaluation_result_input_type_name, /*Scale유형코드명*/
            etv.evaluation_article_desc,            /*평가항목설명*/
-           etv.evaluation_article_lvl_attr_cd,
+           etv.evaluation_article_lvl_attr_cd,     /*Node 유형*/
+           etv.qttive_item_uom_code,               /*단위*/
+           etv.qttive_eval_article_calc_formula,   /*정량항목산식*/
            etv.writer,                             /*작성자*/
            etv.write_tm,                           /*작성일자*/
            etv.sort_sequence,

@@ -16,5 +16,5 @@ entity MI_Cateogry_Detail_View {
     key exchange           : String(10)    @title : '거래소';
     key termsdelv          : String(10)    @title : '인도조건';
     key mi_date            : Date          @title : '시황일자';
-        amount             : Decimal(17, 3)@title : '금액';
+        price              : Decimal(28, 5)@title : '가격';
 }

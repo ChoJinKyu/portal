@@ -81,6 +81,14 @@ sap.ui.define([
             ];
         },
 
+        getServiceParameters: function(){
+            return {
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                ]
+            }
+        },
+
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
                 sDepartment = this.oDepartment.getValue(),
@@ -91,8 +99,18 @@ sap.ui.define([
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
-                            new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                            new Filter({
+                                path: this.getProperty("keyField"),
+                                operator: FilterOperator.Contains,
+                                value1: sKeyword,
+                                caseSensitive: false
+                            }),
+                            new Filter({
+                                path: this.getProperty("textField"),
+                                operator: FilterOperator.Contains,
+                                value1: sKeyword,
+                                caseSensitive: false
+                            })
                         ],
                         and: false
                     })
@@ -102,8 +120,18 @@ sap.ui.define([
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("tolower(department_local_name)", FilterOperator.Contains, "'" + sDepartment.toLowerCase().replace("'","''") + "'"),
-                            new Filter("tolower(department_id)", FilterOperator.Contains, "'" + sDepartment.toLowerCase().replace("'","''") + "'")
+                            new Filter({
+                                path: "department_local_name",
+                                operator: FilterOperator.Contains,
+                                value1: sDepartment,
+                                caseSensitive: false
+                            }),
+                            new Filter({
+                                path: "department_id",
+                                operator: FilterOperator.Contains,
+                                value1: sDepartment,
+                                caseSensitive: false
+                            })
                         ],
                         and: false
                     })
