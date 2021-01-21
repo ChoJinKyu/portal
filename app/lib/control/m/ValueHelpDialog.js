@@ -6,6 +6,7 @@
 sap.ui.define([
     "sap/m/Dialog",
     "sap/m/DialogRenderer",
+    "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
     "sap/ui/layout/GridData",
     "sap/ui/layout/form/SimpleForm",
@@ -17,7 +18,7 @@ sap.ui.define([
     "sap/m/Token",
     "sap/m/Table",
     "sap/m/ColumnListItem"
-], function (Parent, Renderer, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem) {
+], function (Parent, Renderer, Multilingual, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem) {
     "use strict";
 
     //TODO : Localization (Buttons - apply, cancel, search, table no-data, multiInput title)
@@ -59,17 +60,26 @@ sap.ui.define([
             Parent.apply(this, arguments);
             this.setModel(new JSONModel());
             this.addStyleClass("sapUiSizeCompact");
-            this.createDialog();
+            
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            if(this.getModel("I18N").isReady()){
+                this.createContent();
+            }else{
+                oMultilingual.attachEvent("ready", function(){
+                    this.createContent();
+                }.bind(this));
+            }
         },
 
-        createDialog: function(){
+        createContent: function(){
             var isMultiSelection = this.getProperty("multiSelection");
 
             var oLayout = new VBox();
             this.addContent(oLayout);
 
             this.setBeginButton(new Button({
-                text: "Cancel",
+                text: this.getModel("I18N").getText("/CANCEL"),
                 press: function () {
                     this.fireEvent("cancel");
                     this.close();
@@ -78,7 +88,7 @@ sap.ui.define([
             if(isMultiSelection){
                 this.setEndButton(this.oApplyButton = new Button({
                     type: "Emphasized",
-                    text: "Apply",
+                    text: this.getModel("I18N").getText("/APPLY"),
                     enabled: isMultiSelection == true ? false : true,
                     press: function () {
                         this.doApply();
@@ -109,7 +119,7 @@ sap.ui.define([
                 items: [
                     new Button({
                         type: "Transparent",
-                        text: "Search",
+                        text: this.getModel("I18N").getText("/SEARCH"),
                         press: this._onSearchPress.bind(this)
                     })
                 ],
@@ -119,7 +129,7 @@ sap.ui.define([
             oForm.addContent(oSearchButton);
 
             var oTable = new Table({
-                noDataText: "{I18N>/NCM01004}",
+                noDataText: this.getModel("I18N").getText("/NCM01004"),
                 mode: isMultiSelection ? "MultiSelect" : "None",
                 columns: this.getAggregation("columns"),
                 items: {
@@ -153,7 +163,7 @@ sap.ui.define([
                     columnsM: 2,
                     content: [new VBox({
                         items: [
-                            new Label({ text: "Selected Items"}),
+                            new Label({ text: this.getModel("I18N").getText("/SELECTED_ITEMS")}),
                             oMultiInput
                         ],
                         layoutData: new GridData({ span: "XL12 L12 M12 S12"})

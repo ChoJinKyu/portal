@@ -23,6 +23,7 @@ entity Mm_Hs_Code {
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
   key country_code : String(30)  not null @title: '국가코드' ;	
   key hs_code : String(17)  not null @title: 'HS코드' ;	
+    hs_text : String(500)   @title: 'HS텍스트' ;	
     hs_text1 : String(50)   @title: 'HS텍스트1' ;	
     hs_text2 : String(50)   @title: 'HS텍스트2' ;	
     hs_text3 : String(50)   @title: 'HS텍스트3' ;	

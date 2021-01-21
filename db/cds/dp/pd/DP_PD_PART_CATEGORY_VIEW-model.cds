@@ -8,11 +8,12 @@ entity Pd_Part_Category_View {
   key company_code : String(10) default '*' not null @title: '회사코드' ;	
   key org_type_code : String(2)  not null @title: '조직유형코드' ;	
   key org_code : String(10)  not null @title: '조직코드' ;	
+  key category_group_code : String(30)  not null @title: '카테고리그룹코드' ;	
   key category_code : String(40)  not null @title: '카테고리코드' ;	
     parent_category_code : String(40)   @title: '상위카테고리코드' ;
     sequence : Decimal default 1  @title: '순번' ;	
     category_name : String(240)   @title: '카테고리명' ;
     active_flag : Boolean   @title: '활성여부' ;	
     update_user_id : String(255) @title: '최종수정자';
-    syste_update_dtm : DateTime @title: '최종수정일시';
+    local_update_dtm : DateTime @title: '최종수정일시';
 }

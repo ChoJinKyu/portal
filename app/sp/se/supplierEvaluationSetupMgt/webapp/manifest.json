@@ -1,0 +1,131 @@
+{
+    "_version": "1.21.0",
+    "sap.app": {
+        "id": "sp.se.supplierEvaluationSetupMgt",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v2/sp.supEvalSetupService/",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            
+            "up": {
+                "uri": "../uploadCollection.json",
+                "type": "JSON"
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "sp.se.supplierEvaluationSetupMgt.view.App",
+            "type": "XML",
+            "async": true
+        },
+        "dependencies": {
+            "minUI5Version": "1.60.0",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {},
+                "sap.f": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "sp.se.supplierEvaluationSetupMgt.i18n.i18n"
+                }
+            },
+            "": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "odataVersion": "2.0"
+                },
+                "dataSource": "mainService"
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "resourceRoots": {
+            "ext.lib": "../../../../lib"
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "controlId": "app",
+                "viewPath": "sp.se.supplierEvaluationSetupMgt.view",
+                "controlAggregation": "pages",
+                "async": true
+            },
+            "routes": [
+                {
+                    "name": "main",
+                    "pattern": "",
+                    "target": [
+                        "main"
+                    ]
+                },
+                {
+                    "name": "detail",
+                    "pattern": "detail/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code}",
+                    "target": [
+                        "detail"
+                    ]
+                }
+            ],
+            "targets": {
+                "main": {
+                    "viewName": "Main",
+                    "viewType": "XML",
+                    "viewLevel": 1,
+                    "viewId": "main"
+                },
+                "detail": {
+                    "viewName": "Detail",
+                    "viewType": "XML",
+                    "viewLevel": 2,
+                    "viewId": "detail"
+                },
+                "notFound": {
+                    "viewName": "NotFound",
+                    "viewPath": "ext.lib.view",
+                    "viewId": "notFound"
+                }
+            }
+        }
+    }
+}

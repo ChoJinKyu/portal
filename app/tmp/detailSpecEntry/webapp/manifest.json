@@ -39,6 +39,20 @@
         "settings": {
           "odataVersion": "2.0"
         }
+      },
+      "tmpMgrService": {
+        "uri": "srv-api/odata/v4/tmp.TmpMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      },
+      "testService": {
+        "uri": "srv-api/odata/v2/xx.TemplateService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -121,6 +135,26 @@
       },
       "purOrg": {
         "dataSource": "purOrgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "tmp": {
+        "dataSource": "tmpMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
+      "listT": {
+        "dataSource": "testService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

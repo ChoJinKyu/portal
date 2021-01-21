@@ -48,17 +48,17 @@ service ProjectMgtService {
     @readonly
     entity Hr_Department            as projection on hrDept.Hr_Department; 
 
-    view Org_Division as
+    @readonly
+    entity Org_Division as
         select distinct key cpo.tenant_id
              , key cpo.company_code
+             , key cod.bizdivision_code
              , cod.bizdivision_name
-             , cod.bizdivision_code
-          from purOperOrg.Pur_Operation_Org cpo
-     left join orgDiv.Org_Division cod
-            on cpo.tenant_id = cod.tenant_id
-           and cpo.bizdivision_code = cod.bizdivision_code
-         where cpo.bizdivision_code is not null
-      order by cod.bizdivision_code;
+          from orgDiv.Org_Division cod
+     left join purOperOrg.Pur_Operation_Org cpo
+            on cod.tenant_id = cpo.tenant_id
+           and cod.bizdivision_code = cpo.bizdivision_code
+         where cpo.bizdivision_code is not null;
     //entity Org_Division            as projection on orgDiv.Org_Division;
 
     @readonly
@@ -69,8 +69,7 @@ service ProjectMgtService {
                 uom_name,
                 uom_desc
         }
-        where tenant_id = 'L2100'
-          and uom_class_code = 'AAAADL'
+        where uom_class_code = 'AAAADL'
           and uom_desc is not null
           and disable_date is null;
 
@@ -80,8 +79,7 @@ service ProjectMgtService {
             key tenant_id,
             key currency_code
         }
-        where tenant_id = 'L2100'
-          and use_flag = true;    
+        where use_flag = true;    
 
 
     view ProjectView as

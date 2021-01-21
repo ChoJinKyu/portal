@@ -11,11 +11,11 @@ entity Sc_Nego_Item_Prices {
     key nego_header_id               : Integer64 not null  @title : '협상헤더ID';
     key nego_item_number             : String(10) not null @title : '협상품목번호';
         Suppliers                    : Composition of many negoSuppliers.Sc_Nego_Suppliers
-                                           on  Suppliers.tenant_id        = $self.tenant_id
-                                           and Suppliers.nego_header_id   = $self.nego_header_id
+                                           on Suppliers.tenant_id = $self.tenant_id
+                                           and Suppliers.nego_header_id = $self.nego_header_id
                                            and Suppliers.nego_item_number = $self.nego_item_number;
         Header                       : Association to negoHeaders.Sc_Nego_Headers
-                                           on  Header.tenant_id      = $self.tenant_id
+                                           on Header.tenant_id = $self.tenant_id
                                            and Header.nego_header_id = $self.nego_header_id;
         operation_org_code           : String(30)          @title : '운영조직코드';
         operation_unit_code          : String(30)          @title : '운영단위코드';
@@ -45,7 +45,7 @@ entity Sc_Nego_Item_Prices {
         vendor_pool_code             : String(100)         @title : '협력사풀코드';
         request_quantity             : Decimal(28, 3)      @title : '요청수량';
         uom_code                     : String(3)           @title : 'UOM코드';
-        maturity_date                : DateTime                @title : '만기일자';
+        maturity_date                : DateTime            @title : '만기일자';
         currency_code                : String(5)           @title : '통화코드';
         response_currency_code       : String(15)          @title : '응답통화코드';
         exrate_type_code             : String(15)          @title : '환율유형코드';

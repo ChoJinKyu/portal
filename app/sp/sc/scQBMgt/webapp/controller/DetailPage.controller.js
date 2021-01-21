@@ -33,52 +33,16 @@ sap.ui.define([
                 this.getView().byId("panel_Header").setExpanded(true);
                 
                 var temp = {
-                    "list": [
-                        {
-                            "col1": "cm",
-                            "col2": "cm",
-                            "col3": "cm",
-                            "col4": "cm",
-                            "col5": "cm",
-                            "col6": "cm",
-                            "col7": "cm",
-                            "col8": "cm",
-                            "col9": "cm",
-                            "col10": "cm",
-                            "col11": "cm",
-                            "col12": "cm",
-                            "col13": "cm",
-                            "col14": "cm",
-                            "col15": "cm",
-                            "col16": "cm",
-                            "col17": "cm",
-                            "col18": "cm",
-                            "col19": "cm",
-                            "col20": "cm",
-                            "col21": "cm",
-                            "col22": "cm",
-                            "col23": "cm",
-                            "col24": "cm",
-                            "col25": "cm",
-                            "col26": "cm",
-                            "col27": "cm",
-                            "col28": "cm",
-                            "col29": "cm",
-                            "col30": "cm",
-                            "col31": "cm",
-                            "col32": "cm",
-                            "col33": "cm",
-                            "col34": "cm"
-                        }
-                    ],
+                    
                     "propInfo": {
                         outCome: "etc",
-                        isEditMode: false
+                        isEditMode: false,
+                        isDescEditMode: false
                     }
                 };
 
                 // var oModel = new JSONModel(temp.list);
-                this.getView().setModel( new JSONModel(temp) , "list");
+                // this.getView().setModel( new JSONModel(temp) , "list");
                 this.getView().setModel( new JSONModel(temp.propInfo), "propInfo");
 
                 // var that = this;
@@ -89,6 +53,8 @@ sap.ui.define([
                 this.getView().setModel(this.viewModel, "viewModel");
                 this.getView().setModel( new JSONModel(this.viewModel.NegoHeaders), "NegoHeaders");
                 this.getView().setModel( new JSONModel(), "NegoItemPrices");
+                this.getView().setModel( new JSONModel(), "NegoItemSuppliers");
+                
                 
             },
             
@@ -110,11 +76,16 @@ sap.ui.define([
                 var outcome = e.getParameter("arguments").outcome;
                 console.log("_onRouteMatched " + outcome);
 
+                // outcome 이 Supplier Development 일때만 Lines 항목중 Description 입력 가능.
+                this.getView().getModel("propInfo").setProperty("/isDescEditMode",false);
+
                 if( outcome == "BPA" || outcome == "Tentative Price" ) {
                     this.getView().getModel("propInfo").setProperty("/outCome","");
                 }else {
-
                     this.getView().getModel("propInfo").setProperty("/outCome","view");
+                    if( outcome == "Supplier Development" ){ //
+                        this.getView().getModel("propInfo").setProperty("/isDescEditMode",true);
+                    }
                 }
 
 
@@ -140,7 +111,9 @@ sap.ui.define([
                 // &$select=*,Items
                 // &$expand=Items
                 // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders?$filter=tenant_id eq 'L2100' and nego_document_number eq '1-1'";
-                var url = this.srvUrl+"NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._header_id + "'";
+                // NegoHeaders(tenant_id='L2100',nego_header_id=119)?&$format=json&$select=*&$expand=Items($expand=Suppliers)
+                // var url = this.srvUrl+"NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._header_id + "'";
+                var url = this.srvUrl+"NegoHeaders?&$format=json&$select=*&$expand=Items($expand=Suppliers)&$filter=nego_document_number eq '" + this._header_id + "'";
                 $.ajax({
                     url: url,
                     type: "GET",
@@ -210,6 +183,14 @@ sap.ui.define([
             onPageCancelButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", false );
                 this.getView().byId("tableLines").setSelectedIndex(-1);
+                // this.getView().getModel("NegoHeaders")
+                // this.getView().getModel("NegoItemPrices")
+
+                // this.getView().setModel(this.viewModel, "viewModel");
+                this.getView().setModel( new JSONModel(), "NegoHeaders");
+                this.getView().setModel( new JSONModel(), "NegoItemPrices");
+                this.getView().setModel( new JSONModel(), "NegoItemSuppliers");
+                // 
                 // this.onNavBack();
             },
             onPageDeleteButtonPress: function() {
@@ -275,6 +256,11 @@ sap.ui.define([
                 oItem.nego_header_id = String(oItem.nego_header_id); 
                 oItem.open_date = new Date(oView.byId("searchOpenDatePicker").getDateValue());
                 oItem.closing_date = new Date(oView.byId("searchEndDatePicker").getDateValue());
+                oItem.close_date_ext_enabled_hours = Number(oItem.close_date_ext_enabled_hours);
+                oItem.close_date_ext_enabled_count = Number(oItem.close_date_ext_enabled_count);
+
+                oItem.negotiation_style_code = oView.byId("rbg1").getSelectedIndex() === 0 ? "Sealed" : "Blind";
+                oItem.immediate_apply_flag = oView.byId("checkbox_immediate_apply_flag").getSelected() ? 'Y' : 'N';
 
                 console.log( "path :: " + path);
                 console.log( oItem);
@@ -394,99 +380,93 @@ sap.ui.define([
             {  
                 var oHeaders = this.getView().getModel("NegoHeaders").getData();
 
-                if(this._oIndex != null){
-                    // var osTable = this.getView().getModel("NegoHeaders").oData.slist;
-                
-                    // for(var i=0; i<pToken.length; i++){
-                    //     var oData = {};
-                    //     oData.key = this._oIndex;
-                    //     oData.col1 = pToken[i].mProperties.key;
-                    //     oData.col2 = pToken[i].mProperties.text;
-                    //     osTable.push(oData);
-                    //     console.log(this._oIndex , " : ",oData)
-                    // }
-                    
-                    // var bLength = this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[13].getValue();
-                    // var bLength = this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[13].getAggregation("items")[0].getValue();
-                    // bLength = parseInt(bLength);
-                    
-                    for( var i = 0 ; i < pToken.length ; i++ ) {
-                        // var supplierObj = pToken[i].getProperty("")
+                console.log( " this._addSupplierType : " + this._addSupplierType );
 
-                        var indexTemp = (i+1);
+                if( this._addSupplierType == "batch" ) {
+                    var selectedIndices = this.getView().byId("tableLines").getSelectedIndices();
+                    console.log( "selectedIndices: " + selectedIndices );
+                }else {
 
-                        var supplierItem_S = {
-                            "tenant_id": this._selectedLineItem.tenant_id,
-                            "nego_header_id": String(this._selectedLineItem.nego_header_id),
-                            "nego_item_number": this._selectedLineItem.nego_item_number,
-                            "item_supplier_sequence": "0000"+indexTemp,
-                            "operation_org_code": this._selectedLineItem.operation_org_code,
-                            "operation_unit_code": this._selectedLineItem.operation_unit_code,
-                            "nego_supplier_register_type_code": "S",
-                            "evaluation_type_code": null,
-                            "supplier_code": pToken[i].getProperty("key"),
-                            "supplier_name": pToken[i].getProperty("text"),
-                            "supplier_type_code": "RAW MATERIAL",
-                            "excl_flag": null,
-                            "excl_reason_desc": null,
-                            "include_flag": null,
-                            "nego_target_include_reason_desc": null,
-                            "only_maker_flat": null,
-                            "contact": null,
-                            "note_content": null,
-                            // "local_create_dtm": "2021-01-12T10:30:26Z",
-                            "local_update_dtm": new Date(),
-                            // "create_user_id": "997F8D5A04E2433AA7341CADC74AF683_9H28CV9CYJ9DKMI39B4ARVOWS_RT",
-                            "update_user_id":  this._selectedLineItem.update_user_id,
-                            // "system_create_dtm": "2021-01-12T10:30:26Z",
-                            "system_update_dtm": new Date()
-                        };
-                        // NegoItemPrices>/Suppliers
-                        var oModel = this.getView().getModel("NegoItemPrices");//,
-                            // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
-                        oModel.oData.Suppliers.push(supplierItem_S);
-                        oModel.refresh();
-
-
-                    }
-
-                    var bLength = this.getView().byId("table_Specific").getItems().length;
-                    this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[13].getAggregation("items")[0].setValue(bLength );
-                    console.log( " bLength :: " + bLength);
-
-                    // this.supplierSelection.onValueHelpSuppAfterClose();
-
-                }else{
-                    var oIndices = this._Indices;
-                    for(var j=0; j<oIndices.length; j++){
-                        var oInd = oIndices[j];
-
-                        var osTable = this.getView().getModel().oData.slist;
-                
-                        for(var i=0; i<pToken.length; i++){
-                            var oData2 = {};
-                            oData2.key = oInd;
-                            oData2.col1 = pToken[i].mProperties.key;
-                            oData2.col2 = pToken[i].mProperties.text;
-                            osTable.push(oData2);
-                            console.log(j, " + ", i , " : ",oData2);
+                    if(this._oIndex != null){
+                        for( var i = 0 ; i < pToken.length ; i++ ) {
+                            var indexTemp = (i+1);
+                            var supplierItem_S = {
+                                "tenant_id": this._selectedLineItem.tenant_id,
+                                "nego_header_id": String(this._selectedLineItem.nego_header_id),
+                                "nego_item_number": this._selectedLineItem.nego_item_number,
+                                "item_supplier_sequence": "0000"+indexTemp,
+                                "operation_org_code": this._selectedLineItem.operation_org_code,
+                                "operation_unit_code": this._selectedLineItem.operation_unit_code,
+                                "nego_supplier_register_type_code": "S",
+                                "evaluation_type_code": null,
+                                "supplier_code": pToken[i].getProperty("key"),
+                                "supplier_name": pToken[i].getProperty("text"),
+                                "supplier_type_code": "RAW MATERIAL",
+                                "excl_flag": null,
+                                "excl_reason_desc": null,
+                                "include_flag": null,
+                                "nego_target_include_reason_desc": null,
+                                "only_maker_flat": null,
+                                "contact": null,
+                                "note_content": null,
+                                // "local_create_dtm": "2021-01-12T10:30:26Z",
+                                "local_update_dtm": new Date(),
+                                // "create_user_id": "997F8D5A04E2433AA7341CADC74AF683_9H28CV9CYJ9DKMI39B4ARVOWS_RT",
+                                "update_user_id":  this._selectedLineItem.update_user_id,
+                                // "system_create_dtm": "2021-01-12T10:30:26Z",
+                                "system_update_dtm": new Date()
+                            };
+                            // NegoItemPrices>/Suppliers
+                            var oModel = this.getView().getModel("NegoItemPrices");//,
+                                // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
+                            oModel.oData.Suppliers.push(supplierItem_S);
+                            oModel.refresh();
+    
                         }
-                        
-                        var bLength = this.getView().byId("tableLines").getRows()[oInd].getCells()[13].getValue();
-                        bLength = parseInt(bLength);
-                        this.getView().byId("tableLines").getRows()[oInd].getCells()[13].setValue(pToken.length + bLength);
-
+    
+                        var bLength = this.getView().byId("table_Specific").getItems().length;
+                        this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[14].getAggregation("items")[0].setValue(bLength );
+                        console.log( " bLength :: " + bLength);
+    
+                        // this.supplierSelection.onValueHelpSuppAfterClose();
+    
+                    }else{
+                        // var oIndices = this._Indices;
+                        // for(var j=0; j<oIndices.length; j++){
+                        //     var oInd = oIndices[j];
+    
+                        //     var osTable = this.getView().getModel().oData.slist;
+                    
+                        //     for(var i=0; i<pToken.length; i++){
+                        //         var oData2 = {};
+                        //         oData2.key = oInd;
+                        //         oData2.col1 = pToken[i].mProperties.key;
+                        //         oData2.col2 = pToken[i].mProperties.text;
+                        //         osTable.push(oData2);
+                        //         console.log(j, " + ", i , " : ",oData2);
+                        //     }
+                            
+                        //     var bLength = this.getView().byId("tableLines").getRows()[oInd].getCells()[13].getValue();
+                        //     bLength = parseInt(bLength);
+                        //     this.getView().byId("tableLines").getRows()[oInd].getCells()[13].setValue(pToken.length + bLength);
+    
+                        // }
                     }
                 }
+
             },
             onSupplierPress: function(e){
                 // debugger;
+                this._addSupplierType = "sigle";
                 this._oIndex = e.oSource.getParent().getParent().getIndex();
-                
-                this.supplierSelection.showSupplierSelection(this, e, "L1100", "", true);
-                
 
-                
+                var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+
+                this._selectedLineItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+                this.getView().getModel("NegoItemPrices").setData(this._selectedLineItem);
+
+                this.supplierSelection.showSupplierSelection(this, e, "L1100", "", true);
+              
             },
             onLoadSuppliers: function (e) {
                 console.log("onLoadSuppliers");
@@ -498,37 +478,10 @@ sap.ui.define([
                 
                 var that = this;
                 var oView = this.getView();
-                // NegoItemPrices(tenant_id='L2100',nego_header_id=1,nego_item_number='00001')?&$format=json&$expand=Suppliers
-                var url = this.srvUrl + "NegoItemPrices(tenant_id='L2100',nego_header_id="+this._selectedLineItem.nego_header_id+",nego_item_number='"+this._selectedLineItem.nego_item_number+"')?&$format=json&$expand=Suppliers"
-                console.log(url);
 
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    contentType: "application/json",
-                    success: function(data){
-                        // debugger;
-                        // var v_viewHeaderModel = oView.getModel("viewModel").getData();
-                        // v_viewHeaderModel = data.value[0];
-
-                        oView.getModel("NegoItemPrices").setData(data);
-
-                        that.getView().byId("panel_SuppliersContent").setExpanded(true);
-
-                        // oView.getModel("viewModel").updateBindings(true);      
-                       
-                        console.log(data);
-                        // console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
-                        // console.log(data.value[0]);
-
-                        // that.setDataBinding(data.value[0]);
-                    },
-                    error: function(e){
-                        // data 없을때,,
-                        oView.getModel("NegoItemPrices").getData().Suppliers = [];
-                        oView.getModel("NegoItemPrices").refresh(true);
-                    }
-                });
+                // Suppliers
+                oView.getModel("NegoItemPrices").setData(this._selectedLineItem);
+                that.getView().byId("panel_SuppliersContent").setExpanded(true);
 
             },
 
@@ -605,7 +558,8 @@ sap.ui.define([
                 if( !oModel.getData().hasOwnProperty("Items") ) {
                     oModel.getData().Items = [];
                 }
-                oModel.getData().Items.push(oLine);
+                // 첫번째 row 에 추가
+                oModel.getData().Items.unshift(oLine);
                 oModel.refresh();
 
                 // this.getView().byId("tableLines").getVisibleRowCount();
@@ -659,6 +613,19 @@ sap.ui.define([
                 }
                 this.oSearchMultiMaterialMasterDialog.open();
                 
+            },
+
+            onMidTableAddBatchSuppliers: function (e) {
+                // this._oIndex = e.oSource.getParent().getParent().getIndex();
+
+                this._addSupplierType = "batch";
+
+                // var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+
+                // this._selectedLineItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+                // this.getView().getModel("NegoItemPrices").setData(this._selectedLineItem);
+
+                this.supplierSelection.showSupplierSelection(this, e, "L1100", "", true);
             }
             
 		});

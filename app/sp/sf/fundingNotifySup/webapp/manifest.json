@@ -26,8 +26,22 @@
                     "odataVersion": "2.0"
                 }
             },
+            "OrgCodeListViewService": {
+                "uri": "srv-api/odata/v4/sp.fundingApplicationSupV4Service/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             "comCodeService": {
                 "uri": "srv-api/odata/v2/cm.CodeMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "commonUtilService": {
+                "uri": "srv-api/odata/v2/cm.util.CommonService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -109,6 +123,16 @@
                     "defaultBindingMode": "TwoWay",
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": true,
+                    "useBatch": true
+                }
+            },
+            "util": {
+                "dataSource": "commonUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
                     "useBatch": true
                 }
             }

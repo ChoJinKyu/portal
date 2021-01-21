@@ -48,15 +48,12 @@ SQL SECURITY INVOKER
           동일한 정보를 등록할 수 없다.(이미 삭제된 VENDOR POOL은 제외)
 *******************************************************************************************************************************************************/
 AS
-BEGIN
-    DECLARE V_TEST_MSG NVARCHAR(500) := '';
-    
+BEGIN        
     /*****************************************************
 	MASTER정보 CUD 전 체크를 위한 변수
 	*****************************************************/
     DECLARE V_MASTER_COUNT INT := 0;
-	DECLARE V_MASTER_EXIST_CNT INT := 0;
-	DECLARE V_MASTER_EXIST_DELETE_CNT INT := 0;
+	DECLARE V_MASTER_EXIST_CNT INT := 0;	
 	DECLARE V_MASTER_CHILD_EXIST_COUNT INT := 0;
 	DECLARE V_NEW_VENDOR_POOL_CODE NVARCHAR(20) := '';   --신규 생성 시 Vendor Pool Code 체번
 	DECLARE V_MASTER_EXIST_LOC_NAME_COUNT INT := 0;  --생성 및 수정 시 동일 명칭 존재여부 확인 변수
@@ -215,8 +212,7 @@ BEGIN
 	마스터 정보가 DB에 존재하지 않는 경우 마스터 정보만 INSERT 처리한다.
 	(마스터 정보 INSERT 시 그 외의 TYPE 정보는 같이 저장 불가능하다)
 	***************************************************************************************/
-	FOR loop_mst AS l_mst_cursor DO
-        V_TEST_MSG := loop_mst.VENDOR_POOL_CODE;
+	FOR loop_mst AS l_mst_cursor DO        
         V_MASTER_LOOP_INDEX := V_MASTER_LOOP_INDEX + 1;
 	    
 	    V_ERROR_PARAM := 'VENDOR_POOL_CODE: '||IFNULL(loop_mst.VENDOR_POOL_CODE,' ')
@@ -546,8 +542,7 @@ BEGIN
 				INSERT 혹은 DELETE 라인이 한개도 없으면 
 				[PG_VP_VENDOR_POOL_SUPPLIER_DTL]로 한다.
 				*********************************************************/
-			    FOR loop_sup AS l_sup_cursor DO
-				    V_TEST_MSG := loop_sup.SUPPLIER_CODE;
+			    FOR loop_sup AS l_sup_cursor DO				    
 				    V_SUPPLIER_LOOP_INDEX := V_SUPPLIER_LOOP_INDEX + 1;
 				    
 				    V_ERROR_PARAM := 'VENDOR_POOL_CODE: '||IFNULL(loop_mst.VENDOR_POOL_CODE,' ')
@@ -777,8 +772,7 @@ BEGIN
 				/********************************************************
 				[Material 로직] 시작(Master 정보의 Update 시에만 가능함)
 				*******************************************************/
-				FOR loop_itm AS l_itm_cursor DO
-				    V_TEST_MSG := loop_itm.MATERIAL_CODE;
+				FOR loop_itm AS l_itm_cursor DO				    
 				    V_ITEM_LOOP_INDEX := :V_ITEM_LOOP_INDEX + 1;
                     
                     V_ERROR_PARAM := 'VENDOR_POOL_CODE: '||IFNULL(loop_mst.VENDOR_POOL_CODE,' ')
@@ -982,8 +976,7 @@ BEGIN
 				/********************************************************
 				[Manager 로직] 시작(Master 정보의 Update 시에만 가능함)
 				*******************************************************/
-				FOR loop_man AS l_man_cursor DO
-				    V_TEST_MSG := loop_man.VENDOR_POOL_PERSON_EMPNO;
+				FOR loop_man AS l_man_cursor DO				    
 				    V_MANAGER_LOOP_INDEX := V_MANAGER_LOOP_INDEX + 1;
                     
                     V_ERROR_PARAM := 'VENDOR_POOL_CODE: '||IFNULL(loop_mst.VENDOR_POOL_CODE,' ')

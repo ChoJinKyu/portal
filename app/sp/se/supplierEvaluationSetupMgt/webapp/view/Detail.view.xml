@@ -1,0 +1,609 @@
+<mvc:View 
+xmlns="sap.m" 
+xmlns:core="sap.ui.core"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns:uxap="sap.uxap"
+xmlns:table="sap.ui.table"
+xmlns:u="sap.ui.unified"
+xmlns:rte="sap.ui.richtexteditor"
+xmlns:l="sap.ui.layout"
+xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+xmlns:smartTable="sap.ui.comp.smarttable"
+xmlns:f="sap.ui.layout.form"
+class="sapUiSizeCompact"
+displayBlock="true"
+controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
+
+        <App id="idAppControl">
+            <Page title="설정정보" 
+            showNavButton="true" 
+            navButtonType="Back" 
+            navButtonPress="onNavToBack"> 
+            <!-- showNavButton="true"  : 상단 < 버튼  -->
+
+                <content>                   
+                   
+                    <uxap:ObjectPageLayout
+                        id="page" 
+                        alwaysShowContentHeader="false" 
+                        preserveHeaderStateOnScroll="true" 
+                        headerContentPinnable="false" 
+                        upperCaseAnchorBar="false" 
+                        enableLazyLoading="true" 
+                        showFooter="true" 
+                        class="sapUiContentPadding">
+
+                        <uxap:headerTitle/>
+                        <uxap:headerContent/>
+                        
+                        <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="true" title="안녕하세요요요요용">
+                                <uxap:subSections>            
+                                    <uxap:ObjectPageSubSection id="pageSubSection1"/>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections>
+
+                    <!-- BaseInfo  -->
+                        <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/BASE_INFO}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>
+                                            <VBox>
+                                                <f:SimpleForm 
+                                                    id="SimpleFormChange354" 
+                                                    maxContainerCols="2"
+                                                    editable="true"
+                                                    layout="ColumnLayout"
+                                                    adjustLabelSpan="false">
+
+                                                    <f:content>
+                                                        <!-- Column1. 운영단위코드 -->
+                                                        <Label text="{I18N>/OPERATION_UNIT_CODE}"/>
+                                                        <Input  id="opCodeInput" 
+                                                                width="100%" 
+                                                                placeholder="{I18N>/OPERATION_UNIT_CODE}"/>
+                                                        
+                                                        <!-- 배점설계여부 -->
+                                                        <Label text="{I18N>/DISTRB_SCOR_ENG_FLAG}"/>
+                                                            <SegmentedButton
+                                                            selectedKey="No" >
+
+                                                            <!-- id="segmentButton_activate_flag" 
+                                                            selectionChange=".onChangeAuthorityFlag" 
+                                                            selectedKey="{=${monitoring_super_authority_flag} === true? 'Yes' : 'No'}" 
+                                                            enabled="{=${DetailView>/isEditMode}}" -->
+                                                            
+                                                                <items>
+                                                                    <SegmentedButtonItem text="Yes" key="Yes" />
+                                                                    <SegmentedButtonItem text="No" key="No" />
+                                                                </items>
+                                                            </SegmentedButton>
+
+                                                        <!-- 운영 전략 수립 여부 -->
+                                                        <Label text="{I18N>/OPERATION_PLAN_FLAG}"/> 
+                                                            <SegmentedButton 
+                                                            selectedKey="No">
+                                                            <items>
+                                                                <SegmentedButtonItem text="Yes" key="Yes" />
+                                                                <SegmentedButtonItem text="No" key="No" />
+                                                            </items>
+                                                            </SegmentedButton>
+
+                                                        <!-- V/P 운연단위 -->
+                                                        <Label text="{I18N>/VP_OPERATION_UNIT}"/> 
+                                                            <MultiComboBox
+                                                            id="oVPCombo"
+                                                             />
+                                                            
+                                                             <!-- 
+                                                                
+                                                                selectionChange="handleSelectionChange"
+                                                                selectionFinish="handleSelectionFinish"
+                                                                width="350px"
+                                                           
+                                                                items="{
+                                                                path: '/OpUnitMap',
+                                                                sorter: { path: 'user_local_name' }
+                                                            }" 
+
+                                                                <core:Item key="{testModel>deppartment_local_name}" text="{testModel>deppartment_local_name}"/>
+                                                            
+                                                            </MultiComboBox>-->
+                            
+
+                                                        <!-- Column2. 운영단위 명 -->
+                                                        <Label text="{I18N>/OPERATION_UNIT_NAME}"/>
+                                                        <Input  id="opCodeName" 
+                                                                width="100%" 
+                                                                placeholder="{I18N>/OPERATION_UNIT_NAME}"/>
+                                                        
+                                                        <!-- 발의 품의 여부 -->
+                                                        <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}"/> 
+                                                            <SegmentedButton selectedKey="No" >
+                                                                <items>
+                                                                    <SegmentedButtonItem text="Yes" />
+                                                                    <SegmentedButtonItem text="No" key="No" />
+                                                                </items>
+                                                            </SegmentedButton>
+
+                                                        <!-- 사용 여부 -->
+                                                        <Label text="{I18N>/USE_FLAG}"/> 
+                                                            <SegmentedButton selectedKey="No" >
+                                                                <items>
+                                                                    <SegmentedButtonItem text="Yes"  />
+                                                                    <SegmentedButtonItem text="No" key="No" />
+                                                                </items>
+                                                            </SegmentedButton>
+
+                                                        <!-- 평가 대상 V/P 레벨 -->
+                                                        <Label text="{I18N>/EVAL_APPLY_VENDOR_POOL_LVL_NO}"/> 
+                                                            <SegmentedButton selectedKey="level1">
+                                                                <items>
+                                                                    <SegmentedButtonItem text="1레벨" key="level1" />
+                                                                    <SegmentedButtonItem text="2레벨" key="level2" />
+                                                                    <SegmentedButtonItem text="3레벨" key="level3" />
+                                                                    <SegmentedButtonItem text="4레벨" key="level4" />
+                                                                    <SegmentedButtonItem text="5레벨" key="level5" />
+                                                                </items>
+                                                            </SegmentedButton>                                                                    
+    
+                                                    </f:content>
+                                                </f:SimpleForm>
+                                            </VBox>
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections>
+
+                    <!-- Manager  -->
+                        <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/PERSON}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>                                           
+                                                                    
+                                            <table:Table                                             
+                                            id="managerTable"
+                                            rows="{path: 'testModel>/table'}" 
+                                            visibleRowCount="4"  
+                                            visibleRowCountMode="auto"             
+                                            >
+                                                <table:extension>
+                                                    <OverflowToolbar>
+                                                        <ToolbarSpacer/>                                      
+
+                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onManagaerAdd"/>
+                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onManagaerDelete"/>
+                                                    </OverflowToolbar>
+                                                </table:extension>
+
+                                                <table:columns>
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/ROLE}"/>
+                                                        <table:template>
+                                                            <HBox>
+                                                            <Text text="{testModel>user_local_name}"/>
+                                                            <Input value="{testModel>user_local_name}"/>
+                                                            </HBox>
+                                                        </table:template>
+                                                    </table:Column>      
+
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/PERSON}"/>
+                                                        <table:template>
+                                                            <HBox>
+                                                            <Text text="{testModel>deppartment_local_name}"/>
+                                                             <SearchField
+                                                                    id="searchField"
+                                                                    width="50%"
+                                                                    placeholder="나중에 쓸것"
+                                                                    enableSuggestions="true"
+                                                                    search=".onSearch"
+                                                                    suggest=".onSuggest"
+                                                                    suggestionItems="{
+                                                                        path: 'testModel>/table'
+                                                                    }">
+                                                                    <SuggestionItem text="{testModel>deppartment_local_name}" description="테스트" key="{testModel>deppartment_local_name}" />
+                                                                </SearchField>
+                                                                    
+                                                                    
+                                                            </HBox>
+                                                        </table:template>
+                                                    </table:Column>     
+
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/DEPARTMENT}"/>
+                                                        <table:template>
+                                                            <Text text="{testModel>evaluation_execute_role_code}"/>
+                                                        </table:template>
+                                                    </table:Column>     
+
+<!-- 
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/DEPARTMENT}"/>
+                                                        <table:template>
+                                                               
+                                                        </table:template>
+                                                    </table:Column>      -->
+
+                                                </table:columns>
+                                            </table:Table>      
+                                                 
+
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections>
+
+                        <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/VALUATION_TYPE}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>
+
+                                            <Table id="valuationTable"
+
+                                                    inset="false"
+                                                    class="sapFDynamicPageAlignContent"
+                                                    width="auto"
+                                                    items="{
+                                                        path: 'testModel2>/table'
+                                                }">
+                                                    <!-- mode="{= ${contModel>/detail/readMode}?'None':'None'}"
+                                                    sticky="HeaderToolbar,ColumnHeaders" -->
+                                                <headerToolbar>
+                                                    <Toolbar
+                                                        visible="{= !${contModel>/detail/createMode}}">
+                                                        <ToolbarSpacer/>
+                                                        <HBox>
+                                                            <Button 
+                                                                type="Transparent" 
+                                                                text="{I18N>/ROW_ADD}" 
+                                                                press=".onAddDetailDetailPress"/>
+                                                            <!-- <Button 
+                                                                type="Transparent" 
+                                                                text="Delete"
+                                                                visible="{contModel>/detail/editMode}"/> -->
+                                                        </HBox>
+                                                    </Toolbar>
+                                                </headerToolbar>
+                                                <columns>
+                                                    <Column>
+                                                        <Text text="{I18N>/EVALUATION_TYPE_CODE}" />
+                                                    </Column>
+                                                    <Column>
+                                                        <Text text="{I18N>/EVALUATION_TYPE_NAME}" />
+                                                    </Column>
+                                                    <Column>
+                                                        <Text text="{I18N>/EVALUATION_RATE}" />
+                                                    </Column>
+                                                    <Column>
+                                                        <Text text="{I18N>/USE_FLAG}" />
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem type="Navigation" press=".onHandleItemPress">
+                                                        <cells>
+                                                            <Text
+                                                                    text="{testModel2>evaluation_type_code}" />
+                                                            <Text
+                                                                    text="{testModel2>evaluation_type_name}" />
+                                                            <Text
+                                                                    text="{testModel2>evaluation_type_distrb_score_rate}" />
+                                                            <Text
+                                                                    text="{testModel2>use_flag}" />
+
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections>                        
+
+
+                        <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/QUANTITATIVE_ITEM}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>
+                                            <table:Table
+                                            id="quantitativeTable"
+                                            rows="{path: 'testModel3>/table'}" 
+                                            visibleRowCount="4"  
+                                            visibleRowCountMode="auto"  
+                                            >
+                                                <table:extension>
+                                                    <OverflowToolbar>
+                                                        <ToolbarSpacer/>                                                                        
+                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="mAdd"/>
+                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="mDelete"/>
+                                                    </OverflowToolbar>
+                                                </table:extension>
+
+                                                <table:columns>
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/QUANTITATIVE_ITEM_CODE}"/>
+                                                        <table:template>
+                                                            <Text text="{testModel3>qttive_item_code}"/>
+                                                        </table:template>
+                                                    </table:Column>      
+
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/QUANTITATIVE_ITEM_NAME}"/>
+                                                        <table:template>
+                                                            <Text text="{testModel3>qttive_item_name}"/>
+                                                        </table:template>
+                                                    </table:Column>     
+
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="단위x"/>
+                                                        <table:template>
+                                                            <Text text="{testModel3>qttive_item_uom_code}"/>
+                                                        </table:template>
+                                                    </table:Column>    
+                                                    
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/MEASURE_MODE}"/>
+                                                        <table:template>
+                                                            <Text text="{testModel3>qttive_item_measure_mode_code}"/>
+                                                        </table:template>
+                                                    </table:Column>        
+
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/QUANTITATIVE_ITEM_DESC}"/>
+                                                        <table:template>
+                                                            <Text text="{testModel3>qttive_item_desc}"/>
+                                                        </table:template>
+                                                    </table:Column>    
+
+                                                    <table:Column hAlign="Center">
+                                                        <Label text="{I18N>/SORT_NUMBER}"/>
+                                                        <table:template>
+                                                            <Text text="{testModel3>sort_sequence}"/>
+                                                        </table:template>
+                                                    </table:Column>    
+
+                                                </table:columns>
+                                            </table:Table>  
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections>            
+
+                        <!-- <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/PERSON}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>
+                                            <VBox>
+                                                	<f:SimpleForm 
+                                                    id="SimpleFormChange354" 
+                                                    maxContainerCols="2"
+                                                    editable="true"
+                                                    layout="ColumnLayout"
+                                                    adjustLabelSpan="false">
+
+                                                        <f:content>
+
+                                                                    <Label text="{I18N>/OPERATION_UNIT_CODE}"/>
+                                                                    <Input  id="opCodeInput" 
+                                                                            width="100%" 
+                                                                            placeholder="{I18N>/OPERATION_UNIT_CODE}"/>
+
+                                                                    <Label text="{I18N>/OPERATION_UNIT_NAME}"/>
+                                                                    <Input  id="opCodeName" 
+                                                                            width="100%" 
+                                                                            placeholder="{I18N>/OPERATION_UNIT_NAME}"/>
+                                                                            
+                                                        </f:content>
+                                                    </f:SimpleForm>
+                                            </VBox>
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections> -->
+
+                        <!-- Operating Type -->
+                        <!-- <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/OPERATION}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>
+                                              <f:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                                                <f:content id="informationPageSectionForm">
+                                                    <VBox  class="sapUiSmallMarginEnd">
+                                                        <Label text="{I18N>/OPERATION}"/>
+                                                        <HBox id="operating">
+                                                            <CheckBox id="search_flag" text="{I18N>/DISPLAY}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_display_flag} === 'true' ? true : false}" />
+                                                            <HBox width="0.5rem"/>
+                                                            <CheckBox id="calling_flag" text="{I18N>/EXPLAIN}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_calling_flag} === 'true' ? true : false}"/>
+                                                            <HBox width="0.5rem"/>
+                                                            <CheckBox id="alarm_flag" text="{I18N>/ALRAM}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_alram_flag} === 'true' ? true : false}"/>    
+                                                        </HBox>
+                                                        <layoutData>
+                                                            <l:GridData span="XL3 L3 M6 S12"/>
+                                                        </layoutData>
+                                                    </VBox>
+                                                    <VBox id="cycleVBox" >
+                                                        <Label text="{I18N>/CYCLE}"/>
+                                                        <layoutData>
+                                                            <l:GridData span="XL3 L3 M6 S12"/>
+                                                        </layoutData>
+                                                    </VBox>
+                                                </f:content>
+                                            </f:SimpleForm>
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections> -->
+
+                        <!-- Detail Information -->
+                        <!-- <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/DETAIL_INFORMATION}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                            <l:VerticalLayout width="100%">
+                                            <VBox class="sapUiTinyMarginTop" id="monitoringVBox">
+                                                    <Label text="{I18N>/MONITORING_PURPOSE}" design="Bold"/>
+                                                    <rte:RichTextEditor id="reMonitoringPurpose" wrapping="false" editorType="TinyMCE4" width="100%" visible="{=${DetailView>/isEditMode}}"  editable="true" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                    <FormattedText id="PurposeFormattedText"  visible="{=!${DetailView>/isEditMode}}"/>
+                                                </VBox>
+                                                <VBox class="sapUiSmallMarginTop" id="scenarioVBox">
+                                                    <Label text="{I18N>/SCENARIO_DESC}" design="Bold"/>
+                                                    <rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                    <FormattedText id="ScenarioDescFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
+                                                </VBox>
+                                           </l:VerticalLayout>
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections> -->
+
+                    <!-- Data Source System -->
+                    <!-- <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/SOURCE_SYSTEM_DESC}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                     <l:VerticalLayout width="100%">
+                                            <VBox class="sapUiSmallMarginTop" id="systemVBox">
+                                                <Label text="{I18N>/SOURCE_SYSTEM_DESC}" design="Bold"/>
+                                                <rte:RichTextEditor id="reSourceSystemDetail" wrapping="false" beforeEditorInit="onBeforeEditorInit" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                <FormattedText id="ReSourceSystemFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
+                                            </VBox>
+                                        </l:VerticalLayout>
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections> -->
+
+                        <!-- EVALUATION -->
+                        <!-- <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/EVALUATION}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>
+                                                <Table id="signalList" items="{/TaskMonitoringIndicatorNumberView}" class="sapUiNoMarginTop" mode="MultiSelect">
+                                                    <headerToolbar class="sapUiNoMarginTop">
+                                                        <OverflowToolbar>
+                                                            <content>
+                                                                <ToolbarSpacer/>
+                                                                <Button text="{I18N>/ROW_ADD}" id="buttonSignalAddRow" press=".onSignalListAddRow" enabled="{=${DetailView>/isEditMode}}" type="Transparent"/>
+                                                                <Button text="{I18N>/ROW_DELETE}" id="buttonSignalDeleteRow" press=".onSignalListDelete" enabled="{=${DetailView>/isEditMode}}" type="Transparent"/>
+                                                            </content>
+                                                        </OverflowToolbar>
+                                                    </headerToolbar>
+                                                    <columns>
+                                                     <Column hAlign="Center" width="5rem">
+                                                            <header>
+                                                                <Label text="{I18N>/STATUS}"/>
+                                                            </header>
+                                                        </Column>
+                                                        <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                                            <header>
+                                                                <Label text="{I18N>/INDICATOR}"/>
+                                                            </header>
+                                                        </Column>
+                                                        <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                                            <header>
+                                                                <Label text="{I18N>/CONDITION}"/>
+                                                            </header>
+                                                        </Column>
+                                                        <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                                                <Text text="{I18N>/INDICATOR_FIRST_VALUE}"/>
+                                                        </Column>
+                                                        <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                                            <header>
+                                                                <Label text="{I18N>/INDICATOR_LAST_VALUE}"/>
+                                                            </header>
+                                                        </Column>
+                                                        <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                                            <header>
+                                                                <Label text="{I18N>/GRADE}"/>
+                                                            </header>
+                                                        </Column>
+                                                        <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                                            <header>
+                                                                <Label text="{I18N>/UNIT}"/>
+                                                            </header>
+                                                        </Column>
+                                                    </columns>
+                                                    <items>
+                                                        <ColumnListItem type="Active" press="signalListTableItemPress">
+                                                            <cells>
+                                                                <Text text=""/>
+                                                                <ComboBox width="80%" items="{/TaskMonitoringIndicatorNumberCodeView}" selectedKey="" selectionChange=".onChangeIndicator">
+                                                                    <core:Item key="{code}" text="{code_name}"/>
+                                                                </ComboBox>
+                                                                <ComboBox items="{/TaskMonitoringIndicatorComparisonConditionCodeView}" width="80%" selectedKey="{path: 'monitoring_ind_condition_cd', type: 'sap.ui.model.type.String'}">
+                                                                    <core:Item key="{code}" text="{code} ({code_name})"/>
+                                                                </ComboBox>
+                                                                <Input value="{monitoring_indicator_start_value}" width="80%"/>
+                                                                <Input value="{monitoring_indicator_last_value}" width="80%"/>
+                                                                <ComboBox items="{/TaskMonitoringIndicatorComparisionGradeCodeView}" selectedKey="{monitoring_indicator_grade}" width="80%">
+                                                                    <core:Item key="{code}" text="{code_name}"/>
+                                                                </ComboBox>
+                                                                <ComboBox items="{/TaskMonitoringIndicatorComparisionBasicCodeView}" selectedKey="{monitoring_ind_compare_base_cd}" width="80%">
+                                                                    <core:Item key="{code}" text="{code_name}"/>
+                                                                </ComboBox> 
+                                                            </cells>
+                                                        </ColumnListItem>
+                                                    </items>
+                                                </Table>
+
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections> -->
+
+                        <!-- Attachment -->
+                        <!-- <uxap:sections>
+                            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
+                                <uxap:subSections>
+                                    <uxap:ObjectPageSubSection>
+                                        <uxap:blocks>
+                                            <UploadCollection id="UploadCollection" uploadEnabled="false" fileType="gif,png,jpg,jpeg,doc,docx,xls,xlsx,hwp,pdf,ppt,pdf" maximumFilenameLength="55"
+                                            maximumFileSize="10" multiple="false" change=".onChange" instantUpload="false" uploadButtonInvisible="{=!${ui>/bEditMode}}" 
+                                             filenameLengthExceed="onFilenameLengthExceed" fileSizeExceed="onFileSizeExceed" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete" beforeUploadStarts="onBeforeUploadStarts" mode="SingleSelectMaster">
+                                            </UploadCollection>
+                                        </uxap:blocks>
+                                    </uxap:ObjectPageSubSection>
+                                </uxap:subSections>
+                            </uxap:ObjectPageSection>
+                        </uxap:sections> -->
+
+                        <uxap:footer>
+                        <OverflowToolbar>
+                            <ToolbarSpacer/>
+                            <!-- <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" /> -->
+                            <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
+                            <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
+                            <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
+                        </OverflowToolbar>
+                        </uxap:footer>
+
+
+
+                        </uxap:ObjectPageLayout>
+
+
+                        
+                        </content>
+                    </Page>
+                </App>
+</mvc:View>

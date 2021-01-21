@@ -234,35 +234,100 @@ sap.ui.define([
 
             //this.byId("pageGeneralInfoSection").focus();
         },
-        onDragStart : function (oEvent){
-  console.log("//// onDragStart" , oEvent ); 
-  console.log("//// target" , oEvent.getParameter("target") ); 
+
+        /**
+         * 드래그시작
+         */
+        onDragStartTable : function (oEvent){
+            console.log(" *** start >> onDragStart" , oEvent ); 
+            console.log(" *** target" , oEvent.getParameter("target") ); 
 
             var oDraggedRow = oEvent.getParameter("target");
 			var oDragSession = oEvent.getParameter("dragSession");
-			
+			 console.log(" *** oDragSession" , oDragSession );
             oDragSession.setComplexData("draggedRowContext", oDraggedRow.getBindingContext("approver"));
+             console.log(" *** end >> onDragStart" );
         },
         /**
-         * 드래그엔드랍 
+         * 드래그 도착위치 
          */
-       onDragDrop: function (oEvent) { 
-           console.log("//// onDragDrop" , oEvent );
+       onDragDropTable : function (oEvent) { 
+           console.log(" ***  start >> onDragDrop" , oEvent );
           //  var oSwap = this.byId("ApproverTable").getSelectedItems();
-	        var oDragSession = oEvent.getParameter("dragSession");
+            var oDragSession = oEvent.getParameter("dragSession"); 
+ 
+               console.log(" *** oDragSession" , oDragSession );
+               console.log(" *** getDropControl" , oDragSession.getDropControl() );
+               console.log(" *** getDropInfo" , oDragSession.getDropInfo() );
+               console.log(" *** getTextData" , oDragSession.getTextData() );
+               console.log(" *** getDropControl" , oDragSession.getDropControl().mAggregations );
+               console.log(" *** getDropPosition" , oDragSession.getDropPosition() );
+               console.log(" *** draggedRowContext" ,  oDragSession.getComplexData("draggedRowContext") );
+
+  // After 
 			var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
 			if (!oDraggedRowContext) {
 				return;
             }
-            
-            var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath());
-            var arr = this.getModel("approver").getProperty("/right");
-            var idx = oDraggedRowContext.getPath().split("/")[2];
-                       
-            arr.splice(idx,1);
-            this.getModel("approver").setProperty("/right",arr);
-        },
 
+            var data = oDragSession.getDropControl().mAggregations.cells;
+            var dropPosition = {
+                approver_empno : data[0].mProperties.text 
+                , approve_sequence : data[1].mProperties.text
+                , approver_type_code : data[2].mProperties.text
+                , approver_name : data[3].mProperties.text
+                , approve_status_code : data[4].mProperties.text
+                , approve_comment : data[5].mProperties.text
+            };
+
+            var approver = this.getView().getModel('approver');
+            var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath()); // 내가 선택한 아이템 
+
+            console.log("dropPosition >>>> " , dropPosition);
+            console.log("item >>>> " , item);
+
+
+            var sequence = 0;
+            for(var i = 0 ; i < approver.getData().Approvers.length ; i++){ 
+                if(approver.getData().Approvers[i].approve_sequence == item.approve_sequence ){ // 선택한 아이템 위치의 데이터 삭제
+                    approver.removeRecord(i);
+                }  
+            }
+
+            for(var i = 0 ; i < approver.getData().Approvers.length ; i++){
+                 if(approver.getData().Approvers[i].approve_sequence == dropPosition.approve_sequence){ // 드래그가 도착한 위치의 상단 시퀀스  
+                    if(oDragSession.getDropPosition() == 'After'){
+                        sequence = i+1;
+                    }else{
+                         sequence = i;
+                    }
+                }  
+            }
+
+            approver.addRecord({
+               "tenant_id": item.tenant_id,
+                "approval_number":  item.approval_number,
+                "approve_sequence":  item.approve_sequence,
+                "approver_type_code":  item.approver_type_code,
+                "approver_empno":  item.approver_empno,
+                "approver_name":  item.approver_name,
+                "arrowUp":  item.arrowUp,
+                "arrowDown":  item.arrowDown,
+                "editMode":  item.editMode,
+                "trashShow":  item.trashShow
+            }, "/Approvers", sequence); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+
+            // 시퀀스 순서 정렬 
+            for(var i = 0 ; i < approver.getData().Approvers.length ; i++){
+                approver.getData().Approvers[i].approve_sequence = String(i+1);
+            }
+
+           this.getModel("approver").refresh(true); 
+           console.log(" ***  end >> onDragDrop" );
+        },
+        onListMainTableUpdateFinished : function(oEvent){
+             console.log("//// onListMainTableUpdateFinished" , oEvent );
+        },
 
 
         _toEditMode: function () {

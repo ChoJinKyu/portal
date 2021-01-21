@@ -52,10 +52,7 @@ BEGIN
         OUT_PR_NUMBER = ( SELECT :OUT_PR_NUMBER || ',' || :PR_TEMPLATE_NUMBER FROM DUMMY );   
 
          무한실행 방지.. */
-        LCNT := :LCNT - 1;
-        IF :LCNT = 0 THEN
-           RETURN;
-        END IF;
+        LCNT := :LCNT - 1;     
 
     END WHILE;
 

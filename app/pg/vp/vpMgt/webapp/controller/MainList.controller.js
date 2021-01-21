@@ -29,7 +29,10 @@ sap.ui.define([
     "ext/lib/util/ValidatorUtil",
     "sap/f/library",
     "ext/lib/util/ControlUtil",
-    "sap/ui/model/resource/ResourceModel"
+    "sap/ui/model/resource/ResourceModel",
+    "ext/pg/util/control/ui/VendorPoolDialog",
+    "ext/pg/util/control/ui/SupplierDialog",
+    "ext/pg/util/control/ui/MatrialDialog",
 
 ], function (BaseController,
     History,
@@ -62,6 +65,9 @@ sap.ui.define([
     library,
     ControlUtil,
     ResourceModel,
+    VendorPoolDialog,
+    SupplierDialog,
+    MatrialDialog,
 
 ) {
     "use strict";
@@ -301,12 +307,11 @@ sap.ui.define([
             }
 
             reSearchVpNm = "";
-            if(!!this.byId("tpop_vendor_pool_local_name"))
-            {
+            if (!!this.byId("tpop_vendor_pool_local_name")) {
                 this.byId("tpop_vendor_pool_local_name").setValue("");
 
             }
-            
+
             // var oView = this.getView();
 
             // if (!this.pDialog) {
@@ -419,7 +424,7 @@ sap.ui.define([
                     this.byId("v_internal_rate").setVisible(true);
                     this.byId("v_external_rate").setVisible(true);
 
-                    this.handleCreateInput();  
+                    this.handleCreateInput();
 
                     this.byId("pop_save_bt").setVisible(true);
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
@@ -492,7 +497,7 @@ sap.ui.define([
                 this.byId("treeTable").getSelectedIndices().length > 0) {
 
 
-                    this.handleCreateInput();
+                this.handleCreateInput();
                 // if(pop_h_lv == "0")
                 // {
                 //     // MessageBox.error("추후 ORG UNIT 입력가능 콤보로 변경  *임시*");
@@ -505,7 +510,7 @@ sap.ui.define([
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
                     //화면 LAYOUT
-                    this.byId("pop_detail_info").setText("Detail Info");                                      
+                    this.byId("pop_detail_info").setText("Detail Info");
                     this.byId("v_pop_repr_department_code").setVisible(true);
                     this.byId("v_pop_industry_class_code").setVisible(true);
                     this.byId("v_pop_inp_type_code").setVisible(true);
@@ -518,7 +523,7 @@ sap.ui.define([
                     this.byId("v_internal_rate").setVisible(true);
                     this.byId("v_external_rate").setVisible(true);
 
-                    this.handleCreateInput();  
+                    this.handleCreateInput();
 
 
                     this.byId("pop_save_bt").setVisible(true);
@@ -771,15 +776,14 @@ sap.ui.define([
             this.getView().byId("pop_domestic_net_price_diff_rate").setValue("");
             this.byId("v_pop_plan_base").setVisible(false);
         },
-        
-        handlemtlChang:function(event) {
+
+        handlemtlChang: function (event) {
 
             var mtl = this.getView().byId("pop_inp_type_code").getSelectedKey();
-            if(mtl == "MBLMOB")
-            {
+            if (mtl == "MBLMOB") {
                 this.byId("v_pop_plan_base").setVisible(true);
 
-            }else{
+            } else {
                 this.byId("v_pop_plan_base").setVisible(false);
             }
 
@@ -983,7 +987,7 @@ sap.ui.define([
                     reSearchOpCd = soperation_unit_code;
                     reSearchOrgCd = sorg_code;
                     that.onAfterDialog();
-                    
+
                     // that.onDialogSearch();
                     // that.resetValue();
                 },
@@ -1013,7 +1017,7 @@ sap.ui.define([
 
                     sMsg = oBundle.getText(eMessage);
                     if (errorType === 'E') {
-                    // MessageToast.show(eMessageDetail);
+                        // MessageToast.show(eMessageDetail);
                         // alert(sMsg);
                     } else {
                         MessageToast.show(eMessageDetail);
@@ -1182,7 +1186,7 @@ sap.ui.define([
                 treeVendor.push(new Filter({
                     path: 'keyword',
                     filters: [
-                        new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("treepop_vendor_pool_local_name").getValue())
+                        new Filter("vendor_pool_path_name", FilterOperator.Contains, this.byId("treepop_vendor_pool_local_name").getValue())
                     ],
                     and: false
                 }));
@@ -1249,33 +1253,33 @@ sap.ui.define([
 
             if (this.byId("tpop_Operation_ORG").getSelectedKey() && this.byId("tpop_Operation_ORG").getSelectedKey().length > 0 && this.byId("tpop_operation_unit_code").getSelectedKey() && this.byId("tpop_operation_unit_code").getSelectedKey().length > 0) {
 
-                if(!!reSearchOrgCd) {
+                if (!!reSearchOrgCd) {
                     predicates.push(new Filter("org_code", FilterOperator.Contains, reSearchOrgCd));
                     this.byId("tpop_Operation_ORG").setSelectedKey(reSearchOrgCd);
                     reSearchOrgCd = "";
-                }else{
+                } else {
                     if (!!this.byId("tpop_Operation_ORG").getSelectedKey()) {
                         predicates.push(new Filter("org_code", FilterOperator.Contains, this.byId("tpop_Operation_ORG").getSelectedKey()));
                     }
                 }
-                if(!!reSearchOpCd)   {
+                if (!!reSearchOpCd) {
                     predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, reSearchOpCd));
                     this.byId("tpop_operation_unit_code").setSelectedKey(reSearchOpCd)
-                    reSearchOpCd="";
-                }else{
+                    reSearchOpCd = "";
+                } else {
                     if (!!this.byId("tpop_operation_unit_code").getSelectedKey()) {
                         predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("tpop_operation_unit_code").getSelectedKey()));
                     }
                 }
                 if (!!reSearchVpNm) {
                     this.byId("tpop_vendor_pool_local_name").setValue(reSearchVpNm);
-                    reSearchVpNm="";
+                    reSearchVpNm = "";
                 }
                 if (!!this.byId("tpop_vendor_pool_local_name").getValue()) {
                     predicates.push(new Filter({
                         path: 'keyword',
                         filters: [
-                            new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
+                            new Filter("vendor_pool_path_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
                         ],
                         and: false
                     }));
@@ -1562,8 +1566,8 @@ sap.ui.define([
             that.mainTable.clearSelection();
             // for (var i = 0; i < iCount; i++) {
             //     // var oEntity = that.mainTable.getModel().getData(that.mainTable.getContextByIndex(i).getPath());
-                
-                
+
+
             // }
             var oDataLen = 0;
             var oView = this.getView(),
@@ -1612,7 +1616,7 @@ sap.ui.define([
                     this.siteInternalRate.setValue(parseInt(this.siteInternalRate.getValue()));
                 } else if (Number(this.siteInternalRate.getValue()) > 100) {
                     this.siteInternalRate.setValue(100);
-                    
+
                 }
             }
             if (eventId.indexOf("pop_domestic_net_price_diff_rate") > -1) {
@@ -1620,7 +1624,7 @@ sap.ui.define([
                     this.siteExternalRate.setValue(parseInt(this.siteExternalRate.getValue()));
                 } else if (Number(this.siteExternalRate.getValue()) > 100) {
                     this.siteExternalRate.setValue(100);
-                    
+
                 }
             }
         },
@@ -1712,7 +1716,7 @@ sap.ui.define([
                     aSearchFilters.push(new Filter("managers_name", FilterOperator.EQ, s_Man));
                 }
                 if (s_VPC && s_VPC.length > 0) {
-                    aSearchFilters.push(new Filter("vendor_pool_code", FilterOperator.EQ, s_VPC));
+                    aSearchFilters.push(new Filter("vendor_pool_path_code", FilterOperator.Contains, s_VPC));
                 }
                 if (s_Sup && s_Sup.length > 0) {
                     aSearchFilters.push(new Filter("supplier_code", FilterOperator.EQ, s_Sup));
@@ -1783,7 +1787,55 @@ sap.ui.define([
             }
             return rtnStr;
         },
+        //아래 정규식 둘중에 하나 골라서 쓰면 됩니다. 
+        chkReplaceChange: function (oEvent) {
+            console.log("livechange!!");
+            //var regex = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi;     // 특수문자 제거 (한글 영어 숫자만)
+            var regex = /[^a-zA-Z0-9]/gi;                   // 특수문자 제거 (영어 숫자만)
+            //test Str ===> var regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;  //한글 제거 11/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g%^&*()_+|<
 
+            var newValue = oEvent.getParameter("newValue");
+            //$(this).val(v.replace(regexp,''));
+            if (newValue !== "") {
+                newValue = newValue.replace(regex, "");
+                oEvent.oSource.setValue(null);
+                oEvent.oSource.setValue(newValue);
+            }
+        },
+        vhSupplierCode: function (oEvent) {
+            var supplierCode;
+            var oSearchValue = this.byId(oEvent.getSource().sId).getValue();
+
+            if (!this.oSearchSupplierDialog) {
+                this.oSearchSupplierDialog = new SupplierDialog({
+                    title: "Choose Supplier",
+                    MultiSelection: true
+                });
+
+                //여기에 다가 받을 아이디를 셋팅한다. searchField면 아이디를 그리드 아이탬이면 sPath의 경로의 셀 번호를 지정해주면됨다.
+                /*
+                    그리드의 경우
+                    function에서 받은 oEvent를 활용하여 셋팅
+                    var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                    sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item);
+                */
+                // this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
+                //     vendorPoolCode = oEvent.mParameters.item;
+                //     //console.log("materialItem : ", materialItem);
+                //     that.byId("search_material_code").setValue(vendorPoolCode.material_code);
+
+                // }.bind(this));
+            }
+
+            //searObject : 태넌트아이디, 검색 인풋아이디
+            var sSearchObj = {};
+            sSearchObj.tanent_id = "L2100";
+            sSearchObj.supplier_code = oSearchValue;
+            if (this.byId("search_Vp_Code").getValue()) {
+                sSearchObj.vendor_pool_code = this.byId("search_Vp_Code").getValue();
+            }
+            this.oSearchSupplierDialog.open(sSearchObj);
+        },
         onValueHelpRequested: function () {
             // console.group("onValueHelpRequested");
 

@@ -58,8 +58,7 @@ service McstProjectMgtService {
                 uom_name,
                 uom_desc
         }
-        where tenant_id = 'L2100'
-          and uom_class_code = 'AAAADL'
+        where uom_class_code = 'AAAADL'
           and uom_desc is not null
           and disable_date is null;
 
@@ -69,6 +68,5 @@ service McstProjectMgtService {
             key tenant_id,
             key currency_code
         }
-        where tenant_id = 'L2100'
-          and use_flag = true;
+        where use_flag = true;
 }
