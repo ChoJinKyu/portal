@@ -124,13 +124,15 @@
                 class="sapFDynamicPageAlignContent" 
                 rowSelectionChange="treeTableSelection"
                 selectionMode="Single"
+                selectionBehavior="Row"
+                fixedColumnCount="1"
                 >
                 <t:extension>
                     <OverflowToolbar>
                         <Title id="title" text="Category" level="H2"/> 
                         <ToolbarSpacer/>
-                        <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" />
-                        <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" />
+                        <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
+                        <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
                         <Button text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" />
                         <Button text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" />
                         <ToolbarSeparator/>
@@ -138,32 +140,74 @@
                 </t:extension>
                 
                 <t:columns>
-                    <t:Column label="{I18N>/CATEGORY_CODE}">    
+                    <t:Column label="{I18N>/EVAL_ITEM}" width="20em">    
                         <t:template>
-                            <Text text="{evaluation_article_name}" wrapping="false" />
+                            <Text text="{evaluation_article_name}" tooltip="{evaluation_article_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/CATEGORY_NAME}">    
+                    <t:Column label="{I18N>/EVAL_OP_UNT}" width="7em">    
                         <t:template>
-                            <Text text="{category_name}" wrapping="false" />
+                            <Text text="{evaluation_operation_unit_name}" tooltip="{evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/USE_FLAG}">    
+                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" width="7em">    
                         <t:template>
-                            <Text text="{= ${use_flag} === true ? 'Yes' : 'No'}"/>
+                            <Text text="{evaluation_type_name}" tooltip="{evaluation_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/WRITER}">    
+                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" width="7em">    
                         <t:template>
-                            <Text text="{create_user_id}" wrapping="false" />
+                            <Text text="{evaluation_execute_mode_name}" tooltip="{evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/WRITE_DATE}">    
+                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" width="7em">    
                         <t:template>
-                            <Text text="{path: 'system_create_dtm',
-                            type: 'sap.ui.model.type.Date'}" wrapping="false" />
+                            <Text text="{evaluation_article_type_name}" tooltip="{evaluation_article_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" width="7em">    
+                        <t:template>
+                            <Text text="{evaluation_distrb_scr_type_name}" tooltip="{evaluation_distrb_scr_type_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/SCLE_TYPE}" width="7em">    
+                        <t:template>
+                            <Text text="{evaluation_result_input_type_name}" tooltip="{evaluation_result_input_type_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/EVAL_ITEM_DESC}" width="20em">    
+                        <t:template>
+                            <Text text="{evaluation_article_desc}" tooltip="{evaluation_article_desc}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/SORT}" width="5em">    
+                        <t:template>
+                            <Text text="{sort_sequence}" tooltip="{sort_sequence}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/WRITER}" width="8em">    
+                        <t:template>
+                            <Text text="{writer}" tooltip="{writer}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/WRITE_DATE}" width="8em">    
+                        <t:template>
+                            <Text text="{
+                                path:'write_tm',
+                                type:'sap.ui.model.odata.type.DateTime',
+                                constraints : {
+                                    displayFormat: 'Date'
+                                }
+                            }" tooltip="{
+                                path:'write_tm',
+                                type:'sap.ui.model.odata.type.DateTime',
+                                constraints : {
+                                    displayFormat: 'Date'
+                                }
+                            }" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+
 
                     <t:Column label="" width="2rem" >
                         <t:template>

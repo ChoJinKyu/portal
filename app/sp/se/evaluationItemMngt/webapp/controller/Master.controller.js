@@ -261,7 +261,15 @@ sap.ui.define([
              * @param sBtnGubun - 버튼 구분자
              */
             , onPressCreate : function(oEvent, sBtnGubun){
-                var oNavParam;
+                var oNavParam, oTreeTable, aSelectedIdx;
+
+                oTreeTable = this.byId("treeTable");
+                aSelectedIdx = oTreeTable.getSelectedIndices();
+
+                if(!aSelectedIdx.length){
+                    MessageBox.warning("선택된 데이터가 없습니다.");
+                    return;
+                }
 
                 oNavParam = {};
                 oNavParam.new = "Y";
@@ -301,12 +309,6 @@ sap.ui.define([
                     }
                 }
 
-                // new Filter({ path:"org_code", operator:"EQ", value1 : oUserInfo.orgCode }),
-                // new Filter({ path:"evaluation_operation_unit_code", operator:"EQ", value1 : "RAW_MATERIAL" }),
-                // new Filter({ path:"evaluation_type_code", operator:"EQ", value1 : "EVAL002" }),
-                // // new Filter({ path:"evaluation_execute_mode_code", operator:"EQ", value1 : "" }),
-                // // new Filter({ path:"evaluation_article_name", operator:"Contains", value1 : ""  })
-
                 oTable.bindRows({
                     path : "/EvalItemListView",
                     filters : aFilters,
@@ -323,6 +325,18 @@ sap.ui.define([
                         }
                     }
                 });
+            }
+
+            , onPressCollapseAll : function(){
+                var oTreeTable;
+                oTreeTable = this.byId("treeTable");
+                oTreeTable.collapseAll();
+            }
+
+            , onPressExpandAll : function(){
+                var oTreeTable;
+                oTreeTable = this.byId("treeTable");
+                oTreeTable.expandToLevel(99);
             }
 		});
 	});
