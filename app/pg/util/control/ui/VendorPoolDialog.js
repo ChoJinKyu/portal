@@ -86,15 +86,28 @@ sap.ui.define([
             ];
         },
 
+        extractBindingInfo(oValue, oScope){
+            if(oValue && (oValue.filters || oValue.sorters)){
+                debugger;
+                var oParam = jQuery.extend(true, {}, oValue);
+
+                this.aFilters = oValue.filters || [];
+                this.aSorters = oValue.sorters || [];
+                this.aParameters = oValue.parameters;
+            }else{
+                return Parent.prototype.extractBindingInfo.call(this, oValue, oScope);
+            }
+        },
+
         loadData: function () {
             var sCompanyCode = this.oCompanyCode.getValue(),
                 sBizunitCode = this.oBizunitCode.getValue(),
-                sLocalUserName = this.oLocalUserName.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
+                sLocalUserName = this.oLocalUserName.getValue();
+                // aFilters = [
+                //     // 
+                // ];
             if (sCompanyCode) {
-                aFilters.push(
+                this.aFilters.push(
                     new Filter({
                         filters: [
                             new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'", "''") + "'")
@@ -105,7 +118,7 @@ sap.ui.define([
                 );
             }
             if (sBizunitCode) {
-                aFilters.push(
+                this.aFilters.push(
                     new Filter({
                         filters: [
                             new Filter("tolower(bizunit_code)", FilterOperator.Contains, "'" + sBizunitCode.toLowerCase().replace("'", "''") + "'")
@@ -115,7 +128,7 @@ sap.ui.define([
                 );
             }
             if (sLocalUserName) {
-                aFilters.push(
+                this.aFilters.push(
                     new Filter({
                         filters: [
                             new Filter("tolower(idea_manager_name)", FilterOperator.Contains, "'" + sLocalUserName.toLowerCase().replace("'", "''") + "'")
@@ -125,11 +138,13 @@ sap.ui.define([
                 );
             }
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.ImService/").read("/IdeaManager", {
-                filters: aFilters,
+                
+                filters: this.aFilters,
                 sorters: [
                     new Sorter("company_code", true)
                 ],
                 success: function (oData) {
+                    debugger;
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
                 }.bind(this)

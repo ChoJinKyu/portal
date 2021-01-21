@@ -55,7 +55,7 @@
                                     <Label text="{I18N>/OPERATION_UNIT}" labelFor="search_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox   id="search_Operation_UNIT_S" width="10rem"
                                              items="{
-                                                        path : 'util>/CodeDetails',
+                                                        path : 'util>/Code',
                                                         filters : [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
@@ -65,6 +65,19 @@
                                     >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox> 
+                                    <!-- <lib-m:CodeComboBox id="search_Operation_UNIT_S" width="100%" showSecondaryValues="true" 
+                                    useEmpty="true" emptyText="ALL" 
+                                    items="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'SP_SM_SUPPLIER_TYPE'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{util>code}" required="true">
+                                    </lib-m:CodeComboBox> -->
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M2 S12"/>                                        
                                     </layoutData>                                     
@@ -177,7 +190,7 @@
                                 <HBox>
                                     <SearchField id="search_Vp_Name"
                                                 search=".onDialogTreeCreate" 
-
+                                                change=""
                                                 />
                                     <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
                                 </HBox>
@@ -257,7 +270,7 @@
                         <!-- visibleRowCountMode="Auto"> -->
                     <table:extension>
                         <OverflowToolbar>
-                            <Title text="List ({= ${list>/vpSearchOrderView}.length || 0})" level="H2"/>
+                           <Title text="List ({= ${list>/vpSearchOrderView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableCreateButton"          type="Emphasized" text="{I18N>/CREATE_LEVEL}"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
                             <!-- Add the Personalization button -->
@@ -323,7 +336,7 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/SUPPLIER_QUANTITY}" hAlign="Center" width="8rem">
+                            <table:Column label="{I18N>/SUPPLIER_QUANTITY}" hAlign="Center" width="8rem"  >
                                 <table:template>
                                     <Text text="{list>supplier_quantity}" wrapping="false" />
                                 </table:template>
