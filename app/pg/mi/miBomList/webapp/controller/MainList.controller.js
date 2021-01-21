@@ -108,6 +108,10 @@ sap.ui.define([
 
             var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();
+            
+            //var oMi_Material_code = oSmtFilter.getControlByKey("mi_material_code").getValue();
+            //oSmtFilter.getControlByKey("mi_material_code").setValue(oMi_Material_code.toUpperCase());
+            var oMi_Material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();
 
             var aSearchFilters = [];
 
@@ -120,6 +124,17 @@ sap.ui.define([
                 var oSupplier_local_nameFilter = new Filter("supplier_local_name", FilterOperator.Contains, oSupplier_local_name);
                 aSearchFilters.push(oSupplier_local_nameFilter);
             }
+
+            // if (oMi_Material_code.length > 0) {
+            //     var oMi_Material_codeFilter = new Filter("mi_material_code", FilterOperator.Contains, oMi_Material_code);
+            //     aSearchFilters.push(oMi_Material_codeFilter);
+            // }
+
+            if (oMi_Material_name.length > 0) {
+                var oMi_Material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_Material_name);
+                aSearchFilters.push(oMi_Material_nameFilter);
+            }
+
             //  var vGroup = function (oContext) {
             //     var supplier_code = oContext.getProperty("material_code");
             //     var supplier_code = oContext.getProperty("supplier_code");
