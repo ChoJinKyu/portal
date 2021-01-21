@@ -1,16 +1,98 @@
+/* ------------------------------------------------ header style ------------------------------------------------ */
+
+.sapMIBar.sapTntToolHeader .sapMBarChild.sapMITH .sapMITBHead .sapMITBText {
+    font-size: .875rem;
+}
 
 .sapTntToolHeader.sapMTB {
-    background-color: rgb(145, 24, 68);
-    box-shadow: inset 0 -0.0625rem 0 0 rgb(145, 24, 68);
+    background-color: #2C3238;
+    box-shadow: inset 0 -0.0625rem 0 0 #2C3238;
+}
+
+.sapTntToolHeader .sapMBtn .sapMBtnTransparent, .sapTntToolHeader .sapMBtn .sapMBtnDefault, .sapTntToolHeader .sapMBtn .sapMBtnBack, .sapTntToolHeader .sapMBtn .sapMBtnUp {
+    color: #DAE3ED !important;
+}
+
+.sapTntToolHeader .sapMITH .sapMITBSelected .sapMITBFilterWrapper>.sapMITBText {
+    color: #DAE3ED;
+    font-weight: 700;
+}
+
+.sapTntToolHeader .sapMITH .sapMITBText {
+    color: #A5B3C2;
+}
+
+.sapTntToolHeader .sapMITH .sapMITBSelected .sapMITBContentArrow::after {
+    background: none;
+}
+
+.sapTntToolHeader .sapMBtn:hover:not(.sapMBtnDisabled) .sapMBtnInner.sapMBtnHoverable.sapMBtnTransparent:not(.sapMBtnActive):not(.sapMToggleBtnPressed), .sapTntToolHeader .sapMBtn:hover:not(.sapMBtnDisabled) .sapMBtnInner.sapMBtnHoverable.sapMBtnDefault:not(.sapMBtnActive):not(.sapMToggleBtnPressed), .sapTntToolHeader .sapMBtn:hover:not(.sapMBtnDisabled) .sapMBtnInner.sapMBtnHoverable.sapMBtnBack:not(.sapMBtnActive):not(.sapMToggleBtnPressed), .sapTntToolHeader .sapMBtn:hover:not(.sapMBtnDisabled) .sapMBtnInner.sapMBtnHoverable.sapMBtnUp:not(.sapMBtnActive):not(.sapMToggleBtnPressed) {
+    background-color: transparent !important;
+}
+
+.sapTntToolHeader .sapMBtn .sapMBtnTransparent .sapUiIcon, .sapTntToolHeader .sapMBtn .sapMBtnDefault .sapUiIcon, .sapTntToolHeader .sapMBtn .sapMBtnBack .sapUiIcon, .sapTntToolHeader .sapMBtn .sapMBtnUp .sapUiIcon {
+    color: #f5f9fa !important;
+}
+
+
+/* ------------------------------------------------ Navigation style ------------------------------------------------ */
+
+.sapTntSideNavigation {
+    border-right: 1px solid #DAE3ED;
+}
+
+.sapTntSideNavigationNotExpanded .sapTnTNavLINotExpandedTriangle:not(.sapTntNavLIItemDisabled):after {
+    border-bottom: none;
+}
+
+.sapTntNavLIItem:not(.sapTntNavLIItemDisabled):hover {
+    background-color: #F0FDFF;
+}
+
+.sapTntNavLI:not(.sapTntNavLIPopup) .sapTntNavLIGroupItem.sapTntNavLIItem:last-child.sapTntNavLIItemSelected {
+    border-bottom: .0625rem solid #DAE3ED;
+    border-left: .25rem solid #26B9D1;
+}
+
+.sapTntNavLI:not(.sapTntNavLINoIcons) .sapTntNavLIGroupItem .sapMText {
+    font-weight: 500;
 }
 
 .sapTntNavLIItemSelected:not(.sapTntNavLIItemDisabled) {
-   border-bottom: 1px solid rgb(145, 24, 68);
+   border-bottom: none;
 }
 
-
-
-.sapFDynamicPageTitleMain>.sapFDynamicPageTitleMainInner .sapFDynamicPageTitleMainHeading .sapFDynamicPageTitleMainHeadingInner .sapMTitle {
-    color: #f92465;
-    font-weight: bold;
+.sapTntNavLIItem .sapUiIcon {
+    color: #56606B;
 }
+
+.sapUiIcon:focus {
+    outline: none;
+}
+
+html.sap-desktop .sapMBtn:focus>.sapMFocusable {
+    outline: none;
+}
+
+.sapTntNavLIItemSelected .sapTntNavLIItem:hover, .sapTntNavLIItemSelected.sapTntNavLIGroupItem.sapTntNavLIGroupItem:hover {
+    background-color: #F0FDFF;
+}
+
+.sapTntNavLI:not(.sapTntNavLIPopup) .sapTntNavLIGroupItem.sapTntNavLIItem:last-child {
+    border-bottom: .0625rem solid #DAE3ED;
+}
+
+.sapTntNavLIItemSelected .sapMText{
+    margin-left: -0.25rem;
+    font-weight: 700 !important;
+}
+
+.sapTntNavLIItemSelected.sapTntNavLIItem, .sapTntNavLIItemSelected .sapTntNavLIGroup, .sapTntNavLIItemSelected.sapTntNavLIGroupItem.sapTntNavLIGroupItem {
+    background-color: #F0FDFF;
+    border-left: .25rem solid #26B9D1;
+}
+
+.sapTntNavLICollapsed .sapTntNavLIGroup.sapTntNavLIItemSelected, .sapTntNavLIPopup .sapTntNavLIGroup.sapTntNavLIItemSelected {
+    border-color: #26B9D1;
+}
+

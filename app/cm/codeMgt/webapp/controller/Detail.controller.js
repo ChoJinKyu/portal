@@ -353,7 +353,7 @@ sap.ui.define([
 
             if(!aChain){
                 var oUtilModel = this.getModel('util');
-                oUtilModel.read('/CodeDetails',{
+                oUtilModel.read('/Code',{
                     filters : [
                         new Filter("tenant_id", FilterOperator.EQ, "L2100"),
                         new Filter("group_code", FilterOperator.EQ, "CM_CHAIN_CD")

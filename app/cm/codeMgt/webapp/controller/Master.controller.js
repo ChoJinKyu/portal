@@ -86,7 +86,7 @@ sap.ui.define([
                                 group_code:"CM_CHAIN_CD",
                                 code:item.chain_code
                             };
-                            var sChainPath =  oUtilModel.createKey("/CodeDetails", oChainKey);
+                            var sChainPath =  oUtilModel.createKey("/Code", oChainKey);
                             var oChain = oUtilModel.getProperty(sChainPath);
                             var sChainText = (oChain)?oChain.code_description:"";
 
@@ -147,7 +147,7 @@ sap.ui.define([
 
                 var oChain = this.byId("search_chain");
                 oChain.setSelectedKey(null);
-                oChain.bindItems("util>/CodeDetails", oItemTemplate, null, aFilters);
+                oChain.bindItems("util>/Code", oItemTemplate, null, aFilters);
             }
 		});
 	});
