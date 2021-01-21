@@ -343,7 +343,7 @@
         <f:content>
             <table:Table id="moldMstTable"
                     selectionMode="None"
-                    fixedColumnCount="7"
+                    fixedColumnCount="8"
                     visibleRowCountMode="Auto"
                     rows="{list>/MoldMstView}"
                     cellClick=".onCellClick"
@@ -375,7 +375,7 @@
                             visible="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldCompanyColumn" width="5em" hAlign="Center">
+                    <table:Column id="moldCompanyColumn" width="4em" hAlign="Center">
                         <Label text="{I18N>/COMPANY}" wrapping="true"/>           
                         <table:template>
                             <Text id="company_code" text="{list>company_code}"/> 
@@ -387,7 +387,7 @@
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldModelColumn" width="12em" >
+                    <table:Column id="moldModelColumn" width="10em" >
                         <Label text="{I18N>/MODEL}" wrapping="true"/>
                         <table:template>
                             <Text id="model" text="{list>model}"/>
@@ -405,7 +405,7 @@
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldDescriptionColumn" width="12em">
+                    <table:Column id="moldDescriptionColumn" width="10em">
                         <Label text="{I18N>/DESCRIPTION}" wrapping="true"/>
                         <table:template>
                             <Text id="spec_name" text="{list>spec_name}"/>
@@ -429,7 +429,7 @@
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column width="8em" hAlign="Center">
+                    <table:Column width="5em" hAlign="Center">
                         <Label text="Set ID"/>
                         <table:template>
                             <Text text="{list>set_id}"/>
@@ -491,7 +491,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" change=".onSelectChange"
+                                required="true" change=".inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
@@ -510,7 +510,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" change=".onSelectChange"
+                                required="true" change=".inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
                                 class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
