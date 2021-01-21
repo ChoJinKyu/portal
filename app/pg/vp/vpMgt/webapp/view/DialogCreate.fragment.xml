@@ -53,7 +53,7 @@
                             <Label text="{I18N>/OPERATION_UNIT}" labelFor="pop_operation_unit_code" required="true"></Label>                        
                             <ComboBox   id="tpop_operation_unit_code"
                                             items="{
-                                                        path : 'util>/CodeDetails',
+                                                        path : 'util>/Code',
                                                         filters : [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
@@ -61,7 +61,7 @@
                                                     }"
                                             
                                 >
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>    
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M4 S12" />
@@ -268,14 +268,14 @@
                                     <Label text = "{I18N>/INDUSTRIAL_CLASS}" design="Bold"/> 
                                         <ComboBox   id="pop_industry_class_code"
                                                     items="{
-                                                                path : 'util>/CodeDetails',
+                                                                path : 'util>/Code',
                                                                 filters : [
                                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                                     {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INDUSTRY_CLASS_CODE'}                               
                                                                 ]
                                                             }"
                                         >
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
                                         </ComboBox>                                                                 
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
@@ -287,7 +287,7 @@
                                             <Label text = "{I18N>/MTL_ATTRIBUTE}" class="sapUiTinyMarginEnd" design="Bold"/> 
                                             <ComboBox   id="pop_inp_type_code" class="sapUiTinyMarginEnd"
                                                         items="{
-                                                                    path : 'util>/CodeDetails',
+                                                                    path : 'util>/Code',
                                                                     filters : [
                                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                                         {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
@@ -295,7 +295,7 @@
                                                                 }"
                                                         change=".handlemtlChang"
                                             >
-                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                                <core:Item key="{util>code}" text="{util>code_name}" />
                                             </ComboBox>                                      
                                             
                                         </VBox>
@@ -303,14 +303,14 @@
                                             <Label text = "{I18N>/PLANNING_BASE}" class="sapUiTinyMarginEnd" design="Bold"/>
                                             <ComboBox   id="pop_plan_base"
                                                         items="{
-                                                                    path : 'util>/CodeDetails',
+                                                                    path : 'util>/Code',
                                                                     filters : [
                                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                                         {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_MTLMOB_BASE_CODE'}                                
                                                                     ]
                                                                 }"
                                             >
-                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                                <core:Item key="{util>code}" text="{util>code_name}" />
                                             </ComboBox>                                       
                                         </VBox> 
                                     </HBox>                              
@@ -367,14 +367,14 @@
                                         <HBox>
                                             <ComboBox   id="pop_equipment_grade_code"
                                                         items="{
-                                                                    path : 'util>/CodeDetails',
+                                                                    path : 'util>/Code',
                                                                     filters : [
                                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                                         {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_GRADE_CODE'}                                
                                                                     ]
                                                                 }"
                                             >
-                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                                <core:Item key="{util>code}" text="{util>code_name}" />
                                             </ComboBox>                                    
 
                                         </HBox>                               
@@ -387,14 +387,14 @@
                                         <HBox>
                                             <ComboBox   id="pop_equipment_type_code"
                                                         items="{
-                                                                    path : 'util>/CodeDetails',
+                                                                    path : 'util>/Code',
                                                                     filters : [
                                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                                         {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_TYPE_CODE'}                                
                                                                     ]
                                                                 }"
                                             >
-                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                                <core:Item key="{util>code}" text="{util>code_name}" />
                                             </ComboBox>                                        
                                         </HBox>                               
                                     <layoutData>
