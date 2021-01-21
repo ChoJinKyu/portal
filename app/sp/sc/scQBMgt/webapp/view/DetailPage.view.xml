@@ -165,174 +165,211 @@
                         <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content"                          
                             class="sapUiDemoFlexBoxSizeAdjustments">
                             <content>
-                            <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
-                                            columnsM="2"
-                                            columnsL="2"
-                                            columnsXL="3">
+                                <!-- <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
+                                                columnsM="2"
+                                                columnsL="2"
+                                                columnsXL="3">
 
-                                <Label  text="Negotiation No"  class="sapMLabelNoText"/>
-                                <Input  id="inputNegotiationNo" value="{NegoHeaders>/nego_document_number}" editable="false" visible="{=${propInfo>/isEditMode}}"/>
-                                <Text  id="textNegotiationNo" text="{NegoHeaders>/nego_document_number}" visible="{=!${propInfo>/isEditMode} }"/>
-                                <Label  text="Type"  class="sapMLabelNoText"/>
-                                <Input  id="inputType" enabled="false" value="{NegoHeaders>/nego_type_code}" editable="false" visible="{=${propInfo>/isEditMode}}" class="sapUiSmallMarginEnd" />
-                                <Text  id="textType" text="{NegoHeaders>/nego_type_code}" visible="{=!${propInfo>/isEditMode} }"/>
-                                <Label  text="Outcome"  class="sapMLabelNoText"/>
-                                <Input  id="inputOutcome" enabled="false" value="{NegoHeaders>/negotiation_output_class_code}" editable="false" visible="{=${propInfo>/isEditMode}}"/>  
-                                <Text  id="textOutcome" text="{NegoHeaders>/negotiation_output_class_code}" visible="{=!${propInfo>/isEditMode} }"/>
-                            </form:SimpleForm>
-                  
-                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
-                                <Label  text="Title" required="true"  class="sapMLabelNoText"/>
-                                <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"/>
-                                <Text  id="textTitle" text="{NegoHeaders>/nego_document_title}" visible="{=!${propInfo>/isEditMode} }"/>
-                            </VBox>
+                                    <Label  text="Negotiation No"  />
+                                    <Input  id="inputNegotiationNo" value="{NegoHeaders>/nego_document_number}" editable="false" visible="{=${propInfo>/isEditMode}}"/>
+                                    <Text  id="textNegotiationNo" text="{NegoHeaders>/nego_document_number}" visible="{=!${propInfo>/isEditMode} }"/>
+                                    <Label  text="Type"  />
+                                    <Text  id="textType" text="{NegoHeaders>/nego_type_code}" />
+                                    <Label  text="Outcome"  />
+                                    <Text  id="textOutcome" text="{NegoHeaders>/negotiation_output_class_code}" />
+                                </form:SimpleForm> -->
 
-                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin" >
-                                <Label  text="Description"  class="sapMLabelNoText sapUiTinyMarginBottom"/>
-                                <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
-                                    showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
-                                    visible="{=${propInfo>/isEditMode}}" 
-                                    />
-                                <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/>
-                                <!-- nego_document_desc -->
-                            </VBox>
+                                <!-- <form:SimpleForm editable="true"  layout="ColumnLayout"
+                                                columnsM="1"
+                                                columnsL="1"
+                                                columnsXL="1">
 
-    
-                            <FlexBox alignItems="Center" width="100%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom" fitContainer="true">
+                                <Label  text="Title" required="true"  />
+                                    <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"/>
+                                    <Text  id="textTitle" text="{NegoHeaders>/nego_document_title}" visible="{=!${propInfo>/isEditMode} }"/>
+                                </form:SimpleForm> -->
+                    
+                                <layout:Grid
+                                   
+                                    hSpacing="1"
+                                    defaultSpan="XL12 L12 M12 S12">
+                                    <layout:content>
 
-                                <VBox width="100%">
-                                    <HBox  width="100%" alignItems="Center">
-                                        <HBox  width="50%" height="100%" alignItems="Center" >
-                                            <Label  text="Bid Style" width="100px" class="sapMLabelNoText"/>
-                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedKey="{NegoHeaders>/negotiation_style_code}" visible="{=${propInfo>/isEditMode}}" >
-                                                <RadioButton id="RB1-1" key="S" text="Sealed (purchaser : X,Supplier :X)" />
-                                                <RadioButton id="RB1-2" key="B" text="Blind (purchaser : O,Supplier :X)" />
-                                            </RadioButtonGroup>
-                                        </HBox>
+                                        <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout" class="sapUiTinyMarginLeft"
+                                                columnsM="2"
+                                                columnsL="2"
+                                                columnsXL="3">
 
-                                        <HBox  width="50%" height="100%" alignItems="Center" visible="false">
-                                            <Label  text="Incoterms" width="130px" class="sapMLabelNoText"/>
-                                            <VBox alignContent="Center" alignItems="Stretch" width="100%" class="sapUiSmallMarginEnd">
-                                                <ComboBox id="combobox_Incoterms" width="100%" visible="{=${propInfo>/isEditMode}}"/>
-                                                <Text text="{}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
-                                            </VBox>
-                                        </HBox>                                        
-                                    </HBox>
-        
-                                    <HBox  width="100%" >
-
-                                        <HBox  width="50%" height="100%" alignItems="Center" >
-                                            <Label  text="Period" width="100px" required="true" class="sapMLabelNoText"/> 
-                                            <CheckBox text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"/> 
-                                            <ToolbarSpacer width="1rem"/> 
-                                            <FlexBox>
-                                                <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 
-                                                    valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
-                                                    value="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
-                                                <Text text="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
-                                            </FlexBox>
-                                            <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                            <FlexBox>
-                                                <DateTimePicker id="searchEndDatePicker" placeholder="End Date ..." 
-                                                    valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
-                                                    value="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
-                                                <Text text="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                            formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
-                                            </FlexBox>
-                                        </HBox>
-
-                                        <HBox  width="50%" height="100%" alignItems="Center" >
-                                            <Label  text="Extension Period" width="130px" class="sapMLabelNoText "/> 
-                                            <Input id="inputEP" value="{NegoHeaders>/close_date_ext_enabled_hours}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
-                                            <Text text="{NegoHeaders>/close_date_ext_enabled_hours}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
-                                            <Label  text="Hr"  class="sapUiSmallMarginBegin" />
-
-                                            <ToolbarSpacer width="3rem"/> 
-                                            <Label  text="Extension Count" width="130px"  class="sapMLabelNoText "/> 
-                                            <Input id="inputEC"  value="{NegoHeaders>/close_date_ext_enabled_count}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
-                                            <Text text="{NegoHeaders>/close_date_ext_enabled_count}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
-                                            <Label  text="Times"  class="sapUiSmallMarginBegin"/>   
-                                            
-                                        </HBox>
-                                    </HBox>
-                                </VBox>
-                            </FlexBox>
-
-                            <VBox class="sapUiSmallMarginBegin">
-                                <Label  text="Note To Supplier" class="sapMLabelNoText sapUiTinyMarginBottom"/>
-                                <rte:RichTextEditor id="reNoteToSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
-                                     visible="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                <FormattedText id="formTextNoteToSupplier"  visible="{=!${propInfo>/isEditMode}}"/>
-                            </VBox>
-
-                            <Table id="tableAttachments" 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								class="sapUiSmallMarginBegin sapFDynamicPageAlignContent" 
-								mode="None" noDataText="파일 없음"
-
-								width="auto">
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                        <Title text="Attachments ()" level="H2"/>
-                                        <ToolbarSpacer/>
+                                            <Label  text="Negotiation No"  />
+                                            <Input  id="inputNegotiationNo" value="{NegoHeaders>/nego_document_number}" editable="false" visible="{=${propInfo>/isEditMode}}"/>
+                                            <Text  id="textNegotiationNo" text="{NegoHeaders>/nego_document_number}" visible="{=!${propInfo>/isEditMode} }"/>
+                                            <Label  text="Type"  />
+                                            <Text  id="textType" text="{NegoHeaders>/nego_type_code}" />
+                                            <Label  text="Outcome"  />
+                                            <Text  id="textOutcome" text="{NegoHeaders>/negotiation_output_class_code}" />
+                                        </form:SimpleForm>
                                         
-                                        <Button text="Load Attached file From Requisition" type="Transparent" press=".onMidTableAddButtonPress" visible="{=${propInfo>/isEditMode}}" />
-                                        <Button text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" visible="{=${propInfo>/isEditMode}}" />
+                                        <VBox>
+                                            <Label  text="Title" required="true" class="nameTitle"  />
+                                            
+                                            <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"/>
+                                            <Text  id="textTitle" text="{NegoHeaders>/nego_document_title}" visible="{=!${propInfo>/isEditMode} }"/>
+                                        </VBox>
                                        
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    
-                                    <!-- language_code -->
-                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
-                                        <Text text="Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" >
-                                        <Text text="File Name" />
-                                    </Column>
-                                    <!-- <Column minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
-                                        <Text text="File Name" />
-                                    </Column> -->
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Description" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Submission No" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Title" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Delete" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <!-- <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text="txt"/>
-                                            <Text text="fileName1"/>
-                                            <Text text="Timing Controller ** SW0887A, SI"/>
-                                            <Text text="2198849-1"/>
-                                            <Text text="20109040_미정단가_홍길동"/>
-                                            <CheckBox />  
-                                        </cells>
-                                    </ColumnListItem>-->
-                                    <!-- <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text="{viewModel>tenant_id}"/>
-                                            <Text text="{viewModel>nego_header_id}"/>
-                                            <Text text="{viewModel>nego_document_number}"/>
-                                            <Text text="2198865-1"/>
-                                            <Text text="20109046_미정단가_홍길동"/>
-                                            <CheckBox />  
-                                        </cells>
-                                    </ColumnListItem>  -->
-                                </items>
-						    </Table>
+                                         <VBox>
+                                            <Label  text="Description" class="nameTitle sapUiTinyMarginBottom" />
+                                            <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
+                                                showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
+                                                visible="{=${propInfo>/isEditMode}}" 
+                                                />
+                                            <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/>
+                                        </VBox>
+
+                                        <VBox  width="100%" height="100%" alignItems="Start" >
+                                       
+                                            <Label  text="Bid Style" class="nameTitle sapUiTinyMarginBottom" />
+                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="{=${NegoHeaders>/negotiation_style_code}==='Blind' ? 1 : 0 }" visible="{=${propInfo>/isEditMode}}" >
+                                                <RadioButton text="Sealed (purchaser : X,Supplier :X)" />
+                                                <RadioButton text="Blind (purchaser : O,Supplier :X)" />
+                                            </RadioButtonGroup>
+                                            <Text text="{NegoHeaders>/negotiation_style_code}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                        
+                                        </VBox>
+
+                                        <HBox  width="100%" >
+                                            <VBox width="50%">
+                                            
+                                                <Label  text="Period" width="100px" required="true" class="sapMLabelNoText"/> 
+                                                <HBox  height="100%" alignItems="Center" >
+                                                    <CheckBox text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"/> 
+                                                    <ToolbarSpacer width="1rem"/> 
+                                                    <FlexBox>
+                                                        <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 
+                                                            valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
+                                                            value="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
+                                                        <Text text="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                    </FlexBox>
+                                                    <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                                    <FlexBox>
+                                                        <DateTimePicker id="searchEndDatePicker" placeholder="End Date ..." 
+                                                            valueFormat="yyyy/MM/ddTHH:mm:ss" displayFormat="yyyy/MM/dd HH:mm:ss" visible="{=${propInfo>/isEditMode}}"
+                                                            value="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" />
+                                                        <Text text="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                    </FlexBox>
+                                                </HBox>
+                                            </VBox>
+
+                                            <HBox  width="50%" >
+                                                <VBox width="50%">
+
+                                                    <Label  text="Extension Period" width="130px" class="sapMLabelNoText "/> 
+                                                    <HBox  height="100%" alignItems="Center" >
+                                                        <Input id="inputEP" value="{NegoHeaders>/close_date_ext_enabled_hours}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
+                                                        <Text text="{NegoHeaders>/close_date_ext_enabled_hours}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                        <Label  text="Hr"  class="sapUiSmallMarginBegin" />
+
+                                                        
+                                                    </HBox>
+                                                </VBox>
+
+                                                <ToolbarSpacer width="3rem"/> 
+
+                                                <VBox width="50%">
+
+                                                    <Label  text="Extension Count" width="130px"  class="sapMLabelNoText "/> 
+                                                    <HBox  height="100%" alignItems="Center" >
+                                                        <Input id="inputEC"  value="{NegoHeaders>/close_date_ext_enabled_count}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd"/>
+                                                        <Text text="{NegoHeaders>/close_date_ext_enabled_count}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                        <Label  text="Times"  class="sapUiSmallMarginBegin"/>   
+                                                    </HBox>
+                                                </VBox>
+                                            </HBox>
+                                        </HBox>
+
+                                        <VBox >
+                                            <Label  text="Note To Supplier" class="sapMLabelNoText sapUiTinyMarginBottom"/>
+                                            <rte:RichTextEditor id="reNoteToSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
+                                                value="{NegoHeaders>/note_content}" visible="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                            <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/>
+                                        </VBox>
+
+                                        <Table id="tableAttachments" 
+                                            sticky="HeaderToolbar,ColumnHeaders" 
+                                            inset="false" 
+                                            class="sapFDynamicPageAlignContent" 
+                                            mode="None" noDataText="파일 없음"
+
+                                            width="auto">
+                                            <headerToolbar>
+                                                <OverflowToolbar>
+                                                    <Title text="Attachments ()" level="H2"/>
+                                                    <ToolbarSpacer/>
+                                                    
+                                                    <Button text="Load Attached file From Requisition" type="Transparent" press=".onMidTableAddButtonPress" visible="{=${propInfo>/isEditMode}}" />
+                                                    <Button text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" visible="{=${propInfo>/isEditMode}}" />
+                                                
+                                                </OverflowToolbar>
+                                            </headerToolbar>
+                                            <columns>
+                                                
+                                                <!-- language_code -->
+                                                <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                                    <Text text="Type" />
+                                                </Column>
+                                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                                    <Text text="File Name" />
+                                                </Column>
+                                                <!-- <Column minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
+                                                    <Text text="File Name" />
+                                                </Column> -->
+                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                    <Text text="Description" />
+                                                </Column>
+                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                    <Text text="Submission No" />
+                                                </Column>
+                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                    <Text text="Title" />
+                                                </Column>
+                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                    <Text text="Delete" />
+                                                </Column>
+                                            </columns>
+                                            <items>
+                                                <!-- <ColumnListItem type="Inactive" >
+                                                    <cells>
+                                                        <Text text="txt"/>
+                                                        <Text text="fileName1"/>
+                                                        <Text text="Timing Controller ** SW0887A, SI"/>
+                                                        <Text text="2198849-1"/>
+                                                        <Text text="20109040_미정단가_홍길동"/>
+                                                        <CheckBox />  
+                                                    </cells>
+                                                </ColumnListItem>-->
+                                                <!-- <ColumnListItem type="Inactive" >
+                                                    <cells>
+                                                        <Text text="{viewModel>tenant_id}"/>
+                                                        <Text text="{viewModel>nego_header_id}"/>
+                                                        <Text text="{viewModel>nego_document_number}"/>
+                                                        <Text text="2198865-1"/>
+                                                        <Text text="20109046_미정단가_홍길동"/>
+                                                        <CheckBox />  
+                                                    </cells>
+                                                </ColumnListItem>  -->
+                                            </items>
+                                        </Table>
+  
+
+                                    </layout:content>
+                                </layout:Grid>
+
+
+                               
+                                
                             </content>
                         </Panel>
                        
@@ -350,20 +387,20 @@
                                             columnsM="1"
                                             columnsL="2"
                                             columnsXL="4">
-                                <Label  text="Award Type"  class="sapMLabelNoText"/> 
+                                <Label  text="Award Type"  /> 
                                 <ComboBox placeholder="Award by Total Amount" selectedKey="{NegoHeaders>/award_type_code}" >
                                     <core:Item key="Award By Lines" text="Award by Lines"/>
                                     <core:Item key="Award by Total Amount" text="Award by Total Amount"/>
                                 </ComboBox> 
-                                <Label  text="Target Total Amount"   class="sapMLabelNoText" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
+                                <Label  text="Target Total Amount"    visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
                                 <Input value="{NegoHeaders>/target_amount}" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
-                                <Label text="Partial Response" class="sapMLabelNoText"/>
+                                <Label text="Partial Response" />
 
-                                <SegmentedButton id="SegmentButtonUsed" selectedKey="{=${NegoHeaders>/partial_allow_flag} === 'yes' ? true : false }" class="sapUiSmallMarginEnd" 
+                                <SegmentedButton id="SegmentButtonUsed" selectedKey="{NegoHeaders>/partial_allow_flag}" class="sapUiSmallMarginEnd" 
                                     enabled="{=${NegoHeaders>/award_type_code} !== 'Award by Total Amount'}" >
                                     <items>
-                                        <SegmentedButtonItem key="true" text="Yes"/>
-                                        <SegmentedButtonItem key="false" text="No" />
+                                        <SegmentedButtonItem key="Y" text="Yes"/>
+                                        <SegmentedButtonItem key="N" text="No" />
                                     </items>
                                 </SegmentedButton>   
                                 
@@ -373,12 +410,12 @@
                                             columnsM="1"
                                             columnsL="2"
                                             columnsXL="4">
-                                <Label  text="Award Type"  class="sapMLabelNoText"/> 
+                                <Label  text="Award Type"  /> 
                                 <Text text="{NegoHeaders>/award_type_code}" />
-                                <Label  text="Target Total Amount"   class="sapMLabelNoText" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
+                                <Label  text="Target Total Amount"    visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
                                 <Text text="{NegoHeaders>/target_amount}" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/>
-                                <Label text="Partial Response" class="sapMLabelNoText"/>
-                                <Text text="{NegoHeaders>/partial_allow_flag}" /> 
+                                <Label text="Partial Response" />
+                                <Text text="{=${NegoHeaders>/partial_allow_flag}==='Y' ? 'Yes' : 'No'}" /> 
                             </form:SimpleForm>
                         </Panel>
 					</uxap:ObjectPageSubSection>
@@ -391,7 +428,7 @@
 					<uxap:ObjectPageSubSection>
                         <Panel id="panel_Line" expandable="true" expanded="true" headerText="Line Content">
                             <VBox>
-
+                                <!-- enableColumnFreeze="true" -->
                                 <t:Table id="tableLines"
                                     minAutoRowCount="2"
                                     visibleRowCountMode="Auto"
@@ -400,7 +437,7 @@
                                     ariaLabelledBy="title">
                                     <t:extension>
                                         <OverflowToolbar visible="{=${propInfo>/isEditMode}}" >
-                                            <Button text="일괄 Supplier 추가" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                            <Button text="일괄 Supplier 추가" type="Transparent" press=".onMidTableAddBatchSuppliers"  />
                                             <Button text="Exclude Supplier From Vender Pool" type="Transparent" press=".onMidTableDeleteButtonPress" />
                                             <ToolbarSpacer/>
                                             
@@ -470,7 +507,7 @@
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="Submission No" />
                                             <t:template>
-                                            <Label text="{NegoHeaders>pr_approve_number}" />
+                                                <Label text="{NegoHeaders>pr_approve_number}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center">
@@ -485,9 +522,10 @@
                                         <t:Column width="11rem"  hAlign="Center">
                                             <Label text="Material Code"  required="true" />
                                             <t:template>
-                                                <FlexBox >
-                                                    <Input showValueHelp="true" value="{NegoHeaders>material_code}" visible="{=${propInfo>/isEditMode}}" valueHelpRequest=".onPartNoPress"/>
-                                                    <Text text="{NegoHeaders>material_code}" visible="{=!${propInfo>/isEditMode}}" />
+                                                <FlexBox width="100%" >
+                                                    <Input showValueHelp="true" value="{NegoHeaders>material_code}" visible="{=${propInfo>/isEditMode}}" valueHelpRequest=".onPartNoPress"
+                                                        editable="{=!${propInfo>/isDescEditMode}}"/>
+                                                    <Label text="{NegoHeaders>material_code}" visible="{=!${propInfo>/isEditMode}}"/>
                                                 </FlexBox>
                                             </t:template>
                                         </t:Column>
@@ -495,7 +533,7 @@
                                             <Label text="Description" required="true" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}" editable="{=${propInfo>/isDescEditMode}}"/>
                                                     <Text text="{NegoHeaders>material_desc}" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
                                             </t:template>
@@ -503,20 +541,26 @@
                                         <t:Column width="11rem"  hAlign="Center">
                                             <Label text="사양/규격" />
                                             <t:template>
-                                                <Label text="" />
+                                                <FlexBox >
+                                                    <Input showValueHelp="true" value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem"  hAlign="Center">
                                             <Label text="BPA Price" />
                                             <t:template>
-                                                <Label text="{NegoHeaders>bpa_price}" />
+                                                <FlexBox >
+                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="{NegoHeaders>bpa_price}" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="상세단가" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <Input showValueHelp="true" value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
                                                     <Text text="" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
                                             </t:template>
@@ -524,13 +568,19 @@
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="추천정보" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="Group Id" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center">
@@ -555,7 +605,7 @@
                                             <Label text="수량" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <Input showValueHelp="true" value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}"/>
                                                     <Text text="{NegoHeaders>request_quantity}" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
                                             </t:template>
@@ -567,16 +617,18 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
-                                            <Label text="납기요청일" required="true" />
+                                            <Label text="납기요청일" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="통화" required="true" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <!-- <Input value="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}"></Input> -->
                                                     <ComboBox value="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}"></ComboBox>
                                                     <Text text="{NegoHeaders>currency_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
@@ -607,7 +659,7 @@
                                             <Label text="Start Price" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <Input showValueHelp="true" value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}"/>
                                                     <Text text="{NegoHeaders>bidding_start_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
                                             </t:template>
@@ -625,7 +677,7 @@
                                             <Label text="Target Price" />
                                             <t:template>
                                                 <FlexBox >
-                                                    <Input showValueHelp="true" value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}"/>
                                                     <Text text="{NegoHeaders>bidding_target_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                 </FlexBox>
                                             </t:template>
@@ -633,7 +685,10 @@
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="현재 단가" />
                                             <t:template>
-                                                <Label text="{NegoHeaders>current_price}" />
+                                                <FlexBox >
+                                                    <Input value="{NegoHeaders>current_price}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="{NegoHeaders>current_price}" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center">
@@ -642,58 +697,113 @@
                                                 <Label text="{}" />
                                             </t:template>
                                         </t:Column>
+                                        <t:Column width="11rem" hAlign="Center">
+                                            <Label text="Martket" />
+                                            <t:template>
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
+                                            </t:template>
+                                        </t:Column>
+                                         <t:Column width="11rem" hAlign="Center">
+                                            <Label text="Incoterms" />
+                                            <t:template>
+                                                <FlexBox >
+                                                    <ComboBox value="{}" visible="{=${propInfo>/isEditMode}}"></ComboBox>
+                                                    <Text text="{}" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column width="11rem" hAlign="Center">
+                                            <Label text="Payment Terms" />
+                                            <t:template>
+                                                <FlexBox >
+                                                    <ComboBox value="{}" visible="{=${propInfo>/isEditMode}}"></ComboBox>
+                                                    <Text text="{}" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
+                                            </t:template>
+                                        </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
                                             <Label text="Location" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
                                             <Label text="목적" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
                                             <Label text="사유" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
                                             <Label text="예산 부서"  />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
                                             <Label text="요청자" />
                                             <t:template>
-                                                <Label text="{NegoHeaders>requestor_empno}" />
+                                                <FlexBox >
+                                                    <Input value="{NegoHeaders>requestor_empno}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="{NegoHeaders>requestor_empno}" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
                                             <Label text="요청 부서" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center"  visible="{= ${propInfo>/outCome} === 'view' }">
                                             <Label text="요청 날짜" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
+                                        
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="첨부파일" />
                                             <t:template>
-                                                <Label text="{}" />
+                                                <FlexBox >
+                                                    <Input value="" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column width="11rem" hAlign="Center">
                                             <Label text="협력사 제공정보" />
                                             <t:template>
-                                                <Label text="{NegoHeaders>supplier_provide_info}" />
+                                                <FlexBox >
+                                                    <Input value="{NegoHeaders>supplier_provide_info}" visible="{=${propInfo>/isEditMode}}"/>
+                                                    <Text text="{NegoHeaders>supplier_provide_info}" visible="{=!${propInfo>/isEditMode}}" />
+                                                </FlexBox>
                                             </t:template>
                                         </t:Column>
                                     </t:columns>
@@ -705,28 +815,28 @@
                                                         columnsM="2" width="100%" 
                                                         columnsL="3"
                                                         columnsXL="4">
-                                                <Label  text="Requisition No" class="sapMLabelNoText"/>
-                                                <Input  class="sapMLabelNoText" value="{NegoItemPrices>/pr_number}" enabled="false"/>
-                                                <Label  text="Material Code" class="sapMLabelNoText"/>
-                                                <Input  class="sapMLabelNoText" value="{NegoItemPrices>/material_code}" enabled="false"/>
-                                                <Label  text="Description" class="sapMLabelNoText"/>
-                                                <Input  class="sapMLabelNoText" value="{NegoItemPrices>/material_desc}" enabled="false"/>
-                                                <Label  text="Vendor Pool" class="sapMLabelNoText"/>
-                                                <Input  class="sapMLabelNoText" value="{NegoItemPrices>/vendor_pool_code}" enabled="false"/>
+                                                <Label  text="Requisition No" />
+                                                <Input   value="{NegoItemPrices>/pr_number}" enabled="false"/>
+                                                <Label  text="Material Code" />
+                                                <Input   value="{NegoItemPrices>/material_code}" enabled="false"/>
+                                                <Label  text="Description" />
+                                                <Input   value="{NegoItemPrices>/material_desc}" enabled="false"/>
+                                                <Label  text="Vendor Pool" />
+                                                <Input   value="{NegoItemPrices>/vendor_pool_code}" enabled="false"/>
                                             </form:SimpleForm>
 
                                             <form:SimpleForm editable="true"  layout="ColumnLayout" visible="{=!${propInfo>/isEditMode}}" 
                                                         columnsM="2" width="100%" 
                                                         columnsL="3"
                                                         columnsXL="4">
-                                                <Label  text="Requisition No" class="sapMLabelNoText"/>
-                                                <Text  class="sapMLabelNoText" text="{NegoItemPrices>/pr_number}" />
-                                                <Label  text="Material Code" class="sapMLabelNoText"/>
-                                                <Text  class="sapMLabelNoText" text="{NegoItemPrices>/material_code}" />
-                                                <Label  text="Description" class="sapMLabelNoText"/>
-                                                <Text  class="sapMLabelNoText" text="{NegoItemPrices>/material_desc}"/>
-                                                <Label  text="Vendor Pool" class="sapMLabelNoText"/>
-                                                <Text  class="sapMLabelNoText" text="{NegoItemPrices>/vendor_pool_code}"/>
+                                                <Label  text="Requisition No" />
+                                                <Text   text="{NegoItemPrices>/pr_number}" />
+                                                <Label  text="Material Code" />
+                                                <Text   text="{NegoItemPrices>/material_code}" />
+                                                <Label  text="Description" />
+                                                <Text   text="{NegoItemPrices>/material_desc}"/>
+                                                <Label  text="Vendor Pool" />
+                                                <Text   text="{NegoItemPrices>/vendor_pool_code}"/>
                                             </form:SimpleForm>
                                         
                                         </FlexBox>
