@@ -25,7 +25,9 @@
         descriptionKey="supplier_local_name"
     > -->
     <Dialog
-        title="Non Price">
+        beforeOpen="NonPricePopupBeforeOpen" 
+        beforeClose="NonPricePopupBeforeClose" 
+        title="Non Price"> 
         <VBox class="sapUiLargeMargin">
             <!-- Header 입력 start -->
             <VBox>
@@ -34,22 +36,28 @@
                         <Label  text="평가항목 유형" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  class="sapMLabelNoText"
-                                value="{NPHeader>/h1}"/>
+                        <Select width="100%" selectedKey="{NPHeaderModel>/h1}"
+                            id="selectType" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
+                            <core:Item key="1" text="Commercial" />
+                            <core:Item key="2" text="Technical" />
+                        </Select >
+
+                        <!-- <Input  class="sapMLabelNoText"
+                                value="{NPHeader>/h1}"/> -->
                         
                     </VBox>
                     <VBox width="60%" class="sapUiLargeMarginBegin">
                         <Label  text="요구사항" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="{NPHeader>/h2}" class="sapMLabelNoText"/>
+                        <Input  value="{NPHeaderModel>/h2}" class="sapMLabelNoText"/>
                     </VBox>
                 </HBox>
                 <HBox class="sapUiTinyMarginBottom">
-                    <VBox >
+                    <VBox width="85%">
                         <Label  text="비고" 
                                 class="sapMLabelNoText"/>
-                        <TextArea cols="175"/>
+                        <TextArea value="{NPHeaderModel>/h3}" cols="175"/>
                     </VBox>
                 </HBox>
                 <HBox class="sapUiTinyMarginBottom">
@@ -57,24 +65,26 @@
                         <Label  text="평가 속성" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Select width="100%" change="selectNPTypeChange" selectedKey="1"
-                            id="selectType">
+                        <Select width="100%" change="selectNPTypeChange" selectedKey="{NPHeaderModel>/h4}"
+                            enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
                             <core:Item key="1" text="Date" />
                             <core:Item key="2" text="Number" />
                             <core:Item key="3" text="Text" />
                         </Select >
                     </VBox>
-                    <VBox class="sapUiLargeMarginBeginEnd">
+                    <VBox width="15%" class="sapUiLargeMarginBeginEnd">
                         <Label  text="점수 신청 방법" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="" class="sapMLabelNoText"/>
+                        <Select width="100%" selectedKey="{NPHeaderModel>/h5}">
+                            <core:Item key="1" text="Automatic" />
+                        </Select >
                     </VBox>
-                    <VBox class="sapUiLargeMarginBegin">
+                    <VBox width="15%" class="sapUiLargeMarginBegin">
                         <Label  text="Target Score" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="" class="sapMLabelNoText"/>
+                        <Input  value="{NPHeaderModel>/h6}" class="sapMLabelNoText" type="Number" validateFieldGroup="vfgHeader"/>
                     </VBox>
                 </HBox>
             </VBox>
@@ -86,160 +96,163 @@
 
             <!-- Item 입력 start -->
             <VBox>
-                <Table id="idProductsTable"
-                    inset="false">
-                    <headerToolbar>
-                        <OverflowToolbar>
-                            <content>
-                                <Title text="Products" level="H2"/>
-                                <ToolbarSpacer />
-                                <Button  text="Add" type="Transparent" press=".onNonPriceItemAdd" />
-                                <Button  text="Delete" type="Transparent" press=".onNonPriceItemDelete" />
-                            </content>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column 
-                            width="4em">
-                            <Text text="" />
-                        </Column>
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                            hAlign="Center"
-                            minScreenWidth="Tablet"
-                            demandPopin="true">
-                            <Label text="Response Value From" required="true" />
-                        </Column>
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                            minScreenWidth="Desktop"
-                            demandPopin="true"
-                            hAlign="Center">
-                            <Label text="Response Value To" required="true" />
-                        </Column>
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                            minScreenWidth="Desktop"
-                            demandPopin="true"
-                            hAlign="Center">
-                            <Label text="점수" required="true" />
-                        </Column>
+                <ScrollContainer vertical="false" focusable="true" >
+                    <Table id="idProductsTable"
+                        mode="MultiSelect"
+                        inset="false">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <content>
+                                    <Title text="Item Title Name" level="H2"/>
+                                    <ToolbarSpacer />
+                                    <Button  text="Add" type="Transparent" press=".onNonPriceItemAdd" />
+                                    <Button  text="Delete" type="Transparent" press=".onNonPriceItemDelete" />
+                                </content>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column 
+                                width="4em">
+                                <Text text="" />
+                            </Column>
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
+                                hAlign="Center"
+                                minScreenWidth="Tablet"
+                                demandPopin="true">
+                                <Label text="Response Value From" required="true" />
+                            </Column>
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
+                                minScreenWidth="Desktop"
+                                demandPopin="true"
+                                hAlign="Center">
+                                <Label text="Response Value To" required="true" />
+                            </Column>
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
+                                minScreenWidth="Desktop"
+                                demandPopin="true"
+                                hAlign="Center">
+                                <Label text="점수" required="true" />
+                            </Column>
 
 
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
-                            hAlign="Center"
-                            minScreenWidth="Tablet"
-                            demandPopin="true">
-                            <Label text="Response Value From( > )" required="true" />
-                        </Column>
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
-                            minScreenWidth="Desktop"
-                            demandPopin="true"
-                            hAlign="Center">
-                            <Label text="Response Value To( ) " required="true" />
-                        </Column>
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
-                            minScreenWidth="Desktop"
-                            demandPopin="true"
-                            hAlign="Center">
-                            <Label text="점수" required="true" />
-                        </Column>
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
+                                hAlign="Center"
+                                minScreenWidth="Tablet"
+                                demandPopin="true">
+                                <Label text="Response Value From( > )" required="true" />
+                            </Column>
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
+                                minScreenWidth="Desktop"
+                                demandPopin="true"
+                                hAlign="Center">
+                                <Label text="Response Value To( ) " required="true" />
+                            </Column>
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
+                                minScreenWidth="Desktop"
+                                demandPopin="true"
+                                hAlign="Center">
+                                <Label text="점수" required="true" />
+                            </Column>
 
 
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}"
-                            hAlign="Center"
-                            minScreenWidth="Tablet"
-                            demandPopin="true">
-                            <Label text="Response Value" required="true" />
-                        </Column>
-                        <Column
-                            visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}"
-                            minScreenWidth="Desktop"
-                            demandPopin="true"
-                            hAlign="Center">
-                            <Label text="점수 " required="true" />
-                        </Column>
-
-
-
-
-
-
-                        <!-- <Column
-                            hAlign="End">
-                            <Text text="Price" />
-                        </Column> -->
-                    </columns>
-                    <items>
-                        <ColumnListItem>
-                            <cells>
-                                <Text text="1" />
-
-                                <DatePicker
-                                    visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                                    value="2015-11-23"
-                                    valueFormat="yyyy-MM-dd"
-                                    displayFormat="long"/>
-                                <DatePicker
-                                    visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                                    value="2015-11-23"
-                                    valueFormat="yyyy-MM-dd"
-                                    displayFormat="long"/>
-                                <Text text="50"
-                                    visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" />
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}"
+                                hAlign="Center"
+                                minScreenWidth="Tablet"
+                                demandPopin="true">
+                                <Label text="Response Value" required="true" />
+                            </Column>
+                            <Column
+                                visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}"
+                                minScreenWidth="Desktop"
+                                demandPopin="true"
+                                hAlign="Center">
+                                <Label text="점수 " required="true" />
+                            </Column>
 
 
 
-                                <Text text="1"
-                                    visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
-                                <Text text="1.2"
-                                    visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
-                                <Text text="100"
-                                    visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
 
 
 
-                                    
-                                <Text text="사업자등록증"
-                                    visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
-                                <Text text="50"
-                                    visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
+                            <!-- <Column
+                                hAlign="End">
+                                <Text text="Price" />
+                            </Column> -->
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="1" />
+
+                                    <DatePicker
+                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
+                                        value="2015-11-23"
+                                        valueFormat="yyyy-MM-dd"
+                                        displayFormat="long"/>
+                                    <DatePicker
+                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
+                                        value="2015-11-23"
+                                        valueFormat="yyyy-MM-dd"
+                                        displayFormat="long"/>
+                                    <Input value="50"
+                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" />
 
 
-                                <!-- <Text text="4" />
-                                <Text text="5" /> -->
-                                <!-- <ObjectIdentifier
-                                    title="{Name}"
-                                    text="{ProductId}"/>
-                                <Text
-                                    text="{SupplierName}" />
-                                <Text
-                                    text="{Width} x {Depth} x {Height} {DimUnit}" />
-                                <ObjectNumber
-                                    number="{WeightMeasure}"
-                                    unit="{WeightUnit}"
-                                    state="{
-                                        parts: [
-                                            {path: 'WeightMeasure'},
-                                            {path: 'WeightUnit'}
-                                        ],
-                                        formatter: 'sap.m.sample.Table.Formatter.weightState'
-                                    }" />
-                                <ObjectNumber
-                                        number="{
-                                            parts:[{path:'Price'},{path:'CurrencyCode'}],
-                                            type: 'sap.ui.model.type.Currency',
-                                            formatOptions: {showMeasure: false}
-                                        }"
-                                        unit="{CurrencyCode}" /> -->
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
+
+                                    <Input value="1"
+                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
+                                    <Input value="1.2"
+                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
+                                    <Input value="100"
+                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
+
+
+
+                                        
+                                    <Input value="사업자등록증"
+                                        visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
+                                    <Input value="50"
+                                        visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
+
+
+                                    <!-- <Text text="4" />
+                                    <Text text="5" /> -->
+                                    <!-- <ObjectIdentifier
+                                        title="{Name}"
+                                        text="{ProductId}"/>
+                                    <Text
+                                        text="{SupplierName}" />
+                                    <Text
+                                        text="{Width} x {Depth} x {Height} {DimUnit}" />
+                                    <ObjectNumber
+                                        number="{WeightMeasure}"
+                                        unit="{WeightUnit}"
+                                        state="{
+                                            parts: [
+                                                {path: 'WeightMeasure'},
+                                                {path: 'WeightUnit'}
+                                            ],
+                                            formatter: 'sap.m.sample.Table.Formatter.weightState'
+                                        }" />
+                                    <ObjectNumber
+                                            number="{
+                                                parts:[{path:'Price'},{path:'CurrencyCode'}],
+                                                type: 'sap.ui.model.type.Currency',
+                                                formatOptions: {showMeasure: false}
+                                            }"
+                                            unit="{CurrencyCode}" /> -->
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </ScrollContainer>
             </VBox>
 
             <!-- Item 입력 start -->
