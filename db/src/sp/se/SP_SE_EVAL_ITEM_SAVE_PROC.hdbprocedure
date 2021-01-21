@@ -106,9 +106,9 @@ BEGIN
                       ,EIM.QTTIVE_EVAL_ARTICLE_CALC_FORMULA  = REC_ITEM.QTTIVE_EVAL_ARTICLE_CALC_FORMULA
                       ,EIM.EVALUATION_ARTICLE_DESC           = REC_ITEM.EVALUATION_ARTICLE_DESC         
                       ,EIM.SORT_SEQUENCE                     = REC_ITEM.SORT_SEQUENCE  
-                      ,EIM.LOCAL_UPDATE_DTM                  = CURRENT_TIMESTAMP
+                      ,EIM.LOCAL_UPDATE_DTM                  = NOW()
                       ,EIM.UPDATE_USER_ID                    = :I_USER_ID
-                      ,EIM.SYSTEM_UPDATE_DTM                 = CURRENT_TIMESTAMP
+                      ,EIM.SYSTEM_UPDATE_DTM                 = NOW()
                 WHERE  EIM.TENANT_ID     = REC_ITEM.TENANT_ID
                 AND    EIM.COMPANY_CODE  = REC_ITEM.COMPANY_CODE
                 AND    EIM.ORG_TYPE_CODE = REC_ITEM.ORG_TYPE_CODE
@@ -195,12 +195,12 @@ BEGIN
                     ,REC_SCLE.OPTION_ARTICLE_END_VALUE
                     ,REC_SCLE.EVALUATION_SCORE
                     ,REC_SCLE.SORT_SEQUENCE
-                    ,CURRENT_TIMESTAMP
-                    ,CURRENT_TIMESTAMP
+                    ,NOW()
+                    ,NOW()
                     ,:I_USER_ID
                     ,:I_USER_ID
-                    ,CURRENT_TIMESTAMP
-                    ,CURRENT_TIMESTAMP
+                    ,NOW()
+                    ,NOW()
                     );
                     
                 ELSE
@@ -211,9 +211,9 @@ BEGIN
                           ,EIO.OPTION_ARTICLE_END_VALUE    = REC_SCLE.OPTION_ARTICLE_END_VALUE
                           ,EIO.EVALUATION_SCORE            = REC_SCLE.EVALUATION_SCORE
                           ,EIO.SORT_SEQUENCE               = REC_SCLE.SORT_SEQUENCE
-                          ,EIO.LOCAL_UPDATE_DTM            = CURRENT_TIMESTAMP
+                          ,EIO.LOCAL_UPDATE_DTM            = NOW()
                           ,EIO.UPDATE_USER_ID              = :I_USER_ID
-                          ,EIO.SYSTEM_UPDATE_DTM           = CURRENT_TIMESTAMP
+                          ,EIO.SYSTEM_UPDATE_DTM           = NOW()
                     WHERE  EIO.TENANT_ID     = REC_SCLE.TENANT_ID
                     AND    EIO.COMPANY_CODE  = REC_SCLE.COMPANY_CODE
                     AND    EIO.ORG_TYPE_CODE = REC_SCLE.ORG_TYPE_CODE

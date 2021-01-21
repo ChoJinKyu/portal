@@ -44,7 +44,7 @@ BEGIN
     ;
     
     /*Get Evaluation Article Code*/
-    SELECT 'E'||to_varchar(current_date, 'yyyymmdd')||LPAD(SP_SE_EVAL_ITEM_ARTICLE_SEQ.NEXTVAL, 4, '0')
+    SELECT 'E'||to_varchar(NOW(), 'yyyymmdd')||LPAD(SP_SE_EVAL_ITEM_ARTICLE_SEQ.NEXTVAL, 4, '0')
     INTO   V_EVALUATION_ARTICLE_CODE
     FROM   DUMMY;
     
@@ -81,12 +81,12 @@ BEGIN
         ,:I_PARENT_EVALUATION_ARTICLE_CODE
         ,:I_EVALUATION_ARTICLE_LVL_ATTR_CD
         ,:V_SORT_SEQUENCE
-        ,CURRENT_TIMESTAMP
-        ,CURRENT_TIMESTAMP
+        ,NOW()
+        ,NOW()
         ,:I_USER_ID
         ,:I_USER_ID
-        ,CURRENT_TIMESTAMP
-        ,CURRENT_TIMESTAMP
+        ,NOW()
+        ,NOW()
         );
     END;
     
