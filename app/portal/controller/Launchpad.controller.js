@@ -1,4 +1,5 @@
 sap.ui.define([
+    "ext/lib/util/Multilingual",
 	"sap/ui/Device",
     "./BaseController",
     "sap/ui/core/Component",
@@ -15,12 +16,14 @@ sap.ui.define([
     "sap/tnt/NavigationList",
     "sap/tnt/NavigationListItem",
     "sap/ui/core/ComponentContainer"
-], function (Device, BaseController, Component, TreeListModel, HashChanger, JSONModel, Fragment, MessageToast, MessageBox, Filter, FilterOperator, Sorter, ObjectPageSection,  NavigationList, NavigationListItem, ComponentContainer) {
+], function (Multilingual, Device, BaseController, Component, TreeListModel, HashChanger, JSONModel, Fragment, MessageToast, MessageBox, Filter, FilterOperator, Sorter, ObjectPageSection,  NavigationList, NavigationListItem, ComponentContainer) {
         "use strict";
 
         return BaseController.extend("spp.portal.controller.Launchpad", {
 
             onInit: function () {
+                var oMultilingual = new Multilingual();
+                // this.getView().setModel(oMultilingual.getModel(), "I18N");
                 /*
                 // subscribe spp.portal.crossApplicationNavigation event
                 var oEventBus = sap.ui.getCore().getEventBus();

@@ -1,36 +1,36 @@
 view pg_MI_Mat_Code_Bom_Management_View as
 	select
-			header.tenant_id				as tenant_id,
-			tenant.tenant_name				as tenant_name,
-			header.material_code			as material_code,
-			mattext.material_desc			as material_desc,
-			header.supplier_code			as supplier_code,
-			supplier.supplier_local_name	as supplier_local_name,
-			supplier.supplier_english_name	as supplier_english_name,
-			header.base_quantity			as base_quantity,
-			header.processing_cost			as processing_cost,
-			header.pcst_currency_unit		as pcst_currency_unit,
-            header.mi_bom_id                as mi_bom_id,
-			item.mi_material_code			as mi_material_code,
-			mimattext.mi_material_name		as mi_material_name,
-			mimatcode.category_code			as category_code,
-			catgtext.category_name			as category_name,
-			item.reqm_quantity_unit			as reqm_quantity_unit,
-			item.reqm_quantity				as reqm_quantity,
-			item.currency_unit				as currency_unit,
-			item.reqm_quantity*0.001		as mi_base_reqm_quantity,
-			item.quantity_unit				as quantity_unit,
-			item.exchange					as exchange,
-			item.termsdelv					as termsdelv,
-			item.use_flag					as use_flag,
-			header.local_create_dtm			as local_create_dtm,
-			header.local_update_dtm			as local_update_dtm,
-			header.create_user_id			as create_user_id,
-			header.update_user_id			as update_user_id,
-			header.system_create_dtm		as system_create_dtm,
-			header.system_update_dtm		as system_update_dtm
+			header.tenant_id						as tenant_id,
+			tenant.tenant_name						as tenant_name,
+			header.material_code					as material_code,
+			mattext.material_desc					as material_desc,
+			header.supplier_code					as supplier_code,
+			supplier.supplier_local_name			as supplier_local_name,
+			supplier.supplier_english_name			as supplier_english_name,
+			header.base_quantity					as base_quantity,
+			header.processing_cost					as processing_cost,
+			header.pcst_currency_unit				as pcst_currency_unit,
+            header.mi_bom_id                		as mi_bom_id,
+			item.mi_material_code					as mi_material_code,
+			mimattext.mi_material_name				as mi_material_name,
+			mimatcode.category_code					as category_code,
+			catgtext.category_name					as category_name,
+			item.reqm_quantity_unit					as reqm_quantity_unit,
+			item.reqm_quantity						as reqm_quantity,
+			item.currency_unit						as currency_unit,
+            coalesce(item.reqm_quantity,0)*0.001    as mi_base_reqm_quantity,
+			item.quantity_unit						as quantity_unit,
+			item.exchange							as exchange,
+			item.termsdelv							as termsdelv,
+			item.use_flag							as use_flag,
+			header.local_create_dtm					as local_create_dtm,
+			header.local_update_dtm					as local_update_dtm,
+			header.create_user_id					as create_user_id,
+			header.update_user_id					as update_user_id,
+			header.system_create_dtm				as system_create_dtm,
+			header.system_update_dtm				as system_update_dtm
 	from pg_mi_material_code_bom_mngt_header as header
-	left join pg_mi_material_code_bom_mngt_item as item
+	join pg_mi_material_code_bom_mngt_item as item
 		on	header.tenant_id		= item.tenant_id
 		and	header.mi_bom_id		= item.mi_bom_id
 	left join dp_mm_material_desc_lng as mattext
@@ -52,5 +52,34 @@ view pg_MI_Mat_Code_Bom_Management_View as
 		and mimatcode.category_code	= catgtext.category_code
 		and catgtext.language_code	= 'KO'
 	left join cm_org_tenant as tenant
-		on	header.tenant_id		= tenant.tenant_id
+        on	header.tenant_id		= tenant.tenant_id
+	group by
+			header.tenant_id,
+			tenant.tenant_name,
+			header.material_code,
+			mattext.material_desc,
+			header.supplier_code,
+			supplier.supplier_local_name,
+			supplier.supplier_english_name,
+			header.base_quantity,
+			header.processing_cost,
+			header.pcst_currency_unit,
+            header.mi_bom_id,
+			item.mi_material_code,
+			mimattext.mi_material_name,
+			mimatcode.category_code,
+			catgtext.category_name,
+			item.reqm_quantity_unit,
+			item.reqm_quantity,
+			item.currency_unit,
+			item.quantity_unit,
+			item.exchange,
+			item.termsdelv,
+			item.use_flag,
+			header.local_create_dtm,
+			header.local_update_dtm,
+			header.create_user_id,
+			header.update_user_id,
+			header.system_create_dtm,
+			header.system_update_dtm
 	;

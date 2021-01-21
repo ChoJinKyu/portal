@@ -159,39 +159,40 @@
                         hAlign="Center"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="{I18N>/TENANT_ID}" />
+                        <Label text="{I18N>/TENANT_ID}"  />
                     </Column>
                     <Column
                         width="6em"
+                        hAlign="Center"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="{I18N>/CHAIN_CODE}" />
+                        <Label text="{I18N>/CHAIN_CODE}" />
                     </Column>
                     <Column
                         width="10em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="{I18N>/CHAIN}" />
+                        <Label text="{I18N>/CHAIN}" />
                     </Column>
                     <Column
                         width="18em">
-                        <Text text="{I18N>/GROUP_CODE}" />
+                        <Label text="{I18N>/GROUP_CODE}" />
                     </Column>
                     <Column
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="{I18N>/GROUP_CODE_NAME}" />
+                        <Label text="{I18N>/GROUP_CODE_NAME}" />
                     </Column>
                     <Column
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="{I18N>/GROUP_DESC}" />
+                        <Label text="{I18N>/GROUP_DESC}" />
                     </Column>
                     <Column
                         width="6em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="{I18N>/USE_FLAG}" />
+                        <Label text="{I18N>/USE_FLAG}" />
                     </Column>
                 </columns>
                 <items>
