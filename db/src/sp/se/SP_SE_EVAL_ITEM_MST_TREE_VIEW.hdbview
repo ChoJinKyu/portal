@@ -19,7 +19,7 @@ SELECT parent_id
       ,evaluation_article_desc
       ,evaluation_article_lvl_attr_cd
       ,update_user_id            AS writer
-      ,system_update_dtm         AS write_tm
+      ,local_update_dtm         AS write_tm
       ,sort_sequence
       ,hierarchy_rank            /*현재node의 순번(sibling order by에 의한)*/
       ,hierarchy_tree_size       /*현재node포함 하위node 갯수(1이면 leaf node(마지막node))*/
@@ -47,7 +47,7 @@ FROM   HIERARCHY (
                                 ,a.evaluation_article_desc
                                 ,a.evaluation_article_lvl_attr_cd
                                 ,a.update_user_id
-                                ,a.system_update_dtm
+                                ,a.local_update_dtm
                                 ,a.sort_sequence                                
                                 ,HIERARCHY_COMPOSITE_ID(a.tenant_id, a.company_code, a.org_type_code, a.org_code, a.evaluation_operation_unit_code, a.parent_evaluation_article_code) AS parent_id
                                 ,HIERARCHY_COMPOSITE_ID(a.tenant_id, a.company_code, a.org_type_code, a.org_code, a.evaluation_operation_unit_code, a.evaluation_article_code) AS node_id
