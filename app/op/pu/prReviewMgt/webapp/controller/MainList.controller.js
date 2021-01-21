@@ -4,6 +4,7 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
     "cm/util/control/ui/EmployeeDialog",    
     "ext/lib/util/Validator",
     "sap/m/TablePersoController",
@@ -13,10 +14,11 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
-    "ext/lib/util/ExcelUtil"
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, EmployeeDialog, Validator,
+    "ext/lib/util/ExcelUtil",
+    "dp/util/control/ui/MaterialMasterDialog",
+], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, NumberFormatter, EmployeeDialog, Validator,
     TablePersoController, MainListPersoService,
-    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil) {
+    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil, MaterialMasterDialog) {
     "use strict";
 
     var toggleButtonId = "";
@@ -24,6 +26,7 @@ sap.ui.define([
     return BaseController.extend("op.pu.prReviewMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+        numberFormatter: NumberFormatter,
         validator: new Validator(),
 
         /* =========================================================== */
@@ -35,7 +38,9 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            // 다국어
             this.setModel(new Multilingual().getModel(), "I18N");
+            // 조회조건
             this.setModel(new JSONModel({
                 tenant_id: "L2100",
                 company_code: null,
@@ -85,7 +90,9 @@ sap.ui.define([
             //     }, true);
             // }.bind(this));
 
-            // this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            // this.getRouter().getRoute("mainPage").attachPatternMatched(function() {
+            //     this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+            // }, this);
 
             // this._doInitTablePerso();
             // this.enableMessagePopover();
@@ -98,9 +105,33 @@ sap.ui.define([
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
-        onDateRangeSelectionChange: function() {
-            var [event] = arguments;
-            //this.byId("closingDate").setDateValue(oEvent.getParameters().to);
+        // 공통 다이얼로그 호출
+        onValueHelpRequest: function() {
+            // Declare
+            var [event, bindings] = arguments;
+            var [model, paths] = bindings.split(">");
+            var Dialog = this.onValueHelpRequest[bindings];
+            // Dialog Set
+            !Dialog
+            &&
+            (Dialog = this.onValueHelpRequest[bindings] = new MaterialMasterDialog({
+                title: "Choose MaterialMaster",
+                MultiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", "EQ", "L2100")
+                    ]
+                }
+            }))
+            .attachEvent("apply", (function (oEvent) {
+                // Default - material_code
+                this.getModel(model).setProperty(
+                    paths, 
+                    oEvent.mParameters.item[paths.split("/")[paths.split("/").length-1]]
+                );
+            }).bind(this));
+            // Dialog Open
+            Dialog.open();
         },
 		/**
 		 * Triggered by the table's 'updateFinished' event: after new table
@@ -144,89 +175,6 @@ sap.ui.define([
             MainListPersoService.resetPersData();
             this._oTPC.refresh();
         },
-
-        onPrDeletePress: function () {
-            var oTable = this.byId("mainTable"),
-                oModel = this.getModel("list"),
-                oView = this.getView(),
-                data ={},
-                //oSelected  = oTable.getSelectedItems(),
-                oSelected = [],
-                delPrData = [],
-                chkArr =[],
-                chkRow ="",
-                j=0,
-                checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs"),
-                aItems = oTable.getSelectedItems(),
-                aIndices = [];
-
-            var that = this;
-            console.log("checkBoxs ::::", checkBoxs);
-
-            //checkBoxs[0].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()
-            // for (var i = 0; i < checkBoxs.length; i++) {
-            //     if (checkBoxs[i].getSelected() === true )
-            //     {
-            //         aIndices.push(checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getObject()) ;
-            //     }
-            // }
-            aItems.forEach(function(oItem){
-                if (oItem.getBindingContext("list").getProperty("pr_create_status_code") == "10" )
-                {
-                //aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
-                 aIndices.push(oModel.getData().Pr_MstView.indexOf(oItem.getBindingContext("list").getObject()));
-                }
-            });
-
-            console.log("delPrList >>>>", aIndices);
-
-            if (aIndices.length > 0) {
-                MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
-                    title: "Comfirmation",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                       if (sButton === MessageBox.Action.OK) {
-                        aIndices = aIndices.sort(function(a, b){return b-a;});
-                        aIndices.forEach(function(nIndex){                            
-                            oModel.removeRecord(nIndex);
-                            //oModel.markRemoved(nIndex);
-                        });
-
-                        } else if (sButton === MessageBox.Action.CANCEL) { 
-
-                        };    
-                    }
-                });
-
-            } else {
-                MessageBox.error("선택된 임시저장 요청이 없습니다.");
-            }
-        },
-
-
-
-
-
-        /**
-         * @public
-         * @see 리스트 체크박스 제어기능
-         */
-        onColumnChecBox: function (oEvent) {
-            var groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
-            var isChecked = oEvent.getSource().mProperties.selected;
-
-            if (isChecked) {
-                for (var i = 0; i < groupId.length; i++) {
-                    groupId[i].setSelected(true);
-
-                }
-            } else {
-                for (var i = 0; i < groupId.length; i++) {
-                    groupId[i].setSelected(false);
-                }
-            }
-        },
-
 
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
@@ -277,197 +225,9 @@ sap.ui.define([
             });
         },
 
-        onDialogOpen: function (oEvent) {
-   
-            var oPR_TYPE2 = this.byId("SelectionPR_TYPE2")
-                oPR_TYPE2.setSelectedKey("");
-            this.onInitPR_TYPE3();           
-        },
-
         onExit: function () {
             this.byId("dialogTemplateSelection").close();
         },
-
-        onInitPR_TYPE3: function () {
-            var that = this,
-                oPR_TYPE3 = this.byId("SelectionPR_TYPE3"),
-                oPR_TYPE = this.byId("SelectionPR_TYPE"),
-                vPR_TYPE2Value = this.byId("SelectionPR_TYPE2").getSelectedKey(),
-                //oPRTypeModel = new sap.ui.model.json.JSONModel(),
-                oPRTypeModel3 = this.getModel("prtypeModel3"),   // 바인딩 할 데이터..   
-                oServiceModel = this.getModel(),            
-
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("pr_type_code_2", FilterOperator.EQ, vPR_TYPE2Value)
-                ];
-
-            //this.setModel("oPRTypeModel",oPRTypeModel)
-
-            oServiceModel.read("/Pr_TMapView", {
-                filters: aFilters,
-                success: function (oData) {
-                    var oPRTypeData = [];
-                    for (var i = 0; i < oData.results.length; i++) {
-                        var oPRTypeRecord = {
-                            "key": oData.results[i].pr_type_code_3,
-                            "text": oData.results[i].pr_type_name_3,
-                            "additionalText": oData.results[i].pr_type_name_3
-                        };
-
-                        var duplicate = false ;
-
-                        for (var j = 0; j < oPRTypeData.length; j++) {
-                            if (oPRTypeData[j].key !== oPRTypeRecord.key) continue ;
-                                duplicate = true ;
-                                break;
-                        }
-                        if (!duplicate)
-                           oPRTypeData.push(oPRTypeRecord);
-
-                        // if (oPRTypeData.indexOf(oPRTypeRecord) === -1) {
-                        //     oPRTypeData.push(oPRTypeRecord);
-                        // }
-
-                    }
-                    oPRTypeModel3.setData({"list": oPRTypeData });
-
-                    var oItemTemplate = new sap.ui.core.ListItem({
-                        key: "{prtypeModel3>key}",
-                        text: "{prtypeModel3>text}",
-                        additionalText: "{prtypeModel3>key}"
-                    });
-
-                    if(oPRTypeData.length === 1)  
-                    {
-                        oPR_TYPE3.setSelectedKey(oPRTypeData[0].key);                        
-                    }    
-                    else 
-                    {   
-                        oPR_TYPE3.setSelectedKey(null);
-                        oPR_TYPE.setSelectedKey(null) ; 
-                    }                        
-
-                    oPR_TYPE3.bindItems({
-                        path: "prtypeModel3>/list",
-                        template: oItemTemplate
-                    }, null, []);
-
-                    that.onInitPR_TYPE();          
-                                        
-                    //console.log(oPR_TYPE3)
-
-                    //oPRTypeModel.setData({Pr_TMapView : oData.results})
-                    //selecComboData = oData.results;
-                    //this.changeData(selecComboData);
-                },
-                error: function (oData) {
-                    // oCodeMasterTable.setBusy(false);
-                }                
-            });            
-        },
-
-
-        onInitPR_TYPE: function () {
-            var that = this,
-                oPR_TYPE = this.byId("SelectionPR_TYPE"),
-                vPR_TYPE2Value = this.byId("SelectionPR_TYPE2").getSelectedKey(),
-                vPR_TYPE3Value = this.byId("SelectionPR_TYPE3").getSelectedKey(),
-                //oPRTypeModel = new sap.ui.model.json.JSONModel(),
-                oPRTypeModel = this.getModel("prtypeModel"),   // 바인딩 할 데이터..
-                oServiceModel = this.getModel(),
-
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("pr_type_code_2", FilterOperator.EQ, vPR_TYPE2Value),
-                    new Filter("pr_type_code_3", FilterOperator.EQ, vPR_TYPE3Value)
-                ];
-
-            //this.setModel("oPRTypeModel",oPRTypeModel)
-
-            oServiceModel.read("/Pr_TMapView", {
-                filters: aFilters,
-                success: function (oData) {
-                    var oPRTypeData = [];
-                    for (var i = 0; i < oData.results.length; i++) {
-                        var oPRTypeRecord = {
-                            "key": oData.results[i].pr_type_code,
-                            "text": oData.results[i].pr_type_name,
-                            "additionalText": oData.results[i].pr_type_name
-                        };
-
-                        var duplicate = false ;
-
-                        for (var j = 0; j < oPRTypeData.length; j++) {
-                            if (oPRTypeData[j].key !== oPRTypeRecord.key) continue ;
-                                duplicate = true ;
-                                break;
-                        }
-                        if (!duplicate)
-                           oPRTypeData.push(oPRTypeRecord);
-                    }
-                    oPRTypeModel.setData({ "list": oPRTypeData });
-
-                    var oItemTemplate = new sap.ui.core.ListItem({
-                        key: "{prtypeModel>key}",
-                        text: "{prtypeModel>text}",
-                        additionalText: "{prtypeModel>key}"
-                    });
-                   
-
-                    if(oPRTypeData.length === 1)  
-                    {
-                        oPR_TYPE.setSelectedKey(oPRTypeData[0].key);
-                    }
-                    else    
-                    {
-                        oPR_TYPE.setSelectedKey(null);
-                    }   
-
-                    oPR_TYPE.bindItems({
-                        path: "prtypeModel>/list",
-                        template: oItemTemplate
-                    }, null, []);
-                    
-                    that.onInitTemplate();
-                    //oPRTypeModel.setData({Pr_TMapView : oData.results})
-                    //selecComboData = oData.results;
-                    //this.changeData(selecComboData);
-                },
-                error: function (oData) {
-                    // oCodeMasterTable.setBusy(false);
-                }
-            });
-
-        },
-
-
-        onInitTemplate: function () {     
-            
-            
-            var that = this,
-                oSegmentButton = this.byId("searchUsageSegmentButton"),                
-                vPR_TYPE2Value = this.byId("SelectionPR_TYPE2").getSelectedKey(),
-                vPR_TYPE3Value = this.byId("SelectionPR_TYPE3").getSelectedKey(),
-                vPR_TYPE_Value = this.byId("SelectionPR_TYPE").getSelectedKey(),
-                oServiceModel = this.getModel(),
-
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("pr_type_code", FilterOperator.EQ, vPR_TYPE_Value),
-                    new Filter("pr_type_code_2", FilterOperator.EQ, vPR_TYPE2Value),
-                    new Filter("pr_type_code_3", FilterOperator.EQ, vPR_TYPE3Value)
-                ];
-
-            var oItemTemplate = new sap.m.SegmentedButtonItem({
-                key: "{pr_template_number}",
-                text: "{pr_template_name}"                
-            });
-            oSegmentButton.bindItems("/Pr_TMapView", oItemTemplate, null, aFilters);
-        },
-
-       
-
 
         onMainTableAddButtonPress: function () {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1); 
@@ -498,19 +258,8 @@ sap.ui.define([
 		 * @public
 		 */
         onSearch: function (oEvent) {
-            if (oEvent.getParameters().refreshButtonPressed) {
-                // Search field's 'refresh' button has been pressed.
-                // This is visible if you select any master list item.
-                // In this case no new search is triggered, we only
-                // refresh the list binding.
-                this.onRefresh();
-            } else {
-                // var aSearchFilters = this._getSearchStates();
-                // this._applySearch(aSearchFilters);
-            }
-
             // Call Service
-            (function(){
+            (function _search(){
                 var oDeferred = new $.Deferred();
                 var jSearch = this.getModel("jSearch").getData();
                 this.getView()
