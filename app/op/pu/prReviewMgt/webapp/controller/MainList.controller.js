@@ -529,14 +529,10 @@ sap.ui.define([
                                     (jSearch[path] && jSearch[path]["Contains"])
                             )
                             .reduce(function(acc, path) {
-                                console.log(">>>>>>>>>>>>> cond", path, jSearch[path], acc);
-                                if (path == "request_date") {
-                                    console.log(">>>>>>>>>>>>> 0", jSearch[path][0], typeof jSearch[path][0], jSearch[path][0] instanceof Date, (jSearch[path][0]).getTime(), (jSearch[path][1]).getTime());
-                                }
                                 return [
                                     ...acc, 
                                     jSearch[path] instanceof Array
-                                    ? new Filter(path, FilterOperator.BT, (jSearch[path][0]).getTime(), (jSearch[path][1]).getTime())
+                                    ? new Filter(path, FilterOperator.BT, (jSearch[path][0]), (jSearch[path][1]))
                                     : (jSearch[path] && jSearch[path]["Contains"])
                                     ? new Filter(path, FilterOperator.Contains, jSearch[path])
                                     : new Filter(path, FilterOperator.EQ, jSearch[path])
@@ -550,10 +546,10 @@ sap.ui.define([
                 }).call(this)
                 // 성공시
                 .done((function (oData) {
-                    console.log(">>>>>>>>>>> oData", oData);
-                    // this.getView().setModel(new JSONModel({
-                    //     "Pr_ReviewListView": oData.results
-                    // }), "list");
+                    //console.log(">>>>>>>>>>> oData", oData);
+                    this.getView().setModel(new JSONModel({
+                        "Pr_ReviewListView": oData.results
+                    }), "list");
                 }).bind(this))
                 // 실패시
                 .fail(function (oError) {
