@@ -52,8 +52,8 @@ service ProjectMgtService {
     entity Org_Division as
         select distinct key cpo.tenant_id
              , key cpo.company_code
+             , key cod.bizdivision_code
              , cod.bizdivision_name
-             , cod.bizdivision_code
           from orgDiv.Org_Division cod
      left join purOperOrg.Pur_Operation_Org cpo
             on cod.tenant_id = cpo.tenant_id
