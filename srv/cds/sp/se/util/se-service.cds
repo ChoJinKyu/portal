@@ -8,6 +8,7 @@ namespace sp;
 service EvaluationUtilService{
 
     /* User's Evaluation ORG. (Condition) : 평가조직 */
+    @readonly
     view UserEvalOrgView as
     SELECT DISTINCT 
            key mng.tenant_id,
@@ -30,6 +31,7 @@ service EvaluationUtilService{
     AND    mng.evaluation_execute_role_code = 'MAIN';
 
     /* User's Evaluation Unit. (Condition) : 평가운영단위 */
+    @readonly
     view UserEvalUnitView as
     SELECT key mng.tenant_id,
            key mng.company_code,
@@ -47,6 +49,7 @@ service EvaluationUtilService{
     AND    mng.evaluation_operation_unit_code = org.evaluation_operation_unit_code;
 
     /* User's Eval Type :평가유형 */
+    @readonly
     entity UserEvalType as projection on evalType;
 
 }
