@@ -10,6 +10,7 @@ using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm as orgDiv} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
 using {dp as unitOfMeasure} from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 using {cm as currency} from '../../../../../db/cds/cm/CM_CURRENCY-model';
+using {cm as purOperOrg} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
 namespace dp;
 
@@ -48,7 +49,19 @@ service ProjectMgtService {
     entity Hr_Department            as projection on hrDept.Hr_Department;    
 
     @readonly
-    entity Org_Division            as projection on orgDiv.Org_Division;
+    entity Org_Division as
+        select distinct cpo.tenant_id
+             , cpo.company_code
+             , cod.bizdivision_name
+             , cod.bizdivision_code
+          from purOperOrg.Pur_Operation_Org cpo
+     left join orgDiv.Org_Division cod
+            on cpo.tenant_id = cod.tenant_id
+           and cpo.bizdivision_code = cod.bizdivision_code
+         where cpo.tenant_id = 'L2100'
+           and cpo.bizdivision_code is not null
+      order by cod.bizdivision_code;
+    //entity Org_Division            as projection on orgDiv.Org_Division;
 
     @readonly
     entity MM_UOM                as

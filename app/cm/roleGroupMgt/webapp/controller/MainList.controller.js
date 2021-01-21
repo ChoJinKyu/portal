@@ -1,28 +1,21 @@
 sap.ui.define([
   "ext/lib/controller/BaseController",
-  "sap/ui/core/routing/History",
-  "sap/ui/model/json/JSONModel",
+  "ext/lib/util/Multilingual",
   "ext/lib/model/ManagedListModel",
   "ext/lib/formatter/DateFormatter",
-  "sap/m/TablePersoController",
-  "./MainListPersoService",
+  "ext/lib/util/Validator",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-  "sap/m/MessageBox",
-  "sap/m/MessageToast",
-  "sap/m/ColumnListItem",
-  "sap/m/ObjectIdentifier",
-  "sap/m/Text",
-  "sap/m/Input",
-  "sap/m/ComboBox",
-  "sap/ui/core/Item"
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter,
-    FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+  "sap/ui/core/Item",
+  "sap/m/TablePersoController",
+  "./MainListPersoService",
+], function (BaseController, Multilingual, ManagedListModel, DateFormatter, Validator, Filter, FilterOperator, Item, TablePersoController, MainListPersoService) {
   "use strict";
 
-    return BaseController.extend("cm.roleMgt.controller.MainList", {
+    return BaseController.extend("cm.roleGroupMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+        validator: new Validator(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -34,29 +27,27 @@ sap.ui.define([
              */
         
         onInit: function () {
-            var oViewModel, oResourceBundle = this.getResourceBundle();
-
-            // Model used to manipulate control states
-            oViewModel = new JSONModel({
-                headerExpanded: true,
-                mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
-                tableNoDataText: oResourceBundle.getText("tableNoDataText")
-            });
-            this.setModel(oViewModel, "mainListView");
-
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
 
-            this.addHistoryEntry({
-                title: oResourceBundle.getText("/ROLE_MANAGEMENT"),
-                icon: "sap-icon://table-view",
-                intent: "#Template-display"
-            }, true);
-        
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/ROLE") + oi18nModel.getText("/GROUP") + oi18nModel.getText("/MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+            }.bind(this));
+
+            this.setModel(new ManagedListModel(), "mainListView");
+            this.getModel("mainListView").setProperty("/headerExpanded", true);
+
+            this._doInitTablePerso();
         },
 
         onRenderedFirst: function () {
-        //this.byId("pageSearchButton").firePress();
+            this.byId("searchTenantCombo").fireChange();
         },
 
         /* =========================================================== */
@@ -74,20 +65,6 @@ sap.ui.define([
              */
         
         onMainTableUpdateFinished: function (oEvent) {
-            // update the mainList's object counter after the table update
-            var sTitle,
-            oTable = oEvent.getSource(),
-            iTotalItems = oEvent.getParameter("total");
-            // only update the counter if the length is final and
-            // the table is not empty
-            if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-                sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-            } else {
-                sTitle = this.getResourceBundle().getText("mainListTableTitle");
-            }
-
-            this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
-            
         },
 
             /**
@@ -107,8 +84,8 @@ sap.ui.define([
              */
 
         onMainTablePersoRefresh: function () {
-            MainListPersoService.resetPersData();
-            this._oTPC.refresh();
+            // MainListPersoService.resetPersData();
+            // this._oTPC.refresh();
         },
 
             /**
@@ -119,12 +96,10 @@ sap.ui.define([
 
         onMainTableAddButtonPress: function () {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            var tenantId = this.byId("searchTenantCombo").getSelectedKey();
-
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
-                tenantId: tenantId,
-                roleCode: "code",
+                tenantId: "code",
+                roleGroupCode: "roleGroupCode",
                 "?query": {
                     //param1: "1111111111"
                 }
@@ -141,6 +116,14 @@ sap.ui.define([
                 this.onRefresh();
             } else {
                 var aSearchFilters = this._getSearchStates();
+
+                if(this.byId("searchTenantCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchTenantCombo")) !== true) {
+                    sap.m.MessageToast.show("테넌트는 필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchTenantCombo"));
+                }
+
                 this._applySearch(aSearchFilters);
             }
         },
@@ -153,12 +136,13 @@ sap.ui.define([
         onMainTableItemPress: function (oEvent) {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
             sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            //sPath = oEvent.mParameters.rowContext.sPath,
             oRecord = this.getModel("list").getProperty(sPath);
 
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
-                roleCode: oRecord.role_code
+                roleGroupCode: oRecord.role_group_code
             });
 
             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
@@ -170,6 +154,7 @@ sap.ui.define([
             var oParent = oItem.getParent();
             // store index of the item clicked, which can be used later in the columnResize event
             this.iIndex = oParent.indexOfItem(oItem);
+
         },
 
         /* =========================================================== */
@@ -181,9 +166,9 @@ sap.ui.define([
              * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
              * @private
              */
-        _onRoutedThisPage: function () {
-            this.getModel("mainListView").setProperty("/headerExpanded", true);
-        },
+        // _onRoutedThisPage: function () {
+        //     this.getModel("mainListView").setProperty("/headerExpanded", true);
+        // },
 
             /**
              * Internal helper method to apply both filter and search state together on the list binding
@@ -195,7 +180,7 @@ sap.ui.define([
             oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/Role", {
+            oModel.read("/RoleGroupMgt", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     console.log(">>>> success", oData);
@@ -205,15 +190,35 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var aSearchFilters = [];
-            if (!!this.byId("searchTenantCombo").getSelectedKey()) aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey()));
-            if (!!this.byId("searchChainCombo").getSelectedKey()) aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, this.byId("searchChainCombo").getSelectedKey()));
+            var oSearchTenantCombo = this.byId("searchTenantCombo").getSelectedKey(),
+                oSearchRoleGroupCode = this.byId("searchRoleGroupCode").getValue(),
+                aSearchFilters = [];
 
-            if (!!this.byId("searchRoleCode").getValue()) aSearchFilters.push(new Filter("role_code", FilterOperator.EQ, this.byId("searchRoleCode").getValue()));
-            if (!!this.byId("searchRoleName").getValue()) aSearchFilters.push(new Filter("role_name", FilterOperator.EQ, this.byId("searchRoleName").getValue()));
-            if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
+            if (oSearchTenantCombo && oSearchTenantCombo.length > 0) {
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSearchTenantCombo));
+            }
+
+            if (oSearchRoleGroupCode && oSearchRoleGroupCode.length > 0) {
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        new Filter("role_group_code", FilterOperator.Contains, oSearchRoleGroupCode),
+                        new Filter("role_group_name", FilterOperator.Contains, oSearchRoleGroupCode)
+                    ],
+                    and: false
+                }));
+            }
 
             return aSearchFilters;
+        },
+        
+        _doInitTablePerso: function () {
+            // init and activate controller
+            this._oTPC = new TablePersoController({
+                table: this.byId("mainTable"),
+                componentName: "RoleGroupMgt",
+                persoService: MainListPersoService,
+                hasGrouping: true
+            }).activate();
         }
 
     });
