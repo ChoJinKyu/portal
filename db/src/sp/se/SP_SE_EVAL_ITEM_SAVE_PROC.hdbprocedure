@@ -40,7 +40,7 @@ SQL SECURITY INVOKER
 AS
 BEGIN
     /*평가항목 관리 - 평가항목 Sort Sequence저장*/
-    DECLARE V_OPTION_ARTICLE_NUMBER INT := 0;
+    DECLARE V_OPTION_ARTICLE_NUMBER INT = 0;
     DECLARE CURSOR CUR_ITEM FOR
     SELECT *
     FROM   :I_ITEM_TYPE;
@@ -49,7 +49,7 @@ BEGIN
     SELECT *
     FROM   :I_SCLE_TYPE;
     
-    SELECT  IFNULL(I_USER_ID, 'SYSTEM') INTO I_USER_ID FROM DUMMY;
+    SELECT  IFNULL(:I_USER_ID, 'SYSTEM') INTO I_USER_ID FROM DUMMY;
     
 
 
@@ -80,8 +80,8 @@ BEGIN
                 AND    EIO.ORG_TYPE_CODE = REC_ITEM.ORG_TYPE_CODE
                 AND    EIO.ORG_CODE      = REC_ITEM.ORG_CODE
                 AND    EIO.EVALUATION_OPERATION_UNIT_CODE = REC_ITEM.EVALUATION_OPERATION_UNIT_CODE
-                AND    EIO.EVALUATION_TYPE_CODE = REC_ITEM.EVALUATION_TYPE_CODE
-                AND    EIO.EVALUATION_ARTICLE_CODE = REC_ITEM.EVALUATION_ARTICLE_CODE
+                AND    EIO.EVALUATION_TYPE_CODE           = REC_ITEM.EVALUATION_TYPE_CODE
+                AND    EIO.EVALUATION_ARTICLE_CODE        = REC_ITEM.EVALUATION_ARTICLE_CODE
                 ;  
                 --Delete Item Mst
                 DELETE 
@@ -91,8 +91,8 @@ BEGIN
                 AND    EIM.ORG_TYPE_CODE = REC_ITEM.ORG_TYPE_CODE
                 AND    EIM.ORG_CODE      = REC_ITEM.ORG_CODE
                 AND    EIM.EVALUATION_OPERATION_UNIT_CODE = REC_ITEM.EVALUATION_OPERATION_UNIT_CODE
-                AND    EIM.EVALUATION_TYPE_CODE = REC_ITEM.EVALUATION_TYPE_CODE
-                AND    EIM.EVALUATION_ARTICLE_CODE = REC_ITEM.EVALUATION_ARTICLE_CODE
+                AND    EIM.EVALUATION_TYPE_CODE           = REC_ITEM.EVALUATION_TYPE_CODE
+                AND    EIM.EVALUATION_ARTICLE_CODE        = REC_ITEM.EVALUATION_ARTICLE_CODE
                 ;
                
             ELSE
@@ -107,7 +107,7 @@ BEGIN
                       ,EIM.EVALUATION_ARTICLE_DESC           = REC_ITEM.EVALUATION_ARTICLE_DESC         
                       ,EIM.SORT_SEQUENCE                     = REC_ITEM.SORT_SEQUENCE  
                       ,EIM.LOCAL_UPDATE_DTM                  = CURRENT_TIMESTAMP
-                      ,EIM.UPDATE_USER_ID                    = I_USER_ID
+                      ,EIM.UPDATE_USER_ID                    = :I_USER_ID
                       ,EIM.SYSTEM_UPDATE_DTM                 = CURRENT_TIMESTAMP
                 WHERE  EIM.TENANT_ID     = REC_ITEM.TENANT_ID
                 AND    EIM.COMPANY_CODE  = REC_ITEM.COMPANY_CODE
@@ -189,7 +189,7 @@ BEGIN
                     ,REC_SCLE.EVALUATION_OPERATION_UNIT_CODE
                     ,REC_SCLE.EVALUATION_TYPE_CODE
                     ,REC_SCLE.EVALUATION_ARTICLE_CODE
-                    ,V_OPTION_ARTICLE_NUMBER
+                    ,:V_OPTION_ARTICLE_NUMBER
                     ,REC_SCLE.OPTION_ARTICLE_NAME
                     ,REC_SCLE.OPTION_ARTICLE_START_VALUE
                     ,REC_SCLE.OPTION_ARTICLE_END_VALUE
@@ -197,8 +197,8 @@ BEGIN
                     ,REC_SCLE.SORT_SEQUENCE
                     ,CURRENT_TIMESTAMP
                     ,CURRENT_TIMESTAMP
-                    ,I_USER_ID
-                    ,I_USER_ID
+                    ,:I_USER_ID
+                    ,:I_USER_ID
                     ,CURRENT_TIMESTAMP
                     ,CURRENT_TIMESTAMP
                     );
@@ -212,7 +212,7 @@ BEGIN
                           ,EIO.EVALUATION_SCORE            = REC_SCLE.EVALUATION_SCORE
                           ,EIO.SORT_SEQUENCE               = REC_SCLE.SORT_SEQUENCE
                           ,EIO.LOCAL_UPDATE_DTM            = CURRENT_TIMESTAMP
-                          ,EIO.UPDATE_USER_ID              = I_USER_ID
+                          ,EIO.UPDATE_USER_ID              = :I_USER_ID
                           ,EIO.SYSTEM_UPDATE_DTM           = CURRENT_TIMESTAMP
                     WHERE  EIO.TENANT_ID     = REC_SCLE.TENANT_ID
                     AND    EIO.COMPANY_CODE  = REC_SCLE.COMPANY_CODE
