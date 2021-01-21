@@ -130,12 +130,16 @@ sap.ui.define([
 
             this.getView().setModel(this.getOwnerComponent().getModel());
 
-            this.setPlant('LGEKR');
+            this.setPlant('LGESL');
 
             /** Date */
             var today = new Date();
 
             //접속자 법인 사업부로 바꿔줘야함
+            this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
+            this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
+            this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
+            this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
             // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
             // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
             // this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
