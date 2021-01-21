@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +37,8 @@ import cds.gen.ep.loimgtv4service.DeleteLoiSupplySelectionProcContext;
 import cds.gen.ep.loimgtv4service.InputData;
 import cds.gen.ep.loimgtv4service.LoiDtlType;
 import cds.gen.ep.loimgtv4service.LoiMgtV4Service_;
+import cds.gen.ep.loimgtv4service.LoiRfqDtlOutType;
+import cds.gen.ep.loimgtv4service.LoiRfqType;
 import cds.gen.ep.loimgtv4service.OutType;
 import cds.gen.ep.loimgtv4service.SaveLoiPublishProcContext;
 import cds.gen.ep.loimgtv4service.SaveLoiPublishType;
@@ -50,6 +53,7 @@ import cds.gen.ep.loimgtv4service.SavedHeaders;
 import cds.gen.ep.loimgtv4service.SavedReqDetails;
 import cds.gen.ep.loimgtv4service.SavedSuppliers;
 import cds.gen.ep.loimgtv4service.SupplierMulEntityProcContext;
+import cds.gen.ep.loimgtv4service.SupplySelectionResultContext;
 
 @Component
 @ServiceName(LoiMgtV4Service_.CDS_NAME)
@@ -221,6 +225,147 @@ public class LoiMgtV4 implements EventHandler {
         context.setCompleted();          
 
         log.info("### EP_SAVE_LOI_QUOTATION_NUMBER_PROC 프로시저 호출종료 ###");
+
+    }   
+    
+    //업체선정품의 업체선정결과
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event = SupplySelectionResultContext.CDS_NAME)
+    public void onSupplySelectionResult(SupplySelectionResultContext context) {
+
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        //String v_sql_createTableH = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_H (HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+        //String v_sql_createTableD = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (DETAIL_ID BIGINT, HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+
+        StringBuffer v_sql_createTableH = new StringBuffer();
+		v_sql_createTableH.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_R ( ")
+									.append("QUOTATION_NUMBER DECIMAL, ")
+									.append("QUOTATION_ITEM_NUMBER DECIMAL ")
+                                .append(")");
+
+        StringBuffer v_sql_createTableD = new StringBuffer();
+		v_sql_createTableD.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_D ( ")
+									.append("TENANT_ID NVARCHAR(5), ")
+									.append("COMPANY_CODE NVARCHAR(10), ")
+									.append("LOI_WRITE_NUMBER NVARCHAR(50), ")
+                                    .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
+                                .append(")");   
+
+
+        String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_R";
+        String v_sql_dropableD = "DROP TABLE #LOCAL_TEMP_D";
+
+        String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_R VALUES (?, ?)";
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?)";
+
+        String v_sql_callProc = "CALL EP_PO_LOI_REQUEST_HD_SAVE_PROC(I_RFQ_TABLE => #LOCAL_TEMP_R, I_DTL_TABLE => #LOCAL_TEMP_D, O_TABLE => ?, O_D_TABLE => ?)";
+
+        Collection<LoiRfqType> v_inHeaders = context.getInputData().getLoiRfqType();
+        Collection<LoiDtlType> v_inDetails = context.getInputData().getLoiDtlType();
+ 
+        //LoiRfqDtlOutType v_result = LoiRfqDtlOutType.create();
+        Collection<LoiRfqDtlOutType> v_result = new ArrayList<>(); 
+        // Collection<SavedHeaders> v_resultH = new ArrayList<>();
+        // Collection<SavedReqDetails> v_resultD = new ArrayList<>();
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
+
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTableH.toString());
+        jdbc.execute(v_sql_createTableD.toString());
+
+        // Header Local Temp Table에 insert
+        List<Object[]> batchH = new ArrayList<Object[]>();
+        if(!v_inHeaders.isEmpty() && v_inHeaders.size() > 0){
+            for(LoiRfqType v_inRow : v_inHeaders){
+                Object[] values = new Object[] {
+                    v_inRow.get("quotation_number"),
+                    v_inRow.get("quotation_item_number"),
+                };
+                batchH.add(values);
+            }
+        }
+
+        int[] updateCountsH = jdbc.batchUpdate(v_sql_insertTableH, batchH);
+
+        // Detail Local Temp Table에 insert
+        List<Object[]> batchD = new ArrayList<Object[]>();
+        if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+            for(LoiDtlType v_inRow : v_inDetails){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("loi_write_number"),
+                    v_inRow.get("loi_item_number"),
+                };
+                batchD.add(values);
+            }
+        } 
+
+        int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+
+        SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<LoiRfqDtlOutType>(){
+            @Override
+            public LoiRfqDtlOutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                LoiRfqDtlOutType v_row = LoiRfqDtlOutType.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setCompanyCode(v_rs.getString("company_code"));
+                v_row.setLoiWriteNumber(v_rs.getString("loi_write_number"));
+                v_row.setLoiItemNumber(v_rs.getString("loi_item_number"));
+                v_row.setItemSequence(v_rs.getBigDecimal("item_sequence"));
+                v_row.setOfflineFlag(v_rs.getBoolean("offline_flag"));
+                v_row.setPlantCode(v_rs.getString("plant_code"));
+                v_row.setPlantName(v_rs.getString("plant_name"));
+                v_row.setItemDesc(v_rs.getString("item_desc"));
+                v_row.setSpecDesc(v_rs.getString("spec_desc"));
+                v_row.setUnit(v_rs.getString("unit"));
+                v_row.setRequestQuantity(v_rs.getBigDecimal("request_quantity"));
+                v_row.setCurrencyCode(v_rs.getString("currency_code"));
+                v_row.setRequestAmount(v_rs.getBigDecimal("request_amount"));
+                v_row.setSelectionResult(v_rs.getString("selection_result"));
+                v_row.setSupplierCode(v_rs.getString("supplier_code"));
+                v_row.setSupplierName(v_rs.getString("supplier_name"));
+                v_row.setQuotationAmount(v_rs.getBigDecimal("quotation_amount"));
+                v_row.setDeliveryRequestDate(v_rs.getObject("delivery_request_date", LocalDate.class));
+                v_row.setDeliveryRequestDate(v_rs.getObject("quotation_due_date", LocalDate.class));
+                v_row.setQuotationRemark(v_rs.getString("quotation_remark"));
+                v_row.setOfflineSelectionSupplierCode(v_rs.getString("offline_selection_supplier_code"));
+                v_row.setOfflineSelectionSupplierName(v_rs.getString("offline_selection_supplier_name"));
+                v_row.setOfflineQuotationAmount(v_rs.getBigDecimal("offline_quotation_amount"));
+                v_row.setOfflineQuotationDueDate(v_rs.getObject("offline_quotation_due_date", LocalDate.class));
+                v_row.setOfflineQuotationRemark(v_rs.getString("offline_quotation_remark"));
+                
+                v_result.add(v_row);
+                return v_row;
+            }
+        });
+
+        
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(oTable);
+
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                String callProc = "";
+
+                callProc = v_sql_callProc;
+                
+                CallableStatement callableStatement = connection.prepareCall(callProc);
+                return callableStatement;
+            }
+        }, paramList);
+
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropableH);
+        jdbc.execute(v_sql_dropableD);
+
+        context.setResult(v_result);
+        context.setCompleted();
 
     }    
     
