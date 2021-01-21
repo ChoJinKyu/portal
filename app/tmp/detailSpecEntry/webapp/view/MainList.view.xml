@@ -25,6 +25,7 @@
                         <form:content id="transition">
                             <VBox id="vbox">
                                 <Label text="LG Compan2424241y" labelFor="searchCompanyS" required="true"></Label>
+                                <Input type="Number" value="{path: 'org>/Org_Company'}"/>
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
