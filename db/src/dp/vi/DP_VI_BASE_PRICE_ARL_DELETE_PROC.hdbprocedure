@@ -1,5 +1,5 @@
 PROCEDURE DP_VI_BASE_PRICE_ARL_DELETE_PROC (IN I_MASTER DP_VI_BASE_PRICE_ARL_MST_TYPE
-                                    ,OUT O_MSG DP_VI_BASE_PRICE_ARL_OUT_TYPE)
+                                            ,OUT O_MSG DP_VI_BASE_PRICE_ARL_OUT_TYPE)
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************

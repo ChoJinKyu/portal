@@ -42,7 +42,7 @@ curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePri
         "cmd" : "delete",
         "basePriceArlMst" : [
             { 
-                "approval_number": "202101200001"
+                "approval_number": "202101210001"
             }
         ]
         , "debug" : false
