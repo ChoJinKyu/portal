@@ -14,7 +14,7 @@ entity Code_Lng {
                           and parent.group_code = group_code
                           and parent.code       = code;
 
-    key language_cd : String(30) not null  @title : '코드';
+    key language_cd : String(30) not null  @title : '언어코드';
         code_name   : String(240) not null @title : '코드명';
 
 }
