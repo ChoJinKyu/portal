@@ -170,12 +170,13 @@ sap.ui.define([
 
         onCreateFundingNotify: function (oEvent) {
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
-                oRecord = this.getModel("list").getProperty(sPath);
+                oRecord = this.getModel("list").getProperty(sPath),
+                sSupplierCode = this.byId("sSupplierCode").getSelectedKey();
 
             this.getRouter().navTo("mainCreateObject", {
                 tenantId: oRecord.tenant_id,
                 fundingNotifyNumber: oRecord.funding_notify_number,
-                supplierCode:"KR00297400",
+                supplierCode:sSupplierCode,
                 "?query": {
                     //param1: "1111111111"
                 }
@@ -203,26 +204,28 @@ sap.ui.define([
 		 */
         _applySearch: function (aSearchFilters) {
             var oView = this.getView(),
-                oModel = this.getModel("list");
+                oModel = this.getModel("list"),
+                sToday = new Date(new Intl.DateTimeFormat("ko-KR").format(new Date()));
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
             
             var aSorter = [];
             aSorter.push(new Sorter("funding_notify_number", true));
 
-            oModel.read("/SfFundingNotify", {
+            oModel.read("/SfFundingNotifyView", {
                 filters: aSearchFilters,
                 sorters : aSorter,
                 success: function (oData) {
                     for(var i =0 ; i < oData.results.length; i++){
-                        if(oData.results[i].funding_notify_end_date < new Date() || oData.results[i].funding_notify_start_date > new Date()){
-                            oData.results[i].btnClose = true;
-                            oData.results[i].btnCreate = false;
-                        }else{
-                            oData.results[i].btnClose = false;
+                        if(oData.results[i].writable_yn === "Y"){
+                            //oData.results[i].btnClose = false;
                             oData.results[i].btnCreate = true;
+                        }else{
+                            //oData.results[i].btnClose = true;
+                            oData.results[i].btnCreate = false;
                         }
                     }
+                    
                     oModel.setProperty("/SfFundingNotify", oData.results);
                     oView.setBusy(false);
                 }.bind(this)
@@ -250,7 +253,7 @@ sap.ui.define([
                     and: false
                 }));
             }
-
+            
             return aSearchFilters;
         },
 
