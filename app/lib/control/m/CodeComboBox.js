@@ -2,10 +2,11 @@ sap.ui.define([
     "sap/m/ComboBox",
     'sap/m/ComboBoxRenderer',
     "sap/base/util/deepClone",
+    "ext/lib/util/Multilingual",
     "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/core/ListItem",
     "sap/ui/model/json/JSONModel"
-], function (Parent, Renderer, deepClone, ODataV2ServiceProvider, ListItem, JSONModel) {
+], function (Parent, Renderer, deepClone, Multilingual, ODataV2ServiceProvider, ListItem, JSONModel) {
     "use strict";
     
     var CodeComboBox = Parent.extend("ext.lib.control.m.CodeComboBox", {
@@ -21,57 +22,60 @@ sap.ui.define([
                 emptyText: { type: "string", group: "Misc", defaultValue: "" }
             },
             events: {
-                ready: {
-                    parameters: {
-						serviceModel: {type: "object"}
-					}
-                },
-                complete: {
-                }
+                complete: {}
             }
         },
 
-        init: function () {
-            Parent.prototype.init.call(this);
-            this.setModel(new JSONModel());
+        constructor: function(){
+            Parent.prototype.constructor.apply(this, arguments);
+
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            if(this.getModel("I18N").isReady()){
+                this.createContent();
+            }else{
+                oMultilingual.attachEvent("ready", function(){
+                    this.createContent();
+                }.bind(this));
+            }
         },
 
-        extractBindingInfo(oValue, oScope){
-            var oBindingInfo = Parent.prototype.extractBindingInfo.apply(this, arguments);
-            if(oBindingInfo && (oBindingInfo.serviceName || oBindingInfo.serviceUrl) && oBindingInfo.entityName){
+        createContent: function(){
+            if(this.getProperty("useEmpty") == true) {
+                this.setPlaceholder(this.getProperty("emptyText") || this.getModel("I18N").getText("/ALL"));
+            }
+        },
+        
+        extractBindingInfo(oValue){
+            if(oValue && (oValue.serviceName || oValue.serviceUrl) && oValue.entityName){
                 var sKey = "{"+ this.getProperty("keyField") +"}",
                     sText = "{"+ this.getProperty("textField") +"}",
                     sAdditionalTextField = "{"+ (this.getProperty("additionalTextField") || this.getProperty("keyField")) +"}";
 
-                this.oServiceModel = oBindingInfo.serviceName ? 
-                    ODataV2ServiceProvider.getService(oBindingInfo.serviceName) : ODataV2ServiceProvider.getServiceByUrl(oBindingInfo.serviceUrl);
+                this.oServiceModel = oValue.serviceName ? 
+                    ODataV2ServiceProvider.getService(oValue.serviceName) : ODataV2ServiceProvider.getServiceByUrl(oValue.serviceUrl);
                 
-                if(!oBindingInfo.hasOwnProperty('templateShareable')) oBindingInfo.templateShareable = true;
-
-                this.oServiceModel.read("/" + oBindingInfo.entityName, jQuery.extend(oBindingInfo, {
+                this.oServiceModel.read("/" + oValue.entityName, jQuery.extend(oValue, {
                     success: function(oData){
                         var aRecords = deepClone(oData.results);
-                        if(this.getProperty("useEmpty") == true) {
-                            this.setPlaceholder(this.getProperty("emptyText") || "All");
-                        }
                         this.getModel().setData(aRecords, false);
                         this.fireEvent("complete");
                     }.bind(this)
                 }));
 
-                delete oBindingInfo.serviceName;
-                delete oBindingInfo.entityName;
-                delete oBindingInfo.filters;
-                delete oBindingInfo.sorter;
-                oBindingInfo.path = "/";
-                oBindingInfo.template = new ListItem({
+                this.setModel(new JSONModel());
+                return {
+                    path: "/",
+                    templateShareable: true,
+                    template: new ListItem({
                         key: sKey,
                         text: sText,
                         additionalText: sAdditionalTextField
-                    });
-                // oBindingInfo.filters = oBindingInfo.filters || [];
+                    })
+                }
+            }else{
+                return Parent.prototype.extractBindingInfo.apply(this, arguments);
             }
-            return oBindingInfo;
         }
         
     });

@@ -3,6 +3,8 @@ using {sp.Sc_Nego_Item_Prices as negoItemPrices} from '../../../../../db/cds/sp/
 using {sp.Sc_Nego_Suppliers as negoSuppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Headers_New_Record_View as negoHeadersNewRecordView} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
 using {sp.Sc_Outcome_Code as scOutcomeCode} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
+using {sp.Sc_Outcome_Code2 as scOutcomeCode2} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
+// using {localized.Sc_Outcome_Code as scOutcomeCodeLocalized} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model'; //작동안함
 
 using {
     sp.Sc_Nego_Outcom as scNegoOutcom,
@@ -50,17 +52,23 @@ service SourcingTest01V4Service {
     //     system_update_dtm
     // }
     ;
+    // entity ScOutcomeCodeLocalized0                           as projection on scOutcomeCodeLocalized ;
 
     entity ScOutcomeCodeLocalized                             as projection on scOutcomeCode {
-        * , texts.nego_type_name as localized_nego_type_name, texts.locale
-    } ;
-    entity ScOutcomeCodeLocalized2                             as projection on scOutcomeCode {
         * , texts.nego_type_name as localized_nego_type_name
     } ;
+    entity ScOutcomeCodeLocalized2                             as projection on scOutcomeCode {
+        * , texts.nego_type_name as localized_nego_type_name, texts.locale
+    } ;
     entity ScOutcomeCodeLocalized3                             as projection on scOutcomeCode {
-        * , localized.nego_type_name as localized_nego_type_name, localized.locale
+        * , localized.nego_type_name as localized_nego_type_name
     } ;
     entity ScOutcomeCodeLocalized4                             as projection on scOutcomeCode {
+        * , localized.nego_type_name as localized_nego_type_name, localized.locale
+    } ;
+
+    
+    entity ScOutcomeCode2                             as projection on scOutcomeCode2 {
         * , localized.nego_type_name as localized_nego_type_name
     } ;
 // extend ScOutcomeCode with {
