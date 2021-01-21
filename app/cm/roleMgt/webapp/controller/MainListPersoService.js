@@ -4,57 +4,57 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "ctryMgr-mainList-mainColumnCode",
+                id: "Role-mainList-mainRoleCodeColumn",
                 order: 0,
-                text: "Code",
+                text: "역할코드",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnName",
+                id: "Role-mainList-mainRoleNameColumn",
                 order: 1,
-                text: "Name",
-                visible: false
+                text: "역할명",
+                visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnStartDate",
+                id: "Role-mainList-mainChainColumn",
                 order: 2,
-                text: "Start Date",
-                visible: false
+                text: "체인",
+                visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnEndDate",
+                id: "Role-mainList-mainRoleDescColumn",
                 order: 3,
-                text: "End Date",
+                text: "설명",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnSiteFlag",
+                id: "Role-mainList-mainUseFlagColumn",
                 order: 4,
-                text: "Site",
+                text: "사용여부",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnCompanyFlag",
+                id: "Role-mainList-mainCreateUserIdColumn",
                 order: 5,
-                text: "Company",
+                text: "생성자",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnRoleFlag",
-                order: 5,
-                text: "Role",
-                visible: true
-            },
-            {
-                id: "ctryMgr-mainList-mainColumnOrganizationFlag",
+                id: "Role-mainList-mainSystemCreateDtmColumn",
                 order: 6,
-                text: "Organization",
+                text: "시스템생성일시",
                 visible: true
             },
             {
-                id: "ctryMgr-mainList-mainColumnUserFlag",
+                id: "Role-mainList-mainUpdateUserIdColumn",
                 order: 7,
-                text: "User",
+                text: "변경자",
+                visible: true
+            },
+            {
+                id: "Role-mainList-mainSystemUpdateDtmColumn",
+                order: 8,
+                text: "시스템변경일시",
                 visible: true
             }
         ];
@@ -102,8 +102,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "Code") {
-                        return "Code (Important!)";
+                    if (oColumn.getHeader().getText() === "Role") {
+                        return "Role (Important!)";
                     }
                 }
                 return null;
@@ -111,8 +111,7 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnCode") != -1 ||
-                    sId.indexOf("mainColumnName") != -1) {
+                if (sId.indexOf("mainRoleCodeColumn") != -1 ){
                     return "Columns of Key";
                 }
                 return "Others";

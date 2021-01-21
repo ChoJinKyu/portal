@@ -17,9 +17,10 @@ sap.ui.define([
   "sap/m/Text",
   "sap/m/Input",
   "sap/m/ComboBox",
-  "sap/ui/core/Item"
+  "sap/ui/core/Item",
+  "ext/lib/util/Multilingual"
 ], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, TreeListModel,
-    Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Multilingual) {
     
     "use strict";
 
@@ -46,7 +47,6 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            console.log("1111");
         // Model used to manipulate controlstates. The chosen values make sure,
         // detail page shows busy indication immediately so there is no break in
         // between the busy indication for loading the view's meta data
@@ -60,6 +60,9 @@ sap.ui.define([
         this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
         this.setModel(oViewModel, "midObjectView");
         
+        var oMultilingual = new Multilingual();
+        this.setModel(oMultilingual.getModel(), "I18N");
+
         this.setModel(new ManagedModel(), "master");
         this.setModel(new ManagedListModel(), "details");
 
@@ -95,7 +98,6 @@ sap.ui.define([
                 })
                 // 모래시계해제
                 .finally((function () {
-                    debugger;
                     var treeTable = this.byId("midTable");
                     var tableData = treeTable.mAggregations.rows;
                     var detailData = this.getModel("details").getData().Role_Menu;
@@ -191,12 +193,10 @@ sap.ui.define([
          */
         onPageSaveButtonPress: function () {
             var view = this.getView(),
-                master = view.getModel("master"), that = this;
+            master = view.getModel("master"),
+            that = this;
 
-            var oModel = this.getModel("master");
-                //console.log("onPageSaveButtonPress>>> detail", detail.getData());
-
-                master.getData()["tenant_id"] = this._sTenantId;
+            master.getData()["tenant_id"] = this._sTenantId;
             // Validation
             if (!master.getData()["role_code"]) {
                 MessageBox.alert("역할코드를 선택하세요.");
@@ -211,28 +211,29 @@ sap.ui.define([
                 return;
             }
             
-            if (master.getData()["_state_"] !== "U") {
+            if (master.getData()["_state_"] != "U") {
                 if (master.getData()["_state_"] != "C") {
                     MessageBox.alert("변경사항이 없습니다.");
                     return;
                 }
             }
-
-            MessageBox.confirm("저장 하시겠습니까?", {
-                title: "저장",
+            
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                title: this.getModel("I18N").getText("/SAVE"),
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function(sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        view.setBusy(true);
-                        oModel.submitChanges({
-                            success: function(oEvent){
-                                that._toShowMode();
-                                view.setBusy(false);
-                                MessageToast.show("저장하였습니다.");
-                            }.bind(this)
-                        });
-                    };
-                }.bind(this)
+                onClose: function (sButton) {
+                if (sButton === MessageBox.Action.OK) {
+                    view.setBusy(true);
+                    oTransactionManager.submit({
+                    success: function (ok) {
+                        that._toShowMode();
+                        view.setBusy(false);
+                        that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                        sap.m.MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                    }
+                    });
+                };
+                }
             });
         },
 
@@ -241,13 +242,22 @@ sap.ui.define([
          * @public
          */
         onPageCancelEditButtonPress: function () {
-            var oMasterModel = this.getModel("master");
-            if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
-                this.onPageNavBackButtonPress.call(this);
-            } else {
-                this._toShowMode();
-                this.byId("searchChain").fireChange();
-            }
+             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
+            this.onPageNavBackButtonPress.call(this);
+        } else {
+            this._toShowMode();
+            // ljh - 재조회
+            this.getModel("details")
+            .setTransactionModel(this.getModel())
+            .read("/Role_Menu", {
+                filters: [
+                new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
+                ],
+                success: function (oData) {
+                }
+            });
+        }
         },
 
         /* =========================================================== */
@@ -286,8 +296,8 @@ sap.ui.define([
 
             var oMasterModel = this.getModel("master");
             oMasterModel.setData({
-                "tenant_id": "",
-                "role_code": "",
+                "tenant_id": this._sTenantId,
+                "role_code": this._sRoleCode,
                 "chain_code": "",
                 "role_name": "",
                 "role_desc": "",
@@ -362,18 +372,20 @@ sap.ui.define([
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", !FALSE);
             this.byId("pageEditButton").setEnabled(FALSE);
-            this.byId("pageDeleteButton").setEnabled(FALSE);
-            this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageDeleteButton").setEnabled(!FALSE);
+            this.byId("pageCancelEditButton").setEnabled(!FALSE);
+            this.byId("pageSaveButton").setEnabled(!FALSE);
         },
 
         _toShowMode: function () {
             var TRUE = true;
             this._showFormFragment('MidObject_Show');
             this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("page").setProperty("showFooter", !TRUE);
+            this.byId("page").setProperty("showFooter", TRUE);
             this.byId("pageEditButton").setEnabled(TRUE);
             this.byId("pageDeleteButton").setEnabled(TRUE);
-            this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageCancelEditButton").setEnabled(!TRUE);
+            this.byId("pageSaveButton").setEnabled(!TRUE);
         },
 
         _oFragments: {},

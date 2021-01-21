@@ -128,15 +128,15 @@
                         <!-- 역할그룹명 -->
                         <Text text="{I18N>/ROLE_GROUP_NAME}" />
                     </Column>
-                    <Column id="mainColumnRoleDesc" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainColumnRoleDesc" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 역할설명 -->
                         <Text text="{I18N>/ROLE_DESC}" />
                     </Column>
-                    <Column id="mainColumnUpdateDtm" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainColumnUpdateDtm" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 수정일자 -->
                         <Text text="{I18N>/LOCAL_CHANGE_DTM}" />
                     </Column>
-                    <Column id="mainColumnUpdateUserId" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                    <Column id="mainColumnUpdateUserId" minScreenWidth="Tablet" hAlign="Center" importance="High" popinDisplay="WithoutHeader">
                         <!-- 수정자 -->
                         <Text text="{I18N>/UPDATE_USER_ID}" />
                     </Column>
