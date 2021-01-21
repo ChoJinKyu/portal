@@ -62,6 +62,20 @@
                                     <Input id="supplier_local_name" tooltip="{I18N>/SUPPLIER_LOCAL_NAME}" placeholder="{I18N>/INPUT}."/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>  
+                            <!-- 시황자재코드 -->  
+                            <!-- <smartFilterBar:ControlConfiguration key="mi_material_code" groupId="_BASIC" index="3" label="{I18N>/MI_MATERIAL_CODE}" 
+                            visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                    <Input id="mi_material_code" tooltip="{I18N>/MI_MATERIAL_CODE}" placeholder="{I18N>/INPUT}."/>
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>   -->
+                            <!-- 시황자재명 -->  
+                            <smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="3" label="{I18N>/MI_MATERIAL_NAME}" 
+                            visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                    <Input id="mi_material_name" tooltip="{I18N>/MI_MATERIAL_NAME}" placeholder="{I18N>/INPUT}."/>
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>  
                             <smartFilterBar:ControlConfiguration key="Validated" filterType="single"/>          
                         </smartFilterBar:controlConfiguration>
                         <smartFilterBar:layoutData>
