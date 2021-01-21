@@ -59,6 +59,9 @@ sap.ui.define([
             //     persoService: MainListPersoService
             // }).setTable(this.byId("mainTable"));
 
+            // 1.21   this.getView().setModel(new JSONModel()); 
+
+
             this.enableMessagePopover();
 
             // var today = new Date();
@@ -294,7 +297,7 @@ sap.ui.define([
             
             console.log(" _goChartlView oEvent :: ", oEvent);
             var oView = this.getView();
-            var oTable = oView.byId("mainTable"),
+            var oTable = oView.byId("mainChartTable"),
                 oModel = this.getView().getModel("list");
 
 
@@ -332,6 +335,91 @@ sap.ui.define([
                 //     oView.byId("processedCompleteDate").setText(that.getFormatDate(rowData.processed_complete_date));
                 //     oView.byId("remark").setText(rowData.remark);
                 // }
+
+
+                $.ajax({
+                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date=2010-01-01,po_end_date=2020-12-31)/Set",
+                    type: "GET",
+                    contentType: "application/json",
+                    
+                    success: function (oData) {
+                        console.log("#########oData Success#####", oData.value);
+                        console.log("#########oData.value Success#####", JSON.stringify(oData.value));
+                        //console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
+
+
+                        //console.log("#########Success#####", JSON.stringify(oData.value));
+
+
+//1.20                        this.getModel("tblModel").setProperty("/left",oData.value);
+                            
+
+                        //oView.getModel("SummaryChartModel").setData(data);
+
+
+                    //  //1.19   
+                    //     oView.getModel("SummaryChartModel").updateBindings(true);
+
+                    //     console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
+
+                    //     console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
+
+
+                    //     //oView.getModel("SummaryChartModel").setData(data.value[0]);
+
+
+                    console.log("#########Success#####", oData.value[0].group_type);
+
+                        oView.byId("gubun").setText(oData.value[0].group_type);
+                        oView.byId("todo_count").setText(oData.value[0].todo_count);
+                        oView.byId("ongoing_count").setText(oData.value[0].ongoing_count);
+                        oView.byId("complete_count").setText(oData.value[0].complete_count);
+
+                        oView.byId("gubun").setText(oData.value[1].group_type);
+                        oView.byId("todo_count").setText(oData.value[1].todo_count);
+                        oView.byId("ongoing_count").setText(oData.value[1].ongoing_count);
+                        oView.byId("complete_count").setText(oData.value[1].complete_count);
+
+                        oView.byId("gubun").setText(oData.value[2].group_type);
+                        oView.byId("todo_count").setText(oData.value[2].todo_count);
+                        oView.byId("ongoing_count").setText(oData.value[2].ongoing_count);
+                        oView.byId("complete_count").setText(oData.value[2].complete_count);
+
+                    //     // for (var i = 0; i < data.value.length; i++) {
+                    //     //      oView.byId("gubun").setText(data.value[i].group_type);   
+                    //     //      oView.byId("todo_count").setText(data.value[i].todo_count);   
+                    //     //      oView.byId("ongoing_count").setText(data.value[i].ongoing_count);   
+                    //     //      oView.byId("complete_count").setText(data.value[i].complete_count);  
+
+
+                    //     //      console.log("#########i#####", i);
+                    //     //      console.log("#########data.value[i].group_type#####", data.value[i].group_type);
+
+                    //     //     //  oView.byId("group_type").setText(data.value[i].group_type); 
+                    //     //     //  oView.byId("complete_count").setText(data.value[i].complete_count); 
+                    //     //     //  oView.byId("complete_count").setText(data.value[i].complete_count); 
+                    //     // }
+
+
+
+                        oView.byId("company1_").setValue(oData.value[2].todo_counts);
+                        oView.byId("company2_").setValue(oData.value[2].ongoing_count);
+                        oView.byId("company3_").setValue(oData.value[2].complete_count);
+
+
+                        oView.byId("company4_").setValue(oData.value[2].todo_count);
+                        oView.byId("company5_").setValue(oData.value[2].ongoing_count);
+                        oView.byId("company6_").setValue(oData.value[2].todo_count);
+
+                    //     // oView.byId("company4_").setTitle(data.value[0].group_type);
+                    //     // oView.byId("company5_").setTitle(data.value[1].group_type);
+                    //     // oView.byId("company6_").setTitle(data.value[2].group_type);
+
+
+
+
+                    }.bind(this) 
+                })
                  
             });
         },
