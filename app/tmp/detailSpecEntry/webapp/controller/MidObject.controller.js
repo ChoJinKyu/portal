@@ -49,6 +49,7 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "mstSpecView");
 			this.setModel(new ManagedListModel(), "schedule");
             this.setModel(new ManagedModel(), "spec");
+            this.setModel(new ManagedListModel(), "listT");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
@@ -243,6 +244,11 @@ sap.ui.define([
                 this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
                     
                 });
+                this._bindView("test/Message", "listT", [], function(oData){
+
+                });
+
+                this._bindView
             }
             
             oTransactionManager.setServiceModel(this.getModel());
@@ -361,7 +367,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "tmp.detailSpecEntry.view." + sFragmentName,
+					name: "tmp.detailSpecEntry.view.test",
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

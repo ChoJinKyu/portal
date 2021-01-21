@@ -4,13 +4,12 @@ sap.ui.define([
 	"ext/lib/model/ManagedListModel",
     "ext/lib/formatter/Formatter",
     "ext/lib/util/Validator",
-	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/m/MessageBox",
     "sap/m/MessageToast"
-], function (BaseController, Multilingual, ManagedListModel, Formatter, Validator, MainListPersoService, 
+], function (BaseController, Multilingual, ManagedListModel, Formatter, Validator,
 		Filter, FilterOperator, Sorter, MessageBox, MessageToast) {
 	"use strict";
 
@@ -52,25 +51,6 @@ sap.ui.define([
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
-
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoButtonPressed: function(oEvent){
-			this._oTPC.openDialog();
-		},
-
-		/**
-		 * Event handler when a table personalization refresh
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
-			this._oTPC.refresh();
-		},
 
 		/**
 		 * Event handler when a search button pressed

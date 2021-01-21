@@ -21,12 +21,8 @@ sap.ui.define([
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "company_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "company_name" },
-                filters: {
-                    type: "sap.ui.core.Control"
-                },
-                sorters: {
-                    type: "sap.ui.core.Control"
-                }
+                items: { type: "sap.ui.core.Control"}
+                
             }
         },
         
@@ -64,10 +60,19 @@ sap.ui.define([
             ];
         },
 
+        getServiceParameters: function(){
+            return {
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                ]
+            }
+        },
+
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                aFilters = this.getProperty("filters"),
-                aSorters = this.getProperty("sorters");
+                // oParam = this.getServiceParameters(),
+                aFilters = this.getProperty("items").filters || [],
+                aSorters = this.getProperty("items").sorters || [];
             if(sKeyword){
                 aFilters.push(
                     new Filter({

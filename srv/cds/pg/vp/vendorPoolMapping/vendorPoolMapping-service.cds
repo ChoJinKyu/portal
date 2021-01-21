@@ -22,7 +22,7 @@
   3. history
     -. 2020.11.28 : 이상재 최초작성
 *************************************************/
-using { pg as vpTreeView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_TREE_VIEW-model';
+using { pg as vpTreeView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_TREE_LNG_VIEW-model';
 using { pg as vpDetailView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_DETAIL_VIEW-model';
 using { pg as vpSupplierDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_VIEW-model';
 using { pg as vpMaterialDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
@@ -31,12 +31,13 @@ using { pg as vpManagerDtl } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL
 using { cm as cmEmployeeMst } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using { cm as cmDeptMst } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using { pg as vpSupplierMst } from '../../../../../db/cds/pg/vp/PG_VP_SUPPLIER_MST_VIEW-model';
+using { pg as vpTreeDrillType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_LEAF_INFO_VIEW-model';
 
 namespace pg; 
 @path : '/pg.vendorPoolMappingService'
 service VpMappingService {
     
-    entity VpTreeView @(title : '협력사풀 Tree View') as projection on vpTreeView.Vp_Vendor_Pool_Tree_View;
+    //entity VpTreeView @(title : '협력사풀 Tree View') as projection on vpTreeView.Vp_Vendor_Pool_Tree_View;
 
     entity VpDetailView @(title : '협력사풀 공급업체 View') as projection on vpDetailView.Vp_Vendor_Pool_Detail_View;
 
@@ -210,8 +211,141 @@ service VpMappingService {
                 mst.drill_state,
                 mst.vendor_pool_path_code,
                 mst.vendor_pool_path_name
-        from   vpTreeView.Vp_Vendor_Pool_Tree_View mst
-        where  mst.language_cd = 'EN'
+        from   vpTreeView.Vp_Vendor_Pool_Tree_Lng_View(
+                    p_language_code: 'KO'
+                ) mst        
         ;  
+
+        @readonly
+        view vpInfoLeafView as 
+            select
+                key mst.language_cd,
+                key mst.tenant_id,
+                key mst.company_code,
+                key mst.org_type_code,
+                key mst.org_code,
+                key mst.operation_unit_code,
+                key mst.vendor_pool_code,
+                mst.vendor_pool_local_name,
+                mst.vendor_pool_english_name,
+                mst.parent_vendor_pool_code,
+                mst.higher_level_path,
+                mst.level_path,
+                mst.repr_department_code,
+                mst.department_local_name,
+                mst.inp_type_code,
+                mst.inp_type_name,
+                mst.mtlmob_base_code,
+                mst.mtlmob_base_name,
+                mst.regular_evaluation_flag,
+                mst.industry_class_code,
+                mst.industry_class_name,
+                mst.sd_exception_flag,
+                mst.temp_type,
+                mst.node_id,
+                mst.parent_id,
+                mst.path,
+                mst.hierarchy_rank,
+                mst.hierarchy_tree_size,
+                mst.hierarchy_parent_rank,
+                mst.hierarchy_level,
+                mst.hierarchy_root_rank,
+                mst.drill_state,
+                mst.vendor_pool_path_code,
+                mst.vendor_pool_path_name
+            from
+                vpTreeDrillType.Vp_Vendor_Pool_Leaf_Info_View(
+                    p_language_code: 'KO',
+                    p_drill_type: 'leaf'
+                ) mst
+        ;
+
+        @readonly
+        view vpInfoExpandedView as 
+            select
+                key mst.language_cd,
+                key mst.tenant_id,
+                key mst.company_code,
+                key mst.org_type_code,
+                key mst.org_code,
+                key mst.operation_unit_code,
+                key mst.vendor_pool_code,
+                mst.vendor_pool_local_name,
+                mst.vendor_pool_english_name,
+                mst.parent_vendor_pool_code,
+                mst.higher_level_path,
+                mst.level_path,
+                mst.repr_department_code,
+                mst.department_local_name,
+                mst.inp_type_code,
+                mst.inp_type_name,
+                mst.mtlmob_base_code,
+                mst.mtlmob_base_name,
+                mst.regular_evaluation_flag,
+                mst.industry_class_code,
+                mst.industry_class_name,
+                mst.sd_exception_flag,
+                mst.temp_type,
+                mst.node_id,
+                mst.parent_id,
+                mst.path,
+                mst.hierarchy_rank,
+                mst.hierarchy_tree_size,
+                mst.hierarchy_parent_rank,
+                mst.hierarchy_level,
+                mst.hierarchy_root_rank,
+                mst.drill_state,
+                mst.vendor_pool_path_code,
+                mst.vendor_pool_path_name
+            from
+                vpTreeDrillType.Vp_Vendor_Pool_Leaf_Info_View(
+                    p_language_code: 'KO',
+                    p_drill_type: 'expanded'
+                ) mst
+        ;
+
+        @readonly
+        view vpInfoDrillAllView as 
+            select
+                key mst.language_cd,
+                key mst.tenant_id,
+                key mst.company_code,
+                key mst.org_type_code,
+                key mst.org_code,
+                key mst.operation_unit_code,
+                key mst.vendor_pool_code,
+                mst.vendor_pool_local_name,
+                mst.vendor_pool_english_name,
+                mst.parent_vendor_pool_code,
+                mst.higher_level_path,
+                mst.level_path,
+                mst.repr_department_code,
+                mst.department_local_name,
+                mst.inp_type_code,
+                mst.inp_type_name,
+                mst.mtlmob_base_code,
+                mst.mtlmob_base_name,
+                mst.regular_evaluation_flag,
+                mst.industry_class_code,
+                mst.industry_class_name,
+                mst.sd_exception_flag,
+                mst.temp_type,
+                mst.node_id,
+                mst.parent_id,
+                mst.path,
+                mst.hierarchy_rank,
+                mst.hierarchy_tree_size,
+                mst.hierarchy_parent_rank,
+                mst.hierarchy_level,
+                mst.hierarchy_root_rank,
+                mst.drill_state,
+                mst.vendor_pool_path_code,
+                mst.vendor_pool_path_name
+            from
+                vpTreeDrillType.Vp_Vendor_Pool_Leaf_Info_View(
+                    p_language_code: 'KO',
+                    p_drill_type: 'ALL'
+                ) mst
+        ;
 
 }

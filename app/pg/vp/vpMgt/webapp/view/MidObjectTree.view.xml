@@ -44,7 +44,7 @@
                                     <Label text="Operation UINT" labelFor="mid_Tree_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_UNIT_S" width="100%" selectedKey="" 
                                     items="{
-                                                        path : 'util>/CodeDetails',
+                                                        path : 'util>/Code',
                                                         filters : [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
@@ -53,7 +53,7 @@
                                     >
                                                                     
                                         <items>
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
                                         </items>
                                     </ComboBox>
                                 </VBox>                                
@@ -86,7 +86,7 @@
                                     <Label text="Operation UINT" labelFor="mid_Tree_Operation_UNIT_E" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_UNIT_E" width="100%" selectedKey="" 
                                     items="{
-                                                        path : 'util>/CodeDetails',
+                                                        path : 'util>/Code',
                                                         filters : [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
@@ -94,7 +94,7 @@
                                                     }"
                                     >
                                         <items>
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
                                         </items>
                                     </ComboBox>
                                 </VBox>
@@ -138,7 +138,7 @@
 	                            selectionBehavior="Row"                  
                                 enableColumnReordering="false"
                                 expandFirstLevel="true"
-                                visibleRowCountMode="Auto"
+
                                 rows="{
                                     path : 'tree>/vpTreeLngView',
                                     parameters : {

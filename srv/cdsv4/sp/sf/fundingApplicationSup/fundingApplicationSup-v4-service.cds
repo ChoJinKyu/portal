@@ -152,12 +152,15 @@ service FundingApplicationSupV4Service {
     //************************************************
     //리턴타입: 프로시저 저장 후 리턴 값
     type rtnObj : {
-        return_code: String(2);
- 	    return_msg: String(1000);
+        result_code: String(2);
+ 	    err_type: String(20);
+        err_code: String(20);
+        rtn_funding_appl_number: String(10);
     } 
 
     //저장타입: 신청서 마스터
     type applSaveDataType : {
+        funding_appl_number           : String(10);     //자금지원신청번호
         funding_notify_number         : String(10);     //자금지원공고번호
         supplier_code                 : String(10);     //공급업체코드
         tenant_id                     : String(5);      //테넌트ID

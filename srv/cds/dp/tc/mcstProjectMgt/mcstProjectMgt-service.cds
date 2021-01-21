@@ -9,6 +9,7 @@ using {cm as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm as orgDiv} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
 using {dp as unitOfMeasure} from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
+using {cm as currency} from '../../../../../db/cds/cm/CM_CURRENCY-model';
 
 namespace dp;
 
@@ -57,24 +58,15 @@ service McstProjectMgtService {
                 uom_name,
                 uom_desc
         }
-        where tenant_id = 'L2100'
-          and uom_class_code = 'AAAADL'
+        where uom_class_code = 'AAAADL'
           and uom_desc is not null
           and disable_date is null;
 
-// type InputDataType {
-//     tenant_id    : String(5);
-//     project_code : String(30);
-//     model_code   : String(40);
-//     mcst_code    : String(30);
-//     user_id      : String(255);
-// }
-
-// type OutputDataType : {
-//     version_number : String(30);
-//     return_code    : String(20);
-//     return_msg     : String(5000);
-// };
-
-// action TcCreateMcstProjectProc(inputData : InputDataType) returns OutputDataType;
+    @readonly
+    entity Currency as
+        select from currency.Currency as c{
+            key tenant_id,
+            key currency_code
+        }
+        where use_flag = true;
 }

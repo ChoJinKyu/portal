@@ -11,7 +11,7 @@
   entity 위에 @cds.persistence.exists 명시  
   
   5. namespace : dp
-  6. entity  : DP_GS_CHECK_SUPPLIER_UNIQUE_FUNC
+  6. entity  : Pu_Pr_Template_Numbers_Func
   7. entity description : Parent Tenpate List 반환...
   8. history
   -. 2021.01.20 : 김경태 작성

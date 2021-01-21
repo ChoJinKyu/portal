@@ -22,14 +22,14 @@
                         <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <Label text="Company" labelFor="search_company_s" required="true"></Label>
+                                    <Label text="Company Name" labelFor="search_company_s" required="true"></Label>     
                                     <MultiComboBox id="search_company_s" width="100%" required="true" 
                                         items="{
                                                     path: 'org>/Org_Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                     ]
-                                                }">
+                                                }" selectionFinish="handleSelectionFinishComp">
                                         <items>
                                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                         </items>
@@ -38,16 +38,15 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_operation_org_s" required="true"></Label>
-                                    <MultiComboBox id="search_operation_org_s" width="100%" 
+                                    <MultiComboBox id="search_operation_org_s" width="100%" required="true"
                                             items="{
-                                                path: 'org>/organization',
+                                                path: 'purOrg>/Pur_Operation_Org',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                 ]
-                                            }"
-                                            selectionFinish="handleSelectionFinishComp">
+                                            }">
                                         <items>
-                                            <core:Item key="{org>code}" text="[{org>code}] {org>type}" />
+                                            <core:Item key="{purOrg>code}" text="[{purOrg>code}] {purOrg>type}" />
                                         </items>
                                     </MultiComboBox>
                                     <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>                                   
@@ -79,7 +78,7 @@
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                     ]
-                                                }">
+                                                }" selectionFinish="handleSelectionFinishComp">
                                         <items>
                                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                         </items>
@@ -88,16 +87,15 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_operation_org_e" required="true"></Label>
-                                    <MultiComboBox id="search_operation_org_e" width="100%" 
+                                    <MultiComboBox id="search_operation_org_e" width="100%" required="true"
                                             items="{
-                                                path: 'org>/organization',
+                                                path: 'purOrg>/Pur_Operation_Org',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                 ]
-                                            }"
-                                            selectionFinish="handleSelectionFinishComp">
+                                            }">
                                         <items>
-                                            <core:Item key="{org>code}" text="[{org>code}] {org>type}" />
+                                            <core:Item key="{purOrg>code}" text="[{purOrg>code}] {purOrg>type}" />
                                         </items>
                                     </MultiComboBox>
                                     <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
@@ -199,6 +197,10 @@
                                 <Label text="Effective End Date" labelFor="search_effective_end_date"></Label>
                                 <DatePicker id="search_effective_end_date" displayFormat="yyyy.MM.dd" valueFormat="yyyy.MM.dd" editable="true" navigate="onclickDate" value="9999-12-31"/>
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
+                            </VBox>
+                            <VBox>
+                                <!-- <Input id="test" type="Text" liveChange=".chkReplaceChange" /> -->
+                                <Input id="test" type="Text" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhVendorPoolCode"/>
                             </VBox>
                         </form:content>
                     </form:SimpleForm>
@@ -377,7 +379,7 @@
                             </table:template>
                         </table:Column>
                     </table:columns>
-                </table:Table>      
+                </table:Table>                
             </f:content>
             <!-- DynamicPage Footer -->
             <f:footer>

@@ -20,32 +20,14 @@
 		<uxap:headerTitle>
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="Role Details" wrapping="true" />
-				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					<Title text="Role Details" wrapping="true" />
-				</uxap:snappedHeading>
-				<uxap:expandedContent>
-					<Text text="Details for Role Info {Role_code}" />
-				</uxap:expandedContent>
-				<uxap:snappedContent>
-					<Text text="Details for Role Info {Role_code}" />
-				</uxap:snappedContent>
-				<uxap:snappedTitleOnMobile>
-					<Title text="Role Details" />
-				</uxap:snappedTitleOnMobile>
-				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
-                    <Button id="pageSaveButton" text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				    <Button id="pageCancelEditButton" text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
-				</uxap:actions>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="Role Details" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-                </uxap:navigationActions>
+				</uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -54,8 +36,8 @@
 			<FlexBox wrap="Wrap" visible="false">
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
-						<Label text="userID: " />
-						<Text text="{master>/user_id}"/>
+						<Label text="tenantID: " />
+						<Text text="{master>/tenant_id}"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
 
@@ -112,7 +94,7 @@
                         <table:TreeTable
                             id="midTable"
                             visibleRowCountMode="Fixed"
-                            visibleRowCount="20"
+                            visibleRowCount="15"
                             selectionMode="Single"
                             selectionBehavior="Row"
                             enableColumnReordering="false"
@@ -151,17 +133,17 @@
                                 </OverflowToolbar>
                             </table:extension>
                             <table:columns>
-                                <table:Column label="메뉴명" hAlign="Center">
+                                <table:Column label="메뉴명" hAlign="Center" width="60%">
                                     <table:template>
                                         <Text text="{menu>menu_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="메뉴코드" hAlign="Center">
+                                <table:Column label="메뉴코드" hAlign="Center" width="20%">
                                     <table:template>
                                         <Text text="{menu>menu_code}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="권한여부" hAlign="Center">
+                                <table:Column label="권한여부" hAlign="Center" width="20%">
                                     <table:template>
                                         <Switch type="AcceptReject" state="{menu>state}" change=".onSwitchChange" />
                                     </table:template>
@@ -172,7 +154,26 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
+		</uxap:sections>
 
-		</uxap:sections>        
+        <!-- 하단 버튼 처리 툴바 -->
+		<uxap:footer>
+            <OverflowToolbar>
+            <ToolbarSpacer />
+                <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress"/>
+                <Button id="pageCancelEditButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}"  press=".onPageDeleteButtonPress"/>
+                <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}"  press=".onPageSaveButtonPress"/>
+			</OverflowToolbar>
+		</uxap:footer>
+        
 	</uxap:ObjectPageLayout>
 </mvc:View>
+
+
+<!-- <uxap:actions>
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
+					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+                    <Button id="pageSaveButton" text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				    <Button id="pageCancButton" text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				</uxap:actions> -->

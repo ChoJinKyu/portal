@@ -45,6 +45,13 @@
                     "odataVersion": "2.0"
                 }
             },
+            "purOrgMgtService": {
+                "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             "dtlSpecService": {
                 "uri": "srv-api/odata/v2/dp.DetailSpecEntryService/",
                 "type": "OData",
@@ -121,6 +128,16 @@
                     "useBatch": true
                 }
             },
+            "purOrg": {
+                "dataSource": "purOrgMgtService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
             "vendorPool": {
                 "dataSource": "vendorPoolService",
                 "preload": true,
@@ -162,7 +179,8 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "ext.dp": "../../../../dp"
+            "ext.dp": "../../../../dp",
+            "ext.pg": "../../../../pg"
         },
         "routing": {
             "config": {

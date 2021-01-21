@@ -69,7 +69,7 @@ service CommonService {
     ;
 
     @readonly
-    view Time_Zone as
+    view Timezone as
         select
             key a.tenant_id,
             key a.timezone_code,

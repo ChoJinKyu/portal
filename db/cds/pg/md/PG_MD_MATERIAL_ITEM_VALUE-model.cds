@@ -11,7 +11,8 @@ entity Md_Material_Item_Value {
     key vendor_pool_code : String(20) not null @title : '협력사풀코드';
     key material_code    : String(40) not null @title : '자재코드';
     key supplier_code    : String(10) not null @title : '공급업체코드';
-        use_flag         : Boolean not null    @title : '사용여부';
+        use_flag         : Boolean             @title : '사용여부';
+        mapping_flag     : Boolean             @title : '매핑여부';
         spmd_attr_001    : String(100)         @title : 'spmd_attr_001';
         spmd_attr_002    : String(100)         @title : 'spmd_attr_002';
         spmd_attr_003    : String(100)         @title : 'spmd_attr_003';

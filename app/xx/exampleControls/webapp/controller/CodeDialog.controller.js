@@ -3,14 +3,14 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast",
-	"ext/lib/control/ui/CodeValueHelp",
+	"cm/util/control/ui/CodeDialog",
     "cm/util/control/ui/EmployeeDialog",
     "cm/util/control/ui/CompanyDetailDialog",
     "cm/util/control/ui/CmDialogHelp",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
-], function (Controller, JSONModel, MessageBox, MessageToast, CodeValueHelp, EmployeeDialog, CompanyDetailDialog, CmDialogHelp,
+], function (Controller, JSONModel, MessageBox, MessageToast, CodeDialog, EmployeeDialog, CompanyDetailDialog, CmDialogHelp,
         Filter, FilterOperator, Sorter) {
 	"use strict";
 
@@ -30,8 +30,8 @@ sap.ui.define([
         },
 
         onInputWithCodeValuePress: function(){
-            if(!this.oCodeValueHelp){
-                this.oCodeValueHelp = new CodeValueHelp({
+            if(!this.oCodeDialog){
+                this.oCodeDialog = new CodeDialog({
                     title: "Choose Chains",
                     items: {
                         filters: [
@@ -45,11 +45,11 @@ sap.ui.define([
                         entityName: "Code"
                     }
                 });
-                this.oCodeValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("inputWithCodeValueHelp").setValue(oEvent.getParameter("item").code);
+                this.oCodeDialog.attachEvent("apply", function(oEvent){
+                    this.byId("inputWithCodeDialog").setValue(oEvent.getParameter("item").code);
                 }.bind(this));
             }
-            this.oCodeValueHelp.open();
+            this.oCodeDialog.open();
         },
 
         onCmInputWithCodeValuePress: function(){
@@ -69,7 +69,7 @@ sap.ui.define([
                     }
                 });
                 this.oCmDialogHelp.attachEvent("apply", function(oEvent){
-                    this.byId("cmInputWithCodeValueHelp").setValue(oEvent.getParameter("item").bizdivision_code);
+                    this.byId("cmInputWithCodeDialog").setValue(oEvent.getParameter("item").bizdivision_code);
                 }.bind(this));
             }
             this.oCmDialogHelp.open();
@@ -77,7 +77,7 @@ sap.ui.define([
 
         onMultiInputWithCodeValuePress: function(){
             if(!this.oCodeMultiSelectionValueHelp){
-                this.oCodeMultiSelectionValueHelp = new CodeValueHelp({
+                this.oCodeMultiSelectionValueHelp = new CodeDialog({
                     title: "Choose Process Types",
                     multiSelection: true,
                     items: {
@@ -93,11 +93,11 @@ sap.ui.define([
                     }
                 });
                 this.oCodeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithCodeValueHelp").setTokens(oEvent.getSource().getTokens());
+                    this.byId("multiInputWithCodeDialog").setTokens(oEvent.getSource().getTokens());
                 }.bind(this));
             }
             this.oCodeMultiSelectionValueHelp.open();
-            this.oCodeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCodeValueHelp").getTokens());
+            this.oCodeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCodeDialog").getTokens());
         },
 
         onCompanyDetailDialogPress: function() {

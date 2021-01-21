@@ -17,7 +17,9 @@
   -. 2021.01.07 : 최미희 최초작성
 *************************************************/
 // 협력사제안관리
+using { dp as Idea } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA-model';
 using { dp as Status } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_STATUS-model';
+
 
 // 공통코드
 using { cm as Code } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
@@ -30,6 +32,7 @@ namespace dp;
 
 service SupplierIdeaStatusMgtService {
 
+    entity SupplierIdea as projection on Idea.Im_Supplier_Idea;
     entity IdeaStatus as projection on Status.Im_Supplier_Idea_Status;
 
     @readonly

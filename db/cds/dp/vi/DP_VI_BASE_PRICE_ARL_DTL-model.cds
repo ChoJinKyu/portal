@@ -23,34 +23,34 @@ entity VI_Base_Price_Arl_Dtl {
         base_date                 : Date not null;
         base_price_ground_code    : String(30) not null;
 
-        prices                    : Composition of many price
-                                        on  prices.tenant_id       = tenant_id
-                                        and prices.approval_number = approval_number
-                                        and prices.item_sequence   = item_sequence;
+        // prices                    : Composition of many price
+        //                                 on  prices.tenant_id       = tenant_id
+        //                                 and prices.approval_number = approval_number
+        //                                 and prices.item_sequence   = item_sequence;
 
-        approval_number_fk        : Association to master
-                                        on  approval_number_fk.tenant_id       = tenant_id
-                                        and approval_number_fk.approval_number = approval_number;
-        tenant_id_fk              : Association to tenant
-                                        on tenant_id_fk.tenant_id = tenant_id;
-        company_code_fk           : Association to comp
-                                        on  company_code_fk.tenant_id    = tenant_id
-                                        and company_code_fk.company_code = company_code;
-        org_code_fk               : Association to org
-                                        on  org_code_fk.tenant_id    = tenant_id
-                                        and org_code_fk.company_code = company_code
-                                        and org_code_fk.org_type_code = 'PL'
-                                        and org_code_fk.org_code = org_code;
-        material_code_fk          : Association to masterial
-                                        on material_code_fk.tenant_id = tenant_id
-                                        and material_code_fk.material_code = material_code;
-        supplier_code_fk          : Association to supplier
-                                        on  supplier_code_fk.tenant_id     = tenant_id
-                                        and supplier_code_fk.supplier_code = supplier_code;
-        base_price_ground_code_fk : Association to code
-                                        on  base_price_ground_code_fk.tenant_id  = tenant_id
-                                        and base_price_ground_code_fk.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
-                                        and base_price_ground_code_fk.code       = base_price_ground_code;
+        // approval_number_fk        : Association to master
+        //                                 on  approval_number_fk.tenant_id       = tenant_id
+        //                                 and approval_number_fk.approval_number = approval_number;
+        // tenant_id_fk              : Association to tenant
+        //                                 on tenant_id_fk.tenant_id = tenant_id;
+        // company_code_fk           : Association to comp
+        //                                 on  company_code_fk.tenant_id    = tenant_id
+        //                                 and company_code_fk.company_code = company_code;
+        // org_code_fk               : Association to org
+        //                                 on  org_code_fk.tenant_id    = tenant_id
+        //                                 and org_code_fk.company_code = company_code
+        //                                 and org_code_fk.org_type_code = 'PL'
+        //                                 and org_code_fk.org_code = org_code;
+        // material_code_fk          : Association to masterial
+        //                                 on material_code_fk.tenant_id = tenant_id
+        //                                 and material_code_fk.material_code = material_code;
+        // supplier_code_fk          : Association to supplier
+        //                                 on  supplier_code_fk.tenant_id     = tenant_id
+        //                                 and supplier_code_fk.supplier_code = supplier_code;
+        // base_price_ground_code_fk : Association to code
+        //                                 on  base_price_ground_code_fk.tenant_id  = tenant_id
+        //                                 and base_price_ground_code_fk.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
+        //                                 and base_price_ground_code_fk.code       = base_price_ground_code;
 };
 
 extend VI_Base_Price_Arl_Dtl with util.Managed;

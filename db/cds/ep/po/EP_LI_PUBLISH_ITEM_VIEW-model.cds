@@ -46,6 +46,8 @@ entity Li_Publish_Item_View {
         plant_code                 : String(10)          @title : '플랜트코드';
         plant_name                 : String(240)         @title : '플랜트명';
         spec_desc                  : String(1000)        @title : '규격설명';
+        same_selection_item_number                  : String(1000)        @title : '동일한 업체선정품의 항목';
+        same_publish_item_number                  : String(1000)        @title : '동일한 발행품의 항목';
 
 }
 

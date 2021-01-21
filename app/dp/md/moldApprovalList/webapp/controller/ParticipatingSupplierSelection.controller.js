@@ -133,11 +133,29 @@ sap.ui.define([
                 var oTable = this.byId("psTable")
                 , psModel = this.getModel("mdItemMaster"); 
                 var oSelected = oTable.getSelectedIndices(); 
+                var self = this;
                 
                 console.log(oSelected);
                 
             if (oSelected.length > 0) {
-                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.plant_code, function(data){
+
+                var param = {
+                    'oThis':self,
+                    'oEvent':oEvent,
+                    'companyCode':self.company_code,
+                    'orgCode':self.plant_code,
+                    'isMulti':true
+                }
+                
+                self.supplierSelection.showSupplierSelection(param, function(tokens){
+                // this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.plant_code, function(data){
+
+                    console.log(tokens);
+
+                    var data = tokens.map(function(item){
+                        return item.mProperties;
+                    });
+
                     if(data.length > 0) {
                         supplierData=[];
                         for(var i=0; i<data.length; i++){
