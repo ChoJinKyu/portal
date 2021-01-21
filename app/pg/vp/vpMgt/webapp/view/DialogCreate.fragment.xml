@@ -225,7 +225,8 @@
                         </VBox>
                         <VBox>
                             <Label text = "Level Name(Eng)" design="Bold" required="true"/> 
-                                <Input id="pop_vendor_pool_english_name" placeholder="Input data"></Input> 
+                                <Input id="pop_vendor_pool_english_name" placeholder="Input data" type="Text" liveChange=".chkReplaceChange"/>
+                                <!-- <Input id="pop_vendor_pool_english_name"  placeholder="Input data"></Input>  -->
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 

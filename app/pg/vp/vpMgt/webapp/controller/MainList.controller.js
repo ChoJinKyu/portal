@@ -1182,7 +1182,7 @@ sap.ui.define([
                 treeVendor.push(new Filter({
                     path: 'keyword',
                     filters: [
-                        new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("treepop_vendor_pool_local_name").getValue())
+                        new Filter("vendor_pool_path_name", FilterOperator.Contains, this.byId("treepop_vendor_pool_local_name").getValue())
                     ],
                     and: false
                 }));
@@ -1275,7 +1275,7 @@ sap.ui.define([
                     predicates.push(new Filter({
                         path: 'keyword',
                         filters: [
-                            new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
+                            new Filter("vendor_pool_path_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
                         ],
                         and: false
                     }));
@@ -1712,7 +1712,7 @@ sap.ui.define([
                     aSearchFilters.push(new Filter("managers_name", FilterOperator.EQ, s_Man));
                 }
                 if (s_VPC && s_VPC.length > 0) {
-                    aSearchFilters.push(new Filter("vendor_pool_code", FilterOperator.EQ, s_VPC));
+                    aSearchFilters.push(new Filter("vendor_pool_path_code", FilterOperator.Contains, s_VPC));
                 }
                 if (s_Sup && s_Sup.length > 0) {
                     aSearchFilters.push(new Filter("supplier_code", FilterOperator.EQ, s_Sup));
@@ -1782,6 +1782,21 @@ sap.ui.define([
                 rtnStr = rtnStr ? "Y" : "N"
             }
             return rtnStr;
+        },
+        //아래 정규식 둘중에 하나 골라서 쓰면 됩니다. 
+        chkReplaceChange: function (oEvent) {
+            console.log("livechange!!");
+            //var regex = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi;     // 특수문자 제거 (한글 영어 숫자만)
+            var regex = /[^a-zA-Z0-9]/gi;                   // 특수문자 제거 (영어 숫자만)
+            //test Str ===> var regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;  //한글 제거 11/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g%^&*()_+|<
+            
+            var newValue = oEvent.getParameter("newValue");
+            //$(this).val(v.replace(regexp,''));
+            if (newValue !== "") {                
+                newValue = newValue.replace(regex,"");
+                oEvent.oSource.setValue(null);
+                oEvent.oSource.setValue(newValue);
+            }
         },
 
         onValueHelpRequested: function () {

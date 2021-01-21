@@ -74,8 +74,8 @@
             </VBox>
 
             <VBox height="3.5rem">
-                <Label text="Mold Weight(Kg)" required="true"/>
-                <Input value="{spec>/mold_weight}" required="true"/>
+                <Label text="Mold Weight(Kg)1" required="true"/>
+                <Input value="{path: 'spec>/mold_weight'}" required="true"/>
                 <layoutData>
                     <l:GridData
                         span="XL4 L4 M4 S6" />
@@ -434,10 +434,8 @@
     </form:SimpleForm>
 
     <form:SimpleForm 
-            
             layout="ResponsiveGridLayout">
             <form:content>
-
             <core:Title text="Mold Meterial" />
 
             <VBox height="3.5rem">

@@ -32,7 +32,7 @@ service MmService {
     select  key m.tenant_id,
             key m.country_code,
             key m.hs_code,
-            m.hs_text1 as hs_text
+            m.hs_text
     from Hs.HsCode as m
     where m.use_flag = true
     ;

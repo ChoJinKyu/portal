@@ -5,5 +5,6 @@ namespace sp;
 @path : '/sp.supplierViewService'
 service supplierViewService {
 
-    view supplierView @(title : '공급업체 View') as select from supplView.Sm_Supplier_View;
+    @readonly
+    view supplierView @(title : 'Supplier View') as select from supplView.Sm_Supplier_View;
 }

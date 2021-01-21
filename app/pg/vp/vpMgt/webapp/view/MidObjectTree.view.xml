@@ -138,7 +138,7 @@
 	                            selectionBehavior="Row"                  
                                 enableColumnReordering="false"
                                 expandFirstLevel="true"
-                                visibleRowCountMode="Auto"
+
                                 rows="{
                                     path : 'tree>/vpTreeLngView',
                                     parameters : {

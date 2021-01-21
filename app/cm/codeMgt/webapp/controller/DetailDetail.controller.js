@@ -36,7 +36,7 @@ sap.ui.define([
                     var aFilters = [];
                     aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2100'));
                     aFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE'));
-                    oUtilModel.read("/CodeDetails",{
+                    oUtilModel.read("/Code",{
                         filters : aFilters,
                         success : function(data){
                             aLanguages = data.results;

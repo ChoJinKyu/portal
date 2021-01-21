@@ -19,8 +19,8 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "60em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "55em"},
+                keyField: { type: "string", group: "Misc", defaultValue: "company_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
             }
         },
@@ -30,7 +30,7 @@ sap.ui.define([
         createSearchFilters: function(){
             this.oCompanyCode = new SearchField({ placeholder: this.getModel("I18N").getText("/COMPANY_CODE")});
             this.oBizunitCode = new SearchField({ placeholder: this.getModel("I18N").getText("/BIZUNIT_CODE")});
-            this.oLocalUserName = new SearchField({ placeholder: this.getModel("I18N").getText("/LOCAL_USER_NAME")});
+            this.oLocalUserName = new SearchField({ placeholder: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")});
             
             this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
             this.oBizunitCode.attachEvent("change", this.loadData.bind(this));
@@ -53,7 +53,7 @@ sap.ui.define([
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/LOCAL_USER_NAME")}),
+                        new Label({ text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")}),
                         this.oLocalUserName
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M3 S12"})
@@ -74,12 +74,12 @@ sap.ui.define([
                     template: new Text({text: "{bizunit_code}"})
                 }),
                 new Column({
-                    width: "15%",
+                    width: "20%",
                     label: new Label({text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")}),
                     template: new Text({text: "{idea_manager_name}"})
                 }),
                 new Column({
-                    width: "60%",
+                    width: "50%",
                     label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
                     template: new Text({text: "{department_local_name}"})
                 })
@@ -91,39 +91,22 @@ sap.ui.define([
                 sBizunitCode = this.oBizunitCode.getValue(),
                 sLocalUserName = this.oLocalUserName.getValue(),
                 aFilters = [
-                     new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ];
-            if(sCompanyCode){
-                aFilters.push(
-                    new Filter({
-                        filters : [
-                        new Filter("tolower(company_code)", FilterOperator.Contains,  "'" + sCompanyCode.toLowerCase().replace("'","''") + "'")
-                        ],
-                        and : false
-                    })  
-                      
-                );
-            }    
-            if(sBizunitCode){
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("tolower(bizunit_code)", FilterOperator.Contains,  "'" + sBizunitCode.toLowerCase().replace("'","''") + "'")
-                        ],
-                        and: false
-                    })
-                );
-            }    
-            if(sLocalUserName){
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("tolower(idea_manager_name)", FilterOperator.Contains,  "'" + sLocalUserName.toLowerCase().replace("'","''") + "'")
-                        ],
-                        and: false
-                    })
-                );
-            }
+
+                if(sCompanyCode){
+                    aFilters.push(new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sBizunitCode){
+                    aFilters.push(new Filter("tolower(bizunit_code)", FilterOperator.Contains, "'" + sBizunitCode.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sLocalUserName){
+                    aFilters.push(new Filter("tolower(idea_manager_name)", FilterOperator.Contains, "'" + sLocalUserName.toLowerCase().replace("'","''") + "'"));
+                }
+
+
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.ImService/").read("/IdeaManager", {
                 filters: aFilters,
                 sorters: [
