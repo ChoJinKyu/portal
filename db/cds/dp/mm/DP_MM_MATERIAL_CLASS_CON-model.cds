@@ -27,6 +27,7 @@ entity Mm_Material_Class_Con {
     conv_error_desc : String(500)   @title: '컨버전오류설명' ;	
     source_system_code : String(30)   @title: '소스시스템코드' ;	
     material_class_code : String(40)   @title: '자재클래스코드' ;	
+    language_code : String(4)   @title: '언어코드' ;	
     material_class_name : String(100)   @title: '자재클래스명' ;	
     material_class_desc : String(1000)   @title: '자재클래스 설명' ;	
     use_flag : Boolean @title: '사용여부';
