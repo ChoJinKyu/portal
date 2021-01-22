@@ -24,8 +24,11 @@
       "preLaunchTask": "Build sppCap",
       "cwd": "${workspaceFolder}",
       "envFile": "${workspaceFolder}/.env1",
+      "args": [
+        "--spring.profiles.active=default"
+      ],
       "env": {
-        "run.config": "{\"handlerId\":\"cap_run_config_handler_id\",\"runnableId\":\"/home/user/projects/sppCap\"}"
+        "run.config": "{\"handlerId\":\"cap_run_config_handler_id\",\"runnableId\":\"{\\\"projectPath\\\":\\\"/home/user/projects/sppcap\\\",\\\"profileName\\\":\\\"default\\\"}\"}"
       }
     }
   ]

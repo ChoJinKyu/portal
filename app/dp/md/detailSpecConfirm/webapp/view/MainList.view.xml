@@ -6,6 +6,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.m"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -17,14 +18,14 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="{path:'I18N>/DETAIL_SPEC_CONFIRM', formatter:'I18NFormatter'}" />
                 </f:heading>
                 <f:snappedContent>
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                         <form:content>
-                            <VBox>
+                            <VBox height="3rem">
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyS" required="true"></Label>
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%"  required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -36,12 +37,12 @@
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox height="3rem">
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
-                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
+                                <MultiComboBox id="searchDivisionS" width="100%"  required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -53,14 +54,14 @@
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox height="3rem">
                                 <Label text="{I18N>/DATE}" labelFor="searchDateS" required="true"></Label>
                                 <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             
@@ -70,9 +71,9 @@
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                         <form:content>
-                            <VBox>
+                            <VBox height="3rem">
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE"  required="true"></Label>
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%"  required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -84,12 +85,12 @@
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox height="3rem">
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
+                                <MultiComboBox id="searchDivisionE" width="100%"  required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
@@ -101,14 +102,14 @@
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <VBox height="3rem">
                                 <Label text="{I18N>/DATE}" labelFor="searchDateE" required="true"></Label>
                                 <DateRangeSelection id="searchDateE" valueFormat = "yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             
@@ -129,7 +130,7 @@
 
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                     <form:content>
-                        <VBox>
+                        <VBox height="3rem">
                             <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
                             <Input id="searchModel" 
                                     showValueHelp="true"  
@@ -144,11 +145,11 @@
                                 <core:Item key="{model}" text="{model}" />
                             </Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
-                            <Label text="Mold Part No" labelFor="searchPart"></Label>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchPart"></Label>
                             <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -162,18 +163,18 @@
                                 <core:Item key="{mold_number}" text="{mold_number}" />
                             </Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
-                            <Label text="Family Part No" labelFor="searchFamilyPart"></Label>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" labelFor="searchFamilyPart"></Label>
                             <Input id="searchFamilyPart" placeholder="Input data"></Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
-                            <Label text="Requester" labelFor="searchRequester"></Label>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" labelFor="searchRequester"></Label>
                             <Input id="searchRequester" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -187,21 +188,21 @@
                                 <core:Item key="{dsc>create_user_id}" text="{dsc>create_user_id}" />
                             </Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
+                        <VBox height="3rem">
                             <Label text="{I18N>/STATUS}" labelFor="searchStatus"></Label>
-                            <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                            <SegmentedButton id="searchStatus"  class="sapUiSmallMarginBottom" width="100%">
                                 <items>
-                                    <SegmentedButtonItem text="All" key=""/>
-                                    <SegmentedButtonItem text="Draft" key="D" width="4em"/>
-                                    <SegmentedButtonItem text="Confirmed" key="C" width="6em"/>
+                                    <SegmentedButtonItem text="{path:'I18N>/ALL', formatter:'I18NFormatter'}" key="" width="auto"/>
+                                    <SegmentedButtonItem text="{path:'I18N>/TEMP_SAVE', formatter:'I18NFormatter'}" key="D" width="auto"/>
+                                    <SegmentedButtonItem text="{path:'I18N>/CONFIRMED', formatter:'I18NFormatter'}" key="C" width="auto"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData
-                                    span="XL2 L3 M6 S12"/>
+                                    span="XL3 L3 M6 S12"/>
                             </layoutData>
                         </VBox>
                     </form:content>
@@ -245,10 +246,10 @@
                             <Text text="{I18N>/MODEL}" />
                         </Column>
                         <Column id="mainMoldNumber" >
-                            <Text text="Mold Part No" />
+                            <Text text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainMoldSeq" >
-                            <Text text="Mold Seq" />
+                            <Text text="{path:'I18N>/MOLD_SEQ', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainDesc"  minScreenWidth="Desktop" demandPopin="false">
                             <Text text="{I18N>/DESCRIPTION}" />
@@ -257,16 +258,16 @@
                             <Text text="{I18N>/STATUS}" />
                         </Column>
                         <Column id="mainItemType"  minScreenWidth="Desktop" demandPopin="true">
-                            <Text text="Item Type" />
+                            <Text text="{path:'I18N>/MOLD_ITEM_TYPE', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainRequester"  minScreenWidth="Desktop" demandPopin="false">
-                            <Text text="Requester" />
+                            <Text text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainDate"  minScreenWidth="Desktop" demandPopin="false">
                             <Text text="{I18N>/DATE}" />
                         </Column>
                         <Column id="mainFamilyPartNumber"  minScreenWidth="Desktop" demandPopin="false">
-                            <Text text="Family Part No" />
+                            <Text text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
                     </columns>
                     <items>

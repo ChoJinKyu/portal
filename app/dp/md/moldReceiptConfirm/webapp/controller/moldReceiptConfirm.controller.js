@@ -27,18 +27,19 @@ sap.ui.define([
     "sap/m/Text",
     "sap/m/Token",
     "dp/md/util/controller/SupplierSelection",
-    "ext/lib/util/ExcelUtil"
+    "ext/lib/util/ExcelUtil",
+    "ext/lib/formatter/NumberFormatter"
 ], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, moldReceiptConfirmPersoService, 
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
-    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token, SupplierSelection, ExcelUtil) {
+    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token, SupplierSelection, ExcelUtil,
+    NumberFormatter) {
     "use strict";
     
     return BaseController.extend("dp.md.moldReceiptConfirm.controller.moldReceiptConfirm", {
 
         dateFormatter: DateFormatter,
-        
+        numberFormatter: NumberFormatter,
         validator: new Validator(),
-
         supplierSelection: new SupplierSelection(),
 
         /* =========================================================== */

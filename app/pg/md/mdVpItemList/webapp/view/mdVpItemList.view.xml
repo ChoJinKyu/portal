@@ -176,8 +176,8 @@
                     <OverflowToolbar>
                         <Title id="title" level="H2"/> 
                         <ToolbarSpacer/>
-                        <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                        <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
+                        <Button id="mainTableButtonAllOpen" text="Expand All" type="Transparent" press=".onMainTableexpandAll" />
+                        <Button id="mainTableButtonAllClose" text="Collapse All" type="Transparent" press=".onMainTablecollapseAll" />
                         <ToolbarSeparator/>
                         <MenuButton  text=" 특성 설정 ">
                             <menu>

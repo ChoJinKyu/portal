@@ -2,8 +2,15 @@ using {sp.Sc_Nego_Headers as negoHeaders} from '../../../../../db/cds/sp/sc/SP_S
 using {sp.Sc_Nego_Item_Prices as negoItemPrices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers as negoSuppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Headers_New_Record_View as negoHeadersNewRecordView} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
-using {sp.Sc_Outcome_Code as scOutcomeCode} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
-using {sp.Sc_Outcome_Code2 as scOutcomeCode2} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
+using {sp.Sc_Outcome_Code as scOutcomeCode,
+       sp.Sc_Nego_Type_Code as scNegoTypeCode,
+       sp.Sc_Award_Type_Code_View as scAwardTypeCodeView,
+       sp.Sc_Award_Type_Code_View1 as scAwardTypeCodeView1,
+       sp.Sc_Award_Type_Code_View2 as scAwardTypeCodeView2,
+       sp.Sc_Award_Type_Code_View3 as scAwardTypeCodeView3,
+       sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
+} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
+// using {sp.Sc_Outcome_Code2 as scOutcomeCode2} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 // using {localized.Sc_Outcome_Code as scOutcomeCodeLocalized} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model'; //작동안함
 
 using {
@@ -42,35 +49,42 @@ service SourcingTest01V4Service {
     entity NegoHeadersTest04                                  as projection on negoHeadersTest04;
 
     // @odata.draft.enabled
-    entity ScOutcomeCode                                      as projection on scOutcomeCode 
-    // excluding {
-    //     local_create_dtm,
-    //     local_update_dtm,
-    //     create_user_id,
-    //     update_user_id,
-    //     system_create_dtm,
-    //     system_update_dtm
-    // }
-    ;
+    entity ScOutcomeCode                                      as projection on scOutcomeCode;
+    entity ScNegoTypeCode                                     as projection on scNegoTypeCode;
+    entity ScAwardTypeCodeView                                as projection on scAwardTypeCodeView;
+    entity ScAwardTypeCodeView1                               as projection on scAwardTypeCodeView1;
+    entity ScAwardTypeCodeView2                               as projection on scAwardTypeCodeView2;
+    entity ScAwardTypeCodeView3                               as projection on scAwardTypeCodeView3;
+    entity ScNegoProgStatusCodeView                           as projection on scNegoProgStatusCodeView;
+
+    //    sp.Sc_Nego_Type_Code as scNegoTypeCode,
+    //    sp.Sc_Award_Type_Code_View as scAwardTypeCodeView,
+    //    sp.Sc_Award_Type_Code_View2 as scAwardTypeCodeView2,
+    //    sp.Sc_Award_Type_Code_View3 as scAwardTypeCodeView3,
+    //    sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
+
     // entity ScOutcomeCodeLocalized0                           as projection on scOutcomeCodeLocalized ;
 
-    entity ScOutcomeCodeLocalized                             as projection on scOutcomeCode {
-        * , texts.nego_type_name as localized_nego_type_name
-    } ;
-    entity ScOutcomeCodeLocalized2                             as projection on scOutcomeCode {
-        * , texts.nego_type_name as localized_nego_type_name, texts.locale
-    } ;
-    entity ScOutcomeCodeLocalized3                             as projection on scOutcomeCode {
-        * , localized.nego_type_name as localized_nego_type_name
-    } ;
-    entity ScOutcomeCodeLocalized4                             as projection on scOutcomeCode {
-        * , localized.nego_type_name as localized_nego_type_name, localized.locale
-    } ;
+    // BEGIN TEST - CDS Localized 
+    // entity ScOutcomeCodeLocalized                             as projection on scOutcomeCode {
+    //     * , texts.outcome_name as localized_nego_type_name
+    // } ;
+    // entity ScOutcomeCodeLocalized2                             as projection on scOutcomeCode {
+    //     * , texts.outcome_name as localized_nego_type_name, texts.locale
+    // } ;
+    // entity ScOutcomeCodeLocalized3                             as projection on scOutcomeCode {
+    //     * , localized.outcome_name as localized_nego_type_name
+    // } ;
+    // entity ScOutcomeCodeLocalized4                             as projection on scOutcomeCode {
+    //     * , localized.outcome_name as localized_nego_type_name, localized.locale
+    // } ;
 
-    
-    entity ScOutcomeCode2                             as projection on scOutcomeCode2 {
-        * , localized.nego_type_name as localized_nego_type_name
-    } ;
+    // entity ScOutcomeCode2                             as projection on scOutcomeCode2 {
+    //     * , localized.nego_type_name as localized_nego_type_name
+    // } ;
+    // END TEST - CDS Localized 
+
+
 // extend ScOutcomeCode with {
 //     texts.nego_type_name
 // }

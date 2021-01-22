@@ -4,9 +4,11 @@ FUNCTION XX_SAMPLE_MASTER_FUNC (CD NVARCHAR(5000))
 AS
 
 BEGIN
+
     RETURN  SELECT  A.MASTER_ID
                    ,A.CD
                    ,A.NAME
             FROM    XX_SAMPLE_MASTER A
             WHERE   A.CD = :CD;
+
 END

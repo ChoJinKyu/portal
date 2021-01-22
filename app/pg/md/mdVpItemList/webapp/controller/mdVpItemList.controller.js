@@ -283,7 +283,7 @@ sap.ui.define([
 
         onMainTableexpandAll: function(e) {
             var table = this.getView().byId("treeTable");
-            table.expandToLevel(1);
+            table.expandToLevel(3);
         },
 
         onMainTablecollapseAll: function(e){

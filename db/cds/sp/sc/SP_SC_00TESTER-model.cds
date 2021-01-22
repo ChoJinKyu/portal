@@ -15,14 +15,20 @@ entity Sc_Tester00 : util.Managed {
 
 define view Sc_Language as
     select from cm.Currency_Lng{
-        *,
+        language_code,
+        // cast( current_date              as String(30))  as currentDate               : String(30) , 
+        // CURRENT_TIME      as CURRENT_TIME      :Time       ,
+        // CURRENT_USER      as CURRENT_USER      :String(30) ,
+        // CURRENT_TIMESTAMP as CURRENT_TIMESTAMP :DateTime   ,
+        // SESSION_USER      as SESSION_USER      :String(30) ,
+        // SYSTEM_USER       as SYSTEM_USER       :String(30) ,
         cast( $user.locale              as String(30))  as locale                    : String(30) , 
         cast( $user.id                  as String(30))  as user_id                   : String(30) , 
         cast( $at.from                  as String(30))  as at_from                   : String(30) , 
         cast( $at.to                    as String(30))  as at_to                     : String(30) , 
-        cast( $now                      as DateTime)    as now                       : DateTime , 
+        cast( $now                      as DateTime)    as now                       : DateTime   , 
         cast( $projection.language_code as String(30))  as projection_language_code  : String(30) , 
-        cast( $self.language_code       as String(30))  as self_language_cod         : String(30)            
+        cast( $self.language_code       as String(30))  as self_language_cod         : String(30)           
         // ,$session                   as session
     };
 
@@ -180,9 +186,6 @@ entity Sc_Nego_Headers_Test04 {
         nego_document_round             : Integer             @title : '협상문서회차';
 }
 extend Sc_Nego_Headers_Test04 with util.Managed;
-
-
-
 
 aspect Sc_CodeList @(
 cds.autoexpose,

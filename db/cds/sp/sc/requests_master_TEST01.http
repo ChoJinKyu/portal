@@ -1,22 +1,30 @@
-# Local PC : cds serve all --with-mocks --in-memory?
+#################################################
+# OData Sever Configuration
+#################################################
 @serviceUrl = http://localhost:4004
-# Local PC : mvn spring-boot:run : v2
-@serviceUrl = http://localhost:8080/odata/v2
-# Cloud Container Service : sppCap
+# Cloud Container Service : sppCap Workspace
 @serviceUrl = https://lgcommondev-workspaces-ws-ll5cb-app1.jp10.applicationstudio.cloud.sap
 # Cloud Container Service : sppCap
 @serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+# Local PC : mvn spring-boot:run : v2
+@serviceUrlV2 = http://localhost:8080/odata/v2
 # Local PC : mvn spring-boot:run : v4
 @serviceUrl = http://localhost:8080/odata/v4
- 
+
+#################################################
+# OData Service Configuration
+#################################################
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service
 # Odata v2 service
-@reviews-service = {{serviceUrl}}/sp.sourcingService
+@reviews-serviceV2 = {{serviceUrlV2}}/sp.sourcingService
 # Odata v4 service
 @reviews-service = {{serviceUrl}}/sp.sourcingTest01V4Service
 
-### Need a Cookie for credential not in local
+#################################################
+# OData Service Configuration
+# Need not a Cookie for credential in local
+#################################################
 # https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
 @cookie = JTENANTSESSIONID_services=5fZp7Tlz85JCf51p0PLyDiYoWX3fugTkSnF61L2Fb%2BU%3D
 # https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap/
@@ -24,6 +32,9 @@
 # for LG spp Dev Server
 @cookie = 
 
+#################################################
+# OData Ping Test
+#################################################
 ### Ping Test : Deployed Server(DEV)
 GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
 Cookie: {{cookie}}
@@ -35,11 +46,12 @@ GET http://localhost:8080/odata/v4/sp.sourcingTest01V4Service/$metadata
 GET {{reviews-service}}/$metadata
 
 
+
 #################################################
-#
+# OData Main Test #1
 #   localized Master CRUD
 #   (draftActivate|draftPrepare|draftEdit|\bPUT\b|\bPOST\b|\bDELETE\b|\bPATCH\b)
-
+#################################################
 
 ### Show System Variable
 GET {{reviews-service}}/ScLanguage?
@@ -48,18 +60,8 @@ GET {{reviews-service}}/ScLanguage?
 Cookie: {{cookie}}
 
 
-### Show System Variable
-GET {{reviews-service}}/ScAwardTypeCodeView?
-# &$skip=0&$top=1
-# &$expand=*
-Cookie: {{cookie}}
-Accept-Language: zh
-
-
-
-
 ### Multi Select | Default
-GET {{reviews-service}}/Nego_Type_Code?
+GET {{reviews-service}}/ScOutcomeCode?
 &$expand=*
 # &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
 # &$select=tenant_id,nego_header_id,nego_document_round,HasActiveEntity,IsActiveEntity,SiblingEntity,DraftAdministrativeData
@@ -154,7 +156,6 @@ Content-Type: application/json
     "nego_type_code": "RFQ",
     "outcome_code": "010",
     "sort_no": 0,
-    "nego_type_name": null,
     "local_create_dtm": "2021-01-21T13:17:01Z",
     "local_update_dtm": "2021-01-21T13:17:01Z",
     "create_user_id": "anonymous",

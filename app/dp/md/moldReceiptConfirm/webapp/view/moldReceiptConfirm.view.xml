@@ -342,12 +342,11 @@
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
+                        <Title text="{I18N>/LIST} ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <!-- <Button id="testSuppBtn"   type="Emphasized" text="Supp Test"             press=".onTestSuppBtnPress"    /> -->
-                        <Button id="moldMstTableConfirmButton"   type="Emphasized" text="Confirm"             press=".onMoldMstTableConfirmButtonPress"    />
-                        <Button id="moldMstTableExcelButton"  type="Transparent"  text="Excel"            press=".onExportPress"   />
+                        <Button id="moldMstTableConfirmButton" type="Emphasized" text="{path:'I18N>/CONFIRM', formatter:'I18NFormatter'}" press=".onMoldMstTableConfirmButtonPress" />
                         <ToolbarSeparator/>
+                        <Button id="moldMstTableExcelButton" icon="sap-icon://excel-attachment" press=".onExportPress"   />
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="NeverOverflow" />
@@ -485,21 +484,21 @@
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/ESTIMATE_AMOUNT', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="{list>order_confirmed_amount}"/>
+                            <Text text="{path:'list>order_confirmed_amount', formatter:'.numberFormatter.toNumberString'}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/ORDER_AMOUNT', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="{list>purchasing_amount}"/>
+                            <Text text="{path:'list>purchasing_amount', formatter:'.numberFormatter.toNumberString'}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/RECEIPT_AMOUNT', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="{list>receiving_amount}"/>
+                            <Text text="{path:'list>receiving_amount', formatter:'.numberFormatter.toNumberString'}"/>
                         </table:template>
                     </table:Column>
 

@@ -18,7 +18,11 @@ service fundingNotifyService {
                 ,fnd.funding_notify_contents    //내용
                 ,fnd.attch_group_number         //첨부파일 그룹 번호
                 ,fnd.create_user_id             //작성자id
+                ,fnd.update_user_id
                 ,fnd.local_create_dtm           
+                ,fnd.local_update_dtm
+                ,fnd.system_create_dtm
+                ,fnd.system_update_dtm
                 /*
                 ,(select user_local_name
                 from cm_hr_employee
