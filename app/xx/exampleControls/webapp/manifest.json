@@ -96,20 +96,8 @@
           "bundleName": "xx.exampleControls.i18n.i18n"
         }
       },
-      "common": {
-        "dataSource": "commonService",
-        "type": "ext.lib.model.v2.ODataModel",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
       "org": {
         "dataSource": "orgService",
-        "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -136,6 +124,17 @@
           "groupId": "$direct",
           "synchronizationMode": "None",
           "autoExpandSelect": true
+        }
+      },
+      "common": {
+        "dataSource": "commonService",
+        "type": "ext.lib.model.v2.ODataModel",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
         }
       },
       "common-v4": {

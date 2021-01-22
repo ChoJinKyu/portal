@@ -16,16 +16,16 @@
                     <form:content>
                         <VBox>
                             <Label text="Multi Combo: " required="true"></Label>
-                            <MultiComboBox id="multiCombo" width="350px"
+                            <MultiComboBox id="multiCombo" width="350px" showSecondaryValues="true"
                                 items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }" required="true">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code}: {common>code_description}" />
+                                    <core:ListItem key="{common>code}" text="{common>code_name}" additionalText="{common>code}" />
                                 </items>
                             </MultiComboBox>
                             <layoutData>
