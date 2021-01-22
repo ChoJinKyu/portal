@@ -163,7 +163,7 @@
                                         </layoutData>
                                 </VBox>
                                 <VBox>			
-                                    <Label text="{I18N>/EMAIL_ADDRESS}"/>
+                                    <Label text="{I18N>/EMAIL_ADDRESS}" required="true"/>
                                     <Input id="editEmail"  value="{
                                             path: 'SupplierGen>/email_address',
                                             type: 'sap.ui.model.type.String',

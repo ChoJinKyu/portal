@@ -11,9 +11,30 @@
     xmlns:uxap="sap.uxap"
     height="100%">
 <VBox>
-    <!-- File Upload 시작-->
+    <!-- 제품 이미지 시작-->
     <UploadCollection
-        id="UploadCollection"
+        id="productImgUploadCollection"
+        numberOfAttachmentsText="제품 이미지"
+        maximumFilenameLength="55"
+        maximumFileSize="10"
+        multiple="false"
+        sameFilenameAllowed="true"
+        instantUpload="false"
+        noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+        change="onChange"
+        fileDeleted="onFileDeleted"
+        filenameLengthExceed="onFilenameLengthExceed"
+        fileSizeExceed="onFileSizeExceed"
+        typeMissmatch="onTypeMissmatch"
+        uploadComplete="onUploadComplete"
+        beforeUploadStarts="onBeforeUploadStarts" />
+    <!-- 제품 이미지 끝-->
+</VBox>
+<VBox>
+    <!-- 개발 업로드 시작-->
+    <UploadCollection
+        id="devUploadCollection"
+        numberOfAttachmentsText="개발"
         maximumFilenameLength="55"
         maximumFileSize="10"
         multiple="true"
@@ -27,6 +48,26 @@
         typeMissmatch="onTypeMissmatch"
         uploadComplete="onUploadComplete"
         beforeUploadStarts="onBeforeUploadStarts" />
-    <!-- File Upload 끝-->
-</VBox>                            
+    <!-- 개발 업로드 끝-->
+</VBox>
+<VBox>
+    <!-- 구매 업로드 시작-->
+    <UploadCollection
+        id="purchaseUploadCollection"
+        numberOfAttachmentsText="구매"
+        maximumFilenameLength="55"
+        maximumFileSize="10"
+        multiple="true"
+        sameFilenameAllowed="true"
+        instantUpload="false"
+        noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+        change="onChange"
+        fileDeleted="onFileDeleted"
+        filenameLengthExceed="onFilenameLengthExceed"
+        fileSizeExceed="onFileSizeExceed"
+        typeMissmatch="onTypeMissmatch"
+        uploadComplete="onUploadComplete"
+        beforeUploadStarts="onBeforeUploadStarts" />
+    <!-- 구매 업로드 끝-->
+</VBox>
 </mvc:View>

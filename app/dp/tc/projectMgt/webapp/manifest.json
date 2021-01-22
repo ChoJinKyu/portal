@@ -242,7 +242,7 @@
                     "target": "ProjectInfo"
                 },
                 {
-                    "pattern": "McstProjectInfo/{tenant_id}/{project_code}/{model_code}/{cost_type}/{view_mode}/:version_number:",
+                    "pattern": "McstProjectInfo/{tenant_id}/{project_code}/{model_code}/{mcst_code}/{view_mode}/:version_number:",
                     "name": "McstProjectInfo",
                     "target": "McstProjectInfo"
                 }

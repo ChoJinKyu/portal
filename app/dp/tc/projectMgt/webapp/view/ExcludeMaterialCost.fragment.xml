@@ -7,49 +7,56 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogExclusion" class="sapUiSmallMargin" title="재료비 산출 제외" contentWidth="35%" >
+    <Dialog id="dialogExclusion" class="sapUiSmallMargin" title="재료비 산출 제외" contentWidth="40%" >
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm
-                editable="false"
+                editable="true"
                 maxContainerCols="4"
                 layout="ResponsiveGridLayout"
-                labelSpanXL="3"
-                labelSpanL="3"
-                labelSpanM="3"
-                labelSpanS="3"
                 adjustLabelSpan="false"
-                emptySpanXL="0"
-                emptySpanL="0"
-                emptySpanM="0"
-                emptySpanS="0"     
                 singleContainerFullSize="false" >                    
                     <form:content >
                             <Label text = "프로젝트코드" class="sapUiLargeMarginEnd">
                                 <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S12" />
+                                    <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
                             </Label>
                             <Text text = "{updateModel>/project_code}" width="100%">
                                 <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S12" />
+                                    <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
                             </Text>
-                            <Label text = "개발구매담당자" class="sapUiLargeMarginEnd">
+                            <Label text = "재료비총괄" class="sapUiLargeMarginEnd">
                                 <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S12" />
+                                    <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
                             </Label>
                             <Text text = "{updateModel>/buyer_name}" width="100%">
                                 <layoutData>
-                                    <layout:GridData span="XL3 L3 M3 S12" />
+                                    <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
                             </Text>
-                            <Label text = "제외사유" width="100%" class="sapUiLargeMarginBegin">
+                            <Label text = "산출제외" class="sapUiLargeMarginEnd">
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M2 S12" />
+                                </layoutData>
+                            </Label>
+                            <HBox direction="Column">
+                                <Switch state="{updateModel>/mcst_excl_flag}" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch>                            
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M2 S12" />
+                                </layoutData>
+                            </HBox>
+                            <Label text = "제외사유" width="100%" class="sapUiSmallMarginBegin">
                                 <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" lineBreak="true"/>
                                 </layoutData> 
                             </Label>
-                            <TextArea value="{updateModel>/mcst_excl_reason}" width="100%" rows="5">
+                            <TextArea value="{updateModel>/mcst_excl_reason}" width="95%" rows="5" class="sapUiSmallMarginBegin sapUiLargeMarginEnd" enabled="{updateModel>/mcst_excl_flag}">
                                 <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" />
                                 </layoutData> 

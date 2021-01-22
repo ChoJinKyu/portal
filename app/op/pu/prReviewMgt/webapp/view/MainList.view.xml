@@ -229,13 +229,14 @@
                             <Label text="{I18N>/MATERIAL_CODE}"/>
                             <Input
                                 value="{jSearch>/material_code}"
+                                placeholder="(미정)자재를 선택하세요"
                                 showValueHelp="true"
                                 valueHelpRequest=".onValueHelpRequest($event, 'jSearch>/material_code')" 
                             />
                             <!-- 구매담당자 부서 -->
                             <Label text="{I18N>/BUYER_DEPARTMENT}" labelFor="searchRequestDepartmentS"/>
                             <lib-m:CodePicker 
-                                placeholder="(미정)구매담당자 부서명을 입력하세요."
+                                placeholder="(미정)구매담당자 부서명을 입력하세요"
                                 selectedKey="{jSearch>/buyer_department_code}"
                                 keyField="department_id"
                                 textField="department_local_name"
@@ -273,7 +274,7 @@
                     mode="MultiSelect"
                     growingThreshold="10"
                     class="sapFDynamicPageAlignContent" 
-                    updateFinished=".onMainTableUpdateFinished"
+                    updateFinished=".onUpdateFinished($event)"
                     items="{
                         path : 'list>/Pr_ReviewListView',
                         sorter: {
@@ -291,12 +292,12 @@
                             <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddDialogPress" />
                             <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPrDeletePress" visible="false" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onExportPress" >
+                            <Button icon="sap-icon://excel-attachment" press=".onExcelDownload($event, 'mainTable', 'list>/Pr_ReviewListView')" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
                             </Button>
-                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <Button icon="sap-icon://action-settings" press=".onPersonalize($event)" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
