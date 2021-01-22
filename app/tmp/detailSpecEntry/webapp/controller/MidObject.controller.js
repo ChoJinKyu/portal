@@ -49,14 +49,14 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "mstSpecView");
 			this.setModel(new ManagedListModel(), "schedule");
             this.setModel(new ManagedModel(), "spec");
-            this.setModel(new ManagedListModel(), "listT");
+            //this.setModel(new ManagedListModel(), "listT");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
             
-			//oTransactionManager.addDataModel(this.getModel("master"));
-            //oTransactionManager.addDataModel(this.getModel("schedule"));
-            oTransactionManager.addDataModel(this.getModel("listT"));
+			oTransactionManager.addDataModel(this.getModel("master"));
+            oTransactionManager.addDataModel(this.getModel("schedule"));
+            //oTransactionManager.addDataModel(this.getModel("listT"));
 		}, 
 
 		/* =========================================================== */
@@ -228,22 +228,22 @@ sap.ui.define([
 			}else{
 
                 var self = this;
-				// this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
-                //     self._toShowMode();
-                // });
+				this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
+                    self._toShowMode();
+                });
 
-                // this._bindView("/MoldMasterSpec('" + this._sMoldId + "')", "mstSpecView", [], function(oData){
+                this._bindView("/MoldMasterSpec('" + this._sMoldId + "')", "mstSpecView", [], function(oData){
                     
-                // });
+                });
 
-                // var schFilter = [new Filter("mold_id", FilterOperator.EQ, this._sMoldId)];
-                // this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
+                var schFilter = [new Filter("mold_id", FilterOperator.EQ, this._sMoldId)];
+                this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
                     
-                // });
+                });
 
-                // this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
+                this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
                     
-                // });
+                });
                 //this._bindView("test/Message", "listT", [], function(oData){
 
                 //});
@@ -336,7 +336,7 @@ sap.ui.define([
                 sectionId = "pageSubSection4";
             }
 
-            this._loadTemplate(this._sTenantId, templateId, sectionId);
+            //this._loadTemplate(this._sTenantId, templateId, sectionId);
         },
         _loadTemplate: function(tenant_id, templateId, sectionId){
             var input = {};
@@ -346,21 +346,21 @@ sap.ui.define([
             oPageSubSection.removeAllBlocks();
             var that = this;
 
-            $.ajax({
-                url: "tmp/SampleSolutionizedwebapp/srv-api/odata/v4/tmp.TmpMgrService/SampleLogicTransition",
-                type: "POST",
-                data : JSON.stringify(input),
-                contentType: "application/json",
-                success: function(data){
-                    var templatePath = data.TEMPLATE_PATH;
-                    that._loadFragment(templatePath, function(oFragment){
-                        oPageSubSection.addBlock(oFragment);
-                    });
-                },
-                error: function(e){
+            // $.ajax({
+            //     url: "tmp/SampleSolutionized/webapp/srv-api/odata/v4/tmp.TmpMgrService/SampleLogicTransition",
+            //     type: "POST",
+            //     data : JSON.stringify(input),
+            //     contentType: "application/json",
+            //     success: function(data){
+            //         var templatePath = data.TEMPLATE_PATH;
+            //         that._loadFragment(templatePath, function(oFragment){
+            //             oPageSubSection.addBlock(oFragment);
+            //         });
+            //     },
+            //     error: function(e){
                     
-                }
-            });
+            //     }
+            // });
         },
         _loadFragment: function (sFragmentName, oHandler) {
 			if(!this._oFragments[sFragmentName]){

@@ -17,3 +17,5 @@ src/gen/xx*
 src/xx/**
 src/gen/zz*
 src/zz/**
+src/gen/tmp*
+src/tmp/**
