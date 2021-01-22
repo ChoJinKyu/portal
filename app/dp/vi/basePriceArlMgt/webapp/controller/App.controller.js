@@ -10,9 +10,6 @@ sap.ui.define([
       this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
     },
     
-    onSetPurOrgText: function () {
-        return this.getOwnerComponent().onSetPurOrgText();
-    },
   });
 
 });

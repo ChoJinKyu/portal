@@ -11,7 +11,7 @@ sap.ui.define([
   function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, ExcelUtil) {
     "use strict";
 
-    var sSelectedPath, sTenantId, oDialogInfo;
+    var sSelectedPath, sTenantId, oDialogInfo, toggleButtonId = "";
 
     return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceList", {
         dateFormatter: DateFormatter,
@@ -19,11 +19,11 @@ sap.ui.define([
         onStatusColor: function (sStautsCodeParam) {
             var sReturnValue = 1;
 
-            if( sStautsCodeParam === "20" ) {
+            if( sStautsCodeParam === "AR" ) {
                 sReturnValue = 5;
-            }else if( sStautsCodeParam === "30" ) {
+            }else if( sStautsCodeParam === "AP" ) {
                 sReturnValue = 7;
-            }else if( sStautsCodeParam === "40" ) {
+            }else if( sStautsCodeParam === "RJ" ) {
                 sReturnValue = 3;
             }
 
@@ -38,19 +38,14 @@ sap.ui.define([
             this.setModel(new JSONModel(), "listModel");
             this.setModel(new JSONModel({tenantId: sTenantId,
                                         type: "1",
-                                        dateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30, "00", "00", "00"),
-                                        secondDateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate(), "23", "59", "59"),
+                                        dateValue: new Date(this._changeDateFormat(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
+                                        secondDateValue: new Date(this._changeDateFormat(oToday, "-")),
                                         type_list:[{code:"1", text:"개발구매"}]}), "filterModel");
 
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
 
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
-        },
-
-        _addDateTime9: function (oDateParam) {
-            //var oReturnValue = new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
-            return new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
         },
 
         /**
@@ -69,7 +64,7 @@ sap.ui.define([
 
             // Status가 있는 경우
             if( sStatus ) {
-                aFilters.push(new Filter("approval_status_code", FilterOperator.EQ, sStatus));
+                aFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
 
             // Approval Number가 있는 경우
@@ -84,18 +79,12 @@ sap.ui.define([
             
             // Request Date가 있는 경우
             if( oDateValue ) {
-                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, this._addDateTime9(oDateValue), this._addDateTime9(oSecondDateValue)));
+                aFilters.push(new Filter("request_date", FilterOperator.BT, this._changeDateFormat(oDateValue), this._changeDateFormat(oSecondDateValue)));
             }
 
             // Request By가 있는 경우
             if( sRequestBy ) {
-                if( -1<sRequestBy.indexOf(")") ) {
-                    var iStart = sRequestBy.indexOf("(");
-                    var iLast = sRequestBy.indexOf(")");
-                    sRequestBy = sRequestBy.substring(iStart+1, iLast);
-                }
-
-                aFilters.push(new Filter("approval_requestor_empno", FilterOperator.EQ, sRequestBy));
+                aFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestBy));
             }
 
             this._getBasePriceList(aFilters);
@@ -112,10 +101,6 @@ sap.ui.define([
 
             oModel.read("/Base_Price_Arl_Master", {
                 filters : filtersParam,
-                urlParameters: {
-                    "$expand": "approval_status_code_fk,approval_requestor_empno_fk,approval_type_code_fk,tenant_id_fk",
-                    "$orderby": "approval_request_date desc,approval_number desc"
-                },
                 success : function(data){
                     oView.setBusy(false);
 
@@ -129,10 +114,11 @@ sap.ui.define([
         },
 
         /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10T00:00:00
+         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
          */
-        _getNowDayAndTimes: function (bTimesParam, oDateParam) {
+        _changeDateFormat: function (oDateParam, sGubun) {
             var oDate = oDateParam || new Date(),
+                sGubun = sGubun || "",
                 iYear = oDate.getFullYear(),
                 iMonth = oDate.getMonth()+1,
                 iDate = oDate.getDate(),
@@ -140,14 +126,7 @@ sap.ui.define([
                 iMinutes = oDate.getMinutes(),
                 iSeconds = oDate.getSeconds();
 
-            var sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
-            var sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds) + "Z";
-
-            if( bTimesParam ) {
-                sReturnValue += sTimes;
-            }else {
-                sReturnValue += "00:00:00";
-            }
+            var sReturnValue = "" + iYear + sGubun + this._getPreZero(iMonth) + sGubun + this._getPreZero(iDate);
 
             return sReturnValue;
         },
@@ -167,9 +146,21 @@ sap.ui.define([
             var oBindingContext = oEvent.getSource().getBindingContext("listModel");
 
             if( oBindingContext ) {
+                var approvalTarget = "";
                 var sPath = oBindingContext.getPath();
                 var oRootModel = this.getModel("rootModel");
-                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
+                var oSelectedData = oListModel.getProperty(sPath);
+                oRootModel.setProperty("/selectedData", oSelectedData);
+
+                if( -1<oSelectedData.approval_number.indexOf("T") ) {
+                    approvalTarget = "NewBasePriceTable";
+                }else {
+                    approvalTarget = "ChangeBasePriceTable";
+                }
+
+                this.getModel("rootModel").setProperty("/selectedApprovalType", approvalTarget);
+            }else {
+                this.getModel("rootModel").setProperty("/selectedData", {});
             }
 
             this.getRouter().navTo("basePriceDetail");
@@ -197,116 +188,90 @@ sap.ui.define([
             });
         },
 
-                /**
+        /**
          * ==================== Dialog 시작 ==========================
          */
+
         /**
-         * Dialog.fragment open
-         */
-		onOpenDialog: function (oEvent) {
+        * 생성 Dialog Open
+        */
+        onOpenCreateDialog: function () {
             var oView = this.getView();
 
-            if( !oEvent.getParameter("clearButtonPressed") ) {
-                if ( !this._oMaterialDialog ) {
-                    this._oMaterialDialog = Fragment.load({
-                        id: oView.getId(),
-                        name: "dp.vi.basePriceArlMgt.view.MaterialDialog",
-                        controller: this
-                    }).then(function (oDialog) {
-                        oView.addDependent(oDialog);
-                        return oDialog;
-                    });
-                }
-
-                this._oMaterialDialog.then(function(oDialog) {
-                    oDialog.open();
-
-                    this.onGetDialogData();
-                }.bind(this));
+            if ( !this._createDialog ) {
+                this._createDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.vi.basePriceArlMgt.view.CreateDialog",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
             }
-        },
-
-        /**
-         * Dialog data 조회
-         */
-        onGetDialogData: function (oEvent) {
-            var oModel = this.getModel();
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            var oTable = this.byId("materialCodeTable");
-            // 테이블 SearchField 검색값 초기화
-            oTable.getHeaderToolbar().getContent()[2].setValue("");
-
-            // SearchField에서 검색으로 데이터 조회하는 경우 Filter 추가
-            if( oEvent ) {
-                var sQuery = oEvent.getSource().getValue();
-                aFilters.push(new Filter("material_code", FilterOperator.Contains, sQuery));
-            }
-
-            oTable.setBusy(true);
-
-            oModel.read("/Material_Mst", {
-                filters : aFilters,
-                success: function(data) {
-                    oTable.setBusy(false);
-                    
-                    if( data ) {
-                        this.getModel("dialogModel").setProperty("/materialCode", data.results);
-                    }
-                }.bind(this),
-                error: function(data){
-                    oTable.setBusy(false);
-                    console.log('error', data);
-                    MessageBox.error(data.message);
-                }
+            this._createDialog.then(function (oDialog) {
+                oDialog.open();
+                
             });
+            this.onToggleHandleInit();
+
         },
 
         /**
-         * Dialog에서 Row 선택 시
-         */
-        onSelectDialogRow: function (oEvent) {
-            var oDialogModel = this.getModel("dialogModel");
-            var oParameters = oEvent.getParameters();
+        * @public
+        * @see 사용처 create 팝업 로딩시 입력값 초기화 작업
+        */
+        onToggleHandleInit: function () {
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
 
-            oDialogModel.setProperty(oParameters.listItems[0].getBindingContext("dialogModel").getPath()+"/checked", oParameters.selected);
+            for (var i = 0; i < groupId.length; i++) {
+                groupId[i].setPressed(false);
+            }
+
         },
 
-        /**
-         * Dialog Row Data 선택 후 apply
-         */
-        onDailogRowDataApply: function (oEvent) {
-            var oFilterModel = this.getModel("filterModel");
-            var aDialogData = this.getModel("dialogModel").getProperty("/materialCode");
-            var bChecked = false;
+         /**
+        *  create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
+        */
+        onToggleHandleChange: function (oEvent) {
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            var isPressedId = oEvent.getSource().getId();
+            toggleButtonId = isPressedId;
 
-            for( var i=0; i<aDialogData.length; i++ ) {
-                var oDialogData = aDialogData[i];
-
-                if( oDialogData.checked ) {
-                    oFilterModel.setProperty("/materialCode", oDialogData.material_code);
-
-                    delete oDialogData.checked;
-                    bChecked = true;
-
-                    break;
+            for (var i = 0; i < groupId.length; i++) {
+                if (groupId[i].getId() != isPressedId) {
+                    groupId[i].setPressed(false);
                 }
             }
-
-            // 선택된 Material Code가 있는지 경우
-            if( bChecked ) {
-                this.onClose(oEvent);
-            }
-            // 선택된 Material Code가 없는 경우
-            else {
-                MessageBox.error("추가할 데이터를 선택해 주십시오.");
-            }
         },
-          
+
         /**
-         * Dialog Close
-         */
-        onClose: function (oEvent) {
-            this._oMaterialDialog.then(function(oDialog) {
+        * @public
+        * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
+        */
+        handleConfirm: function (oEvent) {
+            var id = toggleButtonId.split('--')[2];
+            var approvalTarget = "";
+            
+            if( !id ){       
+                MessageBox.error("품의서 유형을 선택해주세요");
+                return;
+            }
+            else{
+                if(id.indexOf("newVI") > -1){
+                    approvalTarget = "NewBasePriceTable";
+                }else if(id.indexOf("changeVI") > -1){
+                    approvalTarget = "ChangeBasePriceTable";
+                }
+            }
+            
+            var oRootModel = this.getModel("rootModel");
+            oRootModel.setProperty("/selectedApprovalType", approvalTarget);
+
+            this.onGoDetail(oEvent);
+        },
+
+        createPopupClose: function (oEvent) {
+             this._createDialog.then(function(oDialog) {
                 oDialog.close();
             });
         },

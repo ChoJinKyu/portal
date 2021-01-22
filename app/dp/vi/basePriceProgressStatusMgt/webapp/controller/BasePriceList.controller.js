@@ -19,6 +19,20 @@ sap.ui.define([
 
         numberFormatter: NumberFormatter,
 
+        onStatusColor: function (sStautsCodeParam) {
+            var sReturnValue = 1;
+
+            if( sStautsCodeParam === "AR" ) {
+                sReturnValue = 5;
+            }else if( sStautsCodeParam === "AP" ) {
+                sReturnValue = 7;
+            }else if( sStautsCodeParam === "RJ" ) {
+                sReturnValue = 3;
+            }
+
+            return sReturnValue;
+        },
+
         onInit: function () {
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oRootModel.getProperty("/tenantId");
@@ -27,8 +41,8 @@ sap.ui.define([
             var oFilterData = {tenantId: sTenantId,
                                 materialCodes: [],
                                 type: "1",
-                                 dateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30, "00", "00", "00"),
-                                secondDateValue: new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate(), "23", "59", "59"),
+                                dateValue: new Date(this._changeDateFormat(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
+                                secondDateValue: new Date(this._changeDateFormat(oToday, "-")),
                                 type_list:[{code:"1", text:"개발구매"}]};
 
             this.setModel(new JSONModel(), "listModel");
@@ -48,18 +62,14 @@ sap.ui.define([
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
         },
 
-        _addDateTime9: function (oDateParam) {
-            //var oReturnValue = new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
-            return new Date(oDateParam.getFullYear(), oDateParam.getMonth(), oDateParam.getDate(), oDateParam.getHours()+9, oDateParam.getMinutes(), oDateParam.getSeconds());
-        },
-
         /**
          * Search 버튼 클릭(Filter 추출)
          */
         onSearch: function () {
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
-                aFilters = [],
+                aMasterFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
+                aDetailFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
                 sCompanyCode = oFilterModelData.company_code,
                 sOrgCode = oFilterModelData.org_code,
                 sStatus = oFilterModelData.status,
@@ -71,17 +81,17 @@ sap.ui.define([
 
             // Company Code가 있는 경우
             if( sCompanyCode ) {
-                aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+                aDetailFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
             }
 
             // Org Code가 있는 경우
             if( sOrgCode ) {
-                aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrgCode));
+                aDetailFilters.push(new Filter("org_code", FilterOperator.EQ, sOrgCode));
             }
 
             // Status가 있는 경우
             if( sStatus ) {
-                aFilters.push(new Filter("approval_number_fk/approval_status_code", FilterOperator.EQ, sStatus));
+                aMasterFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
 
             // Material Code가 있는 경우
@@ -92,7 +102,7 @@ sap.ui.define([
                     aMaterialCodeFilter.push(new Filter("material_code", FilterOperator.EQ, oMaterialCode.getKey()));
                 });
 
-                aFilters.push(new Filter({
+                aDetailFilters.push(new Filter({
                     filters: aMaterialCodeFilter,
                     and: false,
                 }));
@@ -100,49 +110,103 @@ sap.ui.define([
 
             // Approval Number가 있는 경우
             if( sApprovalNumber ) {
-                aFilters.push(new Filter("approval_number", FilterOperator.Contains, sApprovalNumber));
+                aMasterFilters.push(new Filter("approval_number", FilterOperator.Contains, sApprovalNumber));
+                aDetailFilters.push(new Filter("approval_number", FilterOperator.Contains, sApprovalNumber));
             }
 
             // Request Date가 있는 경우
             if( oDateValue ) {
-                aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, this._addDateTime9(oDateValue), this._addDateTime9(oSecondDateValue)));
+                aMasterFilters.push(new Filter("request_date", FilterOperator.BT, this._changeDateFormat(oDateValue), this._changeDateFormat(oSecondDateValue)));
             }
-
 
             // Request By가 있는 경우
             if( sRequestBy ) {
-                if( -1<sRequestBy.indexOf(")") ) {
-                    var iStart = sRequestBy.indexOf("(");
-                    var iLast = sRequestBy.indexOf(")");
-                    sRequestBy = sRequestBy.substring(iStart+1, iLast);
-                }
-
-                aFilters.push(new Filter("approval_number_fk/approval_requestor_empno", FilterOperator.EQ, sRequestBy));
+                aMasterFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestBy));
             }
 
-            this._getBasePriceList(aFilters);
+            this._getBasePriceList(aMasterFilters, aDetailFilters);
         },
         
         /**
          * Base Price Progress List 조회
          */
-        _getBasePriceList: function(filtersParam) {
+        _getBasePriceList: function(aMasterFiltersParam, aDetailFiltersParam) {
             var oView = this.getView();
-            var oModel = this.getModel();
-            filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
+            var oListModel = this.getModel("listModel");
             oView.setBusy(true);
 
-            oModel.read("/Base_Price_Arl_Detail", {
-                filters : filtersParam,
-                urlParameters: {
-                    "$expand": "approval_number_fk,prices,material_code_fk,company_code_fk,org_code_fk",
-                    "$orderby": "approval_number desc, material_code"
-                },
-                success : function(data){
-                    oView.setBusy(false);
+            // Master 조회
+            this._readData("/Base_Price_Arl_Master", aMasterFiltersParam, {}, function (data) {
+                var aMasters = data.results;
 
-                    oView.getModel("listModel").setData(data);
-                },
+                // Detail 조회
+                this._readData("/Base_Price_Arl_Detail", aDetailFiltersParam, {}, function (detailsData) {
+                    var aMastersLen = aMasters.length;
+                    var aDetails = detailsData.results;
+                    var aDetailsLen = aDetails.length;
+                    var aList = [];
+                    var aPriceFilters = [];
+                    var aItemSequenceFilters = [];
+
+                    for( var k=0; k<aMastersLen; k++ ) {
+                        var oMaster = aMasters[k];
+
+                        for( var i=0; i<aDetailsLen; i++ ) {
+                            var oDetail = aDetails[i];
+
+                            if( oMaster.approval_number === oDetail.approval_number ) {
+                                oDetail.prices = [];
+                                aList.push($.extend(true, oMaster, oDetail));
+
+                                let aTempFilters = [];
+                                aTempFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
+                                aTempFilters.push(new Filter("approval_number", FilterOperator.EQ, oDetail.approval_number));
+                                aTempFilters.push(new Filter("item_sequence", FilterOperator.EQ, oDetail.item_sequence));
+                                aItemSequenceFilters.push(new Filter({
+                                    filters: aTempFilters,
+                                    and: true,
+                                }));
+                            }
+                        }
+                    }
+
+                    aPriceFilters.push(new Filter({
+                        filters: aItemSequenceFilters,
+                        and: false,
+                    }));
+
+                    // Price 조회
+                    this._readData("/Base_Price_Arl_Price", aPriceFilters, {"$orderby": "approval_number,item_sequence"}, function (pricesData) {
+                        var aPrices = pricesData.results;
+                        var aPricesLen = aPrices.length;
+                        var aListLen = aList.length;
+
+                        for( var m=0; m<aListLen; m++ ) {
+                            var oBasePrice = aList[m];
+
+                            for( var p=0; p<aPricesLen; p++ ) {
+                                if( oBasePrice.approval_number === aPrices[p].approval_number &&
+                                    oBasePrice.item_sequence === aPrices[p].item_sequence ) {
+                                    oBasePrice.prices.push(aPrices[p]);
+                                }
+                            }
+                        }
+
+                        oListModel.setData(aList);
+                        oView.setBusy(false);
+                    });
+                }.bind(this));
+            }.bind(this));
+        },
+        
+        _readData: function (sCallUrlParam, aFiltersParam, oUrlParametersParam, fCallbackParam) {
+            var oModel = this.getModel();
+            var oView = this.getView();
+
+            oModel.read(sCallUrlParam, {
+                filters : aFiltersParam,
+                urlParameters: oUrlParametersParam,
+                success : fCallbackParam,
                 error : function(data){
                     oView.setBusy(false);
                     console.log("error", data);
@@ -151,10 +215,11 @@ sap.ui.define([
         },
 
         /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10T00:00:00
+         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
          */
-        _getNowDayAndTimes: function (bTimesParam, oDateParam) {
+        _changeDateFormat: function (oDateParam, sGubun) {
             var oDate = oDateParam || new Date(),
+                sGubun = sGubun || "",
                 iYear = oDate.getFullYear(),
                 iMonth = oDate.getMonth()+1,
                 iDate = oDate.getDate(),
@@ -162,14 +227,7 @@ sap.ui.define([
                 iMinutes = oDate.getMinutes(),
                 iSeconds = oDate.getSeconds();
 
-            var sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
-            var sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds) + "Z";
-
-            if( bTimesParam ) {
-                sReturnValue += sTimes;
-            }else {
-                sReturnValue += "00:00:00";
-            }
+            var sReturnValue = "" + iYear + sGubun + this._getPreZero(iMonth) + sGubun + this._getPreZero(iDate);
 
             return sReturnValue;
         },
@@ -213,152 +271,37 @@ sap.ui.define([
         },
 
         /**
-         * ==================== Dialog 시작 ==========================
+         * 공통 Material Code Dialog 호출
          */
-        /**
-         * Material Dialog.fragment open
-         */
-		_openMaterialCodeDialog: function (sQueryParam) {
-            var oView = this.getView();
-
-            if ( !this._oMaterialDialog ) {
-                this._oMaterialDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.vi.basePriceProgressStatusMgt.view.MaterialDialog",
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                });
-            }
-
-            //oOpenDialog = this._oMaterialDialog;
-            
-            this._oMaterialDialog.then(function(oDialog) {
-                oDialog.open();
-
-                var oTable = this.byId("materialCodeTable");
-                // 테이블 SearchField 검색값 초기화
-                if( oTable ) {
-                    oTable.getHeaderToolbar().getContent()[2].setValue(sQueryParam);
-                }
-            }.bind(this));
-        },
-
-         /**
-         * Material Code Dialog data 조회
-         */
-        onGetMaterialCodeDialogData: function (oEvent) {
-            var oModel = this.getModel();
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            var sQuery = oEvent.getSource().getValue();
-            var oEventClick = oEvent.getSource().data("dialog");
-
-            if( sQuery ) {
-                aFilters.push(new Filter("material_code", FilterOperator.Contains, sQuery));
-            }
-
-            oModel.read("/Material_Mst", {
-                filters : aFilters,
-                success: function(data) {
-                    if( oEventClick !== "dialog" ) {
-                        this._openMaterialCodeDialog(sQuery);
-                    }
-                    
-                    this.getModel("dialogModel").setProperty("/materialCode", data.results);
-                }.bind(this),
-                error: function(data){
-                    console.log('error', data);
-                    MessageBox.error(JSON.parse(data.responseText).error.message.value);
-                }
-            });
-        },
-
-        /**
-         * Dialog에서 Row 선택 시
-         */
-        onSelectDialogRow: function (oEvent) {
-            var oDialogModel = this.getModel("dialogModel");
-            var oParameters = oEvent.getParameters();
-
-            oDialogModel.setProperty(oParameters.listItems[0].getBindingContext("dialogModel").getPath()+"/checked", oParameters.selected);
-            this.onDailogRowDataApply(oEvent);
-        },
-
-        /**
-         * Dialog Row Data 선택 후 apply
-         */
-        onDailogRowDataApply: function (oEvent) {
-            var oFilterModel = this.getModel("filterModel");
-            var aDialogData = this.getModel("dialogModel").getProperty("/materialCode");
-            var bChecked = false;
-
-            for( var i=0; i<aDialogData.length; i++ ) {
-                var oDialogData = aDialogData[i];
-
-                if( oDialogData.checked ) {
-                    oFilterModel.setProperty("/materialCode", oDialogData.material_code);
-
-                    delete oDialogData.checked;
-                    bChecked = true;
-
-                    break;
-                }
-            }
-
-            // 선택된 Material Code가 있는지 경우
-            if( bChecked ) {
-                oEvent.getSource().removeSelections();
-                this.onClose(oEvent);
-            }
-            // 선택된 Material Code가 없는 경우
-            else {
-                MessageBox.error("추가할 데이터를 선택해 주십시오.");
-            }
-        },
-          
-        /**
-         * Dialog Close
-         */
-        onClose: function (oEvent) {
-            this._oMaterialDialog.then(function(oDialog) {
-                oDialog.close();
-            });
-        },
-
-        /**
-         * ==================== Dialog 끝 ==========================
-         */
-
-         onMaterialMasterMultiDialogPress: function (oEvent) {
+        onMaterialMasterMultiDialogPress: function (oEvent) {
             var oMultiInput = oEvent.getSource();
 
-             if( !this.oSearchMultiMaterialMasterDialog ) {
-                 this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
-                     title: "Choose MaterialMaster",
-                     multiSelection: true,
-                     items: {
-                         filters:[
-                             new Filter("tenant_id", FilterOperator.EQ, sTenantId)
-                         ]
-                     }
-                 })
+            if( !this.oSearchMultiMaterialMasterDialog ) {
+                this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                    title: "Choose MaterialMaster",
+                    multiSelection: true,
+                    items: {
+                        filters:[
+                            new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                        ]
+                    }
+                })
 
-                 this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent) {
-                    oMultiInput.setTokens(oEvent.getSource().getTokens());
-                 }.bind(this));
-             }
+                this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent) {
+                oMultiInput.setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
 
-             this.oSearchMultiMaterialMasterDialog.open();
+            this.oSearchMultiMaterialMasterDialog.open();
 
-             var aTokens = oMultiInput.getTokens();
-             this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
-         },
+            var aTokens = oMultiInput.getTokens();
+            this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
+        },
 
-         onChangeMaterialCode: function (oEvent) {
-             var oFilterModel = this.getModel("filterModel"); 
-             oFilterModel.setProperty("/materialCodes", oEvent.getSource().getTokens());
-         }
+        onChangeMaterialCode: function (oEvent) {
+            var oFilterModel = this.getModel("filterModel"); 
+            oFilterModel.setProperty("/materialCodes", oEvent.getSource().getTokens());
+        }
     });
   }
 );

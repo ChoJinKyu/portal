@@ -113,6 +113,7 @@ sap.ui.define([
         _getBasePriceDetail: function () {
             var oView = this.getView();
             var oDetailViewModel = this.getModel("detailViewModel");
+            var oDetailModel = this.getModel("detailModel");
             var oRootModel = this.getModel("rootModel");
             var oSelectedData = oRootModel.getProperty("/selectedData");
 
@@ -139,13 +140,13 @@ sap.ui.define([
                         if( data && data.results && 0<data.results.length ) {
                             var oMaster = that._returnDataRearrange(data.results[0]);
 
-                            oView.getModel("detailModel").setData(oMaster);
+                            oDetailModel.setData(oMaster);
                             oDetailViewModel.setProperty("/detailsLength", oMaster.details.length);
                             //oView.getModel("detailModel").refresh();
 
                             //this._setEditorStatusAndValue(oMaster.approval_status_code, oMaster.approval_request_desc);
                         }else {
-                            oView.getModel("detailModel").setData(null);
+                            oDetailModel.setData(null);
                             oDetailViewModel.setProperty("/detailsLength", 0);
                         }
                     }.bind(this),
@@ -171,7 +172,7 @@ sap.ui.define([
                                     "update_user_id": "5460", 
                                     "approval_request_date": oToday,
                                     "details": []};
-                this.setModel(new JSONModel(oNewBasePriceData), "detailModel");
+                oDetailModel.setData(oNewBasePriceData);
                 oDetailViewModel.setProperty("/detailsLength", 0);
                 oDetailViewModel.setProperty("/viewMode", true);
 
