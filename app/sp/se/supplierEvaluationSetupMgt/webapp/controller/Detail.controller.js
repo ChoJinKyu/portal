@@ -42,36 +42,13 @@ sap.ui.define([
             this.oRouter = oOwnerComponent.getRouter();
             this.oRouter.getRoute("detail").attachPatternMatched(this._onDetailMatched, this);
 
-                        //Vendor Pool List
-                var oVPComboFilters = [];                
-                oVPComboFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
-                oVPComboFilters.push(new Filter("company_code", 'EQ', this.company_code));
-                oVPComboFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code)); 
-                oVPComboFilters.push(new Filter("org_code", 'EQ', this.org_code));        
-
-                var oVPCombo = this.byId("oVPCombo");
-                oVPCombo.bindAggregation (
-                    "items",
-                    "/OpUnitMst",                    
-                    new Item({
-                        key:"{evaluation_operation_unit_name}",
-                        text:"{evaluation_operation_unit_name}"
-                        }) ,
-                        oVPComboFilters                       
-                    );
-
-
-
-             // 로그인 세션 작업완료시 수정
+            // 로그인 세션 작업완료시 수정
               this.tenant_id = "L2100";
               this.company_code = "LGCKR";
 
               var aSearchFilters = [];                
                 aSearchFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
                 aSearchFilters.push(new Filter("company_code", 'EQ', this.company_code));        
-
-
-
 
 
             //this.setModel(oViewModel, "ManagerView");
@@ -84,15 +61,7 @@ sap.ui.define([
 	              "user_local_name" : "1",
                   "deppartment_local_name" : "첫번째 데이터",
                   "evaluation_execute_role_code" : "1"
-	           },{
-	              "user_local_name" : "2",
-                  "deppartment_local_name" : "2번째 데이터",
-                  "evaluation_execute_role_code" : "2"
-	           },{
-	              "user_local_name" : "3",
-                  "deppartment_local_name" : "3번째 데이터",
-                  "evaluation_execute_role_code" : "3"
-               }]
+	           }]
                
             });
            
@@ -102,18 +71,6 @@ sap.ui.define([
 	           "table": [{
                     "evaluation_type_code" : "Eval001",
                     "evaluation_type_name" : "실적평가",
-                    "evaluation_type_distrb_score_rate"  : "50",
-                    "use_flag" : "Y"           
-               },
-               {
-                    "evaluation_type_code" : "Eval002",
-                    "evaluation_type_name" : "경쟁력평가",
-                    "evaluation_type_distrb_score_rate"  : "50",
-                    "use_flag" : "N"           
-               },
-               {
-                    "evaluation_type_code" : "Eval003",
-                    "evaluation_type_name" : "테스트평가",
                     "evaluation_type_distrb_score_rate"  : "50",
                     "use_flag" : "Y"           
                }]
@@ -131,14 +88,6 @@ sap.ui.define([
                     "qttive_item_measure_mode_code" : "1",
                     "qttive_item_desc" : "1",
                     "sort_sequence" : "1"
-                    },
-                    {
-                    "qttive_item_code" : "2",
-                    "qttive_item_name" : "2",
-                    "qttive_item_uom_code" : "2",
-                    "qttive_item_measure_mode_code" : "2",
-                    "qttive_item_desc" : "2",
-                    "sort_sequence" : "2"
                     }
                ]
                
@@ -434,13 +383,30 @@ sap.ui.define([
             var oView = this.getView();
             oView.getModel().refresh(true);
 
-            this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
+            // this.scenario_number = oEvent.getParameter("arguments")["scenario_number"];
             this.tenant_id = oEvent.getParameter("arguments")["tenant_id"];
             this.company_code = oEvent.getParameter("arguments")["company_code"],            
             this.org_code = oEvent.getParameter("arguments")["org_code"];
             this.org_type_code = oEvent.getParameter("arguments")["org_type_code"];
 
 
+                            //Vendor Pool List
+            var oVPComboFilters = [];                
+            oVPComboFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
+            oVPComboFilters.push(new Filter("company_code", 'EQ', this.company_code));
+            oVPComboFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code)); 
+            oVPComboFilters.push(new Filter("org_code", 'EQ', this.org_code));        
+
+            var oVPCombo = this.byId("oVPCombo");
+            oVPCombo.bindItems({
+                path : "/OpUnitMst", 
+                filters: oVPComboFilters ,                   
+                template : new Item({
+                    key:"{evaluation_operation_unit_name}",
+                    text:"{evaluation_operation_unit_name}"
+                    }) 
+                                        
+            });
         //     oView.getModel().read("/OpUnitMst", {
         //         success: function (oData) {
                

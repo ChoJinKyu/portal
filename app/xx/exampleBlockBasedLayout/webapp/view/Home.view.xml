@@ -9,7 +9,7 @@
         <content>
             <VBox>
                 <MessageStrip class="sapUiMediumMarginBottom"
-                    text="하단의 목록을 확장하여 각종 예제를 참조하세요."
+                    text="재사용 가능한 Block 기반으로 화면을 구성한 예를 아래 목록에서 확인하세요."
                     showIcon="true"
                     showCloseButton="false">
                 </MessageStrip>

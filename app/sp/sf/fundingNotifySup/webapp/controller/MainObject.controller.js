@@ -264,15 +264,16 @@ sap.ui.define([
                 this._bindView("/SfFundingNotify(tenant_id='" + this._sTenantId + "',funding_notify_number='" + this._sFundingNotifyNumber + "')");
 
                 oView.setBusy(true);
-                var oMasterModel = this.getModel("master");
+                var oMasterModel = this.getModel("master"),
+                    sToday = new Date(new Intl.DateTimeFormat("ko-KR").format(new Date()));;
                 //oDetailsModel.setTransactionModel(this.getModel());
-                oMasterModel.read("/SfFundingNotify", {
+                oMasterModel.read("/SfFundingNotifyView", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                         new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber),
                     ],
-                    success: function (oData) {
-                        if(oData.results[0].funding_appl_closing_date < new Date()){
+                    success: function (oData) {                        
+                        if(new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_start_date )) >= sToday || new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_end_date )) < sToday){
                             oData.results[0].btnCreate = false;
                         }else{
                             oData.results[0].btnCreate = true;

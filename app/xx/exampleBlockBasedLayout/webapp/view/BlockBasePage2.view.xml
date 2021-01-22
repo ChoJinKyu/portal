@@ -23,6 +23,31 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
+            
+			<uxap:ObjectPageSection titleUppercase="false" title="example">
+				<uxap:subSections>
+
+					<uxap:ObjectPageSubSection title="Block 3" titleUppercase="false">
+						<uxap:blocks>
+							<block:Section3Block id="block3" />
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+        
+			<uxap:ObjectPageSection titleUppercase="false" title="example">
+				<uxap:subSections>
+
+					<uxap:ObjectPageSubSection title="Block 2" titleUppercase="false">
+						<uxap:blocks>
+							<block:Section2Block id="block2" sectionTitle="Product Form"/>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+            
 			<uxap:ObjectPageSection titleUppercase="false" title="example">
 				<uxap:subSections>
 
@@ -36,6 +61,7 @@
 			</uxap:ObjectPageSection>
 
 		</uxap:sections>
+
 		
 		<uxap:footer>
 			<OverflowToolbar>

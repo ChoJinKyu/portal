@@ -23,14 +23,14 @@
               <VBox>
                 <Label text="Chain" labelFor="searchChainS" required="true"></Label>
                 <ComboBox id="searchChainS" width="100%" selectedKey="CM" items="{
-                  path: 'util>/CodeDetails',
+                  path: 'util>/Code',
                   filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                     {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                   ]
                 }">
                   <items>
-                    <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                   </items>
                 </ComboBox>
                 <layoutData>
@@ -40,7 +40,7 @@
               <VBox>
                 <Label text="Language" labelFor="searchLanguageS"></Label>
                 <ComboBox id="searchLanguageS" width="100%" items="{
-                  path: 'util>/CodeDetails',
+                  path: 'util>/Code',
                   filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                     {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
@@ -48,7 +48,7 @@
                 }">
                   <items>
                     <core:Item key="" text="Choose a Language" />
-                    <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                   </items>
                 </ComboBox>
                 <layoutData>
@@ -71,14 +71,14 @@
               <VBox>
                 <Label text="Chain" labelFor="searchChainE" required="true"></Label>
                 <ComboBox id="searchChainE" width="100%" selectedKey="CM" items="{
-                  path: 'util>/CodeDetails',
+                  path: 'util>/Code',
                   filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                     {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                   ]
                 }">
                 <items>
-                  <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                  <core:Item key="{util>code}" text="{util>code_name}" />
                 </items>
                 </ComboBox>
                 <layoutData>
@@ -88,7 +88,7 @@
               <VBox>
                 <Label text="Language" labelFor="searchLanguageE"></Label>
                 <ComboBox id="searchLanguageE" width="100%" items="{
-                  path: 'util>/CodeDetails',
+                  path: 'util>/Code',
                   filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
@@ -96,7 +96,7 @@
                 }">
                   <items>
                     <core:Item key="" text="Choose a Language" />
-                    <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                   </items>
                 </ComboBox>
                 <layoutData>
@@ -354,38 +354,38 @@
                 <cells>
                   <Text text="{list>_row_state_}"></Text>
                   <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
-                    path: 'util>/CodeDetails',
+                    path: 'util>/Code',
                     filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                     ]
                   }">
                     <items>
-                      <core:Item key="{util>code}" text="{util>code_description}" />
+                      <core:Item key="{uti{util>code_name}" />
                     </items>
                   </ComboBox>
                   <ComboBox selectedKey="{list>language_code}" width="100%" items="{
-                    path: 'util>/CodeDetails',
+                    path: 'util>/Code',
                     filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                     ]
                   }">
                     <items>
-                      <core:Item key="{util>code}" text="{util>code_description}" />
+                      <core:Item key="{uti{util>code_name}" />
                     </items>
                   </ComboBox>
                   <Input value="{list>message_code}"></Input>
                   <Input value="{list>message_contents}"></Input>
                   <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
-                    path: 'util>/CodeDetails',
+                    path: 'util>/Code',
                     filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
                     ]
                   }">
                     <items>
-                      <core:Item key="{util>code}" text="{util>code_description}" />
+                      <core:Item key="{uti{util>code_name}" />
                     </items>
                   </ComboBox>
                 </cells>

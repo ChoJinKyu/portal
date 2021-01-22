@@ -483,16 +483,12 @@ public class MoldApprovalV4 implements EventHandler {
                 
             }  
         }
-
+        Quotation del = Quotation.create();
+        del.setApprovalNumber(this.APPROVAL_NUMBER); 
+        Delete d2 = Delete.from(Quotation_.CDS_NAME).matching(del); 
+        Result rst2 = moldApprovalService.run(d2);
+            
         if(!qtnList.isEmpty() && qtnList.size() > 0){
-            for(QuotationV4 row : qtnList ){
-                Quotation del = Quotation.create();
-                del.setMoldId(row.getMoldId());
-                del.setApprovalNumber(row.getApprovalNumber()); 
-                del.setSupplierCode(row.getSupplierCode()); 
-                Delete d2 = Delete.from(Quotation_.CDS_NAME).matching(del); 
-                Result rst2 = moldApprovalService.run(d2);
-            }  
             for(QuotationV4 row : qtnList ){
                 System.out.println("QuotationV4 ::::" + row);
                 if(row.getSupplierCode()!=null && row.getSequence()!=null){   

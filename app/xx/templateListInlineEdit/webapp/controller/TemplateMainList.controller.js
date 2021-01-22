@@ -2,19 +2,19 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"ext/lib/util/Multilingual",
 	"ext/lib/model/ManagedListModel",
+	"sap/ui/model/json/JSONModel",
+    "ext/lib/formatter/Formatter",
     "ext/lib/util/Validator",
-	"ext/lib/formatter/Formatter",
-	"sap/m/TablePersoController",
+    "ext/lib/control/m/FlexibleEditBox",
 	"./TemplateMainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], function (BaseController, Multilingual, ManagedListModel, Validator, Formatter, 
-        TablePersoController, MainListPersoService,
-		Filter, FilterOperator, Sorter,
-		MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "sap/ui/thirdparty/jquery"
+], function (BaseController, Multilingual, ManagedListModel, JSONModel, Formatter, Validator, FlexibleEditBox, MainListPersoService, 
+		Filter, FilterOperator, Sorter, MessageBox, MessageToast, jQuery) {
 	"use strict";
 
 	return BaseController.extend("xx.templateListInlineEdit.controller.TemplateMainList", {
@@ -39,14 +39,12 @@ sap.ui.define([
 			oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
 				this.addHistoryEntry({
-					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),   //메시지관리
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
 					icon: "sap-icon://table-view",
 					intent: "#Template-display"
 				}, true);
 			}.bind(this));
 
-			this._doInitTablePerso();
-            this.enableMessagePopover();
         },
         
         onRenderedFirst : function () {
@@ -55,45 +53,16 @@ sap.ui.define([
 
 		/* =========================================================== */
 		/* event handlers                                              */
-		/* =========================================================== */
+        /* =========================================================== */
+        
+        onSearchLanguagePickerPress: function(){
+            this.byId("languageCodeDialog").open();
+            this.byId("languageCodeDialog").setTokens(this.byId("searchLanguagePicker").getTokens());
+        },
 
-
-		/**
-		 * Event handler when a page state changed
-		 * @param {sap.ui.base.Event} oEvent the page stateChange event
-		 * @public
-		 */
-		onPageStateChange: function(oEvent){
-			debugger;
-		},
-
-
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table updateFinished event
-		 * @public
-		 */
-		onMainTableUpdateFinished : function (oEvent) {
-		},
-
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoButtonPressed: function(oEvent){
-			this._oTPC.openDialog();
-		},
-
-		/**
-		 * Event handler when a table personalization refresh
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
-			this._oTPC.refresh();
-		},
+        onLanguageCodeDialogApplyPress: function(oEvent){
+            this.byId("searchLanguagePicker").setTokens(oEvent.getSource().getTokens());
+        },
 
 		/**
 		 * Event handler when a search button pressed
@@ -102,8 +71,7 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
 			var forceSearch = function(){
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
+				this._applySearch(this._getSearchStates());
 			}.bind(this);
 			
 			if(this.getModel("list").isChanged() === true){
@@ -122,8 +90,7 @@ sap.ui.define([
 		},
 
 		onMainTableAddButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list");
+			var oModel = this.getModel("list");
 			oModel.addRecord({
 				"tenant_id": "L2100",
 				"chain_code": "CM",
@@ -132,47 +99,58 @@ sap.ui.define([
 				"message_type_code": "LBL",
 				"message_contents": ""
             }, "/Message", 0);
-            this.validator.clearValueState(this.byId("mainTable"));
+			this.validator.clearValueState(this.byId("mainTable"));
+			this.byId("mainTable").clearSelection();
 		},
 
 		onMainTableDeleteButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list"),
-				aItems = oTable.getSelectedItems(),
-				aIndices = [];
-			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getProperty("/Message").indexOf(oItem.getBindingContext("list").getObject()));
-			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
-			});
-			oTable.removeSelections(true);
-            this.validator.clearValueState(this.byId("mainTable"));
-		},
+			var table = this.byId("mainTable"),
+				model = this.getModel("list");
+			// aItems = oTable.getSelectedItems(),
+			// aIndices = [];
+			// aItems.forEach(function(oItem){
+			// 	aIndices.push(oModel.getProperty("/Message").indexOf(oItem.getBindingContext("list").getObject()));
+			// });
+			// aIndices = aIndices.sort(function(a, b){return b-a;});
+			// aIndices.forEach(function(nIndex){
+			// 	//oModel.removeRecord(nIndex);
+			// 	oModel.markRemoved(nIndex);
+			// });
+			// oTable.removeSelections(true);
+			// this.validator.clearValueState(this.byId("mainTable"));
+
+			// var [tId, mName] = arguments;
+			// var table = this.byId(oTable);
+			// var model = this.getView().getModel(oModel);
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
+			this.byId("mainTable").clearSelection();
+        },
        
         onMainTableSaveButtonPress: function(){
 			var oModel = this.getModel("list"),
-				oView = this.getView();
+                oTable = this.byId("mainTable");
 			
 			if(!oModel.isChanged()) {
 				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
 				return;
             }
-
-            if(this.validator.validate(this.byId("mainTable")) !== true) return;
             
+            if(this.validator.validate(this.byId("mainTable")) !== true) return;
+
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+						oTable.setBusy(true);
 						oModel.submitChanges({
 							success: function(oEvent){
-								oView.setBusy(false);
-								MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+								this.byId("mainTable").clearSelection();
+								oTable.setBusy(false);
+                                MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                                this.byId("pageSearchButton").firePress();
 							}.bind(this)
 						});
 					};
@@ -187,62 +165,70 @@ sap.ui.define([
 
 		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
-		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
+		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
 		 * @private
 		 */
-		_applySearch: function(aTableSearchState) {
-			var oView = this.getView(),
+		_applySearch: function(aSearchFilters) {
+			var oTable = this.byId("mainTable"),
 				oModel = this.getModel("list");
-			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
+			oTable.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
-				filters: aTableSearchState,
-				sorters: [
-					new Sorter("chain_code"),
+                filters: aSearchFilters,
+                sorters: [
 					new Sorter("message_code"),
-					new Sorter("language_code", true)
+                    new Sorter("language_code", true),
+					new Sorter("chain_code")
 				],
 				success: function(oData){
-                    this.validator.clearValueState(this.byId("mainTable"));
-                    oView.setBusy(false);
+					this.validator.clearValueState(this.byId("mainTable"));
+					this.byId("mainTable").clearSelection();
+					oTable.setBusy(false);
 				}.bind(this)
 			});
-
 		},
 		
 		_getSearchStates: function(){
-			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
-				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-				keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
-				
-			var aTableSearchState = [];
-			if (chain && chain.length > 0) {
-				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
+			var sChain = this.getView().byId("searchChain").getSelectedKey(),
+                aLanguageTokens = this.getView().byId("searchLanguagePicker").getTokens(),
+                sMessageType = this.getView().byId("searchType").getSelectedKey(),
+                sKeyword = this.getView().byId("searchKeyword").getValue();
+
+			var aSearchFilters = [];
+			if (sChain) {
+				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
 			}
-			if (language && language.length > 0) {
-				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
-			}
-			if (keyword && keyword.length > 0) {
-				aTableSearchState.push(new Filter({
+			if (aLanguageTokens.length > 0) {
+				aSearchFilters.push(new Filter({
+                    filters: jQuery.map(aLanguageTokens, function(oToken){
+                        return new Filter("language_code", FilterOperator.EQ, oToken.getProperty("key"));
+                    }),
+                    and: false
+                }));
+            }
+            if (sMessageType) {
+				aSearchFilters.push(new Filter("message_type_code", FilterOperator.EQ, sMessageType));
+            }
+			if (sKeyword) {
+				aSearchFilters.push(new Filter({
 					filters: [
-						new Filter("tolower(message_code)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'"),
-						new Filter("tolower(message_contents)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'")
+						new Filter({
+							path: "message_code",
+							operator: FilterOperator.Contains,
+							value1: sKeyword,
+							caseSensitive: false
+						}),
+						new Filter({
+							path: "message_contents",
+							operator: FilterOperator.Contains,
+							value1: sKeyword,
+							caseSensitive: false
+						})
 					],
 					and: false
 				}));
 			}
-			return aTableSearchState;
-		},
-		
-		_doInitTablePerso: function(){
-			// init and activate controller
-			this._oTPC = new TablePersoController({
-				table: this.byId("mainTable"),
-				componentName: "xx.templateListInlineEdit",
-				persoService: MainListPersoService,
-				hasGrouping: true
-			}).activate();
+			return aSearchFilters;
 		}
 
 

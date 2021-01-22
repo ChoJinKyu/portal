@@ -15,22 +15,22 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="다건(목록)의 View 모드 + 단건의 Edit 모드" />
                 </f:heading>
                 <f:snappedContent>
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
                                 <Label text="Chain" labelFor="searchChainS" required="true"></Label>
-                                <ComboBox id="searchChainS" width="100%" selectedKey="CM" items="{
-                                        path: 'util>/CodeDetails',
+                                <ComboBox id="searchChainS" width="100%" selectedKey="CM"  placeholder="All" showSecondaryValues="true" items="{
+                                        path: 'util>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ]
                                     }">
                                     <items>
-                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                        <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                                     </items>
                                 </ComboBox>
                                 <layoutData>
@@ -39,16 +39,15 @@
                             </VBox>
                             <VBox>
                                 <Label text="Language" labelFor="searchLanguageS"></Label>
-                                <ComboBox id="searchLanguageS" width="100%" items="{
-                                        path: 'util>/CodeDetails',
+                                <ComboBox id="searchLanguageS" width="100%" placeholder="All" items="{
+                                        path: 'util>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ]
                                     }">
                                     <items>
-                                        <core:Item key="" text="Choose a Language" />
-                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
                                     </items>
                                 </ComboBox>
                                 <layoutData>
@@ -70,15 +69,15 @@
                         <form:content>
                             <VBox>
                                 <Label text="Chain" labelFor="searchChainE" required="true"></Label>
-                                <ComboBox id="searchChainE" width="100%" selectedKey="CM" items="{
-                                        path: 'util>/CodeDetails',
+                                <ComboBox id="searchChainE" width="100%" selectedKey="CM"  placeholder="All" showSecondaryValues="true" items="{
+                                        path: 'util>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ]
                                     }">
                                     <items>
-                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                        <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                                     </items>
                                 </ComboBox>
                                 <layoutData>
@@ -87,16 +86,15 @@
                             </VBox>
                             <VBox>
                                 <Label text="Language" labelFor="searchLanguageE"></Label>
-                                <ComboBox id="searchLanguageE" width="100%" items="{
-                                        path: 'util>/CodeDetails',
+                                <ComboBox id="searchLanguageE" width="100%" placeholder="All" items="{
+                                        path: 'util>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ]
                                     }">
                                     <items>
-                                        <core:Item key="" text="Choose a Language" />
-                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
                                     </items>
                                 </ComboBox>
                                 <layoutData>
@@ -134,6 +132,7 @@
                     showCloseButton="false">
 			    </MessageStrip>
                 <Table id="mainTable" 
+                        noDataText="{I18N>/NCM01004}"
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         mode="None" 
@@ -142,10 +141,8 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Messages" level="H2"/>
+                            <Title text="{I18N>/MESSAGE} {= ${list>/Message}.length > 0 ? '(' + ${list>/Message}.length + ')' : ''}" level="H2"/>
                             <ToolbarSpacer/>
-                            <SearchField width="17.5rem" search=".onListMainTableFilterPress" />
-                            <!-- Add the Personalization button -->
                             <Button id="mainTableAddButton" text="Add" type="Emphasized" press=".onListMainTableAddButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onListMainTablePersoButtonPressed" >

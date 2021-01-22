@@ -11,20 +11,20 @@ entity Sc_Tester00 : util.Managed {
     key org_code           : String(10) not null             @title : '구매운영조직코드';
         effective_end_date : String(8)                       @title : '유효종료일자';
         payterms_code      : String(30)                      @title : '지불조건코드';
-}
+};
 
-view Sc_Language as
-    select
+define view Sc_Language as
+    select from cm.Currency_Lng{
         *,
-        $user.locale              as locale,
-        $user.id                  as user_id,
-        $at.from                  as at_from,
-        $at.to                    as at_to,
-        $now                      as now,
-        $projection.language_code as projection_language_code,
-        $self.language_code       as self_language_code
+        cast( $user.locale              as String(30))  as locale                    : String(30) , 
+        cast( $user.id                  as String(30))  as user_id                   : String(30) , 
+        cast( $at.from                  as String(30))  as at_from                   : String(30) , 
+        cast( $at.to                    as String(30))  as at_to                     : String(30) , 
+        cast( $now                      as DateTime)    as now                       : DateTime , 
+        cast( $projection.language_code as String(30))  as projection_language_code  : String(30) , 
+        cast( $self.language_code       as String(30))  as self_language_cod         : String(30)            
         // ,$session                   as session
-    from cm.Currency_Lng;
+    };
 
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
 using {

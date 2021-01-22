@@ -27,10 +27,10 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oSearchKeyword = new Input({ placeholder: "Keyword"});
+            this.oSearchKeyword = new Input({ placeholder: this.getModel("I18N").getText("/KEYWORD")});
             this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
 
-            this.oDepartment = new Input({ placeholder: "Department Name or No."});
+            this.oDepartment = new Input({ placeholder: this.getModel("I18N").getText("/KEYWORD")});
             this.oDepartment.attachEvent("change", this.loadData.bind(this));
             
             return [
@@ -79,14 +79,6 @@ sap.ui.define([
                     template: new Text({text: "{job_title}"})
                 })
             ];
-        },
-
-        getServiceParameters: function(){
-            return {
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                ]
-            }
         },
 
         loadData: function(){

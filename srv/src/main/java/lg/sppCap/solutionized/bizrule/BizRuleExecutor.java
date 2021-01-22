@@ -54,7 +54,7 @@ public class BizRuleExecutor {
      * @return
      */
     public BizRuleInfo getBizRuleInfo(String tenantId, String bizRuleId, String altFlag){
-        return new BizRuleInfoService().retrieveBizRuleInfo(tenantId, bizRuleId, altFlag);
+        return bizRuleInfoService.retrieveBizRuleInfo(tenantId, bizRuleId, altFlag);
     }
 
 }

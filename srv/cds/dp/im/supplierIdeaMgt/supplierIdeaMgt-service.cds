@@ -18,6 +18,7 @@
 *************************************************/
 // 협력사제안관리
 using { dp as Idea } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA-model';
+using { dp as Status } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_STATUS-model';
 using { dp as Performance } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_PERFORMANCE-model';
 using { dp as ideaMgtView } from '../../../../../db/cds/dp/im/DP_IM_SUPPLIER_IDEA_LIST_VIEW-model';
 // Supplier 
@@ -29,6 +30,9 @@ using { cm as BizUnit } from '../../../../../db/cds/cm/CM_ORG_UNIT-model';
 // Employee
 using {cm.Hr_Employee as Employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 
+// User
+using { cm as User }          from '../../../../../db/cds/cm/CM_USER-model';
+
 namespace dp;
 @path : '/dp.SupplierIdeaMgtService'
 
@@ -36,6 +40,8 @@ service SupplierIdeaMgtService {
 
     entity SupplierIdea as projection on Idea.Im_Supplier_Idea;
     entity SupplierPerform as projection on Performance.Im_Supplier_Idea_Performance;
+    entity IdeaStatus  as projection on Status.Im_Supplier_Idea_Status;
+
  
     
     view IdeaMgtView as select from ideaMgtView.Im_Supplier_Idea_List_View;
@@ -170,4 +176,28 @@ service SupplierIdeaMgtService {
         on emp.tenant_id = isi.tenant_id
         and emp.employee_number = isi.idea_manager_empno
         ;
+
+            
+    view IdeaStatusView as
+    select  key sis.tenant_id,
+            key sis.company_code,
+            key sis.idea_number,
+            key sis.status_change_sequence,
+            sis.idea_progress_status_code,
+            (select cd.code_name
+             from Code.Code_View cd
+             where cd.tenant_id = sis.tenant_id
+             and cd.group_code = 'DP_IM_IDEA_PROGRESS_STATUS'
+             and cd.code = sis.idea_progress_status_code
+             and cd.language_cd = 'KO'
+             ) as idea_progress_status_name: String(240),
+            sis.status_change_user_id,
+            usr.user_name as status_change_user_name: String(240),
+            sis.status_change_date_time,
+            sis.status_change_comment
+    from Status.Im_Supplier_Idea_Status sis 
+    left join User.User usr 
+    on usr.tenant_id = sis.tenant_id
+    and usr.user_id = sis.status_change_user_id
+    ;
 }

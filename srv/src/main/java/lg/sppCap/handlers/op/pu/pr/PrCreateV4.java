@@ -125,7 +125,7 @@ public class PrCreateV4 implements EventHandler {
         .append(")"); 
 
         String v_sql_dropTableM = "DROP TABLE #LOCAL_TEMP_M";   
-        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_D";  
+        String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_D";
 
         String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
@@ -148,11 +148,7 @@ public class PrCreateV4 implements EventHandler {
             // Commit Option
             jdbc.execute(v_sql_commitOption);
                         
-            // Master Local Temp Table 생성
-            jdbc.execute(v_sql_createTableM.toString());
-
-            // Detail Local Temp Table 생성
-            jdbc.execute(v_sql_createTableD.toString());
+            
 
 
             // Header Local Temp Table에 insert
@@ -162,10 +158,16 @@ public class PrCreateV4 implements EventHandler {
             Object[] values = null;
 
             if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
-                for(PrCreateSaveType v_indata : v_inMultiData) {
+                for(PrCreateSaveType v_indata : v_inMultiData) {                    
                     log.info("###"+v_indata.getTenantId()+"###"+v_indata.getCompanyCode()+"###"+v_indata.getPrNumber()+"###"+v_indata.getPrCreateStatusCode());
                     log.info("##### ApprovalContents: " + v_indata.getApprovalContents());
 
+                    // Master Local Temp Table 생성
+                    jdbc.execute(v_sql_createTableM.toString());
+
+                    // Detail Local Temp Table 생성
+                    jdbc.execute(v_sql_createTableD.toString());
+                    
                     values = new Object[] {
                         (String)v_indata.get("tenant_id"),
                         (String)v_indata.get("company_code"),
@@ -258,13 +260,14 @@ public class PrCreateV4 implements EventHandler {
                             return callableStatement;
                         }
                     }, paramList);
+
+                    // Local Temp Table DROP
+                    jdbc.execute(v_sql_dropTableM);
+                    jdbc.execute(v_sql_dropTableD);
                 }
             }
 
-            // Local Temp Table DROP
-            jdbc.execute(v_sql_dropTableM);
-            jdbc.execute(v_sql_dropTableD);
-
+            
             context.setResult(v_result);
             context.setCompleted();
 

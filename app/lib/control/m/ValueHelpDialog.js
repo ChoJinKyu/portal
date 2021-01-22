@@ -6,6 +6,7 @@
 sap.ui.define([
     "sap/m/Dialog",
     "sap/m/DialogRenderer",
+    "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
     "sap/ui/layout/GridData",
     "sap/ui/layout/form/SimpleForm",
@@ -16,11 +17,11 @@ sap.ui.define([
     "sap/m/MultiInput",
     "sap/m/Token",
     "sap/m/Table",
-    "sap/m/ColumnListItem"
-], function (Parent, Renderer, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem) {
+    "sap/m/ColumnListItem",
+    "sap/ui/thirdparty/jquery"
+], function (Parent, Renderer, Multilingual, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem, jQuery) {
     "use strict";
 
-    //TODO : Localization (Buttons - apply, cancel, search, table no-data, multiInput title)
     var ValueHelpDialog = Parent.extend("ext.lib.control.m.ValueHelpDialog", {
 
         renderer: Renderer,
@@ -59,17 +60,26 @@ sap.ui.define([
             Parent.apply(this, arguments);
             this.setModel(new JSONModel());
             this.addStyleClass("sapUiSizeCompact");
-            this.createDialog();
+            
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            if(this.getModel("I18N").isReady()){
+                this.createContent();
+            }else{
+                oMultilingual.attachEvent("ready", function(){
+                    this.createContent();
+                }.bind(this));
+            }
         },
 
-        createDialog: function(){
+        createContent: function(){
             var isMultiSelection = this.getProperty("multiSelection");
 
             var oLayout = new VBox();
             this.addContent(oLayout);
 
             this.setBeginButton(new Button({
-                text: "Cancel",
+                text: this.getModel("I18N").getText("/CANCEL"),
                 press: function () {
                     this.fireEvent("cancel");
                     this.close();
@@ -78,7 +88,7 @@ sap.ui.define([
             if(isMultiSelection){
                 this.setEndButton(this.oApplyButton = new Button({
                     type: "Emphasized",
-                    text: "Apply",
+                    text: this.getModel("I18N").getText("/APPLY"),
                     enabled: isMultiSelection == true ? false : true,
                     press: function () {
                         this.doApply();
@@ -108,8 +118,8 @@ sap.ui.define([
                 justifyContent: "End",
                 items: [
                     new Button({
-                        type: "Transparent",
-                        text: "Search",
+                        type: "Emphasized",
+                        text: this.getModel("I18N").getText("/SEARCH"),
                         press: this._onSearchPress.bind(this)
                     })
                 ],
@@ -119,7 +129,7 @@ sap.ui.define([
             oForm.addContent(oSearchButton);
 
             var oTable = new Table({
-                noDataText: "{I18N>/NCM01004}",
+                noDataText: this.getModel("I18N").getText("/NCM01004"),
                 mode: isMultiSelection ? "MultiSelect" : "None",
                 columns: this.getAggregation("columns"),
                 items: {
@@ -153,7 +163,7 @@ sap.ui.define([
                     columnsM: 2,
                     content: [new VBox({
                         items: [
-                            new Label({ text: "Selected Items"}),
+                            new Label({ text: this.getModel("I18N").getText("/SELECTED_ITEMS")}),
                             oMultiInput
                         ],
                         layoutData: new GridData({ span: "XL12 L12 M12 S12"})
@@ -168,11 +178,11 @@ sap.ui.define([
 
         doApply: function(oItem){
             if(this.getProperty("multiSelection")) {
-                var sTokens = jQuery.map(this.oMultiInput.getTokens(), function(oToken){
+                var sKeys = jQuery.map(this.oMultiInput.getTokens(), function(oToken){
                     return oToken.getKey();
                 }).join(",");
                 var aItems = jQuery.map(this.getModel().getData(), function(oData){
-                    if(sTokens.indexOf(oData[this.getProperty("keyField")]) > -1)
+                    if(sKeys.indexOf(oData[this.getProperty("keyField")]) > -1)
                         return oData;
                 }.bind(this));
                 this.fireEvent("apply", {items: aItems});
@@ -215,7 +225,10 @@ sap.ui.define([
         setTokens: function(aTokens){
             if(this.oMultiInput){
                 this.oMultiInput.setTokens(jQuery.map(aTokens, function(oToken){
-                    return oToken.clone();
+                    return new Token({
+                        key: oToken.getProperty("key"),
+                        text: oToken.getProperty("text"),
+                    });
                 }));
             }
         },

@@ -14,7 +14,7 @@
 		headerContentPinnable="true"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
-		showTitleInHeaderContent="true"
+		showTitleInHeaderContent="false"
 		showEditHeaderButton="true" 
 		showFooter="true">
         
@@ -31,9 +31,30 @@
 
 		<uxap:sections>
 
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER_INFO}">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/EVAL_ITEM}">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection1" >
+					<uxap:ObjectPageSubSection>
+                        <form:SimpleForm 
+                            layout="ResponsiveGridLayout"
+                        >
+                            <VBox>
+                                <Label text="평가항목명" required="true"/>
+                                <Input />
+                                <layoutData>
+                                    <layout:GridData span="L12 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Node 유형" required="true"/>
+                                <ComboBox 
+                                    width="100%" 
+                                    showSecondaryValues="true"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L12 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

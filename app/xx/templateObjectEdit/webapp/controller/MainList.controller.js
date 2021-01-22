@@ -353,7 +353,7 @@ sap.ui.define([
                     selectedKey: "{message_type_code}"
                 });
                 oMessageTypeComboBox.bindItems({
-                    path: 'util>/CodeDetails',
+                    path: 'util>/Code',
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                         new Filter("company_code", FilterOperator.EQ, '*'),
@@ -361,7 +361,7 @@ sap.ui.define([
                     ],
                     template: new Item({
                         key: "{util>code}",
-                        text: "{util>code_description}"
+                        text: "{util>code_name}"
                     })
                 });
 			this.oEditableTemplate = new ColumnListItem({

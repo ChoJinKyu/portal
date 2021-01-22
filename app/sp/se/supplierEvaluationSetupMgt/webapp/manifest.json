@@ -16,7 +16,13 @@
                     "odataVersion": "2.0"
                 }
             },
-            
+            "commonService": {
+                "uri": "srv-api/odata/v2/cm.util.CommonService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },            
             "up": {
                 "uri": "../uploadCollection.json",
                 "type": "JSON"
@@ -70,6 +76,15 @@
                     "odataVersion": "2.0"
                 },
                 "dataSource": "mainService"
+            },
+            "common" : {
+                "dataSource": "commonService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true
+                }
             }
         },
         "resources": {

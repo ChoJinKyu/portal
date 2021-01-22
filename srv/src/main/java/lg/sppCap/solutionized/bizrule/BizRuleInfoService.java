@@ -3,6 +3,7 @@ package lg.sppCap.solutionized.bizrule;
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import lg.sppCap.solutionized.bizrule.model.BizRuleInfo;
 
 @Component
+@ServiceName("slt.BizRuleInfoService")
 public class BizRuleInfoService {
  
   @Autowired
@@ -18,13 +20,13 @@ public class BizRuleInfoService {
 
   public BizRuleInfo retrieveBizRuleInfo(String tenantId, String bizRuleId, String altFlag){
       BizRuleInfo info = new BizRuleInfo();
-      info.setTenantId(tenantId);
-      info.setBizRuleId(bizRuleId);
-      info.setAltFlag(altFlag);
+      info.setTenantId("a");
+      info.setBizRuleId("a");
+      info.setAltFlag("a");
 
        CqnSelect infoSelect = Select
          .from("tmp.bizrule_info")
-         .columns("TENANT_ID","BIZRULE_ID","ALT_FLG","CALL_TYPE","CALL_HOST","CALL_INFO")
+         .columns("TENANT_ID","BIZRULE_ID","ALT_FLAG","CALL_TYPE","CALL_HOST","CALL_INFO")
          .where(
            b->b.get("TENANT_ID").eq(info.getTenantId())
            .and(b.get("BIZRULE_ID").eq(info.getBizRuleId()))
@@ -34,7 +36,7 @@ public class BizRuleInfoService {
        Result result = db.run(infoSelect);
        info.setTenantId((String)result.first().get().get("TENANT_ID"));
        info.setBizRuleId((String)result.first().get().get("BIZRULE_ID"));
-       info.setAltFlag((String)result.first().get().get("ALT_FLG"));
+       info.setAltFlag((String)result.first().get().get("ALT_FLAG"));
        info.setCallType((String)result.first().get().get("CALL_TYPE"));
        info.setCallHost((String)result.first().get().get("CALL_HOST"));
        info.setCallInfo((String)result.first().get().get("CALL_INFO"));

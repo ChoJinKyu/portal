@@ -59,9 +59,8 @@ sap.ui.define([
             //     persoService: MainListPersoService
             // }).setTable(this.byId("mainTable"));
 
-            // 1.21   this.getView().setModel(new JSONModel()); 
 
-
+            this.getView().setModel(new JSONModel({summaryChart: []}), "popup");
             this.enableMessagePopover();
 
             // var today = new Date();
@@ -166,6 +165,9 @@ sap.ui.define([
                 selectDeclareTargetFlag = this.getView().byId("selectDeclareTargetFlag").getSelected(),
                 selectDeclareTargetFlag2 = this.getView().byId("selectDeclareTargetFlag2").getSelected();
 
+                console.log("selectManagementTargetFlag ---> " ,selectManagementTargetFlag);
+                console.log("selectManagementTargetFlag2 ---> " ,selectManagementTargetFlag2);
+
 
             var aSearchFilters = [];
 
@@ -202,52 +204,22 @@ sap.ui.define([
             if (poName && poName.length > 0) {
                  aSearchFilters.push(new Filter("po_name", FilterOperator.EQ, poName));
             }
-
-            if (selectManagementTargetFlag === true && selectManagementTargetFlag2 === false) {
+            if (selectManagementTargetFlag === true && selectManagementTargetFlag2 === true) {
                 aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
+            }else if (selectManagementTargetFlag === false && selectManagementTargetFlag2 === true) {
+                aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, false));
+            }else if(selectManagementTargetFlag === false && selectManagementTargetFlag2 === false){
+                aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, null));
             }
-
-            // if (selectManagementTargetFlag === false && selectManagementTargetFlag2 === true) {
-            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, false));
-            // }
-
-            if (selectDeclareTargetFlag === true && selectDeclareTargetFlag2 === false) {
-                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
-            }
-
-            // if (selectDeclareTargetFlag === false && selectDeclareTargetFlag2 === true) {
-            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, false));
-            // }
-
-            // if (selectManagementTargetFlag === true) {
-            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, true));
-            // }
-
-            // if (selectManagementTargetFlag2 === true) {
-            //     aSearchFilters.push(new Filter("management_target_flag2", FilterOperator.EQ, true));
-            // }
-
-            // if (selectDeclareTargetFlag === true) {
-            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
-            // }
-
-            // if (selectDeclareTargetFlag2 === true) {
-            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
-            // }
-
             
-            // if(selectManagementTargetFlag){
-            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, selectManagementTargetFlag));
-            // }else if(selectManagementTargetFlag2){
-            //     aSearchFilters.push(new Filter("management_target_flag", FilterOperator.EQ, selectManagementTargetFlag2));
-            // }
-
-            // if(selectDeclareTargetFlag){
-            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, selectDeclareTargetFlag));
-            // }else if(selectDeclareTargetFlag2){
-            //     aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, selectDeclareTargetFlag2));
-            // }
-
+            if (selectDeclareTargetFlag === true && selectDeclareTargetFlag2 === true) {
+                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, true));
+            }else if (selectDeclareTargetFlag === false && selectDeclareTargetFlag2 === true) {
+                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, false));
+            }else if(selectDeclareTargetFlag === false && selectDeclareTargetFlag2 === false) {
+                aSearchFilters.push(new Filter("declare_target_flag", FilterOperator.EQ, null));
+            }
+           
 
             console.log("aSearchFilters -----> " , aSearchFilters);
             console.log("this.getView() -----> ", this.getView());
@@ -291,15 +263,13 @@ sap.ui.define([
         onSummaryChartButtonPress: function(oEvent) {
             console.log("chart popup");
             this._goChartlView(oEvent);
+            
         },
 
         _goChartlView: function(oEvent){
             
             console.log(" _goChartlView oEvent :: ", oEvent);
             var oView = this.getView();
-            var oTable = oView.byId("mainChartTable"),
-                oModel = this.getView().getModel("list");
-
 
             this._chartDialog = Fragment.load({
                 id: oView.getId(),
@@ -315,113 +285,92 @@ sap.ui.define([
 
             console.log("_chartDialog :::: " , oView);
 
-            this._chartDialog.then(function (_chartDialog) {
+            var sDate = "2010-01-01";
+            var eDate = "2020-12-31";
+
+            // if (this.requestFromDate_ && this.requestToDate_) {
+            //     console.log("use -------------------->");
+            //     sDate = this.requestFromDate_;
+            //     eDate = this.requestToDate_;
+            //     console.log("end -------------------->");
+            
+            // }
+
+            this._chartDialog.then((function (_chartDialog) {
+                
+                if(!this._chartDialog) {
+                    this._chartDialog =  sap.ui.xmlfragment("searchChartPoDate", this );
+                    this.getView().addDependent(this._chartDialog);
+                }
+
                 _chartDialog.open();
 
-                // if(forexDeclareStatusName == "작성대기" || forexDeclareStatusName == "신고진행중"){
-                //     oView.byId("poNumber").setText(rowData.po_number);
-                //     oView.byId("poName").setText(rowData.po_name);
-                //     oView.byId("receiptScheduledDate").setText(that.getFormatDate(rowData.receipt_scheduled_date));
-                //     oView.byId("declareScheduledDate").setDateValue(rowData.declare_scheduled_date);
-                //     oView.byId("declareDate").setDateValue(rowData.declare_date);
-                //     oView.byId("processedCompleteDate").setText(that.getFormatDate(rowData.processed_complete_date));
-                //     oView.byId("remark").setValue(rowData.remark);
-                // }else{
-                //     oView.byId("poNumber").setText(rowData.po_number);
-                //     oView.byId("poName").setText(rowData.po_name);
-                //     oView.byId("receiptScheduledDate").setText(that.getFormatDate(rowData.receipt_scheduled_date));
-                //     oView.byId("declareScheduledDate").setText(that.getFormatDate(rowData.declare_scheduled_date));
-                //     oView.byId("declareDate").setText(that.getFormatDate(rowData.declare_date));
-                //     oView.byId("processedCompleteDate").setText(that.getFormatDate(rowData.processed_complete_date));
-                //     oView.byId("remark").setText(rowData.remark);
-                // }
-
-
                 $.ajax({
-                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date=2010-01-01,po_end_date=2020-12-31)/Set",
+                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+sDate +",po_end_date="+ eDate +")/Set",
                     type: "GET",
                     contentType: "application/json",
                     
-                    success: function (oData) {
+                    success: (function (oData) {
                         console.log("#########oData Success#####", oData.value);
-                        console.log("#########oData.value Success#####", JSON.stringify(oData.value));
+                        this.getModel("popup").setProperty("/summaryChart", oData.value);
                         //console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
-
-
-                        //console.log("#########Success#####", JSON.stringify(oData.value));
-
-
-//1.20                        this.getModel("tblModel").setProperty("/left",oData.value);
-                            
-
-                        //oView.getModel("SummaryChartModel").setData(data);
-
-
-                    //  //1.19   
-                    //     oView.getModel("SummaryChartModel").updateBindings(true);
-
-                    //     console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
-
-                    //     console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
-
-
-                    //     //oView.getModel("SummaryChartModel").setData(data.value[0]);
-
-
-                    console.log("#########Success#####", oData.value[0].group_type);
-
-                        oView.byId("gubun").setText(oData.value[0].group_type);
-                        oView.byId("todo_count").setText(oData.value[0].todo_count);
-                        oView.byId("ongoing_count").setText(oData.value[0].ongoing_count);
-                        oView.byId("complete_count").setText(oData.value[0].complete_count);
-
-                        oView.byId("gubun").setText(oData.value[1].group_type);
-                        oView.byId("todo_count").setText(oData.value[1].todo_count);
-                        oView.byId("ongoing_count").setText(oData.value[1].ongoing_count);
-                        oView.byId("complete_count").setText(oData.value[1].complete_count);
-
-                        oView.byId("gubun").setText(oData.value[2].group_type);
-                        oView.byId("todo_count").setText(oData.value[2].todo_count);
-                        oView.byId("ongoing_count").setText(oData.value[2].ongoing_count);
-                        oView.byId("complete_count").setText(oData.value[2].complete_count);
-
-                    //     // for (var i = 0; i < data.value.length; i++) {
-                    //     //      oView.byId("gubun").setText(data.value[i].group_type);   
-                    //     //      oView.byId("todo_count").setText(data.value[i].todo_count);   
-                    //     //      oView.byId("ongoing_count").setText(data.value[i].ongoing_count);   
-                    //     //      oView.byId("complete_count").setText(data.value[i].complete_count);  
-
-
-                    //     //      console.log("#########i#####", i);
-                    //     //      console.log("#########data.value[i].group_type#####", data.value[i].group_type);
-
-                    //     //     //  oView.byId("group_type").setText(data.value[i].group_type); 
-                    //     //     //  oView.byId("complete_count").setText(data.value[i].complete_count); 
-                    //     //     //  oView.byId("complete_count").setText(data.value[i].complete_count); 
-                    //     // }
-
-
-
-                        oView.byId("company1_").setValue(oData.value[2].todo_counts);
-                        oView.byId("company2_").setValue(oData.value[2].ongoing_count);
-                        oView.byId("company3_").setValue(oData.value[2].complete_count);
-
-
-                        oView.byId("company4_").setValue(oData.value[2].todo_count);
-                        oView.byId("company5_").setValue(oData.value[2].ongoing_count);
-                        oView.byId("company6_").setValue(oData.value[2].todo_count);
-
-                    //     // oView.byId("company4_").setTitle(data.value[0].group_type);
-                    //     // oView.byId("company5_").setTitle(data.value[1].group_type);
-                    //     // oView.byId("company6_").setTitle(data.value[2].group_type);
-
-
-
-
-                    }.bind(this) 
+                    }).bind(this) 
                 })
                  
-            });
+            }).bind(this));
+        },
+
+        _goChartlView_: function(oEvent,sDate,eDate){
+            
+            console.log(" _goChartlView__ oEvent :: ", oEvent);
+            var oView = this.getView();
+
+            this._chartDialog = Fragment.load({
+                id: oView.getId(),
+                name: "ep.cm.forexDeclarationMgt.view.SummaryChart",
+                controller: this
+            }).then(function (_chartDialog) {
+                oView.addDependent(_chartDialog);
+                
+                //console.log("_chartDialog :::: " , oView);
+                return _chartDialog;
+            }.bind(this));
+
+
+            console.log("_chartDialog :::: " , oView);
+
+            
+
+            this._chartDialog.then((function (_chartDialog) {
+                _chartDialog.open();
+
+                $.ajax({
+                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+sDate +",po_end_date="+ eDate +")/Set",
+                    type: "GET",
+                    contentType: "application/json",
+                    
+                    success: (function (oData) {
+                        console.log("#########oData Success#####", oData.value);
+                        this.getModel("popup").setProperty("/summaryChart", oData.value);
+                        //console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
+                    }).bind(this) 
+                })
+                 
+            }).bind(this));
+        },
+
+        onChartSearchButtonPress: function (oEvent,date) {
+            
+            console.log("chart search ::: " , oEvent);
+            console.log("date search ::: " , date.value);
+
+            var sPoDate = this.getView().byId("searchChartPoDate").getDateValue(),
+                ePoDate = this.getView().byId("searchChartPoDate").getSecondDateValue();
+
+            console.log("this.requestFromDate_ ::: " , sPoDate);
+            console.log("this.requestToDate_ ::: " , ePoDate);
+
+            this._goChartlView_(oEvent,sPoDate,ePoDate);
         },
 
 
@@ -711,6 +660,17 @@ sap.ui.define([
             var day = date.getDate();                   //d
             day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
             return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
+
+        creationDateChange: function (oEvent) {
+            // var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+            //     seSurffix = sSurffix === "E" ? "S" : "E"
+
+            var sFrom = oEvent.getParameter("from");
+            var sTo = oEvent.getParameter("to");
+
+            this.getView().byId("searchChartPoDate").setDateValue(sFrom);
+            this.getView().byId("searchChartPoDate").setSecondDateValue(sTo);
         }
 
 

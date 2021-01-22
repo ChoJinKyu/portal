@@ -7,6 +7,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:cm-ui="cm.util.control.ui"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -39,15 +40,13 @@
                                 <Label text="{I18N>/TYPE}: " labelFor="searchType"></Label>
                                 <lib-m:CodeComboBox id="searchType" width="100%"
                                     items="{
-                                        path: '/',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
                                         ],
                                         serviceName: 'cm.util.CommonService',
                                         entityName: 'Code'
-                                    }"
-                                    selectedKey="{list>code}">
+                                    }">
                                 </lib-m:CodeComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
@@ -55,18 +54,19 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguage"></Label>
-                                <lib-m:CodeComboBox id="searchLanguage" width="100%" showSecondaryValues="true"
+                                <cm-ui:CodeDialog id="languageCodeDialog" multiSelection="true"
+                                    title="{I18N>/LANGUAGE}"
                                     items="{
-                                        path: '/',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ],
                                         serviceName: 'cm.util.CommonService',
                                         entityName: 'Code'
                                     }"
-                                    selectedKey="{list>code}">
-                                </lib-m:CodeComboBox>
+                                    apply=".onLanguageCodeDialogApplyPress" />
+                                <MultiInput id="searchLanguagePicker" placeholder="{I18N>/LANGUAGE}"
+                                    showValueHelp="true" valueHelpRequest=".onSearchLanguagePickerPress">
+                                </MultiInput>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -75,15 +75,13 @@
                                 <Label text="{I18N>/CHAIN}: " labelFor="searchChain"></Label>
                                 <lib-m:CodeComboBox id="searchChain" width="100%" showSecondaryValues="true"
                                     items="{
-                                        path: '/',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ],
                                         serviceName: 'cm.util.CommonService',
                                         entityName: 'Code'
-                                    }"
-                                    selectedKey="{list>code}">
+                                    }">
                                 </lib-m:CodeComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M5 S10" />
@@ -142,7 +140,6 @@
                         <t:template>
 							<lib-m:CodeComboBox selectedKey="{list>language_code}" width="100%" showSecondaryValues="true"
                                 items="{
-                                    path: '/',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
@@ -177,7 +174,6 @@
                         <t:template>
 							<lib-m:CodeComboBox selectedKey="{list>message_type_code}" width="100%"
                                 items="{
-                                    path: '/',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
@@ -194,7 +190,6 @@
                         <t:template>
                             <lib-m:CodeComboBox selectedKey="{list>chain_code}" width="100%" showSecondaryValues="true"
                                 items="{
-                                    path: '/',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
@@ -209,17 +204,5 @@
                 </t:columns>
             </t:Table>
         </f:content>
-		<f:footer>
-			<OverflowToolbar>
-                <Button
-                    icon="sap-icon://alert"
-                    type="Reject"
-                    text="{= ${message>/}.length }"
-                    visible="{= ${message>/}.length > 0 }"
-                    ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />
-				<ToolbarSpacer />
-			</OverflowToolbar>
-		</f:footer>
     </f:DynamicPage>
 </mvc:View>

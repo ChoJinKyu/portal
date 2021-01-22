@@ -96,20 +96,8 @@
           "bundleName": "xx.exampleControls.i18n.i18n"
         }
       },
-      "common": {
-        "dataSource": "commonService",
-        "type": "ext.lib.model.v2.ODataModel",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
       "org": {
         "dataSource": "orgService",
-        "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -138,6 +126,17 @@
           "autoExpandSelect": true
         }
       },
+      "common": {
+        "dataSource": "commonService",
+        "type": "ext.lib.model.v2.ODataModel",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
       "common-v4": {
         "dataSource": "commonV4Service",
         "preload": true,
@@ -152,14 +151,20 @@
     "resources": {
       "css": [
         {
+          "uri": "../../../lib/css/style.css"
+        },
+        {
+          "uri": "../../../lib/css/layout.css"
+        },
+        {
           "uri": "css/style.css"
         }
       ]
     },
     "resourceRoots": {
       "ext.lib": "../../../lib",
-      "cm": "../../../cm",
-      "dp":"../../../dp"
+      "cm.util": "../../../cm/util",
+      "dp": "../../../dp"
     },
     "routing": {
       "config": {
