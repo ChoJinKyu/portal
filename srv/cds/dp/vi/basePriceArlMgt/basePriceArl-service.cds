@@ -4,6 +4,7 @@ using {cm.Referer as arlReferer} from '../../../../../db/cds/cm/CM_REFERER-model
 using {dp.VI_Base_Price_Arl_Mst as arlMaster} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_MST-model';
 using {dp.VI_Base_Price_Arl_Dtl as arlDetail} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
 using {dp.VI_Base_Price_Arl_Price as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
+using {dp.VI_Base_Price_Arl_requestor_his as arlRequestorHis} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_REQUESTOR_HIS-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
@@ -21,16 +22,16 @@ namespace dp;
 @path : '/dp.BasePriceArlService'
 service BasePriceArlService {
 
-    entity Base_Price_Arl_Master   as
+    entity Base_Price_Arl_Master        as
         select from arlMasterSuper sup
         inner join arlMaster sub
-            on  sup.tenant_id       = sub.tenant_id
+            on sup.tenant_id = sub.tenant_id
             and sup.approval_number = sub.approval_number
         inner join employee emp
-            on  sup.tenant_id       = emp.tenant_id
+            on sup.tenant_id = emp.tenant_id
             and sup.requestor_empno = emp.employee_number
         inner join Dept dept
-            on  emp.tenant_id     = dept.tenant_id
+            on emp.tenant_id = dept.tenant_id
             and emp.department_id = dept.department_id
         {
             key sup.tenant_id,
@@ -44,9 +45,9 @@ service BasePriceArlService {
                 (
                     select code_name from codeLng
                     where
-                            tenant_id   = sup.tenant_id
-                        and group_code  = 'DP_VI_APPROVAL_TYPE'
-                        and code        = sup.approval_type_code
+                        tenant_id = sup.tenant_id
+                        and group_code = 'DP_VI_APPROVAL_TYPE'
+                        and code = sup.approval_type_code
                         and language_cd = 'KO'
                 )                          as approval_type_code_nm   : String(240),
                 sup.approval_title,
@@ -55,9 +56,9 @@ service BasePriceArlService {
                 (
                     select code_name from codeLng
                     where
-                            tenant_id   = sup.tenant_id
-                        and group_code  = 'CM_APPROVE_STATUS'
-                        and code        = sup.approve_status_code
+                        tenant_id = sup.tenant_id
+                        and group_code = 'CM_APPROVE_STATUS'
+                        and code = sup.approve_status_code
                         and language_cd = 'KO'
                 )                          as approve_status_code_nm  : String(240),
                 sup.requestor_empno,
@@ -74,13 +75,21 @@ service BasePriceArlService {
                 sup.system_update_dtm
         };
 
-    entity Base_Price_Arl_Approver as
+    annotate Base_Price_Arl_Master with {
+        approve_status_code     @description : '공통코드(CM_CODE_DTL, CM_APPROVE_STATUS) : DR(Draft), AR(Approval Request), IA(In-Approval), AP(Approved), RJ(Rejected)';
+        approve_status_code_nm  @title       : '결재상태명'  @description  : '결재상태코드 이름';
+        requestor_local_nm      @title       : '요청자 이름'  @description : '요청자 이름';
+        requestor_job_title     @title       : '요청자 직급'  @description : '요청자 직급';
+        requestor_dept_local_nm @title       : '요청자 부서'  @description : '요청자 부서';
+    };
+
+    entity Base_Price_Arl_Approver      as
         select from arlApprover app
         inner join employee emp
-            on  app.tenant_id      = emp.tenant_id
+            on app.tenant_id = emp.tenant_id
             and app.approver_empno = emp.employee_number
         inner join Dept dept
-            on  emp.tenant_id     = dept.tenant_id
+            on emp.tenant_id = dept.tenant_id
             and emp.department_id = dept.department_id
         {
             key app.tenant_id,
@@ -94,9 +103,9 @@ service BasePriceArlService {
                 (
                     select code_name from codeLng
                     where
-                            tenant_id   = app.tenant_id
-                        and group_code  = 'CM_APPROVER_TYPE'
-                        and code        = app.approver_type_code
+                        tenant_id = app.tenant_id
+                        and group_code = 'CM_APPROVER_TYPE'
+                        and code = app.approver_type_code
                         and language_cd = 'KO'
                 )                          as approver_type_code_nm  : String(240),
                 app.approve_comment,
@@ -104,9 +113,9 @@ service BasePriceArlService {
                 (
                     select code_name from codeLng l
                     where
-                            tenant_id   = app.tenant_id
-                        and group_code  = 'CM_APPROVE_STATUS'
-                        and code        = app.approve_status_code
+                        tenant_id = app.tenant_id
+                        and group_code = 'CM_APPROVE_STATUS'
+                        and code = app.approve_status_code
                         and language_cd = 'KO'
                 )                          as approve_status_code_nm : String(240),
                 app.approve_date_time,
@@ -123,13 +132,13 @@ service BasePriceArlService {
             app.approve_sequence,
             app.approver_empno;
 
-    entity Base_Price_Arl_Referer  as
+    entity Base_Price_Arl_Referer       as
         select from arlReferer ref
         inner join employee emp
-            on  ref.tenant_id     = emp.tenant_id
+            on ref.tenant_id = emp.tenant_id
             and ref.referer_empno = emp.employee_number
         inner join Dept dept
-            on  emp.tenant_id     = dept.tenant_id
+            on emp.tenant_id = dept.tenant_id
             and emp.department_id = dept.department_id
         {
             key ref.tenant_id,
@@ -146,18 +155,18 @@ service BasePriceArlService {
                 ref.system_update_dtm
         };
 
-    entity Base_Price_Arl_Detail   as
+    entity Base_Price_Arl_Detail        as
         select from arlDetail as dtl
         left outer join org as org
-            on  dtl.tenant_id     = org.tenant_id
-            and dtl.company_code  = org.company_code
+            on dtl.tenant_id = org.tenant_id
+            and dtl.company_code = org.company_code
             and org.org_type_code = 'PL'
-            and dtl.org_code      = org.org_code
+            and dtl.org_code = org.org_code
         left outer join materialMst as mtr
-            on  dtl.tenant_id     = mtr.tenant_id
+            on dtl.tenant_id = mtr.tenant_id
             and dtl.material_code = mtr.material_code
         left outer join supplierMst as sup
-            on  dtl.tenant_id     = sup.tenant_id
+            on dtl.tenant_id = sup.tenant_id
             and dtl.supplier_code = sup.supplier_code
         {
             key dtl.tenant_id,
@@ -191,9 +200,9 @@ service BasePriceArlService {
                 (
                     select code_name from codeLng
                     where
-                            tenant_id   = dtl.tenant_id
-                        and group_code  = 'DP_VI_BASE_PRICE_GROUND_CODE'
-                        and code        = dtl.base_price_ground_code
+                        tenant_id = dtl.tenant_id
+                        and group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
+                        and code = dtl.base_price_ground_code
                         and language_cd = 'KO'
                 ) as base_price_ground_code_nm : String(240),
                 dtl.local_create_dtm,
@@ -204,7 +213,11 @@ service BasePriceArlService {
                 dtl.system_update_dtm
         };
 
-    entity Base_Price_Arl_Price    as
+    annotate Base_Price_Arl_Detail with {
+        base_price_ground_code_nm @title : '기준단가근거명'  @description : '기준단가근거코드 이름';
+    };
+
+    entity Base_Price_Arl_Price         as
         select from arlPrice as prc {
             key prc.tenant_id,
             key prc.approval_number,
@@ -213,11 +226,11 @@ service BasePriceArlService {
                 (
                     select code_name from codeLng
                     where
-                            tenant_id   = prc.tenant_id
-                        and group_code  = 'DP_VI_MARKET_CODE'
-                        and code        = prc.market_code
+                        tenant_id = prc.tenant_id
+                        and group_code = 'DP_VI_MARKET_CODE'
+                        and code = prc.market_code
                         and language_cd = 'KO'
-                ) as market_code_nm : String(240),
+                ) as market_code_nm   : String(240),
                 prc.new_base_price,
                 prc.new_base_price_currency_code,
                 prc.current_base_price,
@@ -225,6 +238,15 @@ service BasePriceArlService {
                 prc.first_purchasing_net_price,
                 prc.first_pur_netprice_curr_cd,
                 prc.first_pur_netprice_str_dt,
+                prc.change_reason_code,
+                (
+                    select code_name from codeLng
+                    where
+                        tenant_id = prc.tenant_id
+                        and group_code = 'DP_VI_CHANGE_REASON_CODE'
+                        and code = prc.change_reason_code
+                        and language_cd = 'KO'
+                ) as change_reason_nm : String(240),
                 prc.local_create_dtm,
                 prc.local_update_dtm,
                 prc.create_user_id,
@@ -232,6 +254,13 @@ service BasePriceArlService {
                 prc.system_create_dtm,
                 prc.system_update_dtm
         };
+
+    annotate Base_Price_Arl_Price with {
+        market_code_nm   @title : '납선명'  @description   : '납선코드 이름';
+        // change_reason_nm @title : '변경사유명'  @description : '변경사유코드 이름';
+    };
+
+    entity Base_Price_Arl_Requestor_His as projection on arlRequestorHis;
 
     // @readonly
     // entity Code_Dtl                as
@@ -303,38 +332,38 @@ service BasePriceArlService {
     //     };
 
     @readonly
-    entity Base_Price_Arl_Config   as
+    entity Base_Price_Arl_Config        as
         select from controlDtl m {
             key tenant_id,
             key control_option_code,
                 case
                     when
-                        control_option_code    =  'DP_VI_COMPANY_EDITABLE_FLAG'
+                        control_option_code = 'DP_VI_COMPANY_EDITABLE_FLAG'
                         and control_option_val is null
                     then
                         'N'
                     when
-                        control_option_code    =  'DP_VI_SUPPLY_DISPLAY_FLAG'
+                        control_option_code = 'DP_VI_SUPPLY_DISPLAY_FLAG'
                         and control_option_val is null
                     then
                         'N'
                     when
-                        control_option_code    =  'DP_VI_PURORG_DISPLAY_NM'
+                        control_option_code = 'DP_VI_PURORG_DISPLAY_NM'
                         and control_option_val is null
                     then
                         'Pur Org'
                     when
-                        control_option_code    =  'DP_VI_MARKETCODE0_DISPLAY_FLAG'
+                        control_option_code = 'DP_VI_MARKETCODE0_DISPLAY_FLAG'
                         and control_option_val is null
                     then
                         'N'
                     when
-                        control_option_code    =  'DP_VI_MARKETCODE1_DISPLAY_FLAG'
+                        control_option_code = 'DP_VI_MARKETCODE1_DISPLAY_FLAG'
                         and control_option_val is null
                     then
                         'N'
                     when
-                        control_option_code    =  'DP_VI_MARKETCODE2_DISPLAY_FLAG'
+                        control_option_code = 'DP_VI_MARKETCODE2_DISPLAY_FLAG'
                         and control_option_val is null
                     then
                         'N'
@@ -343,12 +372,12 @@ service BasePriceArlService {
                 end as control_option_val : String(100)
         }
         where
-                control_option_code       in      (
+            control_option_code in (
                 'DP_VI_COMPANY_EDITABLE_FLAG', 'DP_VI_SUPPLY_DISPLAY_FLAG', 'DP_VI_PURORG_DISPLAY_NM', 'DP_VI_MARKETCODE0_DISPLAY_FLAG', 'DP_VI_MARKETCODE1_DISPLAY_FLAG', 'DP_VI_MARKETCODE2_DISPLAY_FLAG'
             )
-            and control_option_level_code =       'T'
-            and org_type_code             =       '*'
-            and control_option_level_val  =       'Default'
-            and $now                      between start_date and end_date;
+            and control_option_level_code = 'T'
+            and org_type_code = '*'
+            and control_option_level_val = 'Default'
+            and $now between start_date and end_date;
 
 }
