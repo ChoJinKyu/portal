@@ -82,8 +82,14 @@
                         <Label text="{I18N>/REQUEST_DATE} "></Label>
                         <!-- <Label text="Request Date"></Label> -->
                         <DateRangeSelection
-                            dateValue="{filterModel>/dateValue}"
-                            secondDateValue="{filterModel>/secondDateValue}" />
+                             value="{
+                                    parts: [
+                                        {path: 'filterModel>/dateValue'}, 
+                                        {path: 'filterModel>/secondDateValue'}
+                                    ], 
+                                    type: 'sap.ui.model.type.DateInterval',
+                                    formatOptions: { UTC: true, format: 'yMd' }
+                                }" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
@@ -124,10 +130,10 @@
                         <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                             <items>
                                 <SegmentedButtonItem text="{I18N>/ALL}" key="" />
-                                <SegmentedButtonItem text="{rootModel>/processList/0/code_name}" key="10" width="4.7rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="20" width="5.2rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="30" width="4.8rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="40" width="4.5rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/0/code_name}" key="{rootModel>/processList/0/code}" width="4.7rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="{rootModel>/processList/1/code}" width="5.2rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="{rootModel>/processList/2/code}" width="4.8rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="{rootModel>/processList/3/code}" width="4.5rem" />
                             </items>
                         </SegmentedButton>
                         <layoutData>
@@ -163,9 +169,9 @@
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title text="{I18N>/BASE_PRICE_LIST} ({= ${listModel>/results}.length || 0})" level="H2"/>
-                    <!-- <Title text="Base Price List ({= ${listModel>/results}.length || 0})" level="H2"/> -->
                     <ToolbarSpacer />
-                    <Button text="{I18N>/CREATE}" press=".onGoDetail" />
+                    <!-- <Button text="{I18N>/CREATE}" press=".onGoDetail" /> -->
+                    <Button text="{I18N>/CREATE}" press=".onOpenCreateDialog" />
                     <ToolbarSeparator/>
                     <Button icon="sap-icon://excel-attachment" press=".onExcelExport" >
                         <layoutData>
@@ -181,46 +187,38 @@
             <t:columns>
                 <t:Column hAlign="Center" width="10rem">
                     <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
-                    <!-- <Label text="Approval Number" textAlign="Center" /> -->
                     <t:template>
                         <Link text="{listModel>approval_number}" press=".onGoDetail" />
-                        <!-- <Text text="{listModel>approval_number}" /> -->
                     </t:template>
                 </t:Column>
                 <t:Column>
                     <Label text="{I18N>/APPROVAL_TITLE}" textAlign="Center" width="100%" />
-                    <!-- <Label text="Approval Title" textAlign="Center" width="100%" /> -->
                     <t:template>
                         <Text text="{listModel>approval_title}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
                     <Label text="{I18N>/STATUS}"  textAlign="Center" width="100%" />
-                    <!-- <Label text="Status" textAlign="Center" width="100%" /> -->
                     <t:template>
-                        <!-- <Text text="{listModel>approval_status_code_fk/code_description}" /> -->
                         <tnt:InfoLabel 
-                            text="{listModel>approval_status_code_fk/code_name}" 
+                            text="{listModel>approve_status_code_nm}" 
                             colorScheme="{
-                                path: 'listModel>approval_status_code',
+                                path: 'listModel>approve_status_code',
                                 formatter: '.onStatusColor'
                             }" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="7rem">
                     <Label text="{I18N>/REQUEST_DATE}" />
-                    <!-- <Label text="Request Date" /> -->
                     <t:template>
                         <Text text="{
-                                path: 'listModel>local_create_dtm',
-                                formatter: '.dateFormatter.toDateString'}" />
+                                path: 'listModel>request_date'}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
                     <Label text="{I18N>/REQUESTOR}" />
-                    <!-- <Label text="Requested By" /> -->
                     <t:template>
-                        <Text text="{listModel>approval_requestor_empno_fk/user_local_name}" />
+                        <Text text="{listModel>requestor_local_nm}" />
                     </t:template>
                 </t:Column>
             </t:columns>

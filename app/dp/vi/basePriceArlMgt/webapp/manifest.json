@@ -180,7 +180,7 @@
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib",
-      "dp": "../../../../dp"
+      "dputil": "../../../../dp/util"
     },
     "routing": {
       "config": {

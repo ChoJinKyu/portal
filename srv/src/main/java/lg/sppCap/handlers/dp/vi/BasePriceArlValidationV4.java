@@ -203,8 +203,8 @@ public class BasePriceArlValidationV4 {
                     System.out.println("\t# company_code : "           + basePriceArlDetail.getCompanyCode());
                     System.out.println("\t# org_type_code : "          + basePriceArlDetail.getOrgTypeCode());
                     System.out.println("\t# org_code : "               + basePriceArlDetail.getOrgCode());
-                    System.out.println("\t# au_code : "                + basePriceArlDetail.getAuCode());
                     System.out.println("\t# material_code : "          + basePriceArlDetail.getMaterialCode());
+                    System.out.println("\t# base_uom_code : "          + basePriceArlDetail.getBaseUomCode());
                     System.out.println("\t# supplier_code : "          + basePriceArlDetail.getSupplierCode());
                     System.out.println("\t# base_date : "              + basePriceArlDetail.getBaseDate());
                     System.out.println("\t# base_price_ground_code : " + basePriceArlDetail.getBasePriceGroundCode());
@@ -220,7 +220,6 @@ public class BasePriceArlValidationV4 {
                 // validMandatory(basePriceArlDetail.getCompanyCode(),         context, this.getMessage("COMPANY_CODE", context));
                 // validMandatory(basePriceArlDetail.getOrgTypeCode(),         context, this.getMessage("ORG_TYPE_CODE", context));
                 // validMandatory(basePriceArlDetail.getOrgCode(),             context, this.getMessage("ORG_CODE", context));
-                // validMandatory(basePriceArlDetail.getAuCode(),              context, this.getMessage("AU_CODE", context));
                 // validMandatory(basePriceArlDetail.getMaterialCode(),        context, this.getMessage("MATERIAL_CODE", context));
                 // validMandatory(basePriceArlDetail.getBasePriceGroundCode(), context, this.getMessage("BASE_PRICE_GROUND_CODE", context));
 
@@ -254,6 +253,7 @@ public class BasePriceArlValidationV4 {
                     System.out.println("\t\t# first_purchasing_net_price : "         + basePriceArlPrice.getFirstPurchasingNetPrice());
                     System.out.println("\t\t# first_pur_netprice_curr_cd : "         + basePriceArlPrice.getFirstPurNetpriceCurrCd());
                     System.out.println("\t\t# first_pur_netprice_str_dt : "          + basePriceArlPrice.getFirstPurNetpriceStrDt());
+                    System.out.println("\t\t# change_reason_code : "                 + basePriceArlPrice.getChangeReasonCode());
 
                     System.out.println("\t\t# local_create_dtm : "                   + basePriceArlPrice.getLocalCreateDtm());
                     System.out.println("\t\t# local_update_dtm : "                   + basePriceArlPrice.getLocalUpdateDtm());

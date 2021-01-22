@@ -48,8 +48,18 @@ GET {{reviews-service}}/ScLanguage?
 Cookie: {{cookie}}
 
 
-### Multi Select
-GET {{reviews-service}}/ScOutcomeCode?
+### Show System Variable
+GET {{reviews-service}}/ScAwardTypeCodeView?
+# &$skip=0&$top=1
+# &$expand=*
+Cookie: {{cookie}}
+Accept-Language: zh
+
+
+
+
+### Multi Select | Default
+GET {{reviews-service}}/Nego_Type_Code?
 &$expand=*
 # &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
 # &$select=tenant_id,nego_header_id,nego_document_round,HasActiveEntity,IsActiveEntity,SiblingEntity,DraftAdministrativeData
@@ -57,12 +67,18 @@ GET {{reviews-service}}/ScOutcomeCode?
 Cookie: {{cookie}}
 
 ### Multi Select | Expand All[Texts,Localized]
-GET {{reviews-service}}/ScOutcomeCode?
+GET {{reviews-service}}/Nego_Type_Code?
 &$expand=texts,localized
 Cookie: {{cookie}}
+Accept-Language: ko
+### Multi Select | Expand All[Texts,Localized]
+GET {{reviews-service}}/Nego_Type_Code?
+&$expand=texts,localized
+Cookie: {{cookie}}
+Accept-Language: en
 
 ### Multi Select | Localized
-GET {{reviews-service}}/ScOutcomeCode?
+GET {{reviews-service}}/Nego_Type_Code?
 &$expand=localized
 Cookie: {{cookie}}
 

@@ -66,7 +66,7 @@
                                 width="100%"
                                 selectedKey="{filterModel>/bizdivision_code/value}" change="onTestChange"
                                 items="{
-                                    path: '/Org_Division',
+                                    path: '/Org_Div',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: '999'}
                                     ],
@@ -151,7 +151,7 @@
                                 selectedKey="{filterModel>/bizdivision_code/value}"
                                 change="onTestChange"
                                 items="{
-                                    path: '/Org_Division',
+                                    path: '/Org_Div',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: '999'}
                                     ],

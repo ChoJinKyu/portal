@@ -1,0 +1,31 @@
+VIEW  PG_MI_SAC_MATERIAL_INFO_VIEW  AS
+    SELECT
+             'Actual'                                                                           AS  VERSION
+            ,A.TENANT_ID                                                                        AS  TENANT
+            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'BU'  THEN  B.ORG_CODE  ELSE  C.BIZUNIT_CODE  END  AS  BIZUNIT
+            ,B.COMPANY_CODE||'-'||B.ORG_TYPE_CODE||'-'||B.ORG_CODE||'-'||B.VENDOR_POOL_CODE     AS  VENDOR_POOL
+            ,A.MATERIAL_CODE                                                                    AS  MATERIAL
+            ,A.SUPPLIER_CODE                                                                    AS  SUPPLIER
+            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')                                                   AS  "DATE"
+            ,'20200101'                                                                         AS  LATEST_MI_DATE
+            ,'20200101'                                                                         AS  LATEST_NET_PRICE_CFM_DATE
+            ,'#'                                                                                AS  SOURCE_CURRENCY
+            ,A.PCST_CURRENCY_UNIT                                                               AS  TARGET_CURRENCY
+            ,'#'                                                                                AS  UOM
+            ,'#'                                                                                AS  MI_MATERIAL
+            ,'#'                                                                                AS  MI_INCOTERMS
+            ,'#'                                                                                AS  EXCHANGE
+            ,'#'                                                                                AS  NET_PRICE_CONFIRMED_TYPE
+            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'PL'  THEN  B.ORG_CODE  ELSE  '#'  END             AS  PLANT
+            ,'PG0102_00080'                                                                     AS  MI_MEASURE
+            ,A.BASE_QUANTITY                                                                    AS  VALUE
+    FROM     PG_MI_MATERIAL_CODE_BOM_MNGT_HEADER         A
+                INNER  JOIN  PG_VP_VENDOR_POOL_ITEM_DTL  B
+                    ON  A.TENANT_ID      =  B.TENANT_ID
+                    AND A.MATERIAL_CODE  =  B.MATERIAL_CODE
+                INNER  JOIN  CM_PUR_OPERATION_ORG        C
+                    ON  B.TENANT_ID      =  C.TENANT_ID
+                    AND B.COMPANY_CODE   =  C.COMPANY_CODE
+                    AND B.ORG_TYPE_CODE  =  C.ORG_TYPE_CODE
+                    AND B.ORG_CODE       =  C.ORG_CODE
+    ;

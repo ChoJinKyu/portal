@@ -464,7 +464,7 @@
             </Label>
             <VBox>
                 <lib-m:CodePicker
-                    placeholder="Enter a Employee name"
+                    placeholder="{detailModel>/project_leader_info/user_local_name} {detailModel>/project_leader_info/job_title}"
                     selectedKey="{detailModel>/project_leader_info/employee_number}"
                     keyField="employee_number"
                     textField="user_local_name"
@@ -491,7 +491,7 @@
             </Label>
             <VBox>
                 <lib-m:CodePicker
-                    placeholder="Enter a Employee name"
+                    placeholder="{detailModel>/buyer_info/user_local_name} {detailModel>/buyer_info/job_title}"
                     selectedKey="{detailModel>/buyer_info/employee_number}"
                     keyField="employee_number"
                     textField="user_local_name"
@@ -518,7 +518,7 @@
             </Label>
             <VBox>
                 <lib-m:CodePicker
-                    placeholder="Enter a Employee name"
+                    placeholder="{detailModel>/marketing_person_info/user_local_name} {detailModel>/marketing_person_info/job_title}"
                     selectedKey="{detailModel>/marketing_person_info/employee_number}"
                     keyField="employee_number"
                     textField="user_local_name"
@@ -545,7 +545,7 @@
             </Label>
             <VBox>
                 <lib-m:CodePicker
-                    placeholder="Enter a Employee name"
+                    placeholder="{detailModel>/planning_person_info/user_local_name} {detailModel>/planning_person_info/job_title}"
                     selectedKey="{detailModel>/planning_person_info/employee_number}"
                     keyField="employee_number"
                     textField="user_local_name"

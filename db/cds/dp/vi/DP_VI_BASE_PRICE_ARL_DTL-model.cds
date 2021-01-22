@@ -1,14 +1,14 @@
 namespace dp;
 
 using util from '../../cm/util/util-model';
-using {dp.VI_Base_Price_Arl_Mst as master} from './DP_VI_BASE_PRICE_ARL_MST-model';
-using {dp.VI_Base_Price_Arl_Price as price} from './DP_VI_BASE_PRICE_ARL_PRICE-model';
-using {cm.Code_Dtl as code} from '../../cm/CM_CODE_DTL-model';
-using {cm.Org_Tenant as tenant} from '../../cm/CM_ORG_TENANT-model';
-using {cm.Org_Company as comp} from '../../cm/CM_ORG_COMPANY-model';
-using {cm.Pur_Operation_Org as org} from '../../cm/CM_PUR_OPERATION_ORG-model';
-using {dp.Mm_Material_Mst as material} from '../mm/DP_MM_MATERIAL_MST-model';
-using {sp.Sm_Supplier_Mst as supplier} from '../../sp/sm/SP_SM_SUPPLIER_MST-model';
+// using {dp.VI_Base_Price_Arl_Mst as master} from './DP_VI_BASE_PRICE_ARL_MST-model';
+// using {dp.VI_Base_Price_Arl_Price as price} from './DP_VI_BASE_PRICE_ARL_PRICE-model';
+// using {cm.Code_Dtl as code} from '../../cm/CM_CODE_DTL-model';
+// using {cm.Org_Tenant as tenant} from '../../cm/CM_ORG_TENANT-model';
+// using {cm.Org_Company as comp} from '../../cm/CM_ORG_COMPANY-model';
+// using {cm.Pur_Operation_Org as org} from '../../cm/CM_PUR_OPERATION_ORG-model';
+// using {dp.Mm_Material_Mst as material} from '../mm/DP_MM_MATERIAL_MST-model';
+// using {sp.Sm_Supplier_Mst as supplier} from '../../sp/sm/SP_SM_SUPPLIER_MST-model';
 
 entity VI_Base_Price_Arl_Dtl {
     key tenant_id                 : String(5) not null;
@@ -52,11 +52,9 @@ entity VI_Base_Price_Arl_Dtl {
         //                                 and base_price_ground_code_fk.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
         //                                 and base_price_ground_code_fk.code       = base_price_ground_code;
 };
-
 extend VI_Base_Price_Arl_Dtl with util.Managed;
 
 annotate VI_Base_Price_Arl_Dtl with @title : '품의 상세'  @description : '개발단가 품의 상세';
-
 annotate VI_Base_Price_Arl_Dtl with {
     tenant_id              @title : '테넌트ID'  @description    : '테넌트ID';
     approval_number        @title : '품의번호'  @description     : '품의번호';
@@ -68,5 +66,5 @@ annotate VI_Base_Price_Arl_Dtl with {
     base_uom_code          @title : '기본측정단위코드'  @description     : 'material entity 참조';
     supplier_code          @title : '공급업체코드'  @description   : '공급업체코드';
     base_date              @title : '기준일자'  @description     : '기준일자';
-    base_price_ground_code @title : '기준단가근거코드'  @description : '공통코드(CM_CODE_DTL, DP_VI_BASE_PRICE_GROUND_CODE) : 10(Cost Table), 20(RFQ), 30(Family Material Code)';
+    base_price_ground_code @title : '기준단가근거코드'  @description : '공통코드(CM_CODE_DTL, DP_VI_BASE_PRICE_GROUND_CODE) : COST(Cost Table), RFQ(RFQ), FMC(Family Material Code)';
 };

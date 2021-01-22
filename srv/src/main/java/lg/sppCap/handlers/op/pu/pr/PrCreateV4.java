@@ -121,6 +121,11 @@ public class PrCreateV4 implements EventHandler {
         .append("PR_PROGRESS_STATUS_CODE NVARCHAR(30),")
         .append("REMARK NVARCHAR(3000),")
         .append("SLOC_CODE NVARCHAR(3),")
+        .append("ACCOUNT_CODE NVARCHAR(40),")
+        .append("CCTR_CODE NVARCHAR(10),")
+        .append("WBS_CODE NVARCHAR(30),")
+        .append("ASSET_NUMBER NVARCHAR(30),")
+        .append("ORDER_NUMBER NVARCHAR(30),")
         .append("UPDATE_USER_ID NVARCHAR(255)")
         .append(")"); 
 
@@ -128,7 +133,7 @@ public class PrCreateV4 implements EventHandler {
         String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_D";
 
         String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_CREATE_SAVE_PROC ( ")
@@ -147,9 +152,6 @@ public class PrCreateV4 implements EventHandler {
             
             // Commit Option
             jdbc.execute(v_sql_commitOption);
-                        
-            
-
 
             // Header Local Temp Table에 insert
             List<Object[]> batchH = new ArrayList<Object[]>();
@@ -219,7 +221,12 @@ public class PrCreateV4 implements EventHandler {
                                 v_inRow.getPrProgressStatusCode(),
                                 v_inRow.getRemark(),
                                 v_inRow.getSlocCode(),
-                                "A60264"
+                                v_inRow.getAccountCode(),
+                                v_inRow.getCctrCode(),
+                                v_inRow.getWbsCode(),
+                                v_inRow.getAssetNumber(),
+                                v_inRow.getOrderNumber(),
+                                v_indata.getUpdateUserId()
                             };
                             batchD.add(values);
                         }
