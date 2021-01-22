@@ -367,7 +367,8 @@ sap.ui.define([
             // String upperCaseOnly = "^[A-Z]*$";
             var _oInput = oEvent.getSource();
             var val = _oInput.getValue();
-            _oInput.setValue(val.toUpperCase());                      
+            if(this.isValNull(val))
+                _oInput.setValue(0);                      
                 
         },
 		
