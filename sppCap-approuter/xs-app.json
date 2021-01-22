@@ -11,6 +11,12 @@
       "target": "$1"
     },
     {
+      "source": "^.*/lib/css/(.*)$",
+      "service": "html5-apps-repo-rt",
+      "cacheControl": "no-cache, no-store, must-revalidate",
+      "authenticationType": "none"
+    },
+    {
       "source": "^(.*)$",
       "target": "$1",
       "service": "html5-apps-repo-rt",
