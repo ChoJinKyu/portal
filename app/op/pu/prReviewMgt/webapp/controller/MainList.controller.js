@@ -42,33 +42,52 @@ sap.ui.define([
             this.setModel(new Multilingual().getModel(), "I18N");
             // 화면제어
             this.setModel(new JSONModel(), "mainListViewModel");
-            // 조회조건
+            // 조회조건 : 
             this.setModel(new JSONModel({
                 tenant_id: "L2100",
                 company_code: null,
-                pr_type_code: [],
-                pr_number: null,
+                pr_type_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
+                pr_number: {
+                    FilterOperator: FilterOperator.Contains,
+                    values: []
+                },
                 pr_item_number: null,
                 org_type_code: null,
-                org_code: [],
+                org_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
                 material_code: null,
                 material_group_code: null,
-                pr_desc: null,
+                pr_desc: {
+                    FilterOperator: FilterOperator.Contains,
+                    values: []
+                },
                 pr_quantity: null,
                 pr_unit: null,
                 requestor_empno: null,
                 requestor_name: null,
-                request_date: [
-                    uToday, uToday
-                ],
-                accept_date: [null, null],
+                request_date: {
+                    FilterOperator: FilterOperator.BT,
+                    values: [ uToday, uToday ]
+                },
+                accept_date: {
+                    FilterOperator: FilterOperator.BT,
+                    values: [ null, null ]
+                },
                 delivery_request_date: null,
                 buyer_empno: null,
                 purchasing_group_code: null,
                 estimated_price: null,
                 currency_code: null,
                 price_unit: null,
-                pr_progress_status_code: [],
+                pr_progress_status_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
                 remark: null,
                 attch_group_number: null,
                 delete_flag: null,
@@ -86,7 +105,7 @@ sap.ui.define([
         },
         // 화면호출시실행
         onRenderedFirst: function () {
-            this.onSearch();
+            //this.onSearch();
         },
         /* =========================================================== */
         /* event handlers                                              */
@@ -148,32 +167,49 @@ sap.ui.define([
                             .filter(
                                 path => 
                                     // Primitive
-                                    typeof jSearch[path] == "boolean" || typeof jSearch[path] == "number" ||
-                                    (jSearch[path] && typeof jSearch[path] == "string") || 
-                                    // Array 형태
-                                    (jSearch[path] instanceof Array && jSearch[path].length > 0 && (jSearch[path][0] || jSearch[path][1])) ||
+                                    (jSearch[path] && typeof jSearch[path] == "string") || typeof jSearch[path] == "boolean" || typeof jSearch[path] == "number" ||  
                                     // Object (연산자필드포함)
-                                    (jSearch[path] && jSearch[path]["Contains"])
+                                    (jSearch[path] && typeof jSearch[path] == "object" && jSearch[path]["values"].filter(v => !!v).length > 0)
                             )
                             .reduce(function(acc, path) {
-                                return [
-                                    ...acc, 
-                                    jSearch[path] instanceof Array
-                                    ? new Filter(path, FilterOperator.BT, (jSearch[path][0]), (jSearch[path][1]))
-                                    : (jSearch[path] && jSearch[path]["Contains"])
-                                    ? new Filter(path, FilterOperator.Contains, jSearch[path])
-                                    : new Filter(path, FilterOperator.EQ, jSearch[path])
-                                ]
+
+                                var filter = [];
+
+                                if (typeof jSearch[path] == "object") {
+                                    // BT
+                                    jSearch[path]["FilterOperator"] == FilterOperator.BT
+                                    && 
+                                    (filter = new Filter(path, jSearch[path]["FilterOperator"], jSearch[path]["values"][0], jSearch[path]["values"][1]));
+                                    
+                                    // Contains
+                                    jSearch[path]["FilterOperator"] == FilterOperator.Contains
+                                    && 
+                                    (filter = new Filter(path, jSearch[path]["FilterOperator"], jSearch[path]["values"][0]));
+
+                                    // Any 의 경우 v2 에서는 지원이 않되므로, In 절 형태로 바꾸어 줘야 한다. (For MultiCombo)
+                                    jSearch[path]["FilterOperator"] == FilterOperator.Any
+                                    &&
+                                    (filter = jSearch[path]["values"].reduce(function (acc, e) {
+                                        return [...acc, new Filter({
+                                            path: path, operator: FilterOperator.EQ, value1: e
+                                        })];
+                                    }, []));
+                                }
+                                else {
+                                    filter = new Filter(path, FilterOperator.EQ, jSearch[path]);
+                                }
+
+                                return filter instanceof Array ? [ ...acc, ...filter ] : [ ...acc, filter ];
                             }, []),
                     }, {
                         success: oDeferred.resolve,
                         error: oDeferred.reject
                     }));
+
                     return oDeferred.promise();
                 }).call(this)
                 // 성공시
                 .done((function (oData) {
-                    //console.log(">>>>>>>>>>> oData", oData);
                     this.getView().setModel(new JSONModel({
                         "Pr_ReviewListView": oData.results
                     }), "list");

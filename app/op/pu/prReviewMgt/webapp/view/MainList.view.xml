@@ -52,8 +52,8 @@
                                 width="100%"
                                 value="{
                                     parts: [
-                                        {path: 'jSearch>/request_date/0'}, 
-                                        {path: 'jSearch>/request_date/1'}
+                                        {path: 'jSearch>/request_date/values/0'}, 
+                                        {path: 'jSearch>/request_date/values/1'}
                                     ], 
                                     type: 'sap.ui.model.type.DateInterval',
                                     formatOptions: { UTC: true, format: 'yMd' }
@@ -63,8 +63,7 @@
                             <!-- 구매요청생성상태코드 -->
                             <Label text="{I18N>/PR_CREATE_STATUS_CODE}"/>
                             <MultiComboBox
-                                selectedKeys="{jSearch>/pr_progress_status_code}"
-                                placeholder="{I18N>/ALL}"
+                                selectedKeys="{jSearch>/pr_progress_status_code/values}"
                                 showSecondaryValues="false"
                                 width="100%"
                                 items="{
@@ -113,8 +112,8 @@
                                 width="100%"
                                 value="{
                                     parts: [
-                                        {path: 'jSearch>/request_date/0'}, 
-                                        {path: 'jSearch>/request_date/0'}
+                                        {path: 'jSearch>/request_date/values/0'}, 
+                                        {path: 'jSearch>/request_date/values/1'}
                                     ], 
                                     type: 'sap.ui.model.type.DateInterval',
                                     formatOptions: { UTC: true, format: 'yMd' }
@@ -125,8 +124,7 @@
                             <!-- 구매요청 유형 -->
                             <Label text="{I18N>/PR_TYPE_CODE}"/>
                             <MultiComboBox
-                                selectedKeys="{jSearch>/pr_type_code}"
-                                placeholder="{I18N>/ALL}"
+                                selectedKeys="{jSearch>/pr_type_code/values}"
                                 showSecondaryValues="false"
                                 width="100%"
                                 items="{
@@ -171,13 +169,13 @@
                             <Label text="{I18N>/PR_NUMBER}"/>
                             <Input 
                                 placeholder="(미정)구매요청번호를 입력하세요"
-                                value="{path: 'jSearch>/pr_number'}"
+                                value="{path: 'jSearch>/pr_number/values/0'}"
                             />
                             <!-- 구매요청 품명 -->
                             <Label text="{I18N>/PR_ITEM_NAME}"/>
                             <Input 
                                 placeholder="(미정)구매요청품명을 입력하세요"
-                                value="{path: 'jSearch>/pr_desc'}"
+                                value="{path: 'jSearch>/pr_desc/values/0'}"
                             />
                             <!-- 구매담당자 -->
                             <Label text="{I18N>/BUYER}"/>
@@ -209,8 +207,7 @@
                             <!-- 조직코드 -->
                             <Label text="{I18N>/ORG_CODE}"/>
                             <MultiComboBox
-                                selectedKeys="{jSearch>/org_code}"
-                                placeholder="{I18N>/ALL}"
+                                selectedKeys="{jSearch>/org_code/values}"
                                 showSecondaryValues="false"
                                 width="100%"
                                 items="{
