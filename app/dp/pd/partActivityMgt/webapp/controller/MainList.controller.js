@@ -167,7 +167,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/PdPartActivityTemplate", {
+            oModel.read("/pdPartactivityTemplateView", {
                 filters: aSearchFilters,
                 sorters: aSorter,
                 success: function (oData) {
