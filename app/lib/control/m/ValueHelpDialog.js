@@ -17,11 +17,11 @@ sap.ui.define([
     "sap/m/MultiInput",
     "sap/m/Token",
     "sap/m/Table",
-    "sap/m/ColumnListItem"
-], function (Parent, Renderer, Multilingual, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem) {
+    "sap/m/ColumnListItem",
+    "sap/ui/thirdparty/jquery"
+], function (Parent, Renderer, Multilingual, JSONModel, GridData, SimpleForm, VBox, FlexBox, Label, Button, MultiInput, Token, Table, ColumnListItem, jQuery) {
     "use strict";
 
-    //TODO : Localization (Buttons - apply, cancel, search, table no-data, multiInput title)
     var ValueHelpDialog = Parent.extend("ext.lib.control.m.ValueHelpDialog", {
 
         renderer: Renderer,
@@ -118,7 +118,7 @@ sap.ui.define([
                 justifyContent: "End",
                 items: [
                     new Button({
-                        type: "Transparent",
+                        type: "Emphasized",
                         text: this.getModel("I18N").getText("/SEARCH"),
                         press: this._onSearchPress.bind(this)
                     })
@@ -178,11 +178,11 @@ sap.ui.define([
 
         doApply: function(oItem){
             if(this.getProperty("multiSelection")) {
-                var sTokens = jQuery.map(this.oMultiInput.getTokens(), function(oToken){
+                var sKeys = jQuery.map(this.oMultiInput.getTokens(), function(oToken){
                     return oToken.getKey();
                 }).join(",");
                 var aItems = jQuery.map(this.getModel().getData(), function(oData){
-                    if(sTokens.indexOf(oData[this.getProperty("keyField")]) > -1)
+                    if(sKeys.indexOf(oData[this.getProperty("keyField")]) > -1)
                         return oData;
                 }.bind(this));
                 this.fireEvent("apply", {items: aItems});
@@ -225,7 +225,10 @@ sap.ui.define([
         setTokens: function(aTokens){
             if(this.oMultiInput){
                 this.oMultiInput.setTokens(jQuery.map(aTokens, function(oToken){
-                    return oToken.clone();
+                    return new Token({
+                        key: oToken.getProperty("key"),
+                        text: oToken.getProperty("text"),
+                    });
                 }));
             }
         },
