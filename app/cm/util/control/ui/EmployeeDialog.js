@@ -81,14 +81,6 @@ sap.ui.define([
             ];
         },
 
-        getServiceParameters: function(){
-            return {
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                ]
-            }
-        },
-
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
                 sDepartment = this.oDepartment.getValue(),
