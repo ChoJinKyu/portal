@@ -96,7 +96,7 @@ service PrMgtService {
                         and cdLng.group_code          = 'OP_PR_CREATE_STATUS_CODE'
                         and cdLng.language_cd         = 'KO'
                         and mst.pr_create_status_code = cdLng.code
-                ) as pr_create_status_name      : String(30), // 구매요청생성상태코드    'DR'
+                ) as pr_create_status_name      : String(30), // 구매요청생성상태코드 'DR'
                 (
                     select code_name from cdLng
                     where
@@ -173,9 +173,9 @@ service PrMgtService {
                  prTMst.default_template_number,
                  prTMst.approval_flag,
                  prTMst.use_flag,
-                 prTXtn.txn_type_code,
-                 prTXtn.table_name,
-                 prTEtt.column_name,
+            key  prTXtn.txn_type_code,
+            key  prTXtn.table_name,
+            key  prTEtt.column_name,
                  OP_PU_PR_TEMPLATE_GETCOL_FUNC( prTMst.tenant_id
                                                 , prTMst.pr_template_number
                                                 , prTXtn.txn_type_code                                                
