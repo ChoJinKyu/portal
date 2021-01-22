@@ -531,12 +531,12 @@ sap.ui.define([
             var oBindingInfoSnap   = oComboSnap.getBindingInfo("items");
             var oBindingInfoExpand = oComboExpand.getBindingInfo("items");
             var bindInfoSnap = {
-                    path: '/Org_Division',
+                    path: '/Org_Div',
                     filters: filter,
                     template: oBindingInfoSnap.template
                 };
             var bindInfoExpand = {
-                    path: '/Org_Division',
+                    path: '/Org_Div',
                     filters: filter,
                     template: oBindingInfoExpand.template
                 };

@@ -30,7 +30,7 @@
         beforeUploadStarts="onBeforeUploadStarts" />
     <!-- 제품 이미지 끝-->
 </VBox>
-<VBox>
+<VBox class="sapUiSmallMarginTop">
     <!-- 개발 업로드 시작-->
     <UploadCollection
         id="devUploadCollection"
@@ -50,7 +50,7 @@
         beforeUploadStarts="onBeforeUploadStarts" />
     <!-- 개발 업로드 끝-->
 </VBox>
-<VBox>
+<VBox class="sapUiSmallMarginTop">
     <!-- 구매 업로드 시작-->
     <UploadCollection
         id="purchaseUploadCollection"

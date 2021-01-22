@@ -93,7 +93,7 @@
                                 labelFor="searchKeyword">
                             </Label>
                             <Input id="searchKeyword" 
-                                placeholder="{I18N>/IDEA} {I18N>/NAME}"/>
+                                placeholder=""/>
                             <layoutData>
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />
