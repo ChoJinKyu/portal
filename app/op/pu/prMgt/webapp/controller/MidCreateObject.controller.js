@@ -129,29 +129,29 @@ sap.ui.define([
         /**
          * View 항목 visible 세팅
          */
-        _fnSetVisible: function(){
-            var that = this,
-                oView = this.getView(),
-                oServiceModel = this.getModel(),
-                oViewModel = this.getModel('viewModel'),
-                oContModel = this.getModel("contModel");
-            var oPrMstData = oViewModel.getProperty("/PrMst");
+        // _fnSetVisible: function(){
+        //     var that = this,
+        //         oView = this.getView(),
+        //         oServiceModel = this.getModel(),
+        //         oViewModel = this.getModel('viewModel'),
+        //         oContModel = this.getModel("contModel");
+        //     var oPrMstData = oViewModel.getProperty("/PrMst");
 
-            var oPrDtlVisible = {
-                material_code: true,
-                material_group_code: true,
-                sloc_code: true
-            };
+        //     var oPrDtlVisible = {
+        //         material_code: true,
+        //         material_group_code: true,
+        //         sloc_code: true
+        //     };
 
-            //구매유형 : 공사
-            if(oPrMstData.pr_type_code_2 === "TC20003"){
-                oPrDtlVisible.material_code = false;
-                oPrDtlVisible.material_group_code = false;
-                oPrDtlVisible.sloc_code = false;
-            }
+        //     //구매유형 : 공사
+        //     if(oPrMstData.pr_type_code_2 === "TC20003"){
+        //         oPrDtlVisible.material_code = false;
+        //         oPrDtlVisible.material_group_code = false;
+        //         oPrDtlVisible.sloc_code = false;
+        //     }
 
-            oContModel.setProperty("/Pr_Dtl", oPrDtlVisible);
-        },
+        //     oContModel.setProperty("/Pr_Dtl", oPrDtlVisible);
+        // },
 
         /**
          * Edit Mode setting
@@ -173,34 +173,34 @@ sap.ui.define([
         /**
          * 품의내용 폅집기 창 
          */
-        _fnSetRichEditor : function (){ 
-            var that = this,
-                sHtmlValue = '';            
-            var oApprovalLayout = this.getView().byId("approvalLayout");
-            var oApprovalRTE = oApprovalLayout.getContent()[0];
+        // _fnSetRichEditor : function (){ 
+        //     var that = this,
+        //         sHtmlValue = '';            
+        //     var oApprovalLayout = this.getView().byId("approvalLayout");
+        //     var oApprovalRTE = oApprovalLayout.getContent()[0];
 
-            if(!that.oApprovalRichTextEditor){
-                sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                    function (RTE, EditorType) {
-                        that.oApprovalRichTextEditor = new RTE("prCreateApprovalRTE", {
-                            editorType: EditorType.TinyMCE4,
-                            width: "100%",
-                            height: "200px",
-                            customToolbar: true,
-                            showGroupFont: true,
-                            showGroupLink: true,
-                            showGroupInsert: true,
-                            value: sHtmlValue,
-                            ready: function () {
-                                this.addButtonGroup("styleselect").addButtonGroup("table");
-                            }
-                        });
-                        oApprovalLayout.addContent(that.oApprovalRichTextEditor);
-                });
-            } else {
-                that.oApprovalRichTextEditor.setValue("");
-            }                
-        },
+        //     if(!that.oApprovalRichTextEditor){
+        //         sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+        //             function (RTE, EditorType) {
+        //                 that.oApprovalRichTextEditor = new RTE("prCreateApprovalRTE", {
+        //                     editorType: EditorType.TinyMCE4,
+        //                     width: "100%",
+        //                     height: "200px",
+        //                     customToolbar: true,
+        //                     showGroupFont: true,
+        //                     showGroupLink: true,
+        //                     showGroupInsert: true,
+        //                     value: sHtmlValue,
+        //                     ready: function () {
+        //                         this.addButtonGroup("styleselect").addButtonGroup("table");
+        //                     }
+        //                 });
+        //                 oApprovalLayout.addContent(that.oApprovalRichTextEditor);
+        //         });
+        //     } else {
+        //         that.oApprovalRichTextEditor.setValue("");
+        //     }                
+        // },
 
         /**
          * 구매요청 템플릿 리스트 조회
@@ -232,6 +232,9 @@ sap.ui.define([
                             oPrMstData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
                             oPrMstData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
                             oPrMstData.pr_template_numbers = oPrTemplateData.pr_template_numbers;
+                            if(!oPrTemplateData.pr_template_numbers) {
+                                oPrMstData.pr_template_numbers = oPrTemplateData.pr_template_numbers1;
+                            }
                             oViewModel.setProperty("/PrMst",oPrMstData);
                             return true;
                         }
@@ -291,19 +294,29 @@ sap.ui.define([
         _fnSetVisibleModel: function(oTemplateData) {
             var that = this,
                 oView = this.getView(),
-                oServiceModel = this.getModel(),
                 oContModel = this.getModel('contModel');
-            //var oPrMstData = oContModel.getProperty("/PrMst");
+
+            var oContDisplayFlag={};
 
             oTemplateData.forEach(function(item, idx){
-                var oSetData = {
+                var oTableName = item.table_name;
+                var oColumnName = item.column_name;
+                var oSetFlagData = {
                     "display_column_flag" : item.display_column_flag,
                     "hide_column_flag" : item.hide_column_flag,
                     "input_column_flag" : item.input_column_flag,
                     "mandatory_column_flag" : item.mandatory_column_flag
                 };
-                oContModel.setProperty("/" + item.table_name + "/" + item.column_name, oSetData);
+                
+                if(!oContDisplayFlag[oTableName]){
+                    oContDisplayFlag[oTableName] = {};
+                }
+                oContDisplayFlag[oTableName][oColumnName] = oSetFlagData;
             });
+            oContModel.setProperty("/DisplayFlag", oContDisplayFlag);
+
+            //var oMATERIAL_CODEdisplay_column_flag = oContModel.getProperty("/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag");
+            //console.log("DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag > " + oMATERIAL_CODEdisplay_column_flag);
         },
 
         /**
@@ -353,7 +366,7 @@ sap.ui.define([
             //this._fnGetPrTemplateNumbers();
 
             // 항목 Visible setting
-            this._fnSetVisible();
+            //this._fnSetVisible();
         },
 
         _fnReadPrMaster : function(oArgs){
@@ -389,7 +402,7 @@ sap.ui.define([
                         //that._fnGetPrTemplateNumbers();
 
                         // 항목 Visible setting
-                        that._fnSetVisible();
+                        //that._fnSetVisible();
 
                         // 화면 Edit Mode setting
                         that._fnSetEditMode();
@@ -783,7 +796,12 @@ sap.ui.define([
                         price_unit          : (item.price_unit) ? item.price_unit : "",
                         pr_progress_status_code: (item.pr_progress_status_code) ? item.pr_progress_status_code : "",
                         remark              : (item.remark) ? item.remark : "",
-                        sloc_code           : (item.sloc_code) ? item.sloc_code : ""
+                        sloc_code           : (item.sloc_code) ? item.sloc_code : "",
+                        account_code        : (item.account_code) ? item.account_code : "",
+                        cctr_code           : (item.cctr_code) ? item.cctr_code : "",
+                        wbs_code            : (item.wbs_code) ? item.wbs_code : "",
+                        asset_number        : (item.asset_number) ? item.asset_number : "",
+                        order_number        : (item.order_number) ? item.order_number : ""
             }
             return returnData;
         },

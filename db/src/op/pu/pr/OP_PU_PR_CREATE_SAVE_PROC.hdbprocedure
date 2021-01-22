@@ -44,6 +44,11 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
                             PR_PROGRESS_STATUS_CODE NVARCHAR(30),
                             REMARK NVARCHAR(3000),
                             SLOC_CODE NVARCHAR(3),
+                            ACCOUNT_CODE NVARCHAR(40),
+                            CCTR_CODE NVARCHAR(10),
+                            WBS_CODE NVARCHAR(30),
+                            ASSET_NUMBER NVARCHAR(30),
+                            ORDER_NUMBER NVARCHAR(30),
 							UPDATE_USER_ID NVARCHAR(255)
         ),
         OUT O_RTN_MSG TABLE( RETURN_CODE NVARCHAR(4),
@@ -81,7 +86,12 @@ BEGIN
                 PRICE_UNIT ,
                 PR_PROGRESS_STATUS_CODE ,
                 REMARK ,
-                SLOC_CODE, 
+                SLOC_CODE,                             
+                ACCOUNT_CODE,
+                CCTR_CODE ,
+                WBS_CODE ,
+                ASSET_NUMBER ,
+                ORDER_NUMBER ,
 				UPDATE_USER_ID 
         FROM :I_D_TABLE DTL
         ;
@@ -96,7 +106,8 @@ BEGIN
 	
 	/* 구매요청번호 채번 */
     IF (:I_PR_NUMBER IS NULL OR :I_PR_NUMBER = '' OR :I_PR_NUMBER = 'NEW') THEN
-        SELECT 'PR' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(XX_SAMPLE_MASTER_ID_SEQ.NEXTVAL, 5, '0') 
+        --SELECT 'PR' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(XX_SAMPLE_MASTER_ID_SEQ.NEXTVAL, 5, '0')         
+        SELECT 'PR' || LPAD(OP_PU_PR_MST_PR_NUMBER_SEQ.NEXTVAL, 10, '0') 
         INTO V_PR_NUMBER
         FROM DUMMY;
     ELSE
@@ -213,15 +224,24 @@ BEGIN
 	;	
 
     --=================================================
-	-- 구매요청 Detail 
+    -- 구매요청 Detail 
+    ---------------------------------------------------
+    -- 품목정보는 삭제 후 등록 처리
     --=================================================
 
-	/* - 품목 삭제 후 등록 처리 */
+	/* 품목 삭제 */
 	DELETE FROM OP_PU_PR_DTL
 	WHERE 	TENANT_ID 		= :I_TENANT_ID
 	AND		COMPANY_CODE	= :I_COMPANY_CODE
 	AND		PR_NUMBER		= :I_PR_NUMBER
-	;
+    ;
+
+	DELETE FROM OP_PU_PR_ACCOUNT
+	WHERE 	TENANT_ID 		= :I_TENANT_ID
+	AND		COMPANY_CODE	= :I_COMPANY_CODE
+	AND		PR_NUMBER		= :I_PR_NUMBER
+    ;
+        
 	
     /* Cursor 실행 */
 	FOR curDtl AS curDtlList DO
@@ -289,7 +309,51 @@ BEGIN
             curDtl.UPDATE_USER_ID,
             CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP
-		);	
+        );	
+        
+
+        INSERT INTO OP_PU_PR_ACCOUNT (
+			TENANT_ID  ,
+			COMPANY_CODE,
+			PR_NUMBER ,
+			PR_ITEM_NUMBER ,
+			ACCOUNT_SEQUENCE ,
+			SERVICE_SEQUENCE ,
+			ACCOUNT_CODE,
+			CCTR_CODE,
+			WBS_CODE,
+			ASSET_NUMBER,
+			ORDER_NUMBER,
+            PR_QUANTITY ,
+            DISTRB_RATE ,
+            LOCAL_CREATE_DTM,
+            LOCAL_UPDATE_DTM,
+            CREATE_USER_ID,
+            UPDATE_USER_ID,
+            SYSTEM_CREATE_DTM,
+            SYSTEM_UPDATE_DTM
+		) VALUES (
+			curDtl.TENANT_ID , 
+			curDtl.COMPANY_CODE,
+			:V_PR_NUMBER ,
+			curDtl.PR_ITEM_NUMBER,
+			1 ,
+			NULL ,
+			curDtl.ACCOUNT_CODE,
+			curDtl.CCTR_CODE,
+			curDtl.WBS_CODE,
+			curDtl.ASSET_NUMBER,
+            curDtl.ORDER_NUMBER,
+            curDtl.PR_QUANTITY,
+            NULL,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP,
+            curDtl.UPDATE_USER_ID,
+            curDtl.UPDATE_USER_ID,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        );
+
 	END FOR;
         
 

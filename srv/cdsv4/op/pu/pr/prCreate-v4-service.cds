@@ -4,7 +4,7 @@ using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-
 namespace op;
 @path : '/op.PrCreateV4Service'
 service PrCreateV4Service {
-
+/*
     type SavedMaster : {
         tenant_id : String;
         company_code : String;
@@ -33,7 +33,7 @@ service PrCreateV4Service {
         requestor_empno: String;
         requestor_name: String;
     };
-
+*/
     type SavedDetail : {
         tenant_id : String;
         company_code : String;
@@ -56,35 +56,14 @@ service PrCreateV4Service {
         price_unit: String;
         pr_progress_status_code: String;
         remark: String;
-        sloc_code       : String;
-    };  
+        sloc_code : String;
+        account_code : String;
+        cctr_code : String;
+        wbs_code : String;
+        asset_number : String;
+        order_number : String;
+    };
 
-    // (단일 Header에 multi Detail) 가 multi
-    // Test 데이터
-    /*********************************
-    {
-        "inputData": [
-            {
-                "header_id" : 103,
-                "cd" : "CD103",
-                "name": "NAME103",
-                "details": [
-                    {"detail_id" : 1003, "header_id" : 103, "cd" : "CD1003", "name": "NAME1003"},
-                    {"detail_id" : 1004, "header_id" : 103, "cd" : "CD1004", "name": "NAME1004"}
-                ]
-            },
-            {
-                "header_id" : 104,
-                "cd" : "CD104",
-                "name": "NAME104",
-                "details": [
-                    {"detail_id" : 1005, "header_id" : 104, "cd" : "CD1003", "name": "NAME1005"},
-                    {"detail_id" : 1006, "header_id" : 104, "cd" : "CD1004", "name": "NAME1006"}
-                ]
-            }
-        ]
-    }
-    *********************************/
     type PrCreateSaveType {
         tenant_id : String;
         company_code : String;
