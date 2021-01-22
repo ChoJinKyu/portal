@@ -149,7 +149,7 @@
                     "target": ["detailObject"]
                 },{
                     "name": "detailPage2",
-                    "pattern": "detailObject2/{type},{outcome}",
+                    "pattern": "detailObject2/{type},{outcome},{header_id}",
                     "target": ["detailObject2"]
                 }
             

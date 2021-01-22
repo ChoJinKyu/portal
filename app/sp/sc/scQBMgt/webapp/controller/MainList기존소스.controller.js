@@ -25,26 +25,13 @@ sap.ui.define([
         
 
 		return Controller.extend("sp.sc.scQBMgt.controller.MainList", {
-            test1: function(e){
-                debugger;
-            },
+            
 			onInit: function () {
                 
                 console.log("onInit");
                 // I18N 모델 SET
                 var oMultilingual = new Multilingual();
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
-                
-
-
-                // 
-                // oServiceModel: new ODataModel({
-                //     serviceUrl: "srv-api/odata/v2/dp.util.SupplierSelectionService/",
-                //     defaultBindingMode: "OneWay",
-                //     defaultCountMode: "Inline",
-                //     refreshAfterChange: false,
-                //     useBatch: true
-                // })
 
 
                 // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders";
@@ -329,7 +316,6 @@ sap.ui.define([
                 
                 var sTable = this.getView().byId("sTable1");
                 
-                
             },
             onBeforeExport: function (oEvt) {
                 var mExcelSettings = oEvt.getParameter("exportSettings");
@@ -499,7 +485,6 @@ sap.ui.define([
             },
             onAfterRendering:function(e){
                 
-                
                
                 
                 
@@ -508,7 +493,6 @@ sap.ui.define([
             //     console.log("change");
             // },
             attachDataReceived: function(e){
-                
                 
                 // alert("1");
                 // console.log("change : ",e);
