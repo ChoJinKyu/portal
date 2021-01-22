@@ -21,14 +21,14 @@
 		showFooter="false">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-                <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-                </uxap:navigationActions>
 				<uxap:expandedHeading>
-					<Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					    <Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
+                    </HBox>
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
+					    <Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
 				</uxap:snappedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -39,7 +39,7 @@
                 <layout:Grid
                         containerQuery="true"
                         defaultIndent="XL1 L1 M1 S1"
-                        defaultSpan="XL5 L5 M5 S5">
+                        defaultSpan="XL3 L3 M3 S3">
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <ObjectStatus
                             title="{I18N>/IDEA} {I18N>/SEQUENCE} "
@@ -65,6 +65,16 @@
                                     }
                                 }"/>
                         <layout:VerticalLayout span="XL2 L3 M6 S12" />
+                    </layout:VerticalLayout>
+                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
+                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
+                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
+                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
+                        <ObjectStatus
+                            title="{I18N>/PROGRESS}{I18N>/STATUS}"
+                            text="{master>/idea_progress_status_name}"/>
+                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
                     </layout:VerticalLayout>
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
@@ -364,11 +374,11 @@
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 
-                <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
-				<Button id="pageSaveButton" type="Transparent" text="Draft" press=".onPageSaveButtonPress('D')" />
-				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelButtonPress"/>
-				<Button id="pageListButton" type="Transparent" text="List" press=".onPageListButtonPress"/>
-                <Button id="pageSubmitButton" type="Emphasized" text="Submit" press=".onPageSaveButtonPress('R')" />
+                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
+				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('D')" />
+				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
+				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
