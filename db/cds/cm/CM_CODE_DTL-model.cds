@@ -26,6 +26,7 @@ entity Code_Dtl {
         parent_group_code : String(30) null      @title : '상위그룹코드';
         parent_code       : String(30) null      @title : '상위코드';
         remark            : String(500) null     @title : '비고';
+        color_type_code   : String(30) null     @title : '색상구분코드';
 
 }
 
