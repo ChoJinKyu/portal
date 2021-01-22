@@ -37,9 +37,9 @@ entity Tm_Manager_Dtl {
 
     key monitoring_manager_empno        : String(30) not null @title : '모니터링관리자사번';
 
-        monitoring_manager_empnos       : Association to Employee.Hr_Employee
-                                              on  monitoring_manager_empnos.tenant_id       = tenant_id
-                                              and monitoring_manager_empnos.employee_number = monitoring_manager_empno;
+        // monitoring_manager_empnos       : Association to Employee.Hr_Employee
+        //                                       on  monitoring_manager_empnos.tenant_id       = tenant_id
+        //                                       and monitoring_manager_empnos.employee_number = monitoring_manager_empno;
 
         monitoring_super_authority_flag : Boolean not null    @title : '모니터링최상위권한여부';
 }

@@ -15,9 +15,12 @@
   7. service description : Commodity Service
   8. history
   -. 2020.12.11 : 최미희 최초작성
+  -. 2021.01.22 : 최미희 commodityView 추가 
 *************************************************/
 using { dp as Commodity }    from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_COMMODITY-model';
 using { dp as CommodityLng } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_COMMODITY_LNG-model';
+//using { dp as CommodityView } from  '../../../../../db/cds/dp/mm/DP_MM_MTL_COMMODITY_VIEW-model';
+
 namespace dp;
 @path : '/dp.MtlCommodityMgtService'
 
@@ -29,17 +32,15 @@ service MtlCommodityMgtService {
     view MtlCommodityView as
     select key m.tenant_id,
            key m.commodity_code,
-           ifnull(l.commodity_name, m.commodity_name) as commodity_name : String(100),
-           ifnull(l.commodity_desc, m.commodity_desc) as commodity_desc : String(1000),
-           m.use_flag,
-           l.language_code
-    from  Commodity.Mm_Material_Commodity m
-    left join CommodityLng.Mm_Material_Commodity_Lng l
-    on l.tenant_id = m.tenant_id
-      and l.commodity_code = m.commodity_code
-      and l.language_code = 'KO'
+           ifnull(( select l.commodity_name 
+                    from MtlCommodityLng as l
+                    where l.tenant_id = m.tenant_id
+                    and l.commodity_code = m.commodity_code
+                    and l.language_code = 'KO'
+                  ), m.commodity_name) as commodity_name : String(100),
+           m.commodity_desc,
+           m.use_flag
+    from MtlCommodity m
     ;
-
-
 
 }

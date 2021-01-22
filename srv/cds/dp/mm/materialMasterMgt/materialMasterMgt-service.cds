@@ -101,7 +101,7 @@ service MaterialMasterMgtService {
     left join MtlClass.MtlClassView cls
     on cls.tenant_id = mst.tenant_id
     and cls.material_class_code = mst.material_class_code
-    left join MtlGroup.MtlGroupView grp
+    left outer join MtlGroup.MtlGroupView grp
     on grp.tenant_id = mst.tenant_id
     and grp.material_group_code = mst.material_group_code
     left join MtlCommodity.MtlCommodityView com
