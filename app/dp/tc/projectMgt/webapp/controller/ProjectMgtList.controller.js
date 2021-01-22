@@ -26,13 +26,15 @@ sap.ui.define([
                 company_code : {operator: 'EQ', value: ''},
                 bizdivision_code : {operator: 'EQ', value: ''},
                 project_code : {operator: 'Contains', value: ''},
+                project_name : {operator: 'Contains', value: ''},
                 model_code: {operator: 'Contains', value: ''},
                 product_group_code : {operator: 'EQ', value: ''},
                 project_status_code : {operator: 'EQ', value: ''},
                 massprod_start_date : {operator: 'BT', start: null, end: null},
                 project_grade_code : {operator: 'EQ', value: ''},
                 develope_event_code : {operator: 'EQ', value: ''},
-                buyer_name : {operator: 'Contains', value: ''}
+                buyer_name : {operator: 'Contains', value: ''},
+                mcst_excl_flag : {operator: 'EQ', value: ''}
             };
             
             this.setModel(new JSONModel(oFilterModel), "filterModel");
@@ -183,12 +185,12 @@ sap.ui.define([
             const view_mode = "READ";
             let oModel = oContext.getModel();
             let oObj = oModel.getProperty(oContext.getPath());
-            let sCostType = sap.ui.core.Fragment.byId("fragmentProjectSelection","dialogProjectSelection").data("cost_type");
+            let sMcstCode = sap.ui.core.Fragment.byId("fragmentProjectSelection","dialogProjectSelection").data("mcst_code");
             var oNavParam = {
                 tenant_id: oContext.getObject("tenant_id"),
                 project_code: oContext.getObject("project_code"),
                 model_code: oContext.getObject("model_code"),
-                cost_type: sCostType,
+                mcst_code: sMcstCode,
                 view_mode: view_mode,
                 version_number: oContext.getObject("version_number")
             };
@@ -233,6 +235,7 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+                     
         }
 
         /**
@@ -276,24 +279,6 @@ sap.ui.define([
         /********************************************************************************** */
 
         /**
-         * 견적재료비 생성 클릭
-         * @param {event} oEvent
-         */
-        , onEstimateCreatePress: function (oEvent) {
-            this.onGoalCreatePress(oEvent);
-        }
-
-        /**
-         * 예상 재료비 작성 Dialog 오픈 
-         * @param {event} oEvent
-         */
-        , onProgressMgtPress: function (oEvent) {
-            //MessageToast.show("준비중", { at: "Center Center" });
-            //return;
-            this.onGoalCreatePress(oEvent);
-        }
-
-        /**
          * 목표재료비 작성 Dialog 오픈
          * @param {event} oEvent
          */
@@ -314,12 +299,12 @@ sap.ui.define([
                     return oDialog;
                 });
             }
-            var sCostType = oEvent.getSource().data("cost_type");
+            var sMcstCode = oEvent.getSource().data("mcst_code");
             this._oDialogTableSelect.then(function (oDialog) {
                 oDialog.open();
-                oDialog.data("cost_type", sCostType);    
+                oDialog.data("mcst_code", sMcstCode);    
                 
-                this.onGetDialogData();
+                this.onGetDialogData(sMcstCode);
 
             }.bind(this));
 
@@ -327,7 +312,7 @@ sap.ui.define([
         /** 
          *  목표재료비 Dialog 창 데이터 추출  
          */
-        , onGetDialogData: function () {
+        , onGetDialogData: function (sMcstCode) {
             var oView = this.getView("detailPopupTable");
             //var oModel = this.getModel();
             var oModel = this.getModel("mcstProjectMgtModel");   //manifest에 등록한 모델을 가져오면 해당 서비스를 사용할수 있다.
@@ -343,8 +328,9 @@ sap.ui.define([
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oData.tenant_id));
                 aFilters.push(new Filter("project_code", FilterOperator.EQ, oData.project_code));
                 aFilters.push(new Filter("model_code", FilterOperator.EQ, oData.model_code));
+                aFilters.push(new Filter("mcst_code", FilterOperator.EQ, sMcstCode));
             }
-
+            
             oView.setBusy(true);
             oModel.read("/McstProject", {  
                 filters: aFilters,
@@ -367,12 +353,15 @@ sap.ui.define([
         /**
          * Dialog Close
          */
-        , onClose: function (oEvent) {
+        , onGoalPopClose: function (oEvent) {
             this._oDialogTableSelect.then(function (oDialog) {
                 //this.getView().byId("detailPopupTable").clearSelection();
-                sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable").clearSelection();
                 var oTable = sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable")
+                if(oTable) {
+                    oTable.clearSelection();
+                }
                 oDialog.close();
+                this.getView().getModel("popupListModel").setData({});
             }.bind(this));
         }
 
@@ -498,7 +487,7 @@ sap.ui.define([
                 bOnlyField : true
             };
             var oProjectData = this._fnGetEntityFromMetadata(oParam)
-                oProjectData.mcst_excl_flag = true;
+                oProjectData.mcst_excl_flag = this.getModel("updateModel").getProperty("/mcst_excl_flag");
             var oKey = {
                 tenant_id : oProjectData.tenant_id,
                 company_code : oProjectData.company_code,
@@ -522,6 +511,9 @@ sap.ui.define([
             
         }
 
+        , onTestChange : function(oEvent) {
+            console.log("division_code : ", oEvent.getSource().getSelectedItem().getKey());
+        }
         , onChangeCompnay: function(oEvent){
 
             //this.copyMultiSelected(oEvent);
@@ -532,20 +524,26 @@ sap.ui.define([
             var filter = new Filter({
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, 'L2100' )
-                                //,new Filter("company_code", FilterOperator.EQ, sCompCode )
+                               ,new Filter("company_code", FilterOperator.EQ, sCompCode)
                             ],
                             and: true
                          });
-            var oBindingInfo = oComboSnap.getBindingInfo("items");
-            var bindInfo = {
-                    path: '/Division',
+            var oBindingInfoSnap   = oComboSnap.getBindingInfo("items");
+            var oBindingInfoExpand = oComboExpand.getBindingInfo("items");
+            var bindInfoSnap = {
+                    path: '/Org_Division',
                     filters: filter,
-                    template: oBindingInfo.template
+                    template: oBindingInfoSnap.template
                 };
-
-            oComboSnap.bindItems(bindInfo);
-            oComboExpand.bindItems(bindInfo);
-
+            var bindInfoExpand = {
+                    path: '/Org_Division',
+                    filters: filter,
+                    template: oBindingInfoExpand.template
+                };
+            oComboSnap.setSelectedItem(null);
+            oComboExpand.setSelectedItem(null);
+            oComboSnap.bindItems(bindInfoSnap);
+            oComboExpand.bindItems(bindInfoExpand);
         }
 
         /**

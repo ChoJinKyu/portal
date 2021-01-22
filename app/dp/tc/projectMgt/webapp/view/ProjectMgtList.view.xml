@@ -7,6 +7,7 @@
   xmlns:t="sap.ui.table"
   xmlns:layout="sap.ui.layout"
   xmlns:tnt="sap.tnt"
+  xmlns:lib-m="ext.lib.control.m"
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
@@ -63,9 +64,9 @@
                             <ComboBox
                                 id="cbxExpandDivision"
                                 width="100%"
-                                selectedKey="{filterModel>/bizdivision_code/value}"
+                                selectedKey="{filterModel>/bizdivision_code/value}" change="onTestChange"
                                 items="{
-                                    path: '/Division',
+                                    path: '/Org_Division',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: '999'}
                                     ],
@@ -90,16 +91,16 @@
                                 </layoutData>
                             </Input>
 
-                            <Label text="대표모델코드">
+                            <Label text="프로젝트명">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <SearchField value="{filterModel>/model_code/value}" >
+                            <Input value="{filterModel>/project_name/value}" >
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
-                            </SearchField>
+                            </Input>
 
                         </form:content>
                     </form:SimpleForm>
@@ -148,8 +149,9 @@
                                 id="cbxSnapDivision"
                                 width="100%"
                                 selectedKey="{filterModel>/bizdivision_code/value}"
+                                change="onTestChange"
                                 items="{
-                                    path: '/Division',
+                                    path: '/Org_Division',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: '999'}
                                     ],
@@ -174,16 +176,16 @@
                                 </layoutData>
                             </Input>
 
-                            <Label text="대표모델코드">
+                            <Label text="프로젝트명">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <SearchField value="{filterModel>/model_code/value}" >
+                            <Input value="{filterModel>/project_name/value}" >
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>
-                            </SearchField>
+                            </Input>
 
                         </form:content>
                     </form:SimpleForm>
@@ -211,6 +213,17 @@
                 adjustLabelSpan="false">
                     <form:content>
                         <!--Search line 2-->
+                        <Label text="대표모델코드">
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S1" />
+                            </layoutData>
+                        </Label>
+                        <SearchField value="{filterModel>/model_code/value}" >
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S2" />
+                            </layoutData>
+                        </SearchField>
+
                         <Label text="제품군">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
@@ -316,29 +329,52 @@
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
+                        <!--
                         <SearchField value="{filterModel>/buyer_name/value}" >
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </SearchField>
-                        <!--
-                        <lib-m:CodePicker id="searchEmployeePicker"
-                            placeholder="Enter a Employee name"
-                            value="{filterModel>/requestBy}"
-                            keyField="employee_number"
-                            textField="user_local_name"
-                            suggestionItems="{
-                                path: '/',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                ],
-                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                entityName: 'Employee'
-                            }">
-                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                        </lib-m:CodePicker>
                         -->
+                        <VBox>
+                            <lib-m:CodePicker
+                                placeholder="Enter a Employee name"
+                                selectedKey="{filterModel>/buyer_name/value}"
+                                keyField="employee_number"
+                                textField="user_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Employee'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                            </lib-m:CodePicker>
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M3 S12" />
+                            </layoutData>
+                        </VBox>
+                        <Label text="산출제외">
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S1" />
+                            </layoutData>
+                        </Label>
+                        <SegmentedButton id="searchCodeSegmentButton"
+                                         selectedKey="{filterModel>/mcst_excl_flag/value}"
+                                         class="sapUiSmallMarginBottom"
+                                         width="100%">
+                            <items>
+                                <SegmentedButtonItem text="All" key="" />
+                                <SegmentedButtonItem text="Y" key="true" />
+                                <SegmentedButtonItem text="N" key="false" />
+                            </items>
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M3 S12" />
+                            </layoutData>
+                        </SegmentedButton>
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -346,7 +382,7 @@
         <f:content>
             <!--Part No List 시작-->
             <t:Table id="mainTable"
-                selectionMode="MultiToggle"
+                selectionMode="Single"
                 cellClick=".onCellClickPress"
                 rowSelectionChange="onSelectionChange"
                 rowActionCount="1"
@@ -359,19 +395,19 @@
                         <!-- <Title text="{I18n>/PART_NO_LIST}" level="H2"/> -->
                         <Title text="프로젝트 관리 목록 ({= ${listModel>/results}.length})" level="H2"/>
                         <ToolbarSpacer />
-                        <Button text="견적 재료비" type="Emphasized" press=".onEstimateCreatePress">
+                        <Button text="견적 재료비" type="Emphasized" press=".onGoalCreatePress">
                             <customData>
-                                <core:CustomData key="cost_type" value="E" />
+                                <core:CustomData key="mcst_code" value="QUOTATION" />
                             </customData>
                         </Button>
                         <Button text="목표 재료비" type="Emphasized" press=".onGoalCreatePress" >
                             <customData>
-                                <core:CustomData key="cost_type" value="T"/>
+                                <core:CustomData key="mcst_code" value="TARGETS"/>
                             </customData>
                         </Button>
-                        <Button text="예상 재료비" type="Emphasized" press=".onProgressMgtPress" >
+                        <Button text="예상 재료비" type="Emphasized" press=".onGoalCreatePress" >
                             <customData>
-                                <core:CustomData key="cost_type" value="P"/>
+                                <core:CustomData key="mcst_code" value="ESTIMATE"/>
                             </customData>
                         </Button>
                         <ToolbarSeparator/>
@@ -503,8 +539,7 @@
                         </t:multiLabels>
                         <t:template>
                             <Text text="{
-                                path: 'listModel>last_register_date',
-                                formatter: '.dateFormatter.toUTCDateString'
+                                path: 'listModel>last_register_date'
                             }" />
                         </t:template>
                     </t:Column>
@@ -517,11 +552,11 @@
                         </t:multiLabels>
                         <t:template>
                             <tnt:InfoLabel
-                                text="{listModel>mcst_excl_flag}"
+                                text="{= ${listModel>mcst_excl_flag} === true ? 'Y' : 'N'}"
                                 renderMode = "Narrow"
                                 displayOnly="true"
-                                colorScheme= "{= ${listModel>mcst_excl_flag} === true ? 7 : 3 }"
-                                visible = "{= !${listModel>mcst_excl_flag} ? false : true }" 
+                                colorScheme= "{= ${listModel>mcst_excl_flag} === true ? 7 : 3}"
+                                visible = "{= ${listModel>mcst_excl_flag} === true ? true : false }" 
                             />
                         </t:template>
                     </t:Column>
@@ -534,14 +569,14 @@
                         </t:multiLabels>
                         <t:template>
                             <tnt:InfoLabel
-                                text="{listModel>estimate_status_name}"
+                                text="{listModel>quotation_status_name}"
                                 renderMode = "Narrow"
                                 displayOnly="true"
                                 colorScheme= "{
-                                    path: 'listModel>estimate_status_code',
+                                    path: 'listModel>quotation_status_code',
                                     formatter: '.formatStatusColor'
                                 }"
-                                visible = "{= !${listModel>estimate_status_code} ? false : true }" 
+                                visible = "{= !${listModel>quotation_status_code} ? false : true }" 
                             />
                         </t:template>
                     </t:Column>
@@ -574,14 +609,14 @@
                         </t:multiLabels>
                         <t:template>
                             <tnt:InfoLabel
-                                text="{listModel>forecast_status_name}"
+                                text="{listModel>estimate_status_name}"
                                 renderMode = "Narrow"
                                 displayOnly="true"
                                 colorScheme= "{
-                                    path: 'listModel>forecast_status_code',
+                                    path: 'listModel>estimate_status_code',
                                     formatter: '.formatStatusColor'
                                 }"
-                                visible = "{= !${listModel>forecast_status_code} ? false : true }" 
+                                visible = "{= !${listModel>estimate_status_code} ? false : true }" 
                             />
                         </t:template>
                     </t:Column>

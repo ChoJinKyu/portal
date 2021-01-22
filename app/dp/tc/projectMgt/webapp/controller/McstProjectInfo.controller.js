@@ -253,7 +253,8 @@ sap.ui.define([
                     user_id           : me.oUerInfo.user_id                 
                 }
             };
-            //debugger;
+            debugger;
+            return;
             this._sendSaveData(oSendData);
         }
 

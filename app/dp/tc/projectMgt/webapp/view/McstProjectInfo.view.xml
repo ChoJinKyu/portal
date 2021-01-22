@@ -19,7 +19,10 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-                    <Title text="재료비정보" wrapping="true"/>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBackPress" />
+                        <Title text="프로젝트 상세" wrapping="true"/>
+                    </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
                 </uxap:navigationActions>
@@ -68,7 +71,29 @@
                                 class="sapUiNoMarginBottom sapUiNoContentPadding">
                                 <form:content>
 
-                                <Label text="생성자">
+                                 <Label text="산출구분">
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12" />
+                                    </layoutData>
+                                </Label>
+                                <Text text="{detailModel>/mcst_text/code_name}">
+                                    <layoutData>
+                                        <layout:GridData span="XL4 L4 M4 S12" />
+                                    </layoutData>
+                                </Text>
+
+                                <Label text="Seq">
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12" />
+                                    </layoutData>
+                                </Label>
+                                <Text text="{detailModel>/version_sequence}'st ">
+                                    <layoutData>
+                                        <layout:GridData span="XL4 L4 M4 S12" />
+                                    </layoutData>
+                                </Text>
+
+                                <Label text="요청자">
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData>
@@ -143,7 +168,7 @@
                             <!--Image-->
                             <Image 
                                 ariaDetails="detailsActiveImage" class="sapUiLargeMarginBegin"
-                                src="https://www.asiatime.co.kr/news/data/20171128/p179534486305855_461.jpg"
+                                src="https://www.lgchem.com/upload/file/lifein-lgchem/BGT_main.jpg"
                                 decorative="false"
                                 width="10em"
                                 height="10em">            
@@ -164,9 +189,11 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
+                        <VBox>
                             <!--기준정보 Block 시작-->
 							<block:BlockGeneralInfo id="blMcstGeneralInfo" />
                             <!--기준정보 Block 끝-->
+                        </VBox>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -204,33 +231,10 @@
                                         </ColumnListItem>
                                     </items>
                                 </Table>
-                                <!--
-                                <Table id="tblEvents_edit"
-                                        growing="true"
-                                        growingThreshold="20"
-                                        class="sapFDynamicPageAlignContent"
-                                        mode="None"
-                                        width="auto"
-                                        items="{eventsModel>/}"
-                                        >
-                                    <headerToolbar>
-                                        <OverflowToolbar>
-                                        <Label text="개발일정"/>
-                                        </OverflowToolbar>
-                                    </headerToolbar>
-                                    <columns>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells></cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                                -->
                             </VBox>
 
                             <!--판가/물동/원가-->
-                            <VBox>
+                            <VBox class="sapUiSmallMarginTop">
                                 <Table id="tblPrice"
                                         class="sapFDynamicPageAlignContent"
                                         mode="None"
@@ -239,7 +243,7 @@
                                         >
                                     <headerToolbar>
                                         <OverflowToolbar>
-                                        <Label text="판가/물동/원가"/>
+                                            <Label text="판가/물동/원가"/> <ToolbarSeparator/> <Label text=" [ 수율(재료비)"/> <Label text="{detailModel>/mcst_yield_rate}"/> <Label text="% ]"/>
                                         </OverflowToolbar>
                                     </headerToolbar>
                                     <columns>
@@ -263,7 +267,7 @@
                                         >
                                     <headerToolbar>
                                         <OverflowToolbar>
-                                        <Label text="판가/물동/원가"/>
+                                            <Label text="판가/물동/원가"/> <ToolbarSeparator/> <Label text=" [ 수율(재료비)"/> <Label text="{detailModel>/mcst_yield_rate}"/> <Label text="% ]"/>
                                         </OverflowToolbar>
                                     </headerToolbar>
                                     <columns>
@@ -281,7 +285,7 @@
                             </VBox>
 
                             <!--환율-->
-                            <VBox>
+                            <VBox class="sapUiSmallMarginTop">
                                 <Table id="tblExchange"
                                         growing="true"
                                         growingThreshold="20"
