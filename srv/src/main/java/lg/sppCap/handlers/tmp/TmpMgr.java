@@ -11,9 +11,13 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sap.cds.Result;
+import com.sap.cds.ql.Select;
+import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.persistence.PersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,10 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cds.gen.tmp.tmpmgrservice.*;
 import lg.sppCap.solutionized.bizrule.BizRuleExecutor;
+import lg.sppCap.solutionized.bizrule.model.BizRuleInfo;
 
 @Component
 @ServiceName("tmp.TmpMgrService")
 public class TmpMgr implements EventHandler {
+
+    @Autowired
+    private PersistenceService db;
 
     @Autowired
     BizRuleExecutor bizRuleExecutor;
@@ -65,8 +73,38 @@ public class TmpMgr implements EventHandler {
         inData.put("Email", "gdhong@lgcns.com");
 
         // BizRuleExecutor를 통해 업무규칙을 호출한다.
-        // Map<String, Object> outData = bizRuleExecutor.excuteBizRule(tenantId,
-        // bizRuleId, altFlag, inData);
+         Map<String, Object> outData = bizRuleExecutor.excuteBizRule(tenantId,
+         bizRuleId, altFlag, inData);
+
+
+        BizRuleInfo info = new BizRuleInfo();
+      info.setTenantId("a");
+      info.setBizRuleId("a");
+      info.setAltFlag("a");
+
+        
+       CqnSelect infoSelect = Select
+         .from(BizruleInfo_.class)
+         .columns("TENANT_ID","BIZRULE_ID","ALT_FLAG","CALL_TYPE","CALL_HOST","CALL_INFO")
+         .where(
+           b->b.get("TENANT_ID").eq(info.getTenantId())
+           .and(b.get("BIZRULE_ID").eq(info.getBizRuleId()))
+           .and(b.get("ALT_FLAG").eq(info.getAltFlag()))
+         );
+
+        Result result = db.run(infoSelect);
+
+        List tList = result.list();
+
+
+       info.setTenantId((String)result.first().get().get("TENANT_ID"));
+       info.setBizRuleId((String)result.first().get().get("BIZRULE_ID"));
+       info.setAltFlag((String)result.first().get().get("ALT_FLAG"));
+       info.setCallType((String)result.first().get().get("CALL_TYPE"));
+       info.setCallHost((String)result.first().get().get("CALL_HOST"));
+       info.setCallInfo((String)result.first().get().get("CALL_INFO"));
+
+       System.out.println("info : " + info.getCallInfo());
 
         sampleType.setTemplatePath(templatePath);
         context.setResult(sampleType);
