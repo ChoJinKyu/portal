@@ -1,6 +1,6 @@
 PROCEDURE EP_SUPPLY_SELECTION_RESULT (
-    IN I_RFQ_TABLE TABLE(   QUOTATION_NUMBER DECIMAL,
-                        QUOTATION_ITEM_NUMBER DECIMAL
+    IN I_RFQ_TABLE TABLE(   QUOTATION_NUMBER NVARCHAR(100),
+                        QUOTATION_ITEM_NUMBER NVARCHAR(100)
     ),
     IN I_DTL_TABLE TABLE(   TENANT_ID NVARCHAR(5), 
                         COMPANY_CODE NVARCHAR(10), 
@@ -133,18 +133,18 @@ BEGIN
                             , ITEM.UNIT 
                             , ITEM.REQUEST_QUANTITY 
                             , ITEM.CURRENCY_CODE 
-                            , REQUEST_AMOUNT 
+                            , ITEM.REQUEST_AMOUNT 
                             , '오프라인' AS SELECTION_RESULT 
                             , NULL AS SUPPLIER_CODE 
                             , NULL AS SUPPLIER_NAME 
                             , NULL AS QUOTATION_AMOUNT 
-                            , DELIVERY_REQUEST_DATE
+                            , ITEM.DELIVERY_REQUEST_DATE
                             , NULL AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE AS OFFLINE_SELECTION_SUPPLIER_NAME 
                             , ITEM.OFFLINE_QUOTATION_AMOUNT 
-                            , OFFLINE_QUOTATION_DUE_DATE 
+                            , ITEM.OFFLINE_QUOTATION_DUE_DATE 
                             , ITEM.OFFLINE_QUOTATION_REMARK 
                     FROM    :I_DTL_TABLE I_ITEM
                     INNER JOIN EP_LI_DTL ITEM
@@ -178,18 +178,18 @@ BEGIN
                             , ITEM.UNIT 
                             , ITEM.REQUEST_QUANTITY 
                             , ITEM.CURRENCY_CODE 
-                            , REQUEST_AMOUNT 
+                            , ITEM.REQUEST_AMOUNT 
                             , '오프라인' AS SELECTION_RESULT 
                             , NULL AS SUPPLIER_CODE 
                             , NULL AS SUPPLIER_NAME 
                             , NULL AS QUOTATION_AMOUNT 
-                            , DELIVERY_REQUEST_DATE
+                            , ITEM.DELIVERY_REQUEST_DATE
                             , NULL AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE AS OFFLINE_SELECTION_SUPPLIER_NAME 
                             , ITEM.OFFLINE_QUOTATION_AMOUNT 
-                            , OFFLINE_QUOTATION_DUE_DATE 
+                            , ITEM.OFFLINE_QUOTATION_DUE_DATE 
                             , ITEM.OFFLINE_QUOTATION_REMARK 
                     FROM    :I_DTL_TABLE I_ITEM
                     INNER JOIN EP_LI_DTL ITEM

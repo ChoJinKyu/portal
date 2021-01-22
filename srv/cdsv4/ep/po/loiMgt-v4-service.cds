@@ -97,8 +97,8 @@ service LoiMgtV4Service {
     action SaveLoiSupplySelectionProc(inputData : saveLoiSelectionType) returns array of OutType;
 
     type loiRfqType : {
-        quotation_number      : Decimal;
-        quotation_item_number : Decimal;
+        quotation_number      : String;
+        quotation_item_number : String;
     }
 
     type loiRfqDtlInType {
