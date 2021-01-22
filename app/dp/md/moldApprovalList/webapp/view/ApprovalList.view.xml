@@ -277,7 +277,7 @@
                     >
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
+                            <Title text="{I18N>/LIST} ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="{path:'I18N>/CREATE', formatter:'I18NFormatter'}" type="Emphasized" press=".onDialogCreate" />
