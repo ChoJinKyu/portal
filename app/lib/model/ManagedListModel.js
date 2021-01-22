@@ -16,8 +16,8 @@ sap.ui.define([
 
         setData: function (oData, sPath, bMerge) {
             var aRecords = oData.results || oData || [],
-                sPath = sPath || this._transactionPath,
                 oResult = {};
+            sPath = sPath || this._transactionPath;
             aRecords.forEach(function (oItem) {
                 if (oItem.__metadata && oItem.__metadata.uri) {
                     var sType = oItem.__metadata.type,
@@ -29,6 +29,7 @@ sap.ui.define([
             oResult.entityName = sPath.substring(1);
             oResult[oResult.entityName] = aRecords;
             JSONModel.prototype.setData.call(this, oResult, bMerge);
+            this._aRemovedRows = [];
         },
 
         setProperty: function (sPath, oValue, oContext, bAsyncUpdate) {

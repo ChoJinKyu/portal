@@ -11,13 +11,12 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "sap/ui/thirdparty/jquery"
+    "sap/m/MessageToast"
 ], function (BaseController, Multilingual, ManagedListModel, JSONModel, Formatter, Validator, FlexibleEditBox, MainListPersoService, 
-		Filter, FilterOperator, Sorter, MessageBox, MessageToast, jQuery) {
+		Filter, FilterOperator, Sorter, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("xx.templateListInlineEdit.controller.TemplateMainList", {
+	return BaseController.extend("xx.templateListInlineEdit.controller.TemplateMainListFE", {
 
         formatter: Formatter,
         
@@ -53,16 +52,40 @@ sap.ui.define([
 
 		/* =========================================================== */
 		/* event handlers                                              */
-        /* =========================================================== */
-        
-        onSearchLanguagePickerPress: function(){
-            this.byId("languageCodeDialog").open();
-            this.byId("languageCodeDialog").setTokens(this.byId("searchLanguagePicker").getTokens());
-        },
+		/* =========================================================== */
 
-        onLanguageCodeDialogApplyPress: function(oEvent){
-            this.byId("searchLanguagePicker").setTokens(oEvent.getSource().getTokens());
-        },
+		onMainTableRowSelectionChange: function(oEvent){
+			var EDITABLE_COL = "_row_editable_",
+				sEntity = "/Message",
+				oModel = this.getModel("list");
+			FlexibleEditBox.onTableRowSelectionChange(oEvent, function(){
+				var oItems = oModel.getProperty(sEntity);
+				oItems.forEach(function(oItem){
+					oItem[EDITABLE_COL] = false;
+					delete oItem[EDITABLE_COL];
+				})
+				oModel.setProperty(sEntity, oItems);
+			}.bind(this), function(nSelectedIndex){
+				oModel.setProperty(sEntity + "/" + nSelectedIndex + "/" + EDITABLE_COL, true);
+			}.bind(this));
+		},
+
+		onMainTableRowSelectionChange1: function(oEvent){
+			var aRowIndices = oEvent.getParameter("rowIndices"),
+				nEditorIndex = oEvent.getParameter("rowIndex");
+			if(aRowIndices.length > 1 || nEditorIndex == -1){
+				// nViewerIndex = aRowIndices.indexOf(nEditorIndex) == 1 ? 0 : 1;
+				// nViewerIndex = aRowIndices[nViewerIndex];
+				// this.getModel("list").setProperty("/Message/" + nViewerIndex + "/_row_editable_", false);
+				var oItems = this.getModel("list").getProperty("/Message");
+				oItems.forEach(function(oItem){
+					oItem["_row_editable_"] = false;
+					delete oItem["_row_editable_"];
+				})
+				this.getModel("list").setProperty("/Message", oItems);
+			}
+			this.getModel("list").setProperty("/Message/" + nEditorIndex + "/_row_editable_", true);
+		},
 
 		/**
 		 * Event handler when a search button pressed
@@ -192,39 +215,34 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var sChain = this.getView().byId("searchChain").getSelectedKey(),
-                aLanguageTokens = this.getView().byId("searchLanguagePicker").getTokens(),
-                sMessageType = this.getView().byId("searchType").getSelectedKey(),
-                sKeyword = this.getView().byId("searchKeyword").getValue();
-
+			var chain = this.getView().byId("searchChain").getSelectedKey(),
+                language = this.getView().byId("searchLanguage").getSelectedKey(),
+                messageType = this.getView().byId("searchType").getSelectedKey(),
+                keyword = this.getView().byId("searchKeyword").getValue();
+				
 			var aSearchFilters = [];
-			if (sChain) {
-				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
+			if (chain && chain.length > 0) {
+				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, chain));
 			}
-			if (aLanguageTokens.length > 0) {
-				aSearchFilters.push(new Filter({
-                    filters: jQuery.map(aLanguageTokens, function(oToken){
-                        return new Filter("language_code", FilterOperator.EQ, oToken.getProperty("key"));
-                    }),
-                    and: false
-                }));
+			if (language && language.length > 0) {
+				aSearchFilters.push(new Filter("language_code", FilterOperator.EQ, language));
             }
-            if (sMessageType) {
-				aSearchFilters.push(new Filter("message_type_code", FilterOperator.EQ, sMessageType));
+            if (messageType && messageType.length > 0) {
+				aSearchFilters.push(new Filter("message_type_code", FilterOperator.EQ, messageType));
             }
-			if (sKeyword) {
+			if (keyword && keyword.length > 0) {
 				aSearchFilters.push(new Filter({
 					filters: [
 						new Filter({
 							path: "message_code",
 							operator: FilterOperator.Contains,
-							value1: sKeyword,
+							value1: keyword,
 							caseSensitive: false
 						}),
 						new Filter({
 							path: "message_contents",
 							operator: FilterOperator.Contains,
-							value1: sKeyword,
+							value1: keyword,
 							caseSensitive: false
 						})
 					],

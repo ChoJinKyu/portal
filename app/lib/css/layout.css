@@ -1,0 +1,8 @@
+.searchBoxButtonArea {
+    height: 0px;
+}
+.searchBox div.sapUiRespGridSpanXL12.sapUiRespGridSpanL12.sapUiRespGridSpanM12.sapUiRespGridSpanS12 {
+    overflow: visible;
+    top: -1rem;
+    position: relative;
+}

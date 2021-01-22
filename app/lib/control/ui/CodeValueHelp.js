@@ -11,8 +11,9 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
-    "sap/m/Input"
-], function (Parent, Renderer, Multilingual, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input) {
+    "sap/m/Input",
+    "sap/ui/thirdparty/jquery"
+], function (Parent, Renderer, Multilingual, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input, jQuery) {
     "use strict";
 
     //TODO : Localization (Title)
@@ -155,14 +156,27 @@ sap.ui.define([
         },
 
         getServiceParameters: function(){
-            return jQuery.extend(true, {}, this.oServiceParam);
+            var oParam = jQuery.extend(true, {}, this.oServiceParam || {}),
+                aFilters = oParam.filters || [],
+                aTenantFilter = jQuery.map(aFilters, function(oItem){
+                    if(oItem.sPath == "tenant_id") return oItem;
+                });
+            if(aTenantFilter.length < 1)
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            oParam.filters = aFilters;
+            return oParam;
+        },
+
+        getServiceModel: function(oParam){
+            return this.oServiceModel || ODataV2ServiceProvider.getService(oParam.serviceName);
         },
 
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                oParam = this.getServiceParameters();
+                oParam = this.getServiceParameters(),
+                aFilters = oParam.filters || [];
             if(sKeyword){
-                oParam.filters.push(
+                aFilters.push(
                     new Filter({
                         filters: [
                             new Filter({
@@ -182,7 +196,7 @@ sap.ui.define([
                     })
                 );
             }
-            this.oServiceModel.read("/" + oParam.entityName, oParam);
+            this.getServiceModel(oParam).read("/" + oParam.entityName, oParam);
         },
         
         open: function(){

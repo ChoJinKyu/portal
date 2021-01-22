@@ -1,4 +1,4 @@
-<mvc:View controllerName="xx.templateListInlineEdit.controller.TemplateMainList" 
+<mvc:View controllerName="xx.templateListInlineEdit.controller.TemplateMainListFE" 
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -7,7 +7,6 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
-    xmlns:cm-ui="cm.util.control.ui"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -54,19 +53,16 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguage"></Label>
-                                <cm-ui:CodeDialog id="languageCodeDialog" multiSelection="true"
-                                    title="{I18N>/LANGUAGE}"
+                                <lib-m:CodeComboBox id="searchLanguage" width="100%" showSecondaryValues="true"
                                     items="{
                                         filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ],
                                         serviceName: 'cm.util.CommonService',
                                         entityName: 'Code'
-                                    }"
-                                    apply=".onLanguageCodeDialogApplyPress" />
-                                <MultiInput id="searchLanguagePicker" placeholder="{I18N>/LANGUAGE}"
-                                    showValueHelp="true" valueHelpRequest=".onSearchLanguagePickerPress">
-                                </MultiInput>
+                                    }">
+                                </lib-m:CodeComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -112,6 +108,7 @@
                     selectionMode="Single"
                     selectionBehavior="Row"
                     visibleRowCountMode="Auto"
+                    rowSelectionChange=".onMainTableRowSelectionChange"
                     width="auto">
                 <t:extension>
                     <OverflowToolbar>
@@ -136,71 +133,98 @@
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/LANGUAGE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:CodeComboBox selectedKey="{list>language_code}" width="100%" showSecondaryValues="true"
-                                items="{
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                    ],
-                                    serviceName: 'cm.util.CommonService',
-                                    entityName: 'Code'
-                                }"
-                                editable="{= ${list>_row_state_} === 'C' }" required="true">
-                            </lib-m:CodeComboBox>
+                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                                <Text text="{list>language_code}" />
+                                <lib-m:CodeComboBox selectedKey="{list>language_code}" width="100%" showSecondaryValues="true"
+                                    items="{
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                </lib-m:CodeComboBox>
+                            </lib-m:FlexibleEditBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="18em" >
                         <Label text="{I18N>/CODE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <Input value="{
-                                    path: 'list>message_code',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        maxLength: 30
-                                    }
-                                }" editable="{= ${list>_row_state_} === 'C' }" required="true"></Input>
+                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                                <Text text="{list>message_code}" />
+                                <Input value="{
+                                        path: 'list>message_code',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 30
+                                        }
+                                    }" editable="{= ${list>_row_state_} === 'C' }" required="true" ></Input>
+                            </lib-m:FlexibleEditBox>
 						</t:template>
                     </t:Column>
                     <t:Column minWidth="30rem">
                         <Label text="{I18N>/CONTENTS}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <Input value="{list>message_contents}" required="true" />
+                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                                <Text text="{list>message_contents}" textAlign="Left" />
+							    <Input value="{list>message_contents}" required="true" />
+                            </lib-m:FlexibleEditBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/TYPE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:CodeComboBox selectedKey="{list>message_type_code}" width="100%"
-                                items="{
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                    ],
-                                    serviceName: 'cm.util.CommonService',
-                                    entityName: 'Code'
-                                }"
-                                required="true" >
-                            </lib-m:CodeComboBox>
+                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                                <Text text="{list>message_type_code}" />
+                                <lib-m:CodeComboBox selectedKey="{list>message_type_code}" width="100%"
+                                    items="{
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    required="true" >
+                                </lib-m:CodeComboBox>
+                            </lib-m:FlexibleEditBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/CHAIN}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:CodeComboBox selectedKey="{list>chain_code}" width="100%" showSecondaryValues="true"
-                                items="{
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                    ],
-                                    serviceName: 'cm.util.CommonService',
-                                    entityName: 'Code'
-                                }"
-                                editable="{= ${list>_row_state_} === 'C' }" required="true">
-                            </lib-m:CodeComboBox>
+                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                                <Text text="{list>message_type_code}" />
+                                <lib-m:CodeComboBox selectedKey="{list>chain_code}" width="100%" showSecondaryValues="true"
+                                    items="{
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                </lib-m:CodeComboBox>
+                            </lib-m:FlexibleEditBox>
 						</t:template>
                     </t:Column>
                 </t:columns>
             </t:Table>
         </f:content>
+		<f:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Reject"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+			</OverflowToolbar>
+		</f:footer>
     </f:DynamicPage>
 </mvc:View>
