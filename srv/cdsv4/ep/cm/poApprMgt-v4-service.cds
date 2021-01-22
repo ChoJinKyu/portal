@@ -31,7 +31,7 @@ service PoApprMgtV4Service {
     action SavePoForexDeclarationProc (forexItems : array of SavedForexItems) returns array of ResultForexItems;
 
     view ForexDeclarationSummaryView (tenant_id : String, company_code : String, purchasing_department_code : String, buyer_empno : String, po_start_date : Date, po_end_date : Date) as
-    select 'company' as group_type : String(50)
+    select key 'company' as group_type : String(50)
         , ifnull(sum(todo_count),0) as todo_count : Integer64
         , ifnull(sum(ongoing_count),0) as ongoing_count : Integer64
         , ifnull(sum(complete_count),0) as complete_count : Integer64
@@ -46,7 +46,7 @@ service PoApprMgtV4Service {
         group by pfv.forex_declare_status_code   
     ) as A
     union all
-    select 'department' as group_type : String(50)
+    select key 'department' as group_type : String(50)
         , ifnull(sum(todo_count),0) as todo_count : Integer64
         , ifnull(sum(ongoing_count),0) as ongoing_count : Integer64
         , ifnull(sum(complete_count),0) as complete_count : Integer64
@@ -62,7 +62,7 @@ service PoApprMgtV4Service {
         group by pfv.forex_declare_status_code   
     ) as B
     union all
-    select 'person' as group_type : String(50)
+    select key 'person' as group_type : String(50)
         , ifnull(sum(todo_count),0) as todo_count : Integer64
         , ifnull(sum(ongoing_count),0) as ongoing_count : Integer64
         , ifnull(sum(complete_count),0) as complete_count : Integer64
