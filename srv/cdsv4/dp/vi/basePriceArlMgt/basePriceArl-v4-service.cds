@@ -57,8 +57,8 @@ service BasePriceArlV4Service {
         company_code           : String(10);
         org_type_code          : String(2);
         org_code               : String(10);
-        au_code                : String(10);
         material_code          : String(40);
+        base_uom_code          : String(3);
         supplier_code          : String(10);
         base_date              : Date;
         base_price_ground_code : String(30);
@@ -83,6 +83,7 @@ service BasePriceArlV4Service {
         first_purchasing_net_price       : Decimal(19, 4);
         first_pur_netprice_curr_cd       : String(3);
         first_pur_netprice_str_dt        : Date;
+        change_reason_code               : String(30);
 
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
