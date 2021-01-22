@@ -19,7 +19,10 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-                    <Title text="프로젝트정보" wrapping="true"/>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBackPress" />
+                        <Title text="최신 프로젝트 상세" wrapping="true"/>
+                    </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
                 </uxap:navigationActions>
@@ -45,7 +48,7 @@
                                 <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </Label>
-                        <Text text="{detailModel>/project_creator_info}">
+                        <Text text="{detailModel>/project_creator_info/user_local_name} {detailModel>/project_creator_info/job_title}">
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M4 S12" />
                             </layoutData>
@@ -82,7 +85,7 @@
                                 <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </Label>
-                        <Text text="{detailModel>/bizdivision_text}">
+                        <Text text="{detailModel>/bizdivision_text/bizdivision_name}">
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M4 S12" />
                             </layoutData>
@@ -102,7 +105,7 @@
                                 <layout:GridData span="XL1 L1 M6 S12" />
                             </layoutData>
                         </Label>
-                        <ObjectStatus class="sapMObjectStatusLarge" text="{detailModel>/project_status_text}" state="Error">
+                        <ObjectStatus class="sapMObjectStatusLarge" text="{detailModel>/project_status_text/code_name}" state="Error">
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -115,7 +118,7 @@
                     <!--Image-->
                     <Image 
                         ariaDetails="detailsActiveImage" class="sapUiLargeMarginBegin"
-                        src="https://www.asiatime.co.kr/news/data/20171128/p179534486305855_461.jpg"
+                        src="https://www.lgchem.com/upload/file/lifein-lgchem/BGT_main.jpg"
                         decorative="false"
                         width="10em"
                         height="10em">            
@@ -170,33 +173,10 @@
                                         </ColumnListItem>
                                     </items>
                                 </Table>
-                                <!--
-                                <Table id="tblEvents_edit"
-                                        growing="true"
-                                        growingThreshold="20"
-                                        class="sapFDynamicPageAlignContent"
-                                        mode="None"
-                                        width="auto"
-                                        items="{eventsModel>/}"
-                                        >
-                                    <headerToolbar>
-                                        <OverflowToolbar>
-                                        <Label text="개발일정"/>
-                                        </OverflowToolbar>
-                                    </headerToolbar>
-                                    <columns>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells></cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                                -->
                             </VBox>
 
                             <!--판가/물동/원가-->
-                            <VBox>
+                            <VBox class="sapUiSmallMarginTop">
                                 <Table id="tblPrice"
                                         class="sapFDynamicPageAlignContent"
                                         mode="None"
@@ -205,7 +185,7 @@
                                         >
                                     <headerToolbar>
                                         <OverflowToolbar>
-                                        <Label text="판가/물동/원가"/>
+                                            <Label text="판가/물동/원가"/> <ToolbarSeparator/> <Label text=" [ 수율(재료비)"/> <Label text="{detailModel>/mcst_yield_rate}"/> <Label text="% ]"/>
                                         </OverflowToolbar>
                                     </headerToolbar>
                                     <columns>
@@ -228,7 +208,7 @@
                                         >
                                     <headerToolbar>
                                         <OverflowToolbar>
-                                        <Label text="판가/물동/원가"/>
+                                            <Label text="판가/물동/원가"/> <ToolbarSeparator/> <Label text=" [ 수율(재료비)"/> <Label text="{detailModel>/mcst_yield_rate}"/> <Label text="% ]"/>
                                         </OverflowToolbar>
                                     </headerToolbar>
                                     <columns>
@@ -246,7 +226,7 @@
                             </VBox>
 
                             <!--환율-->
-                            <VBox>
+                            <VBox class="sapUiSmallMarginTop">
                                 <Table id="tblExchange"
                                         growing="true"
                                         growingThreshold="20"
@@ -318,7 +298,6 @@
         <uxap:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-                    <Button type="Transparent" text="취소" press=".onBackPress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/readMode}"/>
                     <Button type="Transparent" text="취소" press=".onReadPress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
                     <Button type="Transparent" text="수정" press=".onEditPress" class="sapUiSmallMarginEnd" enabled="{detailModel>/mode/readMode}"/>
                     <Button type="Emphasized"  text="저장"  press=".onSavePress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>

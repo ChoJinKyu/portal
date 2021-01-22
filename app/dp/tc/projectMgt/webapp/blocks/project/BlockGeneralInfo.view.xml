@@ -6,6 +6,7 @@
   xmlns:form="sap.ui.layout.form"
   xmlns:layout="sap.ui.layout"
   xmlns:tnt="sap.tnt"
+  xmlns:lib-m="ext.lib.control.m"
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
@@ -43,7 +44,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/product_group_text}">
+            <Text text="{detailModel>/product_group_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -111,7 +112,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_status_text}">
+            <Text text="{detailModel>/project_status_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -136,7 +137,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_grade_text}">
+            <Text text="{detailModel>/project_grade_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -159,7 +160,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/project_leader_info}">
+            <Text text="{detailModel>/project_leader_info/user_local_name} {detailModel>/project_leader_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -170,7 +171,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/buyer_info}">
+            <Text text="{detailModel>/buyer_info/user_local_name} {detailModel>/buyer_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -181,7 +182,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/marketing_person_info}">
+            <Text text="{detailModel>/marketing_person_info/user_local_name} {detailModel>/marketing_person_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -192,7 +193,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/planning_person_info}">
+            <Text text="{detailModel>/planning_person_info/user_local_name} {detailModel>/planning_person_info/job_title}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -237,7 +238,7 @@
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Text text="{detailModel>/bom_type_text}">
+            <Text text="{detailModel>/bom_type_text/code_name}">
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -465,44 +466,108 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/project_leader_info}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="{detailModel>/project_leader_info/user_local_name} {detailModel>/project_leader_info/job_title}"
+                    selectedKey="{detailModel>/project_leader_empno}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
-            <Label text="개발구매">
+            <Label text="재료비총괄">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/buyer_info}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="{detailModel>/buyer_info/user_local_name} {detailModel>/buyer_info/job_title}"
+                    selectedKey="{detailModel>/buyer_empno}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
             <Label text="마케팅">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/marketing_person_info}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="{detailModel>/marketing_person_info/user_local_name} {detailModel>/marketing_person_info/job_title}"
+                    selectedKey="{detailModel>/marketing_person_empno}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
             <Label text="기획">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/planning_person_info}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="{detailModel>/planning_person_info/user_local_name} {detailModel>/planning_person_info/job_title}"
+                    selectedKey="{detailModel>/planning_person_empno}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
             <!--form line 5-->
             <Label text="최종고객사">
