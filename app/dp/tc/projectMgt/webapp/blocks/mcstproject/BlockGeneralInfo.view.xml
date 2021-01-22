@@ -6,6 +6,7 @@
   xmlns:form="sap.ui.layout.form"
   xmlns:layout="sap.ui.layout"
   xmlns:tnt="sap.tnt"
+  xmlns:lib-m="ext.lib.control.m"
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
@@ -461,44 +462,108 @@
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/project_leader_empno}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="Enter a Employee name"
+                    selectedKey="{detailModel>/project_leader_info/employee_number}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
-            <Label text="개발구매">
+            <Label text="재료비총괄">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/buyer_empno}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="Enter a Employee name"
+                    selectedKey="{detailModel>/buyer_info/employee_number}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
             <Label text="마케팅">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/marketing_person_empno}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="Enter a Employee name"
+                    selectedKey="{detailModel>/marketing_person_info/employee_number}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
             <Label text="기획">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
             </Label>
-            <Input value="{detailModel>/planning_person_empno}">
+            <VBox>
+                <lib-m:CodePicker
+                    placeholder="Enter a Employee name"
+                    selectedKey="{detailModel>/planning_person_info/employee_number}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                </lib-m:CodePicker>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
-            </Input>
+            </VBox>
 
             <!--form line 5-->
             <Label text="최종고객사">
