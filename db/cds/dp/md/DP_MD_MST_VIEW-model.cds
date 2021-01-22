@@ -71,6 +71,7 @@ entity Md_Mst_View {
         mold_type_code                  : String(30)            @title:'금형유형코드';
         mold_mfger_code                 : String(10)            @title:'금형공급업체코드';
         mold_developer_empno            : String(255)           @title:'금형개발자사번';
+        mold_developer_name             : String(480)           @title:'금형개발자명';
         customer_asset_type_code        : String(30)            @title:'고객자산유형코드';
         asset_type_code                 : String(30)            @title:'자산유형코드';
         asset_status_code               : String(30)            @title:'자산상태코드';

@@ -9,6 +9,7 @@
     xmlns:sc="sap.suite.ui.commons" 
     xmlns:microchart="sap.suite.ui.microchart" 
     xmlns:lib-m="ext.lib.m"
+    xmlns:cm-ui="cm.util.control.ui"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -424,7 +425,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                editable="false" class="readonlyField" width="100%" >
+                                editable="false" width="100%" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
@@ -438,11 +439,6 @@
                     <table:Column id="moldFamilyFlagColumn" width="6.3em" hAlign="Center">
                         <Label text="Family Y/N" wrapping="true"/>
                         <table:template>
-                            <!--<ComboBox id="family_flag" selectedKey="{list>family_flag}" selectionChange="familyFlagChange"
-                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="Y" text="Yes"/>
-                                <core:Item key="N" text="No"/>
-                            </ComboBox>-->
                             <Select   id="family_flag"    
                                 selectedKey="{list>family_flag}"
                                 items="{
@@ -453,7 +449,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
                                 change="familyFlagChange">
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
@@ -473,7 +469,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -492,7 +488,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" change=".inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -500,7 +496,7 @@
                     <table:Column id="moldTypeColumn" width="10em" hAlign="Center">
                         <Label text="Mold Type" required="true" wrapping="true"/>
                         <table:template><!--{path : 'parent_code', operator : 'EQ', value1 : ${list>mold_item_type_code}}-->
-                            <Select   id="mold_type_code" width="10em"
+                            <Select id="mold_type_code" width="10em"
                                 selectedKey="{list>mold_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -511,8 +507,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" change=".inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
-                                class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -531,7 +526,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -550,7 +545,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -583,7 +578,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -602,7 +597,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -621,7 +616,7 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" >
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
@@ -635,29 +630,23 @@
                     <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
                         <Label text="Requester" wrapping="true"/>
                             <table:template>
-                                <Text id="mold_develope_requestor_empno" text="{list>mold_develope_requestor_empno}"/>
+                                <Text id="mold_develope_requestor_name" text="{list>mold_develope_requestor_name}"/>
                             </table:template>
                     </table:Column>
                     <table:Column id="moldMoldDeveloperColumn" width="12em" hAlign="Center">
                         <Label text="Mold Developer" required="true" wrapping="true"/>
                         <table:template>
-                            <!--<Text id="mold_developer_empno" text="{list>mold_developer_empno}" visible="{mode>/viewFlag}" />-->
-                            <SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" search=".onMoldMstTableUserSearch" required="true"
-                                enabled="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" />
-                            <!--<Input id=""
-                                value="{list>mold_developer_empno}" 
-                                showValueHelp="true"
-                                valueHelpOnly="true"
-                                valueHelpRequest=".onMoldMstTableUserSearch"
-                                required="true"
-                            />-->
+                            <Input value="{list>mold_developer_name}" placeholder="Search employee" required="true"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" 
+                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                            </Input>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRemarkColumn" width="20em" hAlign="Center">
                         <Label text="Remark" wrapping="true"/>
                         <table:template>
                             <TextArea id="remark" value="{list>remark}" rows="2" width="100%" change="inputFieldChange"
-                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" class="readonlyField" />
+                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldProjectCodeColumn" width="15em">
@@ -702,8 +691,23 @@
                             <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
+                    <table:Column visible="false">
+                        <Label text="Mold Developer"/>
+                        <table:template>
+                            <Text text="{list>mold_developer_empno}"/>
+                        </table:template>
+                    </table:Column>
                 </table:columns>
             </table:Table>
         </f:content>
     </f:DynamicPage>
+    <cm-ui:EmployeeDialog id="employeeDialog" 
+        title="직원 검색"
+        items="{
+            filters: [
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+            ]
+        }"
+        apply=".onEmployeeDialogApplyPress"
+    />
 </mvc:View>

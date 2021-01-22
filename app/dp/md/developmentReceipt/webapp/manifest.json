@@ -139,6 +139,7 @@
     },
     "resourceRoots": {
         "ext.lib": "../../../../lib",
+        "cm.util": "../../../../cm/util",
         "dp.md.util": "../../util"
     },
     "routing": {
