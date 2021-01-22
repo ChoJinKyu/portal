@@ -68,10 +68,16 @@ sap.ui.define([
                 this.oSupplierCode.setValue(this.oSearchObj.supplier_code);
             }
             var sSupplierCode = this.oSupplierCode.getValue();
-            var aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanent_id),
-                new Filter("vendor_pool_code", FilterOperator.EQ, this.oSearchObj.vendor_pool_code)
-            ];
+            // var aFilters = [
+            //     new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanent_id),
+            //     new Filter("vendor_pool_code", FilterOperator.EQ, this.oSearchObj.vendor_pool_code)
+            // ];
+
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanent_id));
+            if (this.oSearchObj.vendor_pool_code) {
+                aFilters.push(new Filter("vendor_pool_code", FilterOperator.Contains, this.oSearchObj.vendor_pool_code));
+            }
 
             if (sSupplierCode) {
                 aFilters.push(

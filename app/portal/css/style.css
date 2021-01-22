@@ -1,7 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
+
+
 /* ------------------------------------------------ header style ------------------------------------------------ */
 
+.sapTntToolPageHeader {
+    height: 3.5rem;
+}
+
+.sapTntToolHeader.sapMTB {
+    height: 3.5rem;
+}
+
 .sapMIBar.sapTntToolHeader .sapMBarChild.sapMITH .sapMITBHead .sapMITBText {
-    font-size: .875rem;
+    font-family: 'Noto sans KR', '72', sans-serif;
+}
+
+.sapTntToolHeader .sapMITH .sapMITBSelected .sapMITBContentArrow::after {
+    box-shadow: none;
+}
+
+.sapMIBar.sapTntToolHeader .sapMBarChild.sapMITH .sapMITBHead .sapMITBText {
+    font-size: .9375rem;
 }
 
 .sapTntToolHeader.sapMTB {
@@ -14,8 +33,8 @@
 }
 
 .sapTntToolHeader .sapMITH .sapMITBSelected .sapMITBFilterWrapper>.sapMITBText {
-    color: #DAE3ED;
-    font-weight: 700;
+    color: #fff;
+    font-weight: 500;
 }
 
 .sapTntToolHeader .sapMITH .sapMITBText {
@@ -41,6 +60,12 @@
     border-right: 1px solid #DAE3ED;
 }
 
+.sapTntNavLIItem .sapMText {
+    color: #2C3238;
+    font-family: 'Noto sans KR', '72', sans-serif;
+    font-weight: 400;
+}
+
 .sapTntSideNavigationNotExpanded .sapTnTNavLINotExpandedTriangle:not(.sapTntNavLIItemDisabled):after {
     border-bottom: none;
 }
@@ -54,10 +79,6 @@
     border-left: .25rem solid #26B9D1;
 }
 
-.sapTntNavLI:not(.sapTntNavLINoIcons) .sapTntNavLIGroupItem .sapMText {
-    font-weight: 500;
-}
-
 .sapTntNavLIItemSelected:not(.sapTntNavLIItemDisabled) {
    border-bottom: none;
 }
@@ -68,6 +89,10 @@
 
 .sapUiIcon:focus {
     outline: none;
+}
+
+.sapMInput:focus{
+    outline: 0 !important;
 }
 
 html.sap-desktop .sapMBtn:focus>.sapMFocusable {
@@ -95,4 +120,3 @@ html.sap-desktop .sapMBtn:focus>.sapMFocusable {
 .sapTntNavLICollapsed .sapTntNavLIGroup.sapTntNavLIItemSelected, .sapTntNavLIPopup .sapTntNavLIGroup.sapTntNavLIItemSelected {
     border-color: #26B9D1;
 }
-

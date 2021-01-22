@@ -7,11 +7,11 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
       pa.company_code,
       pa.org_type_code,
       pa.org_code,
+      pa.category_group_code,				
       pa.category_code,				
       pa.parent_category_code,
       pa.sequence,
-      DP_GET_CODE_NAME_FUNC('L1100','PD_CATEGORY',pa.category_code,'KO' ) as category_name,
---      pcl.code_name as category_name,
+      pcl.code_name as category_name,
       pa.active_flag,
       pa.update_user_id,
       pa.system_update_dtm
@@ -21,14 +21,15 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
 				                company_code,
                                 org_type_code,				
                                 org_code,
+                                category_group_code,				
                                 category_code,				
                                 parent_category_code,	
 						        sequence,
 						        active_flag,
 						        update_user_id,
 						        system_update_dtm,
-                                HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,parent_category_code) as parent_id, 				
-                                HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,category_code) as node_id				
+                                HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,category_group_code,parent_category_code) as parent_id, 				
+                                HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,category_group_code,category_code) as node_id				
 				        FROM dp_pd_part_category
 /*                        WHERE tenant_id = :i_tenant_id
                           AND org_type_code = :i_org_type_code
@@ -37,6 +38,11 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
                           AND active_flag = :i_active_flag                            */
 				    )
 				    START WHERE parent_category_code = 'T'
-            ) pa
+            ) pa,
+            DP_PD_PART_CATEGORY_LNG pcl
+ WHERE pa.tenant_id = pcl.tenant_id
+   AND pa.category_group_code = pcl.category_group_code
+   AND pa.category_code = pcl.category_code
+   AND pcl.language_cd = 'KO'
 ORDER BY pa.HIERARCHY_RANK
 ;

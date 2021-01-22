@@ -7,7 +7,7 @@ using {cm.Code_Dtl as code} from '../../cm/CM_CODE_DTL-model';
 using {cm.Org_Tenant as tenant} from '../../cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as comp} from '../../cm/CM_ORG_COMPANY-model';
 using {cm.Pur_Operation_Org as org} from '../../cm/CM_PUR_OPERATION_ORG-model';
-using {dp.Mm_Material_Mst as masterial} from '../mm/DP_MM_MATERIAL_MST-model';
+using {dp.Mm_Material_Mst as material} from '../mm/DP_MM_MATERIAL_MST-model';
 using {sp.Sm_Supplier_Mst as supplier} from '../../sp/sm/SP_SM_SUPPLIER_MST-model';
 
 entity VI_Base_Price_Arl_Dtl {
@@ -17,8 +17,8 @@ entity VI_Base_Price_Arl_Dtl {
         company_code              : String(10) not null;
         org_type_code             : String(2) not null;
         org_code                  : String(10) not null;
-        au_code                   : String(10) not null;
         material_code             : String(40) not null;
+        base_uom_code             : String(3);
         supplier_code             : String(10);
         base_date                 : Date not null;
         base_price_ground_code    : String(30) not null;
@@ -41,7 +41,7 @@ entity VI_Base_Price_Arl_Dtl {
         //                                 and org_code_fk.company_code = company_code
         //                                 and org_code_fk.org_type_code = 'PL'
         //                                 and org_code_fk.org_code = org_code;
-        // material_code_fk          : Association to masterial
+        // material_code_fk          : Association to material
         //                                 on material_code_fk.tenant_id = tenant_id
         //                                 and material_code_fk.material_code = material_code;
         // supplier_code_fk          : Association to supplier
@@ -64,8 +64,8 @@ annotate VI_Base_Price_Arl_Dtl with {
     company_code           @title : '회사코드'  @description     : '회사코드';
     org_type_code          @title : '조직유형코드'  @description   : '조직유형코드';
     org_code               @title : '조직코드'  @description     : '조직코드';
-    au_code                @title : '회계단위코드'  @description   : '회계단위코드';
     material_code          @title : '자재코드'  @description     : '자재코드';
+    base_uom_code          @title : '기본측정단위코드'  @description     : 'material entity 참조';
     supplier_code          @title : '공급업체코드'  @description   : '공급업체코드';
     base_date              @title : '기준일자'  @description     : '기준일자';
     base_price_ground_code @title : '기준단가근거코드'  @description : '공통코드(CM_CODE_DTL, DP_VI_BASE_PRICE_GROUND_CODE) : 10(Cost Table), 20(RFQ), 30(Family Material Code)';

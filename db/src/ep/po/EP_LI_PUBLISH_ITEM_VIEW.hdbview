@@ -52,18 +52,10 @@ select
     coalesce(dtl.plant_code, '') as plant_code,
     coalesce(pl.plant_name, '') as plant_name,
     coalesce(dtl.spec_desc, '') as spec_desc,
-    (select string_agg(loi_item_number, ',') from ep_li_dtl 
-    where tenant_id = dtl.tenant_id 
-    and company_code = dtl.company_code 
-    and loi_write_number = dtl.loi_write_number 
-    and loi_selection_number = sel.loi_selection_number 
-    group by loi_selection_number) as same_selection_item_number,
-   (select string_agg(loi_item_number, ',') from ep_li_dtl 
-    where tenant_id = dtl.tenant_id 
-    and company_code = dtl.company_code 
-    and loi_write_number = dtl.loi_write_number 
-    and loi_publish_number = pub.loi_publish_number 
-    group by loi_publish_number) as same_publish_item_number,   
+    (select ep_gep_loi_selection_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, sel.loi_selection_number, 'Q') from dummy) as same_quotation_number,
+    (select ep_gep_loi_selection_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, sel.loi_selection_number, 'QT') from dummy) as same_quotation_item_number,
+    (select ep_gep_loi_selection_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, sel.loi_selection_number, 'S') from dummy) as same_selection_item_number,
+    (select ep_gep_loi_publish_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, pub.loi_publish_number) from dummy) as same_publish_item_number,   
     dtl.local_create_dtm,
     dtl.local_update_dtm,
     dtl.create_user_id,

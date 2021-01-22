@@ -9,6 +9,7 @@
     xmlns:lib-m="ext.lib.control.m"
     xmlns:u="sap.ui.unified"
     xmlns:tnt="sap.tnt"
+    xmlns:co="sap.suite.ui.commons"
     height="100%">
 
     <f:DynamicPage id="page2"
@@ -48,7 +49,7 @@
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/PROPOSAL} {I18N>/DATE} : " labelFor="searchRequestDate"/>
-                            <DateRangeSelection id="searchRequestDate" width="100%" placeholder="" />
+                            <DateRangeSelection id="searchRequestDate" width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -119,7 +120,8 @@
                             <Label text="{I18N>/SEARCH_IDEA_MANAGER} : " labelFor="searchIdeaManager"></Label>
                             <Input id="searchIdeaManager"
                                 placeholder="All"
-                                showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress">
+                                showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
+                                                liveChange=".onNameChk">
                             </Input>
                             <Input id="searchIdeaManagerId"  visible="false" ></Input>
                             <layoutData>
@@ -128,6 +130,7 @@
                         </VBox>
                     </form:content>
                 </form:SimpleForm>   
+                
                 <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
                     <items>
                         <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
@@ -155,8 +158,10 @@
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title id="mainTableTitle" text="{I18N>/IDEA} {I18N>/LIST} {= ${list>/IdeaListView}.length > 0 ? '(' + ${list>/IdeaListView}.length + ')' : ''}" level="H2"/>
                     <ToolbarSpacer/>
-                    <Button text="{I18N>/ROW_ADD}" id="buttonCreateIdea" press=".onAdd('mainTable', 'list', 'PdProdActivityTemplate', 'tenant_id')"  type="Transparent"/>
+                    <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
                     
+                    <Button text="TEST" id="testButton" press=".onTestPress"  type="Transparent"/>
+
                     <ToolbarSeparator/>
                     <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                     <Button icon="sap-icon://action-settings" press=".onPersoButtonPressed" >
@@ -211,13 +216,15 @@
                 <Label text="{I18N>/IDEA} {I18N>/MANAGER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>idea_manager_local_name}"/>
+                    <!--
+                    <Text text="{list>idea_manager_local_name} ( {list>idea_manager_empno} )"/>
+                    -->
                 </t:template>
                 </t:Column>
                 <t:Column id="idea_product_group_name" width="7rem">
                 <Label text="{I18N>/PRODUCT_GROUP}" textAlign="Center" width="100%"/>
                 <t:template>
-                    <!--Link text="{list>loi_request_title}" press="goToLoiRequest" tooltip="{list>loi_request_title}" /-->
-                    <Text text="{list>idea_product_group_name}" press="goToLoiRequest" />
+                    <Text text="{list>idea_product_group_name}" />
                 </t:template>
                 </t:Column> 
 

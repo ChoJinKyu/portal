@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
+
 
 /* ------------------------------------------------ contents style ------------------------------------------------ */
 
@@ -10,7 +12,12 @@
 }
 
 .sapMLabel {
-    color: #56606B !important;
+    color: #8996a3;
+}
+
+
+.sapMLnk:visited {
+    color: #12A6BE;
 }
 
 .sapMLIBNavigated {
@@ -26,7 +33,9 @@
 }
 
 .sapMMessageToast {
-    box-shadow: 0 .25rem .25rem 0 rgba(0,0,0,0.11), 0 0 .125rem 0 rgba(0,0,0,0.17)
+    box-shadow: none;
+    background-color: #2C3238;
+    color: #fff;
 }
 
 div.sapMSltPicker {
@@ -66,6 +75,10 @@ div.sapMSuggestionsPopover {
     border: none !important;
 }
 
+.sapUxAPObjectPageSection {
+    padding-top: 1rem;
+}
+
 .sapMPopoverFooter .sapMTB .sapMBtn {
     padding: .5rem 0;
 }
@@ -94,8 +107,11 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 }
 
 .sapMLIBFocusable:focus .sapMCbBg {
-    background-color: #F0FDFF;
-    border: none;
+    background-color: #fff;
+}
+
+.sapMLIBFocusable:focus .sapUiIcon {
+    color: #56606B;
 }
 
 .sapMListShowSeparatorsAll .sapMLIBShowSeparator:last-child>td:not(.sapMListTblDummyCell), .sapMListShowSeparatorsAll .sapMListTblSubRow:last-child>td:not(.sapMListTblDummyCell) {
@@ -108,6 +124,18 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 
 .sapMBtnIcon {
     color: #56606B;
+}
+
+.sapTntNavLI .sapTntNavLIGroupItem.sapTntNavLIItem:not(.sapTntNavLIItemDisabled):active {
+    background-color: #F0FDFF;
+}
+
+.sapTntNavLI .sapTntNavLIGroupItem.sapTntNavLIItem:not(.sapTntNavLIItemDisabled):active .sapMText {
+    color: #2C3238;
+}
+
+.sapTntNavLIItem:focus::before {
+    border: none;
 }
 
 .sapFDynamicPage .sapFDynamicPageContentWrapperStandard>.sapFDynamicPageContent, .sapFDynamicPage .sapFDynamicPageContentWrapperSolid>.sapFDynamicPageContent {
@@ -124,6 +152,8 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 
 .sapMTableTH {
     background: #E9EFF5 !important;
+    border-bottom: none;
+    border-top: .0625rem solid #DAE3ED;
 }
 
 .sapUiTableHeaderRow {
@@ -135,6 +165,7 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 }
 
 .sapFDynamicPageTitleMain>.sapFDynamicPageTitleMainInner .sapFDynamicPageTitleMainHeading .sapFDynamicPageTitleMainHeadingInner .sapMTitle {
+    font-family: 'Noto sans KR', '72', sans-serif ;
     color: #2C3238;
     font-weight: bold;
 }
@@ -251,8 +282,9 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar-thumb {
 }
 
 .sapMH4FontSize, .sapMH4Style {
+    font-family: 'Noto sans KR', '72', sans-serif !important;
     font-size: 1rem !important;
-    font-weight: 700 !important;
+    font-weight: 500 !important;
 }
 
 .sapFFCLBackgroundDesignSolid .sapFFCLArrow {
@@ -295,6 +327,49 @@ span.sapMBtnInner.sapMBtnEmphasized {
     color: #fff !important;
 }
 
+.sapFDynamicPageTitle .sapMBtnEmphasized {
+    background-color: #E0205C !important;
+    border-color: #E0205C;
+}
+
+.sapFDynamicPageHeader .sapMBtnEmphasized {
+    background-color: #E0205C !important;
+    border-color: #E0205C !important;
+}
+
+.sapFDynamicPageTitle .sapMBtn:hover>.sapMBtnHoverable.sapMBtnEmphasized:not(.sapMBtnActive):not(.sapMToggleBtnPressed) {
+    background-color: #F55D8D !important;
+    border-color: #F55D8D;
+}
+
+.sapFDynamicPageHeader .sapMBtn:hover>.sapMBtnHoverable.sapMBtnEmphasized:not(.sapMBtnActive):not(.sapMToggleBtnPressed) {
+    background-color: #F55D8D !important;
+    border-color: #F55D8D;
+}
+
+.sapUiTableContentRow.sapUiTableRowHvr {
+    background-color: #f5f9fa !important;
+    cursor: pointer;
+}
+
+input::placeholder {
+    color: #8996A3 !important;
+    font-style: normal !important;
+}
+
+input:focus {
+    outline: none !important;
+    border: none !important;
+}
+
+.sapUiTableCell:focus:not(*:root) {
+    outline: none;
+}
+
+.sapUiTableTreeIcon {
+    cursor: pointer !important;
+}
+
 .sapMBtn:hover>.sapMBtnHoverable.sapMBtnEmphasized:not(.sapMBtnActive):not(.sapMToggleBtnPressed) {
     background-color: #6B7682 !important;
     border-color: #6B7682;
@@ -302,6 +377,10 @@ span.sapMBtnInner.sapMBtnEmphasized {
 
 .sapMBtn:hover>.sapMBtnTransparent.sapMBtnHoverable:not(.sapMBtnActive):not(.sapMToggleBtnPressed) bdi, .sapMIBar-CTX .sapMBtn:hover>.sapMBtnTransparent.sapMBtnHoverable:not(.sapMBtnActive):not(.sapMToggleBtnPressed) bdi {
     color: #56606B;
+}
+
+.suiteUiProcessFlowLaneHeaderProcessSymbolIcon {
+    color: #8996A3 !important;
 }
 
 .sapMBtn:hover:not(.sapMBtnDisabled)>.sapMBtnTransparent.sapMBtnHoverable:not(.sapMBtnActive):not(.sapMToggleBtnPressed):not(.sapMBtnEmphasized) {
@@ -367,6 +446,7 @@ html.sap-desktop .sapUiCalHead>button:hover, html.sap-desktop .sapUiCalCancel:ho
 }
 
 .sapMTB-Transparent-CTX>.sapMTitleTB.sapMTitleStyleAuto {
+    font-family: 'Noto sans KR', '72', sans-serif;
     font-size: 1rem;
 }
 
@@ -469,6 +549,7 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar-thumb {
 
 .sapMBtnInner {
     border: none;
+    background: transparent;
 }
 
 .sapUiRespGrid.sapUiRespGridHSpace1 {
@@ -477,15 +558,25 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar-thumb {
 
 .sapFDynamicPageToggleHeaderIndicator.sapMBtn .sapMBtnInner, .sapFDynamicPageHeaderPinButton.sapMBtn .sapMBtnInner {
     border: .0625rem solid #BEC9D4;
+    background: #fff;
 }
 
 .sapUxAPObjectPageSection .sapUxAPObjectPageSectionContainer .sapUxAPObjectPageSubSection .sapUxAPBlockContainer {
     padding-bottom: 2rem;
 }
 
+.sapUxAPObjectPageSubSection:focus {
+    outline: none !important;
+}
+
+.sapMObjStatusText {
+    font-family: 'Noto sans KR', '72', sans-serif !important;
+}
+
 .sapUiSizeCompact .sapUxAPObjectPageSectionTitle, .sapUxAPObjectPageSectionTitle {
+    font-family: 'Noto sans KR', '72', sans-serif;
     font-size: 1rem !important;
-    font-weight: 500;
+    font-weight: 400;
     border-bottom: .125rem solid #12A6BE !important;
     color: #2C3238 !important;
     height: 2.5rem !important;
@@ -498,6 +589,7 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar-thumb {
 .sapUiSizeCompact .sapUxAPObjectPageSectionHeader, .sapUxAPObjectPageSectionHeader {
     height: 2.5rem !important;
     border-bottom: .0625rem solid #DAE3ED !important;
+    padding: 0 2rem !important;
 }
 
 .sapFDynamicPageToggleHeaderIndicator:before, .sapFDynamicPageHeaderPinButton:before {
@@ -524,8 +616,10 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar-thumb {
     border-color: transparent;
     background: transparent;
 }
+
 .sapMInputBaseReadonly .sapMInputBaseInner {
     padding: 0 !important;
+    cursor: pointer;
 }
 
 .sapMInputBaseContentWrapper:not(.sapMInputBaseReadonlyWrapper):not(.sapMInputBaseContentWrapperState):not(.sapMInputBaseDisabledWrapper):hover {
@@ -541,8 +635,8 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar-thumb {
     padding: 0;
 }
 
-.sapUiForm:not(.sapUiFormEdit) .sapMText {
-    padding-top: .5rem;
+.sapMRbSel .sapMRbBInn {
+    fill: #E0205C;
 }
 
 .sapUiSizeCompact .sapMMultiComboBox.sapMMultiComboBoxHasToken .sapMInputBaseContentWrapper {
@@ -662,7 +756,7 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar-thumb {
 }
 
 .sapUxAPObjectPageSectionHeader {
-    padding: 0 2rem !important;
+    padding: 0 !important;
 }
 
 .sapUiRespGrid.sapUiRespGridHSpace1>div {
@@ -753,6 +847,7 @@ html.sap-desktop .sapMSegBBtnFocusable:hover .sapMSegBBtnInner {
 
 .sapUiSizeCompact.sapMDialog>.sapMDialogSection, .sapUiSizeCompact .sapMDialog>.sapMDialogSection {
     padding: 1rem;
+    background-color: #f5f9fa !important;
 }
 
 .sapMLIBHoverable.sapMLIBSelected:hover {
@@ -761,6 +856,15 @@ html.sap-desktop .sapMSegBBtnFocusable:hover .sapMSegBBtnInner {
 
 .sapUiTableGroupIcon::before, .sapUiTableTreeIcon::before {
     color: #12A6BE !important;
+}
+
+html.sap-desktop .sapMToken:hover {
+    border: none;
+    background: #E9EFF5;
+}
+
+.sapMTokenIcon {
+    color: #56606B;
 }
 
 .sapMCbHoverable:hover {
@@ -953,6 +1057,11 @@ html.sap-desktop .sapMPersoDialog .sapMLIBSelected:not(.sapMLIBActive):not(.sapM
 
 .sapMInputBaseContentWrapper:not(.sapMInputBaseReadonlyWrapper):not(.sapMInputBaseContentWrapperState):not(.sapMInputBaseDisabledWrapper):active {
     border-color: #424952;
+    outline: none !important;
+}
+
+.sapMLIBHoverable:not(.sapMLIBSelected):hover+.sapMListTblSubRow, .sapMLIBHoverable:not(.sapMLIBSelected)+.sapMListTblSubRow:hover, .sapMLIBHoverable:not(.sapMLIBSelected).sapMPopinHovered:focus {
+    background-color: #f5f9fa;
 }
 
 .sapMDialog.sapMDialogWithSubHeader {
@@ -1004,6 +1113,18 @@ span.sapMBtnInner.sapMToggleBtnPressed .sapMBtnIcon, span.sapMBtnInner.sapMToggl
     text-align: left;
 }
 
+.sapMSltPicker-CTX .sapMSelectListItemBaseSelected, .sapMComboBoxBasePicker-CTX .sapMSelectListItemBaseSelected {
+    outline: none;
+}
+
+.sapUxAPObjectPageSection:focus {
+    outline: none !important;
+}
+
+.sapMBtnIcon:focus {
+    color: #ff0000 !important;
+}
+
 .sapTblTdTextCenter {
     width: 100%;
     text-align: center;
@@ -1014,4 +1135,19 @@ span.sapMBtnInner.sapMToggleBtnPressed .sapMBtnIcon, span.sapMBtnInner.sapMToggl
     text-align: right;
 }
 
+.sapSuiteUiCommonsMicroProcessFlowItemWrapper {
+    align-items: flex-start !important;
+}
 
+.sapSuiteUiCommonsMicroProcessFlowItemSeparator {
+    background-color: #BEC9D4 !important;
+    margin: .6rem !important;
+}
+
+html.sap-desktop .sapUiCal:not(.sapUiCalDateInt) .sapUiCalItem:not(.sapUiCalItemSel) :not(.sapUiCalWeekNum):hover {
+    background: transparent !important;
+}
+
+.sapMGrowingListTrigger {
+    border: none;
+}

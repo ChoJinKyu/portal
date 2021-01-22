@@ -227,6 +227,16 @@ sap.ui.define([
                 }
             }),"list");
 
+            
+            // var oTable = this.byId("treeTable");
+            // oTable.getRows().some(function (oRows) {
+                
+            //     if (oRows.getBindingContext() === oContext) {
+            //         oRows.focus();
+            //         oRows.setSelected(true);       
+            //         return true;
+            //     }
+            // });
         },
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -431,7 +441,7 @@ sap.ui.define([
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		onOpenCategoryItemPage: function(){
-			window.open("https://lgcommondev-workspaces-ws-2dmr2-app2.jp10.applicationstudio.cloud.sap/pg/md/mdCategoryItem/webapp/index.html","_blank");
+			window.open("/pg/md/mdCategoryItem/webapp/index.html","","_blank");
         }
         
     });

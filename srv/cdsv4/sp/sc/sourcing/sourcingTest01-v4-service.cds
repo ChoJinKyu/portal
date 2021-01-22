@@ -12,7 +12,7 @@ using {
     sp.Sc_Contacts as scContacts,
     sp.Sc_Tester00 as scTester00,
     sp.Sc_Language as scLanguage,
-    sp.Sc_Nego_Headers_Test01 as negoHeadersTest01,
+    // sp.Sc_Nego_Headers_Test01 as negoHeadersTest01,
     sp.Sc_Nego_Headers_Test04 as negoHeadersTest04
 } from '../../../../../db/cds/sp/sc/SP_SC_00TESTER-model';
 
@@ -24,7 +24,7 @@ service SourcingTest01V4Service {
     entity Contacts @(title : '아웃컴테스트')                       as projection on scContacts;
     // entity SalesOrderCountryOwnAndGer @(title : '아웃컴테스트')                 as projection on scSalesOrderCountryOwnAndGer;
     entity ScNegoOutcom @(title : '아웃컴테스트')                   as projection on scNegoOutcom;
-    entity NegoHeadersTest01                                  as projection on negoHeadersTest01;
+    // entity NegoHeadersTest01                                  as projection on negoHeadersTest01;
     /* 협상에 대한 헤더 정보(네고종류, 네고산출물, Award유형, 개설일자, 마감일자, 오리엔테이션정보 등)를 관리한다. */
     // @odata.draft.enabled
     entity NegoHeaders @(title : '협상헤더정보')                    as projection on negoHeaders;

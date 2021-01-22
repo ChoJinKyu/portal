@@ -1,0 +1,8 @@
+VIEW OP_PU_PR_TEMPLATE_DTLVIEW AS
+SELECT DISTINCT
+    tenant_id 	
+    ,pr_template_number
+    ,txn_type_code
+    ,table_name	
+from  OP_PU_PR_TEMPLATE_DTL
+

@@ -12,8 +12,8 @@ using {cm.Pur_Operation_Org as org} from '../../../../../db/cds/cm/CM_PUR_OPERAT
 using {cm.Hr_Employee as employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm.Control_Option_Dtl as controlDtl} from '../../../../../db/cds/cm/CM_CONTROL_OPTION_DTL-model';
-using {dp.Mm_Material_Mst as masterialMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
-using {dp.Mm_Material_Org as masterialOrg} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
+using {dp.Mm_Material_Mst as materialMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
+using {dp.Mm_Material_Org as materialOrg} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
 using {sp.Sm_Supplier_Mst as supplierMst} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 
 namespace dp;
@@ -62,6 +62,7 @@ service BasePriceArlService {
                 )                          as approve_status_code_nm  : String(240),
                 sup.requestor_empno,
                 emp.user_local_name        as requestor_local_nm      : String(240),
+                emp.job_title              as requestor_job_title     : String(100),
                 dept.department_local_name as requestor_dept_local_nm : String(240),
                 sup.request_date,
                 sup.attch_group_number,
@@ -87,6 +88,7 @@ service BasePriceArlService {
             key app.approve_sequence,
             key app.approver_empno,
                 emp.user_local_name        as approver_local_nm      : String(240),
+                emp.job_title              as approver_job_title     : String(100),
                 dept.department_local_name as approver_dept_local_nm : String(240),
                 app.approver_type_code,
                 (
@@ -134,6 +136,7 @@ service BasePriceArlService {
             key ref.approval_number,
             key ref.referer_empno,
                 emp.user_local_name        as referer_local_nm      : String(240),
+                emp.job_title              as referer_job_title     : String(100),
                 dept.department_local_name as referer_dept_local_nm : String(240),
                 ref.local_create_dtm,
                 ref.local_update_dtm,
@@ -144,117 +147,160 @@ service BasePriceArlService {
         };
 
     entity Base_Price_Arl_Detail   as
-        select from arlDetail as d {
-            key d.tenant_id,
-            key d.approval_number,
-            key d.item_sequence,
-                d.company_code,
-                d.org_type_code,
-                d.org_code,
-                d.au_code,
-                d.material_code,
-                d.supplier_code,
-                (
-                    select case
-                               when
-                                   'KO' = 'EN'
-                               then
-                                   supplier_english_name
-                               else
-                                   supplier_local_name
-                           end as supplier_name from supplierMst
-                    where
-                            tenant_id     = d.tenant_id
-                        and supplier_code = d.supplier_code
-                ) as supplier_name               : String(240),
-                d.base_date,
-                d.base_price_ground_code,
+        select from arlDetail as dtl
+        left outer join org as org
+            on  dtl.tenant_id     = org.tenant_id
+            and dtl.company_code  = org.company_code
+            and org.org_type_code = 'PL'
+            and dtl.org_code      = org.org_code
+        left outer join materialMst as mtr
+            on  dtl.tenant_id     = mtr.tenant_id
+            and dtl.material_code = mtr.material_code
+        left outer join supplierMst as sup
+            on  dtl.tenant_id     = sup.tenant_id
+            and dtl.supplier_code = sup.supplier_code
+        {
+            key dtl.tenant_id,
+            key dtl.approval_number,
+            key dtl.item_sequence,
+                dtl.company_code,
+                dtl.org_type_code,
+                dtl.org_code,
+                org.org_name,
+                dtl.material_code,
+                mtr.material_desc,
+                mtr.material_spec,
+                dtl.base_uom_code,
+                dtl.supplier_code,
+                sup.supplier_local_name,
+                // (
+                //     select case
+                //                when
+                //                    'KO' = 'EN'
+                //                then
+                //                    supplier_english_name
+                //                else
+                //                    supplier_local_name
+                //            end as supplier_name from supplierMst
+                //     where
+                //             tenant_id     = dtl.tenant_id
+                //         and supplier_code = dtl.supplier_code
+                // ) as supplier_nm               : String(240),
+                dtl.base_date,
+                dtl.base_price_ground_code,
                 (
                     select code_name from codeLng
                     where
-                            tenant_id   = d.tenant_id
+                            tenant_id   = dtl.tenant_id
                         and group_code  = 'DP_VI_BASE_PRICE_GROUND_CODE'
-                        and code        = d.base_price_ground_code
+                        and code        = dtl.base_price_ground_code
                         and language_cd = 'KO'
-                ) as base_price_ground_code_name : String(240),
-                d.local_create_dtm,
-                d.local_update_dtm,
-                d.create_user_id,
-                d.update_user_id,
-                d.system_create_dtm,
-                d.system_update_dtm
+                ) as base_price_ground_code_nm : String(240),
+                dtl.local_create_dtm,
+                dtl.local_update_dtm,
+                dtl.create_user_id,
+                dtl.update_user_id,
+                dtl.system_create_dtm,
+                dtl.system_update_dtm
         };
 
-    entity Base_Price_Arl_Price    as projection on arlPrice;
-
-    @readonly
-    entity Code_Dtl                as
-        select from codeDtl as d {
-            key tenant_id,
-            key group_code,
-            key code,
+    entity Base_Price_Arl_Price    as
+        select from arlPrice as prc {
+            key prc.tenant_id,
+            key prc.approval_number,
+            key prc.item_sequence,
+            key prc.market_code,
                 (
-                    select code_name from codeLng l
+                    select code_name from codeLng
                     where
-                            l.tenant_id   = d.tenant_id
-                        and l.group_code  = d.group_code
-                        and l.code        = d.code
-                        and l.language_cd = 'KO'
-                ) as code_name : String(240),
-                code_description,
-                sort_no
-        }
-        where
-            $now between start_date and end_date;
-
-    @readonly
-    entity Org_Tenant              as projection on tenant;
-
-    @readonly
-    entity Org_Company             as projection on comp;
-
-    @readonly
-    entity Pur_Operation_Org       as projection on org;
-
-    @readonly
-    entity Hr_Employee             as projection on employee;
-
-    @readonly
-    entity Supplier_Mst            as projection on supplierMst;
-
-    @readonly
-    entity Material_Mst            as
-        select from masterialMst {
-            tenant_id,
-            material_code,
-            material_type_code,
-            material_desc,
-            ifnull(
-                material_spec, ''
-            ) as material_spec : String(1000),
-            base_uom_code,
-            purchasing_uom_code,
-            commodity_code
+                            tenant_id   = prc.tenant_id
+                        and group_code  = 'DP_VI_MARKET_CODE'
+                        and code        = prc.market_code
+                        and language_cd = 'KO'
+                ) as market_code_nm : String(240),
+                prc.new_base_price,
+                prc.new_base_price_currency_code,
+                prc.current_base_price,
+                prc.current_base_price_currency_code,
+                prc.first_purchasing_net_price,
+                prc.first_pur_netprice_curr_cd,
+                prc.first_pur_netprice_str_dt,
+                prc.local_create_dtm,
+                prc.local_update_dtm,
+                prc.create_user_id,
+                prc.update_user_id,
+                prc.system_create_dtm,
+                prc.system_update_dtm
         };
 
-    @readonly
-    entity Material_Vw             as
-        select from masterialMst m
-        left outer join masterialOrg o
-            on  m.tenant_id     = o.tenant_id
-            and m.material_code = o.material_code
-        {
-            key m.tenant_id,
-            key m.material_code,
-                m.material_type_code,
-                m.material_desc,
-                ifnull(
-                    m.material_spec, ''
-                ) as material_spec : String(1000),
-                m.base_uom_code,
-                m.purchasing_uom_code,
-                o.material_status_code
-        };
+    // @readonly
+    // entity Code_Dtl                as
+    //     select from codeDtl as d {
+    //         key tenant_id,
+    //         key group_code,
+    //         key code,
+    //             (
+    //                 select code_name from codeLng l
+    //                 where
+    //                         l.tenant_id   = d.tenant_id
+    //                     and l.group_code  = d.group_code
+    //                     and l.code        = d.code
+    //                     and l.language_cd = 'KO'
+    //             ) as code_name : String(240),
+    //             code_description,
+    //             sort_no
+    //     }
+    //     where
+    //         $now between start_date and end_date;
+
+    // @readonly
+    // entity Org_Tenant              as projection on tenant;
+
+    // @readonly
+    // entity Org_Company             as projection on comp;
+
+    // @readonly
+    // entity Pur_Operation_Org       as projection on org;
+
+    // @readonly
+    // entity Hr_Employee             as projection on employee;
+
+    // @readonly
+    // entity Supplier_Mst            as projection on supplierMst;
+
+    // @readonly
+    // entity Material_Mst            as
+    //     select from materialMst {
+    //         tenant_id,
+    //         material_code,
+    //         material_type_code,
+    //         material_desc,
+    //         ifnull(
+    //             material_spec, ''
+    //         ) as material_spec : String(1000),
+    //         base_uom_code,
+    //         purchasing_uom_code,
+    //         commodity_code
+    //     };
+
+    // @readonly
+    // entity Material_Vw             as
+    //     select from materialMst m
+    //     left outer join materialOrg o
+    //         on  m.tenant_id     = o.tenant_id
+    //         and m.material_code = o.material_code
+    //     {
+    //         key m.tenant_id,
+    //         key m.material_code,
+    //             m.material_type_code,
+    //             m.material_desc,
+    //             ifnull(
+    //                 m.material_spec, ''
+    //             ) as material_spec : String(1000),
+    //             m.base_uom_code,
+    //             m.purchasing_uom_code,
+    //             o.material_status_code
+    //     };
 
     @readonly
     entity Base_Price_Arl_Config   as

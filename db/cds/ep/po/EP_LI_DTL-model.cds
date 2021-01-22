@@ -10,10 +10,10 @@ entity Li_Dtl {
     key company_code                    : String(10) not null;
     key loi_write_number                : String(50) not null;
 
-        header                          : Association[1] to mst.Li_Mst
-                                              on  header.tenant_id        = tenant_id
-                                              and header.company_code     = company_code
-                                              and header.loi_write_number = loi_write_number;
+        // header                          : Association[1] to mst.Li_Mst
+        //                                       on  header.tenant_id        = tenant_id
+        //                                       and header.company_code     = company_code
+        //                                       and header.loi_write_number = loi_write_number;
 
     key loi_item_number                 : String(50) not null;
         item_sequence                   : Decimal;
