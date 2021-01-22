@@ -38,13 +38,43 @@ sap.ui.define([
             this._oTPC = new TablePersoController({
             customDataKey: "mdCategoryItem"
             }).setTable(this.byId("treeTable"));
+
+            //테넌트, 사업본부 기본셋팅
+            // this.getView().byId("searchTenantCombo").setSelectedKey("L2100");
+            // this.getView().byId("searchChain").setSelectedKey("BIZ00200");
         },
 
         onMainTablePersoButtonPressed: function (event) {
             this._oTPC.openDialog();
         },
+
+
         // Display row number without changing data
         onAfterRendering: function () {
+
+            //세션값으로 받아야 함 테넌트,사업본부
+            this.getView().byId("searchTenantCombo").setSelectedKey("L2100");
+            this.getView().byId("searchChain").setSelectedKey("BIZ00200");
+            var oSelectedkey = this.getView().byId("searchTenantCombo").getSelectedKey();
+            var business_combo = this.getView().byId("searchChain");  
+            business_combo.setValue("");
+
+            var aFiltersComboBox = [];
+            aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
+            // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
+            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+            
+            business_combo.bindAggregation("items", {
+                path: "org>/Org_Unit",
+                sorter: businessSorter,
+                filters: aFiltersComboBox,
+                // @ts-ignore
+                template: new sap.ui.core.Item({
+                    key: "{org>bizunit_code}",
+                    text: "{org>bizunit_code}: {org>bizunit_name}"
+                })
+            });
+
             this.onSearch();
         },
 
@@ -54,7 +84,8 @@ sap.ui.define([
         onChangeTenant: function (oEvent) {
             var oSelectedkey = oEvent.getSource().getSelectedKey();                
             var business_combo = this.getView().byId("searchChain");  
-            business_combo.setValue("");
+            business_combo.setValue(""); 
+            business_combo.getSelectedKey("");
 
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
@@ -93,11 +124,17 @@ sap.ui.define([
                 MessageToast.show("한 건만 선택해주세요.");
                 return;
             }
+
             var nSelIdx = oTable.getSelectedIndex();
             var oContext = oTable.getContextByIndex(nSelIdx);
             var sPath = oContext.getPath();
             var oData = oTable.getBinding().getModel().getProperty(sPath);
             var level = oData.level_path.trim().split(">");
+
+            if(oData.drill_state != "leaf"){
+                MessageToast.show("leaf node를 선택해주세요.");
+                return;
+            }
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -110,11 +147,16 @@ sap.ui.define([
                     return oDialog;
                 });
             }
+
+            var level1 = (level[0] ? level[0].trim() : "");
+            var level2 = (level[1] ? level[1].trim() : "");
+            var level3 = (level[2] ? level[2].trim() : "");
+            
             this.pDialog.then(function (oDialog) {
                 oDialog.open();
-                that.onDialogMappingSearch(level[0].trim(),
-                                        level[1].trim(),
-                                        level[2].trim(),
+                that.onDialogMappingSearch(level1,
+                                        level2,
+                                        level3,
                                         oData.vendor_pool_code);
             });
         },
@@ -130,22 +172,22 @@ sap.ui.define([
                 sDeptCode = this.getView().byId("search_Dept").getSelectedKey(),
 			    sStatusflag = this.getView().byId("search_statusflag").getSelectedKey();
             var aSearchFilters = [];
-  
-            // if (tenant_combo.length == 0) {
-            //     MessageToast.show("테넌트를 설정해주세요.");
-            //     return;
-            // }
-			// if (sChain.length == 0) {
-            //     MessageToast.show("사업본부를 설정해주세요.");
-            //     return;
-			// }
+            // debugger;
+            if (tenant_combo.length == 0) {
+                MessageToast.show("테넌트를 설정해주세요.");
+                return;
+            }
+			if (sChain.length == 0) {
+                MessageToast.show("사업본부를 설정해주세요.");
+                return;
+			}
 			// if (sVpCode.length == 0) {
             //     MessageToast.show("Vendor Pool을 설정해주세요.");
             //     return;
             // }
-            tenant_combo = "L2100";
-            sChain = "BIZ00200";
-            sVpCode = "VP201610260004";
+            // tenant_combo = "L2100";
+            // sChain = "BIZ00200";
+            // sVpCode = "VP201610260004";
             var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
                         +"?$filter=tenant_id eq '"+tenant_combo+"' and "
                         +"org_code eq '"+ sChain +"'";//+"' and "
@@ -237,6 +279,15 @@ sap.ui.define([
             //         return true;
             //     }
             // });
+        },
+
+        onMainTableexpandAll: function(e) {
+            var table = this.getView().byId("treeTable");
+            table.expandToLevel(1);
+        },
+
+        onMainTablecollapseAll: function(e){
+            this.getView().byId("treeTable").collapseAll();
         },
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,6 +392,7 @@ sap.ui.define([
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         onDialogMappingSearch: function (vpName1,vpName2,vpName3,vpCode3) {
+
             this.getView().byId("vpCode1").setText(vpName1);
             this.getView().byId("vpCode2").setText(vpName2);
             this.getView().byId("vpCode3").setText(vpName3+" ("+vpCode3+")");

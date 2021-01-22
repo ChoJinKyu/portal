@@ -5,6 +5,7 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
     "ext/lib/util/ExcelUtil",
+    "cm/util/control/ui/EmployeeDialog",
     "dp/md/util/controller/ModelDeveloperSelection",
     "./DevelopmentReceiptPersoService",
     "sap/ui/base/ManagedObject",
@@ -28,7 +29,7 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, ModelDeveloperSelection, DevelopmentReceiptPersoService,
+], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, ModelDeveloperSelection, DevelopmentReceiptPersoService,
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item,
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
@@ -213,6 +214,26 @@ sap.ui.define([
 
         onMoldMstTableUserSearch: function (oEvent) {
             this.modelDeveloperSelection.showModelDeveloperSelection(this, oEvent);
+        },
+
+        onInputWithEmployeeValuePress: function(oEvent){
+            oEvent.getSource().getParent().getCells()[0].setSelected(true);
+            var index = oEvent.getSource().getBindingContext("list").getPath().split('/')[2];
+
+            this.onInputWithEmployeeValuePress["row"] = index;
+
+            this.byId("employeeDialog").open();
+        },
+
+        onEmployeeDialogApplyPress: function(oEvent){
+            var userId = oEvent.getParameter("item").email_id.split('@')[0],
+                userName = oEvent.getParameter("item").user_local_name,
+                employeeNumber = oEvent.getParameter("item").employee_number,
+                oModel = this.getModel("list"),
+                rowIndex = this.onInputWithEmployeeValuePress["row"];
+
+            oModel.setProperty("/MoldMstView/"+rowIndex+"/mold_developer_name", userName + " [" + userId + "]");
+            oModel.setProperty("/MoldMstView/"+rowIndex+"/mold_developer_empno", employeeNumber);
         },
 
         /**
