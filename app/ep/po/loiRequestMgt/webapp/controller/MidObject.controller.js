@@ -1071,26 +1071,31 @@ sap.ui.define([
         },
 
          onLiveChange: function(oEvent){
-            
+
             console.log("onLiveChange -->" , oEvent);
             var _oInput = oEvent.getSource();
             var val = _oInput.getValue();
                 val = val.replace(/[^\d]/g, '');
-            //_oInput.setValue(val);
-
-            this.quantity_val = val;
-            console.log("this.quantity_val" , this.quantity_val);
-
-            var sum_val = 0;
-            if(this.quantity_val > 0 && this.price_val > 0){
-                sum_val = this.quantity_val * this.price_val;
-            }
+            _oInput.setValue(val);
 
             var sPath = oEvent.getSource().getBindingContext("details").getPath();
             var index = sPath.substr(sPath.length-1);
             console.log(" index obj ----------------->" , index); 
-
             var oDetailsModel = this.getModel("details");
+
+            var sum_val = 0;
+            this.requestQuantity_ = [];
+            this.requestNetPrice_ = [];
+            this.requestQuantity_[index] = oDetailsModel.getProperty("/LOIRequestDetailView/"+index+"/request_quantity");
+            this.requestNetPrice_[index] = oDetailsModel.getProperty("/LOIRequestDetailView/"+index+"/request_net_price");
+
+            console.log(" this.requestQuantity_[index]  ----------------->" , this.requestQuantity_[index] ); 
+            console.log(" this.requestNetPrice_[index] ----------------->" , this.requestNetPrice_[index]); 
+
+            if(this.requestQuantity_[index] > 0 && this.requestNetPrice_[index] > 0){
+                sum_val = this.requestQuantity_[index] * this.requestNetPrice_[index];
+            }
+
             oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_quantity", this.numberFormatter.toNumberString(val));
             oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_amount", this.numberFormatter.toNumberString(sum_val));
 
@@ -1104,19 +1109,24 @@ sap.ui.define([
                 val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val);
 
-            this.price_val = val;
-            console.log("this.price_val" , this.price_val);
-
-            var sum_val = 0;
-            if(this.quantity_val > 0 && this.price_val > 0){
-                sum_val = this.quantity_val * this.price_val;
-            }
-
             var sPath = oEvent.getSource().getBindingContext("details").getPath();
             var index = sPath.substr(sPath.length-1);
+            var oDetailsModel = this.getModel("details");
             console.log(" index obj ----------------->" , index); 
 
-            var oDetailsModel = this.getModel("details");
+            var sum_val = 0;
+            this.requestQuantity_ = [];
+            this.requestNetPrice_ = [];
+            this.requestQuantity_[index] = oDetailsModel.getProperty("/LOIRequestDetailView/"+index+"/request_quantity");
+            this.requestNetPrice_[index] = oDetailsModel.getProperty("/LOIRequestDetailView/"+index+"/request_net_price");
+
+            console.log(" this.requestQuantity_[index]  ----------------->" , this.requestQuantity_[index] ); 
+            console.log(" this.requestNetPrice_[index] ----------------->" , this.requestNetPrice_[index]); 
+
+            if(this.requestQuantity_[index] > 0 && this.requestNetPrice_[index] > 0){
+                sum_val = this.requestQuantity_[index] * this.requestNetPrice_[index];
+            }
+
             oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_net_price", this.numberFormatter.toNumberString(val));
             oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_amount", this.numberFormatter.toNumberString(sum_val));
 
@@ -1161,13 +1171,14 @@ sap.ui.define([
 
         onEmployeeDialogApplyPress: function(oEvent){
 
-            this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
+            //this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
             var sDepNo = oEvent.getParameter("item").employee_number;
             var oDetailsModel = this.getModel("details");
             var rowIndex = this.onInputWithEmployeeValuePress["row"];
             console.log("row ::: " ,this.onInputWithEmployeeValuePress["row"]);
 
-            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/buyer_empno", oEvent.getParameter("item").user_local_name);
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/buyer_name", oEvent.getParameter("item").user_local_name);
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/buyer_empno", oEvent.getParameter("item").employee_number);
                
         },
 

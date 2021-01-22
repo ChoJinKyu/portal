@@ -183,16 +183,16 @@
 								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Label text="S"/>
 								</Column>
-								<Column id="midLineNoColumn" minScreenWidth="Tablet" hAlign="Center" width="50px">
+								<Column id="midLineNoColumn" minScreenWidth="Tablet" hAlign="Center" width="60px">
 									<Label text="Line No."/>
 								</Column>
-                                <Column id="midPlantColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midPlantColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="플랜트" required="true"/>
 								</Column>
-								<Column id="midItemCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midItemCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="품목코드" />
 								</Column>
-								<Column id="midItemDescColumn" minScreenWidth="Tablet" hAlign="Center"  width="100px">
+								<Column id="midItemDescColumn" minScreenWidth="Tablet" hAlign="Center"  width="150px">
 									<Label text="품명" required="true"/>
 								</Column>
                                 <Column id="midSpecDesc" minScreenWidth="Tablet" hAlign="Center"  width="50px">
@@ -207,22 +207,22 @@
                                 <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="70px">
 									<Label text="통화" />
 								</Column>
-                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="단가" />
 								</Column>
-                                <Column id="midRequestAmountColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midRequestAmountColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="금액" />
 								</Column>
-                                <Column id="midDeliveryRequestDate" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midDeliveryRequestDate" minScreenWidth="Tablet" hAlign="Center" width="120px">
 									<Label text="납기일자" />
 								</Column>
-                                <Column id="midSupplierCodeColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midSupplierCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="150px">
 									<Label text="수행업체" />
 								</Column>
-                                <Column id="midBuyerEmpnoColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midBuyerEmpnoColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="구매담당자" required="true"/>
 								</Column>
-                                <Column id="midRemarkColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midRemarkColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="비고" />
 								</Column>
 
@@ -230,8 +230,8 @@
 							<items>
                                 <ColumnListItem press=".onMidTableItemPress">
 									<cells>
-                                        <Text text="{details>_row_state_}"  />
-                                        <Text text="{details>item_sequence}"/>
+                                        <Label text="{details>_row_state_}"  />
+                                        <Label text="{details>item_sequence}"/>
                                         <!-- <VBox  alignItems="Center">  
                                             <Input value="{details>plant_code}" 
                                                 visible="{=!${midObjectView>/isEditMode}}"
@@ -274,7 +274,7 @@
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
-                                            <Text   text="{details>plant_code}"
+                                            <Label   text="{details>plant_code}"
                                                     visible="{midObjectView>/isShowMode}"/>    
                                              <!-- <Label  text="{details>plant_code}" design="Bold"
                                                         visible="{midObjectView>/isShowMode}"
@@ -288,7 +288,7 @@
                                             <Input value="{details>ep_item_code}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
-                                            <Text   text="{details>ep_item_code}"
+                                            <Label   text="{details>ep_item_code}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -299,7 +299,7 @@
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/>  
-                                            <Text   text="{details>item_desc}"
+                                            <Label   text="{details>item_desc}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -309,7 +309,7 @@
                                             <Input value="{details>spec_desc}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/>  
-                                            <Text   text="{details>spec_desc}"
+                                            <Label   text="{details>spec_desc}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -338,11 +338,11 @@
                                                 selectedKey="{details>unit}"                                       
                                                 placeholder="{I18N>/OPTION}"
                                                 visible="{=!${midObjectView>/isShowMode}}"
-                                                required="{=!${midObjectView>/isShowMode}}"
+ 
                                             >
                                             <core:Item key="{uom_code}" text="{uom_code} : {uom_name}" />
                                             </ComboBox>
-                                            <Text   text="{details>unit}"
+                                            <Label   text="{details>unit}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -374,7 +374,7 @@
                                                             }
                                                         }"
                                                 width="100%"/>  -->
-                                            <Text   text="{details>request_quantity}"
+                                            <Label   text="{details>request_quantity}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -438,7 +438,7 @@
                                             >
                                             <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" />
                                             </ComboBox>
-                                        <Text   text="{details>currency_code}"
+                                        <Label   text="{details>currency_code}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
                                     </HBox>  
 
@@ -465,7 +465,7 @@
                                                 width="100%"/>  -->
                                         
 
-                                        <Text   text="{details>request_net_price}"
+                                        <Label   text="{details>request_net_price}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
 
                                     </HBox>  
@@ -485,7 +485,7 @@
                                             formatOptions: {showMeasure: false}
                                         }" unit="{details>currency_code}" textAlign="End" /> -->
 
-                                        <Text   text="{details>request_amount}"
+                                        <Label   text="{details>request_amount}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
 
                                     </HBox> 
@@ -517,7 +517,7 @@
                                         <Input value="{details>supplier_code}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
                                             width="100%"/>  
-                                        <Text   text="{details>supplier_code}"
+                                        <Label   text="{details>supplier_code}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
 
                                     </HBox>  
@@ -554,13 +554,13 @@
 
                                         <HBox> 
                                             <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
-                                            <Input id="inputWithEmployeeValueHelp" value="{details>buyer_empno}"
+                                            <Input value="{details>buyer_name}"
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
-                                                placeholder="Choose a employee from the ValueHelp"
-                                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress($event, 'tenant_id')">
+                                               
+                                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress($event)">
                                             </Input>
-                                            <Text   text="{details>buyer_empno}"
+                                            <Label   text="{details>buyer_name}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -573,7 +573,7 @@
                                             <Input id = "remark_" value="{details>remark}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
-                                            <Text   text="{details>remark}"
+                                            <Label   text="{details>remark}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
