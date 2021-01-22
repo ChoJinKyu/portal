@@ -45,7 +45,8 @@ BEGIN
             FROM    OP_PU_PR_TEMPLATE_DTL
             WHERE   TENANT_ID           = :I_TENANT_ID
                 AND COLUMN_NAME         = :I_COLUMN_NAME 
-                AND TXN_TYPE_CODE       = :I_TXN_TYPE_CODE                 
+                AND TXN_TYPE_CODE       = :I_TXN_TYPE_CODE  
+                AND TABLE_NAME          = :I_TABLE_NAME
                 AND PR_TEMPLATE_NUMBER  = :P_PR_TEMPLATE_NUMBER;
 
 

@@ -6,7 +6,10 @@ using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-
 using {op.Pu_Pr_Template_Mst as prTMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MST-model';
 using {op.Pu_Pr_Template_Map as prTMap} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
 using {op.Pu_Pr_Template_Lng as prTLng}         from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
-using {op.Pu_Pr_Template_Numbers_Func as prTNums}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_NUMBERS_FUNC-model';
+using {op.Pu_Pr_Template_DtlView as prTDtlView}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_DTLVIEW-model';   // 삭제...
+using {op.Pu_Pr_Template_Ett as prTEtt}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_ETT-model';
+using {op.Pu_Pr_Template_Txn as prTXtn}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_TXN-model';
+
 using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
@@ -159,4 +162,28 @@ service PrMgtService {
 
 
         from prTMap as map;
+
+
+
+     view Pr_TDtlView as
+        select
+            key  prTMst.tenant_id ,	
+            key  prTMst.pr_template_number,
+                 prTMst.erp_interface_flag,
+                 prTMst.default_template_number,
+                 prTMst.approval_flag,
+                 prTMst.use_flag,
+                 prTXtn.txn_type_code,
+                 prTXtn.table_name,
+                 prTEtt.column_name,
+                 OP_PU_PR_TEMPLATE_GETCOL_FUNC( prTMst.tenant_id
+                                                , prTMst.pr_template_number
+                                                , prTXtn.txn_type_code                                                
+                                                , prTXtn.table_name
+                                                , prTEtt.column_name) as  ettStatus: String(30)  
+                              
+
+        from prTMst  
+            INNER JOIN prTXtn on (prTMst.tenant_id = prTXtn.tenant_id )
+            INNER JOIN prTEtt on (prTXtn.table_name = prTEtt.table_name );
 }

@@ -4,5 +4,6 @@ SELECT DISTINCT
     ,pr_template_number
     ,txn_type_code
     ,table_name	
+    ,column_name
 from  OP_PU_PR_TEMPLATE_DTL
 
