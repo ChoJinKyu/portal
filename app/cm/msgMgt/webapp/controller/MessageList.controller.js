@@ -51,6 +51,15 @@ sap.ui.define([
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
+        
+        onSearchLanguagePickerPress: function(){
+            this.byId("languageCodeDialog").open();
+            this.byId("languageCodeDialog").setTokens(this.byId("searchLanguagePicker").getTokens());
+        },
+
+        onLanguageCodeDialogApplyPress: function(oEvent){
+            this.byId("searchLanguagePicker").setTokens(oEvent.getSource().getTokens());
+        },
 
 		/**
 		 * Event handler when a search button pressed
@@ -177,34 +186,39 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var chain = this.getView().byId("searchChain").getSelectedKey(),
-                language = this.getView().byId("searchLanguage").getSelectedKey(),
-                messageType = this.getView().byId("searchType").getSelectedKey(),
-                keyword = this.getView().byId("searchKeyword").getValue();
-				
+			var sChain = this.getView().byId("searchChain").getSelectedKey(),
+                aLanguageTokens = this.getView().byId("searchLanguagePicker").getTokens(),
+                sMessageType = this.getView().byId("searchType").getSelectedKey(),
+                sKeyword = this.getView().byId("searchKeyword").getValue();
+
 			var aSearchFilters = [];
-			if (chain && chain.length > 0) {
-				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, chain));
+			if (sChain) {
+				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
 			}
-			if (language && language.length > 0) {
-				aSearchFilters.push(new Filter("language_code", FilterOperator.EQ, language));
+			if (aLanguageTokens.length > 0) {
+				aSearchFilters.push(new Filter({
+                    filters: jQuery.map(aLanguageTokens, function(oToken){
+                        return new Filter("language_code", FilterOperator.EQ, oToken.getProperty("key"));
+                    }),
+                    and: false
+                }));
             }
-            if (messageType && messageType.length > 0) {
-				aSearchFilters.push(new Filter("message_type_code", FilterOperator.EQ, messageType));
+            if (sMessageType) {
+				aSearchFilters.push(new Filter("message_type_code", FilterOperator.EQ, sMessageType));
             }
-			if (keyword && keyword.length > 0) {
+			if (sKeyword) {
 				aSearchFilters.push(new Filter({
 					filters: [
 						new Filter({
 							path: "message_code",
 							operator: FilterOperator.Contains,
-							value1: keyword,
+							value1: sKeyword,
 							caseSensitive: false
 						}),
 						new Filter({
 							path: "message_contents",
 							operator: FilterOperator.Contains,
-							value1: keyword,
+							value1: sKeyword,
 							caseSensitive: false
 						})
 					],

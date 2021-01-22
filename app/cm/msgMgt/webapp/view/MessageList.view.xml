@@ -7,6 +7,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:cm-ui="cm.util.control.ui"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -53,16 +54,19 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguage"></Label>
-                                <lib-m:CodeComboBox id="searchLanguage" width="100%" showSecondaryValues="true"
+                                <cm-ui:CodeDialog id="languageCodeDialog" multiSelection="true"
+                                    title="{I18N>/LANGUAGE}"
                                     items="{
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ],
                                         serviceName: 'cm.util.CommonService',
                                         entityName: 'Code'
-                                    }">
-                                </lib-m:CodeComboBox>
+                                    }"
+                                    apply=".onLanguageCodeDialogApplyPress" />
+                                <MultiInput id="searchLanguagePicker" placeholder="{I18N>/LANGUAGE}"
+                                    showValueHelp="true" valueHelpRequest=".onSearchLanguagePickerPress">
+                                </MultiInput>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -200,17 +204,5 @@
                 </t:columns>
             </t:Table>
         </f:content>
-		<f:footer>
-			<OverflowToolbar>
-                <Button
-                    icon="sap-icon://alert"
-                    type="Reject"
-                    text="{= ${message>/}.length }"
-                    visible="{= ${message>/}.length > 0 }"
-                    ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />
-				<ToolbarSpacer />
-			</OverflowToolbar>
-		</f:footer>
     </f:DynamicPage>
 </mvc:View>

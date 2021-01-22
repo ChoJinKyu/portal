@@ -146,9 +146,6 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oTable.setBusy(true);
 						oModel.submitChanges({
-							handles: function(oItem){
-
-							},
 							success: function(oEvent){
 								this.byId("mainTable").clearSelection();
 								oTable.setBusy(false);
