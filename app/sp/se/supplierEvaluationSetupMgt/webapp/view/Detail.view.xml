@@ -12,7 +12,9 @@ xmlns:smartTable="sap.ui.comp.smarttable"
 xmlns:f="sap.ui.layout.form"
 class="sapUiSizeCompact"
 displayBlock="true"
-controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
+xmlns:lib-m="ext.lib.control.m"
+controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail"
+>
 
         <App id="idAppControl">
             <Page title="설정정보" 
@@ -37,7 +39,7 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                         <uxap:headerContent/>
                         
                         <uxap:sections>
-                            <uxap:ObjectPageSection titleUppercase="true" title="안녕하세요요요요용">
+                            <uxap:ObjectPageSection titleUppercase="true" title="ObjectPageSection">
                                 <uxap:subSections>            
                                     <uxap:ObjectPageSubSection id="pageSubSection1"/>
                                 </uxap:subSections>
@@ -63,8 +65,8 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                                                         <Label text="{I18N>/OPERATION_UNIT_CODE}"/>
                                                         <Input  id="opCodeInput" 
                                                                 width="100%" 
-                                                                placeholder="{I18N>/OPERATION_UNIT_CODE}"/>
-                                                        
+                                                                placeholder="OPERATION_UNIT_CODE"/>
+                                                                
                                                         <!-- 배점설계여부 -->
                                                         <Label text="{I18N>/DISTRB_SCOR_ENG_FLAG}"/>
                                                             <SegmentedButton
@@ -117,7 +119,38 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                                                         <Label text="{I18N>/OPERATION_UNIT_NAME}"/>
                                                         <Input  id="opCodeName" 
                                                                 width="100%" 
-                                                                placeholder="{I18N>/OPERATION_UNIT_NAME}"/>
+                                                                placeholder="OPERATION_UNIT_NAME"/>
+                                                                 <lib-m:CodePicker id="searchCountryPicker"
+                                                                    placeholder="Enter a Country name"
+                                                                    keyField="user_local_name"
+                                                                    textField="user_local_name"
+                                                                    suggestionItems="{
+                                                                        path: '/',
+                                                                        filters: [
+                                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                        ],                                        
+                                                                        serviceUrl: 'srv-api/odata/v2/sp.supEvalSetupService/',
+                                                                        entityName: 'managerListView'
+                                                                    }">
+                                                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="user_local_name"
+                                                                        keyFieldHeaderText="user_local_name" textFieldHeaderText="user_local_name" />
+                                                                </lib-m:CodePicker>
+
+                                                             <lib-m:CodePicker id="searchCountryPicker3"
+                                                                    placeholder="Enter a Country name"
+                                                                    keyField="user_local_name"
+                                                                    textField="user_local_name"
+                                                                    suggestionItems="{
+                                                                        path: '/',
+                                                                        filters: [
+                                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                        ],                                        
+                                                                        serviceUrl: 'srv-api/odata/v2/sp.supEvalSetupService/',
+                                                                        entityName: 'managerListView'
+                                                                    }">
+                                                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="user_local_name"
+                                                                        keyFieldHeaderText="user_local_name" textFieldHeaderText="user_local_name" />
+                                                                </lib-m:CodePicker>
                                                         
                                                         <!-- 발의 품의 여부 -->
                                                         <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}"/> 
@@ -185,8 +218,34 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                                                         <Label text="{I18N>/ROLE}"/>
                                                         <table:template>
                                                             <HBox>
-                                                            <Text text="{testModel>user_local_name}"/>
-                                                            <Input value="{testModel>user_local_name}"/>
+<!--                                                             
+                                                                <SearchField
+                                                                    id="searchField"
+                                                                    width="50%"
+                                                                    placeholder="role"
+                                                                    enableSuggestions="true"
+                                                                    search=".onSearch"
+                                                                    suggest=".onSuggest"
+                                                                    suggestionItems="{
+                                                                        path: 'testModel>/table'
+                                                                    }">
+                                                                    <SuggestionItem text="{testModel>deppartment_local_name}" 
+                                                                    description="테스트" key="{testModel>deppartment_local_name}" />
+                                                                </SearchField> -->
+
+                                                             <ComboBox selectedKey="" width="100%" items="{
+                                                                path: 'common>/Code',
+                                                                filters: [
+                                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                    {path: 'group_code', operator: 'EQ', value1: 'SP_SE_EVAL_EXECUTE_ROLE_CODE'}
+                                                                ]
+                                                                }" required="true">
+                                                                <items>
+                                                                    <core:Item key="{common>code}" text="{common>code_name}" />
+                                                                </items>
+                                                            </ComboBox>
+
+
                                                             </HBox>
                                                         </table:template>
                                                     </table:Column>      
@@ -194,23 +253,42 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                                                     <table:Column hAlign="Center">
                                                         <Label text="{I18N>/PERSON}"/>
                                                         <table:template>
+
+                                                   
                                                             <HBox>
-                                                            <Text text="{testModel>deppartment_local_name}"/>
-                                                             <SearchField
-                                                                    id="searchField"
-                                                                    width="50%"
-                                                                    placeholder="나중에 쓸것"
-                                                                    enableSuggestions="true"
-                                                                    search=".onSearch"
-                                                                    suggest=".onSuggest"
+                                                            
+                                                            <ComboBox selectedKey="" width="100%" items="{
+                                                                path: '/managerListView',
+                                                                filters: [
+                                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                ]
+                                                                }" required="true">
+                                                                <items>
+                                                                    <core:Item key="{user_local_name}" text="{user_local_name}" />
+                                                                </items> 
+
+
+                                                            </ComboBox>
+
+                                                                 <lib-m:CodePicker id="searchCountryPicker2"
+                                                                    placeholder="Enter a Country name"
+                                                                    keyField="user_local_name"
+                                                                    textField="user_local_name"
                                                                     suggestionItems="{
-                                                                        path: 'testModel>/table'
+                                                                        path: '/',
+                                                                        filters: [
+                                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                        ],                                        
+                                                                        serviceUrl: 'srv-api/odata/v2/sp.supEvalSetupService/',
+                                                                        entityName: 'managerListView'
                                                                     }">
-                                                                    <SuggestionItem text="{testModel>deppartment_local_name}" description="테스트" key="{testModel>deppartment_local_name}" />
-                                                                </SearchField>
-                                                                    
-                                                                    
-                                                            </HBox>
+                                                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="user_local_name"
+                                                                        keyFieldHeaderText="user_local_name" textFieldHeaderText="user_local_name" />
+                                                                </lib-m:CodePicker>
+                                                                
+                                                               
+
+                                                             </HBox>
                                                         </table:template>
                                                     </table:Column>     
 
@@ -221,7 +299,8 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                                                         </table:template>
                                                     </table:Column>     
 
-<!-- 
+
+                                                    <!-- 
                                                     <table:Column hAlign="Center">
                                                         <Label text="{I18N>/DEPARTMENT}"/>
                                                         <table:template>
@@ -262,7 +341,7 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                                                         <HBox>
                                                             <Button 
                                                                 type="Transparent" 
-                                                                text="{I18N>/ROW_ADD}" 
+                                                                text="{I18N>/NEW}" 
                                                                 press=".onAddDetailDetailPress"/>
                                                             <!-- <Button 
                                                                 type="Transparent" 
@@ -346,14 +425,34 @@ controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail">
                                                     <table:Column hAlign="Center">
                                                         <Label text="단위x"/>
                                                         <table:template>
-                                                            <Text text="{testModel3>qttive_item_uom_code}"/>
+                                                           <ComboBox selectedKey="" width="100%" items="{
+                                                                path: 'common>/Code',
+                                                                filters: [
+                                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                    {path: 'group_code', operator: 'EQ', value1: 'SP_SE_QTTIVE_UOM_CODE'}
+                                                                ]
+                                                                }" required="true">
+                                                                <items>
+                                                                    <core:Item key="{common>code}" text="{common>code_name}" />
+                                                                </items>
+                                                            </ComboBox>
                                                         </table:template>
                                                     </table:Column>    
                                                     
                                                     <table:Column hAlign="Center">
                                                         <Label text="{I18N>/MEASURE_MODE}"/>
                                                         <table:template>
-                                                            <Text text="{testModel3>qttive_item_measure_mode_code}"/>
+                                                           <ComboBox selectedKey="" width="100%" items="{
+                                                                path: 'common>/Code',
+                                                                filters: [
+                                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                    {path: 'group_code', operator: 'EQ', value1: 'SP_SE_MEASURE_MODE_CODE'}
+                                                                ]
+                                                                }" required="true">
+                                                                <items>
+                                                                    <core:Item key="{common>code}" text="{common>code_name}" />
+                                                                </items>
+                                                            </ComboBox>
                                                         </table:template>
                                                     </table:Column>        
 
