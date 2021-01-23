@@ -15,6 +15,8 @@
   7. entity description : 자재마스터 기본속성
   8. history
   -. 2020.11.25 : 최미희 최초작성
+  -. 2021.01.23 : 최미희 필드추가
+       - DELETE_MARK
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
@@ -35,5 +37,6 @@ entity Mm_Material_Mst {
     maker_code : String(10)   @title: '제조사 코드' ;	
     maker_part_profile_code : String(30)   @title: '제조사 부품 프로파일 코드' ;	
     maker_material_code : String(40)   @title: '제조사 자재코드' ;
+    delete_mark : Boolean @title: 'SAP 삭제표시';
 }
 extend Mm_Material_Mst with util.Managed;

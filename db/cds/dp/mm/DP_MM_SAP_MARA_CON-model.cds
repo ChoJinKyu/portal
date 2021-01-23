@@ -12,7 +12,7 @@
   
   5. namespace : db
   6. entity : Mm_Sap_Mara_Con
-  7. entity description : SAP MARA Table 
+  7. entity description : SAP MARA Table (일반자재데이타)
   8. history
   -. 2021.01.23 : 최미희 최초작성
 *************************************************/
@@ -183,6 +183,9 @@ entity Mm_Sap_Mara_Con {
     cwqrel : String(10)   @title: 'EWM CW:복수 단위 자재임' ;	
     cwqproc : String(10)   @title: 'EWM CW:CW 수량 입력을 위한 복수 단위 프로파일' ;	
     cwqtolgr : String(10)   @title: 'EWM CW:EWM의 복수 단위 허용 한도 그룹' ;	
+    material_spec : String(1000)   @title: '자재규격' ;	
+    class : String(30) @title: '자재클래스코드';
+    
 }
 
 

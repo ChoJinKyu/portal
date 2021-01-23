@@ -12,7 +12,7 @@
   
   5. namespace : db
   6. entity : Mm_Sap_Marc_Con
-  7. entity description : SAP Marc Table 
+  7. entity description : SAP Marc Table (자재에 대한 플랜트 데이터)
   8. history
   -. 2021.01.23 : 최미희 최초작성
 *************************************************/

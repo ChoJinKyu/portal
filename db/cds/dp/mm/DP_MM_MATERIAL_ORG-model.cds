@@ -15,6 +15,7 @@
   7. entity description : 자재마스터 조직속성
   8. history
   -. 2020.11.25 : 최미희 최초작성
+  -. 2021.01.23 : 최미희 필드 추가(DELETE_MARK)
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
@@ -42,7 +43,8 @@ entity Mm_Material_Org {
     purchasing_enable_flag : Boolean default false  @title: '구매가능여부' ;	
     osp_item_flag : Boolean default false  @title: '외주가공품여부' ;	
     buyer_empno : String(30)   @title: '구매담당자사번' ;	
-    eng_item_flag : Boolean default false  @title: '설계품목여부' ;	
+    eng_item_flag : Boolean default false  @title: '설계품목여부' ;
+    delete_mark : Boolean @title: 'SAP 삭제표시';	
 }
 
 extend Mm_Material_Org with util.Managed;
