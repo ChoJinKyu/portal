@@ -27,7 +27,7 @@ entity Mm_Sap_Mbew_Con {
     conv_prog_status_code : String(30)  not null @title: '컨버전진행상태코드' ;	
     conv_error_desc : String(500)   @title: '컨버전오류설명' ;	
     source_system_code : String(30)   @title: '소스시스템코드' ;	
-    matnr : String(18)   @title: '자재번호' ;	
+    matnr : String(40)   @title: '자재번호' ;	
     bwkey : String(4)   @title: '평가 영역' ;	
     bwtar : String(10)   @title: '평가 유형' ;	
     lvorm : String(1)   @title: '평가 유형의 모든 자재 데이터에 대한 삭제 표시' ;	
