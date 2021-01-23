@@ -113,7 +113,8 @@ service BasePriceArlV4Service {
 
     type OutputDataType : {
         return_code     : String(30);
-        return_msg      : String(5000);
+        return_msg      : String(1000);
+        return_param    : String(5000);
         return_rs       : array of BasePriceArlMstType;
     };
 

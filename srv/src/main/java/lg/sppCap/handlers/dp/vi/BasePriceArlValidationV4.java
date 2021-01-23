@@ -83,12 +83,15 @@ public class BasePriceArlValidationV4 {
                 if (cmdString.equals("upsert") || cmdString.equals("delete"))
                     validMandatory(basePriceArlMst.getApprovalNumber(), context, this.getMessage("APPROVAL_NUMBER", context));
 
-                if (cmdString.equals("insert") || cmdString.equals("upsert")) {
-                    validMandatory(basePriceArlMst.getApprovalTitle(), context, this.getMessage("APPROVAL_TITLE", context));
+                if (cmdString.equals("insert")) {
                     validMandatory(basePriceArlMst.getChainCode(), context, this.getMessage("CHAIN_CODE", context));
                     validMandatory(basePriceArlMst.getApprovalTypeCode(), context, this.getMessage("APPROVAL_TYPE_CODE", context));
-                    validMandatory(basePriceArlMst.getApproveStatusCode(), context, this.getMessage("APPROVE_STATUS_CODE", context));
                     validMandatory(basePriceArlMst.getRequestorEmpno(), context, this.getMessage("REQUESTOR_EMPNO", context));
+                }
+
+                if (cmdString.equals("insert") || cmdString.equals("upsert")) {
+                    validMandatory(basePriceArlMst.getApprovalTitle(), context, this.getMessage("APPROVAL_TITLE", context));
+                    validMandatory(basePriceArlMst.getApproveStatusCode(), context, this.getMessage("APPROVE_STATUS_CODE", context));
                 }
 
                 // 결재라인이 있으면

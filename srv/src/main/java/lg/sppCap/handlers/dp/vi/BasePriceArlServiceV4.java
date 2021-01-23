@@ -14,7 +14,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 
 // Java Util
-import java.time.ZonedDateTime;
+// import java.time.ZonedDateTime;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,8 +33,8 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.sap.cds.services.cds.CdsService;
-import com.sap.cds.services.EventContext;
+// import com.sap.cds.services.cds.CdsService;
+// import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.handler.annotations.Before;
@@ -269,7 +269,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                 resultMap = this.insertProcedure(context, isDisplaySql);
                 break;
             case "upsert" :
-                System.out.println("upsert");
+                // System.out.println("upsert");
+                resultMap = this.upsertProcedure(context, isDisplaySql);
                 break;
             case "delete" :
                 // System.out.println("delete");
@@ -285,16 +286,16 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         this.destoryTable(isDisplaySql);
 
         // 05. Return Value : Processing
-        // for (String key : resultMap.keySet()) { 
-        //     System.out.println("key : " + key + " / value : " + resultMap.get(key).toString()); 
-        // }
+        for (String key : resultMap.keySet()) { 
+            System.out.println("key : " + key + " / value : " + resultMap.get(key).toString()); 
+        }
 
         ArrayList<OutputDataType> returnDBParam = (ArrayList)resultMap.get("O_TABLE");
         OutputDataType returnDBValue = (OutputDataType)returnDBParam.get(0);
         String returnCode = returnDBValue.getReturnCode();
         String returnMsg = returnDBValue.getReturnMsg();
-        // System.out.println("Return Code : " + returnCode);
-        // System.out.println("Return Message : " + returnMsg);
+        String returnParam = returnDBValue.getReturnParam();
+        // System.out.println("Return Code : " + returnCode + " / Return Message : " + returnMsg + " / Return Param : " + returnParam);
 
         switch (returnCode) {
             case "200" :
@@ -318,14 +319,17 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
 
         switch (cmdString) {
             case "insert" :
+                v_result.setReturnCode("200");
                 v_result.setReturnMsg("Insert Success!");
                 v_result.setReturnRs(context.getInputData().getBasePriceArlMst());
                 break;
             case "upsert" :
+                v_result.setReturnCode("200");
                 v_result.setReturnMsg("Upsert Success!");
                 v_result.setReturnRs(context.getInputData().getBasePriceArlMst());
                 break;
             case "delete" :
+                v_result.setReturnCode("200");
                 v_result.setReturnMsg("Delete Success!");
                 Collection<BasePriceArlMstType> basePriceArlMstType = new ArrayList<>();
                 v_result.setReturnRs(basePriceArlMstType);
@@ -340,6 +344,10 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         context.setCompleted();
     }
 
+    /**
+     * Temporary Table Create
+     * @param isDisplaySql
+     */
     @Transactional(rollbackFor = SQLException.class)
     private void makeTable(boolean isDisplaySql) {
         log.info("## makeTable Method Started....");
@@ -448,6 +456,11 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         }
     }
 
+    /**
+     * Temp Data Create
+     * @param basePriceArlMasters
+     * @param isDisplaySql
+     */
     @Transactional(rollbackFor = SQLException.class)
     private void createTempData(Collection<BasePriceArlMstType> basePriceArlMasters, boolean isDisplaySql) {
         log.info("## createTempData Method Started....");
@@ -666,6 +679,12 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         return sum;
     }
 
+    /**
+     * Insert Procedure Call
+     * @param context
+     * @param isDisplaySql
+     * @return
+     */
     @Transactional(rollbackFor = SQLException.class)
     private Map<String, Object> insertProcedure(DpViBasePriceArlProcContext context, boolean isDisplaySql) {
         log.info("## insertProcedure Method Started....");
@@ -691,6 +710,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
             public OutputDataType mapRow(ResultSet rs, int rowNum) throws SQLException {
                 v_result.setReturnCode(rs.getString("return_code"));
                 v_result.setReturnMsg(rs.getString("return_msg"));
+                v_result.setReturnParam(rs.getString("return_param"));
                 return v_result;
             }
         });
@@ -711,6 +731,61 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         return resultMap;
     }
 
+    /**
+     * upsert Procedure Call
+     * @param context
+     * @param isDisplaySql
+     * @return
+     */
+    @Transactional(rollbackFor = SQLException.class)
+    private Map<String, Object> upsertProcedure(DpViBasePriceArlProcContext context, boolean isDisplaySql) {
+        log.info("## upsertProcedure Method Started....");
+
+        StringBuffer v_sql_callProc = new StringBuffer();
+        v_sql_callProc.append("CALL DP_VI_BASE_PRICE_ARL_UPSERT_PROC(");        
+        v_sql_callProc.append("     I_MASTER => #LOCAL_TEMP_MASTER,");        
+        v_sql_callProc.append("     I_APPROVER => #LOCAL_TEMP_APPROVER,");        
+        v_sql_callProc.append("     I_REFERER => #LOCAL_TEMP_REFERER, ");        
+        v_sql_callProc.append("     I_DETAIL => #LOCAL_TEMP_DETAIL,");        
+        v_sql_callProc.append("     I_PRICE => #LOCAL_TEMP_PRICE,");        
+        v_sql_callProc.append("     O_MSG => ?)"); 
+
+        if (isDisplaySql) {
+            System.out.println("\n" + v_sql_callProc);
+        }
+
+        OutputDataType v_result = OutputDataType.create();
+
+        SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputDataType>(){
+            @Override
+            public OutputDataType mapRow(ResultSet rs, int rowNum) throws SQLException {
+                v_result.setReturnCode(rs.getString("return_code"));
+                v_result.setReturnMsg(rs.getString("return_msg"));
+                v_result.setReturnParam(rs.getString("return_param"));
+                return v_result;
+            }
+        });
+
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(oTable);
+
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                return callableStatement;
+            }
+        }, paramList);
+
+        return resultMap;
+    }
+
+    /**
+     * delete Procedure Call
+     * @param context
+     * @param isDisplaySql
+     * @return
+     */
     @Transactional(rollbackFor = SQLException.class)
     private Map<String, Object> deleteProcedure(DpViBasePriceArlProcContext context, boolean isDisplaySql) {
         log.info("## deleteProcedure Method Started....");
@@ -726,18 +801,17 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
 
         OutputDataType v_result = OutputDataType.create();
 
-        //CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
         SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputDataType>(){
             @Override
             public OutputDataType mapRow(ResultSet rs, int rowNum) throws SQLException {
                 v_result.setReturnCode(rs.getString("return_code"));
                 v_result.setReturnMsg(rs.getString("return_msg"));
+                v_result.setReturnParam(rs.getString("return_param"));
                 return v_result;
             }
         });
 
         List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-        //paramList.add(new SqlParameter("USER_ID", Types.VARCHAR));
         paramList.add(oTable);
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
@@ -750,7 +824,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
 
         return resultMap;
     }
-    
+
     @Transactional(rollbackFor = SQLException.class)
     private void destoryTable(boolean isDisplaySql) {
         log.info("## destoryTable Method Started....");
