@@ -15,8 +15,10 @@
   7. service description : UOM 서비스
   8. history
   -. 2020.12.11 : 최미희 최초작성
+  -. 2021.01.23 : 최미희 HS Code 언어 추가
 *************************************************/
 using { dp as Hs } from '../../../../../db/cds/dp/mm/DP_MM_HS_CODE-model';
+using { dp as HsLng } from '../../../../../db/cds/dp/mm/DP_MM_HS_CODE_LNG-model';
 
 namespace dp;
 @path : '/dp.HsCodeMgtService'
@@ -24,5 +26,6 @@ namespace dp;
 service HsCodeMgtService {
 
     entity HsCode as projection on Hs.Mm_Hs_Code;
+    entity HsCodeLng as projection on HsLng.Mm_Hs_Code_Lng;
 
 }
