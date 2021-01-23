@@ -33,6 +33,16 @@ service BasePriceArlService {
         inner join Dept dept
             on emp.tenant_id = dept.tenant_id
             and emp.department_id = dept.department_id
+        left outer join codeLng as cd01
+            on cd01.tenant_id = sup.tenant_id
+            and cd01.group_code = 'DP_VI_APPROVAL_TYPE'
+            and cd01.code = sup.approval_type_code
+            and cd01.language_cd = 'KO'
+        left outer join codeLng as cd02
+            on cd02.tenant_id = sup.tenant_id
+            and cd02.group_code = 'CM_APPROVE_STATUS'
+            and cd02.code = sup.approve_status_code
+            and cd02.language_cd = 'KO'
         {
             key sup.tenant_id,
             key sup.approval_number,
@@ -42,25 +52,11 @@ service BasePriceArlService {
                 sup.org_code,
                 sup.chain_code,
                 sup.approval_type_code,
-                (
-                    select code_name from codeLng
-                    where
-                        tenant_id = sup.tenant_id
-                        and group_code = 'DP_VI_APPROVAL_TYPE'
-                        and code = sup.approval_type_code
-                        and language_cd = 'KO'
-                )                          as approval_type_code_nm   : String(240),
+                cd01.code_name as approval_type_code_nm   : String(240),
                 sup.approval_title,
                 sup.approval_contents,
                 sup.approve_status_code,
-                (
-                    select code_name from codeLng
-                    where
-                        tenant_id = sup.tenant_id
-                        and group_code = 'CM_APPROVE_STATUS'
-                        and code = sup.approve_status_code
-                        and language_cd = 'KO'
-                )                          as approve_status_code_nm  : String(240),
+                cd02.code_name as approve_status_code_nm  : String(240),
                 sup.requestor_empno,
                 emp.user_local_name        as requestor_local_nm      : String(240),
                 emp.job_title              as requestor_job_title     : String(100),
@@ -91,6 +87,16 @@ service BasePriceArlService {
         inner join Dept dept
             on emp.tenant_id = dept.tenant_id
             and emp.department_id = dept.department_id
+        left outer join codeLng as cd01
+            on cd01.tenant_id = app.tenant_id
+            and cd01.group_code = 'CM_APPROVER_TYPE'
+            and cd01.code = app.approver_type_code
+            and cd01.language_cd = 'KO'
+        left outer join codeLng as cd02
+            on cd02.tenant_id = app.tenant_id
+            and cd02.group_code = 'CM_APPROVE_STATUS'
+            and cd02.code = app.approve_status_code
+            and cd02.language_cd = 'KO'
         {
             key app.tenant_id,
             key app.approval_number,
@@ -100,24 +106,10 @@ service BasePriceArlService {
                 emp.job_title              as approver_job_title     : String(100),
                 dept.department_local_name as approver_dept_local_nm : String(240),
                 app.approver_type_code,
-                (
-                    select code_name from codeLng
-                    where
-                        tenant_id = app.tenant_id
-                        and group_code = 'CM_APPROVER_TYPE'
-                        and code = app.approver_type_code
-                        and language_cd = 'KO'
-                )                          as approver_type_code_nm  : String(240),
+                cd01.code_name as approver_type_code_nm  : String(240),
                 app.approve_comment,
                 app.approve_status_code,
-                (
-                    select code_name from codeLng l
-                    where
-                        tenant_id = app.tenant_id
-                        and group_code = 'CM_APPROVE_STATUS'
-                        and code = app.approve_status_code
-                        and language_cd = 'KO'
-                )                          as approve_status_code_nm : String(240),
+                cd02.code_name as approve_status_code_nm : String(240),
                 app.approve_date_time,
                 app.local_create_dtm,
                 app.local_update_dtm,
@@ -125,12 +117,15 @@ service BasePriceArlService {
                 app.update_user_id,
                 app.system_create_dtm,
                 app.system_update_dtm
-        }
-        order by
-            app.tenant_id,
-            app.approval_number,
-            app.approve_sequence,
-            app.approver_empno;
+        };
+
+    annotate Base_Price_Arl_Approver with {
+        approver_local_nm      @title       : '결재자 이름'  @description : '결재자 이름';
+        approver_job_title     @title       : '결재자 직급'  @description : '결재자 직급';
+        approver_dept_local_nm @title       : '결재자 부서'  @description : '결재자 부서';
+        approver_type_code_nm  @title       : '결재유형명'  @description : '공통코드(CM_CODE_DTL, CM_APPROVER_TYPE)';
+        approve_status_code_nm @title       : '결재상태명'  @description : '공통코드(CM_CODE_DTL, CM_APPROVE_STATUS)';
+    };
 
     entity Base_Price_Arl_Referer       as
         select from arlReferer ref
@@ -155,6 +150,12 @@ service BasePriceArlService {
                 ref.system_update_dtm
         };
 
+    annotate Base_Price_Arl_Referer with {
+        referer_local_nm      @title       : '참조자 이름'  @description : '참조자 이름';
+        referer_job_title     @title       : '참조자 직급'  @description : '참조자 직급';
+        referer_dept_local_nm @title       : '참조자 부서'  @description : '참조자 부서';
+    };
+
     entity Base_Price_Arl_Detail        as
         select from arlDetail as dtl
         left outer join org as org
@@ -168,6 +169,11 @@ service BasePriceArlService {
         left outer join supplierMst as sup
             on dtl.tenant_id = sup.tenant_id
             and dtl.supplier_code = sup.supplier_code
+        left outer join codeLng as cd01
+            on cd01.tenant_id = dtl.tenant_id
+            and cd01.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
+            and cd01.code = dtl.base_price_ground_code
+            and cd01.language_cd = 'KO'
         {
             key dtl.tenant_id,
             key dtl.approval_number,
@@ -197,14 +203,7 @@ service BasePriceArlService {
                 // ) as supplier_nm               : String(240),
                 dtl.base_date,
                 dtl.base_price_ground_code,
-                (
-                    select code_name from codeLng
-                    where
-                        tenant_id = dtl.tenant_id
-                        and group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
-                        and code = dtl.base_price_ground_code
-                        and language_cd = 'KO'
-                ) as base_price_ground_code_nm : String(240),
+                cd01.code_name as base_price_ground_code_nm : String(240),
                 dtl.local_create_dtm,
                 dtl.local_update_dtm,
                 dtl.create_user_id,
@@ -218,19 +217,23 @@ service BasePriceArlService {
     };
 
     entity Base_Price_Arl_Price         as
-        select from arlPrice as prc {
+        select from arlPrice as prc
+        left outer join codeLng as cd01
+            on cd01.tenant_id = prc.tenant_id
+            and cd01.group_code = 'DP_VI_MARKET_CODE'
+            and cd01.code = prc.market_code
+            and cd01.language_cd = 'KO'
+        left outer join codeLng as cd02
+            on cd02.tenant_id = prc.tenant_id
+            and cd02.group_code = 'DP_VI_CHANGE_REASON_CODE'
+            and cd02.code = prc.change_reason_code
+            and cd02.language_cd = 'KO'
+        {
             key prc.tenant_id,
             key prc.approval_number,
             key prc.item_sequence,
             key prc.market_code,
-                (
-                    select code_name from codeLng
-                    where
-                        tenant_id = prc.tenant_id
-                        and group_code = 'DP_VI_MARKET_CODE'
-                        and code = prc.market_code
-                        and language_cd = 'KO'
-                ) as market_code_nm   : String(240),
+                cd01.code_name as market_code_nm   : String(240),
                 prc.new_base_price,
                 prc.new_base_price_currency_code,
                 prc.current_base_price,
@@ -239,14 +242,7 @@ service BasePriceArlService {
                 prc.first_pur_netprice_curr_cd,
                 prc.first_pur_netprice_str_dt,
                 prc.change_reason_code,
-                (
-                    select code_name from codeLng
-                    where
-                        tenant_id = prc.tenant_id
-                        and group_code = 'DP_VI_CHANGE_REASON_CODE'
-                        and code = prc.change_reason_code
-                        and language_cd = 'KO'
-                ) as change_reason_nm : String(240),
+                cd02.code_name as change_reason_nm : String(240),
                 prc.local_create_dtm,
                 prc.local_update_dtm,
                 prc.create_user_id,
@@ -257,7 +253,7 @@ service BasePriceArlService {
 
     annotate Base_Price_Arl_Price with {
         market_code_nm   @title : '납선명'  @description   : '납선코드 이름';
-        // change_reason_nm @title : '변경사유명'  @description : '변경사유코드 이름';
+        change_reason_nm @title : '변경사유명'  @description : '변경사유코드 이름';
     };
 
     entity Base_Price_Arl_Requestor_His as projection on arlRequestorHis;
