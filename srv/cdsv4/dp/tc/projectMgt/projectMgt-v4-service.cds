@@ -45,6 +45,7 @@ service ProjectMgtV4Service {
         model_code          : String(40);
         addition_type_code  : String(30);
         period_code         : String(30);
+        uom_code            : String(3);
         addition_type_value : String(10);
     };
 
