@@ -73,7 +73,7 @@ service BasePriceArlV4Service {
 
     type BasePriceArlPriceType : {
         tenant_id                        : String(5);
-        approval_number                  : String(50);
+        approval_number                  : String(30);
         item_sequence                    : Decimal;
         market_code                      : String(30);
         new_base_price                   : Decimal(19, 4);
@@ -93,7 +93,7 @@ service BasePriceArlV4Service {
 
     type BasePriceArlChangeRequestorType : {
         tenant_id              : String(5);
-        approval_number        : String(50);
+        approval_number        : String(30);
         changer_empno          : String(30);
         creator_empno          : String(30);
 
@@ -126,5 +126,12 @@ service BasePriceArlV4Service {
         debug                         : Boolean;
     }
 
-    action DpViBasePriceChangeRequestorProc(inputData : InputRequestorDataType) returns OutputDataType;
+    type OutputDataChangeRequestorType : {
+        return_code     : String(30);
+        return_msg      : String(1000);
+        return_param    : String(5000);
+        return_rs       : array of BasePriceArlChangeRequestorType;
+    };
+
+    action DpViBasePriceChangeRequestorProc(inputData : InputRequestorDataType) returns OutputDataChangeRequestorType;
 }
