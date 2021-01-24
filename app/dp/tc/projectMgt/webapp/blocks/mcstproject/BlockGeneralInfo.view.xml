@@ -17,7 +17,7 @@
             layout="ResponsiveGridLayout">
         <form:content>
             <!--form line 1-->
-            <Label text="프로젝트코드">
+            <Label text="{I18N>/PROJECT_CODE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -28,7 +28,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="프로젝트명">
+            <Label text="{I18N>/PROJECT_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -39,7 +39,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="제품군">
+            <Label text="{I18N>/PRODUCT_GROUP}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -50,7 +50,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="이벤트">
+            <Label text="{I18N>/EVENT}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -62,7 +62,7 @@
             </Text>
 
             <!--form line 2-->
-            <Label text="대표모델코드">
+            <Label text="{I18N>/REPR_MODEL_CODE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
                 </layoutData>
@@ -73,7 +73,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="대표모델명">
+            <Label text="{I18N>/REPR_MODEL_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -84,7 +84,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="자사생산지">
+            <Label text="{I18N>/PRODUCTION_COMPANY}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -95,7 +95,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="견적프로젝트코드">
+            <Label text="{I18N>/QUOTE_PROJECT_CODE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -107,7 +107,7 @@
             </Text>
 
             <!--form line 3-->
-            <Label text="상태">
+            <Label text="{I18N>/STATUS}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
                 </layoutData>
@@ -118,7 +118,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="생성일자">
+            <Label text="{I18N>/CREATION_DATE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -132,7 +132,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="등급">
+            <Label text="{I18N>/GRADE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -143,7 +143,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="고객사">
+            <Label text="{I18N>/CUSTOMER_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -155,7 +155,7 @@
             </Text>            
 
             <!--form line 4-->
-            <Label text="프로젝트리더">
+            <Label text="{I18N>/PROJECT_LEADER}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
@@ -166,7 +166,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="재료비총괄">
+            <Label text="{I18N>/MCST_PERSON}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -177,7 +177,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="마케팅">
+            <Label text="{I18N>/MARKETING}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -188,7 +188,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="기획">
+            <Label text="{I18N>/PLANNING}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -200,7 +200,7 @@
             </Text>
 
             <!--form line 5-->
-            <Label text="최종고객사">
+            <Label text="{I18N>/LAST_CUSTOMER}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
@@ -211,7 +211,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="최종고객사모델명">
+            <Label text="{I18N>/LAST_CUSTOMER_MODEL_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -222,7 +222,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="수율(재료비)">
+            <Label text="{I18N>/YIELD_MATERIAL_COST}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -233,7 +233,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="자재명세서">
+            <Label text="{I18N>/BOM}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -251,7 +251,7 @@
             layout="ResponsiveGridLayout">
         <form:content>
             <!--form line 1-->
-            <Label text="프로젝트코드">
+            <Label text="{I18N>/PROJECT_CODE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -262,7 +262,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="프로젝트명">
+            <Label text="{I18N>/PROJECT_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -273,7 +273,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="제품군">
+            <Label text="{I18N>/PRODUCT_GROUP}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -301,7 +301,7 @@
                 </layoutData>
             </ComboBox>
 
-            <Label text="이벤트">
+            <Label text="{I18N>/EVENT}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -329,7 +329,7 @@
             </ComboBox>
 
             <!--form line 2-->
-            <Label text="대표모델코드">
+            <Label text="{I18N>/REPR_MODEL_CODE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
                 </layoutData>
@@ -340,7 +340,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="대표모델명">
+            <Label text="{I18N>/REPR_MODEL_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -351,7 +351,7 @@
                 </layoutData>
             </Text>
 
-            <Label text="자사생산지">
+            <Label text="{I18N>/PRODUCTION_COMPANY}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -362,7 +362,7 @@
                 </layoutData>
             </Input>
 
-            <Label text="견적프로젝트코드">
+            <Label text="{I18N>/QUOTE_PROJECT_CODE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -374,7 +374,7 @@
             </Input>
 
             <!--form line 3-->
-            <Label text="상태">
+            <Label text="{I18N>/STATUS}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true" />
                 </layoutData>
@@ -396,7 +396,7 @@
                 </layoutData>
             </ComboBox>            
 
-            <Label text="생성일자">
+            <Label text="{I18N>/CREATION_DATE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -418,7 +418,7 @@
                 </layoutData>
             </DatePicker>
 
-            <Label text="등급">
+            <Label text="{I18N>/GRADE}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -445,7 +445,7 @@
                 </layoutData>
             </ComboBox>
 
-            <Label text="고객사">
+            <Label text="{I18N>/CUSTOMER_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -457,7 +457,7 @@
             </Input>            
 
             <!--form line 4-->
-            <Label text="프로젝트리더">
+            <Label text="{I18N>/PROJECT_LEADER}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
@@ -484,7 +484,7 @@
                 </layoutData>
             </VBox>
 
-            <Label text="재료비총괄">
+            <Label text="{I18N>/MCST_PERSON}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -511,7 +511,7 @@
                 </layoutData>
             </VBox>
 
-            <Label text="마케팅">
+            <Label text="{I18N>/MARKETING}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -538,7 +538,7 @@
                 </layoutData>
             </VBox>
 
-            <Label text="기획">
+            <Label text="{I18N>/PLANNING}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -566,7 +566,7 @@
             </VBox>
 
             <!--form line 5-->
-            <Label text="최종고객사">
+            <Label text="{I18N>/LAST_CUSTOMER}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" linebreak="true"/>
                 </layoutData>
@@ -577,7 +577,7 @@
                 </layoutData>
             </Input>
 
-            <Label text="최종고객사모델명">
+            <Label text="{I18N>/LAST_CUSTOMER_MODEL_NAME}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -588,7 +588,7 @@
                 </layoutData>
             </Input>
 
-            <Label text="수율(재료비)">
+            <Label text="{I18N>/YIELD_MATERIAL_COST}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -601,7 +601,7 @@
                 </layoutData>
             </HBox>
 
-            <Label text="자재명세서">
+            <Label text="{I18N>/BOM}">
                 <layoutData>
                     <layout:GridData span="XL1 L1 M3 S12" />
                 </layoutData>
@@ -638,15 +638,15 @@
             >
         <headerToolbar>
             <OverflowToolbar>
-                <Label text="유사 모델"/>
+                <Label text="{I18N>/SIMILAR_MODEL}"/>
             </OverflowToolbar>
         </headerToolbar>
         <columns>
             <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                <Text text="모델코드" />
+                <Text text="{I18N>/MODEL_CODE}" />
             </Column>
             <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                <Text text="모델명" />
+                <Text text="{I18N>/MODEL_NAME}" />
             </Column>
         </columns>
         <items>
@@ -669,15 +669,15 @@
             >
         <headerToolbar>
             <OverflowToolbar>
-                <Label text="유사 모델"/>
+                <Label text="{I18N>/SIMILAR_MODEL}"/>
             </OverflowToolbar>
         </headerToolbar>
         <columns>
             <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                <Text text="모델코드" />
+                <Text text="{I18N>/MODEL_CODE}" />
             </Column>
             <Column minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                <Text text="모델명" />
+                <Text text="{I18N>/MODEL_NAME}" />
             </Column>
         </columns>
         <items>

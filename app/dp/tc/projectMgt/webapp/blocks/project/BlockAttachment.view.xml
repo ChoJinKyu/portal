@@ -14,7 +14,7 @@
     <!-- 제품 이미지 시작-->
     <UploadCollection
         id="productImgUploadCollection"
-        numberOfAttachmentsText="제품 이미지"
+        numberOfAttachmentsText="{I18N>/PRODUCT_IMAGE}"
         maximumFilenameLength="55"
         maximumFileSize="10"
         multiple="false"
@@ -34,7 +34,7 @@
     <!-- 개발 업로드 시작-->
     <UploadCollection
         id="devUploadCollection"
-        numberOfAttachmentsText="개발"
+        numberOfAttachmentsText="{I18N>/DEVELOPMENT}"
         maximumFilenameLength="55"
         maximumFileSize="10"
         multiple="true"
@@ -54,7 +54,7 @@
     <!-- 구매 업로드 시작-->
     <UploadCollection
         id="purchaseUploadCollection"
-        numberOfAttachmentsText="구매"
+        numberOfAttachmentsText="{I18N>/PURCHASING}"
         maximumFilenameLength="55"
         maximumFileSize="10"
         multiple="true"

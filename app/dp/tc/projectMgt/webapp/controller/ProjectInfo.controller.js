@@ -4,11 +4,12 @@ sap.ui.define([
   "ext/lib/model/ManagedListModel",
   "ext/lib/formatter/DateFormatter",
   "ext/lib/formatter/NumberFormatter",
+  "ext/lib/util/Multilingual",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/m/MessageBox"
 ],
-  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Filter, FilterOperator, MessageBox) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Multilingual, Filter, FilterOperator, MessageBox) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectInfo", {
@@ -16,6 +17,8 @@ sap.ui.define([
         , numberFormatter: NumberFormatter
 
         , onInit: function () {
+            let oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             // this.setModel(new JSONModel(), "detailModel");
             // this.setModel(new JSONModel(), "eventsModel");
             // this.setModel(new JSONModel(), "priceModel")
