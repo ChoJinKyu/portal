@@ -45,6 +45,8 @@ entity Tc_Mcst_Project {
         model_name              : String(100)         @title : '모델명';
         mcst_code               : String(30)          @title : '재료비코드';
         version_sequence        : Decimal             @title : '버전순서';
+        mcst_status_code        : String(30)          @title : '재료비상태코드';
+        full_sequence           : Decimal             @title : '전체순서';
         company_code            : String(10)          @title : '회사코드';
         org_type_code           : String(2)           @title : '조직유형코드';
         org_code                : String(10)          @title : '조직코드';
@@ -73,109 +75,107 @@ entity Tc_Mcst_Project {
         mcst_excl_flag          : Boolean             @title : '재료비제외여부';
         mcst_excl_reason        : String(3000)        @title : '재료비제외사유';
         direct_register_flag    : Boolean             @title : '직접등록여부';
-        mcst_status_code        : String(30)          @title : '재료비상태코드';
-        full_sequence           : Decimal             @title : '전체순서';
         mcst_sum_value          : Decimal             @title : '재료비합계값';
 
         mcst_events             : Composition of many Mcst_Project_Event.Tc_Mcst_Project_Event
-                                      on  mcst_events.tenant_id      = tenant_id
-                                      and mcst_events.project_code   = project_code
-                                      and mcst_events.model_code     = model_code
+                                      on mcst_events.tenant_id = tenant_id
+                                      and mcst_events.project_code = project_code
+                                      and mcst_events.model_code = model_code
                                       and mcst_events.version_number = version_number;
 
         mcst_similar_model      : Composition of many Mcst_Project_Similar_Model.Tc_Mcst_Project_Similar_Model
-                                      on  mcst_similar_model.tenant_id      = tenant_id
-                                      and mcst_similar_model.project_code   = project_code
-                                      and mcst_similar_model.model_code     = model_code
+                                      on mcst_similar_model.tenant_id = tenant_id
+                                      and mcst_similar_model.project_code = project_code
+                                      and mcst_similar_model.model_code = model_code
                                       and mcst_similar_model.version_number = version_number;
 
         mcst_base_extra         : Composition of many Mcst_Project_Base_Exrate.Tc_Mcst_Project_Base_Exrate
-                                      on  mcst_base_extra.tenant_id      = tenant_id
-                                      and mcst_base_extra.project_code   = project_code
-                                      and mcst_base_extra.model_code     = model_code
+                                      on mcst_base_extra.tenant_id = tenant_id
+                                      and mcst_base_extra.project_code = project_code
+                                      and mcst_base_extra.model_code = model_code
                                       and mcst_base_extra.version_number = version_number;
 
 
         mcst_mtlmob             : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
-                                      on  mcst_mtlmob.tenant_id          = tenant_id
-                                      and mcst_mtlmob.project_code       = project_code
-                                      and mcst_mtlmob.model_code         = model_code
-                                      and mcst_mtlmob.version_number     = version_number
+                                      on mcst_mtlmob.tenant_id = tenant_id
+                                      and mcst_mtlmob.project_code = project_code
+                                      and mcst_mtlmob.model_code = model_code
+                                      and mcst_mtlmob.version_number = version_number
                                       and mcst_mtlmob.addition_type_code = 'MTLMOB'; //물동
 
         mcst_sales_price        : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
-                                      on  mcst_sales_price.tenant_id          = tenant_id
-                                      and mcst_sales_price.project_code       = project_code
-                                      and mcst_sales_price.model_code         = model_code
-                                      and mcst_sales_price.version_number     = version_number
+                                      on mcst_sales_price.tenant_id = tenant_id
+                                      and mcst_sales_price.project_code = project_code
+                                      and mcst_sales_price.model_code = model_code
+                                      and mcst_sales_price.version_number = version_number
                                       and mcst_sales_price.addition_type_code = 'SALES_PRICE'; //판가
 
         mcst_prcs_cost          : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
-                                      on  mcst_prcs_cost.tenant_id          = tenant_id
-                                      and mcst_prcs_cost.project_code       = project_code
-                                      and mcst_prcs_cost.model_code         = model_code
-                                      and mcst_prcs_cost.version_number     = version_number
+                                      on mcst_prcs_cost.tenant_id = tenant_id
+                                      and mcst_prcs_cost.project_code = project_code
+                                      and mcst_prcs_cost.model_code = model_code
+                                      and mcst_prcs_cost.version_number = version_number
                                       and mcst_prcs_cost.addition_type_code = 'PROCESSING_COST'; //가공비
 
         mcst_sgna               : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
-                                      on  mcst_sgna.tenant_id          = tenant_id
-                                      and mcst_sgna.project_code       = project_code
-                                      and mcst_sgna.model_code         = model_code
-                                      and mcst_sgna.version_number     = version_number
+                                      on mcst_sgna.tenant_id = tenant_id
+                                      and mcst_sgna.project_code = project_code
+                                      and mcst_sgna.model_code = model_code
+                                      and mcst_sgna.version_number = version_number
                                       and mcst_sgna.addition_type_code = 'SGNA'; //판관비
 
         product_group_text      : Association to Code_Dtl.Code_Dtl
-                                      on  product_group_text.tenant_id  = tenant_id
+                                      on product_group_text.tenant_id = tenant_id
                                       and product_group_text.group_code = 'DC_TC_PRODUCT_GROUP_CODE'
-                                      and product_group_text.code       = product_group_code; //제품군명
+                                      and product_group_text.code = product_group_code; //제품군명
 
         project_grade_text      : Association to Code_Dtl.Code_Dtl
-                                      on  project_grade_text.tenant_id  = tenant_id
+                                      on project_grade_text.tenant_id = tenant_id
                                       and project_grade_text.group_code = 'DP_TC_PROJECT_GRADE_CODE'
-                                      and project_grade_text.code       = project_grade_code; //프로젝트등급명
+                                      and project_grade_text.code = project_grade_code; //프로젝트등급명
 
         bom_type_text           : Association to Code_Dtl.Code_Dtl
-                                      on  bom_type_text.tenant_id  = tenant_id
+                                      on bom_type_text.tenant_id = tenant_id
                                       and bom_type_text.group_code = 'DP_TC_BOM_TYPE_CODE'
-                                      and bom_type_text.code       = bom_type_code; //자재명세서유형명
+                                      and bom_type_text.code = bom_type_code; //자재명세서유형명
 
         project_status_text     : Association to Code_Dtl.Code_Dtl
-                                      on  project_status_text.tenant_id  = tenant_id
+                                      on project_status_text.tenant_id = tenant_id
                                       and project_status_text.group_code = 'DP_TC_PROJECT_STATUS_CODE'
-                                      and project_status_text.code       = project_status_code; //프로젝트상태명
+                                      and project_status_text.code = project_status_code; //프로젝트상태명
 
         mcst_text               : Association to Code_Dtl.Code_Dtl
-                                      on  mcst_text.tenant_id  = tenant_id
+                                      on mcst_text.tenant_id = tenant_id
                                       and mcst_text.group_code = 'DP_TC_MCST_CODE'
-                                      and mcst_text.code       = mcst_code; //재료비구분명
+                                      and mcst_text.code = mcst_code; //재료비구분명
 
         mcst_status_text        : Association to Code_Dtl.Code_Dtl
-                                      on  mcst_status_text.tenant_id  = tenant_id
+                                      on mcst_status_text.tenant_id = tenant_id
                                       and mcst_status_text.group_code = 'DP_TC_MCST_STATUS_CODE'
-                                      and mcst_status_text.code       = mcst_status_code; //재료비상태명
+                                      and mcst_status_text.code = mcst_status_code; //재료비상태명
 
         project_creator_info    : Association to hrEmp.Hr_Employee
-                                      on  project_creator_info.tenant_id       = tenant_id
+                                      on project_creator_info.tenant_id = tenant_id
                                       and project_creator_info.employee_number = project_creator_empno; //프로젝트 생성자
 
         project_leader_info     : Association to hrEmp.Hr_Employee
-                                      on  project_leader_info.tenant_id       = tenant_id
+                                      on project_leader_info.tenant_id = tenant_id
                                       and project_leader_info.employee_number = project_leader_empno; //프로젝트리더
 
         buyer_info              : Association to hrEmp.Hr_Employee
-                                      on  buyer_info.tenant_id       = tenant_id
+                                      on buyer_info.tenant_id = tenant_id
                                       and buyer_info.employee_number = buyer_empno; //재료비총괄
 
         marketing_person_info   : Association to hrEmp.Hr_Employee
-                                      on  marketing_person_info.tenant_id       = tenant_id
+                                      on marketing_person_info.tenant_id = tenant_id
                                       and marketing_person_info.employee_number = marketing_person_empno; //마케팅담당자
 
         planning_person_info    : Association to hrEmp.Hr_Employee
-                                      on  planning_person_info.tenant_id       = tenant_id
+                                      on planning_person_info.tenant_id = tenant_id
                                       and planning_person_info.employee_number = planning_person_empno; //기획담당자
 
         bizdivision_text        : Association to orgDiv.Org_Division
-                                      on  bizdivision_text.tenant_id        = tenant_id
+                                      on bizdivision_text.tenant_id = tenant_id
                                       and bizdivision_text.bizdivision_code = bizdivision_code; //사업부명
 }
 
