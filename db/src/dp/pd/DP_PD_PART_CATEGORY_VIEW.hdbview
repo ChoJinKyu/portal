@@ -14,7 +14,7 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
       l1.code_name as category_name,
       pa.active_flag,
       pa.update_user_id,
-      pa.system_update_dtm
+      pa.local_update_dtm
        FROM HIERARCHY (				
 				    SOURCE (
 				        SELECT  tenant_id,
@@ -27,7 +27,7 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
 						        sequence,
 						        active_flag,
 						        update_user_id,
-						        system_update_dtm,
+						        local_update_dtm,
                                 HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,category_group_code,parent_category_code) as parent_id, 				
                                 HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,category_group_code,category_code) as node_id				
 				        FROM dp_pd_part_category
