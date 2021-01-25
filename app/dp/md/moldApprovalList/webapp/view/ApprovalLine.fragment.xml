@@ -151,7 +151,7 @@
                         <MultiInput id="referMulti"
                                 placeholder="Choose codes from the ValueHelp"
                                 showValueHelp="true" 
-                                valueHelpRequest=".onMultiInputWithCodeValuePress"
+                                valueHelpRequest=".onMultiInputWithEmployeeValuePress"
                                 editable="{mode>/editFlag}"
                                 >
                         </MultiInput>
