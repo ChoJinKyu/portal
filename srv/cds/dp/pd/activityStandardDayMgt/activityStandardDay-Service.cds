@@ -12,12 +12,14 @@ service ActivityStandardDayService {
     entity pdActivityStdDayView as projection on activityStdDayView.Pd_Activity_Standard_Day_View;
 
     view CompanyView as
-    select DISTINCT company_code
+    select key company_code
     from  PartCategoryActivity.Pd_Part_Category_Activity
+    group by company_code
     ;
 
     view OrgView as
-    select DISTINCT org_code
+    select key org_code
     from  PartCategoryActivity.Pd_Part_Category_Activity
+    group by org_code 
     ;
 } 
