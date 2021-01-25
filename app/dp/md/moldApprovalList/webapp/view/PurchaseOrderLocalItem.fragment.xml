@@ -85,7 +85,7 @@
                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                 ]
                                             }"
-                                    editable="false" class="readonlyField" >
+                                    editable="false"  >
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
                             </table:template>
@@ -155,7 +155,7 @@
                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                 ]
                                             }"
-                                    editable="false" class="readonlyField" >
+                                    editable="false"  >
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
                             </table:template>
@@ -226,21 +226,21 @@
                 </VBox>
                 <VBox>
                     <Label text="Advanced"/>
-                    <Input id="advanced" value="{payment>/prepay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" class="readonlyField" />
+                    <Input id="advanced" value="{payment>/prepay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
                     <layoutData>
                         <layout:GridData span="XL2 L3 M6 S12" />
                     </layoutData>
                 </VBox>
                 <VBox>
                     <Label text="Part"/>
-                    <Input id="part" value="{payment>/progresspay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" class="readonlyField" />
+                    <Input id="part" value="{payment>/progresspay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
                     <layoutData>
                         <layout:GridData span="XL2 L3 M6 S12" />
                     </layoutData>
                 </VBox>
                 <VBox>
                     <Label text="Residual"/>
-                    <Input id="residual" value="{payment>/rpay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" class="readonlyField" />
+                    <Input id="residual" value="{payment>/rpay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
                     <layoutData>
                         <layout:GridData span="XL2 L3 M6 S12" />
                     </layoutData>
