@@ -155,6 +155,8 @@ sap.ui.define([
                 requestToDate = this.getView().byId("searchPoDate").getSecondDateValue(),
                 status = this.getView().byId("searchStatus").getSelectedKey();
 
+                console.log("requestFromDate ->>>>>>>>>>>>>" , requestFromDate);
+
             var sRequestDepartment = this.getView().byId("searchPurchasingDepartmentName").getValue(),
                 sRequestor = this.getView().byId("searchBuyerName").getValue();
 
@@ -262,6 +264,8 @@ sap.ui.define([
 
         onSummaryChartButtonPress: function(oEvent) {
             console.log("chart popup");
+            this.sFrom = "";
+            this.sTo = "";
             this._goChartlView(oEvent);
             
         },
@@ -283,25 +287,29 @@ sap.ui.define([
             }.bind(this));
 
 
+            console.log("this.sFrom :::: " , this.sFrom);
+            console.log("this.sTo :::: " , this.sTo);
+
+
             console.log("_chartDialog :::: " , oView);
 
             var sDate = "2010-01-01";
             var eDate = "2020-12-31";
 
-            // if (this.requestFromDate_ && this.requestToDate_) {
-            //     console.log("use -------------------->");
-            //     sDate = this.requestFromDate_;
-            //     eDate = this.requestToDate_;
-            //     console.log("end -------------------->");
+            if(this.sFrom != "" && this.sTo != ""){
+                sDate = this.sFrom;
+                eDate = this.sTo;
+            }
+
             
-            // }
+
 
             this._chartDialog.then((function (_chartDialog) {
                 
-                if(!this._chartDialog) {
-                    this._chartDialog =  sap.ui.xmlfragment("searchChartPoDate", this );
-                    this.getView().addDependent(this._chartDialog);
-                }
+                // if(!this._chartDialog) {
+                //     this._chartDialog =  sap.ui.xmlfragment("searchChartPoDate", this );
+                //     this.getView().addDependent(this._chartDialog);
+                // }
 
                 _chartDialog.open();
 
@@ -320,7 +328,7 @@ sap.ui.define([
             }).bind(this));
         },
 
-        _goChartlView_: function(oEvent,sDate,eDate){
+        _goChartlView_: function(oEvent,sFrom,eTo){
             
             console.log(" _goChartlView__ oEvent :: ", oEvent);
             var oView = this.getView();
@@ -336,8 +344,10 @@ sap.ui.define([
                 return _chartDialog;
             }.bind(this));
 
-
             console.log("_chartDialog :::: " , oView);
+
+            
+
 
             
 
@@ -345,7 +355,7 @@ sap.ui.define([
                 _chartDialog.open();
 
                 $.ajax({
-                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+sDate +",po_end_date="+ eDate +")/Set",
+                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+this.sFrom +",po_end_date="+ this.sTo +")/Set",
                     type: "GET",
                     contentType: "application/json",
                     
@@ -359,18 +369,19 @@ sap.ui.define([
             }).bind(this));
         },
 
-        onChartSearchButtonPress: function (oEvent,date) {
+        onChartSearchButtonPress: function (oEvent) {
             
             console.log("chart search ::: " , oEvent);
-            console.log("date search ::: " , date.value);
 
-            var sPoDate = this.getView().byId("searchChartPoDate").getDateValue(),
-                ePoDate = this.getView().byId("searchChartPoDate").getSecondDateValue();
 
-            console.log("this.requestFromDate_ ::: " , sPoDate);
-            console.log("this.requestToDate_ ::: " , ePoDate);
+            console.log("this.getFormatDate(sFrom) :: ", this.sFrom);
+            console.log("this.getFormatDate(to) :: ", this.sTo);
+            console.log("sDate ::: " , this.sFrom);
+            console.log("sTo::: " , this.sTo);
 
-            this._goChartlView_(oEvent,sPoDate,ePoDate);
+
+
+            this._goChartlView_(oEvent,this.sFrom,this.sTo);
         },
 
 
@@ -613,6 +624,10 @@ sap.ui.define([
             this.byId("dialogForexChart").close();
         },
 
+        _findFragmentControlId : function (fragmentID, controlID) {
+            return sap.ui.core.Fragment.byId(fragmentID, controlID);
+        },
+
 
         
 
@@ -663,17 +678,15 @@ sap.ui.define([
         },
 
         creationDateChange: function (oEvent) {
-            // var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-            //     seSurffix = sSurffix === "E" ? "S" : "E"
+            
+            // this.sFrom="";
+            // this.sTo = ""
+            this.sFrom = this.getFormatDate(oEvent.getParameter("from"));
+            this.sTo = this.getFormatDate(oEvent.getParameter("to"));
 
-            var sFrom = oEvent.getParameter("from");
-            var sTo = oEvent.getParameter("to");
-
-            this.getView().byId("searchChartPoDate").setDateValue(sFrom);
-            this.getView().byId("searchChartPoDate").setSecondDateValue(sTo);
+            console.log("this.getFormatDate(sFrom) :: ", this.sFrom);
+            console.log("this.getFormatDate(to) :: ", this.sTo);
         }
-
-
 
     });
 });
