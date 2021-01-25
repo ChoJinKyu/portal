@@ -204,26 +204,31 @@ BEGIN
 	IF  V_MASTER_COUNT  != 1 THEN
 	    --마스터 데이터가 없는지 체크
 	    IF V_MASTER_COUNT = 0 THEN
-	    	SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00017'||'-[Required Value Exception]-@-'||'Param Error.(Please Check Master Data Count)';
+            --No found Vendor Pool Master info.
+            SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00017'||'-[Required Value Exception]-@-'||'Param Error.(Please Check Master Data Count)';
 	    END IF;
 	    
 	    --마스터 count가 1이상인 경우 Delete 데이터가 없는지 체크
 	    IF V_MASTER_DELETE_CNT = 0 THEN
-	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00033'||'-[Required Value Exception]-@-'||'Param Error.(Please Check Master Data Count)';
+            --If the number of Vendor Pool Masters exceeds 1, only deletion is possible.
+            SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00033'||'-[Required Value Exception]-@-'||'Param Error.(Please Check Master Data Count)';
 	    END IF;
 	    
 	    --마스터 count가 1이상인 경우 Delete 데이터 외의 데이터(U, C, R)가 포함되어 있는지 체크
 	    IF V_MASTER_DELETE_CNT != V_MASTER_COUNT THEN
-	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00033'||'-[Required Value Exception]-@-'||'Param Error.(Please Check Master Data Count)';
+            --If the number of Vendor Pool Masters exceeds 1, only deletion is possible.
+            SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00033'||'-[Required Value Exception]-@-'||'Param Error.(Please Check Master Data Count)';
 	    END IF;
 	END IF;
 	
 	IF IFNULL( :I_USER_ID, '-999')  = '-999' OR TRIM( ' ' FROM :I_USER_ID ) = '' THEN
-	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00015'||'-[Required Value Exception]-@-'||'Param Error.(Please Check User Info)';
+        --No found user ID info.
+        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00015'||'-[Required Value Exception]-@-'||'Param Error.(Please Check User Info)';
 	END IF;
 	
 	IF IFNULL( :I_USER_NO, '-999')  = '-999' OR TRIM( ' ' FROM :I_USER_NO ) = '' THEN
-	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00016'||'-[Required Value Exception]-@-'||'Param Error.(Please Check User Info)';
+        --No found user No info.
+        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00016'||'-[Required Value Exception]-@-'||'Param Error.(Please Check User Info)';
 	END IF;
 	
 	/********************************************************
@@ -266,36 +271,44 @@ BEGIN
 	    END IF;
 	    
 	    IF IFNULL( loop_mst.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.TENANT_ID ) = '' THEN
-	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+            --No found Tenant ID info.
+            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
 	    IF IFNULL( loop_mst.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.COMPANY_CODE ) = '' THEN
-	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+            --No found COMPANY CODE info.
+            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
 	    IF IFNULL( loop_mst.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE ) = '' THEN
-	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+            --No found ORG TYPE CODE info.
+            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
 	    IF IFNULL( loop_mst.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.ORG_CODE ) = '' THEN
-	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+            --No found ORG CODE info.
+            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
 	    IF IFNULL( loop_mst.VENDOR_POOL_LOCAL_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ) = '' THEN
-	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00029'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+            --Level Name (Local) is a required value.
+            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00029'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
 	    IF IFNULL( loop_mst.VENDOR_POOL_ENGLISH_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ) = '' THEN
-	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00030'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+            --Level Name (Eng) is a required value.
+            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00030'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
 	    IF TRIM( ' ' FROM loop_mst.CRUD_TYPE_CODE )  NOT IN ( 'C', 'U', 'D') THEN
-	        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+            --No found CRUD TYPE CODE info.
+            SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
 	    IF TRIM( ' ' FROM loop_mst.CRUD_TYPE_CODE )  != 'C' THEN
 	    	IF IFNULL( loop_mst.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE ) = '' THEN
-        		SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+                --No found VENDOR POOL CODE info.
+                SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 		    END IF;
 	    	
 	    	/********************************************************
@@ -329,7 +342,8 @@ BEGIN
 		    AND     A.VENDOR_POOL_USE_FLAG = TRUE;
 			
 			IF V_MASTER_EXIST_CNT > 1 THEN
-			    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+                --The number of data corresponding to the inquiry condition cannot exceed 1.
+                SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 			END IF;
 	    END IF;
 	    
@@ -350,7 +364,8 @@ BEGIN
 		*아래 SUPPLIER 로직에서 READ 데이터도 TEMP에 저장하기 때문임.
 		*****************************************************************************/
 		IF  V_SUPPLIER_TEMP_CNT > 0 AND V_SUPPLIER_COUNT  > 0 THEN
-			SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00024'||'-'||V_ERROR_PARAM||'-@-'||'[Master] Supplier Temp Exist Error.'||V_MSG_LOOP_PARAM;
+            --There is SUPPLIER information pending approval, so it is impossible to proceed.
+            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00024'||'-'||V_ERROR_PARAM||'-@-'||'[Master] Supplier Temp Exist Error.'||V_MSG_LOOP_PARAM;
 		END IF;
 			
 		/***************************************************************************************
@@ -362,7 +377,8 @@ BEGIN
 			FROM DUMMY;
 			
 			IF V_NEW_VENDOR_POOL_CODE is NULL THEN 
-		    	SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00028'||'-'||V_ERROR_PARAM||'-@-'||'Master Error(Vendor Pool Code Create Error).'||V_MSG_LOOP_PARAM;
+                --An error occurred while generating the VENDOR POOL code.
+                SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00028'||'-'||V_ERROR_PARAM||'-@-'||'Master Error(Vendor Pool Code Create Error).'||V_MSG_LOOP_PARAM;
 		    END IF;
 		    
 		    /****************************************************
@@ -380,7 +396,8 @@ BEGIN
 		    AND     A.VENDOR_POOL_USE_FLAG = TRUE;
 		    
 	        IF V_MASTER_EXIST_LOC_NAME_COUNT > 0 THEN
-				SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00031'||'-'||V_ERROR_PARAM||'-@-'||'Master Create Error.(Vendor Pool Exist Local Name Error) '||V_MSG_LOOP_PARAM;
+                --The same Level Name (Local) exists in the same node.
+                SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00031'||'-'||V_ERROR_PARAM||'-@-'||'Master Create Error.(Vendor Pool Exist Local Name Error) '||V_MSG_LOOP_PARAM;
 		    END IF;
 		    
 		    /****************************************************
@@ -398,7 +415,8 @@ BEGIN
 		    AND     A.VENDOR_POOL_USE_FLAG = TRUE;
 		    
 	        IF V_MASTER_EXIST_ENG_NAME_COUNT > 0 THEN
-				SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00032'||'-'||V_ERROR_PARAM||'-@-'||'Master Create Error.(Vendor Pool Exist English Name Error) '||V_MSG_LOOP_PARAM;
+                --The same Level Name (Eng) exists in the same node.
+                SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00032'||'-'||V_ERROR_PARAM||'-@-'||'Master Create Error.(Vendor Pool Exist English Name Error) '||V_MSG_LOOP_PARAM;
 		    END IF;
     	    
     	    INSERT INTO PG_VP_VENDOR_POOL_MST MST(
@@ -451,7 +469,8 @@ BEGIN
     	    
 		    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 				    
-		    IF V_CUD_COUNT != 1 THEN
+            IF V_CUD_COUNT != 1 THEN
+                --The number of revision data is not one.
 		        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Master Insert Error.'||V_MSG_LOOP_PARAM;
 		    END IF;
 			
@@ -480,7 +499,8 @@ BEGIN
 				    AND     A.VENDOR_POOL_USE_FLAG = TRUE;
 				    
 			        IF V_MASTER_EXIST_LOC_NAME_COUNT > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00031'||'-'||V_ERROR_PARAM||'-@-'||'Master Update Error.(Vendor Pool Exist Local Name Error) '||V_MSG_LOOP_PARAM;
+                        --The same Level Name (Local) exists in the same node.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00031'||'-'||V_ERROR_PARAM||'-@-'||'Master Update Error.(Vendor Pool Exist Local Name Error) '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    /****************************************************
@@ -499,7 +519,8 @@ BEGIN
 				    AND     A.VENDOR_POOL_USE_FLAG = TRUE;
 				    
 			        IF V_MASTER_EXIST_ENG_NAME_COUNT > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00032'||'-'||V_ERROR_PARAM||'-@-'||'Master Update Error.(Vendor Pool Exist English Name Error) '||V_MSG_LOOP_PARAM;
+                        --The same Level Name (Eng) exists in the same node.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00032'||'-'||V_ERROR_PARAM||'-@-'||'Master Update Error.(Vendor Pool Exist English Name Error) '||V_MSG_LOOP_PARAM;
 				    END IF;
 					
 					
@@ -540,6 +561,7 @@ BEGIN
                     SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
             
                     IF V_CUD_COUNT != 1 THEN
+                        --The number of revision data is not one.
                         SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Master Update Error.'||V_MSG_LOOP_PARAM;
                         --raise_application_error(-20001, 'PG_VP_VENDOR_POOL_MST UPDATE ERROR '|| loop_mst.VENDOR_POOL_CODE||' ['||::ROWCOUNT||']');
                     END IF;
@@ -551,11 +573,13 @@ BEGIN
 				(해당 기능은 다른프로세스를 통해 처리 예정)
 				*************************************************************************************/
 				IF V_SUPPLIER_DELETE_CNT > 0 AND V_SUPPLIER_DELETE_CNT = V_SUPPLIER_COUNT THEN
-					SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00025'||'-'||V_ERROR_PARAM||'-@-'||'Supplier All Delete Error.'||V_MSG_LOOP_PARAM;
+                    --It is not possible to delete all SUPPLIER information.
+                    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00025'||'-'||V_ERROR_PARAM||'-@-'||'Supplier All Delete Error.'||V_MSG_LOOP_PARAM;
 				END IF;
 				
 				IF V_SUPPLIER_READ_CNT > 0 AND V_SUPPLIER_READ_CNT = V_SUPPLIER_COUNT THEN
-					SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00026'||'-'||V_ERROR_PARAM||'-@-'||'Supplier All Read Error.'||V_MSG_LOOP_PARAM;
+                    --If all SUPPLIER mapping information is READ, saving is not possible.
+                    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00026'||'-'||V_ERROR_PARAM||'-@-'||'Supplier All Read Error.'||V_MSG_LOOP_PARAM;
 				END IF;
 				
 				IF V_SUPPLIER_UPDATE_CNT > 0 AND V_SUPPLIER_UPDATE_CNT = V_SUPPLIER_COUNT THEN
@@ -603,51 +627,63 @@ BEGIN
 				    END IF;
 				    
 				    IF IFNULL( loop_sup.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.TENANT_ID ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found Tenant ID info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_sup.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.COMPANY_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found COMPANY CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_sup.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.ORG_TYPE_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found ORG TYPE CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_sup.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.ORG_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found ORG CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_sup.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.VENDOR_POOL_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found VENDOR POOL CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_sup.SUPPLIER_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.SUPPLIER_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00012'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found SUPPLIER CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00012'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  NOT IN ('C', 'R', 'U', 'D') THEN
-				        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found CRUD TYPE CODE info.
+                        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.TENANT_ID )  != TRIM( ' ' FROM loop_sup.TENANT_ID ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.COMPANY_CODE )  != TRIM( ' ' FROM loop_sup.COMPANY_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE )  != TRIM( ' ' FROM loop_sup.ORG_TYPE_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.ORG_CODE )  != TRIM( ' ' FROM loop_sup.ORG_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE )  != TRIM( ' ' FROM loop_sup.VENDOR_POOL_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    /*******************************************************************************
@@ -664,7 +700,8 @@ BEGIN
 				    ;
 				    
 				    IF V_SUPPLIER_AVLB_CNT = 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00023'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Not Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Vendor pool mapping information does not exist in the master.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00023'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Not Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					END IF;
 					
 					
@@ -686,7 +723,8 @@ BEGIN
 				    ;
 				    
 				    IF V_SUPPLIER_TEMP_EXIST_CNT > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00024'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Temp Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --There is SUPPLIER information pending approval, so it is impossible to proceed.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00024'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Temp Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					END IF;
 				    
 				    SELECT  COUNT(*)
@@ -707,7 +745,8 @@ BEGIN
 				    IF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  !=  'D' THEN
 				        
 						IF V_SUPPLIER_EXIST_CNT > 1 THEN
-							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of data corresponding to the inquiry condition cannot exceed 1.
+                            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 						ELSE
 							IF V_SUPPLIER_JOB_GUBUN = 'TMP' THEN
 							    INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_TMP
@@ -759,7 +798,8 @@ BEGIN
 							    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 						    
 							    IF V_CUD_COUNT != 1 THEN
-							        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier TMP Insert Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                                    --The number of revision data is not one.
+                                    SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier TMP Insert Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 							    END IF;
 							ELSE
 							    UPDATE PG_VP_VENDOR_POOL_SUPPLIER_DTL
@@ -782,7 +822,8 @@ BEGIN
 							    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 						    
 							    IF V_CUD_COUNT != 1 THEN
-							        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier DTL Update Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                                    --The number of revision data is not one.
+                                    SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier DTL Update Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 							    END IF;
 							END IF;
 							
@@ -790,7 +831,8 @@ BEGIN
 					--삭제 로우가 존재하는 경우 VALIDATION만 체크한다.	
 				    ELSE
 						IF V_SUPPLIER_EXIST_CNT != 1 THEN
-						    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of data corresponding to the inquiry condition is not one.
+                            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					    END IF;
 				    END IF;
 				END FOR;
@@ -829,51 +871,63 @@ BEGIN
 				    END IF;
 				    
 				    IF IFNULL( loop_itm.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.TENANT_ID ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found Tenant ID info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_itm.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.COMPANY_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found COMPANY CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_itm.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.ORG_TYPE_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found ORG TYPE CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_itm.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.ORG_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found ORG CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_itm.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.VENDOR_POOL_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found VENDOR POOL CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_itm.MATERIAL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.MATERIAL_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00021'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found MATERIAL CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00021'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  NOT IN ('D', 'C', 'U') THEN
-				        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found CRUD TYPE CODE info.
+                        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.TENANT_ID )  != TRIM( ' ' FROM loop_itm.TENANT_ID ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.COMPANY_CODE )  != TRIM( ' ' FROM loop_itm.COMPANY_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE )  != TRIM( ' ' FROM loop_itm.ORG_TYPE_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.ORG_CODE )  != TRIM( ' ' FROM loop_itm.ORG_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE )  != TRIM( ' ' FROM loop_itm.VENDOR_POOL_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    /*******************************************************************************
@@ -890,7 +944,8 @@ BEGIN
 				    ;
 				    
 				    IF V_ITEM_AVLB_CNT = 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00023'||'-'||V_ERROR_PARAM||'-@-'||'Item Not Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Vendor pool mapping information does not exist in the master.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00023'||'-'||V_ERROR_PARAM||'-@-'||'Item Not Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					END IF;
 				    
 				    SELECT  COUNT(*)
@@ -919,7 +974,8 @@ BEGIN
 				    IF TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'U' THEN
 				        
 						IF V_ITEM_EXIST_CNT > 1 THEN
-							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of data corresponding to the inquiry condition cannot exceed 1.
+                            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 						END IF;
 						
 						--1건이 존재하는 경우 UPDATE
@@ -970,11 +1026,13 @@ BEGIN
 					    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 					    
 					    IF V_CUD_COUNT != 1 THEN
-					        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of revision data is not one.
+                            SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					    END IF;
 				    ELSE
 						IF V_ITEM_EXIST_CNT_FOR_DELETE_ITEM != 1 THEN
-						    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||']'||loop_itm.MATERIAL_CODE||','||loop_itm.CRUD_TYPE_CODE||V_MSG_LOOP_PARAM;
+                            --The number of data corresponding to the inquiry condition is not one.
+                            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||']'||loop_itm.MATERIAL_CODE||','||loop_itm.CRUD_TYPE_CODE||V_MSG_LOOP_PARAM;
 						ELSE
 					    
 							UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL MST
@@ -994,7 +1052,8 @@ BEGIN
 					    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 					    
 					    IF V_CUD_COUNT != 1 THEN
-					        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of revision data is not one.
+                            SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					    END IF;
 				    END IF;
 				END FOR;
@@ -1034,51 +1093,63 @@ BEGIN
 				    END IF;
 				    
 				    IF IFNULL( loop_man.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.TENANT_ID ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found Tenant ID info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_man.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.COMPANY_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found COMPANY CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_man.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.ORG_TYPE_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found ORG TYPE CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_man.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.ORG_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found ORG CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_man.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.VENDOR_POOL_CODE ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found VENDOR POOL CODE info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF IFNULL( loop_man.VENDOR_POOL_PERSON_EMPNO, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_EMPNO ) = '' THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00022'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found Vendor Pool Employeer info.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00022'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  NOT IN ('D', 'C', 'U') THEN
-				        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --No found CRUD TYPE CODE info.
+                        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.TENANT_ID )  != TRIM( ' ' FROM loop_man.TENANT_ID ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.COMPANY_CODE )  != TRIM( ' ' FROM loop_man.COMPANY_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE )  != TRIM( ' ' FROM loop_man.ORG_TYPE_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.ORG_CODE )  != TRIM( ' ' FROM loop_man.ORG_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    IF TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE )  != TRIM( ' ' FROM loop_man.VENDOR_POOL_CODE ) THEN
-				        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Mapping information different from the master information cannot be registered (modified).
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 				    END IF;
 				    
 				    SELECT  COUNT(*)
@@ -1089,7 +1160,8 @@ BEGIN
 				    ;
 				    
 				    IF V_MANAGER_AVLB_CNT = 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00023'||'-'||V_ERROR_PARAM||'-@-'||'Manager Not Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        --Vendor pool mapping information does not exist in the master.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00023'||'-'||V_ERROR_PARAM||'-@-'||'Manager Not Exist Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					END IF;
 				    
 				    SELECT  COUNT(*)
@@ -1118,7 +1190,8 @@ BEGIN
 				    IF TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'U' THEN
 				        
 						IF V_MANAGER_EXIST_CNT > 1 THEN
-							SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of data corresponding to the inquiry condition cannot exceed 1.
+                            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 						END IF;
 						
 						--1건이 존재하는 경우 UPDATE
@@ -1174,11 +1247,13 @@ BEGIN
 					    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 					    
 					    IF V_CUD_COUNT != 1 THEN
-					        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of revision data is not one.
+                            SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					    END IF;
 				    ELSE
 						IF V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER != 1 THEN
-						    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of data corresponding to the inquiry condition is not one.
+                            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 						ELSE
 					    
 							UPDATE  PG_VP_VENDOR_POOL_MANAGER_DTL MST
@@ -1198,7 +1273,8 @@ BEGIN
 					    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 					    
 					    IF V_CUD_COUNT != 1 THEN
-					        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                            --The number of revision data is not one.
+                            SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					    END IF;
 				    END IF;
 				END FOR;
@@ -1208,7 +1284,8 @@ BEGIN
 	    	
 	    	--UPDATE이고 기존 데이터가 존재지 않는 경우 에러
 	    	ELSE 
-	    	    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00013'||'-'||V_ERROR_PARAM||'-@-'||', '||V_MSG_LOOP_PARAM;
+                --There is no data to modify.
+                SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00013'||'-'||V_ERROR_PARAM||'-@-'||', '||V_MSG_LOOP_PARAM;
 	    	END IF;
 	    	
 	    /***************************************************************************************
@@ -1232,12 +1309,14 @@ BEGIN
 					;
 					
 					IF V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
+                        --The master information cannot be deleted because the mapping information exists.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
 					END IF;
 					
 					--SUPPLIER 승인 대기인 데이터가 있는 경우 VP마스터의 정보를 삭제할 수 없다.
 					IF V_SUPPLIER_TEMP_CNT > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
+                        --The master information cannot be deleted because the mapping information exists.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Supplier) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
 					END IF;
 					
 					SELECT	COUNT(*)
@@ -1252,7 +1331,8 @@ BEGIN
 					;
 					
 					IF V_ITEM_EXIST_CNT_FOR_DELETE_MASTER > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Item) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
+                        --The master information cannot be deleted because the mapping information exists.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Item) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
 					END IF;
 					
 					SELECT	COUNT(*)
@@ -1267,7 +1347,8 @@ BEGIN
 					;
 					
 					IF V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER  > 0 THEN
-						SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Manager) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER||',[M CNT]:'||V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
+                        --The master information cannot be deleted because the mapping information exists.
+                        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00014'||'-'||V_ERROR_PARAM||'-@-'||'Master(Manager) Error.[S CNT]:'||V_SUPPLIER_EXIST_CNT_FOR_DELETE_MASTER||',[I CNT]:'||V_ITEM_EXIST_CNT_FOR_DELETE_MASTER||',[M CNT]:'||V_MANAGER_EXIST_CNT_FOR_DELETE_MASTER||V_MSG_LOOP_PARAM;
 					END IF;
 					
 				--최종 DEPTH가 아닌 부모 DEPTH에 대한 삭제 시
@@ -1284,7 +1365,8 @@ BEGIN
 					
 					--하위 노드에 사용중인 데이터가 존재하는 경우 삭제가 불가능합니다.
 					IF V_MASTER_CHILD_EXIST_COUNT > 0 THEN
-						SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00027'||'-'||V_ERROR_PARAM||'-@-'||'Master Parent Delete Error. '||V_MSG_LOOP_PARAM;
+                        --There is a VENDOR POOL in use in the lower VENDOR POOL.
+                        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00027'||'-'||V_ERROR_PARAM||'-@-'||'Master Parent Delete Error. '||V_MSG_LOOP_PARAM;
 					END IF;
 				END IF;
 				
@@ -1303,13 +1385,15 @@ BEGIN
 			    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 	    
 			    IF V_CUD_COUNT != 1 THEN
-			        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Master Delete Error. '||V_MSG_LOOP_PARAM;
+                    --The number of revision data is not one.
+                    SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Master Delete Error. '||V_MSG_LOOP_PARAM;
 			    	--raise_application_error(-20001, 'PG_VP_VENDOR_POOL_MST UPDATE ERROR '|| loop_mst.VENDOR_POOL_CODE||' ['||::ROWCOUNT||']');
 			    END IF;
 				
 			 --조회 조건에 해당하는 데이터 존재하지 않는 경우(삭제 시)   
 			ELSE
-				SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Master Error. '||V_MSG_LOOP_PARAM;
+                --The number of data corresponding to the inquiry condition cannot exceed 1.
+                SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Master Error. '||V_MSG_LOOP_PARAM;
 			END IF;
 	    END IF;
 	END FOR;
