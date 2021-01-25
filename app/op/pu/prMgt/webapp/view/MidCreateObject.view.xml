@@ -24,7 +24,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="구매 요청 생성" wrapping="true" />
+					<Title text="{I18N>/PURCHASING} {I18N>/REQUEST} {I18N>/CREATE}" wrapping="true" />
 				</uxap:expandedHeading>
 
                 <uxap:navigationActions>
@@ -270,7 +270,7 @@
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/display_column_flag}">
-                                    <Label text="WBS코드" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
+                                    <Label text="WBS{I18N>/CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
                                     <table:template>
                                         <Input value="{viewModel>wbs_code}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
                                     </table:template>
