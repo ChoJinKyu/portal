@@ -41,10 +41,10 @@ entity Im_Supplier_Idea {
     material_code : String(40)  @title: '자재코드' ;	
     purchasing_uom_code : String(3)   @title: '구매단위코드' ;	
     currency_code : String(3)   @title: '통화코드' ;	
-    vi_amount : Decimal(20,2)   @title: 'VI금액' ;	
-    monthly_mtlmob_quantity : Decimal(20,2)   @title: '월물동수량' ;	
-    monthly_purchasing_amount : Decimal(20,2)   @title: '월간구매금액' ;	
-    annual_purchasing_amount : Decimal(20,2)   @title: '연간구매금액' ;	
+    vi_amount : Decimal(20,0)   @title: 'VI금액' ;	
+    monthly_mtlmob_quantity : Decimal(20,0)   @title: '월물동수량' ;	
+    monthly_purchasing_amount : Decimal(20,0)   @title: '월간구매금액' ;	
+    annual_purchasing_amount : Decimal(20,0)   @title: '연간구매금액' ;	
     perform_contents : String(500)   @title: '성과내용' ;
 }
 

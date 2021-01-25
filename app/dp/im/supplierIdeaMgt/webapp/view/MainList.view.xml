@@ -49,7 +49,7 @@
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/PROPOSAL} {I18N>/DATE} : " labelFor="searchRequestDate"/>
-                            <DateRangeSelection id="searchRequestDate" width="100%"/>
+                            <DateRangeSelection id="searchRequestDate"  displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"   width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -65,7 +65,8 @@
                                 filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                            {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_PROGRESS_STATUS'}],
                                 sorter: { path: 'sort_no'}
-                                }">
+                                }"
+                                placeholder="All">
                                 
                                 <items>
                                     <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
@@ -86,7 +87,8 @@
                                 filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                            {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_TYPE'}],
                                 sorter: { path: 'sort_no'}
-                                }">
+                                }"
+                                placeholder="All">
                                 <items>
                                     <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
                                 </items>
@@ -106,7 +108,8 @@
                                 filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                            {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_PRODUCT_GROUP'}],
                                 sorter: { path: 'sort_no'}
-                                }">
+                                }"
+                                placeholder="All">
                                 <items>
                                     <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
                                 </items>
@@ -123,6 +126,7 @@
                                 showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
                                                 liveChange=".onNameChk">
                             </Input>
+                            <!-- <Input id="searchIdeaManager"  visible="false" ></Input> -->
                             <Input id="searchIdeaManagerId"  visible="false" ></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -150,17 +154,19 @@
                 }                   
             }"
             cellClick=".onCellClickPress"
-            rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
             fixedColumnCount="3"
-            columnResize="onColumnResize">
+            >
+            <!-- 
+            columnResize="onColumnResize" 
+            rowSelectionChange=".onCheck"-->
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title id="mainTableTitle" text="{I18N>/IDEA} {I18N>/LIST} {= ${list>/IdeaListView}.length > 0 ? '(' + ${list>/IdeaListView}.length + ')' : ''}" level="H2"/>
                     <ToolbarSpacer/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
                     
-                    <Button text="TEST" id="testButton" press=".onTestPress"  type="Transparent"/>
+                    <!-- <Button text="TEST" id="testButton" press=".onTestPress"  type="Transparent"/> -->
 
                     <ToolbarSeparator/>
                     <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
@@ -236,19 +242,25 @@
                     <Text text="{list>idea_part_desc}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="vi_amount" width="6rem">
+                <t:Column id="vi_amount" width="6rem"  hAlign="End">
                 <Label text="VI {I18N>/AMOUNT} (KRW)" textAlign="Center" width="100%" wrapping="true"/>
                 <t:template>
                     <Text text="{list>vi_amount}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="monthly_mtlmob_quantity" width="6rem">
+                <t:Column id="monthly_mtlmob_quantity" width="6rem"  hAlign="End">
                 <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA)" textAlign="Center" width="100%" wrapping="true"/>
                 <t:template>
                     <Text text="{list>monthly_mtlmob_quantity}"/>
                 </t:template>
+                </t:Column>                
+                <t:Column id="monthly_purchasing_amount" width="6rem"  hAlign="End">
+                    <Label text="{I18N>/MM} impact (KRW)" textAlign="Center" width="100%" wrapping="true"/>
+                    <t:template>
+                        <Text text="{list>monthly_purchasing_amount}"/>
+                    </t:template>
                 </t:Column>
-                <t:Column id="annual_purchasing_amount" width="6rem">
+                <t:Column id="annual_purchasing_amount" width="6rem"  hAlign="End">
                 <Label text="{I18N>/ANNUAL} impact (KRW)" textAlign="Center" width="100%" wrapping="true" />
                 <t:template>
                     <Text text="{list>annual_purchasing_amount}"/>
@@ -261,8 +273,8 @@
         <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				<!-- <Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/> -->
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>
