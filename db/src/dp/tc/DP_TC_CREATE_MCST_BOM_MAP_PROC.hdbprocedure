@@ -1,24 +1,24 @@
-PROCEDURE DP_TC_CREATE_MCST_BOM_MAP_PROC (I_TENANT_ID NVARCHAR(5)
-                                         ,I_PROJECT_CODE NVARCHAR(30)
-                                         ,I_MODEL_CODE NVARCHAR(40) 
-                                         ,I_VERSION_NUMBER NVARCHAR(30)
+PROCEDURE DP_TC_CREATE_MCST_BOM_MAP_PROC (IN I_TENANT_ID NVARCHAR(5)
+                                         ,IN I_PROJECT_CODE NVARCHAR(30)
+                                         ,IN I_MODEL_CODE NVARCHAR(40) 
+                                         ,IN I_VERSION_NUMBER NVARCHAR(30)
                                          ,IN I_USER_ID NVARCHAR(255)                                                
                                          ,IN I_OLD_TBL TABLE(MATERIAL_CODE NVARCHAR(40)
                                                             )
                                          ,IN I_NEW_TBL TABLE(MATERIAL_CODE NVARCHAR(40)
                                                             ,CHANGE_REASON NVARCHAR(1000)
                                                             )
-                                         ,I_DEPARTMENT_TYPE_CODE NVARCHAR(30)
-                                         ,I_CREATOR_EMPNO NVARCHAR(30)
-                                         ,I_ENG_CHANGE_NUMBER NVARCHAR(30)
-                                         ,I_CHANGE_REASON NVARCHAR(30)
+                                         ,IN I_DEPARTMENT_TYPE_CODE NVARCHAR(30)
+                                         ,IN I_CREATOR_EMPNO NVARCHAR(30)
+                                         ,IN I_ENG_CHANGE_NUMBER NVARCHAR(30)
+                                         ,IN I_CHANGE_REASON NVARCHAR(30)
                                          ,OUT O_MSG DP_TC_PROC_OUT_TYPE
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /**************************************************************************
 Scrum          : VI/재료비관리
-Procedure Name : DP_TC_CREATE_MCST_BOM_MAP_PROC
+Program Name   : DP_TC_CREATE_MCST_BOM_MAP_PROC
 Creator        : Jeong Jeong Ho
 Description    : 재료비 프로젝트 BOM Mapping 생성
 History        : 2021-01-05 initial creation
