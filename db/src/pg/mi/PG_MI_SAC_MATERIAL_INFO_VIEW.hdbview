@@ -1,4 +1,5 @@
 VIEW  PG_MI_SAC_MATERIAL_INFO_VIEW  AS
+	--  자재별 정보 - 기준수량
     SELECT
              'Actual'                                                                           AS  VERSION
             ,A.TENANT_ID                                                                        AS  TENANT
@@ -16,7 +17,7 @@ VIEW  PG_MI_SAC_MATERIAL_INFO_VIEW  AS
             ,'#'                                                                                AS  MI_INCOTERMS
             ,'#'                                                                                AS  EXCHANGE
             ,'#'                                                                                AS  NET_PRICE_CONFIRMED_TYPE
-            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'PL'  THEN  B.ORG_CODE  ELSE  '#'  END             AS  PLANT
+            ,D.PLANT_CODE           															AS  PLANT
             ,'PG0102_00080'                                                                     AS  MI_MEASURE
             ,A.BASE_QUANTITY                                                                    AS  VALUE
     FROM     PG_MI_MATERIAL_CODE_BOM_MNGT_HEADER         A
@@ -28,4 +29,225 @@ VIEW  PG_MI_SAC_MATERIAL_INFO_VIEW  AS
                     AND B.COMPANY_CODE   =  C.COMPANY_CODE
                     AND B.ORG_TYPE_CODE  =  C.ORG_TYPE_CODE
                     AND B.ORG_CODE       =  C.ORG_CODE
+                INNER  JOIN  (
+					SELECT   D1.TENANT_ID
+							,CASE  WHEN  D1.ORG_TYPE_CODE  =  'PL'  THEN  D1.ORG_CODE  ELSE  D2.PLANT_CODE  END  AS  PLANT_CODE
+							,D1.SUPPLIER_CODE
+							,D1.MATERIAL_CODE
+							,D1.CURRENCY_CODE
+							,D1.UOM_CODE
+							,D1.NET_PRICE
+					FROM	SP_NP_NET_PRICE_MST                D1
+							INNER  JOIN  CM_PUR_OPERATION_ORG  D2
+								ON  D1.TENANT_ID      =  D2.TENANT_ID
+								AND D1.COMPANY_CODE   =  D2.COMPANY_CODE
+								AND D1.ORG_TYPE_CODE  =  D2.ORG_TYPE_CODE
+								AND D1.ORG_CODE       =  D2.ORG_CODE
+							INNER  JOIN  (
+								SELECT
+										 D.TENANT_ID
+										,D.MATERIAL_CODE
+										,MAX(D.EFFECTIVE_START_DATE)  AS  EFFECTIVE_START_DATE
+								FROM	 SP_NP_NET_PRICE_MST  D
+								WHERE    D.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+								GROUP BY D.TENANT_ID
+										,D.MATERIAL_CODE
+								)  D3
+								ON  D1.TENANT_ID             =  D3.TENANT_ID
+								AND D1.MATERIAL_CODE         =  D3.MATERIAL_CODE
+								AND D1.EFFECTIVE_START_DATE  =  D3.EFFECTIVE_START_DATE
+					WHERE	D1.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+                	)  D
+                ON  A.TENANT_ID  =  D.TENANT_ID
+                AND A.MATERIAL_CODE  =  D.MATERIAL_CODE
+                AND A.SUPPLIER_CODE  =  D.SUPPLIER_CODE
+	UNION  ALL
+	--  자재별 정보 - 가공비
+    SELECT
+             'Actual'                                                                           AS  VERSION
+            ,A.TENANT_ID                                                                        AS  TENANT
+            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'BU'  THEN  B.ORG_CODE  ELSE  C.BIZUNIT_CODE  END  AS  BIZUNIT
+            ,B.COMPANY_CODE||'-'||B.ORG_TYPE_CODE||'-'||B.ORG_CODE||'-'||B.VENDOR_POOL_CODE     AS  VENDOR_POOL
+            ,A.MATERIAL_CODE                                                                    AS  MATERIAL
+            ,A.SUPPLIER_CODE                                                                    AS  SUPPLIER
+            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')                                                   AS  "DATE"
+            ,'20200101'                                                                         AS  LATEST_MI_DATE
+            ,'20200101'                                                                         AS  LATEST_NET_PRICE_CFM_DATE
+            ,'#'                                                                                AS  SOURCE_CURRENCY
+            ,A.PCST_CURRENCY_UNIT                                                               AS  TARGET_CURRENCY
+            ,'#'                                                                                AS  UOM
+            ,'#'                                                                                AS  MI_MATERIAL
+            ,'#'                                                                                AS  MI_INCOTERMS
+            ,'#'                                                                                AS  EXCHANGE
+            ,'#'                                                                                AS  NET_PRICE_CONFIRMED_TYPE
+            ,D.PLANT_CODE           															AS  PLANT
+            ,'PG0102_00070'                                                                     AS  MI_MEASURE
+            ,A.PROCESSING_COST                                                                  AS  VALUE
+    FROM     PG_MI_MATERIAL_CODE_BOM_MNGT_HEADER         A
+                INNER  JOIN  PG_VP_VENDOR_POOL_ITEM_DTL  B
+                    ON  A.TENANT_ID      =  B.TENANT_ID
+                    AND A.MATERIAL_CODE  =  B.MATERIAL_CODE
+                INNER  JOIN  CM_PUR_OPERATION_ORG        C
+                    ON  B.TENANT_ID      =  C.TENANT_ID
+                    AND B.COMPANY_CODE   =  C.COMPANY_CODE
+                    AND B.ORG_TYPE_CODE  =  C.ORG_TYPE_CODE
+                    AND B.ORG_CODE       =  C.ORG_CODE
+                INNER  JOIN  (
+					SELECT   D1.TENANT_ID
+							,CASE  WHEN  D1.ORG_TYPE_CODE  =  'PL'  THEN  D1.ORG_CODE  ELSE  D2.PLANT_CODE  END  AS  PLANT_CODE
+							,D1.SUPPLIER_CODE
+							,D1.MATERIAL_CODE
+							,D1.CURRENCY_CODE
+							,D1.UOM_CODE
+							,D1.NET_PRICE
+					FROM	SP_NP_NET_PRICE_MST                D1
+							INNER  JOIN  CM_PUR_OPERATION_ORG  D2
+								ON  D1.TENANT_ID      =  D2.TENANT_ID
+								AND D1.COMPANY_CODE   =  D2.COMPANY_CODE
+								AND D1.ORG_TYPE_CODE  =  D2.ORG_TYPE_CODE
+								AND D1.ORG_CODE       =  D2.ORG_CODE
+							INNER  JOIN  (
+								SELECT
+										 D.TENANT_ID
+										,D.MATERIAL_CODE
+										,MAX(D.EFFECTIVE_START_DATE)  AS  EFFECTIVE_START_DATE
+								FROM	 SP_NP_NET_PRICE_MST  D
+								WHERE    D.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+								GROUP BY D.TENANT_ID
+										,D.MATERIAL_CODE
+								)  D3
+								ON  D1.TENANT_ID             =  D3.TENANT_ID
+								AND D1.MATERIAL_CODE         =  D3.MATERIAL_CODE
+								AND D1.EFFECTIVE_START_DATE  =  D3.EFFECTIVE_START_DATE
+					WHERE	D1.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+                	)  D
+                ON  A.TENANT_ID  =  D.TENANT_ID
+                AND A.MATERIAL_CODE  =  D.MATERIAL_CODE
+                AND A.SUPPLIER_CODE  =  D.SUPPLIER_CODE
+	UNION  ALL
+	--  자재별 정보 - 단가
+    SELECT
+             'Actual'                                                                           AS  VERSION
+            ,A.TENANT_ID                                                                        AS  TENANT
+            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'BU'  THEN  B.ORG_CODE  ELSE  C.BIZUNIT_CODE  END  AS  BIZUNIT
+            ,B.COMPANY_CODE||'-'||B.ORG_TYPE_CODE||'-'||B.ORG_CODE||'-'||B.VENDOR_POOL_CODE     AS  VENDOR_POOL
+            ,A.MATERIAL_CODE                                                                    AS  MATERIAL
+            ,A.SUPPLIER_CODE                                                                    AS  SUPPLIER
+            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')                                                   AS  "DATE"
+            ,'20200101'                                                                         AS  LATEST_MI_DATE
+            ,'20200101'                                                                         AS  LATEST_NET_PRICE_CFM_DATE
+            ,'#'                                                                                AS  SOURCE_CURRENCY
+            ,A.PCST_CURRENCY_UNIT                                                               AS  TARGET_CURRENCY
+            ,'#'                                                                                AS  UOM
+            ,'#'                                                                                AS  MI_MATERIAL
+            ,'#'                                                                                AS  MI_INCOTERMS
+            ,'#'                                                                                AS  EXCHANGE
+            ,'#'                                                                                AS  NET_PRICE_CONFIRMED_TYPE
+            ,D.PLANT_CODE           															AS  PLANT
+            ,'PG0102_00090'                                                                     AS  MI_MEASURE
+            ,D.NET_PRICE                                                                        AS  VALUE
+    FROM     PG_MI_MATERIAL_CODE_BOM_MNGT_HEADER         A
+                INNER  JOIN  PG_VP_VENDOR_POOL_ITEM_DTL  B
+                    ON  A.TENANT_ID      =  B.TENANT_ID
+                    AND A.MATERIAL_CODE  =  B.MATERIAL_CODE
+                INNER  JOIN  CM_PUR_OPERATION_ORG        C
+                    ON  B.TENANT_ID      =  C.TENANT_ID
+                    AND B.COMPANY_CODE   =  C.COMPANY_CODE
+                    AND B.ORG_TYPE_CODE  =  C.ORG_TYPE_CODE
+                    AND B.ORG_CODE       =  C.ORG_CODE
+                INNER  JOIN  (
+					SELECT   D1.TENANT_ID
+							,CASE  WHEN  D1.ORG_TYPE_CODE  =  'PL'  THEN  D1.ORG_CODE  ELSE  D2.PLANT_CODE  END  AS  PLANT_CODE
+							,D1.SUPPLIER_CODE
+							,D1.MATERIAL_CODE
+							,D1.CURRENCY_CODE
+							,D1.UOM_CODE
+							,D1.NET_PRICE
+					FROM	SP_NP_NET_PRICE_MST                D1
+							INNER  JOIN  CM_PUR_OPERATION_ORG  D2
+								ON  D1.TENANT_ID      =  D2.TENANT_ID
+								AND D1.COMPANY_CODE   =  D2.COMPANY_CODE
+								AND D1.ORG_TYPE_CODE  =  D2.ORG_TYPE_CODE
+								AND D1.ORG_CODE       =  D2.ORG_CODE
+							INNER  JOIN  (
+								SELECT
+										 D.TENANT_ID
+										,D.MATERIAL_CODE
+										,MAX(D.EFFECTIVE_START_DATE)  AS  EFFECTIVE_START_DATE
+								FROM	 SP_NP_NET_PRICE_MST  D
+								WHERE    D.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+								GROUP BY D.TENANT_ID
+										,D.MATERIAL_CODE
+								)  D3
+								ON  D1.TENANT_ID             =  D3.TENANT_ID
+								AND D1.MATERIAL_CODE         =  D3.MATERIAL_CODE
+								AND D1.EFFECTIVE_START_DATE  =  D3.EFFECTIVE_START_DATE
+					WHERE	D1.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+                	)  D
+                ON  A.TENANT_ID  =  D.TENANT_ID
+                AND A.MATERIAL_CODE  =  D.MATERIAL_CODE
+                AND A.SUPPLIER_CODE  =  D.SUPPLIER_CODE
+	UNION  ALL
+	--  자재별 정보 - 자재금액
+    SELECT
+             'Actual'                                                                           AS  VERSION
+            ,A.TENANT_ID                                                                        AS  TENANT
+            ,CASE  WHEN  B.ORG_TYPE_CODE  =  'BU'  THEN  B.ORG_CODE  ELSE  C.BIZUNIT_CODE  END  AS  BIZUNIT
+            ,B.COMPANY_CODE||'-'||B.ORG_TYPE_CODE||'-'||B.ORG_CODE||'-'||B.VENDOR_POOL_CODE     AS  VENDOR_POOL
+            ,A.MATERIAL_CODE                                                                    AS  MATERIAL
+            ,A.SUPPLIER_CODE                                                                    AS  SUPPLIER
+            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')                                                   AS  "DATE"
+            ,'20200101'                                                                         AS  LATEST_MI_DATE
+            ,'20200101'                                                                         AS  LATEST_NET_PRICE_CFM_DATE
+            ,'#'                                                                                AS  SOURCE_CURRENCY
+            ,A.PCST_CURRENCY_UNIT                                                               AS  TARGET_CURRENCY
+            ,'#'                                                                                AS  UOM
+            ,'#'                                                                                AS  MI_MATERIAL
+            ,'#'                                                                                AS  MI_INCOTERMS
+            ,'#'                                                                                AS  EXCHANGE
+            ,'#'                                                                                AS  NET_PRICE_CONFIRMED_TYPE
+            ,D.PLANT_CODE           															AS  PLANT
+            ,'PG0102_00100'                                                                     AS  MI_MEASURE
+            ,D.NET_PRICE  -  A.PROCESSING_COST                                                  AS  VALUE
+    FROM     PG_MI_MATERIAL_CODE_BOM_MNGT_HEADER         A
+                INNER  JOIN  PG_VP_VENDOR_POOL_ITEM_DTL  B
+                    ON  A.TENANT_ID      =  B.TENANT_ID
+                    AND A.MATERIAL_CODE  =  B.MATERIAL_CODE
+                INNER  JOIN  CM_PUR_OPERATION_ORG        C
+                    ON  B.TENANT_ID      =  C.TENANT_ID
+                    AND B.COMPANY_CODE   =  C.COMPANY_CODE
+                    AND B.ORG_TYPE_CODE  =  C.ORG_TYPE_CODE
+                    AND B.ORG_CODE       =  C.ORG_CODE
+                INNER  JOIN  (
+					SELECT   D1.TENANT_ID
+							,CASE  WHEN  D1.ORG_TYPE_CODE  =  'PL'  THEN  D1.ORG_CODE  ELSE  D2.PLANT_CODE  END  AS  PLANT_CODE
+							,D1.SUPPLIER_CODE
+							,D1.MATERIAL_CODE
+							,D1.CURRENCY_CODE
+							,D1.UOM_CODE
+							,D1.NET_PRICE
+					FROM	SP_NP_NET_PRICE_MST                D1
+							INNER  JOIN  CM_PUR_OPERATION_ORG  D2
+								ON  D1.TENANT_ID      =  D2.TENANT_ID
+								AND D1.COMPANY_CODE   =  D2.COMPANY_CODE
+								AND D1.ORG_TYPE_CODE  =  D2.ORG_TYPE_CODE
+								AND D1.ORG_CODE       =  D2.ORG_CODE
+							INNER  JOIN  (
+								SELECT
+										 D.TENANT_ID
+										,D.MATERIAL_CODE
+										,MAX(D.EFFECTIVE_START_DATE)  AS  EFFECTIVE_START_DATE
+								FROM	 SP_NP_NET_PRICE_MST  D
+								WHERE    D.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+								GROUP BY D.TENANT_ID
+										,D.MATERIAL_CODE
+								)  D3
+								ON  D1.TENANT_ID             =  D3.TENANT_ID
+								AND D1.MATERIAL_CODE         =  D3.MATERIAL_CODE
+								AND D1.EFFECTIVE_START_DATE  =  D3.EFFECTIVE_START_DATE
+					WHERE	D1.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
+                	)  D
+                ON  A.TENANT_ID  =  D.TENANT_ID
+                AND A.MATERIAL_CODE  =  D.MATERIAL_CODE
+                AND A.SUPPLIER_CODE  =  D.SUPPLIER_CODE
     ;

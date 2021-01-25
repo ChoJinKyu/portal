@@ -21,5 +21,5 @@ entity Mi_Sac_Reqm_Quantity_View {
     key net_price_confirmed_type    : String(20)        @title : '단가결정시점유형';
         plant                       : String(10)        @title : '플랜트';
     key mi_measure                  : String(20)        @title : 'Measure';
-        value                       : Decimal(17, 5)    @title : 'Value';
+        value                       : Decimal(28, 10)    @title : 'Value';
 }

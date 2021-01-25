@@ -1,25 +1,25 @@
 VIEW  PG_MI_SAC_LATEST_MI_PRICE_VIEW  AS
     -- 시황자재별 최근 시황금액 - 현재시점(최근시황일 기준)
     SELECT
-    		 'Actual'							AS	"VERSION"
-            ,A.TENANT_ID						AS	"TENANT"
-            ,'#'								AS	BIZUNIT
-            ,'#'								AS	VENDOR_POOL
-            ,'#'								AS	MATERIAL
-            ,'#'								AS	SUPPLIER
-            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')	AS  "DATE"
-            ,'20200101'							AS	LATEST_MI_DATE
-            ,'20200101'							AS	LATEST_NET_PRICE_CFM_DATE
-            ,A.CURRENCY_UNIT					AS  SOURCE_CURRENCY
-            ,'#'								AS	TARGET_CURRENCY
-            ,A.QUANTITY_UNIT					AS	UOM
-            ,A.MI_MATERIAL_CODE					AS	MI_MATERIAL
-            ,A.TERMSDELV						AS  MI_INCOTERMS
-            ,A.EXCHANGE							AS	EXCHANGE
-            ,'LATEST'							AS  NET_PRICE_CONFIRMED_TYPE
-            ,'#'								AS	PLANT
-            ,'PG0102_00030' 					AS  MI_MEASURE
-            ,A.PRICE							AS	"VALUE"
+    		 'Actual'							        AS	"VERSION"
+            ,A.TENANT_ID						        AS	"TENANT"
+            ,'#'								        AS	BIZUNIT
+            ,'#'								        AS	VENDOR_POOL
+            ,'#'								        AS	MATERIAL
+            ,'#'								        AS	SUPPLIER
+            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')	        AS  "DATE"
+            ,'20200101'							        AS	LATEST_MI_DATE
+            ,'20200101'							        AS	LATEST_NET_PRICE_CFM_DATE
+            ,A.CURRENCY_UNIT					        AS  SOURCE_CURRENCY
+            ,'#'								        AS	TARGET_CURRENCY
+            ,A.QUANTITY_UNIT					        AS	UOM
+            ,D.CATEGORY_CODE||'_'||A.MI_MATERIAL_CODE   AS	MI_MATERIAL
+            ,A.TERMSDELV						        AS  MI_INCOTERMS
+            ,A.EXCHANGE							        AS	EXCHANGE
+            ,'LATEST'							        AS  NET_PRICE_CONFIRMED_TYPE
+            ,'#'								        AS	PLANT
+            ,'PG0102_00030' 					        AS  MI_MEASURE
+            ,A.PRICE							        AS	"VALUE"
     FROM	 PG_MI_MATERIAL_PRICE_MANAGEMENT  A
     		INNER  JOIN  (
     			SELECT
@@ -32,7 +32,10 @@ VIEW  PG_MI_SAC_LATEST_MI_PRICE_VIEW  AS
     					)  C
     			ON  A.TENANT_ID  =  C.TENANT_ID
     			AND A.MI_MATERIAL_CODE  =  C.MI_MATERIAL_CODE
-    			AND A.MI_DATE  =  C.MI_DATE
+                AND A.MI_DATE  =  C.MI_DATE
+            INNER  JOIN  PG_MI_MATERIAL_CODE  D
+                ON  A.TENANT_ID         =  D.TENANT_ID
+                AND A.MI_MATERIAL_CODE  =  D.MI_MATERIAL_CODE
 
     UNION  ALL
 
@@ -41,25 +44,25 @@ VIEW  PG_MI_SAC_LATEST_MI_PRICE_VIEW  AS
     -- NET_PRICE_SOURCE_CODE(단가출처코드) : 조건 없음
     -- MARKET_CODE(납선코드) : 화학은 구분이 없지만 전자의 경우 수출과 내수의 가격에 차이가 있을 수 있음.. 일단 화학은 조건없이 
     SELECT
-    		 'Actual'							AS	"VERSION"
-            ,A.TENANT_ID						AS	"TENANT"
-            ,'#'								AS	BIZUNIT
-            ,'#'								AS	VENDOR_POOL
-            ,B.MATERIAL_CODE					AS	MATERIAL
-            ,'#'								AS	SUPPLIER
-            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')	AS  "DATE"
-            ,'202001'							AS	LATEST_MI_DATE
-            ,'202001'							AS	LATEST_NET_PRICE_CFM_DATE
-            ,A.CURRENCY_UNIT					AS  SOURCE_CURRENCY
-            ,'#'								AS	TARGET_CURRENCY
-            ,A.QUANTITY_UNIT					AS	UOM
-            ,A.MI_MATERIAL_CODE					AS	MI_MATERIAL
-            ,A.TERMSDELV						AS  MI_INCOTERMS
-            ,A.EXCHANGE							AS	EXCHANGE
-            ,'SPECIFIC'							AS  NET_PRICE_CONFIRMED_TYPE
-            ,'#'								AS	PLANT
-            ,'PG0102_00030' 					AS  MI_MEASURE
-            ,A.PRICE							AS	"VALUE"
+    		 'Actual'							        AS	"VERSION"
+            ,A.TENANT_ID						        AS	"TENANT"
+            ,'#'								        AS	BIZUNIT
+            ,'#'								        AS	VENDOR_POOL
+            ,B.MATERIAL_CODE					        AS	MATERIAL
+            ,'#'								        AS	SUPPLIER
+            ,TO_CHAR(CURRENT_DATE,  'YYYYMM')	        AS  "DATE"
+            ,'20200101'							        AS	LATEST_MI_DATE
+            ,'20200101'							        AS	LATEST_NET_PRICE_CFM_DATE
+            ,A.CURRENCY_UNIT					        AS  SOURCE_CURRENCY
+            ,'#'								        AS	TARGET_CURRENCY
+            ,A.QUANTITY_UNIT					        AS	UOM
+            ,C.CATEGORY_CODE||'_'||A.MI_MATERIAL_CODE   AS	MI_MATERIAL
+            ,A.TERMSDELV						        AS  MI_INCOTERMS
+            ,A.EXCHANGE							        AS	EXCHANGE
+            ,'SPECIFIC'							        AS  NET_PRICE_CONFIRMED_TYPE
+            ,'#'								        AS	PLANT
+            ,'PG0102_00030' 					        AS  MI_MEASURE
+            ,A.PRICE							        AS	"VALUE"
     FROM	 PG_MI_MATERIAL_PRICE_MANAGEMENT  A
     		INNER  JOIN  (
     			SELECT
@@ -108,4 +111,7 @@ VIEW  PG_MI_SAC_LATEST_MI_PRICE_VIEW  AS
     			ON  A.TENANT_ID  =  B.TENANT_ID
     			AND A.MI_MATERIAL_CODE  =  B.MI_MATERIAL_CODE
     			AND A.MI_DATE  =  B.MI_DATE
+            INNER  JOIN  PG_MI_MATERIAL_CODE  C
+                ON  A.TENANT_ID         =  C.TENANT_ID
+                AND A.MI_MATERIAL_CODE  =  C.MI_MATERIAL_CODE
     ;
