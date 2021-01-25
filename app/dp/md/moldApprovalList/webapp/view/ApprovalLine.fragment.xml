@@ -40,7 +40,7 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
                         mode="SingleSelectMaster" 
-                        cellClick=".onItemPress" 
+                        type="None"
                         width="auto"
                         items="{approver>/Approvers}" 
                         >
@@ -86,7 +86,7 @@
                           
                     </dragDropConfig>					
                     <items>
-                        <ColumnListItem>
+                        <ColumnListItem type="Active" press=".onItemPress">
                             <cells>
                                 <Text text="{approver>approver_empno}"  />
                                 <Text text="{approver>approve_sequence}" />
@@ -108,10 +108,8 @@
                                 </Input>
                                 <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
-                              
                                 <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
                                 <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
-                               
                             </cells>
                         </ColumnListItem>
                     </items>

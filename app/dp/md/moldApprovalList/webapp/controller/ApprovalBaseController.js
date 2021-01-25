@@ -706,7 +706,7 @@ sap.ui.define([
             this.setOrderByApproval();
             this.setSelectedApproval(String(Number(oParam)+1));
         },
-        onItemPress: function (oEvent) {
+        onItemPress : function (oEvent) {
             console.log("//// onApproverItemPress", oEvent);
         },
 
