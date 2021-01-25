@@ -401,14 +401,11 @@ sap.ui.define([
                 input.inputData.savedReqDetails = details;
                 supInput.inputData = suppliers;
 
-                console.log("hesr");
             }
 
 
             if (this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
-            console.log("aaa");
             if (this.validator.validate(this.byId("midTable")) !== true) return;
-            console.log("bbb");
 
             var url = "ep/po/loiRequestMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiRequestMultiEntitylProc";
 
