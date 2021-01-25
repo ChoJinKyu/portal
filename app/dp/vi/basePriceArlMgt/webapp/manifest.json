@@ -16,31 +16,31 @@
       "version": "1.40.12"
     },
     "dataSources": {
-      "mainService": {
-        "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
-        }
-      },
-      "commonService": {
-        "uri": "srv-api/odata/v2/cm.util.CommonService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
-        }
-      },
-      "currencyService": {
-        "uri": "srv-api/odata/v2/cm.CurrencyMgtService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
-        }
-      },
-      "orgMgtService": {
+        "mainService": {
+            "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
+            "type": "OData",
+            "settings": {
+            "odataVersion": "2.0",
+            "localUri": "localService/metadata.xml"
+            }
+        },
+        "commonService": {
+            "uri": "srv-api/odata/v2/cm.util.CommonService/",
+            "type": "OData",
+            "settings": {
+            "odataVersion": "2.0",
+            "localUri": "localService/metadata.xml"
+            }
+        },
+        "currencyService": {
+            "uri": "srv-api/odata/v2/cm.CurrencyMgtService/",
+            "type": "OData",
+            "settings": {
+            "odataVersion": "2.0",
+            "localUri": "localService/metadata.xml"
+            }
+        },
+        "orgMgtService": {
             "uri": "srv-api/odata/v2/cm.util.OrgService/",
             "type": "OData",
             "settings": {
@@ -56,6 +56,13 @@
         },
         "purOrgMgtService": {
             "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
+        },
+        "supplierSelectionService": {
+            "uri": "srv-api/odata/v2/dp.util.SupplierSelectionService/",
             "type": "OData",
             "settings": {
                 "odataVersion": "2.0"
@@ -162,6 +169,16 @@
         },
         "purOrg": {
             "dataSource": "purOrgMgtService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        },
+        "supplierODataModel": {
+            "dataSource": "supplierSelectionService",
             "preload": true,
             "settings": {
                 "defaultBindingMode": "TwoWay",
