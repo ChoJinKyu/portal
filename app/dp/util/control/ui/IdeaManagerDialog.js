@@ -11,12 +11,10 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input",
-    "sap/m/MultiInput",
     "ext/lib/control/m/CodeComboBox",
     "sap/m/SearchField",
-    "ext/lib/model/ManagedModel",
-    "cm/util/control/ui/CompanyDetailDialog"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, MultiInput, CodeComboBox, SearchField, ManagedModel, CompanyDetailDialog) {
+    "ext/lib/model/ManagedModel"
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, CodeComboBox, SearchField, ManagedModel) {
     "use strict";
 
     var IdeaManagerDialog = Parent.extend("dp.util.control.ui.IdeaManagerDialog", {
@@ -24,7 +22,7 @@ sap.ui.define([
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "55em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "company_code" },
+                keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
                 textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
             }
         },
@@ -127,50 +125,6 @@ sap.ui.define([
             ];
         },
 
-        onTest : function(){
-            console.log("aaa");
-
-
-        },
-
-        loadIdeaManagersetModel : function(oThis){
-
-            var that = oThis,
-                oServiceModel = ODataV2ServiceProvider.getService("cm.util.OrgService"),
-                cFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
-
-            that.oDialog.setModel(new ManagedModel(), "IDEAMANAGER");
-
-            oServiceModel.read("/Company", {
-               // filters: cFilters, 
-                // sorters: [
-                //     new Sorter("company_code", true)
-                // ],
-                success: function(oData){
-                    var aRecords = oData.results;
-                    console.log(aRecords);
-                    that.oDialog.getModel("IDEAMANAGER").setProperty("/Company", aRecords);
-                }.bind(this)
-            });
-
-            // oServiceModel.read("/Unit", {
-            //     //filters: cFilters, 
-            //     // sorters: [
-            //     //     new Sorter("company_code", true)
-            //     // ],
-            //     success: function(oData){
-            //         var aRecords = oData.results;
-            //          console.log(aRecords);
-            //         that.oDialog.getModel("IDEAMANAGER").setProperty("/Unit", aRecords);
-            //         console.log(that.oDialog.getModel("IDEAMANAGER").getProperty("/Unit"));
-            //     }.bind(this)
-            // });
-
-
-        },
-
         loadData: function(oThis){
 
             var that = this,
@@ -206,10 +160,6 @@ sap.ui.define([
                 success: function(oData){
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
-                    
-                    if(!this.oDialog.getModel("IDEAMANAGER")){
-                        this.loadIdeaManagersetModel(this);
-                    }
                     this.oDialog.setBusy(false);
       
                 }.bind(this)
