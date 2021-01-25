@@ -34,10 +34,10 @@ sap.ui.define([
             var oTable = this.getView().byId("mainTable");
             var oSmtFilter = this.getView().byId("smartFilterBar");
 
-            var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();
-            var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();
-            
-            var aSearchFilters = [];
+            var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue(),
+                oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue(),
+                oMI_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue(),
+                aSearchFilters = [];
 
             if (oMaterial_desc.length > 0) {
                 var oMaterial_descFilter = new Filter("material_desc", FilterOperator.Contains, oMaterial_desc);
@@ -49,8 +49,13 @@ sap.ui.define([
                 aSearchFilters.push(oSupplier_local_nameFilter);
             }
 
-            var material_code = new sap.ui.model.Sorter("material_code", false);
-            mBindingParams.sorter.push(material_code);
+            if (oMI_material_name.length > 0) {
+                var oMI_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMI_material_name);
+                aSearchFilters.push(oMI_material_nameFilter);
+            }
+
+            // var material_code = new sap.ui.model.Sorter("material_code", false);
+            // mBindingParams.sorter.push(material_code);
             mBindingParams.filters.push(new Filter(aSearchFilters, true));
 
 
