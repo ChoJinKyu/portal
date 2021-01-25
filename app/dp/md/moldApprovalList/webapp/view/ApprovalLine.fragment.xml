@@ -40,7 +40,7 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
                         mode="SingleSelectMaster" 
-                       
+                        cellClick=".onItemPress" 
                         width="auto"
                         items="{approver>/Approvers}" 
                         >
@@ -69,15 +69,11 @@
                             <Text text="Comment" />
                         </Column>
                         <Column id="add" minScreenWidth="Tablet" hAlign="Center" width="3.2em" >
-                                <Text text="add"  />
+                            <Text text="add"  />
                         </Column>					
                         <Column id="delete" minScreenWidth="Tablet" hAlign="Center" width="5em" >
-                                <Text text="delete" />
+                            <Text text="delete" />
                         </Column>					
-                        <Column id="choose" minScreenWidth="Tablet" hAlign="Center" width="5em" >
-                                <Text text="choose" />
-                        </Column>					
-   
                     </columns>
                     <dragDropConfig>
                         <dnd:DragDropInfo
@@ -89,7 +85,7 @@
                           
                     </dragDropConfig>					
                     <items>
-                        <ColumnListItem press=".onItemPress">
+                        <ColumnListItem>
                             <cells>
                                 <Text text="{approver>approver_empno}"  />
                                 <Text text="{approver>approve_sequence}" />
@@ -100,19 +96,16 @@
                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
                                                 ],
-                                                sorter: { path: 'sort_no'}
+                                                sorter: { path: 'sort_no'} 
                                             }"
-                                    enabled="{mode>/editFlag}" >  
+                                    enabled="{approver>selRow}" >  
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
-                                <SearchField search=".onApproverSearch" width="100%"
-                                    value="{approver>approver_name}" placeholder="Search employee" 
-                                    enabled="{mode>/editFlag}"/>
+                                <SearchField search=".onApproverSearch" width="100%" value="{approver>approver_name}" placeholder="Search employee"  enabled="{approver>selRow}" />
                                 <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
                                 <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
                                 <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
-                                <Button icon="sap-icon://accept" press=".onSelectedApproval(${approver>approve_sequence})" tooltip="delete" />
                             </cells>
                         </ColumnListItem>
                     </items>

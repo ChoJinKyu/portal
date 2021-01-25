@@ -424,6 +424,7 @@ sap.ui.define([
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
                  console.log(" Approvers >>> ", oData);
+                 that.setSelectedApproval(0);
             }.bind(this));
 
             console.log(" Approvers >>> ", approvalNumber);
@@ -686,14 +687,12 @@ sap.ui.define([
                 "selRow": true,
             }, "/Approvers", oParam); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
             this.setOrderByApproval();
+            this.setSelectedApproval(String(Number(oParam)+1));
         },
         onItemPress: function (oEvent) {
             console.log("//// onApproverItemPress", oEvent);
         },
 
-        onSelectedApproval : function (oParam){
-            console.log("//// onSelectedApproval", oParam);
-        },
 
         // 삭제 
         setApproverRemoveRow: function (oParam) {
@@ -709,7 +708,30 @@ sap.ui.define([
             }
             this.getModel("approver").refresh(true);
         },
+        // 선택행 플래그 정리  
+        setSelectedApproval : function (row) { 
+             var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == approver.getData().Approvers[i].approve_sequence){
+                     approver.getData().Approvers[i].selRow = true;
+                  }else{
+                     approver.getData().Approvers[i].selRow = false;
+                  }
+            }
+            console.log(" setSelectedApproval " , approver);
+            this.getModel("approver").refresh(true);
+        } ,
 
+        getApprovalSeletedRow : function () {
+            var approver = this.getModel("approver");
+            var row = 0;
+            for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(approver.getData().Approvers[i].selRow){
+                    row = i;
+                  }
+            }
+            return row;
+        } ,
 
         /**
          * @description employee 이벤트 1
@@ -727,20 +749,19 @@ sap.ui.define([
             console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
         },
 
-
-
-
-
-
         /**
          * @description employee 팝업 열기 (돋보기 버튼 클릭시)
          */
-        handleEmployeeSelectDialogPress: function (oEvent) {
-            var oTable = this.byId("ApproverTable");
+        handleEmployeeSelectDialogPress: function (oEvent) { 
+
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
             var that = this;
-            var aItems = oTable.getItems();
-            if (aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == undefined
-                || aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == "") {
+     
+            console.log(" row " , row);
+
+            if (approver.getData().Approvers[row].approver_type_code == undefined
+                || approver.getData().Approvers[row].approver_type_code == "") {
                 MessageToast.show("Type 을 먼저 선택해주세요.");
             } else {
                 var oView = this.getView();
@@ -803,7 +824,7 @@ sap.ui.define([
                     approver_empno: oItem.getCells()[0].getText(),
                     approver_name: oItem.getCells()[1].getText()
                 });
-                // this._approverAddRow(obj);
+               this._setApprvalItemSetting( obj.oData ); 
             }.bind(this));
             this.onExitEmployee();
         },
@@ -819,8 +840,18 @@ sap.ui.define([
                 this._oDialog = undefined;
             }
         },
-
-
+        _setApprvalItemSetting : function(obj){
+        console.log("_setApprvalItemSetting  " , obj);
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == i){
+                     approver.getData().Approvers[i].approver_empno = obj.approver_empno;
+                     approver.getData().Approvers[i].approver_name = obj.approver_name;
+                  }
+            }
+             this.getModel("approver").refresh(true);
+        },
         /**
          * today
          * @private
