@@ -223,6 +223,7 @@ sap.ui.define([
                         oNewPriceObj['period_code'] = sKey;
                         oNewPriceObj['addition_type_value'] = oPrice[sKey];
                         oNewPriceObj['user_id'] = me.oUerInfo.user_id;
+                        oNewPriceObj['uom_code'] = oPrice.uom_code;
                         aPriceResult.push(oNewPriceObj);
                     }
                 });
@@ -256,8 +257,7 @@ sap.ui.define([
                     user_id           : me.oUerInfo.user_id                 
                 }
             };
-            debugger;
-            //return;
+
             this._sendSaveData(oSendData);
         }
 
@@ -323,9 +323,9 @@ sap.ui.define([
             //events
             var aEventsData = this._reCompositData(oEvents, "develope_event_code", "start_date");
             this.setModel(new JSONModel(aEventsData), "eventsModel");
-            this._factoryTableColumns("tblEvents", "Center", true);
-            //this._factoryTableColumns("tblEvents_edit", "Center", false, "DatePicker");
-debugger;
+            this._factoryTableColumns("tblEvents", true);
+            //this._factoryTableColumns("tblEvents_edit", false, "DatePicker");
+
             //판가/물동/원가
             var aPriceData = {};
             if(oMtlmob.length > 0) {
@@ -374,16 +374,16 @@ debugger;
             if(aPriceData.datas && aPriceData.datas.length > 0) {
                 //aPriceData.datas.concat(oSalesPrice).concat(oPrcsCost).concat(oSgna);
                 this.setModel(new JSONModel(aPriceData), "priceModel");
-                this._factoryTableColumns("tblPrice", "End", true);
-                this._factoryTableColumns("tblPrice_edit", "Center", false);
+                this._factoryTableColumns("tblPrice", true);
+                this._factoryTableColumns("tblPrice_edit", false);
             }
             //환율
 
             if(oBaseExtra.length > 0) {
                 var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : "구분", "data" : "currency_code"});
                 this.setModel(new JSONModel(aExchange), "exchangeModel");
-                this._factoryTableColumns("tblExchange", "End", true);
-                this._factoryTableColumns("tblExchange_edit", "Center", false);
+                this._factoryTableColumns("tblExchange", true);
+                this._factoryTableColumns("tblExchange_edit", false);
             }
         }
 
@@ -459,7 +459,7 @@ debugger;
          * {columns:[], data:[]} 구조의 모델정보를 바탕으로 table aggregation binding 한다.
          * @param {string} biding 하고자 하는 table name
          */
-        , _factoryTableColumns: function(sTableName, sHAlign, bReadMode, sEditControl) {
+        , _factoryTableColumns: function(sTableName, bReadMode, sEditControl) {
             //var oTable = this.getView().byId(sTableName);
             var oTable   = this.byId(sTableName);
             var sModelName = oTable.getBindingInfo("items").model;
@@ -470,7 +470,7 @@ debugger;
             oTable.removeAllColumns();
             oTable.bindAggregation("columns", sModelName + ">/columns", function(sId, oContext) {
                 return new sap.m.Column({
-                    hAlign : sHAlign || "Center",
+                    hAlign : $.isNumeric(oContext.getObject("text")) ? "End" : "Center",
                     header : new sap.m.Label({
                                 text : oContext.getObject().text
                              })
@@ -501,18 +501,45 @@ debugger;
                                         return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"});
                                     } else if(column.name === "uom_code") {
                                         
-                                        return new sap.m.ComboBox({
-                                            selectedKey : {path: sModelName + ">" + column.name,},
-                                            items: {
-                                                path: "/MM_UOM",
-                                                filters: [new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, this.getModel("detailModel").getProperty("/tenant_id"))],
-                                                sorter: new sap.ui.model.Sorter("uom_name"),
-                                                template: new sap.ui.core.Item({
-                                                    key: "{uom_code}",
-                                                    text: "{uom_name}"
-                                                })
-                                            }
-                                        });
+                                        return new sap.m.HBox({items: [
+                                            new sap.m.ComboBox({
+                                                selectedKey : {path: sModelName + ">" + column.name},
+                                                items: {
+                                                    path: "/MM_UOM",
+                                                    filters: [new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, this.getModel("detailModel").getProperty("/tenant_id"))],
+                                                    sorter: new sap.ui.model.Sorter("uom_name"),
+                                                    template: new sap.ui.core.Item({
+                                                        key: "{uom_code}",
+                                                        text: "{uom_name}"
+                                                    })
+                                                },
+                                                 visible: {
+                                                     path: sModelName + ">addition_type_code",
+                                                     formatter: function(_val) {
+                                                        return _val === "MTLMOB" ? true : false;
+                                                     }
+                                                }
+                                            }),
+                                            new sap.m.ComboBox({
+                                                selectedKey : {path: sModelName + ">" + column.name},
+                                                items: {
+                                                    path: "/Currency",
+                                                    filters: [new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, this.getModel("detailModel").getProperty("/tenant_id"))],
+                                                    sorter: new sap.ui.model.Sorter("currency_code"),
+                                                    template: new sap.ui.core.Item({
+                                                        key: "{currency_code}",
+                                                        text: "{currency_code}"
+                                                    })
+                                                },
+                                                 visible: {
+                                                     path: sModelName + ">addition_type_code",
+                                                     formatter: function(_val) {
+                                                        return _val === "MTLMOB" ? false : true;
+                                                     }
+                                                }
+                                            })
+                                        ]});
+                                        
                                     } else if(sEditControl) {
                                         if(sEditControl === "DatePicker") {
                                             return new sap.m.DatePicker({

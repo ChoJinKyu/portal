@@ -223,6 +223,7 @@ sap.ui.define([
                         oNewPriceObj['addition_type_code'] = oPrice.addition_type_code;
                         oNewPriceObj['period_code'] = sKey;
                         oNewPriceObj['addition_type_value'] = oPrice[sKey];
+                        oNewPriceObj['uom_code'] = oPrice.uom_code;
                         aPriceResult.push(oNewPriceObj);
                     }
                 });
@@ -254,6 +255,7 @@ sap.ui.define([
                     user_id           : "A60262"                   
                 }
             };
+
             this._sendSaveData(oSendData);
         }
 
@@ -319,16 +321,22 @@ sap.ui.define([
             //events
             var aEventsData = this._reCompositData(oEvents, "develope_event_code", "start_date");
             this.setModel(new JSONModel(aEventsData), "eventsModel");
-            this._factoryTableColumns("tblEvents", "Center", true);
-            //this._factoryTableColumns("tblEvents_edit", "Center", false, "DatePicker");
+            this._factoryTableColumns("tblEvents", true);
+            //this._factoryTableColumns("tblEvents_edit", false, "DatePicker");
 
             //판가/물동/원가
             var aPriceData = {};
             if(oMtlmob.length > 0) {
+                if(oMtlmob[0].hasOwnProperty("uom_code")) {
+                    oMtlmob.unshift({"period_code" : "uom_code", "addition_type_value" : oMtlmob[0].uom_code});
+                }
                 oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동", "addition_type_copde" : oMtlmob.addition_type_copde});
                 aPriceData = this._reCompositData(oMtlmob, "period_code", "addition_type_value");
             }
             if(oSalesPrice.length > 0) {
+                if(oSalesPrice[0].hasOwnProperty("uom_code")) {
+                    oSalesPrice.unshift({"period_code" : "uom_code", "addition_type_value" : oSalesPrice[0].uom_code});
+                }
                 oSalesPrice.unshift({"period_code" : "구분", "addition_type_value" : "판가"});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSalesPrice, "period_code", "addition_type_value");
@@ -337,6 +345,9 @@ sap.ui.define([
                 }
             }
             if(oPrcsCost.length > 0) {
+                if(oPrcsCost[0].hasOwnProperty("uom_code")) {
+                    oPrcsCost.unshift({"period_code" : "uom_code", "addition_type_value" : oPrcsCost[0].uom_code});
+                }
                 oPrcsCost.unshift({"period_code" : "구분", "addition_type_value" : "가공비"});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oPrcsCost, "period_code", "addition_type_value");
@@ -346,6 +357,9 @@ sap.ui.define([
                 
             }
             if(oSgna.length > 0) {
+                if(oSgna[0].hasOwnProperty("uom_code")) {
+                    oSgna.unshift({"period_code" : "uom_code", "addition_type_value" : oSgna[0].uom_code});
+                }
                 oSgna.unshift({"period_code" : "구분", "addition_type_value" : "판관비"});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSgna, "period_code", "addition_type_value");
@@ -358,14 +372,14 @@ sap.ui.define([
             if(aPriceData.datas && aPriceData.datas.length > 0) {
                 //aPriceData.datas.concat(oSalesPrice).concat(oPrcsCost).concat(oSgna);
                 this.setModel(new JSONModel(aPriceData), "priceModel");
-                this._factoryTableColumns("tblPrice", "End", true);
-                this._factoryTableColumns("tblPrice_edit", "Center", false);
+                this._factoryTableColumns("tblPrice", true);
+                this._factoryTableColumns("tblPrice_edit", false);
             }
             //환율
             var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : "구분", "data" : "currency_code"});
             this.setModel(new JSONModel(aExchange), "exchangeModel");
-            this._factoryTableColumns("tblExchange", "End", true);
-            this._factoryTableColumns("tblExchange_edit", "Center", false);
+            this._factoryTableColumns("tblExchange", true);
+            this._factoryTableColumns("tblExchange_edit", false);
             
         }
 
@@ -398,6 +412,7 @@ sap.ui.define([
          * @return newDatas {Array} 재조합된 data
          */
         , _reCompositData: function (aRowDatas, sKeyName, sTextName) {
+            var oI18NModel = this.getModel("I18N");
             var aDatas = [];
             var aCols  = [];
             var oNewData = {};
@@ -415,7 +430,14 @@ sap.ui.define([
                 //newObj.set(sKey, sTxt);
                 newObj[sKey] = sTxt;
                 newObj.addition_type_code = oData.addition_type_code;
-                aCols.push({name: sKey, text: sKey});
+                if(oData.uom_code) {
+                    newObj.uom_code = oData.uom_code;
+                }
+                if(sKey === "uom_code") {
+                    aCols.push({name: sKey, text: "단위"});//다국어 처리 필요
+                } else {
+                    aCols.push({name: sKey, text: sKey});
+                }
             });
             if(Object.keys(newObj).length > 0 && newObj.constructor === Object) {
                 aDatas.push(newObj);
@@ -430,7 +452,8 @@ sap.ui.define([
          * {columns:[], data:[]} 구조의 모델정보를 바탕으로 table aggregation binding 한다.
          * @param {string} biding 하고자 하는 table name
          */
-        , _factoryTableColumns: function(sTableName, sHAlign, bReadMode, sEditControl) {
+        // @ts-ignore
+        , _factoryTableColumns: function(sTableName, bReadMode, sEditControl) {
             //var oTable = this.getView().byId(sTableName);
             var oTable   = this.byId(sTableName);
             var sModelName = oTable.getBindingInfo("items").model;
@@ -441,9 +464,9 @@ sap.ui.define([
             oTable.removeAllColumns();
             oTable.bindAggregation("columns", sModelName + ">/columns", function(sId, oContext) {
                 return new sap.m.Column({
-                    hAlign : sHAlign || "Center",
+                    hAlign : $.isNumeric(oContext.getObject("text")) ? "End" : "Center",
                     header : new sap.m.Label({
-                                text : oContext.getObject().text
+                                text : oContext.getObject("text")
                              })
                 });
             });
@@ -470,6 +493,47 @@ sap.ui.define([
                                     //return new sap.m.Input({value : "{"+ sModelName +">" + column.name + "}"})
                                     if(column.name === "구분") {// 나중에 별도 property 값을 적용해서 구분하게 변경 할 것.
                                         return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
+                                    } else if(column.name === "uom_code") {
+
+                                        return new sap.m.HBox({items: [
+                                            new sap.m.ComboBox({
+                                                selectedKey : {path: sModelName + ">" + column.name},
+                                                items: {
+                                                    path: "/MM_UOM",
+                                                    filters: [new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, this.getModel("detailModel").getProperty("/tenant_id"))],
+                                                    sorter: new sap.ui.model.Sorter("uom_name"),
+                                                    template: new sap.ui.core.Item({
+                                                        key: "{uom_code}",
+                                                        text: "{uom_name}"
+                                                    })
+                                                },
+                                                 visible: {
+                                                     path: sModelName + ">addition_type_code",
+                                                     formatter: function(_val) {
+                                                        return _val === "MTLMOB" ? true : false;
+                                                     }
+                                                }
+                                            }),
+                                            new sap.m.ComboBox({
+                                                selectedKey : {path: sModelName + ">" + column.name},
+                                                items: {
+                                                    path: "/Currency",
+                                                    filters: [new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, this.getModel("detailModel").getProperty("/tenant_id"))],
+                                                    sorter: new sap.ui.model.Sorter("currency_code"),
+                                                    template: new sap.ui.core.Item({
+                                                        key: "{currency_code}",
+                                                        text: "{currency_code}"
+                                                    })
+                                                },
+                                                 visible: {
+                                                     path: sModelName + ">addition_type_code",
+                                                     formatter: function(_val) {
+                                                        return _val === "MTLMOB" ? false : true;
+                                                     }
+                                                }
+                                            })
+                                        ]});
+
                                     } else if(sEditControl) {
                                         if(sEditControl === "DatePicker") {
                                             return new sap.m.DatePicker({
