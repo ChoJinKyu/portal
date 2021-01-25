@@ -28,7 +28,7 @@ service SourcingV4Service {
     view NegoHeadersView as
         select from negoHeaders {
             *,
-             seconds_between($now,closing_date) as remain_times
+             seconds_between($now,closing_date) as remain_times : Decimal(28, 2)
         };
     // @odata.draft.enabled
 
