@@ -220,7 +220,7 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-            var sTenantId = "L2600",
+            var sTenantId = "L2100",
                 sUomClass = this.getView().byId("searchUomClass").getSelectedKey(),			
                 sUom = this.getView().byId("searchUom").getSelectedKey(),
 			 	sBU = this.getView().byId("searchBUSegmentButton").getSelectedKey();

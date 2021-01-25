@@ -222,7 +222,7 @@ sap.ui.define([
 			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
 			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
             // 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
-            var sTenantId = "L2600"
+            var sTenantId = "L2100"
 			
             var aSearchFilters = [];
             
