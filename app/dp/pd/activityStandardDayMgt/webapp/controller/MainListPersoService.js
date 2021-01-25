@@ -4,80 +4,86 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "activityStandardDayMgt-mainList-mainColumnAU",
+                id: "activityStandardDayMgt-mainList-mainColumnCom",
                 order: 0,
+                text: "Company",
+                visible: true
+            },
+            {
+                id: "activityStandardDayMgt-mainList-mainColumnAU",
+                order: 1,
                 text: "조직코드",
                 visible: true
             },
             {
                 id: "activityStandardDayMgt-mainList-mainColumnPC",
-                order: 1,
+                order: 2,
                 text: "Part Category",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnPT",
-                order: 2,
+                order: 3,
                 text: "Project Type",
                 visible: true
             },
             {
                 id: "activityStandardDayMgt-mainList-mainColumnAC",
-                order: 3,
+                order: 4,
                 text: "Activity 코드",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnAN",
-                order: 4,
+                order: 5,
                 text: "Activity 명",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnUseYn",
-                order: 5,
+                order: 6,
                 text: "사용여부",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnS",
-                order: 6,
+                order: 7,
                 text: "s",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnA",
-                order: 7,
+                order: 8,
                 text: "a",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnB",
-                order: 8,
+                order: 9,
                 text: "b",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnC",
-                order: 9,
+                order: 10,
                 text: "c",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnD",
-                order: 10,
+                order: 11,
                 text: "d",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnUDM",
-                order: 11,
+                order: 12,
                 text: "수정일자",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnUUI",
-                order: 12,
+                order: 13,
                 text: "수정자",
                 visible: true
             }
@@ -135,7 +141,7 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnAU") != -1) {
+                if (sId.indexOf("mainColumnCom") != -1) {
                     return "Columns of Key";
                 }
                 return "Others";

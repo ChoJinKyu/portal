@@ -6,8 +6,6 @@ using {sp.Sc_Outcome_Code as scOutcomeCode,
        sp.Sc_Nego_Type_Code as scNegoTypeCode,
        sp.Sc_Award_Type_Code_View as scAwardTypeCodeView,
        sp.Sc_Award_Type_Code_View1 as scAwardTypeCodeView1,
-       sp.Sc_Award_Type_Code_View2 as scAwardTypeCodeView2,
-       sp.Sc_Award_Type_Code_View3 as scAwardTypeCodeView3,
        sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
 } from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 // using {sp.Sc_Outcome_Code2 as scOutcomeCode2} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
@@ -53,8 +51,6 @@ service SourcingTest01V4Service {
     entity ScNegoTypeCode                                     as projection on scNegoTypeCode;
     entity ScAwardTypeCodeView                                as projection on scAwardTypeCodeView;
     entity ScAwardTypeCodeView1                               as projection on scAwardTypeCodeView1;
-    entity ScAwardTypeCodeView2                               as projection on scAwardTypeCodeView2;
-    entity ScAwardTypeCodeView3                               as projection on scAwardTypeCodeView3;
     entity ScNegoProgStatusCodeView                           as projection on scNegoProgStatusCodeView;
 
     //    sp.Sc_Nego_Type_Code as scNegoTypeCode,

@@ -160,6 +160,7 @@
 								<command>compile srv/cds/op/ -s all -2 edmx-v2 -o ${project.basedir}/src/main/resources/edmx/v2</command>
 								<command>compile srv/cds/pg/ -s all -2 edmx-v2 -o ${project.basedir}/src/main/resources/edmx/v2</command>
 								<command>compile srv/cds/sp/ -s all -2 edmx-v2 -o ${project.basedir}/src/main/resources/edmx/v2</command>
+                                <command>compile srv/cds/tmp/ -s all -2 edmx-v2 -o ${project.basedir}/src/main/resources/edmx/v2</command>
 								<command>compile srv/cds/xx/ -s all -2 edmx-v2 -o ${project.basedir}/src/main/resources/edmx/v2</command>
 							</commands>
 						</configuration>

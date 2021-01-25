@@ -9,6 +9,7 @@ using { pg as vpItemMappingView } from '../../../../db/cds/pg/md/PG_MD_VP_MAPPIN
 using { pg as newCateCodeView } from '../../../../db/cds/pg/md/PG_MD_CATEGORY_CODE_VIEW-model';
 using { pg as newItemCodeView } from '../../../../db/cds/pg/md/PG_MD_CHARACTER_CODE_VIEW-model';
 using { pg as vpMaterialMappListTitleView } from '../../../../db/cds/pg/md/PG_MD_VP_MATERIAL_MAPP_LIST_TITLE_VIEW-model';
+using { pg as vpMaterialMappListView } from '../../../../db/cds/pg/md/PG_MD_VP_MATERIAL_MAPP_LIST_VIEW-model';
 
 namespace pg;
 
@@ -25,9 +26,13 @@ service MdCategoryV4Service {
     view MdNewCategoryItemCode(tenant_id: String, company_code: String, org_type_code: String, org_code: String) as 
             select from newItemCodeView.Md_Character_Code_View(tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code);
 
-    // Vendor pool별 Meterial/Supplier Mapping List Title View
+    // Vendor pool별 Material/Supplier Mapping List Title View
     view MdVpMaterialMappListTitleView(language_code: String, tenant_id: String, company_code: String, org_type_code: String, org_code: String, vendor_pool_code: String) as 
             select from vpMaterialMappListTitleView.Md_Vp_Material_Mapp_List_Title_View(language_code: :language_code, tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code, vendor_pool_code: :vendor_pool_code);
+
+    // Vendor Pool별 Material/Supplier Mapping List View
+    view MdVpMaterialMappListView(language_code: String, tenant_id: String, company_code: String, org_type_code: String, org_code: String, vendor_pool_code: String) as 
+            select from vpMaterialMappListView.Md_Vp_Material_Mapp_List_View(language_code: :language_code, tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code, vendor_pool_code: :vendor_pool_code);
 
     // DB Object로 생성된 View를 조회 하는 경우 (model-cds가 존재해야함)
     //@cds.query.limit.default: 10

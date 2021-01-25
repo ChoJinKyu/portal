@@ -15,13 +15,15 @@ service PartActivityService {
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
 
     view CompanyView as
-    select DISTINCT company_code
-    from  PartActivityTemplateView.Pd_Part_Activity_Template  m
+    select key company_code
+    from  PartActivityTemplateView.Pd_Part_Activity_Template
+    group by company_code
     ;
 
     view OrgView as
-    select DISTINCT org_code
-    from  PartActivityTemplateView.Pd_Part_Activity_Template  m
+    select key org_code
+    from  PartActivityTemplateView.Pd_Part_Activity_Template
+    group by org_code
     ;
 
 }

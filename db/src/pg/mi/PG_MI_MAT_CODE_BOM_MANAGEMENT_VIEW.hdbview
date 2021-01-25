@@ -36,21 +36,21 @@ view pg_MI_Mat_Code_Bom_Management_View as
 	left join dp_mm_material_desc_lng as mattext
 		on	header.tenant_id		= mattext.tenant_id
 		and	header.material_code	= mattext.material_code
-		and mattext.language_code	= 'EN'
+		and mattext.language_code	= upper(substring(session_context('LOCALE'), 1, 2))
 	left join sp_sm_supplier_mst as supplier
 		on	header.tenant_id		= supplier.tenant_id
 		and	header.supplier_code	= supplier.supplier_code
 	left join pg_mi_material_code_lng as mimattext
 		on  item.tenant_id			= mimattext.tenant_id
 		and item.mi_material_code	= mimattext.mi_material_code
-		and mimattext.language_code	= 'KO'
+		and mimattext.language_code	= upper(substring(session_context('LOCALE'), 1, 2))
 	left join pg_mi_material_code as mimatcode
 		on  item.tenant_id    		= mimatcode.tenant_id
 		and item.mi_material_code	= mimatcode.mi_material_code
 	left join pg_mi_category_lng as catgtext
 		on  mimatcode.tenant_id    	= catgtext.tenant_id
 		and mimatcode.category_code	= catgtext.category_code
-		and catgtext.language_code	= 'KO'
+		and catgtext.language_code	= upper(substring(session_context('LOCALE'), 1, 2))
 	left join cm_org_tenant as tenant
         on	header.tenant_id		= tenant.tenant_id
 	group by

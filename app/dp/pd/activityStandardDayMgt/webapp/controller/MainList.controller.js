@@ -21,7 +21,8 @@ sap.ui.define([
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController,
+    MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
     "use strict";
 
     return BaseController.extend("dp.pd.activityStandardDayMgt.controller.MainList", {
@@ -54,6 +55,7 @@ sap.ui.define([
             }.bind(this));
 
             this.byId("btn_search").firePress();
+            this._doInitTablePerso();
         },
 
         onMainTablePersoButtonPressed: function (event) {
@@ -70,13 +72,6 @@ sap.ui.define([
                 this.onRefresh();
             } else {
                 var aSearchFilters = this._getSearchStates();
-                    
-                if(this.byId("searchAUCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchAUCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
-                    return;
-                } else {
-                    this.validator.clearValueState(this.byId("searchAUCombo"));
-                }
                 this._applySearch(aSearchFilters);
             }
         },
@@ -84,20 +79,21 @@ sap.ui.define([
         _applySearch: function (aSearchFilters) {
             var oView = this.getView(),
                 oModel = this.getModel("list");
-            //oView.setBusy(true);
+            oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 
             var oTable = this.byId("mainTable");
-            oModel.read("/ActivityMappingNameView", {
+            oModel.read("/pdActivityStdDayView", {
                 filters: aSearchFilters,
                 success: function (oData) {
-                    //oView.setBusy(false);
+                    oView.setBusy(false);
                 }.bind(this)
             });
         },
 
         _getSearchStates: function () {
-            var sTenantId = "L2100",
+            var sTenantId = "L1100",
+                oSearchCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
                 oSearchAUCombo = this.getView().byId("searchAUCombo").getSelectedKey(),
                 oSearchPCCombo = this.getView().byId("searchPCCombo").getSelectedKey(),
                 oSearchPTCombo = this.getView().byId("searchPTCombo").getSelectedKey(),
@@ -107,31 +103,36 @@ sap.ui.define([
                 new Filter("tenant_id", FilterOperator.EQ, sTenantId)
             ];
 
+            if(oSearchCompanyCombo && oSearchCompanyCombo.length > 0) {
+                aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, oSearchCompanyCombo));
+            }
+
             if (oSearchAUCombo && oSearchAUCombo.length > 0) {
                 aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, oSearchAUCombo));
             }
 
             if (oSearchPCCombo && oSearchPCCombo.length > 0) {
-                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, oSearchPCCombo));
+                aSearchFilters.push(new Filter("category_code", FilterOperator.EQ, oSearchPCCombo));
             }
-
+           
             if (oSearchPTCombo && oSearchPTCombo.length > 0) {
-                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, oSearchPTCombo));
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        new Filter("part_project_type_code", FilterOperator.EQ, oSearchPTCombo)
+                    ],
+                    and: false
+                }));
             }
-
+           
             if (oSearchActivity && oSearchActivity.length > 0) {
-                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, oSearchActivity));
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        new Filter("activity_code", FilterOperator.Contains, oSearchActivity),
+                        new Filter("activity_name", FilterOperator.Contains, oSearchActivity)
+                    ],
+                    and: false
+                }));
             }
-
-            // if (sProductActivity && sProductActivity.length > 0) {
-            //     aSearchFilters.push(new Filter({
-            //         filters: [
-            //             new Filter("product_activity_code", FilterOperator.Contains, sProductActivity),
-            //             new Filter("product_activity_name", FilterOperator.Contains, sProductActivity)
-            //         ],
-            //         and: false
-            //     }));
-            // }
 
             return aSearchFilters;
         },
@@ -141,8 +142,8 @@ sap.ui.define([
             if (!sTableId) { return; }
 
             var oTable = this.byId("mainTable");
-            var sFileName = "Activity Mapping Management";
-            var oData = this.getModel("list").getProperty("/ActivityMappingNameView");
+            var sFileName = "Activity Standard Day Management";
+            var oData = this.getModel("list").getProperty("/pdActivityStdDayView");
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
@@ -150,14 +151,14 @@ sap.ui.define([
             });
         },
 
-        onSearchProductActivity: function (oEvent) {
+        onSearchPartCategory: function (oEvent) {
             var oButton = oEvent.getSource(),
                 oView = this.getView();
 
             if (!this._pDialog) {
                 this._pDialog = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.pd.activityStandardDayMgt.view.ProductActivity",
+                    name: "dp.pd.activityStandardDayMgt.view.pdActivityStdDayView",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);

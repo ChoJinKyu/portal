@@ -62,6 +62,7 @@ service PrCreateV4Service {
         wbs_code : String;
         asset_number : String;
         order_number : String;
+        service_desc : String;
     };
 
     type PrCreateSaveType {
