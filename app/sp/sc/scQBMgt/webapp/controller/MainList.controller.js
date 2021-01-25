@@ -22,11 +22,91 @@ sap.ui.define([
         var resultFilters = [];
         var oMultilingual;
         var textModel;   // I18N 모델 저장
+
         
 
 		return Controller.extend("sp.sc.scQBMgt.controller.MainList", {
+            
+            oServiceModel: new ODataModel({
+                serviceUrl: "srv-api/odata/v2/sp.negoHeadersService/",
+                defaultBindingMode: "OneWay",
+                defaultCountMode: "Inline",
+                refreshAfterChange: false,
+                useBatch: true
+            }),
             test1: function(e){
-                debugger;
+                // this.getView().setModel( this.oServiceModel, "viewModel" );
+
+
+                //  console.log(sPath);						
+                // sPath = String(sPath);						
+                // var promise = jQuery.Deferred();						
+                // var oModel = this.getView().getModel();						
+                        
+                // oModel.read(sPath, {	
+                //     filters: filter,
+                //     method: "GET",						
+                //     async: false,						
+                //     success: function(data){						
+                //         promise.resolve(data);						
+                //     }.bind(this),						
+                //     error: function(data){						
+                //         alert("error");						
+                //     }						
+                        
+                // });						
+                // return promise;
+                
+                
+                var oModel = this.getView().getModel();
+                async function _read(oModel){
+                    var promise = jQuery.Deferred();	
+                    oModel.read("/NegoItemPrices?&$select=*,Header&$expand=Header", {
+                        success: function(data){
+                            promise.resolve(data.results);
+                            debugger;
+                            
+                        }.bind(this),						
+                        error: function(data){						
+                            alert("error");						
+                        }		
+                    });
+                    return promise;	
+                };
+
+                // async function _readR(oModel){
+                //     var result = await _read(oModel);
+                //     return result;
+                // }
+
+                var a = _read(oModel);
+                var that = this;
+                
+                a.then(function(data){
+                    console.log("data ===================================",data);
+                    // this.getView().bindElement(
+                    //     {
+                    //         path: "/NegoItemPrices",
+                    //         parameters: {expand: '/NegoHeaders'}
+                    //     }
+                    // );
+                    // var tab = this.byId("sTable1");
+                    // tab.bindElement(
+                    //     {
+                    //         path: "/NegoItemPrices",
+                    //         parameters: {select : "nego_document_number"}
+                    //     }
+                    // )
+
+                    // tab.bindItems({
+                    //     path : "NegoHeaders",
+                    //     parameters: { select : "nego_document_number"}
+                    // });
+                    var sTable = this.getView().byId("sTable1");
+                    
+                    // this.mBindingParams.parameters["expand"] = "NegoHeaders(tenant_id='L2100',nego_header_id=4L)";
+                    debugger;
+                }.bind(this));
             },
 			onInit: function () {
                 
@@ -38,13 +118,6 @@ sap.ui.define([
 
 
                 // 
-                // oServiceModel: new ODataModel({
-                //     serviceUrl: "srv-api/odata/v2/dp.util.SupplierSelectionService/",
-                //     defaultBindingMode: "OneWay",
-                //     defaultCountMode: "Inline",
-                //     refreshAfterChange: false,
-                //     useBatch: true
-                // })
 
 
                 // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders";
@@ -326,8 +399,78 @@ sap.ui.define([
 
             },
             beforeRebindTable:function(e){
+                this.mBindingParams = e.getParameter("bindingParams");
+                var oModel = this.getView().getModel();
+                async function _read(oModel){
+                    var promise = jQuery.Deferred();	
+                    oModel.read("/NegoItemPrices?&$select=*,Header&$expand=Header", {
+                        success: function(data){
+                            promise.resolve(data.results);
+                            console.log("item+header ========================= ",data.results);
+                            debugger;
+                        }.bind(this),						
+                        error: function(data){						
+                            alert("error");						
+                        }		
+                    });
+                    return promise;	
+                };
+                async function _read2(oModel){
+                    var promise = jQuery.Deferred();	
+                    oModel.read("/NegoHeaders", {
+                        success: function(data){
+                            promise.resolve(data.results);
+                            console.log("header ========================= ",data.results);
+                        }.bind(this),						
+                        error: function(data){						
+                            alert("error");						
+                        }		
+                    });
+                    return promise;	
+                };
+
+                // async function _readR(oModel){
+                //     var result = await _read(oModel);
+                //     return result;
+                // }
+
+                var b = _read2(oModel);
+                b.then(function(data){
+                    // debugger;
+                }.bind(this));
+
+                var a = _read(oModel);
+                var that = this;
+                a.then(function(data){
+                    console.log("data ===================================",data);
+                    // this.getView().bindElement(
+                    //     {
+                    //         path: "/NegoItemPrices",
+                    //         parameters: {expand: '/NegoHeaders'}
+                    //     }
+                    // );
+                    var tab = this.byId("sTable1");
+                    // tab.bindElement(
+                    //     {
+                    //         path: "/NegoItemPrices",
+                    //         parameters: {select : "nego_document_number"}
+                    //     }
+                    // )
+
+                    // tab.bindItems({
+                    //     path : "NegoHeaders",
+                    //     parameters: { select : "nego_document_number"}
+                    // });
+                    this.mBindingParams.parameters["expand"] = "NegoHeaders";
+                    
+                    // this.mBindingParams.parameters["select"] = "nego_item_number";
+                    debugger;
+                    
+                }.bind(this, e));
+                //  /===============================================================
                 
-                var sTable = this.getView().byId("sTable1");
+                
+                
                 
                 
             },
