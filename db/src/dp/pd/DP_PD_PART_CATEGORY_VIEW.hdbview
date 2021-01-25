@@ -18,7 +18,7 @@ SELECT
       pa.active_flag,
       pa.update_user_id,
       pa.local_update_dtm
-       FROM HIERARCHY (				
+       FROM HIERARCHY (	
 				    SOURCE (
 				        SELECT  tenant_id,
 				                company_code,
