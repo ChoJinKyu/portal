@@ -109,7 +109,7 @@ as
 begin
 
     declare lv_max_seq						integer default 0;
-    -- declare current_user                       nvarchar(255) default '';
+    -- declare trim(session_context('APPLICATIONUSER'))                       nvarchar(255) default '';
 
     declare lv_sourcemaster_count			integer default 0;
     declare lv_sourcescenario_count			integer default 0;
@@ -127,7 +127,7 @@ begin
         end;
 -- Session User
     -- select  trim(value)
-    -- into    current_user
+    -- into    trim(session_context('APPLICATIONUSER'))
     -- from    "SYS"."M_SESSION_CONTEXT"
     -- where   connection_id = current_connection
     -- and     key = 'APPLICATIONUSER'
@@ -173,7 +173,7 @@ begin
 				t_master_tab.scenario_desc			= s_master_tab.scenario_desc,
 				t_master_tab.source_system_desc		= s_master_tab.source_system_desc,
 				t_master_tab.local_update_dtm		= current_timestamp,
-				t_master_tab.update_user_id			= current_user,
+				t_master_tab.update_user_id			= trim(session_context('APPLICATIONUSER')),
 				t_master_tab.system_update_dtm		= current_timestamp
 
 		when not matched then
@@ -204,8 +204,8 @@ begin
 				s_master_tab.source_system_desc,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
@@ -234,14 +234,14 @@ begin
 		merge into	pg_tm_scenario_number_lng	as t_scenario_tab
 			using	:o_table_scenario			as s_scenario_tab
 			on		t_scenario_tab.tenant_id		= s_scenario_tab.tenant_id
-			and		t_scenario_tab.scenario_number	= s_scenario_tab.scenario_number
+            and		t_scenario_tab.scenario_number	= s_scenario_tab.scenario_number
+            and     t_scenario_tab.language_code    = s_scenario_tab.language_code
 
 		when matched then
 			update set
-				t_scenario_tab.language_code		= s_scenario_tab.language_code,
 				t_scenario_tab.scenario_name		= s_scenario_tab.scenario_name,
 				t_scenario_tab.local_update_dtm		= current_timestamp,
-				t_scenario_tab.update_user_id		= current_user,
+				t_scenario_tab.update_user_id		= trim(session_context('APPLICATIONUSER')),
 				t_scenario_tab.system_update_dtm	= current_timestamp
 
 		when not matched then
@@ -266,8 +266,8 @@ begin
 				s_scenario_tab.scenario_name,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
@@ -295,13 +295,13 @@ begin
 		merge into	pg_tm_comp_code		as t_company_tab
 			using	:o_table_company	as s_company_tab
 			on		t_company_tab.tenant_id			= s_company_tab.tenant_id
-			and		t_company_tab.scenario_number	= s_company_tab.scenario_number
+            and		t_company_tab.scenario_number	= s_company_tab.scenario_number
+            and     t_company_tab.company_code		= s_company_tab.company_code
 
 		when matched then
 			update set
-				t_company_tab.company_code		= s_company_tab.company_code,
 				t_company_tab.local_update_dtm	= current_timestamp,
-				t_company_tab.update_user_id	= current_user,
+				t_company_tab.update_user_id	= trim(session_context('APPLICATIONUSER')),
 				t_company_tab.system_update_dtm	= current_timestamp
 
 		when not matched then
@@ -324,8 +324,8 @@ begin
 				s_company_tab.company_code,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
@@ -353,13 +353,13 @@ begin
 		merge into	pg_tm_bizunit_code	as t_bizunit_tab
 			using	:o_table_bizunit	as s_bizunit_tab
 			on		t_bizunit_tab.tenant_id			= s_bizunit_tab.tenant_id
-			and		t_bizunit_tab.scenario_number	= s_bizunit_tab.scenario_number
+            and		t_bizunit_tab.scenario_number	= s_bizunit_tab.scenario_number
+            and     t_bizunit_tab.bizunit_code		= s_bizunit_tab.bizunit_code
 
 		when matched then
 			update set
-				t_bizunit_tab.bizunit_code		= s_bizunit_tab.bizunit_code,
 				t_bizunit_tab.local_update_dtm	= current_timestamp,
-				t_bizunit_tab.update_user_id	= current_user,
+				t_bizunit_tab.update_user_id	= trim(session_context('APPLICATIONUSER')),
 				t_bizunit_tab.system_update_dtm	= current_timestamp
 
 		when not matched then
@@ -382,8 +382,8 @@ begin
 				s_bizunit_tab.bizunit_code,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
@@ -412,16 +412,16 @@ begin
 	else
 		merge into	pg_tm_purchasing_type_code_lng	as t_purchasing_tab
 			using	:o_table_purchasing_type		as s_purchasing_tab
-			on		t_purchasing_tab.tenant_id			= s_purchasing_tab.tenant_id
-			and		t_purchasing_tab.scenario_number	= s_purchasing_tab.scenario_number
+			on		t_purchasing_tab.tenant_id			                = s_purchasing_tab.tenant_id
+            and		t_purchasing_tab.scenario_number	                = s_purchasing_tab.scenario_number
+            and     t_purchasing_tab.monitoring_purchasing_type_code    = s_purchasing_tab.monitoring_purchasing_type_code
+            and     t_purchasing_tab.language_code						= s_purchasing_tab.language_code
 
 		when matched then
 			update set
-				t_purchasing_tab.monitoring_purchasing_type_code	= s_purchasing_tab.monitoring_purchasing_type_code,
-				t_purchasing_tab.language_code						= s_purchasing_tab.language_code,
 				t_purchasing_tab.monitoring_purchasing_type_name	= s_purchasing_tab.monitoring_purchasing_type_name,
 				t_purchasing_tab.local_update_dtm					= current_timestamp,
-				t_purchasing_tab.update_user_id						= current_user,
+				t_purchasing_tab.update_user_id						= trim(session_context('APPLICATIONUSER')),
 				t_purchasing_tab.system_update_dtm					= current_timestamp
 
 		when not matched then
@@ -448,8 +448,8 @@ begin
 				s_purchasing_tab.monitoring_purchasing_type_name,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
@@ -478,16 +478,16 @@ begin
 	else
 		merge into	pg_tm_type_code_lng	as t_type_tab
 			using	:o_table_type		as s_type_tab
-			on		t_type_tab.tenant_id		= s_type_tab.tenant_id
-			and		t_type_tab.scenario_number	= s_type_tab.scenario_number
+			on		t_type_tab.tenant_id		    = s_type_tab.tenant_id
+            and		t_type_tab.scenario_number	    = s_type_tab.scenario_number
+            and     t_type_tab.monitoring_type_code	= s_type_tab.monitoring_type_code
+            and     t_type_tab.language_code		= s_type_tab.language_code
 
 		when matched then
 			update set
-				t_type_tab.monitoring_type_code	= s_type_tab.monitoring_type_code,
-				t_type_tab.language_code		= s_type_tab.language_code,
 				t_type_tab.monitoring_type_name	= s_type_tab.monitoring_type_name,
 				t_type_tab.local_update_dtm		= current_timestamp,
-				t_type_tab.update_user_id		= current_user,
+				t_type_tab.update_user_id		= trim(session_context('APPLICATIONUSER')),
 				t_type_tab.system_update_dtm	= current_timestamp
 
 		when not matched then
@@ -514,8 +514,8 @@ begin
 				s_type_tab.monitoring_type_name,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
@@ -542,15 +542,15 @@ begin
 	else
 		merge into	pg_tm_manager_dtl	as t_manager_tab
 			using	:o_table_manager	as s_manager_tab
-			on		t_manager_tab.tenant_id			= s_manager_tab.tenant_id
-			and		t_manager_tab.scenario_number	= s_manager_tab.scenario_number
+			on		t_manager_tab.tenant_id			        = s_manager_tab.tenant_id
+            and		t_manager_tab.scenario_number	        = s_manager_tab.scenario_number
+            and     t_manager_tab.monitoring_manager_empno  = s_manager_tab.monitoring_manager_empno
 
 		when matched then
 			update set
-				t_manager_tab.monitoring_manager_empno			= s_manager_tab.monitoring_manager_empno,
 				t_manager_tab.monitoring_super_authority_flag	= s_manager_tab.monitoring_super_authority_flag,
 				t_manager_tab.local_update_dtm					= current_timestamp,
-				t_manager_tab.update_user_id					= current_user,
+				t_manager_tab.update_user_id					= trim(session_context('APPLICATIONUSER')),
 				t_manager_tab.system_update_dtm					= current_timestamp
 
 		when not matched then
@@ -575,8 +575,8 @@ begin
 				s_manager_tab.monitoring_super_authority_flag,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
@@ -604,16 +604,16 @@ begin
 	else
 		merge into	pg_tm_operation_mode_code_lng	as t_operation_tab
 			using	:o_table_operation				as s_operation_tab
-			on		t_operation_tab.tenant_id		= s_operation_tab.tenant_id
-			and		t_operation_tab.scenario_number	= s_operation_tab.scenario_number
+			on		t_operation_tab.tenant_id		                = s_operation_tab.tenant_id
+            and		t_operation_tab.scenario_number	                = s_operation_tab.scenario_number
+            and     t_operation_tab.monitoring_operation_mode_code	= s_operation_tab.monitoring_operation_mode_code
+            and     t_operation_tab.language_code					= s_operation_tab.language_code
 
 		when matched then
 			update set
-				t_operation_tab.monitoring_operation_mode_code	= s_operation_tab.monitoring_operation_mode_code,
-				t_operation_tab.language_code					= s_operation_tab.language_code,
 				t_operation_tab.monitoring_operation_mode_name	= s_operation_tab.monitoring_operation_mode_name,
 				t_operation_tab.local_update_dtm				= current_timestamp,
-				t_operation_tab.update_user_id					= current_user,
+				t_operation_tab.update_user_id					= trim(session_context('APPLICATIONUSER')),
 				t_operation_tab.system_update_dtm				= current_timestamp
 
 		when not matched then
@@ -640,8 +640,8 @@ begin
 				s_operation_tab.monitoring_operation_mode_name,
 				current_timestamp,
 				current_timestamp,
-				current_user,
-				current_user,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
 				current_timestamp,
 				current_timestamp
             )
