@@ -66,13 +66,76 @@ service SupEvalSetupService {
                        and    evaluation_operation_unit_code = mst.evaluation_operation_unit_code) = mst.evaluation_operation_unit_code then 'N'
                 else 'Y'
             end delete_flag : String(1)
-        from   OpUnitMst mst
+        from   opUnitMst mst
         ;
 
-    entity OpUnitMst as projection on opUnitMst;
-    
-    /* Evaluation Operation Unit VP Mapping */
-    entity OpUnitMap as projection on opUnitMap;
+    view OpUnitListView as
+    select Key lng.language_cd,
+           Key mst.tenant_id,
+           Key mst.company_code,
+           Key mst.org_type_code,
+           Key mst.org_code,
+           Key mst.evaluation_operation_unit_code,
+           mst.evaluation_operation_unit_name,
+           mst.distrb_score_eng_flag,
+           mst.evaluation_request_mode_code,
+           mst.evaluation_request_approval_flag,
+           mst.operation_plan_flag,
+           mst.eval_apply_vendor_pool_lvl_no,
+           mst.use_flag,
+           Key ma.vendor_pool_operation_unit_code,
+           (select cd.code_name
+            from   codeLng cd
+            where  cd.tenant_id = mst.tenant_id
+            and    cd.group_code = 'SP_SM_SUPPLIER_TYPE'
+            and    cd.language_cd = lng.language_cd
+            and    cd.code =  ma.vendor_pool_operation_unit_code) as vendor_pool_operation_unit_name : String(500)
+    from   opUnitMst as mst,
+           opUnitMap as ma,
+           (select tenant_id,
+                   code language_cd
+            from   codeDtl
+            where  group_code = 'CM_LANG_CODE'
+            and    now() between start_date and end_date) lng
+    where  mst.tenant_id = ma.tenant_id
+    and    mst.company_code = ma.company_code
+    and    mst.org_type_code = ma.org_type_code
+    and    mst.org_code = ma.org_code
+    and    mst.evaluation_operation_unit_code = ma.evaluation_operation_unit_code
+    and    mst.tenant_id = lng.tenant_id
+    ;
+
+    view OpUnitView as
+    select Key language_cd,
+	       Key tenant_id,
+	       Key company_code,
+           Key org_type_code,
+           Key org_code,
+           Key evaluation_operation_unit_code,
+           evaluation_operation_unit_name,
+           distrb_score_eng_flag,
+           evaluation_request_mode_code,
+           evaluation_request_approval_flag,
+           operation_plan_flag,
+           eval_apply_vendor_pool_lvl_no,
+           use_flag,
+           string_agg(vendor_pool_operation_unit_code,',') as vendor_pool_operation_unit_code : String(500),
+           string_agg(vendor_pool_operation_unit_name,',') as vendor_pool_operation_unit_name : String(500)
+	from   OpUnitListView
+	group by language_cd,
+	         tenant_id,
+	         company_code,
+	         org_type_code,
+	         org_code,
+	         evaluation_operation_unit_code,
+             evaluation_operation_unit_name,
+             distrb_score_eng_flag,
+             evaluation_request_mode_code,
+             evaluation_request_approval_flag,
+             operation_plan_flag,
+             eval_apply_vendor_pool_lvl_no,
+             use_flag
+    ;    
 
     /* Evaluation Operation Unit Manager */
     view managerListView as

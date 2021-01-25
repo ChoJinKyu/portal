@@ -368,4 +368,44 @@ service individualSpendSacDService {
         from  AaCategoryMst
         ;
 
+    // OpErpAcctAssignCategory View: ERP계정지정범주(계정범주코드)
+    view OpErpAcctAssignCategoryView @(title : 'ERP계정지정범주(계정범주코드) View') as
+        select
+            key tenant_id       as  TENANT_ID
+           ,key code            as  ID : String
+               ,code_name       as  Description
+               ,language_cd     as  LANGUAGE_CODE
+        from  CmCodeDtlView
+        where group_code  =  'OP_ERP_ACCT_ASSIGN_CATEGORY';
+
+    // OpErpPoTypeCode View: ERP구매오더유형(PO유형)
+    view OpErpPoTypeCodeView @(title : 'ERP구매오더유형(PO유형) View') as
+        select
+            key tenant_id       as  TENANT_ID
+           ,key code            as  ID : String
+               ,code_name       as  Description
+               ,language_cd     as  LANGUAGE_CODE
+        from  CmCodeDtlView
+        where group_code  =  'OP_ERP_PO_TYPE_CODE';
+
+    // OpErpItemCategoryCode View: ERP품목범주(품목범주코드)
+    view OpErpItemCategoryCodeView @(title : 'ERP품목범주(품목범주코드) View') as
+        select
+            key tenant_id       as  TENANT_ID
+           ,key code            as  ID : String
+               ,code_name       as  Description
+               ,language_cd     as  LANGUAGE_CODE
+        from  CmCodeDtlView
+        where group_code  =  'OP_ERP_ITEM_CATEGORY_CODE';
+
+    // OpIncoterms View: 인코텀즈(인도조건)
+    view OpIncotermsView @(title : '인코텀즈(인도조건) View') as
+        select
+            key tenant_id       as  TENANT_ID
+           ,key code            as  ID : String
+               ,code_name       as  Description
+               ,language_cd     as  LANGUAGE_CODE
+        from  CmCodeDtlView
+        where group_code  =  'OP_INCOTERMS';
+
 }
