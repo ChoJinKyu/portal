@@ -68,7 +68,7 @@ sap.ui.define([
             this.setModel(new JSONModel(), "visibleTF");
 
             oTransactionManager = new TransactionManager();
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedTThisPage, this);
+            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 
             this.enableMessagePopover();
