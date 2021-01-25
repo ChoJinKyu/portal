@@ -49,14 +49,13 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "mstSpecView");
 			this.setModel(new ManagedListModel(), "schedule");
             this.setModel(new ManagedModel(), "spec");
-            //this.setModel(new ManagedListModel(), "listT");
+            this.setModel(new ManagedModel(), "tmpCcDpMdSpec");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
             
 			oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("schedule"));
-            //oTransactionManager.addDataModel(this.getModel("listT"));
 		}, 
 
 		/* =========================================================== */
@@ -140,7 +139,8 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
 
 			var oView = this.getView(),
-                me = this;
+                me = this,
+                oModel = this.getModel("tmpCcDpMdSpec");
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
@@ -176,10 +176,14 @@ sap.ui.define([
                                 console.log('ok',ok);
 
 								me._toShowMode();
-								oView.setBusy(false);
 								MessageToast.show(me.getModel('I18N').getText('/NCM01001') || 'NCM01001');
 							}
-						});
+                        });
+                        oModel.submitChanges({
+                            success: function (oEvent) {
+                                oView.setBusy(false);
+                            }.bind(this)
+                        });
 					};
 				}
 			});
@@ -220,7 +224,7 @@ sap.ui.define([
 
 			if(oArgs.tenantId == "new" && oArgs.moldId == "code"){
 				//It comes Add button pressed from the before page.
-				var oMasterModel = this.getModel("master");
+                var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
 					tenant_id: "L2100"
 				});
@@ -244,6 +248,11 @@ sap.ui.define([
                 this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
                     
                 });
+
+                this._bindView("/tmpCcDpMdSpec('"+this._sMoldId+"')", "tmpCcDpMdSpec", [], function(oData){
+                
+                });
+                
                 //this._bindView("test/Message", "listT", [], function(oData){
 
                 //});
@@ -322,21 +331,21 @@ sap.ui.define([
             //item type에 따른 템플릿 ID 분기
             if(itemType == 'P' || itemType == 'E'){
                 if(mode == "Show"){
-                    templateId = "tmp0001";
+                    templateId = "SCTT001";
                 }else if(mode == "Edit"){
-                    templateId = "tmp0003";
+                    templateId = "SCTT001";
                 } 
                 sectionId = "pageSubSection3";
             }else{
                 if(mode == "Show"){
-                    templateId = "tmp0002";
+                    templateId = "SCTT001";
                 }else if(mode == "Edit"){
-                    templateId = "tmp0004";
+                    templateId = "SCTT001";
                 }
                 sectionId = "pageSubSection4";
             }
 
-            //this._loadTemplate(this._sTenantId, templateId, sectionId);
+            this._loadTemplate(this._sTenantId, templateId, sectionId);
         },
         _loadTemplate: function(tenant_id, templateId, sectionId){
             var input = {};
@@ -346,27 +355,48 @@ sap.ui.define([
             oPageSubSection.removeAllBlocks();
             var that = this;
 
-            // $.ajax({
-            //     url: "tmp/SampleSolutionized/webapp/srv-api/odata/v4/tmp.TmpMgrService/SampleLogicTransition",
-            //     type: "POST",
-            //     data : JSON.stringify(input),
-            //     contentType: "application/json",
-            //     success: function(data){
-            //         var templatePath = data.TEMPLATE_PATH;
-            //         that._loadFragment(templatePath, function(oFragment){
-            //             oPageSubSection.addBlock(oFragment);
-            //         });
-            //     },
-            //     error: function(e){
+
+            var appModel = this.getView().getModel("tmpCcDpMdSpec");
+            appModel.setTransactionModel(this.getModel("tmpMgr"));
+            appModel.read("/tmpCcDpMdSpec('"+this._sMoldId+"')", {
+
+            });
+
+            $.ajax({
+                url: "tmp/SampleSolutionized/webapp/srv-api/odata/v4/tmp.TmpMgrService/RetrieveTemplateSample",
+                type: "POST",
+                data : JSON.stringify(input),
+                contentType: "application/json",
+                success: function(data){
+                    var templatePath = data.TEMPLATE_PATH;
+                    that._loadFragment(templatePath, function(oFragment){
+                        oPageSubSection.addBlock(oFragment);
+                    });
+                },
+                error: function(e){
                     
-            //     }
-            // });
+                }
+            });
+
+            oTransactionManager.setServiceModel(this.getView().getModel());
+
+            
+        },
+        _showFormItemFragment: function (fragmentFileName) {
+            this._showFormFragment();
+            var oPageItemSection = this.byId("pageItemSection");
+            oPageItemSection.removeAllBlocks();
+
+            this._loadFragment(fragmentFileName, function (oFragment) {
+                oPageItemSection.addBlock(oFragment);
+            }.bind(this));
+
         },
         _loadFragment: function (sFragmentName, oHandler) {
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "tmp.detailSpecEntry.view.test",
+					name: "tmp.detailSpecEntry.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
