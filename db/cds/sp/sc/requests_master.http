@@ -1,22 +1,32 @@
-# Local PC : cds serve all --with-mocks --in-memory?
-@serviceUrl = http://localhost:4004
-# Local PC : mvn spring-boot:run : v2
-@serviceUrl = http://localhost:8080/odata/v2
-# Cloud Container Service : sppCap
+#################################################
+# OData Sever Configuration
+#################################################
+###
+# Cloud Container Service : sppCap Workspace
 @serviceUrl = https://lgcommondev-workspaces-ws-ll5cb-app1.jp10.applicationstudio.cloud.sap
 # Cloud Container Service : sppCap
 @serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+# Local PC : mvn spring-boot:run : v2
+@serviceUrlV2 = http://localhost:8080/odata/v2
 # Local PC : mvn spring-boot:run : v4
 @serviceUrl = http://localhost:8080/odata/v4
- 
+# Local PC[DB+AP] : cds serve all --with-mocks --in-memory?
+@serviceUrl = http://localhost:4004
+
+#################################################
+# OData Service Configuration
+#################################################
 # @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
 # Uncomment this when running a separate reviews service
 # Odata v2 service
-@reviews-service = {{serviceUrl}}/sp.sourcingService
+@reviews-serviceV2 = {{serviceUrlV2}}/sp.sourcingService
 # Odata v4 service
 @reviews-service = {{serviceUrl}}/sp.sourcingTest01V4Service
 
-### Need a Cookie for credential not in local
+#################################################
+# OData Service Configuration
+# Need not a Cookie for credential in local
+#################################################
 # https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
 @cookie = JTENANTSESSIONID_services=5fZp7Tlz85JCf51p0PLyDiYoWX3fugTkSnF61L2Fb%2BU%3D
 # https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap/
@@ -24,6 +34,9 @@
 # for LG spp Dev Server
 @cookie = 
 
+#################################################
+# OData Ping Test
+#################################################
 ### Ping Test : Deployed Server(DEV)
 GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
 Cookie: {{cookie}}
@@ -35,20 +48,22 @@ GET http://localhost:8080/odata/v4/sp.sourcingTest01V4Service/$metadata
 GET {{reviews-service}}/$metadata
 
 
+
 #################################################
-#
+# OData Main Test #1
 #   localized Master CRUD
 #   (draftActivate|draftPrepare|draftEdit|\bPUT\b|\bPOST\b|\bDELETE\b|\bPATCH\b)
-
+#################################################
 
 ### Show System Variable
 GET {{reviews-service}}/ScLanguage?
 &$skip=0&$top=1
 # &$expand=*
 Cookie: {{cookie}}
+Accept-Language: en-UK
 
 
-### Multi Select
+### Multi Select | Default
 GET {{reviews-service}}/ScOutcomeCode?
 &$expand=*
 # &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
@@ -60,6 +75,12 @@ Cookie: {{cookie}}
 GET {{reviews-service}}/ScOutcomeCode?
 &$expand=texts,localized
 Cookie: {{cookie}}
+Accept-Language: ko
+### Multi Select | Expand All[Texts,Localized]
+GET {{reviews-service}}/ScOutcomeCode?
+&$expand=texts,localized
+Cookie: {{cookie}}
+Accept-Language: en
 
 ### Multi Select | Localized
 GET {{reviews-service}}/ScOutcomeCode?
@@ -133,12 +154,13 @@ Accept-Language: en-US,en-US;q=0.9,jp;q=0.8
 POST {{reviews-service}}/ScOutcomeCode?
 Cookie: {{cookie}}
 Content-Type: application/json
+
 {
    "tenant_id": "L2100",
     "nego_type_code": "RFQ",
     "outcome_code": "010",
-    "sort_no": 0,
-    "nego_type_name": null,
+    # "sort_no": 1,
+    "outcome_name": "RFQ (견적계획)",
     "local_create_dtm": "2021-01-21T13:17:01Z",
     "local_update_dtm": "2021-01-21T13:17:01Z",
     "create_user_id": "anonymous",
@@ -146,33 +168,36 @@ Content-Type: application/json
     "system_create_dtm": "2021-01-21T04:17:01Z",
     "system_update_dtm": "2021-01-21T04:17:01Z"
 }
+
+
 ### Single Template Update
 PUT {{reviews-service}}/ScOutcomeCode(tenant_id='L2100',nego_type_code='RFQ',outcome_code='010')?
-&$select=*
-&$expand=*
+# &$select=*
+# &$expand=*
 Cookie: {{cookie}}
+Accept:application/json;odata.metadata=minimal;IEEE754Compatible=true
 Content-Type: application/json
 
 {
    "tenant_id": "L2100",
     "nego_type_code": "RFQ",
     "outcome_code": "010",
-    "sort_no": 0,
-    "nego_type_name": "RFQ (견적계획)",
+    "sort_no": 0.0,
+    "outcome_name": "RFQ (견적계획)",
     "local_create_dtm": "2021-01-21T13:17:01Z",
     "local_update_dtm": "2021-01-21T13:17:01Z",
     "create_user_id": "anonymous",
     "update_user_id": "anonymous",
     "system_create_dtm": "2021-01-21T04:17:01Z",
     "system_update_dtm": "2021-01-21T04:17:01Z",
-    "texts": [ {"nego_type_name": "견적 요청", "locale": "ko"}
-    , {"nego_type_name": "견적 요청", "locale": "ko_KR"}
-    , {"nego_type_name": "RFQ", "locale": "en_US"}
-    , {"nego_type_name": "RFQ", "locale": "en"}
-    , {"nego_type_name": "要求报价", "locale": "zh-Hans_KR"}
-    , {"nego_type_name": "要求报价", "locale": "zh"}
-    , {"nego_type_name": "견적 요청(빈로케일)", "locale": ""}
-    , {"nego_type_name": "견적 요청(빈로케일)", "locale": " "}
+    "texts": [ {"outcome_name": "견적 요청", "locale": "ko"}
+    , {"outcome_name": "견적 요청", "locale": "ko_KR"}
+    , {"outcome_name": "RFQ", "locale": "en_US"}
+    , {"outcome_name": "RFQ", "locale": "en"}
+    , {"outcome_name": "要求报价", "locale": "zh-Hans_KR"}
+    , {"outcome_name": "要求报价", "locale": "zh"}
+    , {"outcome_name": "견적 요청(빈로케일)", "locale": ""}
+    , {"outcome_name": "견적 요청(빈로케일)", "locale": " "}
     ]
 }
 

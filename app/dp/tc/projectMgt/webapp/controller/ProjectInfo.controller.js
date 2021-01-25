@@ -4,11 +4,12 @@ sap.ui.define([
   "ext/lib/model/ManagedListModel",
   "ext/lib/formatter/DateFormatter",
   "ext/lib/formatter/NumberFormatter",
+  "ext/lib/util/Multilingual",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/m/MessageBox"
 ],
-  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Filter, FilterOperator, MessageBox) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Multilingual, Filter, FilterOperator, MessageBox) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectInfo", {
@@ -16,6 +17,8 @@ sap.ui.define([
         , numberFormatter: NumberFormatter
 
         , onInit: function () {
+            let oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             // this.setModel(new JSONModel(), "detailModel");
             // this.setModel(new JSONModel(), "eventsModel");
             // this.setModel(new JSONModel(), "priceModel")
@@ -49,18 +52,20 @@ sap.ui.define([
             
             var oView = this.getView();
 
-            let oModel = this.getModel();
+            let oModel = this.getModel();//srv-api/odata/v2/dp.ProjectMgtService/ - V2 OData Service
             let aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oParam.tenant_id));
             aFilters.push(new Filter("project_code", FilterOperator.EQ, oParam.project_code));
             aFilters.push(new Filter("model_code", FilterOperator.EQ, oParam.model_code));
 
             oView.setBusy(true);
-            oModel.read("/ProjectView", {
+            var sExpand  = "events,similar_model,base_extra,mtlmob,sales_price,prcs_cost,sgna";
+                sExpand += ",product_group_text,project_grade_text,bom_type_text,project_status_text,project_creator_info";
+                sExpand += ",project_leader_info,buyer_info,marketing_person_info,planning_person_info,bizdivision_text";
+            oModel.read("/Project", {
                 filters : aFilters,
                 urlParameters : { 
-                    "$expand" : "events,similar_model,base_extra,mtlmob,sales_price,prcs_cost,sgna",
-                    "$orderby" : "events/sequence"
+                    "$expand" : sExpand
                 },
                 success : function(data){
                     //debugger;
@@ -249,7 +254,6 @@ sap.ui.define([
                     user_id           : "A60262"                   
                 }
             };
-            
             this._sendSaveData(oSendData);
         }
 

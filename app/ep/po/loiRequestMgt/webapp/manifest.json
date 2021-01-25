@@ -172,7 +172,9 @@
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib",
-      "cm": "../../../../cm"
+      "cm.util": "../../../../cm/util",
+      "ext.util": "../../../util",
+      "ext.pg": "../../../../pg"
     },
     "routing": {
   

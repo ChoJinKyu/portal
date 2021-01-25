@@ -69,7 +69,7 @@
                         </layoutData> 
                     </VBox>
                     <VBox>
-                        <Label text= "Vendor Pool" labelFor="search_Vp_Name" required="true"></Label>
+                        <Label text= "Vendor Pool" labelFor="search_Vp_Name"></Label>
                         <HBox>
                             <SearchField id="search_Vp_Name"
                                         search=".onDialogTreeCreate" 
@@ -176,6 +176,9 @@
                     <OverflowToolbar>
                         <Title id="title" level="H2"/> 
                         <ToolbarSpacer/>
+                        <Button id="mainTableButtonAllOpen" text="Expand All" type="Transparent" press=".onMainTableexpandAll" />
+                        <Button id="mainTableButtonAllClose" text="Collapse All" type="Transparent" press=".onMainTablecollapseAll" />
+                        <ToolbarSeparator/>
                         <MenuButton  text=" 특성 설정 ">
                             <menu>
                                 <Menu itemSelected="onMenuAction" id="searchCategory" items="{category>/MdCategory}">

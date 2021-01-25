@@ -8,7 +8,7 @@ using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 service PrReviewMgtService {
 
     // 구매요청 검토/접수 목록
-    view Pr_ReviewListView as
+    view Pr_ReviewListView @(title : '구매요청 검토/접수 List View') as
         select 
              key mst.tenant_id  // 테넌트ID
             ,key mst.company_code  // 회사코드
@@ -41,9 +41,13 @@ service PrReviewMgtService {
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) as buyer_name : String(240)  // 구매담당자명
             ,dtl.buyer_department_code  // 구매담당자부서
 
-
             ,mst.pr_create_status_code  // 구매요청생성상태코드
-            ,cd5.code_name as pr_create_status_name : String(240)   // 구매요청생성상태코드
+            ,cd5.code_name as pr_create_status_name : String(240)  // 구매요청생성상태코드
+
+            ,mst.approval_flag  // 품의여부
+            ,mst.approval_number  // 품의번호
+            ,mst.request_date as approve_date  // 품의완료일자 - 임시
+
             ,dtl.org_type_code  // 조직유형코드
             ,dtl.purchasing_group_code  // 구매그룹코드
             ,dtl.estimated_price  // 예상가격
@@ -63,6 +67,14 @@ service PrReviewMgtService {
             ,dtl.closing_flag  // 마감여부
             ,dtl.item_category_code  // 품목범주코드
             ,dtl.account_assignment_category_code  // 계정지정범주코드
+/*
+            ,mst.local_create_dtm  // 로컬등록시간
+            ,mst.local_update_dtm  // 로컬수정시간
+            ,mst.create_user_id  // 등록사용자ID
+            ,mst.update_user_id  // 변경사용자ID
+            ,mst.system_create_dtm  // 시스템등록시간
+            ,mst.system_update_dtm  // 시스템수정시간
+*/
 
         from prMst mst
         inner join prDtl dtl
@@ -97,8 +109,8 @@ service PrReviewMgtService {
     ;
 
     // 구매요청 검토/접수 상세
-    view Pr_ReviewDtlView as
-        select 
+    view Pr_ReviewDtlView @(title : '구매요청 검토/접수 Detail View') as
+        select
              key mst.tenant_id  // 테넌트ID
             ,key mst.company_code  // 회사코드
             ,key mst.pr_number  // 구매요청번호

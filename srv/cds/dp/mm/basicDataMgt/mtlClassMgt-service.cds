@@ -15,9 +15,12 @@
   7. service description : UOM 서비스
   8. history
   -. 2020.12.11 : 최미희 최초작성
+  -. 2021.01.22 : 최미희 ClassView 추가 
 *************************************************/
 using { dp as Class } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_CLASS-model';
 using { dp as ClassLng } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_CLASS_LNG-model';
+//using { dp as ClassView } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_CLASS_VIEW-model';
+
 namespace dp;
 @path : '/dp.MtlClassMgtService'
 
@@ -29,15 +32,15 @@ service MtlClassMgtService {
     view MtlClassView as
     select key m.tenant_id,
            key m.material_class_code,
-           ifnull(l.material_class_name, m.material_class_name) as material_class_name : String(100),
-           ifnull(l.material_class_desc, m.material_class_desc) as material_class_desc : String(1000),
-           m.use_flag,
-           l.language_code
-    from  Class.Mm_Material_Class m
-    left join ClassLng.Mm_Material_Class_Lng l
-    on l.tenant_id = m.tenant_id
-      and l.material_class_code = m.material_class_code
-      and l.language_code = 'KO'
+           ifnull(( select l.material_class_name
+                    from MtlClassLng as l
+                    where l.tenant_id = m.tenant_id
+                    and l.material_class_code = m.material_class_code
+                    and l.language_code = 'KO'), m.material_class_name) as material_class_name : String(100),
+           m.material_class_desc,
+           m.use_flag
+    from MtlClass as m
     ;
+    
 
 }

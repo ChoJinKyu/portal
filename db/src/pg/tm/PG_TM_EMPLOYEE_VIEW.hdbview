@@ -1,11 +1,18 @@
 view Pg_Tm_Employee_View as
 select
-	tenant_id,
-	employee_number,
-	user_local_name||'('||user_english_name||')' as employee_name,
-    job_title,
-    mobile_phone_number,
-    department_id
-from cm_hr_employee
+	employee.tenant_id,
+	employee.employee_number,
+	employee.user_local_name||'('||employee.user_english_name||')' as employee_name,
+	employee.email_id,
+	employee.job_title,
+    employee.department_id,
+	department.department_local_name,
+	department.department_korean_name,
+	department.department_english_name
+from cm_hr_employee as employee
+left join cm_hr_department as department
+on 	employee.tenant_id		= department.tenant_id
+and employee.department_id	= department.department_id
 order by 
-    employee_number;
+	employee.tenant_id,
+    employee.employee_number;

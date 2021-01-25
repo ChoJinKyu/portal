@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.sap.cds.Result;
+import com.sap.cds.Row;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.services.handler.EventHandler;
@@ -20,6 +21,7 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,8 +75,8 @@ public class TmpMgr implements EventHandler {
         inData.put("Email", "gdhong@lgcns.com");
 
         // BizRuleExecutor를 통해 업무규칙을 호출한다.
-         Map<String, Object> outData = bizRuleExecutor.excuteBizRule(tenantId,
-         bizRuleId, altFlag, inData);
+        //  Map<String, Object> outData = bizRuleExecutor.excuteBizRule(tenantId,
+        //  bizRuleId, altFlag, inData);
 
 
         BizRuleInfo info = new BizRuleInfo();
@@ -92,9 +94,21 @@ public class TmpMgr implements EventHandler {
            .and(b.get("ALT_FLAG").eq(info.getAltFlag()))
          );
 
-        Result result = db.run(infoSelect);
+         CqnSelect viewSelect = Select.from(TmpCcConfigView_.class).where(
+             b->b.get("TENANT_ID").eq("L2600")
+             .and(b.get("SCR_TMPL_ID").eq("SCTM001"))
+         );
 
+        Result result = db.run(viewSelect);
         List tList = result.list();
+        writeFile(tList);
+        
+
+
+
+
+
+
 
 
        info.setTenantId((String)result.first().get().get("TENANT_ID"));
@@ -104,20 +118,37 @@ public class TmpMgr implements EventHandler {
        info.setCallHost((String)result.first().get().get("CALL_HOST"));
        info.setCallInfo((String)result.first().get().get("CALL_INFO"));
 
-       System.out.println("info : " + info.getCallInfo());
+       System.out.println("info : " + tList);
 
         sampleType.setTemplatePath(templatePath);
         context.setResult(sampleType);
         context.setCompleted();
     }
 
-    private void writeFile() {
+    private void writeFile(List<Row> result) {
         // path 변경 필요. 전달 받거나 템플릿 전용 디렉토리 지정
         String path = "/home/user/projects/sppcap/app/tmp/detailSpecEntry/webapp/view/";
-        String content = "<core:FragmentDefinition\n\txmlns=\"sap.m\"\n\txmlns:l=\"sap.ui.layout\"\n\txmlns:form=\"sap.ui.layout.form\"\n\txmlns:core=\"sap.ui.core\"\n\txmlns:uxap=\"sap.uxap\" >";
+        //String content = "<core:FragmentDefinitionxmlns=\"sap.m\"xmlns:l=\"sap.ui.layout\"xmlns:form=\"sap.ui.layout.form\"xmlns:core=\"sap.ui.core\"xmlns:uxap=\"sap.uxap\" ><VBox class=\"sapUiSmallMargin\"><form:SimpleForm editable=\"false\" layout=\"ResponsiveGridLayout\" content=\"{";
+        String content ="<core:FragmentDefinition xmlns=\"sap.m\"  xmlns:l=\"sap.ui.layout\" xmlns:form=\"sap.ui.layout.form\" xmlns:core=\"sap.ui.core\" xmlns:uxap=\"sap.uxap\" >\n<VBox class=\"sapUiSmallMargin\">\n<form:SimpleForm editable=\"false\" layout=\"ResponsiveGridLayout\">\n<form:content>";
         BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()));
 
-        File file = new File(path + "test.xml");
+        for(Row row : result){
+            content += "\n\t<VBox height=\"3.5rem\"><Label text=\"" + row.get("COL_ID").toString().replaceAll("_", " ") + "\"/>";
+            switch((String)row.get("SCR_COL_DP_TYPE")){
+                case "IB":
+                    content += "\n\t\t<Input value=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + ">/" + ((String)row.get("COL_ID")).toLowerCase() + "}\"/>";
+                    break;
+                case "RB":
+                    content += "\n\t\t<Switch state=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + ">/" + ((String)row.get("COL_ID")).toLowerCase() + "}\" customTextOn=\"Yes\" customTextOff=\"No\" enabled=\"false\" />";
+                    break;
+
+            }
+            content += "\n\t\t<layoutData>\n\t\t\t<l:GridData span=\"XL4 L4 M4 S6\" />\n\t\t</layoutData>\n\t</VBox>";
+
+        }
+        content += "\n</form:content>\n</form:SimpleForm>\n</VBox>\n</core:FragmentDefinition>";
+
+        File file = new File(path + "test.fragment.xml");
         try {
             FileWriter writer = new FileWriter(file);
             writer.write(content);

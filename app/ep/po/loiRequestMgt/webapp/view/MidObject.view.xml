@@ -9,7 +9,6 @@
     xmlns:sc="sap.suite.ui.commons" 
     xmlns:microchart="sap.suite.ui.microchart" 
     xmlns:lib-m="ext.lib.control.m"
-    xmlns:m="sap.m"
     xmlns:t="sap.ui.table"
     xmlns:cm-ui="cm.util.control.ui"
     xmlns:html="http://www.w3.org/1999/xhtml"
@@ -201,13 +200,13 @@
                                 <Column id="midUnitColumn" minScreenWidth="Tablet" hAlign="Center"  width="60px" >
 									<Label text="단위" required="true"/>
 								</Column>
-                                <Column id="midRequestQuantityColumn" minScreenWidth="Tablet" hAlign="Center"  width="60px">
+                                <Column id="midRequestQuantityColumn" minScreenWidth="Tablet" hAlign="End"  width="60px">
 									<Label text="수량" required="true"/>
 								</Column>
                                 <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="70px">
 									<Label text="통화" />
 								</Column>
-                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="Center" width="100px">
+                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="End" width="100px">
 									<Label text="단가" />
 								</Column>
                                 <Column id="midRequestAmountColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
@@ -230,8 +229,8 @@
 							<items>
                                 <ColumnListItem press=".onMidTableItemPress">
 									<cells>
-                                        <Label text="{details>_row_state_}"  />
-                                        <Label text="{details>item_sequence}"/>
+                                        <Text text="{details>_row_state_}"  />
+                                        <Text text="{details>item_sequence}"/>
                                         <!-- <VBox  alignItems="Center">  
                                             <Input value="{details>plant_code}" 
                                                 visible="{=!${midObjectView>/isEditMode}}"
@@ -270,11 +269,25 @@
 
                                         <HBox>  
                                             <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
-                                            <Input value="{details>plant_code}" 
+                                            <!-- <Input value="{details>plant_code}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
-                                                width="100%"/> 
-                                            <Label   text="{details>plant_code}"
+                                                width="100%"/>  -->
+                                            <!-- <Input id="cmInputWithCodeDialog"
+                                                placeholder="Choose a code from the ValueHelp"
+                                                value="{details>plant_code}"
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
+                                            </Input> -->
+
+                                            <Input value="{details>plant_code}"
+                                                visible="{=!${midObjectView>/isShowMode}}"
+                                                required="{=!${midObjectView>/isShowMode}}"
+                                               
+                                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress($event)">
+                                            </Input>
+                                            <Text   text="{details>plant_code}"
                                                     visible="{midObjectView>/isShowMode}"/>    
                                              <!-- <Label  text="{details>plant_code}" design="Bold"
                                                         visible="{midObjectView>/isShowMode}"
@@ -288,7 +301,7 @@
                                             <Input value="{details>ep_item_code}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
-                                            <Label   text="{details>ep_item_code}"
+                                            <Text   text="{details>ep_item_code}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -299,7 +312,7 @@
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/>  
-                                            <Label   text="{details>item_desc}"
+                                            <Text   text="{details>item_desc}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -309,7 +322,7 @@
                                             <Input value="{details>spec_desc}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/>  
-                                            <Label   text="{details>spec_desc}"
+                                            <Text   text="{details>spec_desc}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -342,7 +355,7 @@
                                             >
                                             <core:Item key="{uom_code}" text="{uom_code} : {uom_name}" />
                                             </ComboBox>
-                                            <Label   text="{details>unit}"
+                                            <Text   text="{details>unit}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -374,8 +387,15 @@
                                                             }
                                                         }"
                                                 width="100%"/>  -->
-                                            <Label   text="{details>request_quantity}"
-                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+                                            <Text  text="{
+                                                        parts: [
+                                                            {path: 'details>request_quantity'},
+                                                            {value: 'ko-KR'}
+                                                        ],
+                                                        formatter: '.numberFormatter.toNumberString'
+                                                    }"
+                                                    visible="{midObjectView>/isShowMode}"
+                                                    textAlign="Right"/>                                                          
 
                                         </HBox>  
 
@@ -438,7 +458,7 @@
                                             >
                                             <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" />
                                             </ComboBox>
-                                        <Label   text="{details>currency_code}"
+                                        <Text   text="{details>currency_code}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
                                     </HBox>  
 
@@ -465,8 +485,15 @@
                                                 width="100%"/>  -->
                                         
 
-                                        <Label   text="{details>request_net_price}"
-                                                visible="{midObjectView>/isShowMode}"/>                                                          
+                                        <Text  text="{
+                                                        parts: [
+                                                            {path: 'details>request_net_price'},
+                                                            {value: 'ko-KR'}
+                                                        ],
+                                                        formatter: '.numberFormatter.toNumberString'
+                                                    }"
+                                                visible="{midObjectView>/isShowMode}" 
+                                                textAlign="Right"/>                                                          
 
                                     </HBox>  
 
@@ -485,9 +512,15 @@
                                             formatOptions: {showMeasure: false}
                                         }" unit="{details>currency_code}" textAlign="End" /> -->
 
-                                        <Label   text="{details>request_amount}"
-                                                visible="{midObjectView>/isShowMode}"/>                                                          
+                                        <Text  text="{
+                                                    path: 'details>request_amount',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"
+                                                visible="{midObjectView>/isShowMode}"
+                                                vAlign="Right"/> 
 
+
+                            
                                     </HBox> 
 
                                     <HBox>   
@@ -501,7 +534,7 @@
 
                                         <!-- <Text   text="{details>delivery_request_date}"
                                                 visible="{midObjectView>/isShowMode}"/> -->
-                                        <Label text="{
+                                        <Text text="{
                                             path: 'details>delivery_request_date',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
@@ -517,8 +550,14 @@
                                         <Input value="{details>supplier_code}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
                                             width="100%"/>  
-                                        <Label   text="{details>supplier_code}"
-                                                visible="{midObjectView>/isShowMode}"/>                                                          
+                                        <!-- <Input id="search_Sup" placeholder="Input data" 
+                                               showValueHelp="true" 
+                                               valueHelpOnly="false" 
+                                               valueHelpRequest=".vhSupplierCode"/> -->
+                                
+                                        <Text   text="{details>supplier_code}"
+                                                visible="{midObjectView>/isShowMode}"
+                                                />                                                          
 
                                     </HBox>  
 
@@ -560,7 +599,7 @@
                                                
                                                 showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress($event)">
                                             </Input>
-                                            <Label   text="{details>buyer_name}"
+                                            <Text   text="{details>buyer_name}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
                                         </HBox>  
@@ -573,25 +612,15 @@
                                             <Input id = "remark_" value="{details>remark}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
-                                            <Label   text="{details>remark}"
-                                                    visible="{midObjectView>/isShowMode}"/>                                                          
+                                            <Text   text="{details>remark}"
+                                                    visible="{midObjectView>/isShowMode}"
+                                                    textAlign="Right" />                                                          
 
                                         </HBox>  
 									</cells>
 								</ColumnListItem>
 							</items>
-
-
-                            
 						</Table>
-
-                        
-
-
-
-
-
-
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -644,6 +673,16 @@
                                 ]
                             }"
                             apply=".onEmployeeDialogApplyPress"
+                        />
+
+    <cm-ui:PlantDialog id="plantDialog" 
+                            title="직원 검색"
+                            items="{
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }"
+                            apply=".onPlantDialogApplyPress"
                         />
 
 </mvc:View>

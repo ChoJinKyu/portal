@@ -8,8 +8,8 @@ VIEW  PG_MI_SAC_LATEST_MI_PRICE_VIEW  AS
             ,'#'								AS	MATERIAL
             ,'#'								AS	SUPPLIER
             ,TO_CHAR(CURRENT_DATE,  'YYYYMM')	AS  "DATE"
-            ,'202001'							AS	LATEST_MI_DATE
-            ,'202001'							AS	LATEST_NET_PRICE_CFM_DATE
+            ,'20200101'							AS	LATEST_MI_DATE
+            ,'20200101'							AS	LATEST_NET_PRICE_CFM_DATE
             ,A.CURRENCY_UNIT					AS  SOURCE_CURRENCY
             ,'#'								AS	TARGET_CURRENCY
             ,A.QUANTITY_UNIT					AS	UOM

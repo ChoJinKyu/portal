@@ -4,11 +4,12 @@ sap.ui.define([
   "ext/lib/model/ManagedListModel",
   "ext/lib/formatter/DateFormatter",
   "ext/lib/formatter/NumberFormatter",
+  "ext/lib/util/Multilingual",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/m/MessageBox"
 ],
-  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Filter, FilterOperator, MessageBox) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Multilingual, Filter, FilterOperator, MessageBox) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.McstProjectInfo", {
@@ -17,6 +18,8 @@ sap.ui.define([
         , oUerInfo : {user_id : "A60262"}
 
         , onInit: function () {
+            let oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             this.oRouter = this.getOwnerComponent().getRouter();
             this.oRouter.getRoute("McstProjectInfo").attachPatternMatched(this.onAttachPatternMatched, this);
         }
@@ -254,7 +257,7 @@ sap.ui.define([
                 }
             };
             debugger;
-            return;
+            //return;
             this._sendSaveData(oSendData);
         }
 
@@ -322,14 +325,20 @@ sap.ui.define([
             this.setModel(new JSONModel(aEventsData), "eventsModel");
             this._factoryTableColumns("tblEvents", "Center", true);
             //this._factoryTableColumns("tblEvents_edit", "Center", false, "DatePicker");
-
+debugger;
             //판가/물동/원가
             var aPriceData = {};
             if(oMtlmob.length > 0) {
+                if(oMtlmob[0].hasOwnProperty("uom_code")) {
+                    oMtlmob.unshift({"period_code" : "uom_code", "addition_type_value" : oMtlmob[0].uom_code});
+                }
                 oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동", "addition_type_copde" : oMtlmob.addition_type_copde});
                 aPriceData = this._reCompositData(oMtlmob, "period_code", "addition_type_value");
             }
             if(oSalesPrice.length > 0) {
+                if(oSalesPrice[0].hasOwnProperty("uom_code")) {
+                    oSalesPrice.unshift({"period_code" : "uom_code", "addition_type_value" : oSalesPrice[0].uom_code});
+                }
                 oSalesPrice.unshift({"period_code" : "구분", "addition_type_value" : "판가"});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSalesPrice, "period_code", "addition_type_value");
@@ -338,6 +347,9 @@ sap.ui.define([
                 }
             }
             if(oPrcsCost.length > 0) {
+                if(oPrcsCost[0].hasOwnProperty("uom_code")) {
+                    oPrcsCost.unshift({"period_code" : "uom_code", "addition_type_value" : oPrcsCost[0].uom_code});
+                }
                 oPrcsCost.unshift({"period_code" : "구분", "addition_type_value" : "가공비"});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oPrcsCost, "period_code", "addition_type_value");
@@ -347,6 +359,9 @@ sap.ui.define([
                 
             }
             if(oSgna.length > 0) {
+                if(oSgna[0].hasOwnProperty("uom_code")) {
+                    oSgna.unshift({"period_code" : "uom_code", "addition_type_value" : oSgna[0].uom_code});
+                }
                 oSgna.unshift({"period_code" : "구분", "addition_type_value" : "판관비"});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSgna, "period_code", "addition_type_value");
@@ -401,6 +416,7 @@ sap.ui.define([
          * @return newDatas {Array} 재조합된 data
          */
         , _reCompositData: function (aRowDatas, sKeyName, sTextName) {
+            var oI18NModel = this.getModel("I18N");
             var aDatas = [];
             var aCols  = [];
             var oNewData = {};
@@ -418,14 +434,24 @@ sap.ui.define([
                 //newObj.set(sKey, sTxt);
                 newObj[sKey] = sTxt;
                 newObj.addition_type_code = oData.addition_type_code;
-                aCols.push({name: sKey, text: sKey});
+                if(oData.uom_code) {
+                    newObj.uom_code = oData.uom_code;
+                }
+                if(sKey === "uom_code") {
+                    aCols.push({name: sKey, text: "단위"});//다국어 처리 필요
+                } else {
+                    aCols.push({name: sKey, text: sKey});
+                }
             });
             if(Object.keys(newObj).length > 0 && newObj.constructor === Object) {
                 aDatas.push(newObj);
             }
-            if(aCols.length === 0) {
+            /*if(aCols.length === 0) {
+                if(aRowDatas[0].hasOwnProperty("uom_code")) {
+                    aCols.push({name: 'uom_code', text: aRowDatas[0].uom_code});
+                }
                 aCols.push({name: '구분', text: '구분'});
-            }
+            }*/
             return {columns: aCols, datas: aDatas};
         }
 
@@ -472,7 +498,21 @@ sap.ui.define([
                                 } else {
                                     //return new sap.m.Input({value : "{"+ sModelName +">" + column.name + "}"})
                                     if(column.name === "구분") {// 나중에 별도 property 값을 적용해서 구분하게 변경 할 것.
-                                        return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
+                                        return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"});
+                                    } else if(column.name === "uom_code") {
+                                        
+                                        return new sap.m.ComboBox({
+                                            selectedKey : {path: sModelName + ">" + column.name,},
+                                            items: {
+                                                path: "/MM_UOM",
+                                                filters: [new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, this.getModel("detailModel").getProperty("/tenant_id"))],
+                                                sorter: new sap.ui.model.Sorter("uom_name"),
+                                                template: new sap.ui.core.Item({
+                                                    key: "{uom_code}",
+                                                    text: "{uom_name}"
+                                                })
+                                            }
+                                        });
                                     } else if(sEditControl) {
                                         if(sEditControl === "DatePicker") {
                                             return new sap.m.DatePicker({

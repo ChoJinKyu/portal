@@ -12,6 +12,7 @@ entity Md_Mst_View {
     key mold_id                         : String(100) not null  @title:'금형ID';
         mold_progress_status_code       : String(30)            @title:'금형진행상태코드';
         set_progress_status             : String(30)            @title:'setID진행상태코드';
+        mold_progress_status_name       : String(150)           @title:'금형진행상태이름';
         spec_name                       : String(500)           @title:'규격명';
         model                           : String(100)           @title:'모델';
         asset_number                    : String(100)           @title:'자산번호';
@@ -71,6 +72,7 @@ entity Md_Mst_View {
         mold_type_code                  : String(30)            @title:'금형유형코드';
         mold_mfger_code                 : String(10)            @title:'금형공급업체코드';
         mold_developer_empno            : String(255)           @title:'금형개발자사번';
+        mold_developer_name             : String(480)           @title:'금형개발자명';
         customer_asset_type_code        : String(30)            @title:'고객자산유형코드';
         asset_type_code                 : String(30)            @title:'자산유형코드';
         asset_status_code               : String(30)            @title:'자산상태코드';

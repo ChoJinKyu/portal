@@ -78,6 +78,7 @@ service McstProjectMgtV4Service {
         version_number : String(30);
         add_type_code  : String(30);
         period_code    : String(30);
+        uom_code       : String(3);
         add_type_value : String(10);
         user_id        : String(255);
     }
@@ -117,6 +118,7 @@ service McstProjectMgtV4Service {
         version_number : String(30);
         addition_type_code  : String(30);
         period_code         : String(30);
+        uom_code            : String(3);
         addition_type_value : String(10);
         user_id        : String(255);
     };

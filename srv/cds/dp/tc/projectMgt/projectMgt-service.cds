@@ -49,7 +49,10 @@ service ProjectMgtService {
     entity Hr_Department            as projection on hrDept.Hr_Department; 
 
     @readonly
-    entity Org_Division as
+    entity Org_Division            as projection on orgDiv.Org_Division;
+
+    @readonly
+    entity Org_Div as
         select distinct key cpo.tenant_id
              , key cpo.company_code
              , key cod.bizdivision_code
@@ -59,7 +62,6 @@ service ProjectMgtService {
             on cod.tenant_id = cpo.tenant_id
            and cod.bizdivision_code = cpo.bizdivision_code
          where cpo.bizdivision_code is not null;
-    //entity Org_Division            as projection on orgDiv.Org_Division;
 
     @readonly
     entity MM_UOM                as

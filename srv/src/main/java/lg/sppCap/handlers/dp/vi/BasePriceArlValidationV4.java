@@ -83,12 +83,15 @@ public class BasePriceArlValidationV4 {
                 if (cmdString.equals("upsert") || cmdString.equals("delete"))
                     validMandatory(basePriceArlMst.getApprovalNumber(), context, this.getMessage("APPROVAL_NUMBER", context));
 
-                if (cmdString.equals("insert") || cmdString.equals("upsert")) {
-                    validMandatory(basePriceArlMst.getApprovalTitle(), context, this.getMessage("APPROVAL_TITLE", context));
+                if (cmdString.equals("insert")) {
                     validMandatory(basePriceArlMst.getChainCode(), context, this.getMessage("CHAIN_CODE", context));
                     validMandatory(basePriceArlMst.getApprovalTypeCode(), context, this.getMessage("APPROVAL_TYPE_CODE", context));
-                    validMandatory(basePriceArlMst.getApproveStatusCode(), context, this.getMessage("APPROVE_STATUS_CODE", context));
                     validMandatory(basePriceArlMst.getRequestorEmpno(), context, this.getMessage("REQUESTOR_EMPNO", context));
+                }
+
+                if (cmdString.equals("insert") || cmdString.equals("upsert")) {
+                    validMandatory(basePriceArlMst.getApprovalTitle(), context, this.getMessage("APPROVAL_TITLE", context));
+                    validMandatory(basePriceArlMst.getApproveStatusCode(), context, this.getMessage("APPROVE_STATUS_CODE", context));
                 }
 
                 // 결재라인이 있으면
@@ -203,8 +206,8 @@ public class BasePriceArlValidationV4 {
                     System.out.println("\t# company_code : "           + basePriceArlDetail.getCompanyCode());
                     System.out.println("\t# org_type_code : "          + basePriceArlDetail.getOrgTypeCode());
                     System.out.println("\t# org_code : "               + basePriceArlDetail.getOrgCode());
-                    System.out.println("\t# au_code : "                + basePriceArlDetail.getAuCode());
                     System.out.println("\t# material_code : "          + basePriceArlDetail.getMaterialCode());
+                    System.out.println("\t# base_uom_code : "          + basePriceArlDetail.getBaseUomCode());
                     System.out.println("\t# supplier_code : "          + basePriceArlDetail.getSupplierCode());
                     System.out.println("\t# base_date : "              + basePriceArlDetail.getBaseDate());
                     System.out.println("\t# base_price_ground_code : " + basePriceArlDetail.getBasePriceGroundCode());
@@ -220,7 +223,6 @@ public class BasePriceArlValidationV4 {
                 // validMandatory(basePriceArlDetail.getCompanyCode(),         context, this.getMessage("COMPANY_CODE", context));
                 // validMandatory(basePriceArlDetail.getOrgTypeCode(),         context, this.getMessage("ORG_TYPE_CODE", context));
                 // validMandatory(basePriceArlDetail.getOrgCode(),             context, this.getMessage("ORG_CODE", context));
-                // validMandatory(basePriceArlDetail.getAuCode(),              context, this.getMessage("AU_CODE", context));
                 // validMandatory(basePriceArlDetail.getMaterialCode(),        context, this.getMessage("MATERIAL_CODE", context));
                 // validMandatory(basePriceArlDetail.getBasePriceGroundCode(), context, this.getMessage("BASE_PRICE_GROUND_CODE", context));
 
@@ -254,6 +256,7 @@ public class BasePriceArlValidationV4 {
                     System.out.println("\t\t# first_purchasing_net_price : "         + basePriceArlPrice.getFirstPurchasingNetPrice());
                     System.out.println("\t\t# first_pur_netprice_curr_cd : "         + basePriceArlPrice.getFirstPurNetpriceCurrCd());
                     System.out.println("\t\t# first_pur_netprice_str_dt : "          + basePriceArlPrice.getFirstPurNetpriceStrDt());
+                    System.out.println("\t\t# change_reason_code : "                 + basePriceArlPrice.getChangeReasonCode());
 
                     System.out.println("\t\t# local_create_dtm : "                   + basePriceArlPrice.getLocalCreateDtm());
                     System.out.println("\t\t# local_update_dtm : "                   + basePriceArlPrice.getLocalUpdateDtm());
@@ -263,6 +266,39 @@ public class BasePriceArlValidationV4 {
                 }
 
                 //     validMandatory(basePriceArlPrice.getMarketCode(), context, this.getMessage("MARKET_CODE", context));
+            }
+        }
+    }
+
+    /**
+     * validationBasePriceArlChangeRequestor 입력값 체크
+     * @param context
+     * @param basePriceArlMasters
+     */
+    public void validationBasePriceArlChangeRequestor(DpViBasePriceChangeRequestorProcContext context, Collection<BasePriceArlChangeRequestorType> basePriceArlChangeRequestors, boolean isDebug) {
+        log.info("## validationBasePriceArlChangeRequestor Method Started....");
+
+        String cmdString = context.getInputData().getCmd().toLowerCase();
+
+        if (!basePriceArlChangeRequestors.isEmpty() && basePriceArlChangeRequestors.size() > 0){
+            for (BasePriceArlChangeRequestorType basePriceArlChangeRequestor : basePriceArlChangeRequestors) {
+                if (isDebug) {
+                    System.out.println("# tenant_id : "             + basePriceArlChangeRequestor.getTenantId());
+                    System.out.println("# approval_number : "       + basePriceArlChangeRequestor.getApprovalNumber());
+                    System.out.println("# changer_empno : "         + basePriceArlChangeRequestor.getChangerEmpno());
+                    System.out.println("# creator_empno : "         + basePriceArlChangeRequestor.getCreatorEmpno());
+
+                    System.out.println("# local_create_dtm : "      + basePriceArlChangeRequestor.getLocalCreateDtm());
+                    System.out.println("# local_update_dtm : "      + basePriceArlChangeRequestor.getLocalUpdateDtm());
+                    System.out.println("# create_user_id : "        + basePriceArlChangeRequestor.getCreateUserId());
+                    System.out.println("# update_user_id : "        + basePriceArlChangeRequestor.getUpdateUserId());
+                    System.out.println("# --------------------------------------------------------------------------------------------");
+                }
+
+                validMandatory(basePriceArlChangeRequestor.getTenantId(), context, this.getMessage("TENANT_ID", context));
+                validMandatory(basePriceArlChangeRequestor.getApprovalNumber(), context, this.getMessage("APPROVAL_NUMBER", context));
+                validMandatory(basePriceArlChangeRequestor.getChangerEmpno(), context, this.getMessage("CHANGER_EMPNO", context));
+                validMandatory(basePriceArlChangeRequestor.getCreatorEmpno(), context, this.getMessage("CREATOR_EMPNO", context));
             }
         }
     }

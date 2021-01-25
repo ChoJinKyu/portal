@@ -2,14 +2,14 @@ using {xx as Header} from '../../../db/cds/xx/sampleMgr/XX_SAMPLE_HEADER-model';
 using {xx as Detail} from '../../../db/cds/xx/sampleMgr/XX_SAMPLE_DETAIL-model';
 using {xx as MgrView} from '../../../db/cds/xx/sampleMgr/XX_SAMPLE_MGR_VIEW-model';
 using {xx as MasterF} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_FUNC-model';
-using { dp as uom } from    '../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
-using { dp as uomLng } from '../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+using {xx as deploy} from '../../../db/cds/xx/sampleMgr/XX_SAMPLE_DEPLOY-model';
 namespace xx;
 @path : '/xx.SampleMgrService'
 service SampleMgrService {
     
     entity SampleHeaders as projection on Header.Sample_Header;
     entity SampleDetails as projection on Detail.Sample_Detail;
+    entity SampleDeploy as projection on deploy.Sample_Deploy;
 
 /*
     entity SampleHeadersRestrict @(restrict: [
@@ -246,7 +246,7 @@ service SampleMgrService {
     select key h.header_id
           ,h.cd as header_cd
           ,h.name as header_name
-          ,key d.detail_id
+          ,d.detail_id
           ,d.cd as detail_cd
           ,d.name as detail_name
     from Header.Sample_Header as h 

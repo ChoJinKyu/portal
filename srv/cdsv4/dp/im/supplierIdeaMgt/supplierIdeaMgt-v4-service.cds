@@ -50,4 +50,35 @@ service SupplierIdeaMgtV4Service {
 
     action CreateIdeaStatusProc (inputdata : IdeaStatusIn ) returns IdeaStatusResult;
 
+    
+
+    // Suppplier Idea 생성 Procedure
+    type IdeaIn : {
+        tenant_id : String;
+        company_code : String;
+        idea_number : String;
+        idea_title : String;
+        idea_progress_status_code : String;
+
+        supplier_code : String;
+        idea_create_user_id : String;
+        bizunit_code : String;
+        idea_product_group_code : String;
+        idea_type_code : String;
+
+        idea_period_code : String;
+        idea_manager_empno : String;
+        idea_part_desc : String;
+        current_proposal_contents : String;
+        change_proposal_contents : String;
+        
+        idea_contents : String;
+        attch_group_number : String;
+        create_user_id : String;
+        update_user_id : String;
+        crd_type_code : String;
+    }
+    action SaveIdeaProc (inputdata : IdeaIn ) returns IdeaStatusResult;
+
+
 }

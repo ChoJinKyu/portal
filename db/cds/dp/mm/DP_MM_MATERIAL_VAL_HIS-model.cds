@@ -15,6 +15,7 @@
   7. entity description : 자재마스터 평가속성 이력
   8. history
   -. 2020.11.25 : 최미희 최초작성
+  -. 2021.01.23 : 최미희 필드 추가(DELETE_MARK)
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
@@ -32,6 +33,7 @@ entity Mm_Material_Val_His {
     material_price_unit : Decimal(5,0)   @title: '가격단위' ;	
     moving_average_price : Decimal   @title: '이동평균가격' ;	
     standard_price : Decimal   @title: '표준가격' ;	
+    delete_mark : Boolean @title: 'SAP 삭제표시';
 }
 
 extend Mm_Material_Val_His with util.Managed;

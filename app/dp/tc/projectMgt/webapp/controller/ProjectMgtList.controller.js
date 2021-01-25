@@ -47,12 +47,14 @@ sap.ui.define([
          * Search 버튼 클릭 시 List 조회
          */
         , onSearch: function () {
-            
+            var oI18nModel = this.getModel("I18N");
+
             var oFilterModel = this.getModel("filterModel"),
                 oFilterData = oFilterModel.getData(),
                 aFilters = [];
 
             if(!oFilterData.company_code.value) {
+                let sCompany = oI18nModel.getText("COMPANY");
                 MessageToast.show("회사는 필수 조회조건 입니다.", {at: "Center Center"});
                 return;
             }
@@ -531,12 +533,12 @@ sap.ui.define([
             var oBindingInfoSnap   = oComboSnap.getBindingInfo("items");
             var oBindingInfoExpand = oComboExpand.getBindingInfo("items");
             var bindInfoSnap = {
-                    path: '/Org_Division',
+                    path: '/Org_Div',
                     filters: filter,
                     template: oBindingInfoSnap.template
                 };
             var bindInfoExpand = {
-                    path: '/Org_Division',
+                    path: '/Org_Div',
                     filters: filter,
                     template: oBindingInfoExpand.template
                 };

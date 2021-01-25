@@ -57,8 +57,8 @@ service BasePriceArlV4Service {
         company_code           : String(10);
         org_type_code          : String(2);
         org_code               : String(10);
-        au_code                : String(10);
         material_code          : String(40);
+        base_uom_code          : String(3);
         supplier_code          : String(10);
         base_date              : Date;
         base_price_ground_code : String(30);
@@ -73,7 +73,7 @@ service BasePriceArlV4Service {
 
     type BasePriceArlPriceType : {
         tenant_id                        : String(5);
-        approval_number                  : String(50);
+        approval_number                  : String(30);
         item_sequence                    : Decimal;
         market_code                      : String(30);
         new_base_price                   : Decimal(19, 4);
@@ -83,6 +83,19 @@ service BasePriceArlV4Service {
         first_purchasing_net_price       : Decimal(19, 4);
         first_pur_netprice_curr_cd       : String(3);
         first_pur_netprice_str_dt        : Date;
+        change_reason_code               : String(30);
+
+        local_create_dtm       : DateTime;
+        local_update_dtm       : DateTime;
+        create_user_id         : String(255);
+        update_user_id         : String(255);
+    };
+
+    type BasePriceArlChangeRequestorType : {
+        tenant_id              : String(5);
+        approval_number        : String(30);
+        changer_empno          : String(30);
+        creator_empno          : String(30);
 
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
@@ -92,7 +105,7 @@ service BasePriceArlV4Service {
 
     type CmdType : String enum { insert; upsert; delete; };
 
-    type InputDataType : {
+    type InputArlDataType : {
         cmd               : CmdType;
         basePriceArlMst   : array of BasePriceArlMstType;
         debug             : Boolean;
@@ -100,9 +113,25 @@ service BasePriceArlV4Service {
 
     type OutputDataType : {
         return_code     : String(30);
-        return_msg      : String(5000);
+        return_msg      : String(1000);
+        return_param    : String(5000);
         return_rs       : array of BasePriceArlMstType;
     };
 
-    action DpViBasePriceArlProc(inputData : InputDataType) returns OutputDataType;
+    action DpViBasePriceArlProc(inputData : InputArlDataType) returns OutputDataType;
+
+    type InputRequestorDataType : {
+        cmd                           : CmdType;        // only upsert
+        BasePriceArlChangeRequestor   : array of BasePriceArlChangeRequestorType;
+        debug                         : Boolean;
+    }
+
+    type OutputDataChangeRequestorType : {
+        return_code     : String(30);
+        return_msg      : String(1000);
+        return_param    : String(5000);
+        return_rs       : array of BasePriceArlChangeRequestorType;
+    };
+
+    action DpViBasePriceChangeRequestorProc(inputData : InputRequestorDataType) returns OutputDataChangeRequestorType;
 }

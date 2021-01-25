@@ -19,6 +19,7 @@ sap.ui.define([
             this._loadResponsibleTableData();
             this._loadGridTableData();
             this.setModel(new JSONModel(), "excelModel");
+            this.setModel(new JSONModel({readMode: true, editMode: false}), "displayModel");
 
             //sheet.js cdn url
             jQuery.getScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js");
@@ -57,6 +58,13 @@ sap.ui.define([
                 table: oTable,
                 data: oData
             }, oOption);
+        },
+
+        onChangeModePress: function (_oEvent) {
+            let oDispModel = this.getModel("displayModel");
+            let toBeReadMode = oDispModel.getProperty("/readMode") ? false : true;
+            let toBeEditMode = oDispModel.getProperty("/editMode") ? false : true;
+            oDispModel.setData({readMode: toBeReadMode, editMode: toBeEditMode});
         },
 
         onImportChange: function (_oEvent) {

@@ -15,9 +15,12 @@
   7. service description : Material Group Service
   8. history
   -. 2020.12.11 : 최미희 최초작성
+  -. 2021.01.22 : 최미희 자재그룹 View 추가
 *************************************************/
 using { dp as mtlGroup }    from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP-model';
 using { dp as mtlGroupLng } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP_LNG-model';
+//using { dp as mtlGroupView } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP_VIEW-model';
+
 namespace dp;
 @path : '/dp.MtlGroupMgtService'
 
@@ -25,8 +28,22 @@ service MtlGroupMgtService {
 
     entity MtlGroup as projection on mtlGroup.Mm_Material_Group;
     entity MtlGroupLng as projection on mtlGroupLng.Mm_Material_Group_Lng;
+    //entity MtlGroupView as projection on mtlGroupView.Mm_Material_Group_View;
 
     view MtlGroupView as
+    select key m.tenant_id,
+           key m.material_group_code,
+           ifnull((select l.material_group_name
+                  from MtlGroupLng as l
+                  where l.tenant_id = m.tenant_id
+                  and l.material_group_code = m.material_group_code
+                  and l.language_code = 'KO'), m.material_group_name) as material_group_name : String(100),
+           m.material_group_desc,
+           m.use_flag
+    from MtlGroup as m
+    ;
+
+/*    view MtlGroupView as
     select key m.tenant_id,
            key m.material_group_code,
            ifnull(l.material_group_name, m.material_group_name) as material_group_name : String(100),
@@ -39,5 +56,6 @@ service MtlGroupMgtService {
     and l.material_group_code = m.material_group_code 
     and l.language_code = 'KO'
     ;
+*/
 
 }

@@ -38,6 +38,7 @@ sap.ui.define([
 
         loginUserId: new String,
         tenant_id: new String,
+        statusGloCode: new String,
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -49,7 +50,6 @@ sap.ui.define([
 		 */
         onInit: function () {
 
-            console.log("IdeaSelection start");
             //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
             this.tenant_id = "L2100";
@@ -112,7 +112,6 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
-            console.log(oArgs);
             this._sTenantId = oArgs.tenantId;
             this._sCompanyCode = oArgs.companyCode;
             this._sIdeaNumber = oArgs.ideaNumber;
@@ -120,7 +119,7 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("midObjectForm"));
             if (oArgs.ideaNumber == "new") {
                 this._toEditMode();
-                console.log("###신규저장");
+                //console.log("###신규저장");
                 this._fnInitModel();
                 var date = new Date();
                 var year = date.getFullYear();
@@ -134,7 +133,7 @@ sap.ui.define([
                 oDetailModel.setData({
                     "tenant_id": this._sTenantId,
                     "company_code": this._sCompanyCode,
-                    "idea_number": "1234567890",
+                    "idea_number": "New",
                     "idea_date": toDate2,
                     "supplier_code": "KR01820500",
                     "idea_create_user_id": this.loginUserId,
@@ -150,37 +149,50 @@ sap.ui.define([
                 oView.byId("ideaCompany").setValue(this._sCompanyCode);
                 oDetailModel.setTransactionModel(this.getModel());
             } else {
-                console.log("###수정");
-
-                var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + this._sIdeaNumber + "')";
-                var oMasterModel = this.getModel("master");
-                //테스트 에러로 
-                //oView.setBusy(true);
-                oMasterModel.setTransactionModel(this.getModel());
-                oMasterModel.read(sObjectPath, {
-                    success: function (oData) {
-                        console.log("oData====", oData);
-                        oView.byId("ideaCompany").setValue(oData.company_code);
-                        oView.setBusy(false);
-                    }
-                });
-                
-                var sObjectPath2 = "/SupplierIdea(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + this._sIdeaNumber + "')";
-                var oDetailsModel = this.getModel("details");
-                
-                oView.setBusy(true);
-                oDetailsModel.setTransactionModel(this.getModel());
-                oDetailsModel.read(sObjectPath2, {
-                    success: function (oData) {
-                        console.log("oData====", oData);
-                        oView.setBusy(false);
-                    }
-                });
-
-                this._toShowMode();
+                //console.log("###수정");
+                this.onSearch(oArgs.ideaNumber);
             }
         },
 
+        
+
+        
+
+		/**
+		 * 조회
+		 * @public
+		 */
+        onSearch: function (idea_number) {
+            var oView = this.getView();
+            var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number + "')";
+            var oMasterModel = this.getModel("master");
+            var v_this = this;
+            this.statusGloCode = "";
+
+            //테스트 에러로 
+            //oView.setBusy(true);
+            oMasterModel.setTransactionModel(this.getModel());
+            oMasterModel.read(sObjectPath, {
+                success: function (oData) {
+                    oView.byId("ideaCompany").setValue(oData.company_code);
+                    oView.setBusy(false);
+                }
+            });
+            
+            var sObjectPath2 = "/SupplierIdea(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + this._sIdeaNumber + "')";
+            var oDetailsModel = this.getModel("details");
+            
+            oView.setBusy(true);
+            oDetailsModel.setTransactionModel(this.getModel());
+            oDetailsModel.read(sObjectPath2, {
+                success: function (oData) {
+                    v_this.statusGloCode = oData.idea_progress_status_code;
+                    v_this._toShowMode();
+                    oView.setBusy(false);
+                }
+            });
+
+        },
 
 		/**
 		 * Event handler for saving page changes
@@ -191,15 +203,62 @@ sap.ui.define([
             var oView = this.getView(),
                 oDetailsModel = this.getModel("details"),
                 v_this = this;
-
+            var oData = oDetailsModel.oData;
+            var statsCode = "DRAFT";
+            var CUType = "C";            
+                var inputData = {
+                    inputdata : {}
+                };
             if (this._sIdeaNumber !== "new"){
                 if(!oDetailsModel.isChanged() ) {
                     MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                     return;
                 }
+                CUType = "U";
+                /*
+                    진행상태에 대한 정의가 필요 하며 정의에 따른 진행상태 셋팅 필요
+                    idea_progress_status_code
+                    업체에서 SUBMIT인 경우 정의 필요
+                */
+                if( flag == "D"){
+                    statsCode = oData.idea_progress_status_code;
+                }else if( flag == "R"){
+                    statsCode = oData.idea_progress_status_code;
+                }
             }
+
+
+            inputData.inputdata = {
+                tenant_id                            : oData.tenant_id                  ,
+                company_code                         : oData.company_code               ,
+                idea_number                          : oData.idea_number                ,
+                idea_title                           : oData.idea_title                 ,
+                idea_progress_status_code            : statsCode                         ,
+
+                supplier_code                        : oData.supplier_code              ,
+                idea_create_user_id                  : this.loginUserId                 ,
+                bizunit_code                         : oData.bizunit_code               ,
+                idea_product_group_code              : oData.idea_product_group_code    ,
+                idea_type_code                       : oData.idea_type_code             ,
+
+                idea_period_code                     : oData.idea_period_code           ,
+                idea_manager_empno                   : oData.idea_manager_empno         ,
+                idea_part_desc                       : oData.idea_part_desc             ,
+                current_proposal_contents            : oData.current_proposal_contents  ,
+                change_proposal_contents             : oData.change_proposal_contents   ,
+                
+                idea_contents                        : oData.idea_contents              ,
+                attch_group_number                   : oData.attch_group_number         ,
+                create_user_id                       : this.loginUserId                 ,
+                update_user_id                       : this.loginUserId                 ,
+                crd_type_code                        : CUType
+            }
+        
                 
             if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
+
+            var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
+            
 
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -207,16 +266,25 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						//oView.setBusy(true);
-						oTransactionManager.submit({						
-							success: function(ok){
-                                console.log("succ");
-                                console.log(ok);
-								v_this._toShowMode();
-                                oView.setBusy(false);
-								MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-							}
-						});
+                        //oView.setBusy(true);
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: JSON.stringify(inputData),
+                            contentType: "application/json",
+                            success: function (rst) {
+                                if(rst.return_code =="S"){
+                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    v_this.onSearch(rst.return_msg );
+                                }else{
+                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                }
+                            },
+                            error: function (rst) {
+                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+
+                            }
+                        });
 					};
 				}
             });
@@ -226,12 +294,19 @@ sap.ui.define([
 
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
+            var oDetailsModel = this.getModel("details");
+            var oData = oDetailsModel.oData;
+
             this.getView().getModel("viewModel").setProperty("/showMode", true);
             this.getView().getModel("viewModel").setProperty("/editMode", false);
             this.byId("page").setProperty("showFooter", true);
             
             this.byId("pageNavBackButton").setVisible(true);
-            this.byId("pageEditButton").setEnabled(true);
+            if(this.statusGloCode =="DRAFT" || this.statusGloCode =="REQUEST REWRITING"){
+                this.byId("pageEditButton").setEnabled(true);
+            }else{
+                this.byId("pageEditButton").setEnabled(false);
+            }
             this.byId("pageSaveButton").setEnabled(false);
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageListButton").setEnabled(true);

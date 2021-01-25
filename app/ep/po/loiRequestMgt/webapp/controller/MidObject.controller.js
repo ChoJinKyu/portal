@@ -26,10 +26,13 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel",
     "cm/util/control/ui/EmployeeDialog",
+    "cm/util/control/ui/PlantDialog",
+    "cm/util/control/ui/CmDialogHelp",
+    //"ext/pg/util/control/ui/SupplierDialog",
     "sap/m/ObjectStatus"
 ], function (BaseController, Multilingual, NumberFormatter, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, Sorter, DateFormatter, ValidatorUtil, Formatter, Validator,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-    ColumnListItem, ObjectIdentifier, RichTextEditor, Text, Input, ComboBox, Item, EmployeeDialog, ObjectStatus) {
+    ColumnListItem, ObjectIdentifier, RichTextEditor, Text, Input, ComboBox, Item, EmployeeDialog, PlantDialog, CmDialogHelp, ObjectStatus) {
 
     "use strict";
 
@@ -322,7 +325,23 @@ sap.ui.define([
                         delfalg = r["_row_state_"];
                     }
 
-                    console.log("loiWriteNum_val(1) :: ", loiWriteNum_val);
+
+                    var request_net_price_ = "0";
+                    var request_quantity_ = "0";
+                    var request_amount_ = "0";
+
+                    //console.log("detail request_net_price::: " , r["request_net_price"].length);
+                    
+                    if(r["request_net_price"] != "" && r["request_net_price"] != null){
+                        request_net_price_ = String( r["request_net_price"].replaceAll(",",""));
+                    }
+                    if(r["request_quantity"] != "" && r["request_quantity"] != null){
+                        request_quantity_ = String( r["request_quantity"].replaceAll(",",""));
+                    }
+                    if(r["request_amount"] != "" && r["request_amount"] != null){
+                        request_amount_ = String( r["request_amount"].replaceAll(",",""));
+                    }
+
 
                     details.push({
                         tenant_id: 'L2100',
@@ -334,12 +353,12 @@ sap.ui.define([
                         ep_item_code: r["ep_item_code"],
                         item_desc: r["item_desc"],
                         unit: r["unit"],
-                        request_net_price:String( r["request_net_price"]).replace(",",""),
-                        request_quantity: String(r["request_quantity"]).replace(",",""),
+                        request_net_price: request_net_price_,
+                        request_quantity: request_quantity_,
                         currency_code: r["currency_code"],
                         spec_desc: r["spec_desc"],
                         delivery_request_date: that.getFormatDate(r["delivery_request_date"]),
-                        request_amount: String(r["request_amount"]).replace(",",""),
+                        request_amount: request_amount_,
                         supplier_code: r["supplier_code"],
                         buyer_empno: r["buyer_empno"],
                         purchasing_department_code: "50008948",
@@ -381,6 +400,7 @@ sap.ui.define([
 
                 input.inputData.savedReqDetails = details;
                 supInput.inputData = suppliers;
+
             }
 
 
@@ -450,6 +470,28 @@ sap.ui.define([
             this.getModel("midObjectView").setProperty("/isAddedMode", false);
             this._bindView("/LOIRequestListView(tenant_id='" + data.savedHeaders[0].tenant_id + "',company_code='" + data.savedHeaders[0].company_code + "',loi_write_number='" + data.savedHeaders[0].loi_write_number + "')").then((function () {
                     oView.setBusy(true);
+
+                    var oDetailsModel = this.getModel('details');
+                    oDetailsModel.setTransactionModel(this.getModel());
+                    oDetailsModel.read("/LOIRequestDetailView", {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, data.savedHeaders[0].tenant_id),
+                            new Filter("company_code", FilterOperator.EQ, data.savedHeaders[0].company_code),
+                            new Filter("loi_write_number", FilterOperator.EQ, data.savedHeaders[0].loi_write_number)
+                        ],
+                        sorters: [
+                            new Sorter("item_sequence", false)
+                        ],
+
+                        success: function (oData) {
+                            console.log(" LOIRequestDetailView ::: ", oData);
+                            oView.setBusy(false);
+                            oView.getModel("details").updateBindings(true);
+                        }
+
+                    });
+
+
                     this._toShowMode();
             }).bind(this));
 
@@ -458,25 +500,25 @@ sap.ui.define([
 
             //if (data.savedReqDetails.length > 0 && detail.getChanges().length > 0) {
             //if (detail.getChanges().length > 0) {
-                var oDetailsModel = this.getModel('details');
-                oDetailsModel.setTransactionModel(this.getModel());
-                oDetailsModel.read("/LOIRequestDetailView", {
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, data.savedHeaders[0].tenant_id),
-                        new Filter("company_code", FilterOperator.EQ, data.savedHeaders[0].company_code),
-                        new Filter("loi_write_number", FilterOperator.EQ, data.savedHeaders[0].loi_write_number)
-                    ],
-                    sorters: [
-                        new Sorter("item_sequence", false)
-                    ],
+                //1.24 var oDetailsModel = this.getModel('details');
+                // oDetailsModel.setTransactionModel(this.getModel());
+                // oDetailsModel.read("/LOIRequestDetailView", {
+                //     filters: [
+                //         new Filter("tenant_id", FilterOperator.EQ, data.savedHeaders[0].tenant_id),
+                //         new Filter("company_code", FilterOperator.EQ, data.savedHeaders[0].company_code),
+                //         new Filter("loi_write_number", FilterOperator.EQ, data.savedHeaders[0].loi_write_number)
+                //     ],
+                //     sorters: [
+                //         new Sorter("item_sequence", false)
+                //     ],
 
-                    success: function (oData) {
-                        console.log(" LOIRequestDetailView ::: ", oData);
-                        oView.setBusy(false);
-                        oView.getModel("details").updateBindings(true);
-                    }
+                //     success: function (oData) {
+                //         console.log(" LOIRequestDetailView ::: ", oData);
+                //         oView.setBusy(false);
+                //         oView.getModel("details").updateBindings(true);
+                //     }
 
-                });
+                //1.24 });
             //}
 
            // this._toShowMode();
@@ -1181,6 +1223,97 @@ sap.ui.define([
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/buyer_empno", oEvent.getParameter("item").employee_number);
                
         },
+
+
+        
+
+        onCmInputWithCodeValuePress: function(oEvent){
+            console.log(" empl abc----------------->", oEvent); 
+
+            var sPath = oEvent.getSource().getBindingContext("details").getPath(),
+            oRecord = this.getModel("details").getProperty(sPath);
+            var index = sPath.substr(sPath.length-1);
+
+            console.log(" index obj ----------------->" , index); 
+            this.onCmInputWithCodeValuePress["row"] = index;
+
+            this.byId("plantDialog").open();
+        },
+
+        
+
+        onPlantDialogApplyPress: function(oEvent){
+
+            //this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
+            var sDepNo = oEvent.getParameter("item").plant_code;
+            var oDetailsModel = this.getModel("details");
+            var rowIndex = this.onCmInputWithCodeValuePress["row"];
+            console.log("row ::: " ,this.onCmInputWithCodeValuePress["row"]);
+
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/plant_name", oEvent.getParameter("item").plant_name);
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/plant_code", oEvent.getParameter("item").plant_code);
+               
+        },
+
+
+
+        // onCmInputWithCodeValuePress: function(){
+        //     if(!this.oCmDialogHelp){
+        //         this.oCmDialogHelp = new CmDialogHelp({
+        //             title: "{I18N>/PLANT_NAME}",
+        //             keyFieldLabel : "{I18N>/PLANT_CODE}",
+        //             textFieldLabel : "{I18N>/PLANT_NAME}",
+        //             keyField : "bizdivision_code",
+        //             textField : "bizdivision_name",
+        //             items: {
+        //                 sorters: [
+        //                     new Sorter("bizdivision_name", false)
+        //                 ],
+        //                 serviceName: "cm.util.OrgService",
+        //                 entityName: "Division"
+        //             }
+        //         });
+        //         this.oCmDialogHelp.attachEvent("apply", function(oEvent){
+        //             this.byId("cmInputWithCodeDialog").setValue(oEvent.getParameter("item").bizdivision_code);
+        //         }.bind(this));
+        //     }
+        //     this.oCmDialogHelp.open();
+        // },
+
+        // vhSupplierCode: function (oEvent) {
+        //     var supplierCode;
+        //     var oSearchValue = this.byId(oEvent.getSource().sId).getValue();
+
+        //     if (!this.oSearchSupplierDialog) {
+        //         this.oSearchSupplierDialog = new SupplierDialog({
+        //             title: "Choose Supplier",
+        //             MultiSelection: true
+        //         });
+
+        //         //여기에 다가 받을 아이디를 셋팅한다. searchField면 아이디를 그리드 아이탬이면 sPath의 경로의 셀 번호를 지정해주면됨다.
+        //         /*
+        //             그리드의 경우
+        //             function에서 받은 oEvent를 활용하여 셋팅
+        //             var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+        //             sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item);
+        //         */
+        //         // this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
+        //         //     vendorPoolCode = oEvent.mParameters.item;
+        //         //     //console.log("materialItem : ", materialItem);
+        //         //     that.byId("search_material_code").setValue(vendorPoolCode.material_code);
+
+        //         // }.bind(this));
+        //     }
+
+        //     //searObject : 태넌트아이디, 검색 인풋아이디
+        //     var sSearchObj = {};
+        //     sSearchObj.tanent_id = "L2100";
+        //     sSearchObj.supplier_code = oSearchValue;
+        //     // if (this.byId("search_Vp_Code").getValue()) {
+        //     //     sSearchObj.vendor_pool_code = this.byId("search_Vp_Code").getValue();
+        //     // }
+        //     this.oSearchSupplierDialog.open(sSearchObj);
+        // },
 
         getFormatDate: function (date) {
 

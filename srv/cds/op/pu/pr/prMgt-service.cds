@@ -6,10 +6,9 @@ using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-
 using {op.Pu_Pr_Template_Mst as prTMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MST-model';
 using {op.Pu_Pr_Template_Map as prTMap} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
 using {op.Pu_Pr_Template_Lng as prTLng}         from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
-using {op.Pu_Pr_Template_DtlView as prTDtlView}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_DTLVIEW-model';   // 삭제...
+using {op.Pu_Pr_Template_DtlView as prTDtlView}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_DTLVIEW-model';  
 using {op.Pu_Pr_Template_Ett as prTEtt}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_ETT-model';
 using {op.Pu_Pr_Template_Txn as prTXtn}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_TXN-model';
-
 using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
@@ -96,7 +95,7 @@ service PrMgtService {
                         and cdLng.group_code          = 'OP_PR_CREATE_STATUS_CODE'
                         and cdLng.language_cd         = 'KO'
                         and mst.pr_create_status_code = cdLng.code
-                ) as pr_create_status_name      : String(30), // 구매요청생성상태코드    'DR'
+                ) as pr_create_status_name      : String(30), // 구매요청생성상태코드 'DR'
                 (
                     select code_name from cdLng
                     where
@@ -112,6 +111,7 @@ service PrMgtService {
     entity Pr_TDtl    as projection on op.Pu_Pr_Template_Dtl;
     entity Pr_TLng    as projection on op.Pu_Pr_Template_Lng;
     entity Pr_TMap    as projection on op.Pu_Pr_Template_Map;
+    entity Pr_TDtlVIew as projection on op.Pu_Pr_Template_DtlView;
 
 
     // 간단한 View 생성
@@ -163,27 +163,5 @@ service PrMgtService {
 
         from prTMap as map;
 
-
-
-     view Pr_TDtlView as
-        select
-            key  prTMst.tenant_id ,	
-            key  prTMst.pr_template_number,
-                 prTMst.erp_interface_flag,
-                 prTMst.default_template_number,
-                 prTMst.approval_flag,
-                 prTMst.use_flag,
-                 prTXtn.txn_type_code,
-                 prTXtn.table_name,
-                 prTEtt.column_name,
-                 OP_PU_PR_TEMPLATE_GETCOL_FUNC( prTMst.tenant_id
-                                                , prTMst.pr_template_number
-                                                , prTXtn.txn_type_code                                                
-                                                , prTXtn.table_name
-                                                , prTEtt.column_name) as  ettStatus: String(30)  
-                              
-
-        from prTMst  
-            INNER JOIN prTXtn on (prTMst.tenant_id = prTXtn.tenant_id )
-            INNER JOIN prTEtt on (prTXtn.table_name = prTEtt.table_name );
+     
 }

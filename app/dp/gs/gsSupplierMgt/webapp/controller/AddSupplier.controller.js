@@ -690,63 +690,90 @@ sap.ui.define([
                             path: 'SupplierFin>sales_amount'
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>opincom_amount'
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>asset_amount'
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>curasset_amount'
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>nca_amount'
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>liabilities_amount'
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>curliablities_amount'
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>ncl_amount'                            
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
                             path: 'SupplierFin>equity_capital'                           
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        liveChange: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     })
 				]
             });
@@ -790,14 +817,19 @@ sap.ui.define([
                             path: 'SupplierSal>annual_txn_amount'                            
                         },
                         type: "Number",
-                        textAlign: "End"
+                        textAlign: "End",
+                        change: function (oEvent) {
+                            this.onInputChange(oEvent);
+                        }.bind(this)  
                     }),
                     new Input({
                         value: {
-                            path: 'SupplierSal>sales_weight'                            
+                            path: 'SupplierSal>sales_weight',
+                            type: 'sap.ui.model.type.Integer'                            
                         },
                         type: "Number",
                         textAlign: "End",
+                        maxLength: 1,
                         change: function (oEvent) {
                             this.onInputChange(oEvent);
                         }.bind(this)                        

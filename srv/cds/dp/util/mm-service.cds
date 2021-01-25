@@ -23,8 +23,12 @@ service MmService {
     view Uom as
     select  key m.tenant_id,
             key m.uom_code,
-            m.uom_name
-    from  uom.UomView as m
+            ifnull((select l.uom_name
+             from uom.UomLng l 
+             where l.tenant_id = m.tenant_id
+             and l.uom_code = m.uom_code
+             and l.language_code = 'KO' ), m.uom_name)  as uom_name : String(30)
+    from  uom.Uom as m
     ;
 
     @readonly
@@ -32,7 +36,13 @@ service MmService {
     select  key m.tenant_id,
             key m.country_code,
             key m.hs_code,
-            m.hs_text
+            (select l.hs_text
+             from  Hs.HsCodeLng l
+             where l.tenant_id = m.tenant_id
+             and l.country_code = m.country_code
+             and l.hs_code = m.hs_code
+             and l.language_code = 'KO'
+            )    as hs_text : String(500)
     from Hs.HsCode as m
     where m.use_flag = true
     ;
@@ -41,10 +51,15 @@ service MmService {
     view MaterialClass as
     select  key m.tenant_id,
             key m.material_class_code, 
-            m.material_class_name,
+            ifnull((select l.material_class_name
+                    from MtlClass.MtlClassLng l
+                    where l.tenant_id = m.tenant_id
+                    and l.material_class_code = m.material_class_code
+                    and l.language_code = 'KO'
+            ), m.material_class_name) as material_class_name : String(100),
             m.material_class_desc,
             m.use_flag
-    from MtlClass.MtlClassView as m
+    from MtlClass.MtlClass as m
     where m.use_flag = true
     ;
 
@@ -52,20 +67,28 @@ service MmService {
     view MaterialCommodity as 
     select  key m.tenant_id,
             key m.commodity_code,
-            m.commodity_name,
+            ifnull((select l.commodity_name
+             from Commodity.MtlCommodityLng l
+             where l.tenant_id = m.tenant_id
+             and l.commodity_code = m.commodity_code
+             and l.language_code = 'KO'), m.commodity_name) as commodity_name : String(100),
             m.commodity_desc,
             m.use_flag
-    from Commodity.MtlCommodityView as m 
+    from Commodity.MtlCommodity as m 
     where m.use_flag = true
     ;
     @readonly
     view MaterialGroup as 
     select  key m.tenant_id,
             key m.material_group_code,
-            m.material_group_name,
+            ifnull((select l.material_group_name
+             from MtlGroup.MtlGroupLng l
+             where l.tenant_id = m.tenant_id
+             and l.material_group_code = m.material_group_code
+             and l.language_code = 'KO' ), m.material_group_name) as material_group_name : String(100),
             m.material_group_desc,
             m.use_flag
-    from MtlGroup.MtlGroupView as m 
+    from MtlGroup.MtlGroup as m 
     where m.use_flag = true
     ;
 

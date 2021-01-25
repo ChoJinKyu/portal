@@ -98,29 +98,13 @@
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
                             <HBox alignItems="Center">
-                                <Label
-                                    text="품의 제목"                                      
-                                    class="sapUiTinyMarginEnd"
-                                    textAlign="Left"
-                                    labelFor="input"
-                                    required="true"/>
-                                <Input
-                                    value="{viewModel>/PrMst/pr_header_text}"
-                                    visible="true"
-                                    width="40em" 
-                                    placeholder="필수"
-                                    >
-                                </Input>
+                                <Label text="{I18N>/APPROVAL_TITLE}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" required="true"/>
+                                <Input value="{viewModel>/PrMst/pr_header_text}" width="50em" placeholder="필수" 
+                                    required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}" 
+                                    visible="true" />
                             </HBox>
                             <HBox alignItems="Center">
-                                <Label
-                                    text="품의 내용"                           
-                                    class="sapUiTinyMarginEnd"
-                                    textAlign="Left"
-                                    labelFor="input"/>
-                            </HBox>
-                            <HBox alignItems="Center">
-                                <Label text="{I18N>/SOURCING}{I18N>/CONTENTS}"/>
+                                <Label text="{I18N>/APPROVAL_CONTENTS}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" />
                                 <richtexteditor:RichTextEditor
                                     editorType="TinyMCE4"
                                     width="100%"
@@ -132,8 +116,7 @@
                                     showGroupInsert="true"
                                     value="{viewModel>/PrMst/approval_contents}">
                                 </richtexteditor:RichTextEditor>
-                            </HBox>
-                            
+                            </HBox>                            
                         </layout:VerticalLayout> 						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -178,7 +161,7 @@
                                             valueHelpRequest=".onOpenOrgcodeDialog" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{= !${contModel>/OP_PU_PR_DTL/MATERIAL_CODE/hide_column_flag} }" >
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}" >
                                     <Label text="자재코드" required="true"/>           
                                     <table:template>
                                         <Input id="i_material_code"
@@ -256,13 +239,13 @@
                                         <Input value="{viewModel>purchasing_group_code}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/Pr_Dtl/material_group_code}">
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_GROUP_CODE/display_column_flag}">
                                     <Label text="자재그룹" required="true" />           
                                     <table:template>
                                         <Input value="{viewModel>material_group_code}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/Pr_Dtl/sloc_code}">
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/SLOC_CODE/display_column_flag}">
                                     <Label text="저장위치"/>
                                     <table:template>
                                         <Input value="{viewModel>sloc_code}" />
@@ -272,6 +255,36 @@
                                     <Label text="비고"/>
                                     <table:template>
                                         <Input maxLength="2000" value="{viewModel>remark}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ACCOUNT_CODE/display_column_flag}">
+                                    <Label text="계정코드"/>
+                                    <table:template>
+                                        <Input value="{viewModel>account_code}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/CCTR_CODE/display_column_flag}">
+                                    <Label text="비용부서코드"/>
+                                    <table:template>
+                                        <Input value="{viewModel>cctr_code}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/display_column_flag}">
+                                    <Label text="WBS코드" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>wbs_code}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ASSET_NUMBER/display_column_flag}">
+                                    <Label text="자산번호"/>
+                                    <table:template>
+                                        <Input value="{viewModel>asset_number}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ORDER_NUMBER/display_column_flag}">
+                                    <Label text="오더번호"/>
+                                    <table:template>
+                                        <Input value="{viewModel>order_number}" />
                                     </table:template>
                                 </table:Column>
                             </table:columns>

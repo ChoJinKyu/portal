@@ -363,46 +363,46 @@ sap.ui.define([
 
         _toEditModeEachApproval: function () {
             // console.log(" BudgetExecutionApproval  _toEditModeEachApproval ");
-            console.log(" this " , this.getView());
-            this.byId("customer_po_no").removeStyleClass("readonlyField");
-            this.byId("customer").removeStyleClass("readonlyField");
-            this.byId("acquisition_department").removeStyleClass("readonlyField");
-            this.byId("accounting_department").removeStyleClass("readonlyField");
-            this.byId("importCompany").removeStyleClass("readonlyField");
-            this.byId("projectCode").removeStyleClass("readonlyField");
-            this.byId("importPlant").removeStyleClass("readonlyField");
-            this.byId("account").removeStyleClass("readonlyField");
+        //     console.log(" this " , this.getView());
+        //     this.byId("customer_po_no").removeStyleClass("readonlyField");
+        //     this.byId("customer").removeStyleClass("readonlyField");
+        //    this.byId("acquisition_department").removeStyleClass("readonlyField");
+        //     this.byId("accounting_department").removeStyleClass("readonlyField");
+        //     this.byId("importCompany").removeStyleClass("readonlyField");
+        //     this.byId("projectCode").removeStyleClass("readonlyField");
+        //     this.byId("importPlant").removeStyleClass("readonlyField");
+        //     this.byId("account").removeStyleClass("readonlyField");
 
-            var oRows = this.byId("budgetExecutionTable").getRows();
+        //     var oRows = this.byId("budgetExecutionTable").getRows();
 
-            oRows.forEach(function (oCell, idx) {
-                oCell.mAggregations.cells.forEach(function (item, jdx) {
-                    if (jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8) {
-                        item.removeStyleClass("readonlyField");
-                    }
-                });
-            }); 
+        //     oRows.forEach(function (oCell, idx) {
+        //         oCell.mAggregations.cells.forEach(function (item, jdx) {
+        //             if (jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8) {
+        //                 item.removeStyleClass("readonlyField");
+        //             }
+        //         });
+        //     }); 
         },
         _toShowModeEachApproval: function () {
             // console.log(" BudgetExecutionApproval  _toShowModeEachApproval ");
-            this.byId("customer_po_no").addStyleClass("readonlyField");
-            this.byId("customer").addStyleClass("readonlyField");
-            this.byId("acquisition_department").addStyleClass("readonlyField");
-            this.byId("accounting_department").addStyleClass("readonlyField");
-            this.byId("importCompany").addStyleClass("readonlyField");
-            this.byId("projectCode").addStyleClass("readonlyField");
-            this.byId("importPlant").addStyleClass("readonlyField");
-            this.byId("account").addStyleClass("readonlyField");
+            // this.byId("customer_po_no").addStyleClass("readonlyField");
+            // this.byId("customer").addStyleClass("readonlyField");
+            // this.byId("acquisition_department").addStyleClass("readonlyField");
+            // this.byId("accounting_department").addStyleClass("readonlyField");
+            // this.byId("importCompany").addStyleClass("readonlyField");
+            // this.byId("projectCode").addStyleClass("readonlyField");
+            // this.byId("importPlant").addStyleClass("readonlyField");
+            // this.byId("account").addStyleClass("readonlyField");
 
-            var oRows = this.byId('budgetExecutionTable').getRows();
+            // var oRows = this.byId('budgetExecutionTable').getRows();
 
-            oRows.forEach(function (oCell, idx) {
-                oCell.mAggregations.cells.forEach(function (item, jdx) {
-                    if (jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8) {
-                        item.addStyleClass("readonlyField");
-                    }
-                });
-            });
+            // oRows.forEach(function (oCell, idx) {
+            //     oCell.mAggregations.cells.forEach(function (item, jdx) {
+            //         if (jdx == 4 || jdx == 5 || jdx == 7 || jdx == 8) {
+            //             item.addStyleClass("readonlyField");
+            //         }
+            //     });
+            // });
             
         },
 

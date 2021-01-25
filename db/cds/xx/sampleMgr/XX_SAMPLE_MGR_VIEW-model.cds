@@ -21,7 +21,7 @@ namespace xx;
 @cds.persistence.exists
 entity Sample_Mgr_View {
   key header_id : Integer64;
-  key detail_id : Integer64;
+  detail_id : Integer64;
   header_cd : String;
   header_name : String;
   detail_cd : String;
