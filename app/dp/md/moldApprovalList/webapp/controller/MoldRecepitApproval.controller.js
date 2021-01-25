@@ -114,28 +114,28 @@ sap.ui.define([
         _toEditModeEachApproval : function(){ 
             // console.log(" Mold RecepitApproval  _toEditModeEachApproval ");
             
-          var oRows = this.byId("moldRecepitTable").getRows();
-            oRows.forEach(function(oCell, idx){
-               oCell.mAggregations.cells.forEach(function(item, jdx){ 
-                   // console.log("item>>> " , item , ">>> jdx " , jdx);
-                    if(jdx == 12){
-                         item.removeStyleClass("readonlyField");
-                    }
-                });
-            });
+        //   var oRows = this.byId("moldRecepitTable").getRows();
+        //     oRows.forEach(function(oCell, idx){
+        //        oCell.mAggregations.cells.forEach(function(item, jdx){ 
+        //            // console.log("item>>> " , item , ">>> jdx " , jdx);
+        //             if(jdx == 12){
+        //                  item.removeStyleClass("readonlyField");
+        //             }
+        //         });
+        //     });
 
          },
         _toShowModeEachApproval : function(){ 
             // console.log(" Mold RecepitApproval  _toShowModeEachApproval ");
-           var oRows = this.byId("moldRecepitTable").getRows();
-            oRows.forEach(function(oCell, idx){
-               oCell.mAggregations.cells.forEach(function(item, jdx){ 
-                   // console.log("item>>> " , item , ">>> jdx " , jdx);
-                    if(jdx == 12){
-                         item.addStyleClass("readonlyField");
-                    }
-                });
-            });
+        //    var oRows = this.byId("moldRecepitTable").getRows();
+        //     oRows.forEach(function(oCell, idx){
+        //        oCell.mAggregations.cells.forEach(function(item, jdx){ 
+        //            // console.log("item>>> " , item , ">>> jdx " , jdx);
+        //             if(jdx == 12){
+        //                  item.addStyleClass("readonlyField");
+        //             }
+        //         });
+        //     });
          } ,
       
        /**
