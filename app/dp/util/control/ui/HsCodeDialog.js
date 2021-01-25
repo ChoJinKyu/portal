@@ -19,8 +19,8 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "40em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "country_code" },
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "50em"},
+                keyField: { type: "string", group: "Misc", defaultValue: "hs_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "hs_code" }
             }
         },
@@ -46,18 +46,18 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
-                    width: "30%",
+                    width: "10%",
                     label: new Label({text: this.getModel("I18N").getText("/COUNTRY_CODE")}),
                     template: new Text({text: "{country_code}"})
                 }),
                 new Column({
-                    width: "30%",
+                    width: "15%",
                     label: new Label({text: this.getModel("I18N").getText("/HS_CODE")}),
                     template: new Text({text: "{hs_code}"})
                 }),
                 new Column({
-                    width: "40%",
-                    label: new Label({text: "hs_text(x)"}),
+                    width: "75%",
+                    label: new Label({text: this.getModel("I18N").getText("/HS_TEXT")}),
                     template: new Text({text: "{hs_text}"})
                 })
             ];
