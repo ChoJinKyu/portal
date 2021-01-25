@@ -62,7 +62,7 @@
         <buttons>
             <Button text="{I18N>/CLOSE}" press=".onGoalPopClose" />
             <!--<Button text="{I18N>/COPY}" press=".onCopy" />-->
-            <Button text="{I18N>/WRITE}" type="Emphasized" press=".onDialogCreate" />
+            <Button text="{I18N>/WRITE}" type="Emphasized" press=".onDialogCreatePress" />
         </buttons>
 	</Dialog>
 </core:FragmentDefinition>

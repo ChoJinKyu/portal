@@ -967,6 +967,7 @@ sap.ui.define([
                      this._oDetail.material_code = oSelectedDialogItem.material_code;
                      this._oDetail.material_desc = oSelectedDialogItem.material_desc;
                      this._oDetail.material_spec = oSelectedDialogItem.material_spec;
+                     this._oDetail.base_uom_code = oSelectedDialogItem.base_uom_code;
                      oDetailModel.refresh();
                  }.bind(this));
              }

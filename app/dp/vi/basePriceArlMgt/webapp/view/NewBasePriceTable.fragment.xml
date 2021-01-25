@@ -96,6 +96,12 @@
                     <Text text="{detailModel>material_spec}" />
                 </t:template>
             </t:Column>
+            <t:Column width="6rem">
+                <Label text="{I18N>/BASE_UOM_CODE}" textAlign="Center" width="100%" />
+                <t:template>
+                    <Text text="{detailModel>base_uom_code}" textAlign="Center" width="100%" />
+                </t:template>
+            </t:Column>
             <t:Column width="12rem">
                 <Label text="{I18N>/BASIS}" textAlign="Center" width="100%" />
                 <t:template>

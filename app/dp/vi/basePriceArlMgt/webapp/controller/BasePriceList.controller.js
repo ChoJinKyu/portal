@@ -40,7 +40,7 @@ sap.ui.define([
                                         type: "1",
                                         dateValue: new Date(this._changeDateFormat(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
                                         secondDateValue: new Date(this._changeDateFormat(oToday, "-")),
-                                        type_list:[{code:"1", text:"개발구매"}]}), "filterModel");
+                                        type_list:[{code:"VI10", text:"신규 품의"}, {code:"VI20", text:"변경 품의"}]}), "filterModel");
 
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
