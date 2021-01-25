@@ -101,7 +101,10 @@
                                     enabled="{approver>selRow}" >  
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
-                                <SearchField search=".onApproverSearch" width="100%" value="{approver>approver_name}" placeholder="Search employee"  enabled="{approver>selRow}" />
+                                <Input value="{approver>approver_name}" placeholder="Search employee"
+                                    enabled="{approver>selRow}"
+                                    showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                                </Input>
                                 <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
                               

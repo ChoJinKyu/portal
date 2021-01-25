@@ -6,6 +6,7 @@ sap.ui.define([
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
+    "cm/util/control/ui/EmployeeDialog",
     "sap/m/ColumnListItem",
     "sap/m/Label",
     "sap/m/MessageBox",
@@ -21,18 +22,16 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalList.controller", 
     "sap/ui/model/Sorter",
-    "dp/md/util/controller/EmployeeDialog",
     "sap/m/Token",
     "sap/ui/core/dnd/DragInfo",
 	"sap/ui/core/dnd/DropInfo",
 	"sap/ui/core/dnd/DropPosition",
 	"sap/ui/core/dnd/DropLayout",
 	"sap/f/dnd/GridDropInfo",
-], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator, EmployeeDialog,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
-    , Sorter , EmployeeDialog , Token 
-    , DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList,
+    Sorter, Token, DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
 ) {
     "use strict";
 
@@ -399,8 +398,6 @@ sap.ui.define([
         },
 
         _onRoutedThisPage: function (approvalNumber) {
-            console.log(" approvalNumber >>> ", approvalNumber);
-
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
@@ -408,8 +405,6 @@ sap.ui.define([
 
             if (approvalNumber !== "New") {
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
-
-                    console.log(" oData >>> ", oData); 
                     this.firstStatusCode = oData.approve_status_code; // 저장하시겠습니까? 하고 취소 눌렀을 경우 다시 되돌리기 위해서 처리 
                     this._toButtonStatus();
                 }.bind(this));
@@ -420,14 +415,13 @@ sap.ui.define([
 
             }.bind(this));
             
-            var that = this;
-
             this._bindView("/Approvers", "approver", filter, function (oData) {
-                 console.log(" Approvers >>> ", oData);
-                 that.setSelectedApproval(0);
+                 //this.setSelectedApproval(0);
+                 if (oData.results.length < 1) {
+                    this.onApproverAdd(0);
+                 }
             }.bind(this));
 
-            console.log(" Approvers >>> ", approvalNumber);
            // var refererMultiCB = this.getModel('refererMultiCB');
            
             var oView = this.getView();
@@ -444,6 +438,29 @@ sap.ui.define([
             //   //  refererMultiCB.setProperty("/refer", rList);
             //     }
             }.bind(this));
+        },
+
+        onInputWithEmployeeValuePress: function(oEvent){
+            var index = oEvent.getSource().getBindingContext("approver").getPath().split('/')[2];
+     
+            if (this.getModel("approver").getData().Approvers[index].approver_type_code === "") {
+                MessageToast.show("Type 을 먼저 선택해주세요.");
+            } else {
+                this.onInputWithEmployeeValuePress["row"] = index;
+
+                this.byId("employeeDialog").open();
+            }
+        },
+
+        onEmployeeDialogApplyPress: function(oEvent){
+            var employeeNumber = oEvent.getParameter("item").employee_number,
+                userName = oEvent.getParameter("item").user_local_name,
+                departmentLocalName = oEvent.getParameter("item").department_local_name,
+                oModel = this.getModel("approver"),
+                rowIndex = this.onInputWithEmployeeValuePress["row"];
+
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_empno", employeeNumber);
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_name", userName + " / " + departmentLocalName);
         },
 
        onMultiInputWithCodeValuePress: function(){ 

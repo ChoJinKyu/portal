@@ -10,6 +10,7 @@
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
     xmlns="sap.m"
+    xmlns:cm-ui="cm.util.control.ui"
 	height="100%">
 
 	<uxap:ObjectPageLayout 
@@ -148,4 +149,13 @@
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
+    <cm-ui:EmployeeDialog id="employeeDialog" 
+        title="직원 검색"
+        items="{
+            filters: [
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+            ]
+        }"
+        apply=".onEmployeeDialogApplyPress"
+    />
 </mvc:View>
