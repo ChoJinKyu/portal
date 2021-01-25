@@ -33,8 +33,8 @@ using {dp as Mcst_Project_Part_Map_Dtl} from './DP_TC_MCST_PROJECT_PART_MAP_DTL-
 entity Tc_Mcst_Project_Part_Map_Dtl {
     key tenant_id        : String(5) not null @title : '테넌트ID';
     key mapping_id       : Integer not null   @title : '매핑ID';
+    key material_code    : String(40)         @title : '자재코드';
         change_info_code : String(30)         @title : '변경정보코드';
-        material_code    : String(40)         @title : '자재코드';
         change_reason    : String(1000)       @title : '변경사유';
 }
 
