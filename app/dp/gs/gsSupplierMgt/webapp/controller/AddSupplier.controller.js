@@ -818,7 +818,7 @@ sap.ui.define([
                         },
                         type: "Number",
                         textAlign: "End",
-                        change: function (oEvent) {
+                        liveChange: function (oEvent) {
                             this.onInputChange(oEvent);
                         }.bind(this)  
                     }),
@@ -828,9 +828,8 @@ sap.ui.define([
                             type: 'sap.ui.model.type.Integer'                            
                         },
                         type: "Number",
-                        textAlign: "End",
-                        maxLength: 1,
-                        change: function (oEvent) {
+                        textAlign: "End",                        
+                        liveChange: function (oEvent) {
                             this.onInputChange(oEvent);
                         }.bind(this)                        
                     })
