@@ -1,10 +1,20 @@
 namespace sp;
 
+/* Transaction Association */
 using util from '../../cm/util/util-model';
-using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
 using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
-using {cm.Hr_Employee as hrEmployee} from '../../cm/CM_HR_EMPLOYEE-model.cds';
+using {cm.Hr_Employee as hrEmployee} from '../../cm/CM_HR_EMPLOYEE-model';
+
+/* Master Association */
+using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
+using {
+    sp.Sc_Outcome_Code               as scOutcomeCode,
+    sp.Sc_Nego_Parent_Type_Code      as scNegoParentTypeCode,
+    sp.Sc_Nego_Type_Code             as scNegoTypeCode,
+    sp.Sc_Award_Type_Code_View       as scAwardTypeCodeView,
+    sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
+} from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 

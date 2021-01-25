@@ -1,8 +1,8 @@
 VIEW Sp_Sc_Nego_Headers_New_Record_VIEW AS
 SELECT OT.TENANT_ID,
   CAST(MAX(IFNULL(NEGO_HEADER_ID,0) +1) AS BIGINT)                                    AS NEGO_HEADER_ID,
-  CAST(1 AS BIGINT)                                                                   AS REFERENCE_NEGO_HEADER_ID,
-  CAST(1 AS BIGINT)                                                                   AS PREVIOUS_NEGO_HEADER_ID,
+  CAST(MAX(IFNULL(NEGO_HEADER_ID,0) +1) AS BIGINT)                                    AS REFERENCE_NEGO_HEADER_ID,
+  CAST(0 AS BIGINT)                                                                   AS PREVIOUS_NEGO_HEADER_ID,
   CAST(MAX(IFNULL(REFERENCE_NEGO_DOCUMENT_NUMBER,0) + 1) AS INTEGER)                  AS REFERENCE_NEGO_DOCUMENT_NUMBER,
   CAST(1 AS INTEGER)                                                                  AS NEGO_DOCUMENT_ROUND,
   CAST(MAX(IFNULL(REFERENCE_NEGO_DOCUMENT_NUMBER,0) + 1) || '-' || 1 AS NVARCHAR(50)) AS NEGO_DOCUMENT_NUMBER
