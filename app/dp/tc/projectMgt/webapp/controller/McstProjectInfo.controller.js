@@ -78,13 +78,18 @@ sap.ui.define([
                 filters : aFilters,
                 urlParameters : { "$expand" : sExpand },
                 success : function(data){
-                    //debugger;
+                    debugger;
                     oView.setBusy(false);
                     console.log("McstProjectInfo.Controller", data);
 
                     if( data && data.results && 0<data.results.length ) {
                         oView.getModel("detailModel").setData(data.results[0]);
-                        oView.getModel("detailModel").setProperty("/mode", {readMode : true, editMode : false});
+                        if(oParam.hasOwnProperty("view_mode") && oParam.view_mode === "EDIT") {
+                            oView.getModel("detailModel").setProperty("/mode", {readMode : false, editMode : true});
+                        } else {
+                            oView.getModel("detailModel").setProperty("/mode", {readMode : true, editMode : false});
+                        }
+                        
                         this._pivottingData();
                     }
                 }.bind(this),

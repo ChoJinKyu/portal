@@ -16,7 +16,10 @@ sap.ui.define([
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectMgtList", {
+
         dateFormatter: DateFormatter,
+
+        oUerInfo : {user_id : "A60262"},
 
         onInit: function () {
             let oMultilingual = new Multilingual();
@@ -376,12 +379,78 @@ sap.ui.define([
         }
 
         /**
-        * Dialog Create
+        * 재료비 작성
         */
-        , onDialogCreate: function (oEvent) {
-            MessageToast.show("준비중", {at: "Center Center"});
-            return;
-            this._goCreateView();
+        , onDialogCreatePress: function (oEvent) {
+            MessageBox.confirm("작성 하시겠습니까?", {
+                title : "작성",
+                initialFocus : MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        this._callCreateProjectProc();
+                    }
+                }.bind(this)
+            });
+        }
+
+        , _callCreateProjectProc: function () {
+            //TcCreateMcstProjectProcContext
+            debugger;
+            var me = this;
+            /*
+            var oTable = sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable")
+            let iIdx = oTable.getSelectedIndex();
+            if(iIdx < 0) {
+                MessageToast.show("데이터가 선택되지 않았습니다.", {at: "Center Center"});
+                return;
+            }
+            let oContext = oTable.getContextByIndex(iIdx);
+            */
+           
+            var oTable = this.getView().byId("mainTable");
+            var nSelIdx = this._getSelectedIndex(oTable);
+            var oContext = oTable.getContextByIndex(nSelIdx);
+            var sPath = oContext.getPath();
+            var oData = oTable.getBinding().getModel().getProperty(sPath);
+            let sMcstCode = sap.ui.core.Fragment.byId("fragmentProjectSelection","dialogProjectSelection").data("mcst_code");
+            //call Create Procedure
+            var oInputData = {
+                    inputData : {
+                        tenant_id : oData.tenant_id,
+                        project_code : oData.project_code,
+                        model_code : oData.model_code,
+                        mcst_code : sMcstCode,
+                        user_id : me.oUerInfo.user_id
+                    }
+            };
+
+            var targetName = "TcCreateMcstProjectProc";
+            var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.McstProjectMgtV4Service/" + targetName;
+            $.ajax({
+                url: url,
+                type: "POST",
+                data : JSON.stringify(oInputData),
+                contentType: "application/json",
+                success: function(data){
+                    console.log("create Proc callback Data", data);
+                    debugger;
+                    if(data.return_code === "OK") {
+                        let detailParam = oInputData.inputData;
+                        detailParam.version_number = data.version_number;
+                        this._goCreateView(detailParam);
+                    } else {
+                        //MessageToast.show("생성 실패 하였습니다.", {at: "Center Center"});
+                        MessageToast.show(data.return_msg, {at: "Center Center"});
+                    }
+                }.bind(this),
+                error: function(e){
+                    console.log("error", e);
+                    let eMessage = JSON.parse(e.responseText).error.message;
+                    MessageBox.show("생성 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
+                }
+            });
+
+            
         }
 
         /**
@@ -398,24 +467,12 @@ sap.ui.define([
         /**
          * Dialog(견적재료비 생성, 목표 재료비 생성, 진척관리) > Create(작성) > 입력/수정하는 화면으로 이동
          */
-        , _goCreateView: function (oEvent) {
-            //var iSelIdx = this._getSelectedIndex(this.getView().byId("detailPopupTable"));
+        , _goCreateView: function (oSendData) {
+            const view_mode = "EDIT";
+            oSendData.view_mode = view_mode;
+            debugger;
+            this.getRouter().navTo("McstProjectInfo", oSendData);
 
-            //if (iSelIdx < 0) { return; }//skip
-            var index = 0;
-            let oTable = this.getView().byId("detailPopupTable");
-            let oContext = oTable.getContextByIndex(index);
-            let oModel = oContext.getModel();
-            let oObj = oModel.getProperty(oContext.getPath());
-
-            var oNavParam = {
-                tenant_id: oObj.tenant_id,
-                project_code: oObj.project_code,
-                model_code: oObj.model_code
-            };
-
-            this.getRouter().navTo("McstProjectMgtDetail", oNavParam);
-            //this.getRouter().navTo("ProjectInfo", oNavParam);
         }
 
         /********************************************************************************** */
