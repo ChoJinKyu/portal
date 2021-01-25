@@ -1,10 +1,8 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
+    "op/util/controller/BaseController",
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
-    "ext/lib/formatter/DateFormatter",
-    "ext/lib/formatter/NumberFormatter",
     "cm/util/control/ui/EmployeeDialog",    
     "ext/lib/util/Validator",
     "sap/m/TablePersoController",
@@ -16,17 +14,14 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "ext/lib/util/ExcelUtil",
     "dp/util/control/ui/MaterialMasterDialog",
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, NumberFormatter, EmployeeDialog, Validator,
+], function (BaseController, Multilingual, ManagedListModel, JSONModel, EmployeeDialog, Validator,
     TablePersoController, MainListPersoService,
-    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil, MaterialMasterDialog) {
+    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil, MaterialMasterDialog, Aop) {
     "use strict";
 
     var toggleButtonId = "";
 
     return BaseController.extend("op.pu.prReviewMgt.controller.MainList", {
-
-        dateFormatter: DateFormatter,
-        numberFormatter: NumberFormatter,
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -36,6 +31,9 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            // call the base component's init function
+            BaseController.prototype["op.init"].apply(this, arguments);
+            // today
             var lToday = new Date();
             var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()));
             // 다국어
@@ -96,6 +94,7 @@ sap.ui.define([
                 account_assignment_category_code: null,
                 sloc_code: null
             }), "jSearch");
+
             // 화면 호출 될 때마다 실행
             this.getRouter()
                 .getRoute("mainPage")
@@ -138,16 +137,6 @@ sap.ui.define([
             // Dialog Open
             Dialog.open();
         },
-		
-        onExcelDownload: function () {
-            var [event, tId, bindings] = arguments;
-            var [model, paths] = bindings.split(">");
-            ExcelUtil.fnExportExcel({
-                fileName: "PR Review List",
-                table: this.byId(tId),
-                data: this.getModel(model||"").getProperty(paths)
-            });
-        },
 
 		/**
 		 * Event handler when a search button pressed
@@ -158,54 +147,16 @@ sap.ui.define([
             // Call Service
             (function _search(){
                 var oDeferred = new $.Deferred();
-                var jSearch = this.getModel("jSearch").getData();
                 this.getView()
                     .setBusy(true)
                     .getModel().read("/Pr_ReviewListView", $.extend({
-                        filters: Object.keys(jSearch)
-                            // EQ, BT 만 해당
-                            .filter(
-                                path => 
-                                    // Primitive
-                                    (jSearch[path] && typeof jSearch[path] == "string") || typeof jSearch[path] == "boolean" || typeof jSearch[path] == "number" ||  
-                                    // Object (연산자필드포함)
-                                    (jSearch[path] && typeof jSearch[path] == "object" && jSearch[path]["values"].filter(v => !!v).length > 0)
-                            )
-                            .reduce(function(acc, path) {
-
-                                var filter = [];
-
-                                if (typeof jSearch[path] == "object") {
-                                    // BT
-                                    jSearch[path]["FilterOperator"] == FilterOperator.BT
-                                    && 
-                                    (filter = new Filter(path, jSearch[path]["FilterOperator"], jSearch[path]["values"][0], jSearch[path]["values"][1]));
-                                    
-                                    // Contains
-                                    jSearch[path]["FilterOperator"] == FilterOperator.Contains
-                                    && 
-                                    (filter = new Filter(path, jSearch[path]["FilterOperator"], jSearch[path]["values"][0]));
-
-                                    // Any 의 경우 v2 에서는 지원이 않되므로, In 절 형태로 바꾸어 줘야 한다. (For MultiCombo)
-                                    jSearch[path]["FilterOperator"] == FilterOperator.Any
-                                    &&
-                                    (filter = jSearch[path]["values"].reduce(function (acc, e) {
-                                        return [...acc, new Filter({
-                                            path: path, operator: FilterOperator.EQ, value1: e
-                                        })];
-                                    }, []));
-                                }
-                                else {
-                                    filter = new Filter(path, FilterOperator.EQ, jSearch[path]);
-                                }
-
-                                return filter instanceof Array ? [ ...acc, ...filter ] : [ ...acc, filter ];
-                            }, []),
+                        filters: this.generateFilters(
+                            this.getModel("jSearch").getData()
+                        ),
                     }, {
                         success: oDeferred.resolve,
                         error: oDeferred.reject
                     }));
-
                     return oDeferred.promise();
                 }).call(this)
                 // 성공시
@@ -228,18 +179,17 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent
 		 * @public
 		 */
-        onMainTableItemPress: function (oEvent) {
-          
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-                sPath = oEvent.getSource().getBindingContext("list").getPath(),
-                oRecord = this.getModel("list").getProperty(sPath);
+        onColumnListItemPress: function (oEvent) {
+            console.log(">>>>>>>>>>>> onMainTableItemPress", arguments);
+            var [event, record] = arguments;
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
 
             this.getRouter().navTo("midView", {
                 layout: oNextUIState.layout,
                 vMode: "VIEW",
-                tenantId: oRecord.tenant_id,
-                company_code: oRecord.company_code,
-                pr_number: oRecord.pr_number
+                tenantId: record.tenant_id,
+                company_code: record.company_code,
+                pr_number: record.pr_number
             });
 
             if (oNextUIState.layout === "TwoColumnsMidExpanded") {   
@@ -247,13 +197,23 @@ sap.ui.define([
                 //this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 
+            /*
             var oItem = oEvent.getSource();
             oItem.setNavigated(true);
             var oParent = oItem.getParent();
             // store index of the item clicked, which can be used later in the columnResize event
             this.iIndex = oParent.indexOfItem(oItem);
+            */
         },
-
+        // Excel Download
+        onExcelDownload: function () {
+            var [event, tId, items] = arguments;
+            ExcelUtil.fnExportExcel({
+                fileName: "PR Review List",
+                table: this.byId(tId),
+                data: items
+            });
+        },
         /**
 		 * Triggered by the table's 'updateFinished' event: after new table
 		 * data is available, this handler method updates the table counter.
@@ -264,12 +224,5 @@ sap.ui.define([
 		 * @public
 		 */
         onUpdateFinished: function (event) {},
-
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-        onPersonalize: function (oEvent) {},
     });
 });

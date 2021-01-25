@@ -16,20 +16,29 @@ entity Sc_Tester00 : util.Managed {
 define view Sc_Language as
     select from cm.Currency_Lng{
         language_code,
-        // cast( current_date              as String(30))  as currentDate               : String(30) , 
-        // CURRENT_TIME      as CURRENT_TIME      :Time       ,
-        // CURRENT_USER      as CURRENT_USER      :String(30) ,
-        // CURRENT_TIMESTAMP as CURRENT_TIMESTAMP :DateTime   ,
-        // SESSION_USER      as SESSION_USER      :String(30) ,
-        // SYSTEM_USER       as SYSTEM_USER       :String(30) ,
-        cast( $user.locale              as String(30))  as locale                    : String(30) , 
-        cast( $user.id                  as String(30))  as user_id                   : String(30) , 
-        cast( $at.from                  as String(30))  as at_from                   : String(30) , 
-        cast( $at.to                    as String(30))  as at_to                     : String(30) , 
-        cast( $now                      as DateTime)    as now                       : DateTime   , 
-        cast( $projection.language_code as String(30))  as projection_language_code  : String(30) , 
-        cast( $self.language_code       as String(30))  as self_language_cod         : String(30)           
-        // ,$session                   as session
+        // cast( CURRENT_TIMESTAMP         as DateTime)    as current_timestamp         : DateTime   , 
+        // cast( CURRENT_DATE              as String(30))  as currentDate               : String(30) , 
+        // CURRENT_TIME                    as CURRENT_TIME      :Time       ,
+        // CURRENT_USER                    as CURRENT_USER      :String(30) ,
+        // CURRENT_TIMESTAMP               as CURRENT_TIMESTAMP :DateTime   ,
+        // SESSION_USER                    as SESSION_USER      :String(30) ,
+        // SYSTEM_USER                     as SYSTEM_USER       :String(30) ,
+        $user.locale                    as locale                      :String(30) ,
+        $user.id                        as user_id                     :String(30) ,
+        $at.from                        as at_from                     :String(30) ,
+        $at.to                          as at_to                       :String(30) ,
+        $now                            as now                         :DateTime   ,
+        $projection.language_code       as projection_language_code    :String(30) ,
+        $self.language_code             as self_language_cod           :String(30) 
+        
+        // cast( $user.locale              as String(30))  as locale                   :String(30) ,
+        // cast( $user.id                  as String(30))  as user_id                  :String(30) ,
+        // cast( $at.from                  as String(30))  as at_from                  :String(30) ,
+        // cast( $at.to                    as String(30))  as at_to                    :String(30) ,
+        // cast( $now                      as DateTime  )  as now                      :DateTime   ,
+        // cast( $projection.language_code as String(30))  as projection_language_code :String(30) ,
+        // cast( $self.language_code       as String(30))  as self_language_cod        :String(30) 
+        // // ,$session                   as session
     };
 
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model.cds';
