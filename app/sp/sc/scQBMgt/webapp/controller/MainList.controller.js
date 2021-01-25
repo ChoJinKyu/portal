@@ -108,6 +108,21 @@ sap.ui.define([
                     debugger;
                 }.bind(this));
             },
+            remaining_hours_formatter:function(closing_date){
+
+                var newDate = new Date();
+                var dDate= new Date(2021,0,30);
+                var a = newDate.getTime();
+                var b = dDate.getTime();
+                var c = b - a ;
+                var result = c / 1000 / 60 / 60;
+                result = Math.floor(result);
+                // debugger;
+                // var result = closing_date - newDate ;
+
+                return result+" 시간";
+                
+            },
 			onInit: function () {
                 
                 console.log("onInit");
@@ -399,74 +414,79 @@ sap.ui.define([
 
             },
             beforeRebindTable:function(e){
-                this.mBindingParams = e.getParameter("bindingParams");
-                var oModel = this.getView().getModel();
-                async function _read(oModel){
-                    var promise = jQuery.Deferred();	
-                    oModel.read("/NegoItemPrices?&$select=*,Header&$expand=Header", {
-                        success: function(data){
-                            promise.resolve(data.results);
-                            console.log("item+header ========================= ",data.results);
-                            debugger;
-                        }.bind(this),						
-                        error: function(data){						
-                            alert("error");						
-                        }		
-                    });
-                    return promise;	
-                };
-                async function _read2(oModel){
-                    var promise = jQuery.Deferred();	
-                    oModel.read("/NegoHeaders", {
-                        success: function(data){
-                            promise.resolve(data.results);
-                            console.log("header ========================= ",data.results);
-                        }.bind(this),						
-                        error: function(data){						
-                            alert("error");						
-                        }		
-                    });
-                    return promise;	
-                };
 
-                // async function _readR(oModel){
-                //     var result = await _read(oModel);
-                //     return result;
-                // }
+                debugger;
+                
+                // this.mBindingParams = e.getParameter("bindingParams");
+                // var oModel = this.getView().getModel();
+                // async function _read(oModel){
+                //     var promise = jQuery.Deferred();	
+                //     oModel.read("/NegoItemPrices?&$select=*,Header&$expand=Header", {
+                //         success: function(data){
+                //             promise.resolve(data.results);
+                //             console.log("item+header ========================= ",data.results);
+                //             debugger;
+                //         }.bind(this),						
+                //         error: function(data){						
+                //             alert("error");						
+                //         }		
+                //     });
+                //     return promise;	
+                // };
+                // async function _read2(oModel){
+                //     var promise = jQuery.Deferred();	
+                //     oModel.read("/NegoHeaders", {
+                //         success: function(data){
+                //             promise.resolve(data.results);
+                //             console.log("header ========================= ",data.results);
+                //         }.bind(this),						
+                //         error: function(data){						
+                //             alert("error");						
+                //         }		
+                //     });
+                //     return promise;	
+                // };
 
-                var b = _read2(oModel);
-                b.then(function(data){
-                    // debugger;
-                }.bind(this));
+                // // async function _readR(oModel){
+                // //     var result = await _read(oModel);
+                // //     return result;
+                // // }
 
-                var a = _read(oModel);
-                var that = this;
-                a.then(function(data){
-                    console.log("data ===================================",data);
-                    // this.getView().bindElement(
-                    //     {
-                    //         path: "/NegoItemPrices",
-                    //         parameters: {expand: '/NegoHeaders'}
-                    //     }
-                    // );
-                    var tab = this.byId("sTable1");
-                    // tab.bindElement(
-                    //     {
-                    //         path: "/NegoItemPrices",
-                    //         parameters: {select : "nego_document_number"}
-                    //     }
-                    // )
+                // var b = _read2(oModel);
+                // b.then(function(data){
+                //     // debugger;
+                // }.bind(this));
 
-                    // tab.bindItems({
-                    //     path : "NegoHeaders",
-                    //     parameters: { select : "nego_document_number"}
-                    // });
-                    this.mBindingParams.parameters["expand"] = "NegoHeaders";
+                // var a = _read(oModel);
+                // var that = this;
+                // a.then(function(data){
+                //     console.log("data ===================================",data);
+                //     // this.getView().bindElement(
+                //     //     {
+                //     //         path: "/NegoItemPrices",
+                //     //         parameters: {expand: '/NegoHeaders'}
+                //     //     }
+                //     // );
+                //     var tab = this.byId("sTable1");
+                //     // tab.bindElement(
+                //     //     {
+                //     //         path: "/NegoItemPrices",
+                //     //         parameters: {select : "nego_document_number"}
+                //     //     }
+                //     // )
+
+                //     // tab.bindItems({
+                //     //     path : "NegoHeaders",
+                //     //     parameters: { select : "nego_document_number"}
+                //     // });
+                //     this.mBindingParams.parameters["expand"] = "Header";
+
+
                     
-                    // this.mBindingParams.parameters["select"] = "nego_item_number";
-                    debugger;
+                //     // this.mBindingParams.parameters["select"] = "nego_document_number";
+                //     debugger;
                     
-                }.bind(this, e));
+                // }.bind(this, e));
                 //  /===============================================================
                 
                 
