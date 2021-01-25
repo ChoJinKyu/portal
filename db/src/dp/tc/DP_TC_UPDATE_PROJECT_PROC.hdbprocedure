@@ -168,6 +168,7 @@ BEGIN
 
                 UPDATE DP_TC_PROJECT_ADDITION_INFO
                    SET ADDITION_TYPE_VALUE = loop_add_info.ADDITION_TYPE_VALUE
+                     , UOM_CODE = loop_add_info.UOM_CODE
                      , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
                      , UPDATE_USER_ID = I_USER_ID
                      , SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP

@@ -28,6 +28,7 @@
                         <ToolbarSpacer />
                         <Button text="Load Data" type="Transparent" press=".onRLoadPress" />
                         <Button text="Reset Data" type="Transparent" press=".onResetRModelListPress" />
+                        <Button text="Change Mode" type="Transparent" press=".onChangeModePress" />
                         <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                         <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" />
                         <!--<Button text="Import" type="Transparent" press=".onImportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>-->
@@ -118,13 +119,17 @@
                                     <core:Item key="{common>code}" text="{common>code_name}" />
                                 </items>
                             </ComboBox>
-                            <Input textAlign="End" value="{
-                                    path: 'rModelList>message_code',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        maxLength: 30
-                                    }
-                                }" required="true"></Input>
+                            <HBox>
+                                <Text text="{rModelList>message_code}" visible="{displayModel>/readMode}"/>
+                                <Input textAlign="End" value="{
+                                        path: 'rModelList>message_code',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 30
+                                        }
+                                    }" required="true" visible="{displayModel>/editMode}"/>
+                            </HBox>
+
                             <Text text="{rModelList>message_contents}" width="100%" />
                             <Select forceSelection="false" selectedKey="{rModelList>message_type_code}" autoAdjustWidth="true" items="{
                                     path: 'common>/Code',
@@ -164,6 +169,7 @@
                         <ToolbarSpacer />
                         <Button text="Load Data" type="Transparent" press=".onGLoadPress" />
                         <Button text="Reset Data" type="Transparent" press=".onResetGModelListPress" />
+                        <Button text="Change mode" type="Transparent" press=".onChangeModePress" />
                         <Button id="gTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                         <u:FileUploader id="gFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" />
                     </OverflowToolbar>
@@ -208,19 +214,24 @@
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="End">
+                    <table:Column width="9rem" hAlign="End">
                         <table:customData>
                             <core:CustomData key="bindName" value="message_code" />
                         </table:customData>
                         <Label text="Code" />
                         <table:template>
-                            <Input textAlign="End" value="{
-                                    path: 'gModelList>message_code',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        maxLength: 30
-                                    }
-                                }" editable="{= ${gModelList>_row_state_} === 'C' }" required="true"></Input>
+
+                            <HBox>
+                                <Text text="{gModelList>message_code}" visible="{displayModel>/readMode}"/>
+                                <Input textAlign="End" value="{
+                                        path: 'gModelList>message_code',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 30
+                                        }
+                                    }" required="true" visible="{displayModel>/editMode}"/>
+                            </HBox>
+
                         </table:template>
                     </table:Column>
                     <table:Column width="9rem">

@@ -44,7 +44,7 @@ sap.ui.define([
                     
                 });
             }
-            debugger;
+            //debugger;
             var oSettings = {
                 fileName: _oParam.fileName,
                 workbook: {
@@ -110,7 +110,6 @@ sap.ui.define([
                     if(oBindingInfo.prop === "") {//binding 정보가 없으면 pass
                         return;
                     }
-                    debugger;
                     var aPath = [];
                     if(Array.isArray(oBindingInfo.prop)) {
                         aPath = oBindingInfo.prop.map(function(oProp) {
@@ -134,8 +133,20 @@ sap.ui.define([
          * binding 정보가 없다면 empty string 반환
          */
         , _getBindingInfo : function(oCell){
-            var sEleNm = oCell.getMetadata().getElementName(),
+            var sEleNm = "",
                 oBindingInfo = {prop: {}, align: "Left"};
+            //FlexBox 등으로 Control을 감싼 경우 visible 이 true 인 Control 적용
+            if(oCell instanceof sap.m.FlexBox) {
+                $.each(oCell.getAggregation("items"), function(idx, oObj) {
+                    if(oObj.getVisible()) {
+                        sEleNm = oObj.getMetadata().getElementName();
+                        oCell = oObj;
+                        return false;
+                    }
+                });
+            } else {
+                sEleNm = oCell.getMetadata().getElementName()
+            }
             switch(sEleNm) {
                 case "sap.m.Text" :
                 case "sap.m.ObjectIdentifier" :

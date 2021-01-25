@@ -7,7 +7,7 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogExclusion" class="sapUiSmallMargin" title="재료비 산출 제외" contentWidth="40%" >
+    <Dialog id="dialogExclusion" class="sapUiSmallMargin" title="{I18N>/MCST_COMPUT_EXCLUSION}" contentWidth="40%" >
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm
                 editable="true"
@@ -16,7 +16,7 @@
                 adjustLabelSpan="false"
                 singleContainerFullSize="false" >                    
                     <form:content >
-                            <Label text = "프로젝트코드" class="sapUiLargeMarginEnd">
+                            <Label text = "{I18N>/PROJECT_CODE}" class="sapUiLargeMarginEnd">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
@@ -26,7 +26,7 @@
                                     <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
                             </Text>
-                            <Label text = "재료비총괄" class="sapUiLargeMarginEnd">
+                            <Label text = "{I18N>/MCST_PERSON}" class="sapUiLargeMarginEnd">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
@@ -36,7 +36,7 @@
                                     <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
                             </Text>
-                            <Label text = "산출제외" class="sapUiLargeMarginEnd">
+                            <Label text = "{I18N>/COMPUT_EXCLUSION}" class="sapUiLargeMarginEnd">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
@@ -51,7 +51,7 @@
                                     <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>
                             </HBox>
-                            <Label text = "제외사유" width="100%" class="sapUiSmallMarginBegin">
+                            <Label text = "{I18N>/EXCLUSION_REASON}" width="100%" class="sapUiSmallMarginBegin">
                                 <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" lineBreak="true"/>
                                 </layoutData> 
@@ -67,8 +67,8 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="End" justifyContent="End" >
-            <Button text="닫기" class="sapUiSmallMarginEnd" press=".onExcludeCalExit"/>
-            <Button text="저장" class="sapUiSmallMarginEnd" type="Emphasized" press=".onExcludeCalSavePress"/>
+            <Button text="{I18N>/CLOSE}" class="sapUiSmallMarginEnd" press=".onExcludeCalExit"/>
+            <Button text="{I18N>/SAVE}" class="sapUiSmallMarginEnd" type="Emphasized" press=".onExcludeCalSavePress"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

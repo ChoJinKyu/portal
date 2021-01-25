@@ -125,7 +125,7 @@ curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePri
         "cmd" : "upsert",
         "basePriceArlMst" : [
             { 
-                "approval_number": "202101230001", "approve_status_code": "DR",
+                "approval_number": "202101240001", "approve_status_code": "DR",
                 "approval_title": "Change Approval Title Update", "approval_contents": "Change Approval Contents",
                 "request_date": "20201210",
                 "Approvers" : [
@@ -160,7 +160,22 @@ curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePri
         "cmd" : "delete",
         "basePriceArlMst" : [
             { 
-                "approval_number": "202101230001"
+                "approval_number": "202101240001"
+            }
+        ]
+        , "debug" : false
+    } 
+}'
+
+## 담당자 변경
+curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePriceChangeRequestorProc \
+-H "Content-Type: application/json" \
+-d '{
+    "inputData" : { 
+        "cmd" : "upsert",
+        "BasePriceArlChangeRequestor" : [
+            { 
+                "tenant_id": "L2100", "approval_number": "202101240001", "changer_empno": "5459", "creator_empno": "5473"
             }
         ]
         , "debug" : false

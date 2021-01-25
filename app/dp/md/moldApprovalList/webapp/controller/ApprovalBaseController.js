@@ -518,7 +518,7 @@ sap.ui.define([
             var that = this;
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
-                
+                 console.log(" Approvers >>> ", oData);
             }.bind(this));
 
             console.log(" Approvers >>> ", approvalNumber);

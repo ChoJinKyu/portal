@@ -19,7 +19,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="프로젝트 관리" />
+                    <Title text="{I18N>/PROJECT} {I18N>/MANAGEMENT}" />
                 </f:heading>
 
                 <f:expandedContent>
@@ -35,7 +35,7 @@
                             adjustLabelSpan="false">
                         <form:content>
 
-                            <Label text="회사" required="true">
+                            <Label text="{I18N>/COMPANY}" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -56,7 +56,7 @@
                                 </layoutData>
                             </ComboBox>
 
-                            <Label text="사업부" required="true">
+                            <Label text="{I18N>/BUSINESS_DIVISION}" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -80,7 +80,7 @@
                                 </layoutData>
                             </ComboBox>
 
-                            <Label text="프로젝트코드">
+                            <Label text="{I18N>/PROJECT_CODE}">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -91,7 +91,7 @@
                                 </layoutData>
                             </Input>
 
-                            <Label text="프로젝트명">
+                            <Label text="{I18N>/PROJECT_NAME}">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -119,7 +119,7 @@
                             adjustLabelSpan="false">
                         <form:content>
                             <!--Search line 2-->
-                            <Label text="회사" required="true">
+                            <Label text="{I18N>/COMPANY}" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -140,7 +140,7 @@
                                 </layoutData>
                             </ComboBox>
                             
-                            <Label text="사업부" required="true">
+                            <Label text="{I18N>/BUSINESS_DIVISION}" required="true">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -165,7 +165,7 @@
                                 </layoutData>
                             </ComboBox>
 
-                            <Label text="프로젝트코드">
+                            <Label text="{I18N>/PROJECT_CODE}">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -176,7 +176,7 @@
                                 </layoutData>
                             </Input>
 
-                            <Label text="프로젝트명">
+                            <Label text="{I18N>/PROJECT_NAME}">
                                 <layoutData>
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
@@ -192,8 +192,7 @@
                 </f:snappedContent>
 
                 <f:actions>
-                    <Button text="조회" type="Emphasized" press=".onSearch"/> 
-                    <!-- <Button text="Search2" type="Emphasized" press=".onSearch2"/> -->
+                    <Button text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/> 
                 </f:actions>
 
             </f:DynamicPageTitle>
@@ -213,7 +212,7 @@
                 adjustLabelSpan="false">
                     <form:content>
                         <!--Search line 2-->
-                        <Label text="대표모델코드">
+                        <Label text="{I18N>/REPR_MODEL_CODE}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -224,7 +223,7 @@
                             </layoutData>
                         </SearchField>
 
-                        <Label text="제품군">
+                        <Label text="{I18N>/PRODUCT_GROUP}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -246,7 +245,7 @@
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="상태">
+                        <Label text="{I18N>/STATUS}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -268,7 +267,7 @@
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="양산일자">
+                        <Label text="{I18N>/MASSPROD_DATE}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -280,7 +279,7 @@
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </DateRangeSelection>
-                        <Label text="등급">
+                        <Label text="{I18N>/GRADE}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -302,7 +301,7 @@
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="이벤트">
+                        <Label text="{I18N>/EVENT}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -324,7 +323,7 @@
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
                         </ComboBox>
-                        <Label text="재료비총괄">
+                        <Label text="{I18N>/MCST_PERSON}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -357,7 +356,7 @@
                                 <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
-                        <Label text="산출제외">
+                        <Label text="{I18N>/COMPUT_EXCLUSION}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
@@ -392,101 +391,88 @@
                 visibleRowCountMode="Auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <!-- <Title text="{I18n>/PART_NO_LIST}" level="H2"/> -->
-                        <Title text="프로젝트 관리 목록 ({= ${listModel>/results}.length})" level="H2"/>
+                        <!-- <Title text="{I18N>/PART_NO_LIST}" level="H2"/> -->
+                        <Title text="{I18N>/PROJECT} {I18N>/MANAGEMENT} {I18N>/LIST} ({= ${listModel>/results}.length})" level="H2"/>
                         <ToolbarSpacer />
-                        <Button text="견적 재료비" type="Emphasized" press=".onGoalCreatePress">
+                        <Button text="{I18N>/QUOTATION_MCST}" type="Emphasized" press=".onGoalCreatePress">
                             <customData>
                                 <core:CustomData key="mcst_code" value="QUOTATION" />
                             </customData>
                         </Button>
-                        <Button text="목표 재료비" type="Emphasized" press=".onGoalCreatePress" >
+                        <Button text="{I18N>/TARGET_MCST}" type="Emphasized" press=".onGoalCreatePress" >
                             <customData>
                                 <core:CustomData key="mcst_code" value="TARGETS"/>
                             </customData>
                         </Button>
-                        <Button text="예상 재료비" type="Emphasized" press=".onGoalCreatePress" >
+                        <Button text="{I18N>/ESTIMATED} {I18N>/MATERIAL_COST}" type="Emphasized" press=".onGoalCreatePress" >
                             <customData>
                                 <core:CustomData key="mcst_code" value="ESTIMATE"/>
                             </customData>
                         </Button>
                         <ToolbarSeparator/>
-                        <Button text="모델 추가" type="Transparent" press=".onAddModelPress" />
-                        <Button text="산출 제외" type="Transparent" press=".onExcludeCalPress" />
+                        <Button text="{I18N>/MODEL_ADDITION}" type="Transparent" press=".onAddModelPress" />
+                        <Button text="{I18N>/COMPUT_EXCLUSION}" type="Transparent" press=".onExcludeCalPress" />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
                     </OverflowToolbar>
                 </t:extension>
                 <t:columns>
                     <t:Column hAlign="Left" width="8rem">
-                        <!-- <Label text="{I18n>/DIV}" textAlign="Center" /> -->
-                        <Label text="회사" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{listModel>company_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Begin" width="10rem">
-                        <!-- <Label text="{I18n>/DIV}" textAlign="Center" /> -->
-                        <Label text="사업부" />
+                        <Label text="{I18N>/BUSINESS_DIVISION}" />
                         <t:template>
                             <Text text="{listModel>bizdivision_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="10rem">
-                        <!-- <Label text="{I18n>/PART_NO}" /> -->
-                        <Label text="제품군" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/PRODUCT_GROUP}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>product_group_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="12rem">
-                        <!-- <Label text="{I18n>/DESCRIPTION}" textAlign="Center" /> -->
-                        <Label text="고객사" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/CUSTOMER_NAME}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>customer_local_name}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="5rem">
-                        <!-- <Label text="{I18n>/SPECIFICATION}" /> -->
-                        <Label text="등급" />
+                        <Label text="{I18N>/GRADE}" />
                         <t:template>
                             <Text text="{listModel>project_grade_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="12rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="프로젝트코드" />
+                        <Label text="{I18N>/PROJECT_CODE}" />
                         <t:template>
-                            <!--<Text text="{listModel>project_code}" />-->
                             <Text text="{listModel>project_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Left"  width="15rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="프로젝트명" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/PROJECT_NAME}" textAlign="Center" width="100%" />
                         <t:template>
-                            <!--<Text text="{listModel>project_name}" />-->
                             <Text text="{listModel>project_name}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="12rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="견적프로젝트코드" />
+                        <Label text="{I18N>/QUOTE_PROJECT_CODE}" />
                         <t:template>
-                            <!--<Text text="{listModel>project_code}" />-->
                             <Text text="{listModel>quotation_project_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="15rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="대표모델코드" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/REPR_MODEL_CODE}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>model_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="7rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="양산일자" />
+                        <Label text="{I18N>/MASSPROD_DATE}" />
                         <t:template>
                             <Text text="{
                                 path: 'listModel>massprod_start_date',
@@ -495,36 +481,31 @@
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="자재명세서" />
+                        <Label text="{I18N>/BOM}" />
                         <t:template>
                             <Text text="{listModel>bom_type_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="상태" />
+                        <Label text="{I18N>/STATUS}" />
                         <t:template>
                             <Text text="{listModel>project_status_text}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="이벤트" />
+                        <Label text="{I18N>/EVENT}" />
                         <t:template>
                             <Text text="{listModel>develope_event_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="7rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="프로젝트리더" />
+                        <Label text="{I18N>/PROJECT_LEADER}" />
                         <t:template>
                             <Text text="{listModel>project_leader_name}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="6rem">
-                        <!-- <Label text="{I18n>/BASIS}" textAlign="Center" width="100%"/> -->
-                        <Label text="재료비총괄" />
+                        <Label text="{I18N>/MCST_PERSON}" />
                         <t:template>
                             <Text text="{listModel>buyer_name}" />
                         </t:template>
@@ -532,10 +513,8 @@
 
                     <t:Column headerSpan="5" hAlign="Center" width="7rem">
                         <t:multiLabels>
-                            <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
-                            <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비관리상태" />
-                            <Label text="최종등록일자" />
+                            <Label text="{I18N>/MCST_MGT_STATUS}" />
+                            <Label text="{I18N>/LAST_REG_DATE}" />
                         </t:multiLabels>
                         <t:template>
                             <Text text="{
@@ -545,10 +524,8 @@
                     </t:Column>
                     <t:Column hAlign="Center" width="5rem">
                         <t:multiLabels>
-                            <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
-                            <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비관리상태" />
-                            <Label text="산출제외" />
+                            <Label text="{I18N>/MCST_MGT_STATUS}" />
+                            <Label text="{I18N>/COMPUT_EXCLUSION}" />
                         </t:multiLabels>
                         <t:template>
                             <tnt:InfoLabel
@@ -562,10 +539,8 @@
                     </t:Column>
                     <t:Column hAlign="Left" width="8rem">
                         <t:multiLabels>
-                            <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
-                            <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비관리상태" textAlign="Center" width="100%" />
-                            <Label text="견적" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/MCST_MGT_STATUS}" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/QUOTATION}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
                             <tnt:InfoLabel
@@ -582,10 +557,8 @@
                     </t:Column>
                     <t:Column hAlign="Left" width="8rem">
                         <t:multiLabels>
-                            <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
-                            <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비관리상태" textAlign="Center" width="100%" />
-                            <Label text="목표" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/MCST_MGT_STATUS}" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/TARGETS}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
                             <tnt:InfoLabel
@@ -602,10 +575,8 @@
                     </t:Column>
                     <t:Column hAlign="Left" width="8rem">
                         <t:multiLabels>
-                            <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
-                            <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                            <Label text="재료비관리상태" textAlign="Center" width="100%" />
-                            <Label text="예상" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/MCST_MGT_STATUS}" textAlign="Center" width="100%" />
+                            <Label text="{I18N>/ESTIMATED}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
                             <tnt:InfoLabel

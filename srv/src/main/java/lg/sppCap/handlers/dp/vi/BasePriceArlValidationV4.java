@@ -271,6 +271,39 @@ public class BasePriceArlValidationV4 {
     }
 
     /**
+     * validationBasePriceArlChangeRequestor 입력값 체크
+     * @param context
+     * @param basePriceArlMasters
+     */
+    public void validationBasePriceArlChangeRequestor(DpViBasePriceChangeRequestorProcContext context, Collection<BasePriceArlChangeRequestorType> basePriceArlChangeRequestors, boolean isDebug) {
+        log.info("## validationBasePriceArlChangeRequestor Method Started....");
+
+        String cmdString = context.getInputData().getCmd().toLowerCase();
+
+        if (!basePriceArlChangeRequestors.isEmpty() && basePriceArlChangeRequestors.size() > 0){
+            for (BasePriceArlChangeRequestorType basePriceArlChangeRequestor : basePriceArlChangeRequestors) {
+                if (isDebug) {
+                    System.out.println("# tenant_id : "             + basePriceArlChangeRequestor.getTenantId());
+                    System.out.println("# approval_number : "       + basePriceArlChangeRequestor.getApprovalNumber());
+                    System.out.println("# changer_empno : "         + basePriceArlChangeRequestor.getChangerEmpno());
+                    System.out.println("# creator_empno : "         + basePriceArlChangeRequestor.getCreatorEmpno());
+
+                    System.out.println("# local_create_dtm : "      + basePriceArlChangeRequestor.getLocalCreateDtm());
+                    System.out.println("# local_update_dtm : "      + basePriceArlChangeRequestor.getLocalUpdateDtm());
+                    System.out.println("# create_user_id : "        + basePriceArlChangeRequestor.getCreateUserId());
+                    System.out.println("# update_user_id : "        + basePriceArlChangeRequestor.getUpdateUserId());
+                    System.out.println("# --------------------------------------------------------------------------------------------");
+                }
+
+                validMandatory(basePriceArlChangeRequestor.getTenantId(), context, this.getMessage("TENANT_ID", context));
+                validMandatory(basePriceArlChangeRequestor.getApprovalNumber(), context, this.getMessage("APPROVAL_NUMBER", context));
+                validMandatory(basePriceArlChangeRequestor.getChangerEmpno(), context, this.getMessage("CHANGER_EMPNO", context));
+                validMandatory(basePriceArlChangeRequestor.getCreatorEmpno(), context, this.getMessage("CREATOR_EMPNO", context));
+            }
+        }
+    }
+
+    /**
      * 필수 입력값 체크
      * @param validSource
      * @param context

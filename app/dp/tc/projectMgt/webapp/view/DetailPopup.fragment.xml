@@ -9,9 +9,9 @@
     xmlns:form="sap.ui.layout.form"
     displayBlock="true">
 	
-	<Dialog id="dialogProjectSelection" title="재료비 조회" contentWidth="40%" >
+	<Dialog id="dialogProjectSelection" title="{I18N>/MCST_SEARCH}" contentWidth="40%" >
 		<content>
-                <!-- 재료비 조회 List 시작 -->
+                <!-- 재료비검색 List 시작 -->
                 <t:Table 
                     id="detailPopupTable"
                     selectionMode="Single"
@@ -22,60 +22,30 @@
                     visibleRowCountMode="Auto" >
                     <t:extension>
                         <OverflowToolbar>
-                            <Title text="재료비" level="H2" />
+                            <Title text="{I18N>/MATERIAL_COST}" level="H2" />
                             <ToolbarSpacer />
                             <!-- <SearchField search=".onGetDialogData" width="15rem"/>  검색 버튼-->
                         </OverflowToolbar>
                     </t:extension>
                     <t:columns>
                         <t:Column hAlign="Begin"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="산출정보" width="100%" textAlign="Center"/>  
+                            <Label text="{I18N>/COMPUT_INFO}" width="100%" textAlign="Center"/>  
                             <t:template>
                                  <Text text="{popupListModel>mcst_text/code_name} - {popupListModel>version_sequence}'st"/>
                             </t:template>                          
                         </t:Column>
                         <t:Column hAlign="Center"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="상태" />  
+                            <Label text="{I18N>/STATUS}" />  
                             <t:template>
                                  <Text text="{popupListModel>mcst_status_text/code_name}"/>
                             </t:template>                          
                         </t:Column>
                         <t:Column hAlign="Center"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="등록일" />  
+                            <Label text="{I18N>/REG_DATE}" />  
                             <t:template>
                                  <Text text="{ path : 'popupListModel>project_create_date',
                                               formatter: '.dateFormatter.toUTCDateString'  
                                             }" />         
-                            </t:template>                          
-                        </t:Column> 
-                        <t:Column hAlign="Center" visible="false"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="tenant_id" />  
-                            <t:template>
-                                 <Text text="{popupListModel>tenant_id}"/>         
-                            </t:template>                          
-                        </t:Column>
-                        <t:Column hAlign="Center" visible="false"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="project_code" />  
-                            <t:template>
-                                 <Text text="{popupListModel>project_code}"/>       
-                            </t:template>                          
-                        </t:Column>
-                        <t:Column hAlign="Center" visible="false"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="model_code" />  
-                            <t:template>
-                                 <Text text="{popupListModel>model_code}"/>       
-                            </t:template>                          
-                        </t:Column>
-                        <t:Column hAlign="Center" visible="false"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="mcst_code" />  
-                            <t:template>
-                                 <Text text="{popupListModel>mcst_code}"/>       
-                            </t:template>                          
-                        </t:Column>
-                        <t:Column hAlign="Center" visible="false"> <!-- width="10rem" 컬럼 사이즈 조절  -->
-                            <Label text="user_id" />  
-                            <t:template>
-                                 <Text text="A53942"/>       
                             </t:template>                          
                         </t:Column> 
                     </t:columns>
@@ -87,15 +57,12 @@
                         </t:RowAction>
                     </t:rowActionTemplate>
                 </t:Table>
-                <!-- 재료비 조회 List 끝 --> 
+                <!-- 재료비검색 List 끝 --> 
 		</content>
         <buttons>
-            <Button text="닫기" press=".onGoalPopClose" />
-            <!--<Button text="복사" press=".onCopy" />-->
-            <Button text="작성" type="Emphasized" press=".onDialogCreate" />
+            <Button text="{I18N>/CLOSE}" press=".onGoalPopClose" />
+            <!--<Button text="{I18N>/COPY}" press=".onCopy" />-->
+            <Button text="{I18N>/WRITE}" type="Emphasized" press=".onDialogCreate" />
         </buttons>
-        <customData>
-            <core:CustomData key="cost_type" value=""/>
-        </customData>
 	</Dialog>
 </core:FragmentDefinition>

@@ -5,6 +5,7 @@ PROCEDURE DP_TC_UPDATE_MCST_ADD_INFO_PROC (IN I_TENANT_ID NVARCHAR(5)
                                           ,IN I_ADDITION_TYPE_CODE NVARCHAR(30)
                                           ,IN I_PERIOD_CODE NVARCHAR(30)
                                           ,IN I_ADDITION_TYPE_VALUE NVARCHAR(10)
+                                          ,IN I_UOM_CODE NVARCHAR(3)
                                           ,IN I_USER_ID NVARCHAR(255)
                                           ,OUT O_RETURN_CODE NVARCHAR(10)
                                           ,OUT O_RETURN_MSG NVARCHAR(3000)
@@ -48,6 +49,7 @@ BEGIN
             
         UPDATE DP_TC_MCST_PROJECT_ADDITION_INFO
            SET ADDITION_TYPE_VALUE = I_ADDITION_TYPE_VALUE
+             , UOM_CODE = I_UOM_CODE
              , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
              , UPDATE_USER_ID = I_USER_ID
              , SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP
