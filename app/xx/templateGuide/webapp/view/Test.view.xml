@@ -8,16 +8,22 @@
     xmlns:microchart="sap.suite.ui.microchart"
     xmlns:cm="sap.suite.ui.commons"
     xmlns:m="sap.m"
-    xmlns:l="sap.ui.layout">
+    xmlns:l="sap.ui.layout"
+    xmlns:custom="ext.lib.custom">
     <m:Panel>
     <m:content>
+        <custom:SppCustomUploadCollection
+            uploadUrl="srv-api/test/upload"
+            instantUpload="false"
+        >
+        </custom:SppCustomUploadCollection>
 		<m:HBox>
 			<m:ToggleButton text="Disabled" enabled="false" press="" >
 				<m:layoutData>
 					<m:FlexItemData growFactor="1" />
 				</m:layoutData>
 			</m:ToggleButton>
-			<m:ToggleButton text="Pressed" enabled="true" pressed="true" press="" id="btnToggle">
+			<m:ToggleButton text="Pressed" enabled="true" pressed="" press="onSaveFile" id="btnToggle">
 				<m:layoutData>
 					<m:FlexItemData growFactor="1" />
 				</m:layoutData>
@@ -167,7 +173,7 @@
             <!-- <TreeTable -->
             <Table
                     id="TreeTableBasic"
-                    rows="{path:'/catalog/clothing/categories', parameters: {arrayNames:['categories']}}"
+                    rows="{/modelData}"
                     selectionMode="MultiToggle"
                     enableSelectAll="false"
                     ariaLabelledBy="title">
@@ -183,27 +189,21 @@
                 </extension>
                 <columns>
                     <Column width="13rem">
-                        <m:Label text="Categories"/>
+                        <m:Label text="Street"/>
                         <template>
-                            <m:Text text="{name}" wrapping="false" />
+                            <m:Text text="{street}" wrapping="false" />
                         </template>
                     </Column>
                     <Column width="9rem">
-                        <m:Label text="Price"/>
+                        <m:Label text="City"/>
                         <template>
-                            <u:Currency value="{amount}" currency="{currency}"/>
+                            <m:Text text="{city}" wrapping="false" />
                         </template>
                     </Column>
                     <Column width="11rem">
-                        <m:Label text="Size"/>
-                        <template>
-                            <m:Select
-                                    items="{path: '/sizes', templateShareable: true}"
-                                    selectedKey="{size}"
-                                    visible="{= !!${size}}"
-                                    forceSelection="false">
-                                <core:Item key="{key}" text="{value}"/>
-                            </m:Select>
+                        <m:Label text="Phone"/>
+                         <template>
+                        <m:Text text="{phone}" wrapping="false" />
                         </template>
                     </Column>
                 </columns>
