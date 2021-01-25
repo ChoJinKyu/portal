@@ -175,7 +175,17 @@ sap.ui.define([
                 this.oSupplierCode.setValue(sSupplierCode);
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, sSupplierCode));
             }
-            if(sSupplierName)aFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, sSupplierName));
+            if(sSupplierName){
+                aFilters.push(
+                    new Filter({
+                        filters: [
+                            new Filter("supplier_local_name", FilterOperator.Contains, sSupplierName ),
+                            new Filter("supplier_english_name", FilterOperator.Contains, sSupplierName )
+                        ],
+                        and: false
+                    })
+                )
+            }
             if(sTaxId)aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
             if(sStatus)aFilters.push(new Filter("supplier_status_code", FilterOperator.EQ, sStatus));
 
