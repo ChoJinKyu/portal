@@ -1,0 +1,117 @@
+/* Vendor pool별 Item 매핑처리 */
+PROCEDURE PG_MD_VP_MATERIAL_MAPP_INSERT_PROC (
+        IN I_TABLE TABLE(   
+                              TENANT_ID NVARCHAR(5) 
+							, COMPANY_CODE NVARCHAR(10)
+							, ORG_TYPE_CODE NVARCHAR(30)
+							, ORG_CODE NVARCHAR(10)
+							, SPMD_CATEGORY_CODE NVARCHAR(4)
+							, SPMD_CHARACTER_CODE NVARCHAR(4)
+							, SPMD_CHARACTER_SERIAL_NO BIGINT
+							, VENDOR_POOL_CODE NVARCHAR(20)
+							, UPDATE_USER_ID NVARCHAR(255)
+        ),
+        OUT O_TABLE TABLE(  
+                              TENANT_ID NVARCHAR(5)
+                            , COMPANY_CODE NVARCHAR(10)
+							, ORG_TYPE_CODE NVARCHAR(30)
+							, ORG_CODE NVARCHAR(10)
+							, VENDOR_POOL_CODE NVARCHAR(20)
+							, SPMD_CATEGORY_CODE NVARCHAR(4)
+							, SPMD_CHARACTER_CODE NVARCHAR(4)
+        )
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+AS
+BEGIN
+	DECLARE V_SQL_EXEC_STR NVARCHAR(4000);
+	DECLARE V_ROWCNT BIGINT;
+
+    /* VP Metrail/Supplier Mapping대상 조회 */
+    DECLARE CURSOR curList FOR
+        SELECT 
+            MVIM.TENANT_ID
+            , MVIM.COMPANY_CODE
+            , MVIM.ORG_TYPE_CODE
+            , MVIM.ORG_CODE
+            , MVIM.VENDOR_POOL_CODE
+            , MSMST.MATERIAL_CODE
+            , MSMST.SUPPLIER_CODE
+        FROM PG_MD_VP_ITEM_MAPPING MVIM
+        JOIN (	SELECT 
+                    DISTINCT VVPID.TENANT_ID
+                    --VVPID.TENANT_ID
+                    , VVPID.VENDOR_POOL_CODE
+                    , VVPID.MATERIAL_CODE
+                    , IFNULL(NNPM.SUPPLIER_CODE, '*') AS SUPPLIER_CODE
+                FROM PG_VP_VENDOR_POOL_ITEM_DTL VVPID
+                LEFT OUTER JOIN SP_NP_NET_PRICE_MST NNPM ON (
+                                                NNPM.TENANT_ID = VVPID.TENANT_ID
+                                                AND NNPM.MATERIAL_CODE = VVPID.MATERIAL_CODE
+                                            )
+                where IFNULL(VVPID.VENDOR_POOL_MAPPING_USE_FLAG, TRUE) = TRUE
+            ) MSMST ON (
+                MSMST.VENDOR_POOL_CODE = MVIM.VENDOR_POOL_CODE
+            )
+        where 1=1
+        and MVIM.CONFIRMED_STATUS_CODE = '300'  /* VP별 Item특성 매핑 확정된 상태  */
+        ;
+	
+	/* SQL Error 처리 */
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+        --O_RTN_MESG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
+		--SELECT ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE INTO O_RTN_MESG FROM DUMMY;
+
+        O_TABLE = SELECT
+                        TMP.TENANT_ID
+                        , TMP.COMPANY_CODE
+                        , TMP.ORG_TYPE_CODE
+                        , TMP.ORG_CODE
+                        , TMP.VENDOR_POOL_CODE AS VENDOR_POOL_CODE
+                        , VIMA.SPMD_CATEGORY_CODE
+                        , VIMA.SPMD_CHARACTER_CODE
+                    FROM PG_MD_VP_ITEM_MAPPING_ATTR VIMA
+                    RIGHT OUTER JOIN :I_TABLE TMP ON ( 
+                                            VIMA.TENANT_ID = TMP.TENANT_ID
+                                            AND VIMA.COMPANY_CODE = TMP.COMPANY_CODE
+                                            AND VIMA.ORG_TYPE_CODE = TMP.ORG_TYPE_CODE
+                                            AND VIMA.ORG_CODE = TMP.ORG_CODE
+                                            AND VIMA.SPMD_CATEGORY_CODE = TMP.SPMD_CATEGORY_CODE
+                                            AND VIMA.SPMD_CHARACTER_CODE = TMP.SPMD_CHARACTER_CODE
+                                            AND VIMA.VENDOR_POOL_CODE = TMP.VENDOR_POOL_CODE
+                    )
+                    ;
+	END;
+
+
+
+
+
+
+    
+
+	COMMIT;
+
+    O_TABLE = SELECT
+                TMP.TENANT_ID
+                , TMP.COMPANY_CODE
+                , TMP.ORG_TYPE_CODE
+                , TMP.ORG_CODE
+                , TMP.VENDOR_POOL_CODE AS VENDOR_POOL_CODE
+                , VIMA.SPMD_CATEGORY_CODE
+                , VIMA.SPMD_CHARACTER_CODE
+            FROM PG_MD_VP_ITEM_MAPPING_ATTR VIMA
+            RIGHT OUTER JOIN :I_TABLE TMP ON ( 
+                                    VIMA.TENANT_ID = TMP.TENANT_ID
+                                    AND VIMA.COMPANY_CODE = TMP.COMPANY_CODE
+                                    AND VIMA.ORG_TYPE_CODE = TMP.ORG_TYPE_CODE
+                                    AND VIMA.ORG_CODE = TMP.ORG_CODE
+                                    AND VIMA.SPMD_CATEGORY_CODE = TMP.SPMD_CATEGORY_CODE
+                                    AND VIMA.SPMD_CHARACTER_CODE = TMP.SPMD_CHARACTER_CODE
+                                    AND VIMA.VENDOR_POOL_CODE = TMP.VENDOR_POOL_CODE
+            )
+            ;                
+END;
