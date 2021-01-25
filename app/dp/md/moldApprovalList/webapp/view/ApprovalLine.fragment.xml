@@ -53,26 +53,26 @@
                         <Column id="approver_empno" minScreenWidth="Tablet" hAlign="Center" visible="false" width="3em" >
                             <Text text="approver_empno" />
                         </Column>
-                        <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3em" >
-                            <Text text="No." />
+                        <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3.5em" >
+                            <Text text="{I18N>/SEQUENCE}" />
                         </Column>
                         <Column id="type" minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="Type" />
+                            <Text text="{I18N>/TYPE}" />
                         </Column>
                         <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                            <Text text="Name/Dept" />
+                            <HBox><Text text="{I18N>/NAME}" /><Text text="/" /><Text text="{I18N>/DEPARTMENT}" /></HBox>
                         </Column>
                         <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Status" />
+                            <Text text="{I18N>/STATUS}" />
                         </Column> 
                         <Column id="comment" minScreenWidth="Tablet" hAlign="Center" >
-                            <Text text="Comment" />
+                            <Text text="{I18N>/COMMENT}" />
                         </Column>
-                        <Column id="add" minScreenWidth="Tablet" hAlign="Center" width="3.2em" >
-                            <Text text="add"  />
+                        <Column id="add" minScreenWidth="Tablet" hAlign="Center" width="5em" >
+                            <Text text="{I18N>/ROW_ADD}"  />
                         </Column>					
                         <Column id="delete" minScreenWidth="Tablet" hAlign="Center" width="5em" >
-                            <Text text="delete" />
+                            <Text text="{I18N>/ROW_DELETE}" />
                         </Column>					
                     </columns>
                     <dragDropConfig>
@@ -104,8 +104,10 @@
                                 <SearchField search=".onApproverSearch" width="100%" value="{approver>approver_name}" placeholder="Search employee"  enabled="{approver>selRow}" />
                                 <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
+                              
                                 <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
                                 <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
+                               
                             </cells>
                         </ColumnListItem>
                     </items>
