@@ -394,7 +394,7 @@
                             <Text id="model" text="{list>model}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldNoColumn" width="12em" hAlign="Center">
+                    <table:Column id="moldMoldNoColumn" width="12em">
                         <Label text="Mold No" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>
@@ -412,10 +412,10 @@
                             <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldStatusColumn" width="13em" hAlign="Center">
+                    <table:Column id="moldStatusColumn" width="13em">
                         <Label text="{I18N>/STATUS}" wrapping="true"/>
                         <table:template>
-                             <ComboBox   id="mold_progress_status_code"
+                            <!--<ComboBox   id="mold_progress_status_code"
                                 selectedKey="{list>mold_progress_status_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -427,7 +427,8 @@
                                         }"
                                 editable="false" width="100%" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </ComboBox>-->
+                            <Text id="mold_progress_status_name" text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="5em" hAlign="Center">
@@ -583,7 +584,7 @@
                             </Select>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldStructureColumn" width="9em" hAlign="Center">
+                    <table:Column id="moldStructureColumn" width="9em" hAlign="Center">
                         <Label text="Mold Structure" required="true" wrapping="true"/>
                         <table:template>
                             <Select   id="die_form" width="9em"
