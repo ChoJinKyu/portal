@@ -56,18 +56,21 @@ sap.ui.define([
         onInvestmentDtlAddButtonPress : function() {
             
             // var oTable = this.byId("investmentDtl");
-            var oModel = this.getView().getModel("localModel"),
-                oTableModel = oModel.getProperty("/items");
-            
-            oTableModel.push({
-                            itemCode1 : "",
-                            itemCode2 : "",
-                            itemCode3 : "",
-                            itemCode4 : "",
-                            itemCode5 : ""
-                        });
+            var oModel = this.getModel("applicationSup"),
+                dtlModel = oModel.getProperty("/popUpInvestPlanDtl"),
+                oTableModel = {};
+                // oTableModel = oModel.getProperty("/items");
 
-            oModel.setProperty("/items", oTableModel);
+            oTableModel={
+                            investment_item_name : "",
+                            investment_item_purchasing_price : "",
+                            investment_item_purchasing_qty : "",
+                            investment_item_purchasing_amt : ""
+                        };
+                
+            dtlModel.push(oTableModel);
+
+            oModel.setProperty("/popUpInvestPlanDtl", dtlModel);
         },
 
         onPageSaveButtonPress : function() {
@@ -165,7 +168,7 @@ sap.ui.define([
             bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
             
             oModel.read("/SfFundingInvestPlanMst", {
-                //Filter : 공고번호, sub 정보
+                //Filter : 신청번호
                 filters : bFilters,
                 success: function(oRetrievedResult) {
                     that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
@@ -178,6 +181,25 @@ sap.ui.define([
 
         onSelectObject : function(oEvent) {
             
+        },
+
+        onPurchasingAtm : function(oEvent) {
+
+            var rowBindingContext = oEvent.oSource.getParent().getBindingContext("applicationSup"),
+                rowInvestmentPurchasingPrice = rowBindingContext.getObject().investment_item_purchasing_price,
+                rowInvestmentPurchasingQty = rowBindingContext.getObject().investment_item_purchasing_qty,
+                rowInvestmentPurchasingAmt = rowInvestmentPurchasingPrice*rowInvestmentPurchasingQty,
+                dtlLength=rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl").length,
+                investmentPurchasingAmtSum = 0;
+
+                rowBindingContext.getModel().setProperty(rowBindingContext.getPath() + "/investment_item_purchasing_amt", rowInvestmentPurchasingAmt);
+                //rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl")[0].investment_item_purchasing_amt
+                for(var i= 0; i < dtlLength; i++){
+                    investmentPurchasingAmtSum += parseInt(rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl/"+i+"/investment_item_purchasing_amt"));
+                };
+
+                this.byId("investment_item_purchasing_amt_sum").setText(investmentPurchasingAmtSum);
+
         },
 
         _onComCodeListView : function(oEvent) {

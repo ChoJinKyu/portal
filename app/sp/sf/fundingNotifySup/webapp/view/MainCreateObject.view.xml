@@ -343,7 +343,6 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-                    
 		</uxap:sections>
 
 		<!-- 하단 버튼 처리 툴바 -->
@@ -357,8 +356,8 @@
                     press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
                 <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
-                <Button id="pageSaveButton" type="Transparent" text="임시저장" press=".onPageSaveButtonPress" />
-                <Button id="pageSubmissionButton" type="Emphasized" text="제출" press=".onPageSubmissionButtonPress" />
+                <Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress" />
+                <Button id="pageSubmissionButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
