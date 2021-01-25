@@ -14,9 +14,13 @@ service MoldItemSelectionService {
 
      // not in 대상 조회 
     view moldIdView as 
-      select dtl.mold_id , m2.approval_type_code 
+      select 
+        key m2.tenant_id
+        , key m2.approval_type_code 
+        , dtl.mold_id 
       from  approvalMst.Approval_Mst m2  
       join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
+      and m2.tenant_id = dtl.tenant_id
     ;
 
     /** 
