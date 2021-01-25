@@ -16,34 +16,75 @@ sap.ui.define([
 		/* =========================================================== */
 
 		onInit: function () {
-			this.setModel(new JSONModel({
-				Books: [{
-					value1: null,
-					value2: null,
-					value3: null,
-					value4: null,
-				}, {
-					value1: null,
-					value2: null,
-					value3: null,
-					value4: null,
-				}]
-			}), "books");
+            this.setModel(new JSONModel());
+            this.getOwnerComponent().getModel("main").setDeferredGroups(["updateGroup", "readGroup"]);
         },
-        
-        onAfterRendering: function(){
-            var oView = this.getView();
-            oView.setBusy(true);
+
+        getTable: function(){
+			return this.byId("mainTable");
+        },
+
+
+        concat: function(aDatas){
+            var aResults = [];
+            aDatas.forEach(function(oData){
+                if(oData && oData.d && oData.d.results)
+                    aResults = aResults.concat(oData.d.results);
+                else if(oData.results)
+                    aResults = aResults.concat(oData.results);
+            });
+            return aResults;
+        }, 
+        onMainTableSearchButtonPress: function(){
             this.getModel("main").read("/Message", {
-				success: function(oData){
-					oView.setBusy(false);
-				}
-			});
+                urlParameters: {
+                    "$inlinecount": "allpages"
+                },
+                success: function(oData){
+                    this.getModel().setData(oData.results, false);
+                    oData.__count;
+
+                    this.getModel("main").read("/Message", {
+                        groupId: "readGroup",
+                        urlParameters: {
+                            "$skip": 1000,
+                            "$top": 2000
+                        },
+                        success: function(oData){
+                            var aData = this.getModel().getData();
+                            aData = aData.concat(oData.results);
+                            this.getModel().setData(aData);
+                        }.bind(this)
+                    });
+                    this.getModel("main").read("/Message", {
+                        groupId: "readGroup",
+                        urlParameters: {
+                            "$skip": 2000,
+                            "$top": 3000
+                        },
+                        success: function(oData){
+                            var aData = this.getModel().getData();
+                            aData = aData.concat(oData.results);
+                            this.getModel().setData(aData);
+                        }.bind(this)
+                    });
+                    
+                    this.getModel("main").submitChanges({
+                        groupId: "readGroup",
+                        success: function(oEvent){
+                            debugger;
+                        }, error: function(){
+                            debugger;
+                        }
+                    });
+                    
+                }.bind(this)
+            })
         },
 
         onMainTableAddButtonPress: function(){
             var oContext = this.getModel("main").createEntry("/Message", {
-                groupId: "changes",
+                groupId: "updateGroup",
                 properties: {
                     "tenant_id": "L2100",
                     "chain_code": "CM",
@@ -55,38 +96,31 @@ sap.ui.define([
                     "local_update_dtm": new Date()
                 }
             });
-            this.getModel("main").submitChanges({
-                groupId: "changes",
-                success: function(){
-                    debugger;
-                }, error: function(){
-                    debugger;
-                }});
             // this.getModel("main").deleteCreatedEntry(oContext);
         },
 
         onMainTableDeleteButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("main"),
-                aItems = oTable.getSelectedItems();
-                debugger;
+            var aItems = this.getTable().getSelectedItems();
             this.getModel("main").remove(aItems[0].getBindingContextPath(), {
-                groupId: "changes"
+                groupId: "updateGroup"
             });
-            this.getModel("main").submitChanges({
-                groupId: "changes",
-                success: function(){
-                    debugger;
-                }, error: function(){
-                    debugger;
-                }});
         },
 
-        onMainTableTestButtonPress: function(){
-            var oView = this.getView(),
-                oModel = this.getModel("main");
-                
-            debugger;
+        onMainTableSaveButtonPress: function(){
+            var oModel = this.getModel("main"),
+                aPendingChanges;
+            if(oModel.hasPendingChanges()){
+                // aPendingChanges = oModel.getPendingChanges();
+                oModel.updateBindings();
+                debugger;
+            }
+            oModel.submitChanges({
+                    groupId: "updateGroup",
+                    success: function(){
+                        debugger;
+                    }, error: function(){
+                        debugger;
+                }});
         }
 
 	});
