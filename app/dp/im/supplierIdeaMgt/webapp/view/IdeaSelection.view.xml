@@ -104,7 +104,7 @@
                             <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
                                 <VBox>
                                     <Label text="{I18N>/COMPANY}: " labelFor="ideaCompany"  required="true"></Label>
-                                    <Input id="hidIdeaNumber"  visible="true" value="{details>/idea_number}"/>
+                                    <Input id="hidIdeaNumber"  visible="false" value="{details>/idea_number}"/>
                                     <ComboBox id="ideaCompany" width="250em" editable="false"
                                         selectedKey="{details>/company_code}"
                                         items="{
@@ -261,25 +261,25 @@
                                     <VBox>
                                         <Label text="VI {I18N>/AMOUNT} (KRW): " labelFor="partNo" />
                                         <Input id="viAmount"  width="80%"   visible="{viewModel>/editMode}"
-                                            placeholder="0" value="{details>/vi_amount}"/>
+                                            placeholder="0" value="{details>/vi_amount}" textAlign="Right" />
                                         <Text id="viAmountTxt" width="80%" textAlign="Left"  text="{details>/vi_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA): " labelFor="partNo" />
                                         <Input id="monthMtlmob"  width="80%"   visible="{viewModel>/editMode}"
-                                            placeholder="0" value="{details>/monthly_mtlmob_quantity}"/>
+                                            placeholder="0" value="{details>/monthly_mtlmob_quantity}" textAlign="Right"/>
                                         <Text id="monthMtlmobTxt" width="80%" textAlign="Left"  text="{details>/monthly_mtlmob_quantity}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} impact (KRW): " labelFor="partNo" />
                                         <Input id="mmImpct"  width="80%"   visible="{viewModel>/editMode}"
-                                            placeholder="0" value="{details>/monthly_purchasing_amount}"/>
+                                            placeholder="0" value="{details>/monthly_purchasing_amount}" textAlign="Right"/>
                                         <Text id="mmImpctTxt" width="80%" textAlign="Left"  text="{details>/monthly_purchasing_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/ANNUAL} impact (KRW): " labelFor="partNo" />
                                         <Input id="annualImpact"  width="80%"   visible="{viewModel>/editMode}"
-                                            placeholder="0" value="{details>/annual_purchasing_amount}"/>
+                                            placeholder="0" value="{details>/annual_purchasing_amount}" textAlign="Right"/>
                                         <Text id="annualImpactTxt" width="80%" textAlign="Left"  text="{details>/annual_purchasing_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                 </VBox>
