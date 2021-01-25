@@ -25,6 +25,7 @@ entity Sc_Outcome_Code2 {
 };
 //Test-End
 
+// 견적|입찰 여부
 entity Sc_Nego_Parent_Type_Code {
     key tenant_id             : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
     key nego_parent_type_code : String(30) not null                      @title : '협상상위유형코드';
@@ -35,11 +36,36 @@ entity Sc_Nego_Parent_Type_Code {
 
 extend Sc_Nego_Parent_Type_Code with util.Managed;
 
+// 평가유형(가격|가격&비가격)
+entity Sc_Award_Type_Code {
+    key tenant_id             : type of orgTenant.Org_Tenant : tenant_id               @title : '테넌트ID';
+    key nego_parent_type_code : type of Sc_Nego_Parent_Type_Code:nego_parent_type_code @title : '협상상위유형코드';
+    key award_type_code       : String(30) not null                                    @title : '평가유형코드';
+        sort_no               : Decimal not null                                       @title : '정렬번호';
+        award_type_name       : localized String(240)                                  @title : '평가유형이름';
+// award_type_desc : localized String(1000)           @title : 'Description';
+};
+
+extend Sc_Award_Type_Code with util.Managed;
+
+// 평가유형(가격|가격&비가격)
+entity Sc_Evaluation_Type_Code {
+    key tenant_id             : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
+    key evaluation_type_code  : String(30) not null                      @title : '평가유형코드';
+        sort_no               : Decimal not null                         @title : '정렬번호';
+        evaluation_type_name  : localized String(240)                     @title : '평가유형이름';
+// evaluation_type_desc : localized String(1000)           @title : 'Description';
+};
+
+extend Sc_Evaluation_Type_Code with util.Managed;
+
+// 협상유형코드
 entity Sc_Nego_Type_Code {
     key tenant_id             : type of orgTenant.Org_Tenant : tenant_id                 @title : '테넌트ID';
     key nego_type_code        : String(30) not null                                      @title : '협상타입코드';
         sort_no               : Decimal not null                                         @title : '정렬번호';
         nego_parent_type_code : type of Sc_Nego_Parent_Type_Code : nego_parent_type_code @title : '협상상위유형코드';
+        evaluation_type_code  : type of Sc_Evaluation_Type_Code : evaluation_type_code   @title : '평가유형코드';
         nego_type_name        : localized String(240)                                    @title : '협상타입이름';
 // nego_type_desc : localized String(1000)           @title : 'Description';
 };
@@ -68,9 +94,9 @@ extend Sc_Outcome_Code with util.Managed;
 define view Sc_Nego_Prog_Status_Code_View as
     select from codeMst.Code_Dtl as cd {
         key cd.tenant_id,
-        key cd.code      as nego_prog_status_code,
+        key cd.code      as nego_progress_status_code,
             cd.sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as sp_sc_award_type_name
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as nego_progress_status_name
     } 
     where
         group_code = 'SP_SC_NEGO_PROG_STATUS_CODE';
@@ -81,7 +107,7 @@ define view Sc_Award_Type_Code_View as
         key cd.tenant_id,
         key cd.code      as award_type_code,
             cd.sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as sp_sc_award_type_name
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as award_type_name
     }
     where
         group_code = 'SP_SC_AWARD_TYPE_CODE';
