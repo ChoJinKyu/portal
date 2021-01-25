@@ -15,6 +15,7 @@ sap.ui.define([
         UIComponent.prototype.init.apply(this, arguments);
         
         this.setModel(new JSONModel(), "projectMgtRootModel");
+        this.getModel().setSizeLimit(1000);
     },
   });
 });

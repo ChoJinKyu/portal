@@ -41,10 +41,10 @@
         }
       },
       "tmpMgrService": {
-        "uri": "srv-api/odata/v4/tmp.TmpMgrService/",
+        "uri": "srv-api/odata/v2/tmp.TmpMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       },
       "testService": {
@@ -143,14 +143,14 @@
           "useBatch": true
         }
       },
-      "tmp": {
+      "tmpMgr": {
         "dataSource": "tmpMgrService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
         }
       },
       "listT": {

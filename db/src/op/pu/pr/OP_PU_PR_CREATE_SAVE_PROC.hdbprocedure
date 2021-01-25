@@ -49,6 +49,7 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
                             WBS_CODE NVARCHAR(30),
                             ASSET_NUMBER NVARCHAR(30),
                             ORDER_NUMBER NVARCHAR(30),
+                            SERVICE_DESC NVARCHAR(100),
 							UPDATE_USER_ID NVARCHAR(255)
         ),
         OUT O_RTN_MSG TABLE( RETURN_CODE NVARCHAR(4),
@@ -92,6 +93,7 @@ BEGIN
                 WBS_CODE ,
                 ASSET_NUMBER ,
                 ORDER_NUMBER ,
+                SERVICE_DESC ,
 				UPDATE_USER_ID 
         FROM :I_D_TABLE DTL
         ;
@@ -241,7 +243,13 @@ BEGIN
 	AND		COMPANY_CODE	= :I_COMPANY_CODE
 	AND		PR_NUMBER		= :I_PR_NUMBER
     ;
-        
+
+    DELETE FROM OP_PU_PR_SERVICE
+	WHERE 	TENANT_ID 		= :I_TENANT_ID
+	AND		COMPANY_CODE	= :I_COMPANY_CODE
+	AND		PR_NUMBER		= :I_PR_NUMBER
+    ;
+    
 	
     /* Cursor 실행 */
 	FOR curDtl AS curDtlList DO
@@ -311,7 +319,6 @@ BEGIN
             CURRENT_TIMESTAMP
         );	
         
-
         INSERT INTO OP_PU_PR_ACCOUNT (
 			TENANT_ID  ,
 			COMPANY_CODE,
@@ -346,6 +353,44 @@ BEGIN
             curDtl.ORDER_NUMBER,
             curDtl.PR_QUANTITY,
             NULL,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP,
+            curDtl.UPDATE_USER_ID,
+            curDtl.UPDATE_USER_ID,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        );
+
+        INSERT INTO OP_PU_PR_SERVICE (
+			TENANT_ID  ,
+			COMPANY_CODE,
+			PR_NUMBER ,
+			PR_ITEM_NUMBER ,
+			SERVICE_SEQUENCE ,
+			SERVICE_DESC,
+			PR_QUANTITY,
+			UNIT,
+			NET_PRICE,
+			GROSS_AMOUNT,
+            CURRENCY_CODE ,
+            LOCAL_CREATE_DTM,
+            LOCAL_UPDATE_DTM,
+            CREATE_USER_ID,
+            UPDATE_USER_ID,
+            SYSTEM_CREATE_DTM,
+            SYSTEM_UPDATE_DTM
+		) VALUES (
+			curDtl.TENANT_ID , 
+			curDtl.COMPANY_CODE,
+			:V_PR_NUMBER ,
+			curDtl.PR_ITEM_NUMBER,
+			1 ,
+			curDtl.SERVICE_DESC,
+			curDtl.PR_QUANTITY,
+			curDtl.PR_UNIT,
+			curDtl.ESTIMATED_PRICE,
+            IFNULL(curDtl.PR_QUANTITY, 0) * IFNULL(curDtl.ESTIMATED_PRICE, 0),
+            curDtl.CURRENCY_CODE,
             CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP,
             curDtl.UPDATE_USER_ID,

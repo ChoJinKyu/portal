@@ -94,22 +94,7 @@ public class TmpMgr implements EventHandler {
            .and(b.get("ALT_FLAG").eq(info.getAltFlag()))
          );
 
-         CqnSelect viewSelect = Select.from(TmpCcConfigView_.class).where(
-             b->b.get("TENANT_ID").eq("L2600")
-             .and(b.get("SCR_TMPL_ID").eq("SCTM001"))
-         );
-
-        Result result = db.run(viewSelect);
-        List tList = result.list();
-        writeFile(tList);
-        
-
-
-
-
-
-
-
+        Result result = db.run(infoSelect);
 
        info.setTenantId((String)result.first().get().get("TENANT_ID"));
        info.setBizRuleId((String)result.first().get().get("BIZRULE_ID"));
@@ -118,9 +103,50 @@ public class TmpMgr implements EventHandler {
        info.setCallHost((String)result.first().get().get("CALL_HOST"));
        info.setCallInfo((String)result.first().get().get("CALL_INFO"));
 
-       System.out.println("info : " + tList);
-
         sampleType.setTemplatePath(templatePath);
+        context.setResult(sampleType);
+        context.setCompleted();
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event = CreateTemplateSampleContext.CDS_NAME)
+    public void onCreateTemplateSample(CreateTemplateSampleContext context){
+        
+        //TO-DO : 템플릿 생성 조건 변경 필요. (ex. 파일 생성 기록이 없는 템플릿 일괄 생성)
+        CqnSelect viewSelect = Select.from(TmpCcConfigView_.class).where(
+            b->b.get("TENANT_ID").eq("L2600")
+            .and(b.get("SCR_TMPL_ID").eq("SCTM001"))
+        );
+
+        Result result = db.run(viewSelect);
+        List row = result.list();
+        writeFile(row);
+
+        //TO-DO : 템플릿 생성 후 파일 생성 일자 입력 로직 필요
+
+        context.setResult("OK");
+        context.setCompleted();
+    }
+    
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event = RetrieveTemplateSampleContext.CDS_NAME)
+    public void onRetrieveTemplateSample(RetrieveTemplateSampleContext context) {
+        SampleType sampleType = SampleType.create();
+        String templatePath = "";
+
+        String tenantId = (String) context.getTenantId();
+        String templateId = (String) context.getTemplateId();
+
+        CqnSelect templateSelect = Select.from(TmpCcConfig001_.class)
+        .columns("FORM_FILE_PATH")
+        .where(
+            b->b.get("SCR_TMPL_ID").eq(templateId)
+        );
+
+        Result result = db.run(templateSelect);
+        templatePath = tenantId + "_" + result.first().get().get("FORM_FILE_PATH").toString();
+        sampleType.setTemplatePath(templatePath);
+
         context.setResult(sampleType);
         context.setCompleted();
     }
@@ -148,7 +174,8 @@ public class TmpMgr implements EventHandler {
         }
         content += "\n</form:content>\n</form:SimpleForm>\n</VBox>\n</core:FragmentDefinition>";
 
-        File file = new File(path + "test.fragment.xml");
+        //TO-DO: 파일명 규칙 구현 필요
+        File file = new File(path + "L2600_test.fragment.xml");
         try {
             FileWriter writer = new FileWriter(file);
             writer.write(content);
@@ -161,4 +188,5 @@ public class TmpMgr implements EventHandler {
 
         
     }
+
 }

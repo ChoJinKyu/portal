@@ -54,7 +54,7 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
-                    label: new Label({text: "Name"}),
+                    label: new Label({text: "Name / Job Title / Department"}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 }),
                 new Column({

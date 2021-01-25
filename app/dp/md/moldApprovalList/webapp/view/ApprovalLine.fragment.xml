@@ -39,57 +39,56 @@
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
-                        mode="SingleSelectMaster"
+                        mode="SingleSelectMaster" 
+                        cellClick=".onItemPress" 
                         width="auto"
                         items="{approver>/Approvers}" 
                         >
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Label text="Approval Line"/>
+                            <Label text="Approval Line"/> 
+                            <ObjectStatus icon="sap-icon://move" text=""  tooltip="드래그앤드랍으로 승인라인을 변경할 수 있습니다." /> 
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
                         <Column id="approver_empno" minScreenWidth="Tablet" hAlign="Center" visible="false" width="3em" >
                             <Text text="approver_empno" />
                         </Column>
-                        <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3em" >
-                            <Text text="No." />
+                        <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3.5em" >
+                            <Text text="{I18N>/SEQUENCE}" />
                         </Column>
                         <Column id="type" minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="Type" />
+                            <Text text="{I18N>/TYPE}" />
                         </Column>
                         <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                            <Text text="Name/Dept" />
+                            <HBox><Text text="{I18N>/NAME}" /><Text text="/" /><Text text="{I18N>/DEPARTMENT}" /></HBox>
                         </Column>
                         <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Status" />
+                            <Text text="{I18N>/STATUS}" />
                         </Column> 
                         <Column id="comment" minScreenWidth="Tablet" hAlign="Center" >
-                            <Text text="Comment" />
+                            <Text text="{I18N>/COMMENT}" />
                         </Column>
-                        <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                <Text text="" />
+                        <Column id="add" minScreenWidth="Tablet" hAlign="Center" width="5em" >
+                            <Text text="{I18N>/ROW_ADD}"  />
                         </Column>					
-                        <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                <Text text="" />
+                        <Column id="delete" minScreenWidth="Tablet" hAlign="Center" width="5em" >
+                            <Text text="{I18N>/ROW_DELETE}" />
                         </Column>					
-                        <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                <Text text="" />
-                        </Column>
                     </columns>
                     <dragDropConfig>
                         <dnd:DragDropInfo
                             sourceAggregation="items" 
                             targetAggregation="items" 
                             dropPosition="Between" 
-                            dragStart="onDragStartTable"
+                            dragStart="onDragStartTable" 
                             drop="onDragDropTable"   /> 
                           
                     </dragDropConfig>					
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <Text text="{approver>approver_empno}" />
+                                <Text text="{approver>approver_empno}"  />
                                 <Text text="{approver>approve_sequence}" />
                                 <ComboBox width="100%"
                                     selectedKey="{approver>approver_type_code}" 
@@ -98,19 +97,21 @@
                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
                                                 ],
-                                                sorter: { path: 'sort_no'}
+                                                sorter: { path: 'sort_no'} 
                                             }"
-                                    enabled="{= ${approver>editMode}?${mode>/editFlag}:false }">  
+                                    enabled="{approver>selRow}" >  
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
-                                <SearchField search=".onApproverSearch" width="100%"
-                                    value="{approver>approver_name}" placeholder="Search employee" 
-                                    enabled="{= ${approver>editMode}?${mode>/editFlag}:false }"/>
+                                <Input value="{approver>approver_name}" placeholder="Search employee"
+                                    enabled="{approver>selRow}"
+                                    showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                                </Input>
                                 <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
-                                <Button icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}!==''?${mode>/editFlag}:false }"></Button>
-                                <Button icon="{approver>arrowDown}" press=".onApproverSortDown(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowDown}===''?false:${mode>/editFlag} }"></Button>
-                                <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="삭제" visible="{= ${approver>trashShow}?${mode>/editFlag}:false }"></Button>
+                              
+                                <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
+                                <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
+                               
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -150,7 +151,7 @@
                         <MultiInput id="referMulti"
                                 placeholder="Choose codes from the ValueHelp"
                                 showValueHelp="true" 
-                                valueHelpRequest=".onMultiInputWithCodeValuePress"
+                                valueHelpRequest=".onMultiInputWithEmployeeValuePress"
                                 editable="{mode>/editFlag}"
                                 >
                         </MultiInput>

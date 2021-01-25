@@ -107,23 +107,45 @@ sap.ui.define([
         _fnSetCreateData : function(oArgs){          
         },
 
+        dTtFormatter : function(code){
+            
+            //this._fnGetChainList();
+            // console.log('chainFormatter',code)
+            var oViewModel = this.getModel("detailModel");
+            // var aChain = this._fnGetChainList();
+            // console.log('aChain',aChain)
+       
+            debugger;
+            return code;
+            // aChain.forEach(function(item){
+            //     if(this.code === code){
+            //         return code + " : " + this.code_description;
+            //     }
+            // })
+        },
+
 
          /**
          * 기존 데이터 조회  
          */
         _fnGetMasterData : function(oArgs){
 
-            
-
             var oViewModel = this.getModel('viewModel');
             var oDetailModel = this.getModel('detailModel');
             var that = this;
 
             var aFilters = [
-                    new Filter("tenant_id"      , FilterOperator.EQ, oArgs.tenantId),
+                    new Filter(  FilterOperator.EQ, oArgs.tenantId),
                     new Filter("company_code"   , FilterOperator.EQ, oArgs.company_code),
                     new Filter("pr_number"      , FilterOperator.EQ, oArgs.pr_number)
-                ];           
+                ];   
+
+            var tFilters = [
+                    new Filter("tenant_id"          , FilterOperator.EQ, oArgs.tenantId),
+                    new Filter("pr_template_number" , FilterOperator.EQ, oDetailModel.getProperty("/pr_template_number") ),
+                    new Filter("txn_type_code" , FilterOperator.EQ, "CREATE" )
+                ];  
+    
             
             var sExpand  = "dtls,tplm";
 
@@ -139,6 +161,7 @@ sap.ui.define([
                         oDetailModel.setProperty("/company_code", oArgs.company_code);
                         oDetailModel.setProperty("/tenantId", oArgs.tenantId);
                         oDetailModel.setProperty("/pr_create_status_code", data.results[0].pr_create_status_code );
+                        oDetailModel.setProperty("/pr_template_number", data.results[0].pr_template_number );                        
           
                         //oCodeMasterTable.setBusy(false);
                     },
@@ -155,6 +178,24 @@ sap.ui.define([
                         //oCodeMasterTable.setBusy(false);
                     },
                     error : function(data){
+                        //oCodeMasterTable.setBusy(false);
+                    }
+                });
+
+               
+                oServiceModel.read("/Pr_TDtlVIew",{                         
+                    filters : tFilters,
+                    success : function(data){
+                        debugger;
+                        //oDetailModel.setProperty(data.results[0], "detailModel"); 
+                      // oDetailModel.setProperty("/tdtl" , data.results);    
+                        //oCodeMasterTable.setBusy(false);
+                        setTimeout(() => {
+                oDetailModel.setProperty("/tdtl" , data.results);   
+                        }, 100);
+                    },
+                    error : function(data){
+                        debugger;
                         //oCodeMasterTable.setBusy(false);
                     }
                 });

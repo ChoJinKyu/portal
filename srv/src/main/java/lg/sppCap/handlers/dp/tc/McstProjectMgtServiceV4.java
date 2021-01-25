@@ -4,15 +4,12 @@ import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 import java.sql.Types;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,20 +26,11 @@ import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 
-import com.sap.cds.reflect.CdsModel;
-import com.sap.cds.services.EventContext;
-import com.sap.cds.services.cds.CdsCreateEventContext;
-import com.sap.cds.services.cds.CdsReadEventContext;
-import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
-import com.sap.cds.services.handler.annotations.Before;
-import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.request.ParameterInfo;
 
 import cds.gen.dp.mcstprojectmgtv4service.*;
-import cds.gen.dp.projectmgtv4service.TcProcOutType;
 
 /**
  *  프로시저 호출시 OutPut의 경우 문자열로 적용시 데이터을 받지 못하고 있음 
@@ -186,7 +174,8 @@ public class McstProjectMgtServiceV4 implements EventHandler {
         v_sql_callProcAdd.append("I_VERSION_NUMBER => ?,");
         v_sql_callProcAdd.append("I_ADDITION_TYPE_CODE => ?,"); 
         v_sql_callProcAdd.append("I_PERIOD_CODE => ?,"); 
-        v_sql_callProcAdd.append("I_ADDITION_TYPE_VALUE => ?,"); 
+        v_sql_callProcAdd.append("I_ADDITION_TYPE_VALUE => ?,");
+        v_sql_callProcAdd.append("I_UOM_CODE => ?,");
         v_sql_callProcAdd.append("I_USER_ID => ?,");
         v_sql_callProcAdd.append("O_RETURN_CODE => ?,");
         v_sql_callProcAdd.append("O_RETURN_MSG => ?)");
@@ -230,18 +219,6 @@ public class McstProjectMgtServiceV4 implements EventHandler {
         if(!v_inPrj.isEmpty() && v_inPrj.size() > 0){
             log.info("-----> v_inPrj");
 
-            
-            /*SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
-                @Override
-                public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                    log.info("==> return_code in PRJ : "+v_rs.getString("O_RETURN_CODE"));
-                    log.info("==> return_msg in PRJ : "+v_rs.getString("O_RETURN_MSG"));
-                    v_result.setReturnCode(v_rs.getString("O_RETURN_CODE"));
-                    v_result.setReturnMsg(v_rs.getString("O_RETURN_MSG"));
-                    return v_result;
-                }
-            });*/
-            
             List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
             paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
@@ -323,14 +300,6 @@ public class McstProjectMgtServiceV4 implements EventHandler {
         if(!v_inAddInfo.isEmpty() && v_inAddInfo.size() > 0){
             log.info("-----> v_inAddInfo");
 
-            /*SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
-                @Override
-                public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                    v_result.setReturnCode(v_rs.getString("returncode"));
-                    v_result.setReturnMsg(v_rs.getString("v_inAddInfo :: "+"returnmessage"));
-                    return v_result;
-                }
-            });*/
             List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
             paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
@@ -340,6 +309,7 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             paramList.add(new SqlParameter("I_ADDITION_TYPE_CODE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_PERIOD_CODE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_ADDITION_TYPE_VALUE", Types.NVARCHAR));
+            paramList.add(new SqlParameter("I_UOM_CODE", Types.NVARCHAR));
             paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
             paramList.add(new SqlOutParameter("O_RETURN_CODE", Types.NVARCHAR));
             paramList.add(new SqlOutParameter("O_RETURN_MSG", Types.NVARCHAR));
@@ -358,9 +328,10 @@ public class McstProjectMgtServiceV4 implements EventHandler {
                         stmt.setObject(5, v_inRowAdd.get("addition_type_code"));
                         stmt.setObject(6, v_inRowAdd.get("period_code"));
                         stmt.setObject(7, v_inRowAdd.get("addition_type_value"));
-                        stmt.setObject(8, v_inRowAdd.get("user_id"));
-                        stmt.registerOutParameter(9, Types.NCHAR);
+                        stmt.setObject(8, v_inRowAdd.get("uom_code"));
+                        stmt.setObject(9, v_inRowAdd.get("user_id"));
                         stmt.registerOutParameter(10, Types.NCHAR);
+                        stmt.registerOutParameter(11, Types.NCHAR);
                         return stmt;
                     }
                 }, paramList);
@@ -376,14 +347,6 @@ public class McstProjectMgtServiceV4 implements EventHandler {
         if(!v_inBaseExtract.isEmpty() && v_inBaseExtract.size() > 0){
             log.info("-----> v_inBaseExtract");
 
-            /*SqlReturnResultSet oDTable = new SqlReturnResultSet("O_TABLE_MESSAGE", new RowMapper<OutputData>(){
-                @Override
-                public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                    v_result.setReturnCode(v_rs.getString("returncode"));
-                    v_result.setReturnMsg(v_rs.getString("v_inBaseExtract :: "+"returnmessage"));
-                    return v_result;
-                }
-            });*/
             List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 
             paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
@@ -396,7 +359,6 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
             paramList.add(new SqlOutParameter("O_RETURN_CODE", Types.NVARCHAR));
             paramList.add(new SqlOutParameter("O_RETURN_MSG", Types.NVARCHAR));
-            //paramList.add(oDTable);
 
             for(TcProjectBaseExrateType v_inRowBase : v_inBaseExtract){
 
@@ -434,30 +396,25 @@ public class McstProjectMgtServiceV4 implements EventHandler {
             // SimilarModel Local Temp Table에 insert
             List<Object[]> batch_similarmodel = new ArrayList<Object[]>();
 
-            //if(!v_inSimilarModel.isEmpty() && v_inSimilarModel.size() > 0){
             log.info("-----> v_inSimilarModel : " + v_inSimilarModel.size());
 
-                for(UpdateSimilarModelInputDataType v_inRow : v_inSimilarModel){
+            for(UpdateSimilarModelInputDataType v_inRow : v_inSimilarModel){
 
-                    Collection<UpdateSimilarModelInputData> similarModelList = v_inRow.getSimilarModel();
+                Collection<UpdateSimilarModelInputData> similarModelList = v_inRow.getSimilarModel();
 
-                    for(UpdateSimilarModelInputData v_inSimModel : similarModelList) {
-                        Object[] values = new Object[] {
-                            //v_inRow.get("similar_model_code"),
-                            //v_inRow.get("code_desc"),
-                            //v_inRow.get("direct_register_flag")
-                            v_inSimModel.get("similar_model_code"),
-                            v_inSimModel.get("code_desc"),
-                            v_inSimModel.get("direct_register_flag")
-                        };
-                        batch_similarmodel.add(values);
-                    }
-
+                for(UpdateSimilarModelInputData v_inSimModel : similarModelList) {
+                    Object[] values = new Object[] {
+                        v_inSimModel.get("similar_model_code"),
+                        v_inSimModel.get("code_desc"),
+                        v_inSimModel.get("direct_register_flag")
+                    };
+                    batch_similarmodel.add(values);
                 }
 
-                int[] updateCounts = jdbc.batchUpdate(v_sql_insertTableSimilarModel, batch_similarmodel);
-                log.info("batch_similarmodel : " + updateCounts);
-            //}            
+            }
+
+            int[] updateCounts = jdbc.batchUpdate(v_sql_insertTableSimilarModel, batch_similarmodel);
+            log.info("batch_similarmodel : " + updateCounts);
 
             for(UpdateSimilarModelInputDataType v_inRowSim : v_inSimilarModel){
                 

@@ -92,7 +92,7 @@
                             <table:template>
                                 <ComboBox 
                                         editable="false"
-                                        class="readonlyField"
+                                       
                                         selectedKey="{mdItemMaster>mold_item_type_code}" 
                                         items="{ 
                                                 path : 'util>/Code',
@@ -130,7 +130,7 @@
                             <table:template>
                                 <ComboBox 
                                     id="currency"
-                                    class="readonlyField"
+                                    
                                     editable="{mode>/editFlag}"
                                     selectedKey="{mdItemMaster>currency_code}" 
                                     items="{ 
@@ -151,7 +151,7 @@
                                 <Label text="Amount"/>
                             </VBox>
                             <table:template>
-                                <Input id="target_amount" class="readonlyField" textAlign="End" editable="{mode>/editFlag}" value="{mdItemMaster>target_amount}"/>
+                                <Input id="target_amount" textAlign="End" editable="{mode>/editFlag}" value="{mdItemMaster>target_amount}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="c_mold_supplier1" width="10em" hAlign="Center">

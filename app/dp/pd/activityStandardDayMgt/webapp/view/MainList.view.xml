@@ -41,18 +41,36 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="AU : " required="true"></Label>
+                            <Label text="Company: "></Label>
+                            <ComboBox
+                                id="searchCompanyCombo"
+                                width="100%"
+                                selectedKey=""
+                                items="{
+                                    path: '/CompanyView'
+                                }">
+                                <items>
+                                    <core:Item key="{company_code}" text="{company_code}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="조직: "></Label>
+                            <!-- 테스트 테넌트번호 L1100, 원세팅테넌트번호 2100, 2600 -->
                             <ComboBox
                                 id="searchAUCombo"
                                 width="100%"
-                                selectedKey="BIZ00000"
+                                selectedKey=""
                                 items="{
                                     path: '/PdOperationOrg',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}    
                                     ],
                                     sorter: { path: 'operation_org_code'}
-                                }" required="true">
+                                }">
                                 <items>
                                     <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
                                 </items>
@@ -62,19 +80,19 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <!-- <SearchField value="{list>product_activity_name}" search=".onSearchProductActivity" /> -->
-                            <Label text="Part Category: " required="true"></Label>
+                            <!-- <SearchField value="{list>product_activity_name}" search=".onSearchPartCategory" /> -->
+                            <Label text="Part Category: "></Label>
                             <ComboBox
                                 id="searchPCCombo"
                                 width="100%"
-                                selectedKey="BIZ00000"
+                                selectedKey=""
                                 items="{
                                     path: '/PdOperationOrg',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                     ],
                                     sorter: { path: 'operation_org_code'}
-                                }" required="true">
+                                }">
                                 <items>
                                     <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
                                 </items>
@@ -88,16 +106,17 @@
                             <ComboBox
                                 id="searchPTCombo"
                                 width="100%"
-                                selectedKey="BIZ00000"
+                                selectedKey=""
                                 items="{
-                                    path: '/PdOperationOrg',
+                                    path: 'util>/Code',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'DP_PART_PJT_TYPE'}
                                     ],
-                                    sorter: { path: 'operation_org_code'}
+                                    sorter: { path: 'sort_no'}
                                 }">
                                 <items>
-                                    <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                    <core:Item key="{util>code}" text="[{util>code}] {util>code_description}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -124,14 +143,14 @@
         <f:content>
             <Table
                 id="mainTable"
-                items="{list>/activityStandardDayMgt}"
+                items="{list>/pdActivityStdDayView}"
                 mode="None"
                 noDataText="{I18N>/NCM01004}"
                 sticky="HeaderToolbar,ColumnHeaders"
                 width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title id="mainTableTitle" text="Part Category Activity SD List ({=(${list>/ActivityMappingNameView})?${list>/ActivityMappingNameView}.length:0})" level="H2"/>
+                        <Title id="mainTableTitle" text="Part Category Activity SD List ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
                         <ToolbarSeparator/>
@@ -143,60 +162,64 @@
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column id="mainColumnAU" minScreenWidth="Tablet">
+                    <Column id="mainColumnCom" minScreenWidth="Tablet" hAlign="Center">
+                        <Text text="Company" />
+                    </Column>
+                    <Column id="mainColumnAU" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="조직코드" />
                     </Column>
-                    <Column id="mainColumnPC" minScreenWidth="Tablet">
+                    <Column id="mainColumnPC" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="Part Category" />
                     </Column>
-                    <Column id="mainColumnPT" minScreenWidth="Tablet">
+                    <Column id="mainColumnPT" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="Project Type" />
                     </Column>
-                    <Column id="mainColumnAC" minScreenWidth="Tablet">
+                    <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="Activity 코드" />
                     </Column>
-                    <Column id="mainColumnAN" minScreenWidth="Tablet">
+                    <Column id="mainColumnAN" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="Activity 명" />
                     </Column>
-                    <Column id="mainColumnUseYn" minScreenWidth="Tablet">
+                    <Column id="mainColumnUseYn" minScreenWidth="Tablet" hAlign="Center" width="5rem">
                         <Text text="사용여부" />
                     </Column>
-                    <Column id="mainColumnS" minScreenWidth="Tablet">
+                    <Column id="mainColumnS" minScreenWidth="Tablet" hAlign="Right" width="5rem">
                         <Text text="s" />
                     </Column>
-                    <Column id="mainColumnA" minScreenWidth="Tablet">
+                    <Column id="mainColumnA" minScreenWidth="Tablet" hAlign="Right" width="5rem">
                         <Text text="a" />
                     </Column>
-                    <Column id="mainColumnB" minScreenWidth="Tablet">
+                    <Column id="mainColumnB" minScreenWidth="Tablet" hAlign="Right" width="5rem">
                         <Text text="b" />
                     </Column>
-                    <Column id="mainColumnC" minScreenWidth="Tablet">
+                    <Column id="mainColumnC" minScreenWidth="Tablet" hAlign="Right" width="5rem">
                         <Text text="c" />
                     </Column>
-                    <Column id="mainColumnD" minScreenWidth="Tablet">
+                    <Column id="mainColumnD" minScreenWidth="Tablet" hAlign="Right" width="5rem">
                         <Text text="d" />
                     </Column>
-                    <Column id="mainColumnUDM" minScreenWidth="Tablet">
+                    <Column id="mainColumnUDM" minScreenWidth="Tablet" hAlign="Right">
                         <Text text="수정일자" />
                     </Column>
-                    <Column id="mainColumnUUI" minScreenWidth="Tablet">
+                    <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="수정자" />
                     </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
                         <cells>
+                            <Text text="{list>company_code}" />
                             <Text text="{list>org_code}" />
-                            <Text text="{list>product_activity_code}" />
-                            <Text text="{list>product_activity_name}" />
-                            <Text text="{list>activity_dependency_name}" />
+                            <Text text="{list>category_name}" />
+                            <Text text="{list>part_project_type_name}" />
                             <Text text="{list>activity_code}" />
                             <Text text="{list>activity_name}" />
-                            <Text text="{list>product_activity_code_org}" />
-                            <Text text="{list>activity_code_org}" />
-                            <Text text="{list>product_activity_code_org}" />
-                            <Text text="{list>activity_code_org}" />
-                            <Text text="{list>activity_code_org}" />
+                            <Text text="{list>active_flag}" />
+                            <Text text="{list>s_grade_standard_days}" />
+                            <Text text="{list>a_grade_standard_days}" />
+                            <Text text="{list>b_grade_standard_days}" />
+                            <Text text="{list>c_grade_standard_days}" />
+                            <Text text="{list>d_grade_standard_days}" />
                             <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" />
                             <Text text="{list>update_user_id}" />
                         </cells>

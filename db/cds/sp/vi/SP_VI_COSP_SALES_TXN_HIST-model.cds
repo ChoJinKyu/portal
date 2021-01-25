@@ -10,7 +10,7 @@ entity VI_Cosp_Sales_Txn_Hist {
         company_code             : String(10) not null @title : '회사코드';
         au_code                  : String(10) not null @title : '회계단위코드';
         material_code            : String(40) not null @title : '자재코드';
-        transaction_date         : Date(10) not null   @title : '트랜잭션일자';
+        transaction_date         : Date       not null   @title : '트랜잭션일자';
         transaction_type_name    : String(50)          @title : '트랜잭션유형명';
         customer_code            : String(30) not null @title : '고객코드';
         customer_local_name      : String(240)         @title : '고객로컬명';

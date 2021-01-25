@@ -6,6 +6,7 @@ sap.ui.define([
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
+    "dp/md/util/controller/EmployeeDeptDialog",
     "sap/m/ColumnListItem",
     "sap/m/Label",
     "sap/m/MessageBox",
@@ -21,18 +22,16 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalList.controller", 
     "sap/ui/model/Sorter",
-    "dp/md/util/controller/EmployeeDialog",
     "sap/m/Token",
     "sap/ui/core/dnd/DragInfo",
 	"sap/ui/core/dnd/DropInfo",
 	"sap/ui/core/dnd/DropPosition",
 	"sap/ui/core/dnd/DropLayout",
 	"sap/f/dnd/GridDropInfo",
-], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator, EmployeeDeptDialog, 
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList
-    , Sorter , EmployeeDialog , Token 
-    , DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList,
+    Sorter, Token, DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
 ) {
     "use strict";
 
@@ -235,103 +234,8 @@ sap.ui.define([
             //this.byId("pageGeneralInfoSection").focus();
         },
 
-        /**
-         * 드래그시작
-         */
-        onDragStartTable : function (oEvent){
-            console.log(" *** start >> onDragStart" , oEvent ); 
-            console.log(" *** target" , oEvent.getParameter("target") ); 
-
-            var oDraggedRow = oEvent.getParameter("target");
-			var oDragSession = oEvent.getParameter("dragSession");
-			 console.log(" *** oDragSession" , oDragSession );
-            oDragSession.setComplexData("draggedRowContext", oDraggedRow.getBindingContext("approver"));
-             console.log(" *** end >> onDragStart" );
-        },
-        /**
-         * 드래그 도착위치 
-         */
-       onDragDropTable : function (oEvent) { 
-           console.log(" ***  start >> onDragDrop" , oEvent );
-          //  var oSwap = this.byId("ApproverTable").getSelectedItems();
-            var oDragSession = oEvent.getParameter("dragSession"); 
- 
-               console.log(" *** oDragSession" , oDragSession );
-               console.log(" *** getDropControl" , oDragSession.getDropControl() );
-               console.log(" *** getDropInfo" , oDragSession.getDropInfo() );
-               console.log(" *** getTextData" , oDragSession.getTextData() );
-               console.log(" *** getDropControl" , oDragSession.getDropControl().mAggregations );
-               console.log(" *** getDropPosition" , oDragSession.getDropPosition() );
-               console.log(" *** draggedRowContext" ,  oDragSession.getComplexData("draggedRowContext") );
-
-  // After 
-			var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
-			if (!oDraggedRowContext) {
-				return;
-            }
-
-            var data = oDragSession.getDropControl().mAggregations.cells;
-            var dropPosition = {
-                approver_empno : data[0].mProperties.text 
-                , approve_sequence : data[1].mProperties.text
-                , approver_type_code : data[2].mProperties.text
-                , approver_name : data[3].mProperties.text
-                , approve_status_code : data[4].mProperties.text
-                , approve_comment : data[5].mProperties.text
-            };
-
-            var approver = this.getView().getModel('approver');
-            var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath()); // 내가 선택한 아이템 
-
-            console.log("dropPosition >>>> " , dropPosition);
-            console.log("item >>>> " , item);
-
-
-            var sequence = 0;
-            for(var i = 0 ; i < approver.getData().Approvers.length ; i++){ 
-                if(approver.getData().Approvers[i].approve_sequence == item.approve_sequence ){ // 선택한 아이템 위치의 데이터 삭제
-                    approver.removeRecord(i);
-                }  
-            }
-
-            for(var i = 0 ; i < approver.getData().Approvers.length ; i++){
-                 if(approver.getData().Approvers[i].approve_sequence == dropPosition.approve_sequence){ // 드래그가 도착한 위치의 상단 시퀀스  
-                    if(oDragSession.getDropPosition() == 'After'){
-                        sequence = i+1;
-                    }else{
-                         sequence = i;
-                    }
-                }  
-            }
-
-            approver.addRecord({
-               "tenant_id": item.tenant_id,
-                "approval_number":  item.approval_number,
-                "approve_sequence":  item.approve_sequence,
-                "approver_type_code":  item.approver_type_code,
-                "approver_empno":  item.approver_empno,
-                "approver_name":  item.approver_name,
-                "arrowUp":  item.arrowUp,
-                "arrowDown":  item.arrowDown,
-                "editMode":  item.editMode,
-                "trashShow":  item.trashShow
-            }, "/Approvers", sequence); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
-
-            // 시퀀스 순서 정렬 
-            for(var i = 0 ; i < approver.getData().Approvers.length ; i++){
-                approver.getData().Approvers[i].approve_sequence = String(i+1);
-            }
-
-           this.getModel("approver").refresh(true); 
-           console.log(" ***  end >> onDragDrop" );
-        },
-        onListMainTableUpdateFinished : function(oEvent){
-             console.log("//// onListMainTableUpdateFinished" , oEvent );
-        },
-
-
         _toEditMode: function () {
-            this._onEditApproverRow();
+          //  this._onEditApproverRow();
 
             var oUiModel = this.getView().getModel("mode");
             oUiModel.setProperty("/editFlag", true);
@@ -341,7 +245,7 @@ sap.ui.define([
         },
 
         _toShowMode: function () {
-            this._onShowApproverRow();
+           // this._onShowApproverRow();
 
             var oUiModel = this.getView().getModel("mode");
             oUiModel.setProperty("/editFlag", false);
@@ -494,8 +398,6 @@ sap.ui.define([
         },
 
         _onRoutedThisPage: function (approvalNumber) {
-            console.log(" approvalNumber >>> ", approvalNumber);
-
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
@@ -503,8 +405,6 @@ sap.ui.define([
 
             if (approvalNumber !== "New") {
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
-
-                    console.log(" oData >>> ", oData); 
                     this.firstStatusCode = oData.approve_status_code; // 저장하시겠습니까? 하고 취소 눌렀을 경우 다시 되돌리기 위해서 처리 
                     this._toButtonStatus();
                 }.bind(this));
@@ -515,13 +415,13 @@ sap.ui.define([
 
             }.bind(this));
             
-            var that = this;
-
             this._bindView("/Approvers", "approver", filter, function (oData) {
-                 console.log(" Approvers >>> ", oData);
+                 //this.setSelectedApproval(0);
+                 if (oData.results.length < 1) {
+                    this.onApproverAdd(0);
+                 }
             }.bind(this));
 
-            console.log(" Approvers >>> ", approvalNumber);
            // var refererMultiCB = this.getModel('refererMultiCB');
            
             var oView = this.getView();
@@ -540,10 +440,33 @@ sap.ui.define([
             }.bind(this));
         },
 
-       onMultiInputWithCodeValuePress: function(){ 
+        onInputWithEmployeeValuePress: function(oEvent){
+            var index = oEvent.getSource().getBindingContext("approver").getPath().split('/')[2];
+     
+            if (this.getModel("approver").getData().Approvers[index].approver_type_code === "") {
+                MessageToast.show("Type 을 먼저 선택해주세요.");
+            } else {
+                this.onInputWithEmployeeValuePress["row"] = index;
+
+                this.byId("employeeDialog").open();
+            }
+        },
+
+        onEmployeeDialogApplyPress: function(oEvent){
+            var employeeNumber = oEvent.getParameter("item").employee_number,
+                userName = oEvent.getParameter("item").user_local_name,
+                departmentLocalName = oEvent.getParameter("item").department_local_name,
+                oModel = this.getModel("approver"),
+                rowIndex = this.onInputWithEmployeeValuePress["row"];
+
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_empno", employeeNumber);
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_name", userName + " / " + departmentLocalName);
+        },
+
+       onMultiInputWithEmployeeValuePress: function(){ 
           
             if(!this.oEmployeeMultiSelectionValueHelp){
-               this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+               this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
                     title: "Choose Referer",
                     multiSelection: true,
                     items: {
@@ -573,75 +496,6 @@ sap.ui.define([
                 }.bind(this));
             } else {
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
-            }
-        },
-
-        /**
-         * @description Approval Row에 add 하기 
-         */
-        _onEditApproverRow: function () {
-            var oModel = this.getModel("approver"),
-                approverData = oModel.getData().Approvers,
-                rowCount = 0;
-
-            /** 기존 데이터에 화살표, 휴지통 추가 */
-            if (approverData !== undefined && approverData.length > 0) {
-                rowCount = approverData.length;
-                for (var i = 0; i < rowCount; i++) {
-
-                    if (Number(oModel.getData().Approvers[i].approve_sequence) === 1) { // 첫Line은 bottom 으로 가는 화살표만 , Data가 1Row인 경우 화살표 없음 
-                        oModel.getData().Approvers[i].arrowUp = "";
-                        oModel.getData().Approvers[i].arrowDown = (rowCount > 1 && approverData[rowCount - 1].approver_empno !== "") ? "sap-icon://arrow-bottom" : "";
-                        oModel.getData().Approvers[i].editMode = false;
-                        oModel.getData().Approvers[i].trashShow = true;
-                    } else { // 중간 꺼는 위아래 화살표 모두
-                        oModel.getData().Approvers[i].arrowUp = "sap-icon://arrow-top";
-                        oModel.getData().Approvers[i].arrowDown = rowCount - 1 === i ? "" : "sap-icon://arrow-bottom";
-                        oModel.getData().Approvers[i].editMode = false;
-                        oModel.getData().Approvers[i].trashShow = true;
-                    }
-                }
-            }
-            /** 마지막 Search 하는 Row 담는 작업 */
-            this._onApproverAddRow(rowCount);
-        },
-
-        /**
-         * @description  // Approver row 추가 (employee)
-         */
-        _onApproverAddRow: function (appSeq) {
-            var oModel = this.getModel("approver");
-
-            oModel.addRecord({
-                "tenant_id": this.tenant_id,
-                "approval_number": this.approval_number,
-                "approve_sequence": (Number(appSeq) + 1) + "",
-                "approver_type_code": "",
-                "approver_empno": "",
-                "arrowUp": "",
-                "arrowDown": "",
-                "editMode": true,
-                "trashShow": false
-            }, "/Approvers");
-        },
-
-        /**
-         * @description Approval Row에 View
-         */
-        _onShowApproverRow: function () {
-            var oModel = this.getModel("approver"),
-                approverData = oModel.getData().Approvers;
-
-            if (approverData.length > 0) {
-                for (var i = 0; i < approverData.length; i++) {
-                    oModel.getData().Approvers[i].arrowUp = "";
-                    oModel.getData().Approvers[i].arrowDown = "";
-                    oModel.getData().Approvers[i].editMode = false;
-                    oModel.getData().Approvers[i].trashShow = false;
-                }
-                if (approverData[approverData.length - 1].approver_empno === "") {
-                    oModel.removeRecord(approverData.length - 1);
-                }
             }
         },
 
@@ -747,6 +601,156 @@ sap.ui.define([
         },
 
         /**
+         * @description Approval Line Event 
+         * @param {*} oEvent 
+         */
+        /**
+         * 드래그시작
+         */
+        onDragStartTable: function (oEvent) {
+            console.log(" *** start >> onDragStart", oEvent);
+            console.log(" *** target", oEvent.getParameter("target"));
+
+            var oDraggedRow = oEvent.getParameter("target");
+            var oDragSession = oEvent.getParameter("dragSession");
+            console.log(" *** oDragSession", oDragSession);
+            oDragSession.setComplexData("draggedRowContext", oDraggedRow.getBindingContext("approver"));
+            console.log(" *** end >> onDragStart");
+        },
+        /**
+         * 드래그 도착위치 
+         */
+        onDragDropTable: function (oEvent) {
+            console.log(" ***  start >> onDragDrop", oEvent);
+            //  var oSwap = this.byId("ApproverTable").getSelectedItems();
+            var oDragSession = oEvent.getParameter("dragSession");
+            //    console.log(" *** oDragSession" , oDragSession );
+            //    console.log(" *** getDropControl" , oDragSession.getDropControl() );
+            //    console.log(" *** getDropInfo" , oDragSession.getDropInfo() );
+            //    console.log(" *** getTextData" , oDragSession.getTextData() );
+            //    console.log(" *** getDropControl" , oDragSession.getDropControl().mAggregations );
+            //    console.log(" *** getDropPosition" , oDragSession.getDropPosition() );
+            //    console.log(" *** draggedRowContext" ,  oDragSession.getComplexData("draggedRowContext") );
+
+            // After 
+            var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
+            if (!oDraggedRowContext) {
+                return;
+            }
+
+            var data = oDragSession.getDropControl().mAggregations.cells;
+            var dropPosition = {
+                approver_empno: data[0].mProperties.text
+                , approve_sequence: data[1].mProperties.text
+                , approver_type_code: data[2].mProperties.text
+                , approver_name: data[3].mProperties.text
+                , approve_status_code: data[4].mProperties.text
+                , approve_comment: data[5].mProperties.text
+            };
+
+            var approver = this.getView().getModel('approver');
+            var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath()); // 내가 선택한 아이템 
+
+            console.log("dropPosition >>>> ", dropPosition);
+            console.log("item >>>> ", item);
+
+
+            var sequence = 0;
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                if (approver.getData().Approvers[i].approve_sequence == item.approve_sequence) { // 선택한 아이템 위치의 데이터 삭제
+                    approver.removeRecord(i);
+                }
+            }
+
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                if (approver.getData().Approvers[i].approve_sequence == dropPosition.approve_sequence) { // 드래그가 도착한 위치의 상단 시퀀스  
+                    if (oDragSession.getDropPosition() == 'After') {
+                        sequence = i + 1;
+                    } else {
+                        sequence = i;
+                    }
+                }
+            }
+
+            approver.addRecord({
+                "tenant_id": item.tenant_id,
+                "approval_number": item.approval_number,
+                "approve_sequence": item.approve_sequence,
+                "approver_type_code": item.approver_type_code,
+                "approver_empno": item.approver_empno,
+                "approver_name": item.approver_name,
+                "selRow": item.selRow,
+            }, "/Approvers", sequence); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+
+            // 시퀀스 순서 정렬 
+            this.setOrderByApproval();
+            console.log(" ***  end >> onDragDrop");
+        },
+        onListMainTableUpdateFinished: function (oEvent) {
+            var item = this.byId("ApproverTable").getSelectedItems();
+            console.log("//// onListMainTableUpdateFinished", oEvent);
+
+        },
+        onApproverAdd : function (oParam){
+             console.log("//// onApproverAdd", oParam);
+            var approver = this.getView().getModel('approver');
+             approver.addRecord({
+                "tenant_id": this.tenant_id,
+                "approval_number": this.approval_number,
+                "approve_sequence": "",
+                "approver_type_code": "",
+                "approver_empno": "",
+                "approver_name": "",
+                "selRow": true,
+            }, "/Approvers", oParam); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+            this.setOrderByApproval();
+            this.setSelectedApproval(String(Number(oParam)+1));
+        },
+        onItemPress: function (oEvent) {
+            console.log("//// onApproverItemPress", oEvent);
+        },
+
+
+        // 삭제 
+        setApproverRemoveRow: function (oParam) {
+            var oModel = this.getModel("approver");
+            oModel.removeRecord(oParam - 1);
+            this.setOrderByApproval();
+        },
+        // 시퀀스 정렬 
+        setOrderByApproval: function () {
+            var approver = this.getModel("approver");
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                approver.getData().Approvers[i].approve_sequence = String(i + 1);
+            }
+            this.getModel("approver").refresh(true);
+        },
+        // 선택행 플래그 정리  
+        setSelectedApproval : function (row) { 
+             var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == approver.getData().Approvers[i].approve_sequence){
+                     approver.getData().Approvers[i].selRow = true;
+                  }else{
+                     approver.getData().Approvers[i].selRow = false;
+                  }
+            }
+            console.log(" setSelectedApproval " , approver);
+            this.getModel("approver").refresh(true);
+        } ,
+
+        getApprovalSeletedRow : function () {
+            var approver = this.getModel("approver");
+            var row = 0;
+            for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(approver.getData().Approvers[i].selRow){
+                    row = i;
+                  }
+            }
+            return row;
+        } ,
+
+        /**
          * @description employee 이벤트 1
          */
         onApproverSearch: function (event) {
@@ -761,29 +765,20 @@ sap.ui.define([
                 aFilters = [];
             console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
         },
-        /**
-         * @description employee 팝업 닫기 
-         */
-        onExitEmployee: function () {
-            if (this._oDialog) {
-                this._oDialog.then(function (oDialog) {
-                   
-                    oDialog.close(); 
-                    oDialog.destroy();
-                });
-                this._oDialog = undefined;
-            }
-        },
 
         /**
          * @description employee 팝업 열기 (돋보기 버튼 클릭시)
          */
-        handleEmployeeSelectDialogPress: function (oEvent) {
-            var oTable = this.byId("ApproverTable");
+        handleEmployeeSelectDialogPress: function (oEvent) { 
+
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
             var that = this;
-            var aItems = oTable.getItems();
-            if (aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == undefined
-                || aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == "") {
+     
+            console.log(" row " , row);
+
+            if (approver.getData().Approvers[row].approver_type_code == undefined
+                || approver.getData().Approvers[row].approver_type_code == "") {
                 MessageToast.show("Type 을 먼저 선택해주세요.");
             } else {
                 var oView = this.getView();
@@ -808,29 +803,29 @@ sap.ui.define([
         /**
          * @description employee 팝업에서 search 버튼 누르기 
          */
-        onEmployeeSearch : function(){
+        onEmployeeSearch: function () {
 
-            var aSearchFilters = []; 
-             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600')); 
-             var employee = this.byId('employSearch').getValue().trim();
+            var aSearchFilters = [];
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+            var employee = this.byId('employSearch').getValue().trim();
             if (employee != undefined && employee != "" && employee != null) {
                 var nFilters = [];
-              
+
                 nFilters.push(new Filter("approver_name", FilterOperator.Contains, String(employee)));
                 nFilters.push(new Filter("employee_number", FilterOperator.Contains, String(employee)));
-;                
+
                 var oInFilter = {
                     filters: nFilters,
-                    and : false
+                    and: false
                 };
                 aSearchFilters.push(new Filter(oInFilter));
             }
 
             this._bindView("/RefererSearch", "oEmployee", aSearchFilters, function (oData) {
-                console.log("/RefererSearch " , oData);
-            }.bind(this)); 
-            
-            console.log(" oEmployee " , this.getModel('oEmployee'));
+                console.log("/RefererSearch ", oData);
+            }.bind(this));
+
+            console.log(" oEmployee ", this.getModel('oEmployee'));
 
         },
 
@@ -846,270 +841,34 @@ sap.ui.define([
                     approver_empno: oItem.getCells()[0].getText(),
                     approver_name: oItem.getCells()[1].getText()
                 });
-                this._approverAddRow(obj);
+               this._setApprvalItemSetting( obj.oData ); 
             }.bind(this));
             this.onExitEmployee();
         },
-
         /**
-         * @description Approval Row에 add 하기 
+         * @description employee 팝업 닫기 
          */
-        _approverAddRow: function (obj) {
-            var oModel = this.getModel("approver"),
-                approverData = oModel.getData().Approvers;
-
-            /** 선택한 데이터를 담음 */
-            approverData[approverData.length - 1].approver_empno = obj.oData.approver_empno;
-            approverData[approverData.length - 1].approver_name = obj.oData.approver_name;
-
-            this._onEditApproverRow();
-        },
-
-        onApproverSortUp: function (oParam) {
-            var oModel = this.getModel("approver"),
-                approverData = oModel.getData().Approvers;
-
-            var nArray = [],
-                actionData = {},
-                reciveData = {};
-
-            for (var i = 0; i < approverData.length - 1; i++) {
-                if (oParam == approverData[i].approve_sequence) {
-                    actionData = {
-                        "approve_sequence": (Number(approverData[i].approve_sequence) - 1) + "",
-                        "approver_type_code": approverData[i].approver_type_code,
-                        "approver_empno": approverData[i].approver_empno,
-                        "approver_name": approverData[i].approver_name,
-                        "arrowUp": approverData[i - 1].arrowUp,
-                        "arrowDown": approverData[i - 1].arrowDown,
-                        "editMode": approverData[i - 1].editMode,
-                        "trashShow": approverData[i - 1].trashShow
-                    };
-                    nArray.push(actionData);
-                    reciveData = {
-                        "approve_sequence": (Number(approverData[i - 1].approve_sequence) + 1) + "",
-                        "approver_type_code": approverData[i - 1].approver_type_code,
-                        "approver_empno": approverData[i - 1].approver_empno,
-                        "approver_name": approverData[i - 1].approver_name,
-                        "arrowUp": approverData[i].arrowUp,
-                        "arrowDown": approverData[i].arrowDown,
-                        "editMode": approverData[i].editMode,
-                        "trashShow": approverData[i].trashShow
-                    };
-                    nArray.push(reciveData);
-                    oModel.removeRecord(i);
-                    oModel.removeRecord(i - 1);
-                }
-            }
-
-            for (var j = 0; j < nArray.length; j++) {
-                oModel.addRecord({
-                    "tenant_id": this.tenant_id,
-                    "approval_number": this.approval_number,
-                    "approve_sequence": nArray[j].approve_sequence,
-                    "approver_type_code": nArray[j].approver_type_code,
-                    "approver_empno": nArray[j].approver_empno,
-                    "approver_name": nArray[j].approver_name,
-                    "arrowUp": nArray[j].arrowUp,
-                    "arrowDown": nArray[j].arrowDown,
-                    "editMode": nArray[j].editMode,
-                    "trashShow": nArray[j].trashShow
-                }, "/Approvers", Number(nArray[j].approve_sequence) - 1);
+        onExitEmployee: function () {
+            if (this._oDialog) {
+                this._oDialog.then(function (oDialog) {
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialog = undefined;
             }
         },
-
-        onApproverSortDown: function (oParam) {
-            var oModel = this.getModel("approver"),
-                approverData = oModel.getData().Approvers;
-
-            var nArray = [],
-                actionData = {},
-                reciveData = {};
-
-            for (var i = 0; i < approverData.length - 1; i++) {
-                if (oParam == approverData[i].approve_sequence) {
-                    reciveData = {
-                        "approve_sequence": (Number(approverData[i + 1].approve_sequence) - 1) + "",
-                        "approver_type_code": approverData[i + 1].approver_type_code,
-                        "approver_empno": approverData[i + 1].approver_empno,
-                        "approver_name": approverData[i + 1].approver_name,
-                        "arrowUp": approverData[i].arrowUp,
-                        "arrowDown": approverData[i].arrowDown,
-                        "editMode": approverData[i].editMode,
-                        "trashShow": approverData[i].trashShow
-                    };
-                    nArray.push(reciveData);
-                    actionData = {
-                        "approve_sequence": (Number(approverData[i].approve_sequence) + 1) + "",
-                        "approver_type_code": approverData[i].approver_type_code,
-                        "approver_empno": approverData[i].approver_empno,
-                        "approver_name": approverData[i].approver_name,
-                        "arrowUp": approverData[i + 1].arrowUp,
-                        "arrowDown": approverData[i + 1].arrowDown,
-                        "editMode": approverData[i + 1].editMode,
-                        "trashShow": approverData[i + 1].trashShow
-                    };
-                    nArray.push(actionData);
-                    oModel.removeRecord(i + 1);
-                    oModel.removeRecord(i);
-                }
+        _setApprvalItemSetting : function(obj){
+        console.log("_setApprvalItemSetting  " , obj);
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == i){
+                     approver.getData().Approvers[i].approver_empno = obj.approver_empno;
+                     approver.getData().Approvers[i].approver_name = obj.approver_name;
+                  }
             }
-
-            for (var j = 0; j < nArray.length; j++) {
-                oModel.addRecord({
-                    "tenant_id": this.tenant_id,
-                    "approval_number": this.approval_number,
-                    "approve_sequence": nArray[j].approve_sequence,
-                    "approver_type_code": nArray[j].approver_type_code,
-                    "approver_empno": nArray[j].approver_empno,
-                    "approver_name": nArray[j].approver_name,
-                    "arrowUp": nArray[j].arrowUp,
-                    "arrowDown": nArray[j].arrowDown,
-                    "editMode": nArray[j].editMode,
-                    "trashShow": nArray[j].trashShow
-                }, "/Approvers", Number(nArray[j].approve_sequence) - 1);
-            }
+             this.getModel("approver").refresh(true);
         },
-
-        setApproverRemoveRow: function (oParam) {
-            var oModel = this.getModel("approver"),
-                oTable = this.byId("ApproverTable"),
-                aItems = oTable.getItems(),
-                oldItems = [],
-                nArray = [];
-
-            aItems.forEach(function (oItem) {
-                var item = {
-                    "approver_empno": oItem.mAggregations.cells[0].mProperties.text,
-                    "approve_sequence": oItem.mAggregations.cells[1].mProperties.text,
-                    "approver_type_code": oItem.mAggregations.cells[2].mProperties.selectedKey,
-                    "approver_name": oItem.mAggregations.cells[3].mProperties.value,
-                }
-                oldItems.push(item);
-            });
-
-            for (var i = 0; i < oldItems.length - 1; i++) {
-                if (oParam != oldItems[i].approve_sequence) {
-                    nArray.push(oldItems[i]);
-                }
-            }
-
-            for (var j = oModel.getData().Approvers.length - 1; j >= 0; j--) {
-                oModel.removeRecord(j);
-            }
-
-            this.setApproverData(nArray);
-        },
-
-        setApproverData: function (dataList) {
-            //this.getView().setModel(new ManagedListModel(), "approver"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함
-            var oModel = this.getModel("approver");
-            var noCnt = 1;
-
-            for (var i = 0; i < dataList.length; i++) {
-                if (dataList.length > 0 && i == 0) { // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
-                    oModel.addRecord({
-                        "tenant_id": this.tenant_id,
-                        "approval_number": this.approval_number,
-                        "approve_sequence": noCnt + "",
-                        "approver_type_code": dataList[i].approver_type_code,
-                        "approver_empno": dataList[i].approver_empno,
-                        "approver_name": dataList[i].approver_name,
-                        "arrowUp": "",
-                        "arrowDown": dataList.length === 1 ? "" : "sap-icon://arrow-bottom",
-                        "editMode": false,
-                        "trashShow": true
-                    }, "/Approvers");
-                } else if (i == dataList.length - 1) {
-                    oModel.addRecord({ // 마지막 꺼는 밑으로 가는거 없음  
-                        "tenant_id": this.tenant_id,
-                        "approval_number": this.approval_number,
-                        "approve_sequence": noCnt + "",
-                        "approver_type_code": dataList[i].approver_type_code,
-                        "approver_empno": dataList[i].approver_empno,
-                        "approver_name": dataList[i].approver_name,
-                        "arrowUp": "sap-icon://arrow-top",
-                        "arrowDown": "",
-                        "editMode": false,
-                        "trashShow": true
-                    }, "/Approvers");
-
-                } else {
-                    oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
-                        "tenant_id": this.tenant_id,
-                        "approval_number": this.approval_number,
-                        "approve_sequence": noCnt + "",
-                        "approver_type_code": dataList[i].approver_type_code,
-                        "approver_empno": dataList[i].approver_empno,
-                        "approver_name": dataList[i].approver_name,
-                        "arrowUp": "sap-icon://arrow-top",
-                        "arrowDown": "sap-icon://arrow-bottom",
-                        "editMode": false,
-                        "trashShow": true
-                    }, "/Approvers");
-                }
-                noCnt++;
-            }
-
-            /** 마지막 Search 하는 Row 담는 작업 */
-            oModel.addRecord({
-                "tenant_id": this.tenant_id,
-                "approval_number": this.approval_number,
-                "approve_sequence": noCnt + "",
-                "approver_type_code": "",
-                "approver_empno": "",
-                "approver_name": "",
-                "arrowUp": "",
-                "arrowDown": "",
-                "editMode": true,
-                "trashShow": false
-            }, "/Approvers");
-        },
-/*
-        handleSelectionChangeReferer: function (oEvent) { // Referrer 
-            var referModel = this.getModel('referer');
-            var changedItem = oEvent.getParameter("changedItem");
-            var isSelected = oEvent.getParameter("selected");
-
-            var state = "Selected";
-            if (!isSelected) {
-                state = "Deselected";
-            }
-
-            if (state == "Selected") {
-                referModel.addRecord({
-                    "referer_empno": changedItem.getKey(),
-                    "approval_number": this.approval_number,
-                    "tenant_id": this.tenant_id
-                }, "/Referers");
-            } else {
-                for (var i = 0; i < referModel.getData().Referers.length; i++) {
-                    if (referModel.getData().Referers[i].referer_empno == changedItem.getKey()) {
-                        referModel.markRemoved(i);
-                    }
-                }
-            }
-            this.setRefererList();
-        },
-
-        setRefererList: function () {
-            this.getView().setModel(new ManagedModel(), "refererMultiCB");
-            var refererMultiCB = this.getModel('refererMultiCB');
-            var referModel = this.getModel('referer');
-            if (referModel.getData().Referers.length > 0) {
-                var rList = [];
-                referModel.getData().Referers.forEach(function (item) {
-                    rList.push(item.referer_empno);
-                }.bind(this));
-                refererMultiCB.setProperty("/refer", rList);
-            }
-
-        },
-
-        handleSelectionFinishReferer: function (oEvent) { // Referrer 
-            oEvent.getParameter("selectedItems");
-        },
-*/ 
         /**
          * today
          * @private

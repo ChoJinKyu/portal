@@ -10,6 +10,7 @@ entity Pd_Part_Activity_Template_View {
   key part_project_type_code : String(30)  not null @title: '부품PJT유형코드' ;   
   key activity_code : String(40)  not null @title: '활동코드' ; 
   key category_group_code : String(30)   @title: '카테고리그룹코드' ;
+    part_project_type_name : String(240)   @title: '이벤트명' ;
     sequence : Decimal default 1  @title: '순번' ;    
     develope_event_code : String(30)   @title: '이벤트코드' ;
     develope_event_name : String(240)   @title: '이벤트명' ;

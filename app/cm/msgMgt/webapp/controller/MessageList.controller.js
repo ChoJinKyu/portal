@@ -45,7 +45,25 @@ sap.ui.define([
         },
         
         onRenderedFirst : function () {
-			//this.byId("pageSearchButton").firePress();
+            var aSearchFilters = [], applySearch = "applySearch";
+            aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, applySearch));
+            var forceSearch = function(){
+				this._applySearch(aSearchFilters);
+			}.bind(this);
+			
+			if(this.getModel("list").isChanged() === true){
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM00005"), {
+					title : this.getModel("I18N").getText("/SEARCH"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+							forceSearch();
+						}
+					}.bind(this)
+				});
+			}else{
+				forceSearch();
+			}
         },
 
 		/* =========================================================== */
@@ -91,7 +109,7 @@ sap.ui.define([
 			oModel.addRecord({
 				"tenant_id": "L2100",
 				"chain_code": "CM",
-				"language_code": "",
+				"language_code": "KO",
 				"message_code": "",
 				"message_type_code": "LBL",
 				"message_contents": ""
@@ -133,8 +151,8 @@ sap.ui.define([
 				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
 				return;
             }
-            
-            if(this.validator.validate(this.byId("mainTable")) !== true) return;
+            if(this.validator.validate(oTable) !== true) return;
+            if(this.validator.validate(oModel) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -152,7 +170,8 @@ sap.ui.define([
 						});
 					};
 				}.bind(this)
-			});
+            });
+            this.validator.clearValueState(this.byId("mainTable"));
 			
         }, 
 

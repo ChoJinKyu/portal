@@ -6,6 +6,7 @@ SELECT pat.tenant_id,
       pat.part_project_type_code,
       pat.activity_code,				
       pat.category_group_code,				
+      pt.code_name as part_project_type_name,
       pat.sequence,
       pat.develope_event_code,          /* develope_event 명 Function 변경 */
       de.code_name as develope_event_name,
@@ -30,6 +31,11 @@ SELECT pat.tenant_id,
         left join (select 
                 code, code_name, tenant_id
                 from CM_CODE_LNG 
+                where group_code='DP_PART_PJT_TYPE' and LANGUAGE_CD='KO') pt
+        on pt.code = pat.part_project_type_code and pt.tenant_id = pat.tenant_id		
+        left join (select 
+                code, code_name, tenant_id
+                from CM_CODE_LNG 
                 where group_code='DP_DEVELOPE_EVENT_CODE' and LANGUAGE_CD='KO') de
         on de.code = pat.develope_event_code and de.tenant_id = pat.tenant_id
         left join (select 
@@ -46,6 +52,7 @@ SELECT pat.tenant_id,
                 code, code_name, tenant_id
                 from CM_CODE_LNG 
                 where group_code='DP_JOB_TYPE' and LANGUAGE_CD='KO') jt
-        on jt.code = pat.job_type_code and jt.tenant_id = pat.tenant_id				            		            				            
+        on jt.code = pat.job_type_code and jt.tenant_id = pat.tenant_id		
+  where pat.tenant_id = 'L2100'
 ORDER BY pat.part_project_type_code, pat.sequence
 ;

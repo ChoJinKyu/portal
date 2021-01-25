@@ -5,6 +5,7 @@ using {tmp as TMP_BIZRULE} from '../../../db/cds/tmp/TMP_BIZRULE_INFO';
 using {tmp as TMP_CC_CONFIG002} from '../../../db/cds/tmp/TMP_CC_CONFIG002';
 using {tmp as TMP_CC_CONFIG003} from '../../../db/cds/tmp/TMP_CC_CONFIG003';
 using {tmp as TMP_CC_CONFIG004} from '../../../db/cds/tmp/TMP_CC_CONFIG004';
+using {tmp as TMP_CC_DP_MD_SPEC} from '../../../db/cds/tmp/TMP_CC_DP_MD_SPEC';
 
 namespace tmp;
 @path : '/tmp.TmpMgrService'
@@ -13,6 +14,7 @@ service TmpMgrService {
     entity prjt as projection on TMP_PRJT.prjt;
     entity tmpCcConfig001 as projection on TMP_CC_CONFIG001.CC_CONFIG001;
     entity bizruleInfo as projection on TMP_BIZRULE.bizrule_info;
+    entity tmpCcDpMdSpec as projection on TMP_CC_DP_MD_SPEC.CC_DP_MD_SPEC;
 
     view tmpCcConfigView as
         SELECT 
@@ -48,4 +50,9 @@ service TmpMgrService {
     };
     
     action SampleLogicTransition(TENANT_ID : String, TEMPLATE_ID: String) returns SampleType;
+
+    action CreateTemplateSample() returns String;
+
+    action RetrieveTemplateSample(TENANT_ID : String, TEMPLATE_ID: String) returns SampleType;
+
 }

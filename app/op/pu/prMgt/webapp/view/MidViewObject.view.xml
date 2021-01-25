@@ -51,7 +51,7 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="{I18N>/PR_TEMPLATE_NUMBER} :"/>
                     <ObjectStatus
-                        text="{detailModel>/mst/pr_number}"/>
+                        text="{detailModel>/mst/pr_template_number}"/>
                     <Label text="{I18N>/REQUESTOR_NAME} :"/>
                     <ObjectStatus
                         text="{detailModel>/mst/requestor_name}"/>
@@ -148,13 +148,16 @@
                                     <!-- Add the Personalization button -->
                                     
                                     <Button icon="sap-icon://group-2" />
-                                    <Button icon="sap-icon://action-settings" />
+                                    <Button icon="sap-icon://action-settings" />    
                                 </OverflowToolbar>
                             </table:extension>          
 
                             <table:columns>
                                 <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/ITEM_NUMBER}"/>
+                                    <Label text="{
+                                                path:'detailModel>/tdtl/0/pr_template_number',
+                                                formatter:'.dTtFormatter' 
+                                            }"/>
                                     <table:template>
                                         <Text id="t_model" text="{detailModel>pr_item_number}"/>
                                     </table:template>
