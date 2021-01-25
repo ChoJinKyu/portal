@@ -25,7 +25,7 @@
             <ComboBox id="editClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
                     path: 'uomClass>/UomClass',
                     filters: [
-                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}                                        
                     ]
                 }" editable="{midObjectView>/isAddedMode}" required="true"> 
                 <items>

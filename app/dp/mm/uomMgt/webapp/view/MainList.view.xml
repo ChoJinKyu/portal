@@ -40,7 +40,7 @@
                             <ComboBox id="searchUomClass" width="100%" selectedKey="" items="{
                                 path: 'uomClass>/UomClass',
                                 filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}                                        
                                     ]
                                 }">
                                 <items>
@@ -61,7 +61,7 @@
                                 suggestionItems="{
                                     path: '/',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
                                     serviceUrl: 'srv-api/odata/v2/dp.util.MmService/',
                                     entityName: 'Uom'

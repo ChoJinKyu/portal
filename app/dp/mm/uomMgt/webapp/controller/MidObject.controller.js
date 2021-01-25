@@ -313,7 +313,7 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-                    "tenant_id": "L2600",
+                    "tenant_id": "L2100",
                     "uom_code": "",
                     "base_unit_flag": false					
 				}, "/Uom");
@@ -458,7 +458,7 @@ sap.ui.define([
                 oLanguageCode.bindItems({
                     path: 'util>/Code',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2600'),                        
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
                         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
                     ],
                     template: new Item({
