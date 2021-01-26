@@ -243,9 +243,9 @@
 
 
                         <HBox height="auto" >
-                            <VBox alignContent="Center" alignItems="Center" justifyContent="Center"  class=""
+                            <VBox alignContent="Center" alignItems="Center" justifyContent="Center"  class="darkgrayBG sapUiSmallMarginTop"
                                 width="10%" height="auto"   >
-                                <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop darkgrayBG"
+                                <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd  "
                                     alignContent="Center" alignItems="Center" justifyContent="Center" >
                                     <Text text="{I18N>/PRICE} + {I18N>/NON_PRICE}" class="mText" />
                                 </VBox>

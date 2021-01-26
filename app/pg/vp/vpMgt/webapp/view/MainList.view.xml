@@ -36,13 +36,17 @@
 
                                 <VBox>
                                     <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG_S" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_S" width="10rem" items="{
+                                    <ComboBox 
+                                        id="search_Operation_ORG_S" 
+                                        width="10rem" 
+                                        items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                         ],
                                         sorter: { path: 'operation_org_code'}
-                                    }">
+                                        }" 
+                                        change="checkOrg" >
                                         <items>
                                             <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
@@ -61,6 +65,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                             change="checkOrg"
                                              
                                     >
                                     <core:Item key="{util>code}" text="{util>code_name}" />
@@ -99,7 +104,7 @@
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                         ],
                                         sorter: { path: 'operation_org_code'}
-                                    }">
+                                    }" change="checkOrg">
                                         <items>
                                             <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
@@ -118,6 +123,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                             change="checkOrg"
                                             
                                     >
                                     <core:Item key="{util>code}" text="{util>code_name}" />
@@ -191,7 +197,8 @@
                                 <HBox>
                                     <SearchField id="search_Vp_Name"
                                                 search=".onDialogTreeCreate" 
-                                                change=""
+                                                change="resetVpCode"
+
                                                 />
                                     <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
                                 </HBox>
@@ -290,17 +297,39 @@
                     </table:extension> 
 
                     <table:columns>
-                            <table:Column label="{I18N>/HIGHER_LEVEL}" width="12rem" filterProperty="higher_level_path" >
+                            
+                            <table:Column id="table_1lv" label="1레벨" width="12rem" filterProperty="vendor_pool_level1_name" >
                                 <table:template>
-                                    <Text text="{list>higher_level_path}" wrapping="false" />
+                                    <Text text="{list>vendor_pool_level1_name}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                            <table:Column id="table_2lv" label="2레벨" width="12rem" filterProperty="vendor_pool_level2_name" >
+                                <table:template>
+                                    <Text text="{list>vendor_pool_level2_name}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                            <table:Column id="table_3lv" label="3레벨" width="12rem" filterProperty="vendor_pool_level3_name" >
+                                <table:template>
+                                    <Text text="{list>vendor_pool_level3_name}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                            <table:Column id="table_4lv" label="4레벨" width="12rem" filterProperty="vendor_pool_level4_name" >
+                                <table:template>
+                                    <Text text="{list>vendor_pool_level4_name}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                            <table:Column id="table_5lv" label="5레벨" width="12rem" filterProperty="vendor_pool_level5_name" >
+                                <table:template>
+                                    <Text text="{list>vendor_pool_level5_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
+<!-- 
                             <table:Column label="{I18N>/VENDOR_POOL}" width="8rem" filterProperty="vendor_pool_local_name"  >
                                 <table:template>
                                     <Text text="{list>vendor_pool_local_name}" wrapping="false" />
                                 </table:template>
-                            </table:Column>
+                            </table:Column> -->
 
                             <table:Column label="{I18N>/INFO_CHANGE_STATUS}" width="10rem" hAlign="Center">
                                 <table:template>

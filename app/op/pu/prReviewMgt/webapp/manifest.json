@@ -190,7 +190,7 @@
               ]
           },
           {
-              "pattern": "midView/{layout}/{vMode}/{tenantId}/{company_code}/{pr_number}",
+              "pattern": "midView/{layout}/{?query}",
               "name": "midView",
               "target": [
                   "mainObject",

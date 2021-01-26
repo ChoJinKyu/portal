@@ -16,15 +16,8 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/ManagedModel", 
     "ext/lib/util/Multilingual",
-], function (
-    Controller, ODataModel, Dialog, Renderer,
-    Sorter, Filter, FilterOperator,
-    Button, Text, Table, Column, ColumnListItem, Fragment
-    , ManagedListModel
-    , JSONModel
-    , ManagedModel 
-    , Multilingual 
-) {
+], function ( Controller, ODataModel, Dialog, Renderer, Sorter, Filter, FilterOperator, Button, Text, Table, Column, ColumnListItem, Fragment
+            , ManagedListModel, JSONModel, ManagedModel , Multilingual ) {
     "use strict";
 
         var oServiceModel = new ODataModel({
@@ -84,6 +77,7 @@ sap.ui.define([
             oArges = pArges;
             oCallback = callback;
             oThis.setModel(new ManagedModel(), "moldItemPop");
+            oThis.setModel(new ManagedListModel(), "notInMold");
             oThis.setModel(new ManagedListModel(), "moldItemPopList");
             oThis.setModel(new ManagedListModel(), "moldItemPopList_temp");
             oThis.setModel(new ManagedListModel(), "moldSelectionCompanyPopList");
@@ -139,7 +133,7 @@ sap.ui.define([
 
                 var nFilters = [];
                 oArges.mold_progress_status_code.forEach(function (mold_progress_status_code) {
-                    nFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, String(mold_progress_status_code)));
+                    nFilters.push(new Filter("prog_status_code", FilterOperator.EQ, String(mold_progress_status_code)));
                 });
                 
                 var oInFilter = {
@@ -153,13 +147,21 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, oArges.mold_purchasing_type_code));
             }
 
-            if (oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) {
+            if ((oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) 
+                || (oThis.getModel('notInMold').getData().moldIdView != undefined && oThis.getModel('notInMold').getData().moldIdView.length > 0)) {
 
                 var nFilters = [];
-                oArges.mold_id_arr.forEach(function (mold_id) {
-                    nFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(mold_id)));
-                });
-
+                if(oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0){
+                    oArges.mold_id_arr.forEach(function (mold_id) {
+                        nFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(mold_id)));
+                    });
+                }
+                if(oThis.getModel('notInMold').getData().moldIdView != undefined && oThis.getModel('notInMold').getData().moldIdView.length > 0){
+                    oThis.getModel('notInMold').getData().moldIdView.forEach(function (item) {
+                        nFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(item.mold_id)));
+                    });
+                }
+                
                 var oNotInFilter = {
                     filters: nFilters,
                     and: true
@@ -175,14 +177,39 @@ sap.ui.define([
          * @param {*} oEvent 
          */
         onMoldItemSelection: function (oEvent) {
+            console.log("onMoldItemSelection >>>>> ", oEvent);
+
+            var popThis = this;
+
             console.log(oEvent.getParameters());
             if (oEvent.getParameters().refreshButtonPressed) {
                 this.onRefresh();
-            } else {
-                var aSearchFilters = this._getSearchMoldSelection();
-                this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
+            } else { 
+                this._notInMoldId(function(oData){
+                    console.log("_notInMoldId >>>>> ", oData); 
+                    var aSearchFilters = popThis._getSearchMoldSelection();
+                    popThis._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
+                });
             }
         },
+
+
+        _notInMoldId : function (callback){ 
+            var oView = oThis.getView() , 
+                oModel = oThis.getModel("notInMold");
+
+            oModel.setTransactionModel(oServiceModel);
+            oModel.read("/moldIdView", {
+                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L2600') 
+                        , new Filter("approval_type_code", FilterOperator.EQ, oArges.approval_type_code) 
+                        ],
+                success: function (oData) {
+                   callback(oData);
+               
+                }
+            });
+        } ,
+
 
         /**
          * @description Mold Item Selection Search Button 누를시 
@@ -200,7 +227,7 @@ sap.ui.define([
             //  setData: function (oData, sPath, bMerge) 
             oView.setBusy(true);
             oModel_temp.setTransactionModel(oServiceModel);
-            oModel_temp.read("/MoldItemSelect_"+ oArges.approval_type_code , {
+            oModel_temp.read("/MoldItemSelect", {
                 filters: aSearchFilters,
                 success: function (oData) { 
                     oModel.setData(oData,"/MoldItemSelect");

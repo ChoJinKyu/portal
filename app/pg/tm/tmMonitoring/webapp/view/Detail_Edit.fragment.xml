@@ -5,21 +5,13 @@
 	xmlns:core="sap.ui.core">
      
 	<f:SimpleForm
-                    id="simpleform_edit"
-                    maxContainerCols="2"
-                    editable="true"
-                    layout="ResponsiveGridLayout"
-                    adjustLabelSpan="false"
-                    labelSpanL="0"
-                    labelSpanM="0"
-                    emptySpanL="0"
-                    emptySpanM="0"
-                    columnsL="3"
-                    columnsM="3">
+                id="simpleform_edit"
+                maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
+                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <f:content id="informationPageSectionForm">
                         <VBox>
                             <Label text="{I18N>/TYPE_NAME}" required="true"/>
-                            <ComboBox items="{/TaskMonitoringTypedCodeView}" required="true" placeholder="{I18N>/TYPE_NAME}" id="combo_monitoring_type" selectedKey="{monitoring_type_code}" width="100%">
+                            <ComboBox items="{path: '/TaskMonitoringTypedCodeView', templateShareable: true}" required="true" placeholder="{I18N>/TYPE_NAME}" id="combo_monitoring_type" selectedKey="{monitoring_type_code}" width="100%">
                                 <core:Item key="{code}" text="{code_name}" />
                             </ComboBox>
                             <layoutData>
@@ -30,9 +22,8 @@
                             <Label text="{I18N>/PURCHASING_TYPE_NAME}" required="true"/>
                              <MultiComboBox
                                     selectedKeys="{=${monitoring_purchasing_type_code}.split(';')}"
-                                    placeholder="{I18N>/PURCHASING_TYPE_NAME}"
                                     id="combo_purchasing_type"
-                                    items="{/TaskMonitoringPurchaingTypeCodeView}"
+                                    items="{path: '/TaskMonitoringPurchaingTypeCodeView', templateShareable: true}"
                                     required="true"
                                    >
                                     <core:ListItem key="{code}" text="{code_name}"/>
@@ -44,7 +35,7 @@
                         <VBox>
                             <Label text="{I18N>/ACTIVATE}"/>
                             <!-- <Switch id="switch_activate" state="{activate_flag}" customTextOn="Yes" customTextOff="No" enabled="true"/> -->
-                            <SegmentedButton id="segmentButton_activate" selectedKey="{=${activate_flag} === true? 'Yes' : 'No'}" class="sapUiSmallMarginBottom">
+                            <SegmentedButton id="segmentButton_activate" selectedKey="{=${activate_flag} === true? 'Yes' : 'No'}" >
                                 <items>
                                     <SegmentedButtonItem text="Yes" key="Yes" />
                                     <SegmentedButtonItem text="No" key="No" />
@@ -59,7 +50,7 @@
                             <Input width="100%"
                                 id="Input_scenarioName"
                                 editable="{=${DetailView>/isCreate}}"
-                                placeholder="{I18N>/SCENARIO}"
+                             
                                 type="Text"
                                 value="{
                                     path: 'scenario_name',
@@ -67,7 +58,8 @@
                                     constraints: {
                                         minLength: 1,
                                         maxLength: 240
-                                    }
+                                    },
+                                    templateShareable: true
                                 }"
                               
                                 showValueHelp="false"
@@ -79,24 +71,24 @@
                                 <l:GridData span="XL6 L6 M12 S12" />
                             </layoutData>
                         </VBox>
-                            <VBox>
+                        <VBox>
                             <Text text=""/>
                                 <Text text=""/>
                             <layoutData>
                                 <l:GridData span="XL6 L6 M12 S12" />
                             </layoutData>
                         </VBox>
-                            <VBox>
+                        <VBox>
                             <Label text="{I18N>/TENANT_NAME}" required="true"/>
                             <ComboBox 
                                 id="tenant_edit_combo" 
                                 editable="{=${DetailView>/isCreate}}" 
-                                selectedKey="{tenant_id}" 
-                                items="{/OrgTenantView}" 
+                                selectedKey="L2100" 
+                                items="{path: '/OrgTenantView', templateShareable: true}" 
                                 selectionChange=".onChangeTenant" 
                                 width="100%" 
                                 required="true"
-                                placeholder="{I18N>/TENANT_NAME}">
+                             >
                                     <core:Item key="{tenant_id}" text="{tenant_name}" />
                             </ComboBox>
                             <layoutData>
@@ -107,10 +99,8 @@
                             <Label text="{I18N>/COMPANY}" required="true"/>
                             <MultiComboBox 
                                 required="true"
-                                placeholder="{I18N>/COMPANY}"
                                 id="company_edit_combo" 
                                 selectedKeys="{=${company_code}.split(';')}"
-                                class="sapUiSmallMarginBottom"
                                 maxWidth="100%"
                                 >
                                 <core:ListItem key="{company_code}" text="{company_name}" />
@@ -124,8 +114,6 @@
                             <MultiComboBox 
                                 id="bizunit_edit_combo" 
                                 selectedKeys="{=${bizunit_code}.split(';')}" 
-                                class="sapUiSmallMarginBottom"
-                                placeholder="{I18N>/BUSINESS_UNIT}"
                                 required="true"
                                 maxWidth="100%">
                                 <core:ListItem key="{bizunit_code}" text="{bizunit_name}" />

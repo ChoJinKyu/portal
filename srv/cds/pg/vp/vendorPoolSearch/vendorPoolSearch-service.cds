@@ -2,6 +2,7 @@ using { pg as vpOperationOrg } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_PO
 using { pg as vpSearchView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SEARCH_VIEW-model';
 using { pg as vpPopupView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_POPUP_VIEW-model';
 using { pg as vpMst } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';
+using { pg as vpMaxLevel } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MAX_LEVEL_VIEW-model';
 
 namespace pg; 
 @path : '/pg.vendorPoolSearchService'
@@ -63,4 +64,19 @@ service VpSearchService {
         from   vpSearchView.Vp_Vendor_Pool_Search_View
         order by vendor_pool_path_name
         ;
+    
+    @readonly
+    view vpMaxLevelView as 
+        select
+            key mst.language_cd,
+            key mst.tenant_id,
+            key mst.org_code,
+            key mst.operation_unit_code,
+            mst.max_level                
+        from
+            vpMaxLevel.Vp_Vendor_Pool_Max_Level_View(
+                p_tenant_id: 'L2100',
+                p_language_code: 'KO'
+            ) mst
+        ;        
 }

@@ -19,13 +19,13 @@ using {
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 
 entity Sc_Nego_Headers {
-    key tenant_id                       : String(5) not null @title : '테넌트ID';
+    key tenant_id : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
         // key tenant_id                       : Association to orgTenant.Org_Tenant @title : '테넌트ID';
     key nego_header_id                  : Integer64 not null @title : '협상헤더ID';
         Items                           : Composition of many negoItemPrices.Sc_Nego_Item_Prices
                                               on  Items.tenant_id      = $self.tenant_id
                                               and Items.nego_header_id = $self.nego_header_id;
-        reference_nego_header_id        : Integer64          @title : '참조협상헤더ID';
+        reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64          @title : '이존협상헤더ID';
         operation_unit_code             : String(30)         @title : '운영단위코드';
         reference_nego_document_number  : Integer            @title : '참조협상문서번호';

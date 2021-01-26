@@ -18,4 +18,5 @@ entity Pd_Part_Category_View {
     active_flag : Boolean   @title: '활성여부' ;	
     update_user_id : String(255) @title: '최종수정자';
     local_update_dtm : DateTime @title: '최종수정일시';
+    drill_state : String(10)  not null @title: 'drill down 상태' ;
 }

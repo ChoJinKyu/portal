@@ -19,29 +19,19 @@
 		showFooter="false">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="설비/공사 Project 상세" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>              
+				<!-- <uxap:expandedHeading>
 					<Title text="설비/공사 Project 상세" wrapping="true" />
-				</uxap:expandedHeading>
-				<!-- <uxap:snappedHeading>
-					<Title text="설비/공사 Project 상세" wrapping="true" />
-				</uxap:snappedHeading> -->
-				<!-- <uxap:expandedContent>
-					<Text text="Details for control option1 {company_code}" />
-				</uxap:expandedContent> -->
-				<!-- <uxap:snappedContent>
-					<Text text="Details for control option {company_code}" />
-				</uxap:snappedContent> -->
-				<!-- <uxap:snappedTitleOnMobile>
-					<Title text="Control Option Details2" />
-				</uxap:snappedTitleOnMobile> -->
-				<!-- <uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
-				</uxap:actions> -->
+				</uxap:expandedHeading> -->
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -88,9 +78,9 @@
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
+                <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 				<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />                
 				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
-				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

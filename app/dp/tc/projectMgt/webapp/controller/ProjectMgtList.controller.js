@@ -570,9 +570,15 @@ sap.ui.define([
             
         }
 
-        , onTestChange : function(oEvent) {
-            console.log("division_code : ", oEvent.getSource().getSelectedItem().getKey());
+        /**
+         * 산출제외 팝업의 산출제외 Switch off 시 제외사유 삭제
+         */
+        , onChangeExclFlag : function(oEvent) {
+            if(!oEvent.getParameter("state")) {
+                this.getModel("updateModel").setProperty("/mcst_excl_reason", "");
+            }
         }
+
         , onChangeCompnay: function(oEvent){
 
             //this.copyMultiSelected(oEvent);

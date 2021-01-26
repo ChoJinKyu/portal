@@ -36,13 +36,13 @@ service MmService {
     select  key m.tenant_id,
             key m.country_code,
             key m.hs_code,
-            (select l.hs_text
+            ifnull((select l.hs_text
              from  Hs.HsCodeLng l
              where l.tenant_id = m.tenant_id
              and l.country_code = m.country_code
              and l.hs_code = m.hs_code
              and l.language_code = 'KO'
-            )    as hs_text : String(500)
+            ), m.hs_text)   as hs_text : String(500)
     from Hs.HsCode as m
     where m.use_flag = true
     ;

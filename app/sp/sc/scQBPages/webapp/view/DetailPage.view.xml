@@ -218,11 +218,11 @@
                                        
                                          <VBox>
                                             <Label  text="Description" class="nameTitle sapUiTinyMarginBottom" />
-                                            <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
-                                                showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
+                                            <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true"  
+                                                showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}" class="testA"
                                                 visible="{=${propInfo>/isEditMode}}" 
                                                 />
-                                            <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/>
+                                            <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}" class="testA"/>
                                         </VBox>
 
                                         <VBox  width="100%" height="100%" alignItems="Start" >

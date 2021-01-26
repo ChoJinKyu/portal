@@ -7,13 +7,17 @@ sap.ui.define([
         "sap/ui/model/json/JSONModel",
         "../controller/SupplierSelection",
         // "dp/util/control/ui/MaterialMasterDialog"
-        "../controller/MaterialMasterDialog"
+        "../controller/MaterialMasterDialog",
+        "sap/ui/core/Component",
+        "sap/ui/core/routing/HashChanger",
+        "sap/ui/core/ComponentContainer",
+        "sap/m/MessageToast"
 
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON, SupplierSelection, MaterialMasterDialog) {
+	function (Controller, Filter, FilterOperator,MessageBox, Multilingual, JSON, SupplierSelection, MaterialMasterDialog, Component, HashChanger, ComponentContainer, MessageToast) {
         "use strict";
         
 		return Controller.extend("sp.sc.scQBPages.controller.DetailPage2", {
@@ -162,7 +166,42 @@ sap.ui.define([
                 
             },
             onNavBack: function(e){
-                this.getOwnerComponent().getRouter().navTo("mainPage", {} );
+
+                // App To App
+                
+                //portal에 있는 toolPage 
+                var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
+
+                var oMode = $.sap.negoMode;
+
+                
+                //이동하려는 app의 component name,url
+                if(oMode == "NW"){
+                    var sComponent = "sp.sc.scQBMgt",
+                        sUrl = "../sp/sc/scQBMgt/webapp";
+                }else{
+                    var sComponent = "sp.sc.scQBCreate",
+                        sUrl = "../sp/sc/scQBCreate/webapp";
+                }
+                    
+                
+                Component.load({
+                    name: sComponent,
+                    url: sUrl
+                }).then(function (oComponent) {
+                    var oContainer = new ComponentContainer({
+                        name: sComponent,
+                        async: true,
+                        url: sUrl
+                    });
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oContainer);
+                    
+                }).catch(function (e) {
+                    MessageToast.show("error");
+                });
+                
+                // this.getOwnerComponent().getRouter().navTo("mainPage", {} );
             },
             mTableOnCellClick: function(e){
                 alert("1");
