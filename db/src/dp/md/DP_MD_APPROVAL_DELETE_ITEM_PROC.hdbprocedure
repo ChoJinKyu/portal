@@ -64,7 +64,7 @@ BEGIN
                             MOLD_PRODUCTION_TYPE_CODE=NULL, MOLD_ITEM_TYPE_CODE=NULL,
                             PROVISIONAL_BUDGET_AMOUNT=NULL, ASSET_TYPE_CODE=NULL,
                             ACQ_DEPARTMENT_CODE=NULL
-                            WHERE MOLD_ID = loop_cur.MOLD_ID;
+                            WHERE MOLD_ID = loop_cur.MOLD_ID
                             AND TENANT_ID = loop_cur.TENANT_ID;
                 END;  
             END IF;
@@ -82,7 +82,7 @@ BEGIN
                 BEGIN 
                     UPDATE DP_MD_MST
                         SET CURRENCY_CODE=NULL, TARGET_AMOUNT=NULL
-                            WHERE MOLD_ID = loop_cur.MOLD_ID;
+                            WHERE MOLD_ID = loop_cur.MOLD_ID
                             AND TENANT_ID = loop_cur.TENANT_ID;
                 END;  
             END IF;
@@ -90,7 +90,7 @@ BEGIN
                 BEGIN 
                     UPDATE DP_MD_MST
                         SET ACQ_DEPARTMENT_CODE=NULL
-                            WHERE MOLD_ID = loop_cur.MOLD_ID;
+                            WHERE MOLD_ID = loop_cur.MOLD_ID
                             AND TENANT_ID = loop_cur.TENANT_ID;
                 END;  
             END IF;
