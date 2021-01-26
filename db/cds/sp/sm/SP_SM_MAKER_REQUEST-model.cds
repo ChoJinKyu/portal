@@ -25,6 +25,7 @@ entity Sm_Maker_Request {
   key   maker_request_sequence      : Integer64  not null   @title: '제조사요청순번' ;	
         maker_request_type_code     : String(30)            @title: '제조사요청타입코드' ;	
         maker_progress_status_code  : String(30)            @title: '제조사진행상태코드' ;	
+        requestor_empno             : String(30)            @title: '요청자사번' ;	
         tax_id                      : String(30)            @title: '세금등록번호' ;	
         supplier_code               : String(10)            @title: '공급업체 코드' ;	
         supplier_local_name         : String(240)           @title: '공급업체 로컬명' ;	
