@@ -3,7 +3,7 @@ namespace dp;
 using util from '../../cm/util/util-model';
 
 entity Md_Spec {
-
+    key tenant_id         		      : String(5) not null   @title : '테넌트ID';
     key mold_id                       : String(100) not null @title : '금형ID';
         use_material_value            : String(240)      @title : '사용재질값';
         inspection_flag               : Boolean          @title : '검사여부';
