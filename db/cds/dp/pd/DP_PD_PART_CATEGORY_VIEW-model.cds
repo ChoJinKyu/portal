@@ -4,6 +4,8 @@ namespace dp;
 entity Pd_Part_Category_View {	
   key hierarchy_rank : String(5)  not null @title: 'Rank' ;
   key hierarchy_level : String(10) not null @title: 'Level' ;
+  key parent_id : String(240)  not null @title: 'parent_id' ;	
+  key node_id : String(240)  not null @title: 'node_id' ;	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
   key company_code : String(10) default '*' not null @title: '회사코드' ;	
   key org_type_code : String(2)  not null @title: '조직유형코드' ;	

@@ -10,9 +10,24 @@ sap.ui.define([
 ],
 	function(MessageToast, Controller, JSONModel, Row, HashChanger, EventBus) {
 	"use strict";
-
+ 
 	return Controller.extend("xx.templateGuie.controller.Test", {
-        onInit: function() {            
+        onInit: function() {   
+            var oModel = new JSONModel();
+			var oData = {
+				modelData: [
+					{supplier: "Titanium", street: "401 23rd St", city: "Port Angeles", phone: "5682-121-828", openOrders: 10},
+					{supplier: "Technocom", street: "51 39th St", city: "Smallfield", phone: "2212-853-789", openOrders: 0},
+					{supplier: "Red Point Stores", street: "451 55th St", city: "Meridian", phone: "2234-245-898", openOrders: 5},
+					{supplier: "Technocom", street: "40 21st St", city: "Bethesda", phone: "5512-125-643", openOrders: 0},
+					{supplier: "Very Best Screens", street: "123 72nd St", city: "McLean", phone: "5412-543-765", openOrders: 6}
+				]
+			};
+			var oView = this.getView();
+
+			oModel.setData(oData);
+            oView.setModel(oModel);
+
             // var oHashChanger = HashChanger.getInstance();
             //     oHashChanger.init();
             //     oHashChanger.attachEvent("hashChanged", function(oEvent) {
@@ -25,6 +40,23 @@ sap.ui.define([
 
         onExit : function(){
             console.log("onExit Test");
+        },
+
+        onSaveFile : function(){
+			var fnSave = $.ajax({
+				url: 'srv-api/test/upload',
+                type: "POST",
+                data: new FormData($("#upload-file-form")[0]),
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+				data: ""
+			});
+						
+			fnSave.done(function(oResultData) {	
+                oResultData;
+            });
         },
 
         onPress: function (oEvent) {

@@ -144,31 +144,32 @@ sap.ui.define([
             },
 
             onAppPress: function(oEvent){
-                var oTile = oEvent.getSource(),
-                    sPath = oEvent.getSource().getBindingContext().getPath(),
+                var sPath = oEvent.getSource().getBindingContext().getPath(),
                     oModel = this.getView().getModel(),
                     oToolPage = this.byId("toolPage"),
                     sComponent = oModel.getProperty(sPath + "/menu_path_info"),
                     sUrl = "../"+sComponent.replace(/\./gi,"/")+"/webapp";
                 HashChanger.getInstance().replaceHash("");
 
-                Component.load({
-                    name: sComponent,
-                    url: sUrl
-                }).then(function(oComponent) {
-                    // var oContainer = new ComponentContainer({
-                    //     component: oComponent
-                    // });
-                    var oContainer = new ComponentContainer({
-                        name: sComponent,
-                        async: true,
-                        url: sUrl
-                    });
-                    oToolPage.removeAllMainContents();
-                    oToolPage.addMainContent(oContainer);
-                }).catch(function(e){
-                    MessageToast.show("등록된 메뉴 경로가 올바르지 않습니다.");
-                })
+                this._createComponent(oToolPage, sComponent, sUrl);
+
+                // Component.load({
+                //     name: sComponent,
+                //     url: sUrl
+                // }).then(function(oComponent) {
+                //     // var oContainer = new ComponentContainer({
+                //     //     component: oComponent
+                //     // });
+                //     var oContainer = new ComponentContainer({
+                //         name: sComponent,
+                //         async: true,
+                //         url: sUrl
+                //     });
+                //     oToolPage.removeAllMainContents();
+                //     oToolPage.addMainContent(oContainer);
+                // }).catch(function(e){
+                //     MessageToast.show("등록된 메뉴 경로가 올바르지 않습니다.");
+                // })
 
                 // console.log("oToolPage",oToolPage)
                 // oToolPage.removeMainContent(0);
@@ -186,31 +187,33 @@ sap.ui.define([
                 var sComponent = oData.sMenuPath;
                 var sUrl = oData.sMenuUrl;
                 var oCustomData = oData.oCustomData;
-                
-                Component.create({
-                    name: sComponent,
-                    url: sUrl,
-                    id : this.getView().createId(new Date().getTime() + ""),
-                    componentData : oCustomData
-                }).then(function(oComponent) {
-                    var oNewContainer;                
-                    var oOldContainer = oToolPage.getMainContents()[0];
-                    if(!oOldContainer.getLifecycle){
-                        oNewContainer = new ComponentContainer({
-                            id : oComponent.getId() + "--container"
-                        });
 
-                        oNewContainer.setComponent(oComponent);
-                    }else{
-                        oOldContainer.getComponentInstance().destroy();
-                        oOldContainer.setComponent(oComponent);
-                    }                                  
+                this._createComponent(oToolPage, sComponent, sUrl, oCustomData);
+                
+                // Component.create({
+                //     name: sComponent,
+                //     url: sUrl,
+                //     id : this.getView().createId(new Date().getTime() + ""),
+                //     componentData : oCustomData
+                // }).then(function(oComponent) {
+                //     var oNewContainer;                
+                //     var oOldContainer = oToolPage.getMainContents()[0];
+                //     if(!oOldContainer.getLifecycle){
+                //         oNewContainer = new ComponentContainer({
+                //             id : oComponent.getId() + "--container"
+                //         });
+
+                //         oNewContainer.setComponent(oComponent);
+                //     }else{
+                //         oOldContainer.getComponentInstance().destroy();
+                //         oOldContainer.setComponent(oComponent);
+                //     }                                  
                     
-                    oToolPage.removeAllMainContents();
-                    oToolPage.addMainContent(oNewContainer ? oNewContainer : oOldContainer);
-                }).catch(function(e){
-                    MessageToast.show("등록된 메뉴 경로가 올바르지 않습니다.");
-                })
+                //     oToolPage.removeAllMainContents();
+                //     oToolPage.addMainContent(oNewContainer ? oNewContainer : oOldContainer);
+                // }).catch(function(e){
+                //     MessageToast.show("등록된 메뉴 경로가 올바르지 않습니다.");
+                // })
             },
 
             onTilePress: function(oEvent){
@@ -260,6 +263,33 @@ sap.ui.define([
                         oDialog.close();
                     });
                 }
+            },
+
+            _createComponent : function(oToolPage, sComponent, sUrl, oCustomData){
+                Component.create({
+                    name: sComponent,
+                    url: sUrl,
+                    id : this.getView().createId(new Date().getTime() + ""),
+                    componentData : oCustomData ? oCustomData : undefined
+                }).then(function(oComponent) {
+                    var oNewContainer;                
+                    var oOldContainer = oToolPage.getMainContents()[0];
+                    if(!oOldContainer.getLifecycle){
+                        oNewContainer = new ComponentContainer({
+                            id : oComponent.getId() + "--container"
+                        });
+
+                        oNewContainer.setComponent(oComponent);
+                    }else{
+                        oOldContainer.getComponentInstance().destroy();
+                        oOldContainer.setComponent(oComponent);
+                    }                                  
+                    
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oNewContainer ? oNewContainer : oOldContainer);
+                }).catch(function(e){
+                    MessageToast.show("등록된 메뉴 경로가 올바르지 않습니다.");
+                })
             }
         });
     }

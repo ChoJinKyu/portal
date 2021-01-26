@@ -415,27 +415,46 @@ sap.ui.define([
         },
 
         _fnReadPrDetail : function(oArgs){
-             var that = this;
+            var that = this,
+                oServiceModel = this.getModel(),
+                oViewModel = this.getModel('viewModel');
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenantId));
             aFilters.push(new Filter("company_code", FilterOperator.EQ, oArgs.company_code));
             aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
  
             var aSorter = [];
-            aSorter.push(new Sorter("pr_number", false));
+            aSorter.push(new Sorter("pr_item_number", false));
 
-            var oViewModel = this.getModel('viewModel');
-            var oServiceModel = this.getModel();
+            var sExpand  = "accounts,services";
+            
             oServiceModel.read("/Pr_Dtl",{
                 filters : aFilters,
                 sorters : aSorter,
+                urlParameters : { "$expand" : sExpand }, 
                 success : function(data){
                     if(data.results.length > 0) {
                         oViewModel.setProperty("/Pr_Dtl", data.results);
                     } else {
                         oViewModel.setProperty("/Pr_Dtl", []);
                     }
-                    // oCodeMasterTable.setBusy(false);
+                    var checkdata = oViewModel.getProperty("/Pr_Dtl");
+
+                    var oAccounts={}, oServices={};
+                    var aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
+                    if(aPrDtlData && aPrDtlData.length > 0){
+                        aPrDtlData.forEach(function(item, idx){
+                            if(item.accounts.results && item.accounts.results.length > 0) {
+                                //item.accounts = item.accounts.results[0]; //==> service.cds, handler를 다 바꿔야해서 보류함 
+                                item.account_code = item.accounts.results[0].account_code;
+                                item.cctr_code = item.accounts.results[0].cctr_code;                                
+                                item.wbs_code = item.accounts.results[0].wbs_code;
+                                item.asset_number = item.accounts.results[0].asset_number;
+                                item.order_number = item.accounts.results[0].order_number;
+                            }
+                        });
+                        console.log("");
+                    }
                 },
                 error : function(data){
                     MessageToast.show("Pr_Dtl read failed.");
@@ -462,14 +481,7 @@ sap.ui.define([
                 tenant_id: this.tenantId,
                 company_code: this.company_code,
                 pr_number: this.pr_number,
-                pr_item_number: prItemNumber+"",
-                org_type_code: "",
-                currency_code: "KRW",
-                estimated_price: "0", 
-                requestor_empno: "A60264",
-                requestor_name: "김구매", 
-                delivery_request_date: new Date(),
-                pr_progress_status_code: "10"
+                pr_item_number: prItemNumber+""
             }
             var oNewData = this._fnSetPrDetailData(oItem);
             
@@ -782,19 +794,19 @@ sap.ui.define([
                         org_type_code       : (item.org_type_code) ? item.org_type_code : "",
                         org_code            : (item.org_code) ? item.org_code : "", 
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
-                        currency_code       : (item.currency_code) ? item.currency_code : "",
+                        currency_code       : (item.currency_code) ? item.currency_code : "KRW",
                         estimated_price     : (item.estimated_price) ? item.estimated_price : "", 
                         material_code       : (item.material_code) ? item.material_code : "",
                         material_group_code : (item.material_group_code) ? item.material_group_code : "",
                         pr_desc             : (item.pr_desc) ? item.pr_desc : "",                        
                         pr_quantity         : (item.pr_quantity) ? item.pr_quantity : "",
                         pr_unit             : (item.pr_unit) ? item.pr_unit : "",
-                        requestor_empno     : (item.requestor_empno) ? item.requestor_empno : "",
-                        requestor_name      : (item.requestor_name) ? item.requestor_name : "",
-                        delivery_request_date: (item.delivery_request_date) ? item.delivery_request_date : "",
+                        requestor_empno     : (item.requestor_empno) ? item.requestor_empno : "A60264",
+                        requestor_name      : (item.requestor_name) ? item.requestor_name : "김구매",
+                        delivery_request_date: (item.delivery_request_date) ? item.delivery_request_date : new Date(),
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
                         price_unit          : (item.price_unit) ? item.price_unit : "",
-                        pr_progress_status_code: (item.pr_progress_status_code) ? item.pr_progress_status_code : "",
+                        pr_progress_status_code: (item.pr_progress_status_code && item.pr_progress_status_code != "") ? item.pr_progress_status_code : "10",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
                         account_code        : (item.account_code) ? item.account_code : "",

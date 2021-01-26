@@ -73,7 +73,8 @@
 			}]
         },
         "resourceRoots": {
-            "ext.lib": "../../../lib"
+            "ext.lib": "../../../../lib",
+            "ext.lib.custom": "./controller"
         },
 		"routing": {
 			"config": {

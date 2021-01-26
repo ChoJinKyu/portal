@@ -12,23 +12,25 @@
         <content>
 
             <Table id="mainTable" 
-                    sticky="HeaderToolbar,ColumnHeaders" 
-                    inset="false" 
-                    class="sapFDynamicPageAlignContent" 
-                    updateFinished=".onMainTableUpdateFinished"
-                    items="{
-                        path: '/Message',
-                        sorter: {
-                            path: 'message_contents'
-                        }
-                    }"
-                    mode="SingleSelectLeft"
-                    width="auto">
+                sticky="HeaderToolbar,ColumnHeaders" 
+                inset="false" 
+                class="sapFDynamicPageAlignContent" 
+                items="{
+                    path: '/',
+                    sorter: {
+                        path: 'message_contents'
+                    }
+                }"
+                growing="true"
+                growingThreshold="50"
+                growingDirection="Downwards"
+                mode="SingleSelectLeft"
+                width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title text="Messages" level="H2"/>
+                        <Title text="Messages {= ${/}.length > 0 ? '(' + ${/}.length + ')' : ''}" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="mainTableTestButton" text="Test" type="Transparent" press=".onMainTableTestButtonPress" />
+                        <Button id="mainTableSearchButton" text="Search" type="Transparent" press=".onMainTableSearchButtonPress" />
                         <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                         <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
                         <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
@@ -106,11 +108,11 @@
                             </HBox>
                             <HBox>
                                 <!-- <Text text="{message_contents}" visible="true"></Text> -->
-                                <Input value="{message_contents}" visible="true"></Input>
+                                <Input value="{message_contents}" width="100%" visible="true"></Input>
                             </HBox>
                             <HBox>
                                 <!-- <Text text="{message_type_code}" visible="true"></Text> -->
-                                <ComboBox selectedKey="{message_type_code}" width="100%" visible="true" items="{
+                                <ComboBox selectedKey="{message_type_code}" visible="true" items="{
                                         path: 'common>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},

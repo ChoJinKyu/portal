@@ -184,22 +184,24 @@ sap.ui.define([
                             // }
 
                             var item = JSON.parse(itemArr);
-                            var column = that.byId("tableColumns");
-                            column.bindAggregation("items", { 
+                            // var column = that.byId("tableColumns");
+                            // column.bindAggregation("items", { 
 
-                                path: "category>/MdCategory", 
+                            //     path: "category>/MdCategory", 
 
-                                // @ts-ignore 
+                            //     // @ts-ignore 
 
-                                template: new sap.m.MenuItem({ 
+                            //     template: new sap.m.MenuItem({ 
 
-                                    key: "{category>spmd_category_code}", 
+                            //         key: "{category>spmd_category_code}", 
 
-                                    text: "{category>spmd_category_code}: {category>spmd_category_code_name}" 
+                            //         text: "{category>spmd_category_code}: {category>spmd_category_code_name}" 
 
-                                }) 
+                            //     }) 
 
-                            }); 
+                            // }); 
+
+                            
                             // that.byId("tableColumns").appendChildf('<t:Column headerSpan="2" hAlign="Center">'
                             //             +'<t:multiLabels>'
                             //                 +'<Label text="Contact"/>'

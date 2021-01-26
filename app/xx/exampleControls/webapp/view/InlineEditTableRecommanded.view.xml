@@ -1,0 +1,133 @@
+<mvc:View controllerName="xx.exampleControls.controller.InlineEditTableRecommanded" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <Page id="page" 
+        title="Inline Edit Table with ext.lib.model.v2.ODataModel" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+
+        <content>
+
+            <Table id="mainTable" 
+                sticky="HeaderToolbar,ColumnHeaders" 
+                inset="false" 
+                class="sapFDynamicPageAlignContent" 
+                items="{
+                    path: 'main>/Message',
+                    sorter: {
+                        path: 'message_contents'
+                    }
+                }"
+                growing="true"
+                growingDirection="Upwards"
+                mode="SingleSelectLeft"
+                width="auto">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="Messages {= ${main>/Message}.length > 0 ? '(' + ${main>/Message}.length + ')' : ''}" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button id="mainTableTestButton" text="Test" type="Transparent" press=".onMainTableTestButtonPress" />
+                        <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                        <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                        <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        <ToolbarSeparator/>
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="NeverOverflow" />
+                            </layoutData>
+                        </Button>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                        <ObjectStatus icon="sap-icon://document" />
+                    </Column>
+                    <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                        <Text text="Chain" />
+                    </Column>
+                    <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                        <Text text="Language" />
+                    </Column>
+                    <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Text text="Code" />
+                    </Column>
+                    <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Center">
+                        <Text text="Content" />
+                    </Column>
+                    <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Text text="Type" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <HBox>
+                                <ObjectStatus icon="{
+                                    path: '_row_state_',
+                                    formatter: '.formatter.toModelStateColumnIcon'
+                                }" />
+                            </HBox>
+                            <HBox>
+                                <!-- <Text text="{chain_code}" visible="true"></Text> -->
+                                <ComboBox selectedKey="{main>chain_code}" 
+                                            width="100%" 
+                                            visible="true" 
+                                            items="{
+                                                path: 'common>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                                ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{common>code}" text="{common>code_name}" />
+                                    </items>
+                                </ComboBox>
+                            </HBox>
+                            <HBox>
+                                <!-- <Text text="{language_code}" visible="true"></Text> -->
+                                <ComboBox selectedKey="{main>language_code}" width="100%" visible="true" items="{
+                                        path: 'common>/Code',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{common>code}" text="{common>code_name}" />
+                                    </items>
+                                </ComboBox>
+                            </HBox>
+                            <HBox>
+                                <!-- <Text text="{message_code}" visible="true"></Text> -->
+                                <Input value="{main>message_code}" visible="true"></Input>
+                            </HBox>
+                            <HBox>
+                                <!-- <Text text="{message_contents}" visible="true"></Text> -->
+                                <Input value="{main>message_contents}" width="100%" visible="true"></Input>
+                            </HBox>
+                            <HBox>
+                                <!-- <Text text="{message_type_code}" visible="true"></Text> -->
+                                <ComboBox selectedKey="{main>message_type_code}" visible="true" items="{
+                                        path: 'common>/Code',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{common>code}" text="{common>code_name}" />
+                                    </items>
+                                </ComboBox>
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+        </content>
+    </Page>
+</mvc:View>

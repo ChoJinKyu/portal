@@ -186,6 +186,12 @@
             </t:extension>
             <t:columns>
                 <t:Column hAlign="Center" width="10rem">
+                    <Label text="{I18N>/APPROVAL_TYPE_CODE}" textAlign="Center" />
+                    <t:template>
+                        <Text text="{listModel>approval_type_code_nm}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="10rem">
                     <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                     <t:template>
                         <Link text="{listModel>approval_number}" press=".onGoDetail" />

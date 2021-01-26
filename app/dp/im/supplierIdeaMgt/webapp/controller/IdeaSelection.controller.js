@@ -37,6 +37,9 @@ sap.ui.define([
         validator: new Validator(),
 
         loginUserId: new String,
+        loginUserName: new String,
+        supplier_code: new String,
+        supplier_local_name: new String,
         tenant_id: new String,
         statusGloCode: new String,
 
@@ -52,15 +55,18 @@ sap.ui.define([
 
             //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
+            this.loginUserName = "TestUser";
             this.tenant_id = "L2100";
+            this.supplier_code = "KR01820500";
+            this.supplier_local_name = "공급업체";
             //법인 필터
             this.setCompanyFilter();
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedListModel(), "list");
             this.setModel(new ManagedModel(), "details");
+            this.setModel(new ManagedModel(), "supplierPerform");
             this.setModel(new JSONModel(), "midObjectViewModel");
 
 			var oViewModel = new JSONModel({
@@ -95,13 +101,77 @@ sap.ui.define([
         
 
         _fnInitModel : function(){
-            var oInitData = {
-                tenant_id: "L2100",
-                company_code: "",
-                idea_number: ""
-            };
-            var oViewModel = this.getModel("details");
-            oViewModel.setProperty("/SupplierIdea", oInitData);
+            // console.log("_fnInitModel");
+            
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = ("0" + (1 + date.getMonth())).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+            var toDate = year + "/" + month + "/" + day;
+            var toDate2 = year + "-" + month + "-" + day;
+
+            this.getView().byId("ideaDate").setText(toDate);
+            
+
+            var oViewModel = this.getView().getModel("master");
+            oViewModel.setData({}, "/IdeaView");
+            oViewModel.setData({
+                "tenant_id": this._sTenantId,
+                "company_code": this._sCompanyCode,
+                "idea_number": "New",
+				"idea_title": "",
+                "idea_date": null,
+				
+				"idea_progress_status_code": "NEW",
+				"idea_progress_status_name": "NEW",
+                "supplier_code": this.supplier_code,
+                "supplier_local_name": this.supplier_local_name,
+                "idea_create_user_id": this.loginUserId,
+				
+				
+                "idea_create_user_local_name": this.loginUserName,
+				"bizunit_code": null,
+				"bizunit_name": null,
+				"idea_product_group_code": null,
+				"idea_product_group_name": null,
+
+
+				"idea_type_code": null,
+				"idea_type_name": null,
+				"idea_period_code": null,
+				"idea_period_name": null,
+				"idea_manager_empno": null,
+
+				"idea_manager_local_name": null,
+				"idea_part_desc": null,
+				"current_proposal_contents": null,
+				"change_proposal_contents": null,
+				"idea_contents": null,
+
+                "attch_group_number": null,                
+				"material_code": null,
+				"purchasing_uom_code": null,
+				"currency_code": null,
+                "vi_amount": null,
+                
+				"monthly_mtlmob_quantity": null,
+				"monthly_purchasing_amount": null,
+				"annual_purchasing_amount": null,
+				"perform_contents": null
+
+            }, "/IdeaView");
+            var oViewModel2 = this.getView().getModel("details");
+            oViewModel2.setData({}, "/SupplierIdea");
+            oViewModel2.setData({
+                "tenant_id": this._sTenantId,
+                "company_code": this._sCompanyCode,
+                "idea_number": "New",
+                "supplier_code": this.supplier_code,
+                "idea_progress_status_name": "NEW",
+                "idea_create_user_id": this.loginUserId,
+                "create_user_id": this.loginUserId,
+                "update_user_id": this.loginUserId,
+            }, "/SupplierIdea");
         },
 
 		/**
@@ -115,41 +185,24 @@ sap.ui.define([
             this._sTenantId = oArgs.tenantId;
             this._sCompanyCode = oArgs.companyCode;
             this._sIdeaNumber = oArgs.ideaNumber;
+            var oMasterModel = this.getModel("master");
+            oMasterModel.setProperty("/IdeaView", {});
+            var oDetailModel = this.getModel("details");
+            oDetailModel.setProperty("/SupplierIdea", {});
 
             this.validator.clearValueState(this.byId("midObjectForm"));
             if (oArgs.ideaNumber == "new") {
-                this._toEditMode();
-                //console.log("###신규저장");
-                this._fnInitModel();
-                var date = new Date();
-                var year = date.getFullYear();
-                var month = ("0" + (1 + date.getMonth())).slice(-2);
-                var day = ("0" + date.getDate()).slice(-2);
-                var toDate = year + "/" + month + "/" + day;
-                var toDate2 = year + "-" + month + "-" + day;
-
-                this.getView().byId("ideaDate").setText(toDate);
-                var oDetailModel = this.getModel("details");
-                oDetailModel.setData({
-                    "tenant_id": this._sTenantId,
-                    "company_code": this._sCompanyCode,
-                    "idea_number": "New",
-                    "idea_date": toDate2,
-                    "supplier_code": "KR01820500",
-                    "idea_create_user_id": this.loginUserId,
-                    "local_create_dtm": toDate2,
-                    "local_update_dtm": toDate2,
-                    "create_user_id": this.loginUserId,
-                    "update_user_id": this.loginUserId,
-                    "system_create_dtm": toDate2,
-                    "system_update_dtm": toDate2
-                }, "/SupplierIdea"); 
                 
-
+                // console.log("###신규저장");
+                this._fnInitModel();
+                this._sTenantId = oArgs.tenantId;
+                this._sCompanyCode = oArgs.companyCode;
+                this._sIdeaNumber = "new";
+                this._toEditMode();
                 oView.byId("ideaCompany").setValue(this._sCompanyCode);
                 oDetailModel.setTransactionModel(this.getModel());
             } else {
-                //console.log("###수정");
+                // console.log("###수정");
                 this.onSearch(oArgs.ideaNumber);
             }
         },
@@ -251,10 +304,19 @@ sap.ui.define([
                 attch_group_number                   : oData.attch_group_number         ,
                 create_user_id                       : this.loginUserId                 ,
                 update_user_id                       : this.loginUserId                 ,
+                material_code                        : oData.material_code         ,
+                
+                purchasing_uom_code                  : oData.purchasing_uom_code         ,
+                currency_code                        : oData.currency_code         ,
+                vi_amount                            : oData.vi_amount         ,
+                monthly_mtlmob_quantity              : oData.monthly_mtlmob_quantity         ,
+                monthly_purchasing_amount            : oData.monthly_purchasing_amount         ,
+                
+                annual_purchasing_amount             : oData.annual_purchasing_amount         ,
+                perform_contents                     : oData.perform_contents         ,
                 crd_type_code                        : CUType
             }
-        
-                
+
             if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
 
             var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
@@ -408,7 +470,7 @@ sap.ui.define([
          * 코드 체크
          */
         onNameChk : function(e) {
-            console.log(e);
+            // console.log(e);
             var oView = this.getView();
             var ideaManagerId = this.getView().byId("ideaManagerId");
             ideaManagerId.setValue("");

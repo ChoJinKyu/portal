@@ -39,6 +39,16 @@ PROCEDURE DP_IM_SAVE_IDEA_PROC (
 
                            IDEA_CONTENTS NCLOB,
                            ATTCH_GROUP_NUMBER NVARCHAR(100),
+                           MATERIAL_CODE NVARCHAR(40),
+                           PURCHASING_UOM_CODE NVARCHAR(3),
+                           CURRENCY_CODE NVARCHAR(3),
+                           
+                           VI_AMOUNT DECIMAL,
+                           MONTHLY_MTLMOB_QUANTITY DECIMAL,
+                           MONTHLY_PURCHASING_AMOUNT DECIMAL,
+                           ANNUAL_PURCHASING_AMOUNT DECIMAL,
+                           PERFORM_CONTENTS NVARCHAR(500),
+
                            CUD_TYPE_CODE NVARCHAR(1)
                            ),
     OUT O_RETURN_TAB TABLE (RETURN_CODE NVARCHAR(1), RETURN_MSG_CODE NVARCHAR(30), RETURN_MSG NVARCHAR(1000))
@@ -75,6 +85,16 @@ BEGIN
 		   
 		   A.IDEA_CONTENTS,
 		   A.ATTCH_GROUP_NUMBER,
+		   A.MATERIAL_CODE,
+		   A.PURCHASING_UOM_CODE,
+		   A.CURRENCY_CODE,
+		   
+		   A.VI_AMOUNT,
+		   A.MONTHLY_MTLMOB_QUANTITY,
+		   A.MONTHLY_PURCHASING_AMOUNT,
+		   A.ANNUAL_PURCHASING_AMOUNT,
+           A.PERFORM_CONTENTS,
+           
 		   A.CUD_TYPE_CODE
     FROM   :I_SAVE_TAB A;
 
@@ -185,11 +205,21 @@ BEGIN
                     CHANGE_PROPOSAL_CONTENTS,
                     IDEA_CONTENTS,
                     ATTCH_GROUP_NUMBER,
+                    MATERIAL_CODE,
+                    PURCHASING_UOM_CODE,
+
+                    CURRENCY_CODE,
+                    VI_AMOUNT,
+                    MONTHLY_MTLMOB_QUANTITY,
+                    MONTHLY_PURCHASING_AMOUNT,
+                    ANNUAL_PURCHASING_AMOUNT,
+
+                    PERFORM_CONTENTS,
                     LOCAL_CREATE_DTM,
                     LOCAL_UPDATE_DTM,
-
                     CREATE_USER_ID,
                     UPDATE_USER_ID,
+
                     SYSTEM_CREATE_DTM,
                     SYSTEM_UPDATE_DTM
                 )
@@ -216,11 +246,21 @@ BEGIN
                     REC_DATA.CHANGE_PROPOSAL_CONTENTS,
                     REC_DATA.IDEA_CONTENTS,
                     REC_DATA.ATTCH_GROUP_NUMBER,
+                    REC_DATA.MATERIAL_CODE,
+                    REC_DATA.PURCHASING_UOM_CODE,
+
+                    REC_DATA.CURRENCY_CODE,
+                    REC_DATA.VI_AMOUNT,
+                    REC_DATA.MONTHLY_MTLMOB_QUANTITY,
+                    REC_DATA.MONTHLY_PURCHASING_AMOUNT,
+                    REC_DATA.ANNUAL_PURCHASING_AMOUNT,
+
+                    REC_DATA.PERFORM_CONTENTS,                    
                     current_date,
-                    current_date,
-                    
+                    current_date,                    
                     REC_DATA.USER_ID,
                     REC_DATA.USER_ID,
+
                     current_date,
                     current_date
                 );
@@ -233,26 +273,35 @@ BEGIN
             BEGIN
                 UPDATE DP_IM_SUPPLIER_IDEA
                 SET 
-                    IDEA_TITLE                           =     REC_DATA.IDEA_TITLE,
-                    IDEA_PROGRESS_STATUS_CODE            =     REC_DATA.IDEA_PROGRESS_STATUS_CODE,
-                    SUPPLIER_CODE                        =     REC_DATA.SUPPLIER_CODE,
-                    IDEA_CREATE_USER_ID                  =     REC_DATA.USER_ID,					
-                    BIZUNIT_CODE                         =     REC_DATA.BIZUNIT_CODE,
-
-                    IDEA_PRODUCT_GROUP_CODE              =     REC_DATA.IDEA_PRODUCT_GROUP_CODE,	
-                    IDEA_TYPE_CODE                       =     REC_DATA.IDEA_TYPE_CODE,
-                    IDEA_PERIOD_CODE                     =     REC_DATA.IDEA_PERIOD_CODE,
-                    IDEA_MANAGER_EMPNO                   =     REC_DATA.IDEA_MANAGER_EMPNO,			
-                    IDEA_PART_DESC                       =     REC_DATA.IDEA_PART_DESC,
-
-                    CURRENT_PROPOSAL_CONTENTS            =     REC_DATA.CURRENT_PROPOSAL_CONTENTS,
-                    CHANGE_PROPOSAL_CONTENTS             =     REC_DATA.CHANGE_PROPOSAL_CONTENTS,
-                    IDEA_CONTENTS                        =     REC_DATA.IDEA_CONTENTS,
-                    ATTCH_GROUP_NUMBER                   =     REC_DATA.ATTCH_GROUP_NUMBER,			
-                    LOCAL_UPDATE_DTM                     =     current_date,
-                    
-                    UPDATE_USER_ID                       =     REC_DATA.USER_ID,
-                    SYSTEM_UPDATE_DTM                    =     current_date
+                    IDEA_TITLE                    =     REC_DATA.IDEA_TITLE,
+                    IDEA_PROGRESS_STATUS_CODE     =     REC_DATA.IDEA_PROGRESS_STATUS_CODE,
+                    SUPPLIER_CODE                 =     REC_DATA.SUPPLIER_CODE,
+                    IDEA_CREATE_USER_ID           =     REC_DATA.USER_ID,					
+                    BIZUNIT_CODE                  =     REC_DATA.BIZUNIT_CODE,
+					
+                    IDEA_PRODUCT_GROUP_CODE       =     REC_DATA.IDEA_PRODUCT_GROUP_CODE,	
+                    IDEA_TYPE_CODE                =     REC_DATA.IDEA_TYPE_CODE,
+                    IDEA_PERIOD_CODE              =     REC_DATA.IDEA_PERIOD_CODE,
+                    IDEA_MANAGER_EMPNO            =     REC_DATA.IDEA_MANAGER_EMPNO,			
+                    IDEA_PART_DESC                =     REC_DATA.IDEA_PART_DESC,
+					
+                    CURRENT_PROPOSAL_CONTENTS     =     REC_DATA.CURRENT_PROPOSAL_CONTENTS,
+                    CHANGE_PROPOSAL_CONTENTS      =     REC_DATA.CHANGE_PROPOSAL_CONTENTS,
+                    IDEA_CONTENTS                 =     REC_DATA.IDEA_CONTENTS,
+                    ATTCH_GROUP_NUMBER            =     REC_DATA.ATTCH_GROUP_NUMBER,
+                    MATERIAL_CODE				  =     REC_DATA.MATERIAL_CODE,
+					
+                    PURCHASING_UOM_CODE           =     REC_DATA.PURCHASING_UOM_CODE,
+                    CURRENCY_CODE                 =     REC_DATA.CURRENCY_CODE,
+                    VI_AMOUNT                     =     REC_DATA.VI_AMOUNT,
+                    MONTHLY_MTLMOB_QUANTITY       =     REC_DATA.MONTHLY_MTLMOB_QUANTITY,
+                    MONTHLY_PURCHASING_AMOUNT     =     REC_DATA.MONTHLY_PURCHASING_AMOUNT,
+					
+                    ANNUAL_PURCHASING_AMOUNT      =     REC_DATA.ANNUAL_PURCHASING_AMOUNT,
+                    PERFORM_CONTENTS              =     REC_DATA.PERFORM_CONTENTS,     					
+                    LOCAL_UPDATE_DTM              =     current_date,												  
+                    UPDATE_USER_ID                =     REC_DATA.USER_ID,
+                    SYSTEM_UPDATE_DTM             =     current_date
                 WHERE TENANT_ID = REC_DATA.TENANT_ID
                 AND COMPANY_CODE = REC_DATA.COMPANY_CODE
                 AND IDEA_NUMBER = REC_DATA.IDEA_NUMBER;

@@ -8,7 +8,8 @@ select
     prTMst.erp_interface_flag,
     prTMst.default_template_number,
     prTMst.approval_flag,
-    prTMst.use_flag,                 
+    prTMst.use_flag,        
+    REPLACE( prTXtn.table_name , 'OP_PU_PR_', '') || '-' || prTEtt.column_name AS EttLabel,         
     OP_PU_PR_TEMPLATE_GETCOL_FUNC( prTMst.tenant_id
                                 , prTMst.pr_template_number
                                 , prTXtn.txn_type_code                                                

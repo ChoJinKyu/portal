@@ -56,7 +56,6 @@
                                                      value-state="Error"
                                                      
                                                      />
-
                                                                                   
                                                     <!-- <ComboBox id="tenant_combo" 
                                                         items="{/SupEvalOrgView}" 
@@ -116,7 +115,6 @@
                                     showFullScreenButton="false"
                                     beforeRebindTable="onSearchTable"
                                     
-                                    
                                     >
                          <!-- 자동바인딩 -->
                                     <!-- useExportToExcel : 추가메뉴 활성화 여부 -->
@@ -136,9 +134,6 @@
                                         <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press=".onColumns"/> -->
 
                                     </OverflowToolbar>
-
-
-
                                             </smartTable:customToolbar>
                                             <Table id="MonitorListTable" sticky="HeaderToolbar,ColumnHeaders">
                                             <columns>
@@ -262,8 +257,7 @@
                                             <cells>
                                                 <ObjectIdentifier text="{= ${use_flag}? 'Y' : 'N'}"/> 
                                                 <!-- <ObjectIdentifier text="{evaluation_operation_unit_code}"/>
-                                                <ObjectIdentifier text="{evaluation_operation_unit_name}"/>
--->
+                                                <ObjectIdentifier text="{evaluation_operation_unit_name}"/>-->
 
 
                                                 <!-- <ObjectIdentifier text="{scenario_name}"/> -->

@@ -171,32 +171,7 @@ sap.ui.define([
 
 
 
-            /** Detail view로 Navigate 기능 
-            * @public
-            */
-            // onNavToDetail: function (oEvent) {
-            //     // @ts-ignore
-            //     var itemPath = oEvent.getSource().getBindingContext().getPath();
-            //     // /MonitoringMasterView(scenario_number=1l,tenant_id='L2100',company_code='LGCKR',bizunit_code='L210000000')
-            //     // this.getModel().read(itemPath, {
-            //     //     success: function (oData, response) {
-
-            //     //     }.bind(this)
-            //     // });
-            //     var key = itemPath.substring(itemPath.indexOf("(") + 1, itemPath.indexOf(")"));
-            //     var key_arr = key.split(",");
-            //     var scenario_number = key_arr[0].substring(key_arr[0].indexOf("=") + 1).replaceAll("'", "")
-            //     var tenant_id = key_arr[1].substring(key_arr[1].indexOf("=") + 1).replaceAll("'", "");
-            //     var company_code = key_arr[2].substring(key_arr[2].indexOf("=") + 1).replaceAll("'", "");
-            //     var bizunit_code = key_arr[3].substring(key_arr[3].indexOf("=") + 1).replaceAll("'", "");
-            //     this.getRouter().navTo("detail", {
-            //         scenario_number: scenario_number,
-            //         tenant_id: tenant_id,
-            //         company_code: company_code,
-            //         bizunit_code: bizunit_code
-
-            //     });
-            // },
+          
 
 
             /** 회사(tenant_id)값으로 법인, 사업본부 combobox item filter 기능
@@ -237,6 +212,44 @@ sap.ui.define([
             //     });
             // },
 
+            /** Detail view로 Navigate 기능 
+            * @public
+            */
+            onNavToDetail: function (oEvent) {
+               
+                var oEventContext = oEvent.getSource().getBindingContext();
+                var oEventModel = oEventContext.getModel();
+                var oEventItem = oEventModel.getProperty(oEventContext.getPath());
+                
+                
+                var oTenantCombo = this.byId("tenant_combo");
+                var oContext = oTenantCombo.getSelectedItem().getBindingContext();
+                var oModel = oContext.getModel();
+                var oItem = oModel.getProperty(oContext.getPath());
+
+
+                oModel.getProperty(oEvent.getSource().getBindingContext().getPath())
+                 var tenant_id = oItem.tenant_id,
+                     company_code = oItem.company_code,
+                     org_code = oItem.org_code ,
+                     org_type_code = oItem.org_type_code,
+                     evaluation_operation_unit_code = oEventItem.evaluation_operation_unit_code,
+                     evaluation_operation_unit_name = oEventItem.evaluation_operation_unit_name,
+                     use_flag = oEventItem.use_flag;
+                
+                    this.getRouter().navTo("detail", {
+                        scenario_number: "Detail",
+                        tenant_id: tenant_id,
+                        company_code: company_code,
+                        org_code: org_code,
+                        org_type_code: org_type_code,
+                        evaluation_operation_unit_code : evaluation_operation_unit_code,
+                        evaluation_operation_unit_name : evaluation_operation_unit_name,
+                        use_flag : use_flag
+                    });
+
+            },
+
             /** Create 버튼 기능
             * 시나리오 생성 화면으로 이동 
             * @public
@@ -250,24 +263,26 @@ sap.ui.define([
                     return;
                 }
                 else{
-                    
-                    var oSelectedData = oTenantCombo.getSelectedItem().getBindingContext().getModel().getProperty
-                    (this.byId("tenant_combo").getSelectedItem().getBindingContext().getPath());
 
-                    var tenant_id = oSelectedData.tenant_id,
-                    company_code = oSelectedData.company_code,
-                    org_code = oSelectedData.org_code ,
-                    org_type_code = oSelectedData.org_type_code;
+                    var oContext = oTenantCombo.getSelectedItem().getBindingContext();
+                    var oModel = oContext.getModel();
+                    var oItem = oModel.getProperty(oContext.getPath());
+
+                    var tenant_id = oItem.tenant_id,
+                    company_code = oItem.company_code,
+                    org_code = oItem.org_code ,
+                    org_type_code = oItem.org_type_code;
                 
                     this.getRouter().navTo("detail", {
                         scenario_number: "New",
                         tenant_id: tenant_id,
                         company_code: company_code,
                         org_code: org_code,
-                        org_type_code: org_type_code
-                        // bizunit_code: bizunit_code
-
-                });
+                        org_type_code: org_type_code,
+                        evaluation_operation_unit_code : " ",
+                        evaluation_operation_unit_name : " ",
+                        use_flag : " "
+                    });
                 }
 
             }

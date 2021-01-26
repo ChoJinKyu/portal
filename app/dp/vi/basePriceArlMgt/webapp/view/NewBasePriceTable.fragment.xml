@@ -96,6 +96,12 @@
                     <Text text="{detailModel>material_spec}" />
                 </t:template>
             </t:Column>
+            <t:Column width="6rem">
+                <Label text="{I18N>/BASE_UOM_CODE}" textAlign="Center" width="100%" />
+                <t:template>
+                    <Text text="{detailModel>base_uom_code}" textAlign="Center" width="100%" />
+                </t:template>
+            </t:Column>
             <t:Column width="12rem">
                 <Label text="{I18N>/BASIS}" textAlign="Center" width="100%" />
                 <t:template>
@@ -106,7 +112,7 @@
                             templateShareable:false}"
                         selectedKey="{detailModel>base_price_ground_code}">
                         <items>
-                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>text}" />
+                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>code_description}" />
                         </items>
                     </Select>
                 </t:template>
@@ -152,11 +158,17 @@
                 <t:template>
                     <Input 
                         value="{
-                                path:'detailModel>prices/0/new_base_price'
-                                }" 
+                                parts: [
+                                    {path: 'detailModel>prices/0/new_base_price'},
+                                    {path: 'detailModel>prices/0/new_base_price_currency_code'}
+                                ],
+                                type: 'sap.ui.model.type.Currency',
+                                formatOptions: {
+                                    showMeasure: false
+                                }
+                            }" 
                         editable="{detailViewModel>/viewMode}"
-                        textAlign="End"
-                        type="Number" />
+                        textAlign="End" />
                 </t:template>
             </t:Column>
             <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">

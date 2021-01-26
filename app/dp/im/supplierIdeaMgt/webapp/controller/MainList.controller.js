@@ -24,10 +24,11 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Input",
     "sap/m/VBox",
-    "dp/util/control/ui/IdeaManagerDialog"
+    "dp/util/control/ui/IdeaManagerDialog",
+    "ext/lib/util/ExcelUtil"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,IdeaManagerDialog) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,IdeaManagerDialog,ExcelUtil) {
     "use strict";
 
     var oTransactionManager;
@@ -86,7 +87,7 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
-            this._oTPC.openDialog();
+            // this._oTPC.openDialog();
         },
 
 		/**
@@ -134,6 +135,7 @@ sap.ui.define([
         },
 
         onCreate: function (oEvent) {
+
             this.getRouter().navTo("selectionPage", {
                 tenantId: this.tenant_id,
                 companyCode: this.companyCode,
@@ -171,7 +173,7 @@ sap.ui.define([
                 filters: aSearchFilters,
                 sorters: aSorter,
                 success: function (oData) {
-                    console.log("oData====", oData);
+                    //console.log("oData====", oData);
                     oView.setBusy(false);
                 }
             });
@@ -323,7 +325,7 @@ sap.ui.define([
             var rowData = oEvent.getParameter('rowBindingContext').getObject();
 
             var idea_number = rowData.idea_number;
-            console.log("####idea_number====", idea_number);
+            //console.log("####idea_number====", idea_number);
 
             this.getRouter().navTo("selectionPage", {
                 //layout: oNextUIState.layout,
@@ -351,7 +353,7 @@ sap.ui.define([
                     }
                 });
                 this.oSearchIdeaManagerDialog.attachEvent("apply", function(oEvent){ 
-                    this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name);
+                    this.byId("searchIdeaManager").setValue(oEvent.getParameter("item").idea_manager_name);
                     // this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name+"("+oEvent.getParameter("item").idea_manager_empno+")");
                     this.byId("searchIdeaManagerId").setValue(oEvent.getParameter("item").idea_manager_empno);
                     
@@ -366,7 +368,7 @@ sap.ui.define([
          * 코드 체크
          */
         onNameChk : function(e) {
-            console.log(e);
+            //console.log(e);
             var oView = this.getView();
             //var searchIdeaManager = this.getView().byId("searchIdeaManager");
             var searchIdeaManagerId = this.getView().byId("searchIdeaManagerId");
@@ -377,6 +379,20 @@ sap.ui.define([
         },
 
 
+        onExportPress: function (_oEvent) {
+            console.log("export");
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "Supplier Idea List";
+            var oData = this.getModel("list").getProperty("/IdeaListView"); //binded Data
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
 
 
 

@@ -8,7 +8,6 @@
     xmlns:t="sap.ui.table"
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
-    xmlns:suiteCom="sap.suite.ui.commons"
     height="100%"
 >
     
@@ -21,11 +20,13 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="평가 항목 관리" />
+                     <!-- 평가항목 관리 -->
+                    <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" />
                 </f:heading>
                 
                 <f:actions>
-                    <Button text="조회" type="Emphasized" press="onPressSearch"/>
+                    <!-- 조회 -->
+                    <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
                 </f:actions>
             </f:DynamicPageTitle>
         </f:title>
@@ -36,7 +37,8 @@
                     layout="ResponsiveGridLayout"
                 >
                     <VBox>
-                        <Label text="평가조직" />
+                        <!-- 평가조직 -->
+                        <Label text="{I18N>/EVAL_ORG}" />
                         <ComboBox 
                             id="orgCode" 
                             width="100%" 
@@ -49,7 +51,8 @@
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="평가운영단위" />
+                        <!-- 평가운영단위 -->
+                        <Label text="{I18N>/EVAL_OP_UNT}" />
                         <ComboBox 
                             id="unitCode" 
                             width="100%" 
@@ -62,7 +65,8 @@
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="평가유형" />
+                        <!-- 평가유형명 -->
+                        <Label text="{I18N>/EVALUATION_TYPE_NAME}" />
                         <SegmentedButton 
                             id="evaluType" 
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
@@ -72,45 +76,26 @@
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="평가항목구분" />
+                        <!-- 평가항목구분 -->
+                        <Label text="{I18N>/EVAL_ITEM_TYPE}" />
                         <SegmentedButton 
                             id="evaluExecuteMode" 
-                            selectedKey="{viewModel>/cond/EQ/evaluation_execute_mode_code}"
+                            selectedKey="{viewModel>/cond/EQ/evaluation_article_type_code}"
                         />
                         <layoutData>
                             <layout:GridData span="L2 M6 S12" linebreak="true"/>
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="평가항목명" />
+                        <!-- 평가항목명 -->
+                        <Label text="{I18N>/EVAL_ITEM_NM}" />
                         <Input 
-                            value="{viewModel>/cond/EQ/evaluation_article_name}"
+                            value="{viewModel>/cond/Contains/evaluation_article_name}"
                         />
                         <layoutData>
                             <layout:GridData span="L2 M6 S12" />
                         </layoutData>
                     </VBox>
-                    <!-- <suiteCom:CalculationBuilder
-                        allowStringLiterals="true"
-                        id="builder"
-                        layoutType="VisualOnly"
-                        expression="(AssetTurnover + ProfitMargin) * (Reference3)"
-                        readOnly="false"
-                        allowComparisonOperators="true"
-                        allowLogicalOperators="true"
-                        validateFunction="validateFunction"
-                        afterValidation="afterValidation"
-                        title="정량 항목 산식"
-                    > -->
-                        <!-- variables="{/variables}" -->
-                        <!-- <suiteCom:variables>
-                            <suiteCom:CalculationBuilderVariable key="{key}" label="{label}"/>
-                        </suiteCom:variables> -->
-
-                        <!-- <suiteCom:layoutData>
-                            <layout:GridData span="L12 M12 S12" linebreak="true"/>
-                        </suiteCom:layoutData>
-                    </suiteCom:CalculationBuilder> -->
                 </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
@@ -122,17 +107,18 @@
                 minAutoRowCount="16"
                 enableColumnReordering="false"
                 class="sapFDynamicPageAlignContent" 
-                rowSelectionChange="treeTableSelection"
+                rowSelectionChange="onRowSelectionChange"
                 selectionMode="Single"
                 selectionBehavior="Row"
                 fixedColumnCount="1"
+                expandFirstLevel="true"
                 >
                 <t:extension>
                     <OverflowToolbar>
                         <Title id="title" text="Category" level="H2"/> 
                         <ToolbarSpacer/>
-                        <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
-                        <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
+                        <Button text="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
+                        <Button text="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
                         <Button text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" />
                         <Button text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" />
                         <ToolbarSeparator/>
@@ -140,56 +126,67 @@
                 </t:extension>
                 
                 <t:columns>
+                    <!-- 평가항목 -->
                     <t:Column label="{I18N>/EVAL_ITEM}" width="20em">    
                         <t:template>
                             <Text text="{evaluation_article_name}" tooltip="{evaluation_article_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 평가운영단위 -->
                     <t:Column label="{I18N>/EVAL_OP_UNT}" width="7em">    
                         <t:template>
                             <Text text="{evaluation_operation_unit_name}" tooltip="{evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 평가유형명 -->
                     <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" width="7em">    
                         <t:template>
                             <Text text="{evaluation_type_name}" tooltip="{evaluation_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 평가수행방식 -->
                     <t:Column label="{I18N>/EVAL_EXEC_MODE}" width="7em">    
                         <t:template>
                             <Text text="{evaluation_execute_mode_name}" tooltip="{evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 평가항목구분-->
                     <t:Column label="{I18N>/EVAL_ITEM_TYPE}" width="7em">    
                         <t:template>
                             <Text text="{evaluation_article_type_name}" tooltip="{evaluation_article_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 배점유형 -->
                     <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" width="7em">    
                         <t:template>
                             <Text text="{evaluation_distrb_scr_type_name}" tooltip="{evaluation_distrb_scr_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- Scale유형 -->
                     <t:Column label="{I18N>/SCLE_TYPE}" width="7em">    
                         <t:template>
                             <Text text="{evaluation_result_input_type_name}" tooltip="{evaluation_result_input_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 평가항목설명 -->
                     <t:Column label="{I18N>/EVAL_ITEM_DESC}" width="20em">    
                         <t:template>
                             <Text text="{evaluation_article_desc}" tooltip="{evaluation_article_desc}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 정렬 -->
                     <t:Column label="{I18N>/SORT}" width="5em">    
                         <t:template>
                             <Text text="{sort_sequence}" tooltip="{sort_sequence}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 작성자 -->
                     <t:Column label="{I18N>/WRITER}" width="8em">    
                         <t:template>
                             <Text text="{writer}" tooltip="{writer}" wrapping="false" />
                         </t:template>
                     </t:Column>
+                    <!-- 작성일자 -->
                     <t:Column label="{I18N>/WRITE_DATE}" width="8em">    
                         <t:template>
                             <Text text="{

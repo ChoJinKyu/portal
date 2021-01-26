@@ -8,9 +8,10 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/ui/thirdparty/jquery",
 ], function (BaseController, Multilingual, ManagedListModel, Formatter, Validator,
-		Filter, FilterOperator, Sorter, MessageBox, MessageToast) {
+		Filter, FilterOperator, Sorter, MessageBox, MessageToast, jQuery) {
 	"use strict";
 
 	return BaseController.extend("cm.msgMgt.controller.MainList", {
@@ -45,10 +46,8 @@ sap.ui.define([
         },
         
         onRenderedFirst : function () {
-            var aSearchFilters = [], applySearch = "applySearch";
-            aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, applySearch));
             var forceSearch = function(){
-				this._applySearch(aSearchFilters);
+				this._applySearch(this._getSearchStates());
 			}.bind(this);
 			
 			if(this.getModel("list").isChanged() === true){
@@ -190,15 +189,19 @@ sap.ui.define([
 			oTable.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
+                fetchAll: true,
                 filters: aSearchFilters,
                 sorters: [
 					new Sorter("message_code"),
                     new Sorter("language_code", true),
 					new Sorter("chain_code")
 				],
-				success: function(oData){
+				success: function(oData, bHasMore){
 					this.validator.clearValueState(this.byId("mainTable"));
 					this.byId("mainTable").clearSelection();
+                    if(!bHasMore) oTable.setBusy(false);
+				}.bind(this),
+				fetchAllSuccess: function(aData, aErrors){
 					oTable.setBusy(false);
 				}.bind(this)
 			});
@@ -210,7 +213,9 @@ sap.ui.define([
                 sMessageType = this.getView().byId("searchType").getSelectedKey(),
                 sKeyword = this.getView().byId("searchKeyword").getValue();
 
-			var aSearchFilters = [];
+			var aSearchFilters = [
+				new Filter("tenant_id", FilterOperator.EQ, "L2100")
+            ];
 			if (sChain) {
 				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
 			}

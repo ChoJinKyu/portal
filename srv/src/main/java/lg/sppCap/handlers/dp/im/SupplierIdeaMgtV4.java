@@ -210,10 +210,19 @@ public class SupplierIdeaMgtV4 implements EventHandler {
 
         v_sql_createTable.append("IDEA_CONTENTS NCLOB,");
         v_sql_createTable.append("ATTCH_GROUP_NUMBER NVARCHAR(100),");
+        v_sql_createTable.append("MATERIAL_CODE NVARCHAR(40),");
+        v_sql_createTable.append("PURCHASING_UOM_CODE NVARCHAR(3),");
+        v_sql_createTable.append("CURRENCY_CODE NVARCHAR(3),");
+        
+        v_sql_createTable.append("VI_AMOUNT DECIMAL,");
+        v_sql_createTable.append("MONTHLY_MTLMOB_QUANTITY DECIMAL,");
+        v_sql_createTable.append("MONTHLY_PURCHASING_AMOUNT DECIMAL,");
+        v_sql_createTable.append("ANNUAL_PURCHASING_AMOUNT DECIMAL,");
+        v_sql_createTable.append("PERFORM_CONTENTS NVARCHAR(500),");
+
         v_sql_createTable.append("CUD_TYPE_CODE NVARCHAR(1) )");
 
-
-        String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_SUPPLIER_IDEA VALUES (?, ?, ?, ?, ?,    ?, ?, ?, ?, ?,    ?, ?, ?, ?, ?,   ?, ?, ?)";
+        String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_SUPPLIER_IDEA VALUES (?, ?, ?, ?, ?,    ?, ?, ?, ?, ?,    ?, ?, ?, ?, ?,     ?, ?, ?, ?, ?,     ?, ?, ?, ?, ?,   ?)";
         String v_sql_callProc = "CALL DP_IM_SAVE_IDEA_PROC(I_SAVE_TAB => #LOCAL_TEMP_SUPPLIER_IDEA, O_RETURN_TAB => ?)";
         
         String v_sql_dropable = "DROP TABLE #LOCAL_TEMP_SUPPLIER_IDEA";
@@ -253,9 +262,17 @@ public class SupplierIdeaMgtV4 implements EventHandler {
 
                 v_inDatas.get("idea_contents"),
                 v_inDatas.get("attch_group_number"),
+                v_inDatas.get("material_code"),
+                v_inDatas.get("purchasing_uom_code"),
+                v_inDatas.get("currency_code"),
+                
+                Integer.parseInt(String.valueOf(v_inDatas.get("vi_amount"))),
+                Integer.parseInt(String.valueOf(v_inDatas.get("monthly_mtlmob_quantity"))),
+                Integer.parseInt(String.valueOf(v_inDatas.get("monthly_purchasing_amount"))),
+                Integer.parseInt(String.valueOf(v_inDatas.get("annual_purchasing_amount"))),
+                v_inDatas.get("perform_contents"),
+
                 v_inDatas.get("crd_type_code")
-
-
             };
             batch.add(values);
         }

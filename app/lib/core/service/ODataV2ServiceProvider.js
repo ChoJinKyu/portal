@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/base/Object",
 	"./ServiceUrlProvider",
-	"sap/ui/model/odata/v2/ODataModel"
+	"ext/lib/model/v2/ODataModel"
 ], function (Object, ServiceUrlProvider, ODataModel) {
     "use strict";
 

@@ -20,11 +20,11 @@ sap.ui.define([
             var sReturnValue = 1;
 
             if( sStautsCodeParam === "AR" ) {
-                sReturnValue = 5;
+                sReturnValue = 8;
             }else if( sStautsCodeParam === "AP" ) {
-                sReturnValue = 7;
+                sReturnValue = 9;
             }else if( sStautsCodeParam === "RJ" ) {
-                sReturnValue = 3;
+                sReturnValue = 2;
             }
 
             return sReturnValue;
@@ -40,7 +40,7 @@ sap.ui.define([
                                         type: "1",
                                         dateValue: new Date(this._changeDateFormat(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
                                         secondDateValue: new Date(this._changeDateFormat(oToday, "-")),
-                                        type_list:[{code:"1", text:"개발구매"}]}), "filterModel");
+                                        type_list:[{code:"VI10", text:"신규 품의"}, {code:"VI20", text:"변경 품의"}]}), "filterModel");
 
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
@@ -111,31 +111,6 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
-        },
-
-        /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
-         */
-        _changeDateFormat: function (oDateParam, sGubun) {
-            var oDate = oDateParam || new Date(),
-                sGubun = sGubun || "",
-                iYear = oDate.getFullYear(),
-                iMonth = oDate.getMonth()+1,
-                iDate = oDate.getDate(),
-                iHours = oDate.getHours(),
-                iMinutes = oDate.getMinutes(),
-                iSeconds = oDate.getSeconds();
-
-            var sReturnValue = "" + iYear + sGubun + this._getPreZero(iMonth) + sGubun + this._getPreZero(iDate);
-
-            return sReturnValue;
-        },
-
-        /**
-         * 넘겨진 Parameter가 10이하이면 숫자앞에 0을 붙여서 return
-         */
-        _getPreZero: function (iDataParam) {
-            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
         },
 
         /**

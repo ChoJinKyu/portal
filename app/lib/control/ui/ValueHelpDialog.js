@@ -207,10 +207,11 @@ sap.ui.define([
                             this.oTable.removeSelectionInterval(nIndex, nIndex);
                     }.bind(this));
                 }
-                this.oTable.setBusy(false);
-            }else{
-                this.oTable.setBusy(false);
             }
+        },
+
+        getData: function(){
+            return this.getModel().getData();
         },
 
         getTokens: function(){
