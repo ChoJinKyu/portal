@@ -3,12 +3,12 @@ namespace sp;
 @cds.persistence.exists
 
 entity Sm_Maker_View {
-    key tenant_id                  : String(5)   @title : '테넌트id';
+    key tenant_id                  : String(5)   @title : '테넌트ID';
     key maker_code                 : String(10)  @title : '제조사코드';
         maker_local_name           : String(240) @title : '제조사로컬명';
         maker_english_name         : String(240) @title : '제조사영문명';
         tax_id                     : String(30)  @title : '세금등록번호';
-        vat_number                 : String(30)  @title : 'vat등록번호';
+        vat_number                 : String(30)  @title : 'VAT등록번호';
         country_code               : String(2)   @title : '국가코드';
         country_name               : String(30)  @title : '국가명';
         maker_status_code          : String(1)   @title : '제조사상태코드';
@@ -32,8 +32,8 @@ entity Sm_Maker_View {
         old_maker_code             : String(15)  @title : '구제조사코드';
         local_create_dtm           : DateTime    @title : '로컬등록시간';
         local_update_dtm           : DateTime    @title : '로컬수정시간';
-        create_user_id             : String(255) @title : '등록사용자id';
-        update_user_id             : String(255) @title : '변경사용자id';
+        create_user_id             : String(255) @title : '등록사용자ID';
+        update_user_id             : String(255) @title : '변경사용자ID';
         system_create_dtm          : DateTime    @title : '시스템등록시간';
         system_update_dtm          : DateTime    @title : '시스템수정시간';
 }

@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "ext/lib/util/ExcelUtil"
-], function (Controller, DelegateModel, JSONModel, MessageBox, MessageToast, ExcelUtil) {
+    "ext/lib/util/ExcelUtil",
+    "ext/lib/formatter/Formatter"
+], function (Controller, DelegateModel, JSONModel, MessageBox, MessageToast, ExcelUtil, Formatter) {
     "use strict";
 
     return Controller.extend("xx.exampleControls.controller.ExcelUtilExam", {
@@ -13,7 +14,8 @@ sap.ui.define([
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
-
+        formatter: Formatter,
+        
         onInit: function () {
 
             this._loadResponsibleTableData();

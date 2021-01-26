@@ -92,7 +92,7 @@ sap.ui.define([
                             });   
                         }
                         
-                    } else if(typeof oCol.getHeader === "function") {
+                    } else if(typeof oCol.getHeader === "function" && oCol.getHeader()) {
                         if(typeof oCol.getHeader().getText === "function" && oCol.getHeader().getText() !== "State") {
                             sLabel = oCol.getHeader().getText();
                         } else if(typeof oCol.getHeader().getItems === "function" && oCol.getHeader().getItems().length > 0) {

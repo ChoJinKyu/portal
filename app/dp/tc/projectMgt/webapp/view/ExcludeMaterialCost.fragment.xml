@@ -42,7 +42,7 @@
                                 </layoutData>
                             </Label>
                             <HBox direction="Column">
-                                <Switch state="{updateModel>/mcst_excl_flag}" customTextOn="Yes" customTextOff="No">
+                                <Switch state="{updateModel>/mcst_excl_flag}" customTextOn="Yes" customTextOff="No" change="onChangeExclFlag">
                                     <layoutData>
                                         <FlexItemData growFactor="1" />
                                     </layoutData>
@@ -56,7 +56,7 @@
                                     <layout:GridData span="XL12 L12 M12 S12" lineBreak="true"/>
                                 </layoutData> 
                             </Label>
-                            <TextArea value="{updateModel>/mcst_excl_reason}" width="95%" rows="5" class="sapUiSmallMarginBegin sapUiLargeMarginEnd" enabled="{updateModel>/mcst_excl_flag}">
+                            <TextArea value="{updateModel>/mcst_excl_reason}" width="95%" rows="5" class="sapUiSmallMarginBegin sapUiLargeMarginEnd" >
                                 <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" />
                                 </layoutData> 

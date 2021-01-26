@@ -109,7 +109,7 @@
                             <Label text="{I18N>/LOI}{I18N>/PUBLISH_STATUS} :" labelFor="searchLoiPublishStatus"></Label>
                             <MultiComboBox id="searchLoiPublishStatus" width="100%"
                                             items="{
-                                                path: 'common>/CodeDetails',
+                                                path: 'common>/Code',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                     {path: 'group_code', operator: 'EQ', value1: 'EP_LOI_PUBLISH_STATUS'}
@@ -118,7 +118,7 @@
                                             }"
                             selectionFinish="handleSelectionFinishComp" placeholder="">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code}: {common>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code}: {common>code_name}" />
                                 </items>
                             </MultiComboBox>                     
 
@@ -198,7 +198,7 @@
                             <Label text="{I18N>/EP_PO_STATUS} :" labelFor="searchPoStatus"></Label>
                             <MultiComboBox id="searchPoStatus" width="100%"
                                             items="{
-                                                path: 'common>/CodeDetails',
+                                                path: 'common>/Code',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                     {path: 'group_code', operator: 'EQ', value1: 'EP_LOI_PO_STATUS'}
@@ -207,7 +207,7 @@
                                             }"
                             selectionFinish="handleSelectionFinishComp" placeholder="">
                                 <items>
-                                    <core:Item key="{common>code}" text="{common>code}: {common>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code}: {common>code_name}" />
                                 </items>
                             </MultiComboBox>                     
 

@@ -7,10 +7,11 @@ using { op.Pu_Pr_Service as services } from './OP_PU_PR_SERVICE-model';
 
 entity Pu_Pr_Dtl {	
 
-    key tenant_id				: String(5)     not null	 @title: '테넌트id';
-    key company_code			: String(10)    not null	 @title: '회사코드';
-    key pr_number				: String(50)    not null	 @title: '구매요청번호';
-    key pr_item_number			: String(10)    not null	 @title: '구매요청품목번호';
+    key tenant_id       : String(5)     not null	@title: '테넌트id';
+    key company_code    : String(10)    not null	@title: '회사코드';
+    key pr_number		: String(50)    not null	@title: '구매요청번호';
+    key pr_item_number  : Integer64     not null    @title: '구매요청품목번호' ;	
+
     
         mst : Association to mst
             on mst.tenant_id = tenant_id 
@@ -46,7 +47,7 @@ entity Pu_Pr_Dtl {
             purchasing_group_code : String(3)   @title: '구매그룹코드' ;	
             estimated_price : Decimal           @title: '예상가격' ;	
             currency_code   : String(3)         @title: '통화코드' ;	
-            price_unit      : String(3)         @title: '가격단위' ;	
+            price_unit      : Decimal           @title: '가격단위' ;	
             pr_progress_status_code : String(30)        @title: '구매요청진행상태코드' ;	
             remark          : String(3000)      @title: '비고' ;	
             attch_group_number : String(100)    @title: '첨부파일그룹번호' ;	

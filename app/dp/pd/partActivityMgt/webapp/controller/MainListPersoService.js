@@ -2,157 +2,79 @@ sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
         var i = 0;            
-        var _columns = [
+        var _columns = [           
             {
-                id: "partActivityMgt-mainTable-mainLoiNumber",
+                id: "partActivityMgt-mainList-mainColumnCompany",
                 order: i++,
-                text: "LOI번호",
+                text: "Company",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainItemSequence",
+                id: "partActivityMgt-mainList-mainColumnOrg",
                 order: i++,
-                text: "Line No.",
+                text: "조직코드",
+                visible: true
+            },            
+            {
+                id: "partActivityMgt-mainList-mainColumnPartProjectType",
+                order: i++,
+                text: "Project Type",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainRequestDepartmentName",
+                id: "partActivityMgt-mainList-mainColumnActivity",
                 order: i++,
-                text: "요청부서",
+                text: "Activity 명",
+                visible: true
+            },            
+            {
+                id: "partActivityMgt-mainList-mainColumnDevelopeEvent",
+                order: i++,
+                text: "EVENT",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainRequestorName",
+                id: "partActivityMgt-mainList-mainColumnActualRole",
                 order: i++,
-                text: "요청자",
+                text: "역할",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainPurchasingDepartmentName",
+                id: "partActivityMgt-mainList-mainColumnAttachmentMandatory",
                 order: i++,
-                text: "구매부서",
+                text: "산출물 필수",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainBuyerName",
+                id: "partActivityMgt-mainList-mainColumnApproveMandatory",
                 order: i++,
-                text: "구매담당자",
+                text: "결재 필수",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainLoiRequestTitle",
+                id: "partActivityMgt-mainList-mainColumnActivityCompleteType",
                 order: i++,
-                text: "요청명",
+                text: "Activity 완료 유형",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainItemDesc",
+                id: "partActivityMgt-mainList-mainColumnJobType",
                 order: i++,
-                text: "품명",
+                text: "업무 유형",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainSupplierName",
+                id: "partActivityMgt-mainList-mainColumnLocalUpdateDtm",
                 order: i++,
-                text: "협력사",
+                text: "수정일시",
                 visible: true
             },
             {
-                id: "partActivityMgt-mainTable-mainPublishDate",
+                id: "partActivityMgt-mainList-mainColumnUpdateUserId",
                 order: i++,
-                text: "발행일자",
+                text: "수정자",
                 visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainDeliveryRequestDate",
-                order: i++,
-                text: "납기일자",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainRequestQuantity",
-                order: i++,
-                text: "수량",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainCurrencyCode",
-                order: i++,
-                text: "통화",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainRequestAmount",
-                order: i++,
-                text: "금액",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainLoiSelectionStatusCode",
-                order: i++,
-                text: "업체선정진행상태",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainLoiPublishStatusCode",
-                order: i++,
-                text: "LOI발행상태",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainPoStatusCode",
-                order: i++,
-                text: "발주상태",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainRequestDate",
-                order: i++,
-                text: "요청일자",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainSystemCreateDtm",
-                order: i++,
-                text: "작성일자",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainSupplierOpinion",
-                order: i++,
-                text: "VOS",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainPoNumber",
-                order: i++,
-                text: "발주번호",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainPurchasingRequestDate",
-                order: i++,
-                text: "구매요청일자",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainPoDate",
-                order: i++,
-                text: "발주일자",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainPoDate2",
-                order: i++,
-                text: "입고일자",
-                visible: true
-            },
-            {
-                id: "partActivityMgt-mainTable-mainRemark",
-                order: i++,
-                text: "비고",
-                visible: true
-            }            
+            }          
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
@@ -198,8 +120,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "Code") {
-                        return "Code (Important!)";
+                    if (oColumn.getHeader().getText() === "Company") {
+                        return "Company (Important!)";
                     }
                 }
                 return null;
@@ -207,8 +129,10 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnCode") != -1 ||
-                    sId.indexOf("mainColumnName") != -1) {
+                if (sId.indexOf("mainColumnCompany") != -1 ||
+                    sId.indexOf("mainColumnOrg") != -1 ||
+					sId.indexOf("mainColumnPartProjectType") != -1 ||
+					sId.indexOf("mainColumnActivity") != -1) {
                     return "Columns of Key";
                 }
                 return "Others";

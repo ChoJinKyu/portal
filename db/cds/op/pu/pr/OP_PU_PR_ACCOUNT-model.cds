@@ -8,7 +8,7 @@ entity Pu_Pr_Account {
     key tenant_id				: String(5)     not null	 @title: '테넌트id';
     key company_code			: String(10)    not null	 @title: '회사코드';
     key pr_number				: String(50)    not null	 @title: '구매요청번호';
-    key pr_item_number			: String(10)    not null	 @title: '구매요청품목번호';
+    key pr_item_number          : Integer64     not null     @title: '구매요청품목번호' ;
     key account_sequence		: Decimal		not null	 @title: '계정순번';
         
         dtl : Association to dtl
