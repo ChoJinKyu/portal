@@ -177,7 +177,7 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
-                    oView.setBusy(false);
+            oView.setBusy(false);
         },
 
         _getSearchStates: function () {
@@ -197,7 +197,8 @@ sap.ui.define([
             
 
             if (searchKeyword != "") {
-                aSearchFilters.push(new Filter("idea_title", FilterOperator.Contains, searchKeyword) );
+                // aSearchFilters.push(new Filter("idea_title", FilterOperator.Contains, "'" + searchKeyword.toLowerCase().replace("'","''") + "'"));
+                aSearchFilters.push(new Filter("tolower(idea_title)", FilterOperator.Contains, "'" + searchKeyword.toLowerCase().replace("'","''") + "'"));
             }
 
 
