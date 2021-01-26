@@ -4,6 +4,7 @@
 	xmlns:uxap="sap.uxap" 
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
+    xmlns:t="sap.ui.table"
     xmlns:sc="sap.suite.ui.commons"
 	xmlns:core="sap.ui.core"
     xmlns:richtexteditor="sap.ui.richtexteditor"
@@ -19,31 +20,23 @@
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
 		showFooter="false">
+     
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="LOI 업체선정 품의" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>            
+				<!-- <uxap:expandedHeading>
 					<Title text="LOI 업체선정 품의" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
 					<Title text="LOI 업체선정 품의" wrapping="true" />
-				</uxap:snappedHeading>
-				<!-- <uxap:expandedContent>
-					<Text text="Details for control option {control_option_code}" />
-				</uxap:expandedContent>
-				<uxap:snappedContent>
-					<Text text="Details for control option {control_option_code}" />
-				</uxap:snappedContent>
-				<uxap:snappedTitleOnMobile>
-					<Title text="Control Option Details" />
-				</uxap:snappedTitleOnMobile> -->
-				<!-- <uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
-				</uxap:actions> -->
+				</uxap:snappedHeading> -->
                 <uxap:navigationActions>
-					<!-- <OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/> -->
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -143,101 +136,158 @@
                             <Label  text="* 업체선정결과" 
                                     design="Bold" 
                                     class="sapUiSmallMarginTop"/>
-                            <Table id="tableAttachments" 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-                                inset="false" 
-                                visible="{= ${midObjectViewModel>/existRfq} === true ? false : true }"
-                                class="sapFDynamicPageAlignContent" 
-                                mode="None"
-                                width="98%">
-                                <columns>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Line No." />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="플랜트" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="품명" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="규격" />
-                                    </Column>                                    
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="단위" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="수량" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="통화" />
-                                    </Column>  
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="요청금액" />
-                                    </Column> 
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="선정결과" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="참여업체" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="환산견적금액" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="요청납기일자" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="견적납기일자" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="견적비고" />
-                                    </Column>  
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="견적번호" />
-                                    </Column>                                                                                                                                                                                    
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive">
-                                        <cells>
-                                            <Text text="10"/>
-                                            <Text text="여수 공통"/>
-                                            <Text text="FFU"/>
-                                            <Text text="LG지정사양"/>
-                                            <Text text="EA"/>
-                                            <Text text="3,260"/>
-                                            <Text text="KRW"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="1(선정)"/>
-                                            <Text text="신성이엔지"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="2021-02-01"/>
-                                            <Text text="2021-02-01"/>
-                                            <Text text=""/>
-                                            <Text text="123400"/>
-                                         </cells>
-                                    </ColumnListItem>
-                                    <ColumnListItem type="Inactive">
-                                        <cells>
-                                            <Text text="20"/>
-                                            <Text text="여수 공통"/>
-                                            <Text text="FFU용 Filter"/>
-                                            <Text text="LG지정사양"/>
-                                            <Text text="EA"/>
-                                            <Text text="1"/>
-                                            <Text text="KRW"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="1(선정)"/>
-                                            <Text text="신성이엔지"/>
-                                            <Text text="10,000,000"/>
-                                            <Text text="2021-03-01"/>
-                                            <Text text="2021-02-25"/>
-                                            <Text text=""/>
-                                            <Text text="123400"/>
-                                         </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
+                            <t:Table id="mainTable"
+                            selectionMode="None"
+                            rows="{
+                                path: 'details>/',
+                                sorter: { 
+                                    path: 'system_create_dtm',
+                                    descending: true 
+                                }                   
+                            }"
+                            cellClick=".onCellClick"
+                            rowSelectionChange=".onCheck"
+                            visibleRowCountMode="Auto"
+                            columnResize="onColumnResize">
+                            <!-- <t:extension>
+                                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                                <Title text="업체선정결과 {= ${details>/}.length > 0 ? '(' + ${details>/}.length + ')' : ''}" level="H2"/>
+                                <ToolbarSpacer/>
+                                <Button text="{I18N>/RFQ_CREATE}" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
+                                <Button text="{I18N>/SUPPLIER_SELECTION_APPROVAL}" id="supplierSelectionButton" press=".onSupplierSelectionButtonPress" type="Transparent"/>
+                                <Button text="{I18N>/PUBLISH_APPROVAL}" id="publishButton" press=".onPublishButtonPress"   type="Transparent"/>
+                                <Button text="{I18N>/ORDER_MAPPING}" id="poMappingButton" press=".onSave('mainTable', 'list')"   type="Transparent"/>
+                                <Button text="{I18N>/ORDER_MAPPING_CANCEL}" id="poMappingCansel" press=".onSave('mainTable', 'list')"   type="Transparent"/>
+                                <ToolbarSeparator/>
+                                <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                                    <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                                    </layoutData>
+                                </Button>
+                                </OverflowToolbar>
+                            </t:extension> -->
+                            <t:columns>
+                                <t:Column id="mainLoiNumber" width="6rem" hAlign="Center">
+                                <Label text="Line No." textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>item_sequence}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainItemSequence" width="5rem">
+                                <Label text="플랜트" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>plant_name}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainLoiRequestTitle" width="6rem">
+                                <Label text="품명" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>item_desc}" />
+                                </t:template>
+                                </t:Column> 
+                                <t:Column id="mainItemDesc" width="7rem">
+                                <Label text="규격" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>spec_desc}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainSupplierName" width="4rem" hAlign="Center">
+                                <Label text="단위" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>unit}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainPublishDate" width="6rem" hAlign="Right">
+                                <Label text="수량" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>request_quantity}"/>
+                                </t:template>
+                                </t:Column>  
+                                <t:Column id="mainDeliveryRequestDate" width="4rem" hAlign="Center">
+                                <Label text="통화" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>currency_code}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainRequestQuantity" width="6rem" hAlign="Right">
+                                <Label text="요청금액" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>request_amount}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainCurrencyCode" width="6rem" hAlign="Left">
+                                <Label text="선정결과" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>selection_result}"/>
+                                </t:template>
+                                </t:Column> 
+                                <t:Column id="mainRequestAmount" width="7rem" hAlign="Left">
+                                <Label text="참여업체" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>supplier_name}"/>
+                                    <Input value="{
+                                                        path: 'details>offline_selection_supplier_name',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 50
+                                                        }
+                                                    }" visible="{details>offline_flag}"/>                                    
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainLoiSelectionStatusCode" width="8rem" hAlign="Right">
+                                <Label text="환산견적금액" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
+                                <t:template>
+                                    <Text text="{details>quotation_amount}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                    <Input value="{
+                                                        path: 'details>offline_quotation_amount',
+                                                        type: 'sap.ui.model.type.Integer',
+                                                        constraints: {
+                                                            minimum: '0',
+                                                            maximum: '1000000000000'
+                                                        }
+                                                    }" textAlign="Right" visible="{details>offline_flag}"/>    
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainLoiPublishStatusCode" width="7rem" hAlign="Center">
+                                <Label text="요청납기일자" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
+                                <t:template>
+                                    <Text text="{details>delivery_request_date}"/>
+                                </t:template>
+                                </t:Column> 
+                                <t:Column id="mainPoStatusCode" width="10rem" hAlign="Center">
+                                <Label text="견적납기일자" textAlign="Center" width="100%" tooltip="발주상태"/>
+                                <t:template>
+                                    <Text text="{details>quotation_due_date}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                    <DatePicker value="{ 
+                                        path: 'details>offline_quotation_due_date', 
+                                        type: 'sap.ui.model.odata.type.DateTime', 
+                                        formatOptions: { UTC: true, format: 'yMd' } }" 
+                                    placeholder="Date" visible="{details>offline_flag}"/>   
+                                    <!-- <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" value="{details>/offline_quotation_due_date}" 
+                                    placeholder="Date" visible="{details>offline_flag}"/>    -->
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainRequestDepartmentName" width="7rem">
+                                <Label text="견적비고" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>quotation_remark}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                    <Input value="{
+                                                        path: 'details>offline_quotation_remark',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 50
+                                                        }
+                                                    }" visible="{details>offline_flag}"/> 
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainRequestorName" width="5rem">
+                                <Label text="견적번호" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>quotation_remark}"/>
+                                </t:template>
+                                </t:Column>  
+                            </t:columns>
+                            </t:Table>
 
                             <!-- <Table id="tableAttachments" 
                                 sticky="HeaderToolbar,ColumnHeaders" 
@@ -386,8 +436,8 @@
 				<ToolbarSpacer />
                 <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
                 <Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('D')" />
-                <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
                 <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
                 <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
                 <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
 				

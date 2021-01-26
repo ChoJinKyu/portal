@@ -129,7 +129,7 @@
                     ]
                 },
                 {
-                    "pattern": "selectionObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiSelectionNumber}/{loiNumber}",
+                    "pattern": "selectionObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiSelectionNumber}/{loiNumber}/{quotationNumber}/{quotationItemNumber}",
                     "name": "selectionPage",
                     "target": [
                         "selectionObject"
