@@ -44,8 +44,8 @@ service MoldRecepitApprovalService {
                 '[' || mst.production_supplier_code || '] ' || s2.supplier_local_name as  production_supplier_code_nm : String(240),
                 s2.supplier_local_name as production_supplier_local_name : String(240) ,
                 mst.project_code, 
-                mst.acq_department_code, 
-                dep.department_local_name as acq_department_code_nm : String(240) ,
+             /*   mst.acq_department_code, 
+                dep.department_local_name as acq_department_code_nm : String(240) , */ 
                 cast(ps.drawing_agreement_date as Date ) as drawing_consent_plan : Date , 
         		cast(rs.drawing_agreement_date as Date ) as drawing_consent_result : Date ,
         		cast(ps.first_production_date as Date ) as production_plan : Date , 
@@ -61,7 +61,7 @@ service MoldRecepitApprovalService {
         and cur.language_cd = 'KO'
         left join supplier s1 on s1.supplier_code = mst.supplier_code  and s1.tenant_id = mst.tenant_id 
         left join supplier s2 on s2.supplier_code = mst.production_supplier_code and s2.tenant_id = mst.tenant_id  
-        left join cmDept.Hr_Department dep on dep.department_id =  mst.acq_department_code and dep.tenant_id = mst.tenant_id   
+       /* left join cmDept.Hr_Department dep on dep.department_id =  mst.acq_department_code and dep.tenant_id = mst.tenant_id   */  
         left join moldSche.Md_Schedule ps on ps.mold_id = mst.mold_id and ps.mold_develope_date_type_code = 'P'
         left join moldSche.Md_Schedule rs on rs.mold_id = mst.mold_id and rs.mold_develope_date_type_code = 'R'
     ; 

@@ -26,10 +26,9 @@ service BudgetExecutionApprovalService {
                 mst.mold_number,
                 mst.mold_sequence,
                 mst.mold_id,
-                mst.mold_progress_status_code,
                 mst.spec_name,
                 mst.model,
-                mst.asset_number,
+              //  mst.asset_number,
                 mst.mold_item_type_code,
                 (
                     select l.code_name from codeLng.Code_Lng l
@@ -81,14 +80,7 @@ service BudgetExecutionApprovalService {
                         and l.language_cd = 'KO'
                         and l.tenant_id   = mst.tenant_id
                 ) as account_code_nm              : String(240),
-                mst.accounting_department_code,
-                mst.acq_department_code, 
-                ( 
-                    select d.department_local_name  
-                    from Dept as d 
-                    where d.tenant_id = mst.tenant_id 
-                    and mst.acq_department_code = d.department_id
-                ) as acq_department_code_nm    : String(240) , 
+                mst.accounting_department_code, 
                 mst.production_supplier_code,
                 mst.remark,
                 mst.mold_develope_request_type_code,
@@ -106,9 +98,6 @@ service BudgetExecutionApprovalService {
                 mst.budget_exrate_date,
                 mst.budget_exrate,
                 mst.split_pay_type_code,
-                mst.prepay_rate,
-                mst.progresspay_rate,
-                mst.rpay_rate,
                 mst.mold_sales_status_code,
                 mst.pr_number,
                 mst.import_company_code, 
@@ -125,20 +114,19 @@ service BudgetExecutionApprovalService {
                 mst.mold_type_code,
                 mst.mold_mfger_code,
                 mst.mold_developer_empno,
-                mst.customer_asset_type_code,
-                mst.asset_type_code,
-                (
-                    select l.code_name from codeLng.Code_Lng l
-                    where
-                            l.group_code  = 'DP_MD_ASSET_TYPE'
-                        and l.code        = mst.asset_type_code
-                        and l.language_cd = 'KO'
-                        and l.tenant_id   = mst.tenant_id
-                ) as asset_type_code_nm           : String(240),
-                mst.asset_status_code,
-                mst.scrap_date,
-                mst.acq_date,
-                mst.acq_amount,
+              //  mst.customer_asset_type_code, 
+                '' as  asset_type_code : String(240), 
+              //  mst.asset_type_code, 
+                '' as asset_type_code_nm : String(240) ,
+                // (
+                //     select l.code_name from codeLng.Code_Lng l
+                //     where
+                //             l.group_code  = 'DP_MD_ASSET_TYPE'
+                //         and l.code        = mst.asset_type_code
+                //         and l.language_cd = 'KO'
+                //         and l.tenant_id   = mst.tenant_id
+                // ) as asset_type_code_nm           : String(240),
+               // mst.asset_status_code,
                 mst.use_department_code
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst  on dtl.mold_id = mst.mold_id 

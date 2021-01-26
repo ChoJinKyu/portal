@@ -133,8 +133,8 @@
                     <ToolbarSpacer/>
                     <Button text="Copy" id="buttonCopy" press=""  type="Transparent"/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
-                    <Button text="{I18N>/DELETE}" id="buttonDelete" press="onMainTableDeleteButtonPress"  type="Transparent"/>
-                    <Button text="{I18N>/SAVE}" id="buttonSave" press=""  type="Transparent"/>
+                    <!-- <Button text="{I18N>/DELETE}" id="buttonDelete" press="onMainTableDeleteButtonPress"  type="Transparent"/> -->
+                    <!-- <Button text="{I18N>/SAVE}" id="buttonSave" press=""  type="Transparent"/> -->
 
                     <ToolbarSeparator/>
                     <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                    
@@ -148,7 +148,7 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <t:Column id="mainColumnState" hAlign="Center" width="2em" >
+                <!-- <t:Column id="mainColumnState" hAlign="Center" width="2em" >
                     <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                     <t:template>
                         <ObjectStatus icon="{
@@ -156,7 +156,7 @@
                             formatter: '.formatter.toModelStateColumnIcon'
                         }" />
                     </t:template>
-                </t:Column>
+                </t:Column> -->
                 <t:Column id="company_code" hAlign="Center">
                 <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%"/>
                 <t:template>
