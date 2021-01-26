@@ -318,6 +318,7 @@
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
+                                
                                 <VBox id="v_pop_regular_evaluation_flag">
                                     <Label text = "{I18N>/EVALUATION}" design="Bold"/> 
                                         <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
@@ -359,7 +360,7 @@
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL2 L2 M2 S12" />
+                                        <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>                                                                       
                                 <VBox id = "v_review_grade" >

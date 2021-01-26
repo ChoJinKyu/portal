@@ -98,7 +98,7 @@ sap.ui.define([
     var reSearchVpNm;
     var reSearchOpCd;
     var reSearchOrgCd;
-
+    var maxLv;
 
     var oTransactionManager;
 
@@ -168,6 +168,7 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list");
             // this.getView().setModel(new ManagedListModel(), "VpMst");            
             this.setModel(new ManagedListModel(), "VpMst");
+            this.setModel(new ManagedListModel(), "orglist");
 
             // oTransactionManager = new TransactionManager();
             // oTransactionManager.addDataModel(this.getModel("VpMst"));
@@ -423,6 +424,8 @@ sap.ui.define([
                     this.byId("v_equipment_type").setVisible(true);
                     this.byId("v_internal_rate").setVisible(true);
                     this.byId("v_external_rate").setVisible(true);
+                    // this.byId("equipment_box").setVisible(true);
+                    // this.byId("rate_box").setVisible(true);
 
                     this.handleCreateInput();
 
@@ -460,6 +463,8 @@ sap.ui.define([
                     this.byId("v_equipment_type").setVisible(false);
                     this.byId("v_internal_rate").setVisible(false);
                     this.byId("v_external_rate").setVisible(false);
+                    // this.byId("equipment_box").setVisible(false);
+                    // this.byId("rate_box").setVisible(false);
 
 
                     this.byId("pop_save_bt").setVisible(true);
@@ -522,6 +527,8 @@ sap.ui.define([
                     this.byId("v_equipment_type").setVisible(true);
                     this.byId("v_internal_rate").setVisible(true);
                     this.byId("v_external_rate").setVisible(true);
+                    // this.byId("equipment_box").setVisible(true);
+                    // this.byId("rate_box").setVisible(true);
 
                     this.handleCreateInput();
 
@@ -560,6 +567,8 @@ sap.ui.define([
                     this.byId("v_equipment_type").setVisible(false);
                     this.byId("v_internal_rate").setVisible(false);
                     this.byId("v_external_rate").setVisible(false);
+                    // this.byId("equipment_box").setVisible(false);
+                    // this.byId("rate_box").setVisible(false);                    
 
 
 
@@ -812,6 +821,39 @@ sap.ui.define([
                 this.byId("table_equipment_type").setVisible(false);
             }
 
+            if (maxLv =="3") {
+
+                this.byId("table_1lv").setVisible(true);
+                this.byId("table_2lv").setVisible(true);
+                this.byId("table_3lv").setVisible(true);
+                this.byId("table_4lv").setVisible(false);
+                this.byId("table_5lv").setVisible(false);
+
+            }else if (maxLv =="4") {
+
+                this.byId("table_1lv").setVisible(true);
+                this.byId("table_2lv").setVisible(true);
+                this.byId("table_3lv").setVisible(true);
+                this.byId("table_4lv").setVisible(true);
+                this.byId("table_5lv").setVisible(false);
+
+            }else if (maxLv =="5") {
+
+                this.byId("table_1lv").setVisible(true);
+                this.byId("table_2lv").setVisible(true);
+                this.byId("table_3lv").setVisible(true);
+                this.byId("table_4lv").setVisible(true);
+                this.byId("table_5lv").setVisible(true);
+
+            }else if (maxLv =="2") {
+
+                this.byId("table_1lv").setVisible(true);
+                this.byId("table_2lv").setVisible(true);
+                this.byId("table_3lv").setVisible(false);
+                this.byId("table_4lv").setVisible(false);
+                this.byId("table_5lv").setVisible(false);                
+            }
+
         },
 
         handleCreateInput: function () {
@@ -822,11 +864,15 @@ sap.ui.define([
                 this.byId("v_equipment_type").setVisible(true);
                 this.byId("v_internal_rate").setVisible(false);
                 this.byId("v_external_rate").setVisible(false);
+                // this.byId("equipment_box").setVisible(true);
+                // this.byId("rate_box").setVisible(false);
             } else {
                 this.byId("v_review_grade").setVisible(false);
                 this.byId("v_equipment_type").setVisible(false);
                 this.byId("v_internal_rate").setVisible(true);
                 this.byId("v_external_rate").setVisible(true);
+                // this.byId("equipment_box").setVisible(false);
+                // this.byId("rate_box").setVisible(true);                
             }
 
         },
@@ -1787,11 +1833,19 @@ sap.ui.define([
             }
             return rtnStr;
         },
+        resetVpCode: function () {
+            // debugger;
+            var s_vp_name = this.getView().byId("search_Vp_Name").getValue();
+
+            if(s_vp_name == ""){
+                this.getView().byId("search_Vp_Code").setValue("");
+            }
+        },
         //아래 정규식 둘중에 하나 골라서 쓰면 됩니다. 
         chkReplaceChange: function (oEvent) {
             console.log("livechange!!");
             //var regex = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi;     // 특수문자 제거 (한글 영어 숫자만)
-            var regex = /[^a-zA-Z0-9]/gi;                   // 특수문자 제거 (영어 숫자만)
+            var regex = /[^a-zA-Z0-9\s ]/gi;                   // 특수문자 제거 (영어 숫자만)
             //test Str ===> var regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;  //한글 제거 11/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g%^&*()_+|<
 
             var newValue = oEvent.getParameter("newValue");
@@ -1868,6 +1922,39 @@ sap.ui.define([
             // this._oValueHelpDialog.open();
 
             //     console.groupEnd();
+        },
+        checkOrg: function (oEvent) {
+
+            // debugger
+            var pselectedOrg = oEvent.getSource().mProperties.selectedKey;
+            var aSelectedOrg = [];
+            aSelectedOrg.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aSelectedOrg.push(new Filter("operation_org_code", FilterOperator.EQ, pselectedOrg));
+
+            var oView = this.getView(),
+                oModel = this.getModel("orglist");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
+            oModel.read("/VpOperationOrg", {
+                filters: aSelectedOrg,
+                success: function (oData) {
+
+                    if (oData.results.length === 1) {
+                        var results = oData.results[0];
+                        maxLv = results.org_max_level
+
+                        
+                    } else {
+                        //
+                    }
+                    oView.setBusy(false);
+                }, error: function (e) {
+                    console.log("error occrupie!!!");
+                }
+            });
+
+            // var row = this.getView().getModel("VpOperationOrg").getObject(event.getParameters().rowContext.sPath);
+
         }
 
     });
