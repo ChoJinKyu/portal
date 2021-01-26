@@ -47,7 +47,7 @@ entity Pu_Pr_Dtl {
             purchasing_group_code : String(3)   @title: '구매그룹코드' ;	
             estimated_price : Decimal           @title: '예상가격' ;	
             currency_code   : String(3)         @title: '통화코드' ;	
-            price_unit      : Decimal           @title: '가격단위' ;	
+            price_unit      : Decimal(5,0)        @title: '가격단위' ;	
             pr_progress_status_code : String(30)        @title: '구매요청진행상태코드' ;	
             remark          : String(3000)      @title: '비고' ;	
             attch_group_number : String(100)    @title: '첨부파일그룹번호' ;	
