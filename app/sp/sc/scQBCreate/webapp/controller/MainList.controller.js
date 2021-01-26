@@ -76,8 +76,8 @@ sap.ui.define([
                 var sComponent = "sp.sc.scQBPages",
                     sUrl = "../sp/sc/scQBPages/webapp";
                     
-                // Negotiation Type / outcome / 생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench)
-                var changeHash = this._cNum + "/" + String(outcome) + "/" + "NC";   
+                //  생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome 
+                var changeHash =  "NC" + this._cNum + "/" + String(outcome) + "/" ;   
                 HashChanger.getInstance().replaceHash("");
 
                 Component.load({

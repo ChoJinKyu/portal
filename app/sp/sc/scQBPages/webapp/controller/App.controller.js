@@ -16,10 +16,27 @@ sap.ui.define([
                 // this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
                 
                 var sHash = sap.ui.core.routing.HashChanger.getInstance().getHash();
-                var pageId = sHash.split('/')[0];
-                var pType = sHash.split('/')[0];
-                var pOutcome = sHash.split('/')[1];
-                var pMode = sHash.split('/')[2];
+                
+                var paramArray = sHash.split('/');
+                // 0 : 생성구분( NC: 생성, NW: 조회)
+                // 1 : Negotiation Type
+                // 2 : outcome
+                // 3 : Header Id(NW일 때만)
+
+                var pMode = paramArray[0];
+                var pType = paramArray[1];
+                var pOutcome = paramArray[2];
+                if(pMode == "NW"){
+                    var pHeaderId =paramArray[3];
+                }
+
+                console.log("parameterArray ===================", paramArray);
+                // var pMode = sHash.split('/')[0];
+                // var pType = sHash.split('/')[1];
+                // var pOutcome = sHash.split('/')[2];
+                // if(pMode == "NW"){
+                //     var pHeaderId = sHash.split('/')
+                // }
                 
                 var routeName;
                 debugger;

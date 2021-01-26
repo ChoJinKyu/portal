@@ -148,7 +148,7 @@
 
 		<uxap:sections>
             <!-- Header Start -->
-			<uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="Header" visible="true" subSectionLayout="titleOnTop" >
+			<uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="Header" visible="true" >
 				<uxap:subSections >
 					<uxap:ObjectPageSubSection>
                         <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content"
@@ -173,7 +173,11 @@
 
                             <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin" >
                                 <Label  text="Description"  class="sapMLabelNoText sapUiTinyMarginBottom"/>
-                                <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
+                                                    showGroupFont="true" showGroupLink="true" showGroupInsert="false" height="400px"/>
+                                <layoutData>
+                                    <layout:GridData span="XL12 L12 M12 S12" />
+                                </layoutData>
                             </VBox>
 
     
@@ -262,8 +266,11 @@
 
                             <VBox class="sapUiSmallMarginBegin">
                                 <Label  text="Note To Supplier" class="sapMLabelNoText"/>
-                                
-                                <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" 
+                                                    showGroupFont="true" showGroupLink="true" showGroupInsert="false" height="400px"/>
+                                <layoutData>
+                                    <layout:GridData span="XL12 L12 M12 S12" />
+                                </layoutData>
                             </VBox>
 
                             <Table id="tableAttachments" 

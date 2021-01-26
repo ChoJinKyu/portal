@@ -6,12 +6,16 @@ sap.ui.define([
     "sap/m/MessageBox",
     "ext/lib/util/Multilingual",
     "sap/ui/model/odata/v2/ODataModel",
-    "sap/ui/model/json/JSONModel"
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Component",
+    "sap/ui/core/routing/HashChanger",
+    "sap/ui/core/ComponentContainer",
+    "sap/m/MessageToast"
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, fioriLibrary, Filter, FilterOperator, MessageBox, Multilingual,ODataModel, JSON) {
+	function (Controller, fioriLibrary, Filter, FilterOperator, MessageBox, Multilingual,ODataModel, JSON, Component, HashChanger, ComponentContainer, MessageToast) {
         "use strict";
         var oMaster;
         var oModels;
@@ -553,6 +557,70 @@ sap.ui.define([
                 //초기 필터
                 var oTable = sap.ui.getCore().byId("dialog_manager--managerDialogTable");
                 // oTable.getBinding("items").filter([new Filter("tenant_id", FilterOperator.Contains, "L2100")]);
+
+            },
+            onNegoNumberPress: function(e){
+                
+                
+                var vIndex = e.oSource.oParent.getIndex();
+                
+                var oPath = e.oSource.oParent.oParent.getContextByIndex(vIndex).sPath;
+                var oRow = this.getView().getModel().getProperty(oPath);
+                var oRow_HeaderPath = '/' + oRow.Header.__ref;
+                var oRow_Header = this.getView().getModel().getProperty(oRow_HeaderPath);
+                console.log("row Item ========",oRow);
+                console.log("oRow_Header ========",oRow_Header);
+                
+                var pNegoTypeCode,
+                    pOutcome,
+                    pHeader_id;
+                pNegoTypeCode = oRow_Header.nego_type_code;
+                pOutcome = oRow_Header.negotiation_output_class_code;
+                pHeader_id =  String(oRow_Header.nego_document_number);
+
+                if(pNegoTypeCode == null){
+                    pNegoTypeCode = " ";
+                }
+                if(pOutcome == null){
+                    pOutcome = " ";
+                }
+                if(pHeader_id == null){
+                    pHeader_id = " ";
+                }
+
+
+                // App To App
+                //portal에 있는 toolPage 
+                var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
+                //이동하려는 app의 component name,url
+                var sComponent = "sp.sc.scQBPages",
+                    sUrl = "../sp/sc/scQBPages/webapp";
+                    
+                // 생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome / Header Id
+                var changeHash = "NW/" + pNegoTypeCode + "/" + pOutcome + "/" + pHeader_id;   
+                HashChanger.getInstance().replaceHash("");
+
+                Component.load({
+                    name: sComponent,
+                    url: sUrl
+                }).then(function (oComponent) {
+                    var oContainer = new ComponentContainer({
+                        name: sComponent,
+                        async: true,
+                        url: sUrl
+                    });
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oContainer);
+                    //hash setting
+                    HashChanger.getInstance().setHash(changeHash);
+                }).catch(function (e) {
+                    MessageToast.show("error");
+                })
+
+                
+                
+                // this.getOwnerComponent().getRouter().navTo("detailPage", { type : pNegoTypeCode , outcome : pOutcome, header_id: pHeader_id  } );
+
 
             },
             tableCellClick: function(e){

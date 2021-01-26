@@ -258,7 +258,7 @@
                             useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
                             useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
                             enableAutoBinding="true" tableBindingPath="{viewModel>/NegoHeaders}"
-                            class="sapUiResponsiveContentPadding sapUiLargeMarginBottom"
+                            class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
                             initiallyVisibleFields=""
                             beforeRebindTable="beforeRebindTable"
                             >
@@ -278,7 +278,7 @@
                     </smartTable:customToolbar>
                     <t:Table 
                         enableColumnFreeze="true"
-                        visibleRowCount="15"
+                        visibleRowCount="14"
                         rows="{
                                     path: '/NegoItemPrices',
                                     sorter: {
@@ -296,7 +296,7 @@
                                 </t:customData>
                                 <Label text="Negotiation No" design="Bold"/>
                                 <t:template>
-                                    <ObjectStatus text="{Header/nego_document_number}" active="true" press="" />
+                                    <ObjectStatus text="{Header/nego_document_number}" active="true" press="onNegoNumberPress"  />
                                     <!-- <ObjectStatus text="1" active="true" press=""  /> -->
                                     <!-- <Text text="{Header/nego_document_number}" wrapping="false" /> -->
                                     <!-- <Text text="1" wrapping="false" /> -->
@@ -357,7 +357,7 @@
                                     <Text text="{Header/supplier_participation_flag}" wrapping="false" />
                                 </t:template> 
                             </t:Column>
-                            <t:Column width="7rem" sortProperty="Header/remaining_hours" filterProperty="Header/remaining_hours">
+                            <t:Column width="7rem" hAlign="Center" sortProperty="Header/remaining_hours" filterProperty="Header/remaining_hours">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "Header/remaining_hours", "leadingProperty": "Header/remaining_hours", "sortProperty": "Header/remaining_hours", "filterProperty": "Header/remaining_hours"}'/>
                                 </t:customData>
