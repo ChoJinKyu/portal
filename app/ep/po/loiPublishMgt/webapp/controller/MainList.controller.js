@@ -76,6 +76,10 @@ sap.ui.define([
 
             var today = new Date();
 
+            // var oCombo = this.byId("searchLoiNumber"),
+            //     oPopOver = oCombo.getPicker();
+            // oPopOver.setContentHeight("100px");
+
             // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             // this.getView().byId("searchBuyer").setValue("(9586) **민");
@@ -540,9 +544,11 @@ sap.ui.define([
                 tenantId: oRecord.tenant_id,
                 companyCode: oRecord.company_code,
                 loiWriteNumber: oRecord.loi_write_number,
-                loiItemNumber: oRecord.loi_item_number,
+                loiItemNumber: oRecord.same_selection_item_number,
                 loiSelectionNumber: oRecord.loi_selection_number,
-                loiNumber: oRecord.loi_number
+                loiNumber: oRecord.loi_number,
+                quotationNumber: oRecord.same_quotation_number,
+                quotationItemNumber: oRecord.same_quotation_item_number
                 // existRfq: (oRecord.quotation_number ? true : false)
             }, true);
         },
@@ -566,12 +572,14 @@ sap.ui.define([
                 sLoiWriteNumber = "",
                 sLoiItemNumber = "",
                 sLoiSelectionNumber = "",
-                sLoiNumber = "";
+                sLoiNumber = "",
+                sQuotationNumber = "",
+                sQuotationItemNumber = "";
 
             //RFQ 번호,상태에 따라 이동가능 여부 체크  
             var canSelect = true;
             var existRfq = true;
-            var quotationNumberrArr = [];
+            var existRfqCnt = 0;
             var loiNumberArr = [];
 
             if (oSelected.length > 0) {
@@ -606,7 +614,11 @@ sap.ui.define([
                     if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
                         //MessageToast.show("견적번호가 없습니다.");
                         existRfq = false;
+                        return false;
                     }
+
+                    sQuotationNumber += oModel.getData().LOIPublishItemView[chkIdx].quotation_number + (oSelected.length == index + 1 ? "" : ",");
+                    sQuotationItemNumber += oModel.getData().LOIPublishItemView[chkIdx].quotation_item_number + (oSelected.length == index + 1 ? "" : ",");
 
                     //견적번호 동일한지 체크
                     // var quotationNumber = oModel.getData().LOIPublishItemView[chkIdx].quotation_number;
@@ -636,10 +648,14 @@ sap.ui.define([
                     loiNumberArr.push(oModel.getData().LOIPublishItemView[chkIdx].loi_number);
 
                 });
+
+
             } else {
                 canSelect = false;
                 MessageToast.show("한개이상 선택해주세요.");
             }
+
+            existRfqCnt
 
             // if(!existRfq) {
             //     if(confirm(this.getModel("I18N").getText("/NEP00004"))) {
@@ -675,8 +691,9 @@ sap.ui.define([
                                         loiWriteNumber: sLoiWriteNumber,
                                         loiItemNumber: sLoiItemNumber,
                                         loiSelectionNumber: sLoiSelectionNumber,
-                                        loiNumber: sLoiNumber
-                                        // existRfq: existRfq
+                                        loiNumber: sLoiNumber,
+                                        quotationNumber: sQuotationNumber,
+                                        quotationItemNumber: sQuotationItemNumber
                                     }, true);
 
                                 }
@@ -693,8 +710,9 @@ sap.ui.define([
                         loiWriteNumber: sLoiWriteNumber,
                         loiItemNumber: sLoiItemNumber,
                         loiSelectionNumber: sLoiSelectionNumber,
-                        loiNumber: sLoiNumber
-                        // existRfq: existRfq
+                        loiNumber: sLoiNumber,
+                        quotationNumber: sQuotationNumber,
+                        quotationItemNumber: sQuotationItemNumber
                     }, true);
                 }
 
@@ -711,7 +729,7 @@ sap.ui.define([
                 tenantId: oRecord.tenant_id,
                 companyCode: oRecord.company_code,
                 loiWriteNumber: oRecord.loi_write_number,
-                loiItemNumber: oRecord.loi_item_number,
+                loiItemNumber: oRecord.same_publish_item_number,
                 loiPublishNumber: oRecord.loi_publish_number,
                 loiNumber: oRecord.loi_number
             }, true);
@@ -882,6 +900,7 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
+            // oModel.setSizeLimit(500);
         },
 
         _getSearchStates: function () {

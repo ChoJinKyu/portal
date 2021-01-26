@@ -125,13 +125,13 @@ service LoiMgtV4Service {
         supplier_code                   : String;
         supplier_name                   : String;
         quotation_amount                : Decimal;
-        delivery_request_date           : Date;
-        quotation_due_date              : Date;
+        delivery_request_date           : String;
+        quotation_due_date              : String;
         quotation_remark                : String;
         offline_selection_supplier_code : String;
         offline_selection_supplier_name : String;
         offline_quotation_amount        : Decimal;
-        offline_quotation_due_date      : Date;
+        offline_quotation_due_date      : String;
         offline_quotation_remark        : String;
     }
 
