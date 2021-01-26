@@ -29,6 +29,7 @@ namespace dp;
 using {User} from '@sap/cds/common';
 using util from '../../cm/util/util-model';
 using {dp as Mcst_Project_Part_Map_Dtl} from './DP_TC_MCST_PROJECT_PART_MAP_DTL-model';
+using {dp as Mcst_Project_Part_Map_Mst} from './DP_TC_MCST_PROJECT_PART_MAP_MST-model';
 
 entity Tc_Mcst_Project_Part_Map_Dtl {
     key tenant_id        : String(5) not null @title : '테넌트ID';
@@ -36,6 +37,10 @@ entity Tc_Mcst_Project_Part_Map_Dtl {
     key material_code    : String(40)         @title : '자재코드';
         change_info_code : String(30)         @title : '변경정보코드';
         change_reason    : String(1000)       @title : '변경사유';
+
+        mappping_mst     : Association to Mcst_Project_Part_Map_Mst.Tc_Mcst_Project_Part_Map_Mst
+                               on mappping_mst.tenant_id = tenant_id
+                               and mappping_mst.mapping_id = mapping_id;
 }
 
 extend Tc_Mcst_Project_Part_Map_Dtl with util.Managed;
