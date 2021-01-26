@@ -197,6 +197,63 @@ sap.ui.define([
 				}
 			});
         },
+        // Vendor Pool별 Material/Supplier Mapping 목록 Value Keyin 저장 처리
+        callMappKeyValueListSave: function(oEvent){
+            var url = "pg/md/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMaterialMappSaveProc";
+									
+			// VendorPool Material/Supplier Mapping 목록 Value array multi건 Procedure 호출
+			// Fiori Json Array 데이터 Ajax로 V4호출
+			// URL : /pg.md.MdCategoryV4Service/MdVpMaterialMappSaveProc
+			//{
+			//	"params" : {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260087", "values":[
+			//		{"material_code":"MCode-1", "supplier_code":"SCode-1", "item_serial_no":"1", "attr_value":"Value-1값"},
+			//		{"material_code":"MCode-1", "supplier_code":"SCode-1", "item_serial_no":"2", "attr_value":"Value-2값"},
+			//		{"material_code":"MCode-1", "supplier_code":"SCode-1", "item_serial_no":"3", "attr_value":"Value-3값"},
+			//		{"material_code":"MCode-1", "supplier_code":"SCode-2", "item_serial_no":"1", "attr_value":"Value-1값"},
+			//		{"material_code":"MCode-1", "supplier_code":"SCode-2", "item_serial_no":"100", "attr_value":"Value-100값"},
+			//		{"material_code":"MCode-2", "supplier_code":"SCode-1", "item_serial_no":"5", "attr_value":"Value-5값"}
+			//	]}
+			//}
+			var param = {};
+            var VpValueInfo = {};
+            var values = [];
+            
+            VpValueInfo.tenant_id = "L2100";
+            VpValueInfo.company_code = "*";
+            VpValueInfo.org_type_code = "BU";
+            VpValueInfo.org_code = "BIZ00200";
+            VpValueInfo.vendor_pool_code = "VP201610260087";
+            
+			values.push({material_code:"MCode-1", supplier_code:"SCode-1", item_serial_no:"1", attr_value:"Value-1값"});
+			values.push({material_code:"MCode-1", supplier_code:"SCode-1", item_serial_no:"2", attr_value:"Value-2값"});
+            values.push({material_code:"MCode-1", supplier_code:"SCode-1", item_serial_no:"4", attr_value:"Value-4값"});
+            
+            values.push({material_code:"MCode-2", supplier_code:"SCode-2", item_serial_no:"1", attr_value:"Value-1값"});
+            
+            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"1", attr_value:"Value-1값"});
+            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"2", attr_value:"Value-2값"});
+            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"3", attr_value:"Value-3값"});
+            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"4", attr_value:"Value-4값"});
+            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"5", attr_value:"Value-5값"});
+            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"10", attr_value:"Value-10값"});
+
+            VpValueInfo.values = values;
+
+			param.params = VpValueInfo; // param.params array변수명은 변경불가함 handler에서 사용하기 때문
+			$.ajax({
+				url: url,
+				type: "POST",
+				//datatype: "json",
+				data : JSON.stringify(param),
+				contentType: "application/json",
+				success: function(data){
+                    alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
+				},
+				error: function(req){
+					alert("Ajax Error => "+req.status);
+				}
+			});
+        },
         //카테고리 채번 V4호출 처리
         callNewCategoryItemCode: function(oEvent){
             var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
