@@ -74,7 +74,6 @@
                                         <!-- <Title id="tableTitle" text="" level="H2"/> -->
                                         <ToolbarSpacer/>
                                         <Button text="{I18N>/NEW}" type="Transparent" press=".onCreateDetail"/>
-                                        <!-- <Button text="Delete" type="Transparent" press=".onDelete"/> -->
                                         <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press=".onSort"/>
                                         <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press=".onFilter"/>
                                         <!-- <OverflowToolbarButton icon="sap-icon://group-2" tooltip="Group" text="Group" press=".onGroup"/> -->

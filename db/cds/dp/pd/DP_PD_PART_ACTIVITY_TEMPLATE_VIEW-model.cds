@@ -21,7 +21,7 @@ entity Pd_Part_Activity_Template_View {
     job_type_code : String(10)   @title: '업무유형코드' ; 
     job_type_name : String(240)   @title: '업무유형명' ; 
     attachment_mandatory_flag : Boolean   @title: '산출물필수여부' ;   
-    approve_mandatory_flag : Boolean   @title: '자가결재 여부' ;  
+    approve_mandatory_flag : Boolean   @title: '결재필수 여부' ;  
     activity_name : String(240)   @title: '활동명' ;   
     active_flag : Boolean   @title: '활성여부' ;    
     update_user_id : String(255) @title: '최종수정자';

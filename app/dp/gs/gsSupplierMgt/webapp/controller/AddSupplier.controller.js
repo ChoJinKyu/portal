@@ -300,46 +300,7 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("pageSubSection1"));
             this.validator.clearValueState(this.byId("finTable"));
             this.validator.clearValueState(this.byId("salTable"));
-        },
-
-        _fnUpdateCodeDetail : function(){
-            var oViewModel = this.getModel("SupplierGen");
-            var oParam = oViewModel.getProperty("/detailDetail");
-            var oKey = {
-                tenant_id : oParam.tenant_id,
-                group_code : oParam.group_code,
-                code : oParam.code
-            }
-
-            var oModel = this.getModel();
-            var sCreatePath = oModel.createKey("/CodeDetails", oKey);
-            oModel.update(sCreatePath, oParam, {
-                success: function(data){
-                    this._fnReadDetails(oParam.tenant_id, oParam.group_code);
-
-                    var oLangModel = this.getModel("languages");
-                    oLangModel.getProperty("/CodeLanguages").forEach(function(item, i){
-                        if(item["tenant_id"] === ""){
-                            oLangModel.setProperty("/CodeLanguages/"+i+"/tenant_id", oParam.tenant_id);
-                            oLangModel.setProperty("/CodeLanguages/"+i+"/group_code", oParam.group_code);
-                            oLangModel.setProperty("/CodeLanguages/"+i+"/code", oParam.code);
-                        }                        
-                    })
-
-                    oLangModel.submitChanges({
-                        groupId: "CodeLanguages",
-                        success: function (data) {
-                            this._fnSetReadMode();
-                            MessageToast.show("Success to update.");
-                        }.bind(this)
-                    });
-
-                }.bind(this),
-                error: function(data){
-                    console.log('error',data)
-                }
-            });
-        },
+        },        
         
         CheckEmail: function (str) {                                                 
 

@@ -197,7 +197,7 @@
                                     <Label text="{I18N>/IDEA} {I18N>/MANAGER} : " labelFor="ideaManager" required="true"></Label>
                                     <Input id="ideaManager"  width="80%"  visible="{viewModel>/editMode}" placeholder="All"
                                         showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
-                                                        liveChange=".onNameChk" value="{details>/idea_manager_local_name}" >
+                                                        liveChange=".onNameChk" value="{master>/idea_manager_local_name}" >
                                     </Input>
                                     <Input id="ideaManagerId"  visible="false" value="{details>/idea_manager_empno}"  ></Input>
                                     <Text id="ideaManagerTxt" width="80%" textAlign="Left"  text="{master>/idea_manager_local_name}" visible="{viewModel>/showMode}"/>
@@ -262,25 +262,25 @@
                                         <Label text="VI {I18N>/AMOUNT} (KRW): " labelFor="partNo" />
                                         <Input id="viAmount"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/vi_amount}" textAlign="Right" />
-                                        <Text id="viAmountTxt" width="80%" textAlign="Left"  text="{details>/vi_amount}" visible="{viewModel>/showMode}"/>
+                                        <Text id="viAmountTxt" width="80%" textAlign="Right"  text="{details>/vi_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA): " labelFor="partNo" />
                                         <Input id="monthMtlmob"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_mtlmob_quantity}" textAlign="Right"/>
-                                        <Text id="monthMtlmobTxt" width="80%" textAlign="Left"  text="{details>/monthly_mtlmob_quantity}" visible="{viewModel>/showMode}"/>
+                                        <Text id="monthMtlmobTxt" width="80%" textAlign="Right"  text="{details>/monthly_mtlmob_quantity}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} impact (KRW): " labelFor="partNo" />
                                         <Input id="mmImpct"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_purchasing_amount}" textAlign="Right"/>
-                                        <Text id="mmImpctTxt" width="80%" textAlign="Left"  text="{details>/monthly_purchasing_amount}" visible="{viewModel>/showMode}"/>
+                                        <Text id="mmImpctTxt" width="80%" textAlign="Right"  text="{details>/monthly_purchasing_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/ANNUAL} impact (KRW): " labelFor="partNo" />
                                         <Input id="annualImpact"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/annual_purchasing_amount}" textAlign="Right"/>
-                                        <Text id="annualImpactTxt" width="80%" textAlign="Left"  text="{details>/annual_purchasing_amount}" visible="{viewModel>/showMode}"/>
+                                        <Text id="annualImpactTxt" width="80%" textAlign="Right"  text="{details>/annual_purchasing_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                 </VBox>
                             </layout:Grid>                      

@@ -134,7 +134,6 @@ sap.ui.define([
                 // @ts-ignore
                 var itemPath = oEvent.getSource().getBindingContext().getPath();
                 // var masterObj = this.getView().getModel().getProperty(itemPath);
-
                 // /MonitoringMasterView(scenario_number=1l,tenant_id='L2100',company_code='LGCKR',bizunit_code='L210000000')
                 this.getModel().read(itemPath, {
                     success: function (oData, response) {

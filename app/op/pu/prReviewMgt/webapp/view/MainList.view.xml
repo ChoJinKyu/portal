@@ -286,10 +286,11 @@
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_ReviewListView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddDialogPress" />
-                            <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPrDeletePress" visible="false" />
+                            <Button text="(미정)재작성요청" type="Transparent" press=".onButtonPress($event, 'rewrite')" />
+                            <Button text="(미정)마감" type="Transparent" press=".onButtonPress($event, 'close')" />
+                            <Button text="(미정)구매담당자변경" type="Transparent" press=".onButtonPress($event, 'change')" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onExcelDownload($event, 'mainTable', ${list>/Pr_ReviewListView})" >
+                            <Button icon="sap-icon://excel-attachment" press="onExcelDownload($event, 'Download', ${list>/Pr_ReviewListView}, {fileName: 'PR Review List', tId: 'mainTable' })">
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -315,7 +316,7 @@
                             <Text text="{I18N>/ORG_CODE}" />
                         </Column>
                         <!-- 자재코드 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto">
                             <Text text="{I18N>/MATERIAL_CODE}" />
                         </Column>
                         <!-- 구매요청 품명 -->
@@ -323,39 +324,39 @@
                             <Text text="{I18N>/ITEM_NAME}" />
                         </Column>
                         <!-- 단위 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/UNIT}" />
                         </Column>
                         <!-- 요청수량 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto">
                             <Text text="{I18N>/REQUEST_QUANTITY}" />
                         </Column>
                         <!-- 잔여수량 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/STOCK_QUANTITY}" />
                         </Column>
                         <!-- 납품요청 일자 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/DELIVERY_REQUEST_DATE}" />
                         </Column>
                         <!-- 금액 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/AMOUNT}" />
                         </Column>
                         <!-- 통화 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/CURRENCY}" />
                         </Column>
                         <!-- 구매담당자 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/BUYER}" />
                         </Column>
                         <!-- 구매요청자 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_REQUESTOR}" />
                         </Column>
                         <!-- 구매요청 일자 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_DATE}" />
                         </Column>
                     </columns>

@@ -23,7 +23,7 @@
         ,k.sort_no
         ,c.mold_sequence
     from CM_APPROVAL_MST a
-    left join (select approval_number, max(mold_id) as mold_id from dp_md_approval_dtl group by approval_number) b 
+    left join dp_md_approval_dtl b 
         on a.approval_number = b.approval_number
     left join dp_md_mst c on b.mold_id = c.mold_id
     left join (select 
