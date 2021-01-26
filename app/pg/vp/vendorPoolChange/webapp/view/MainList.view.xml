@@ -60,7 +60,7 @@
                                                         ]
                                                     }"
                                              change="handleTable">
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    <core:Item key="{util>code}" text="{util>code_name}" />
                                     </ComboBox> 
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M2 S12"/>                                        
@@ -70,7 +70,7 @@
                                  <Label text="{I18N>/CHANGE_DATE}" labelFor="search_Operation_DATE_S" required="true"></Label>
                                  <DateRangeSelection 
                                             id="search_Operation_DATE_S" 
-                                            showFooter="true" displayFormat="yyyy-MM-dd"
+                                            showFooter="true" displayFormat="yyyy.MM.dd"
                                             width="13rem" />	
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
@@ -121,7 +121,7 @@
                                                         ]
                                                     }"
                                     >
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    <core:Item key="{util>code}" text="{util>code_name}" />
                                     </ComboBox>  
                                    <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
@@ -131,7 +131,7 @@
                                  <Label text="{I18N>/CHANGE_DATE}" labelFor="search_Operation_DATE_E" required="true"></Label>
                                  <DateRangeSelection 
                                             id="search_Operation_DATE_E" 
-                                            showFooter="true" displayFormat="yyyy-MM-dd"
+                                            showFooter="true" displayFormat="yyyy.MM.dd"
                                             width="13rem" />	
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
