@@ -311,9 +311,12 @@ service FundingApplicationSupV4Service {
     // 프로시저 호출 액션
     //************************************************
     //------------------임시저장
-    action procSaveTemp (applSaveType: applSaveDataType //신청서 저장 타입
-                        ,user_id : String(30)           //작성자id
-    ) returns rtnObj;
+    // action procSaveTemp (applSaveType: applSaveDataType //신청서 저장 타입
+    //                     ,user_id : String(30)           //작성자id
+    // ) returns rtnObj;
+    action procSaveTemp (applSaveType : array of applSaveDataType,
+                            user_id : String(30)
+    ) returns array of rtnObj;
 
     //------------------제출
     action procRequest (applSaveType: applSaveDataType  //신청서 저장 타입
