@@ -55,9 +55,6 @@ entity Md_Mst_View {
         budget_exrate_date              : String(8)             @title:'예산환율일자';
         budget_exrate                   : Decimal(20,2)         @title:'예산환율';
         split_pay_type_code             : String(30)            @title:'분할지급코드';
-        prepay_rate                     : Decimal(20,2)         @title:'선급금비율';
-        progresspay_rate                : Decimal(20,2)         @title:'중도금비율';
-        rpay_rate                       : Decimal(20,2)         @title:'잔여금액비율';
         mold_sales_status_code          : String(30)            @title:'금형매출상태코드';
         pr_number                       : String(240)           @title:'구매요청번호';
         import_company_code             : String(30)            @title:'수입회사코드';
