@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-using {dp as DpProductActivityTemplateLng} from '../pd/DP_PD_PART_BASE_ACTIVITY_LNG-model';	
+using {dp as DpProductActivityTemplateLng} from '../pd/DP_PD_PRODUCT_ACTIVITY_TEMPLATE_LNG-model';	
 // using {dp as productActivityTemplate} from '../pd/DP_PD_PRODUCT_ACTIVITY_TEMPLATE-model';	
 	
 entity Pd_Product_Activity_Template {	

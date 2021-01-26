@@ -25,13 +25,6 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
-            },
-            "orgService": {
-                "uri": "srv-api/odata/v2/cm.util.OrgService/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
             }
         }
     },
@@ -82,23 +75,13 @@
                     "bundleName": "dp.pd.partActivityMgt.i18n.i18n"
                 }
             },
-            "common": {
+            "util": {
                 "dataSource": "commonService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": false,
-                    "useBatch": true
-                }
-            },
-            "org": {
-                "dataSource": "orgService",
-                "preload": true,
-                "settings": {
-                    "defaultBindingMode": "TwoWay",
-                    "defaultCountMode": "Inline",
-                    "refreshAfterChange": true,
                     "useBatch": true
                 }
             },
@@ -147,10 +130,10 @@
                     ]
                 },
                 {
-                    "pattern": "selectionObject/{tenantId}/{companyCode}/{ideaNumber}",
-                    "name": "selectionPage",
+                    "pattern": "midObject/{tenantId}/{companyCode}/{ideaNumber}",
+                    "name": "midPage",
                     "target": [
-                        "selectionObject"
+                        "midObject"
                     ]
                 },
                 {
@@ -167,7 +150,7 @@
                     "viewId": "mainPage",
                     "viewLevel": 1
                 },
-                "selectionObject": {
+                "midObject": {
                     "viewName": "IdeaSelection",
                     "viewId": "selectionPage",
                     "viewLevel": 2
