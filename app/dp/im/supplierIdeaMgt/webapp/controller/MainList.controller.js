@@ -297,14 +297,29 @@ sap.ui.define([
 
         onStatusColor: function (sStautsCodeParam) {
 
+/* 할당안된 상태값
+[REQUEST TD] 기술자료요청
+[ASSIGN COACH] Idea 담당자 지정
+[TRANSFER PD] 부품개발 이관
+[TRANSFER ECN] ECN 이관
+[FINAL COMPLETE] 최종완료
+*/
             var sReturnValue = 5;
             //색상 정의 필요
-            if( sStautsCodeParam === "DRAFT" ) {
+            if( sStautsCodeParam === "DRAFT" || sStautsCodeParam === "SUBMIT" ) {
+                sReturnValue = 1;
+            }else if( sStautsCodeParam === "ADOPT" || sStautsCodeParam === "REQUEST CONTRACT" || sStautsCodeParam === "CONCLUDE CONTRACT" ) {
                 sReturnValue = 5;
-            }else if( sStautsCodeParam === "30" ) {
+            }else if( sStautsCodeParam === "REJECT"  ) {
+                sReturnValue = 9;
+            }else if( sStautsCodeParam === "COMPLETE PLAN"  ) {
+                sReturnValue = 6;
+            }else if( sStautsCodeParam === "COMPLETE 4M" || sStautsCodeParam === "APPLY PRICE" || sStautsCodeParam === "COMPLETE PRODUCTION" ) {
                 sReturnValue = 7;
-            }else if( sStautsCodeParam === "40" ) {
-                sReturnValue = 3;
+            }else if( sStautsCodeParam === "DROP"  ) {
+                sReturnValue = 8;
+            }else if( sStautsCodeParam === "REQUEST REWRITING"  ) {
+                sReturnValue = 8;
             }
 
             return sReturnValue;
