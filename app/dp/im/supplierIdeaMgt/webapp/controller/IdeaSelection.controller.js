@@ -474,10 +474,6 @@ sap.ui.define([
             var oView = this.getView();
             var ideaManagerId = this.getView().byId("ideaManagerId");
             ideaManagerId.setValue("");
-        },
-
-
-
-
+        }
     });
 });
