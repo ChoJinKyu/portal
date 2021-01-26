@@ -5,7 +5,8 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/util/Validator",
     "sap/ui/model/json/JSONModel",
-    "ext/lib/formatter/DateFormatter",    
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/Formatter",    
     "sap/ui/table/TablePersoController",
     "./MainListPersoService",
     "sap/ui/core/Fragment",
@@ -25,7 +26,7 @@ sap.ui.define([
     "sap/m/VBox",
     "ext/lib/util/ExcelUtil"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
-    TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
+    Formatter, TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
     Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, ExcelUtil) {
     "use strict";
 
@@ -34,6 +35,8 @@ sap.ui.define([
     return BaseController.extend("dp.pd.partActivityMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+
+        formatter: Formatter,
 
         numberFormatter: NumberFormatter,
 
@@ -99,27 +102,57 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
+        onSearch: function () {
+            var aSearchFilters = this._getSearchStates();
+            var aSorter = this._getSorter();
+            this._applySearch(aSearchFilters, aSorter);
+        },
+
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-            if (oEvent.getParameters().refreshButtonPressed) {
-                // Search field's 'refresh' button has been pressed.
-                // This is visible if you select any master list item.
-                // In this case no new search is triggered, we only
-                // refresh the list binding.
-                this.onRefresh();
-            } else {
-                var aSearchFilters = this._getSearchStates();
-                var aSorter = this._getSorter();
-                this._applySearch(aSearchFilters, aSorter);
-            }
+            // if (oEvent.getParameters().refreshButtonPressed) {
+            //     // Search field's 'refresh' button has been pressed.
+            //     // This is visible if you select any master list item.
+            //     // In this case no new search is triggered, we only
+            //     // refresh the list binding.
+            //     this.onRefresh();
+            // } else {
+            //     var aSearchFilters = this._getSearchStates();
+            //     var aSorter = this._getSorter();
+            //     this._applySearch(aSearchFilters, aSorter);
+            // }
+
+            if(this.getModel("list").isChanged() === true){
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM00005"), {
+					title : this.getModel("I18N").getText("/SEARCH"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+							this.onSearch();
+						}
+					}.bind(this)
+				});
+			} else {
+				this.onSearch();
+			}
+        },
+
+        onMainTableDeleteButtonPress: function(){
+			var table = this.byId("mainTable"),
+				model = this.getModel("list");
+			
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
+			this.byId("mainTable").clearSelection();
         },
 
         onCreate: function (oEvent) {
-            this.getRouter().navTo("selectionPage", {
+            this.getRouter().navTo("midPage", {
                 tenantId: this.tenant_id,
                 companyCode: this.companyCode,
                 ideaNumber: 'new'
