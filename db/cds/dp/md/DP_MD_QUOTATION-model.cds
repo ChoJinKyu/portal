@@ -3,7 +3,7 @@ namespace dp;
 using util from '../../cm/util/util-model';
 
 entity Md_Quotation {
-     tenant_id           : String(5)                     @title : '테넌트ID';
+    key tenant_id           : String(5)     not null                @title : '테넌트ID';
     key mold_id             : String(100)   not null                @title: '금형ID' ;	
     key supplier_code       : String(10)    not null                @title: '공급업체코드' ;	
     key approval_number     : String(30)    not null                @title: '품의번호' ;	
