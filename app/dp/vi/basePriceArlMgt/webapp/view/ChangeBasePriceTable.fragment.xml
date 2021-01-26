@@ -24,7 +24,7 @@
         <t:columns>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
             <t:Column hAlign="Center" width="18rem">
-                <Label text="aaaa" textAlign="Center" />
+                <Label text="{I18N>/COMPANY}" textAlign="Center" />
                 <t:template>
                     <ComboBox width="100%" 
                         editable="{= ${detailViewModel>/viewMode} &amp;&amp; ${rootModel>/config/DP_VI_COMPANY_EDITABLE_FLAG} === 'Y' ? true : false}"
@@ -87,13 +87,13 @@
             <t:Column width="14rem">
                 <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%" />
                 <t:template>
-                    <Text text="{detailModel>material_code_fk/material_desc}" />
+                    <Text text="{detailModel>material_desc}" />
                 </t:template>
             </t:Column>
             <t:Column width="20rem">
                 <Label text="{I18N>/SPEC_DESC}" textAlign="Center" width="100%" />
                 <t:template>
-                    <Text text="{detailModel>material_code_fk/material_spec}" />
+                    <Text text="{detailModel>material_spec}" />
                 </t:template>
             </t:Column>
             <t:Column width="12rem">
@@ -106,7 +106,7 @@
                             templateShareable:false}"
                         selectedKey="{detailModel>base_price_ground_code}">
                         <items>
-                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>text}" />
+                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>code_description}" />
                         </items>
                     </Select>
                 </t:template>
@@ -152,11 +152,17 @@
                 <t:template>
                     <Input 
                         value="{
-                                path:'detailModel>prices/0/new_base_price'
-                                }" 
+                                parts: [
+                                    {path: 'detailModel>prices/0/new_base_price'},
+                                    {path: 'detailModel>prices/0/new_base_price_currency_code'}
+                                ],
+                                type: 'sap.ui.model.type.Currency',
+                                formatOptions: {
+                                    showMeasure: false
+                                }
+                            }"
                         editable="{detailViewModel>/viewMode}"
-                        textAlign="End"
-                        type="Number" />
+                        textAlign="End" />
                 </t:template>
             </t:Column>
             <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">

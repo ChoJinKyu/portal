@@ -179,7 +179,7 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");         
 
-            var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue().toUpperCase();   
+            var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();//.toUpperCase();  // 자재명 조회 조건이기에 uppercase 취소
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
 
 	 

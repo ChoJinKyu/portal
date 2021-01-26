@@ -44,16 +44,13 @@
                         <ObjectStatus
                             title="{I18N>/IDEA} {I18N>/SEQUENCE} "
                             text="{master>/idea_number}"/>
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
                         <ObjectStatus
                             title="{I18N>/SUPPLIER} "
                             text="{master>/supplier_local_name}"/>
-                        <layout:VerticalLayout span="XL2 L3 M6 S12" />
                         <ObjectStatus
                             id="createUser"         
                             title="{I18N>/IDEA} {I18N>/WRITER} "
                             text="{master>/idea_create_user_local_name}"/>
-                        <layout:VerticalLayout span="XL2 L3 M6 S12" />
                         <ObjectStatus
                             id="ideaDate"         
                             title="{I18N>/IDEA} {I18N>/WRITE_DATE} "
@@ -64,17 +61,11 @@
                                     pattern: 'yyyy/MM/dd'
                                     }
                                 }"/>
-                        <layout:VerticalLayout span="XL2 L3 M6 S12" />
                     </layout:VerticalLayout>
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
                         <ObjectStatus
                             title="{I18N>/PROGRESS}{I18N>/STATUS}"
                             text="{master>/idea_progress_status_name}"/>
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
                     </layout:VerticalLayout>
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
@@ -108,12 +99,12 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
-                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
+                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
                             <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
                                 <VBox>
                                     <Label text="{I18N>/COMPANY}: " labelFor="ideaCompany"  required="true"></Label>
-                                    <Input id="hidIdeaNumber"  visible="true" value="{details>/idea_number}"/>
+                                    <Input id="hidIdeaNumber"  visible="false" value="{details>/idea_number}"/>
                                     <ComboBox id="ideaCompany" width="250em" editable="false"
                                         selectedKey="{details>/company_code}"
                                         items="{
@@ -248,10 +239,67 @@
 
                       
                         </VBox>
-                        </form:SimpleForm>                    
+                        </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection id="pageSectionMain3" titleUppercase="false" title="{I18N>/BASIC_INFO}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection3" >
+                    <form:SimpleForm id="midObjectForm3" editable="{midObjectViewModel>/isEditMode}">
+                        <core:Title text="정량적" />
+                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
+                            <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
+                                <VBox>
+                                    <VBox>
+                                        <Label text="{I18N>/REPRESENTATION} Part No: " labelFor="partNo" />
+                                        <Input id="repPartNo"  width="80%"   visible="{viewModel>/editMode}"
+                                            placeholder="{I18N>/REPRESENTATION} Part No" value="{details>/material_code}"/>
+                                        <Text id="repPartNoTxt" width="80%" textAlign="Left"  text="{details>/material_code}" visible="{viewModel>/showMode}"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="VI {I18N>/AMOUNT} (KRW): " labelFor="partNo" />
+                                        <Input id="viAmount"  width="80%"   visible="{viewModel>/editMode}"
+                                            placeholder="0" value="{details>/vi_amount}" textAlign="Right" />
+                                        <Text id="viAmountTxt" width="80%" textAlign="Left"  text="{details>/vi_amount}" visible="{viewModel>/showMode}"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA): " labelFor="partNo" />
+                                        <Input id="monthMtlmob"  width="80%"   visible="{viewModel>/editMode}"
+                                            placeholder="0" value="{details>/monthly_mtlmob_quantity}" textAlign="Right"/>
+                                        <Text id="monthMtlmobTxt" width="80%" textAlign="Left"  text="{details>/monthly_mtlmob_quantity}" visible="{viewModel>/showMode}"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="{I18N>/MM} impact (KRW): " labelFor="partNo" />
+                                        <Input id="mmImpct"  width="80%"   visible="{viewModel>/editMode}"
+                                            placeholder="0" value="{details>/monthly_purchasing_amount}" textAlign="Right"/>
+                                        <Text id="mmImpctTxt" width="80%" textAlign="Left"  text="{details>/monthly_purchasing_amount}" visible="{viewModel>/showMode}"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="{I18N>/ANNUAL} impact (KRW): " labelFor="partNo" />
+                                        <Input id="annualImpact"  width="80%"   visible="{viewModel>/editMode}"
+                                            placeholder="0" value="{details>/annual_purchasing_amount}" textAlign="Right"/>
+                                        <Text id="annualImpactTxt" width="80%" textAlign="Left"  text="{details>/annual_purchasing_amount}" visible="{viewModel>/showMode}"/>
+                                    </VBox>
+                                </VBox>
+                            </layout:Grid>                      
+                        </VBox>
+                        <core:Title text="정성적" />
+                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
+                            <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
+                                <VBox>
+                                    <Input id="performCnt"  width="80%"   visible="{viewModel>/editMode}"
+                                        placeholder="{I18N>/CONTENTS}" value="{details>/perform_contents}"/>
+                                    <Text id="performCntTxt" width="80%" textAlign="Left"  text="{details>/perform_contents}" visible="{viewModel>/showMode}"/>
+                                </VBox>
+                            </layout:Grid>                      
+                        </VBox>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
 
             <!-- 첨부파일 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
@@ -280,69 +328,6 @@
                 </uxap:subSections>
             </uxap:ObjectPageSection>
             <!-- 첨부파일 끝 -->
-
-			<uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="개선효과">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection2">
-                    <form:SimpleForm id="midObjectForm2" editable="{midObjectViewModel>/isEditMode}">                    
-                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
-                            <Table id="tableAttachments" 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-                                inset="false" 
-                                class="sapFDynamicPageAlignContent" 
-                                mode="None"
-                                items="{
-                                path: 'list>/SupplierPerform'
-                                }"
-                                width="98%">
-                                <columns>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="자재코드" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="단위" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="월 물동수량" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="통화" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="VI 금액" />
-                                    </Column>
-
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="월 구매금액" />
-                                    </Column>  
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="년 구매금액" />
-                                    </Column> 
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="정성적 효과" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" >
-                                        <cells>
-                                            <Text text="{list>material_code}"/>
-                                            <Text text="{list>purchasing_uom_code}"/>
-                                            <Text text="{list>monthly_mtlmob_quantity}"/>
-                                            <Text text="{list>currency_code}"/>
-                                            <Text text="{list>vi_amount}"/>
-
-                                            <Text text="{list>monthly_purchasing_amount}"/>
-                                            <Text text="{list>annual_purchasing_amount}"/>
-                                            <Text text="{list>perform_contents}"/>
-                                         </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-                        </VBox>
-                        </form:SimpleForm>                    
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
 
 
             <!-- 결재라인 시작 -->

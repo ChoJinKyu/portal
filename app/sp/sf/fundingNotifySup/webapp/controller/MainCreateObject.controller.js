@@ -46,7 +46,7 @@ sap.ui.define([
         },
 
         onAfterRendering: function(oEvent){
-            this.setModel(this.getModel("fundingApp"), "createNotify");
+            this.getModel("fundingApp");
         },
 
         onPageNavBackButtonPress : function() {
@@ -56,29 +56,86 @@ sap.ui.define([
         onInvestmentDtlAddButtonPress : function() {
             
             // var oTable = this.byId("investmentDtl");
-            var oModel = this.getView().getModel("localModel"),
-                oTableModel = oModel.getProperty("/items");
-            
-            oTableModel.push({
-                            itemCode1 : "",
-                            itemCode2 : "",
-                            itemCode3 : "",
-                            itemCode4 : "",
-                            itemCode5 : ""
-                        });
+            var oModel = this.getModel("applicationSup"),
+                dtlModel = oModel.getProperty("/popUpInvestPlanDtl"),
+                oTableModel = {};
+                // oTableModel = oModel.getProperty("/items");
 
-            oModel.setProperty("/items", oTableModel);
+            oTableModel={
+                            investment_item_name : "",
+                            investment_item_purchasing_price : "",
+                            investment_item_purchasing_qty : "",
+                            investment_item_purchasing_amt : ""
+                        };
+                
+            dtlModel.push(oTableModel);
+
+            oModel.setProperty("/popUpInvestPlanDtl", dtlModel);
         },
 
         onPageSaveButtonPress : function() {
             alert("준비중");
         },
+        
+        onOpenInvestmentDtl : function(oEvent) {
+            var oView = this.getView(),
+                oModel = this.getModel("fundingApp"),
+                bFilters = [],
+                cFilters = [],
+                that = this,
+                rowPath = oEvent.getSource().getParent().getBindingContext("applicationSup").getPath();
+            
+            if (!this.pDialog) {
+                this.pDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "sp.sf.fundingNotifySup.view.DialogCreate",
+                    controller: this
+                }).then(function (oDialog) {
+                    // connect dialog to the root view of this component (models, lifecycle)
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            };
+
+            bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
+            bFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, this.getModel("applicationSup").getProperty(rowPath+"/investment_plan_sequence")));
+
+            this.pDialog.then(function (oDialog) {
+                oModel.read("/SfFundingInvestPlanMst", {
+                    filters : bFilters,
+                    urlParameters:{
+                        $expand: "invDtlList"
+                    },
+                    success: function(oRetrievedResult) {
+                        that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", oRetrievedResult.results[0]);
+
+                        cFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
+                        cFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, oRetrievedResult.results[0].investment_plan_sequence));
+
+                        oModel.read("/SfFundingInvestPlanDtl", {
+                            filters : cFilters,
+                            success: function(Result) {
+                                that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", Result.results);
+                            },
+                            error: function(oError) {
+                                
+                            }
+                        })
+                    },
+                    error: function(oError) {
+                        
+                    }
+                });
+                oDialog.open();
+            });
+        },
 
         onInvestmentPlanAddButtonPress : function(oEvent) {
             var oView = this.getView(),
-                test = false;
+                checkNum = this.getModel("applicationSup").getProperty("/funding_appl_number"),
+                that = this;
 
-            if(test){
+            if(!checkNum){
                 MessageBox.alert("저장하고 입력 하세요.");
             }else{
                 if (!this.pDialog) {
@@ -92,25 +149,67 @@ sap.ui.define([
                         return oDialog;
                     });
                 }
+
                 this.pDialog.then(function (oDialog) {
                     oDialog.open();
+                    that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", {});
+                    that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", []);
                 });
             }
         },
 
         onCreatePopupClose : function() {
+            var oModel = this.getModel("fundingApp"),
+                bFilters = [],
+                that = this;
+
             this.byId("investmentPlanDetails").close();
+
+            bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
+            
+            oModel.read("/SfFundingInvestPlanMst", {
+                //Filter : 신청번호
+                filters : bFilters,
+                success: function(oRetrievedResult) {
+                    that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                },
+                error: function(oError) {
+                    
+                }
+            });
         },
 
         onSelectObject : function(oEvent) {
             
         },
 
+        onPurchasingAtm : function(oEvent) {
+
+            var rowBindingContext = oEvent.oSource.getParent().getBindingContext("applicationSup"),
+                rowInvestmentPurchasingPrice = rowBindingContext.getObject().investment_item_purchasing_price,
+                rowInvestmentPurchasingQty = rowBindingContext.getObject().investment_item_purchasing_qty,
+                rowInvestmentPurchasingAmt = rowInvestmentPurchasingPrice*rowInvestmentPurchasingQty,
+                dtlLength=rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl").length,
+                investmentPurchasingAmtSum = 0;
+
+                rowBindingContext.getModel().setProperty(rowBindingContext.getPath() + "/investment_item_purchasing_amt", rowInvestmentPurchasingAmt);
+                //rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl")[0].investment_item_purchasing_amt
+                for(var i= 0; i < dtlLength; i++){
+                    investmentPurchasingAmtSum += parseInt(rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl/"+i+"/investment_item_purchasing_amt"));
+                };
+
+                this.byId("investment_item_purchasing_amt_sum").setText(investmentPurchasingAmtSum);
+
+        },
+
         _onComCodeListView : function(oEvent) {
-            var that = this;
+            var that = this,
+                tenant_id = "L1100",
+                group_code = "SP_SF_FUNDING_REASON_CODE",
+                language_cd = "KO";
             
             jQuery.ajax({
-                url: "srv-api/odata/v4/sp.fundingApplicationSupV4Service/ComCodeListView(tenant_id='L1100',chain_code='SP',group_code='SP_SF_FUNDING_REASON_CODE',language_cd='KO')/Set",
+                url: "srv-api/odata/v4/sp.fundingApplicationSupV4Service/ComCodeListView(tenant_id='"+tenant_id+"',chain_code='SP',group_code='"+group_code+"',language_cd='"+language_cd+"')/Set",
                 contentType: "application/json",
                 success: function(oData){
                     var aArr=[];
@@ -125,7 +224,7 @@ sap.ui.define([
 
         _onTransactionDivision : function(oEvent) {
             var tenant_id = "L1100",
-                company_code = "LGEKR"
+                company_code = "LGEKR";
 
             jQuery.ajax({
                 url: "srv-api/odata/v4/sp.fundingApplicationSupV4Service/OrgCodeListView(tenant_id='"+tenant_id+"',company_code='"+ company_code +"')/Set", 
@@ -180,7 +279,7 @@ sap.ui.define([
                             oModel.read("/SfFundingInvestPlanMst", {
                                 //Filter : 공고번호, sub 정보
                                 filters : bFilters,
-                                success: function(oRetrievedResult) { 
+                                success: function(oRetrievedResult) {
                                     that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
                                 },
                                 error: function(oError) {
@@ -240,7 +339,6 @@ sap.ui.define([
         },
 
         _onCheckEmail: function (str) {                                                 
-
             var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
 
             if(!reg_email.test(str)) {

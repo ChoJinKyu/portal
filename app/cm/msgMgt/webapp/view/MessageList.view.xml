@@ -138,7 +138,7 @@
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/LANGUAGE}" required="true" />
                         <t:template>
-							<lib-m:CodeComboBox selectedKey="{list>language_code}" width="100%" showSecondaryValues="true"
+							<lib-m:CodeComboBox selectedKey="{list>language_code}" width="100%" showSecondaryValues="true" required="true"
                                 items="{
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -147,7 +147,7 @@
                                     serviceName: 'cm.util.CommonService',
                                     entityName: 'Code'
                                 }"
-                                editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                editable="{= ${list>_row_state_} === 'C' }" >
                             </lib-m:CodeComboBox>
 						</t:template>
                     </t:Column>

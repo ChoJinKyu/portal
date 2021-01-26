@@ -1,5 +1,5 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller",
+	"./BaseController",
 	"sap/f/library",						
     "sap/ui/model/Filter",					
     "sap/ui/model/Sorter",						
@@ -30,7 +30,8 @@ sap.ui.define([
 
                 oView.setModel(oMultilingual.getModel(), "I18N");
                 oViewModel.setProperty("/cond",{
-                    EQ : {}
+                    EQ : {},
+                    Contains : {}
                 });
                 
                 this._bindOrgCodeComboItem();
@@ -244,7 +245,7 @@ sap.ui.define([
                             oBtnEvaluExecuteMode.addItem(
                                 new SegmentedButtonItem({ 
                                     text : item.code_name, 
-                                    key : item.sort_no
+                                    key : item.code
                                 })
                             );
                         });
@@ -282,13 +283,18 @@ sap.ui.define([
                 //leaf
                 this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
             }
-
+            /***
+             * 데이터 조회
+             */
             , onPressSearch : function(){
-                var oTable, aFilters, oUserInfo, oViewModel, oCondData;
+                var oTable, oView, aFilters, oUserInfo, oViewModel, oCondData, oODataModel;
 
                 oTable = this.byId("treeTable");
+                oView = this.getView();
                 oUserInfo = this._getUserSession();
-                oViewModel = this.getView().getModel("viewModel");
+                oViewModel = oView.getModel("viewModel");
+                oODataModel = oView.getModel();
+                //조회용 데이터
                 oCondData = oViewModel.getProperty("/cond");
                 aFilters = [
                     new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
@@ -297,6 +303,15 @@ sap.ui.define([
 
                 ]
 
+                //미리 세팅해둔 경로를 바탕으로 Filter를 생성한다.
+                /**
+                 * EQ {
+                 *    Field
+                 * }
+                 * Contains {
+                 *    Field
+                 * }
+                 */
                 for(var operator in oCondData){
                     if(oCondData.hasOwnProperty(operator)){
                         for(var field in oCondData[operator]){
@@ -308,23 +323,152 @@ sap.ui.define([
                         }
                     }
                 }
+                
+                oView.setBusyIndicatorDelay(0);
+                if(!oCondData.EQ.evaluation_article_type_code && !oCondData.Contains.evaluation_article_name){
+                    /*** 
+                     * Tree 구조에선 상위 0 level 만 조건으로 걸린다.
+                     * 평가항목구분과 평가항목명은 하위 항목에 대한 데이터 이므로 
+                     * 별다른 작업없이 호출
+                     */
+                    oTable.bindRows({
+                        path : "/EvalItemListView",
+                        filters : aFilters,
+                        sorter : [
+                            new Sorter("evaluation_article_path_sequence")
+                        ],
+                        parameters : {
+                            countMode: 'Inline',
+                            treeAnnotationProperties : {
+                                hierarchyLevelFor : 'hierarchy_level',
+                                hierarchyNodeFor : 'evaluation_article_code',
+                                hierarchyParentNodeFor : 'parent_evaluation_article_code',
+                                hierarchyDrillStateFor : 'drill_state',
+                                numberOfExpandedLevels : 5
+                            }
+                        },
+                        events : {
+                            dataRequested : function(){
+                                oView.setBusy(true);
+                            },
+                            dataReceived : function(){
+                                oView.setBusy(false);
+                            }
+                        }
+                    });
+                    return;
+                }
+                /***
+                 * Tree 구조에선 상위 0 level 만 조건으로 걸린다.
+                 * 하위 항목에 대한 평가항목구분과 평가항목명에 대한 조건은
+                 * Odata 를 level 조건 없이 조회한후 
+                 * 해당 상위 level을 읽어온다.
+                 * 
+                 */
+                oView.setBusy(true);
+                this._readOdata({
+                    model : oODataModel,
+                    entity : "/EvalItemListView",
+                    param : {
+                        path : "/EvalItemListView", 
+                        filters : aFilters,
+                        error : function(){
+                            oView.setBusy(false);
+                        },
+                        success : function(oData){
+                            var aDataKeys, aDummyFilters, aTableFilter, aResults;
+                            aDataKeys = [];
+                            aDummyFilters = [];
+                            aTableFilter = [];
+                            aResults = oData.results;
 
-                oTable.bindRows({
-                    path : "/EvalItemListView",
-                    filters : aFilters,
-                    sorter : [
-                        new Sorter("evaluation_article_path_sequence")
-                    ],
-                    parameters : {
-                        countMode: 'Inline',
-                        treeAnnotationProperties : {
-                            hierarchyLevelFor : 'hierarchy_level',
-                            hierarchyNodeFor : 'evaluation_article_code',
-                            hierarchyParentNodeFor : 'parent_evaluation_article_code',
-                            hierarchyDrillStateFor : 'drill_state'
+                            aResults.forEach(function(oRowData){
+                                for(var i = 1, len = 5; i < 6; i++){
+                                    var sCode = oRowData["evaluation_article_level" + i + "_code"];
+                                    if(!sCode){
+                                        continue;
+                                    }
+                                    if(aDataKeys.indexOf(sCode) === -1){
+                                        aDataKeys.push(sCode);
+                                        aDummyFilters.push(
+                                            new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sCode })
+                                        );
+                                    }
+                                }
+                                
+                                // var sKey, sParentKey;
+                                // sKey = oRowData.evaluation_article_code;
+                                // sParentKey = oRowData.parent_evaluation_article_code;
+                                // if(aDataKeys.indexOf(sKey) === -1){
+                                //     aDataKeys.push(sKey);
+                                //     aDummyFilters.push(
+                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sKey })
+                                //     );
+                                // }
+
+                                // if(aDataKeys.indexOf(sParentKey) === -1){
+                                //     aDataKeys.push(sParentKey);
+                                //     aDummyFilters.push(
+                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sParentKey })
+                                //     );
+                                // }
+                            });
+                            
+                            aTableFilter = [
+                                new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
+                                new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
+                                new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode })
+                            ];
+
+                            aTableFilter.push(
+                                new Filter({ filters : aDummyFilters, and : false })
+                            );
+                            
+                            if(oCondData.EQ.org_code){
+                                aTableFilter.push(
+                                    new Filter({ path:"org_code", operator:"EQ", value1 : oCondData.EQ.org_code })
+                                );
+                            }
+                            if(oCondData.EQ.evaluation_operation_unit_code){
+                                aTableFilter.push(
+                                    new Filter({ path:"evaluation_operation_unit_code", operator:"EQ", value1 : oCondData.EQ.evaluation_operation_unit_code })
+                                );
+                            }
+                            if(oCondData.EQ.evaluation_type_code){
+                                aTableFilter.push(
+                                    new Filter({ path:"evaluation_type_code", operator:"EQ", value1 : oCondData.EQ.evaluation_type_code })
+                                );
+                            }
+
+                            oTable.bindRows({
+                                path : "/EvalItemListView",
+                                filters : aTableFilter,
+                                sorter : [
+                                    new Sorter("evaluation_article_path_sequence")
+                                ],
+                                parameters : {
+                                    countMode: 'Inline',
+                                    treeAnnotationProperties : {
+                                        hierarchyLevelFor : 'hierarchy_level',
+                                        hierarchyNodeFor : 'evaluation_article_code',
+                                        hierarchyParentNodeFor : 'parent_evaluation_article_code',
+                                        hierarchyDrillStateFor : 'drill_state',
+                                        numberOfExpandedLevels : 5
+                                    }
+                                },
+                                events : {
+                                    dataRequested : function(){
+                                        oView.setBusy(true);
+                                    },
+                                    dataReceived : function(){
+                                        oView.setBusy(false);
+                                    }
+                                }
+                            });
                         }
                     }
                 });
+
             }
 
             , onPressCollapseAll : function(){
@@ -336,7 +480,35 @@ sap.ui.define([
             , onPressExpandAll : function(){
                 var oTreeTable;
                 oTreeTable = this.byId("treeTable");
-                oTreeTable.expandToLevel(99);
+                oTreeTable.expandToLevel(5);
             }
+
+            , onRowSelectionChange : function(oEvent){
+                var oNavParam, oTable, aSelectedIdx, oContext, oRowData, oViewModel;
+                
+                oNavParam = {};
+                oNavParam.new = "N";
+
+                oTable = oEvent.getSource();
+                aSelectedIdx = oTable.getSelectedIndices();
+
+                if(!aSelectedIdx.length){
+                    // MessageBox.warning("선택된 데이터가 없습니다.");
+                    return;
+                }
+
+                oContext = oTable.getContextByIndex(aSelectedIdx[0]);
+                oRowData = oContext.getObject();
+                oViewModel = this.getView().getModel("viewModel");
+
+                oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
+                oNavParam.leaf = oRowData.leaf_flag;
+                
+                oViewModel.setProperty("/Detail", {
+                    Header : oRowData
+                });
+                this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
+            }
+
 		});
 	});

@@ -45,9 +45,11 @@ sap.ui.define([
 					delay : 0
                 });                
 
-            this.getView().setModel(new ManagedListModel(), "PrMstView");
-            this.getView().setModel(new ManagedListModel(), "PrMst");
-            this.getView().setModel(new ManagedListModel(), "PrDtl");              
+            //this.getView().setModel(new ManagedListModel(), "PrMstView");
+            // this.getView().setModel(new ManagedListModel(), "PrMst");
+            // this.getView().setModel(new ManagedListModel(), "PrDtl");       
+            
+            this.getView().setModel(new JSONModel(), "tModel");       
 
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
@@ -115,7 +117,6 @@ sap.ui.define([
             // var aChain = this._fnGetChainList();
             // console.log('aChain',aChain)
        
-            debugger;
             return code;
             // aChain.forEach(function(item){
             //     if(this.code === code){
@@ -161,7 +162,9 @@ sap.ui.define([
                         oDetailModel.setProperty("/company_code", oArgs.company_code);
                         oDetailModel.setProperty("/tenantId", oArgs.tenantId);
                         oDetailModel.setProperty("/pr_create_status_code", data.results[0].pr_create_status_code );
-                        oDetailModel.setProperty("/pr_template_number", data.results[0].pr_template_number );                        
+                        oDetailModel.setProperty("/pr_template_number", data.results[0].pr_template_number );  
+                        
+                        that._setUI(oArgs.tenantId, "CREATE", data.results[0].pr_template_number) ;
           
                         //oCodeMasterTable.setBusy(false);
                     },
@@ -183,22 +186,22 @@ sap.ui.define([
                 });
 
                
-                oServiceModel.read("/Pr_TDtlVIew",{                         
-                    filters : tFilters,
-                    success : function(data){
-                        debugger;
-                        //oDetailModel.setProperty(data.results[0], "detailModel"); 
-                      // oDetailModel.setProperty("/tdtl" , data.results);    
-                        //oCodeMasterTable.setBusy(false);
-                        setTimeout(() => {
-                oDetailModel.setProperty("/tdtl" , data.results);   
-                        }, 100);
-                    },
-                    error : function(data){
-                        debugger;
-                        //oCodeMasterTable.setBusy(false);
-                    }
-                });
+                // oServiceModel.read("/Pr_TDtlVIew",{                         
+                //     filters : tFilters,
+                //     success : function(data){
+                //         debugger;
+                //         //oDetailModel.setProperty(data.results[0], "detailModel"); 
+                //       // oDetailModel.setProperty("/tdtl" , data.results);    
+                //         //oCodeMasterTable.setBusy(false);
+                //         setTimeout(() => {
+                // oDetailModel.setProperty("/tdtl" , data.results);   
+                //         }, 100);
+                //     },
+                //     error : function(data){
+                //         debugger;
+                //         //oCodeMasterTable.setBusy(false);
+                //     }
+                // });
 
 
 
@@ -217,13 +220,34 @@ sap.ui.define([
             //oTransactionManager.setServiceModel(this.getModel());
 
         },
-        _setUI : function (oCreate_status_code){
-            switch (oCreate_status_code) {
-              case "10":    // 임시저장..
-                  
-                break;
-              
-            }          
+        _setUI : function (tenantId, txn_type_code, pr_template_number){
+            
+            var oTemplateModel = this.getModel('tModel');
+            var oServiceModel = this.getModel();
+
+            var aFilters = [
+                new Filter("tenant_id"          , FilterOperator.EQ, tenantId),
+                new Filter("pr_template_number" , FilterOperator.EQ, pr_template_number ),
+                new Filter("txn_type_code"      , FilterOperator.EQ, txn_type_code ),
+                new Filter("table_name"      , FilterOperator.EQ, "OP_PU_PR_MST" )
+            ];  
+
+
+            oServiceModel.read("/Pr_TDtlVIew",{
+                filters : aFilters,
+                success : function(data){
+                    //oDetailModel.setProperty(data.results[0], "detailModel"); 
+                    oTemplateModel.setProperty("/mst" , data.results);    
+                    //oCodeMasterTable.setBusy(false);
+                },
+                error : function(data){
+                    //oCodeMasterTable.setBusy(false);
+                }
+            });
+
+           
+
+
 
         },
         

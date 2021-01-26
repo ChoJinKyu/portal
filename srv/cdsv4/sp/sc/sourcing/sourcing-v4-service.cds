@@ -1,3 +1,4 @@
+//cds-service sourcing-v4-service.cds
 using {sp.Sc_Nego_Headers as negoHeaders} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Item_Prices as negoItemPrices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers as negoSuppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
@@ -5,6 +6,7 @@ using {sp.Sc_Nego_Headers_New_Record_View as negoHeadersNewRecordView} from '../
 using {
     sp.Sc_Outcome_Code as scOutcomeCode,
     sp.Sc_Nego_Type_Code as scNegoTypeCode,
+    sp.Sc_Nego_Parent_Type_Code as scNegoParentTypeCode,
     sp.Sc_Award_Type_Code_View as scAwardTypeCodeView,
     sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
 } from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
@@ -22,11 +24,18 @@ service SourcingV4Service {
     entity NegoSuppliers @(title : '협상아이템업체정보')               as projection on negoSuppliers;
     /* 협상에 대한 헤더 정보의 신규 레코드 초기 값 레코드를 생성한다. */
     entity NegoHeadersNewRecordView @(title : '협상헤더정보-신규레코드') as projection on negoHeadersNewRecordView;
+
+    view NegoHeadersView as
+        select from negoHeaders {
+            *,
+             seconds_between($now,closing_date) as remain_times : Decimal(28, 2)
+        };
     // @odata.draft.enabled
 
     /* 마스터 */
     entity ScOutcomeCode @(title : 'OutcomCode')              as projection on scOutcomeCode;
     entity ScNegoTypeCode @(title : '협상유형코드')                 as projection on scNegoTypeCode;
+    entity ScNegoParentTypeCode @(title : '협상유형코드')           as projection on scNegoParentTypeCode;
     entity ScAwardTypeCodeView @(title : 'AwardTypeCode')     as projection on scAwardTypeCodeView;
     entity ScNegoProgStatusCodeView @(title : '협상상태코드')       as projection on scNegoProgStatusCodeView;
 

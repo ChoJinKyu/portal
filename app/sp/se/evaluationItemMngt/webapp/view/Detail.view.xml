@@ -5,6 +5,7 @@
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
+    xmlns:suiteCom="sap.suite.ui.commons"
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
@@ -31,21 +32,21 @@
 
 		<uxap:sections>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/EVAL_ITEM}">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/EVAL_ITEM}" visible="{=${viewModel>/Args/new} === 'Y'}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <form:SimpleForm 
                             layout="ResponsiveGridLayout"
                         >
                             <VBox>
-                                <Label text="평가항목명" required="true"/>
+                                <Label text="{I18N>/EVAL_ITEM_NM}" required="true"/>
                                 <Input />
                                 <layoutData>
                                     <layout:GridData span="L12 M12 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Node 유형" required="true"/>
+                                <Label text="{I18N>/NODE_TYPE}" required="true"/>
                                 <ComboBox 
                                     width="100%" 
                                     showSecondaryValues="true"
@@ -59,15 +60,240 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/GENERAL_INFO}" visible="{=${viewModel>/Args/new} !== 'Y'}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <form:SimpleForm 
+                            layout="ResponsiveGridLayout"
+                        >
+                            <VBox>
+                                <Label text="{I18N>/EVAL_ITEM_GRP}" required="true"/>
+                                <Text text="{viewModel>/Detail/Header/higher_level_path_name}"/>
+                                <layoutData>
+                                    <layout:GridData span="L6 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/EVAL_OP_UNT}" required="true"/>
+                                <Text text="{viewModel>/Detail/Header/evaluation_operation_unit_name}"/>
+                                <layoutData>
+                                    <layout:GridData span="L6 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/EVAL_ITEM}" required="true"/>
+                                <Text text="{viewModel>/Detail/Header/evaluation_article_name}"/>
+                                <layoutData>
+                                    <layout:GridData span="L6 M6 S12" linebreak="true"/>
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <Label text="{I18N>/EVAL_EXEC_MODE}" required="true"/>
+                                <SegmentedButton 
+                                    id="btnEvaluExeMode"
+                                    selectedKey="{viewModel>/Detail/Header/evaluation_execute_mode_code}"
+                                    enabled="{viewModel>/App/EditMode}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L3 M3 S6" />
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <Label text="{I18N>/EVAL_ITEM_TYPE}" required="true"/>
+                                <SegmentedButton 
+                                    id="btnEvaluArtType"
+                                    selectedKey="{viewModel>/Detail/Header/evaluation_article_type_code}"
+                                    enabled="{viewModel>/App/EditMode}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L3 M3 S6" />
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <Label text="{I18N>/DISTRB_SCOR_TYPE}" required="true"/>
+                                <ComboBox 
+                                    id="comboEvaluDisScrType"
+                                    width="100%"
+                                    selectedKey="{viewModel>/Detail/Header/evaluation_distrb_scr_type_cd}"
+                                    editable="{viewModel>/App/EditMode}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L6 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <Label text="{I18N>/SCLE_TYPE}" required="true"/>
+                                <ComboBox  
+                                    id="comboEvaluResultInputType"
+                                    width="100%"
+                                    selectedKey="{viewModel>/Detail/Header/evaluation_result_input_type_cd}"
+                                    editable="{viewModel>/App/EditMode}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L6 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <Label text="{I18N>/UNIT}" required="true"/>
+                                <ComboBox 
+                                    id="comboQttItemUom"
+                                    width="100%"
+                                    selectedKey="{viewModel>/Detail/Header/qttive_item_uom_code}"
+                                    editable="{viewModel>/App/EditMode}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L6 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <Label text="{I18N>/SORT}" required="true"/>
+                                <Input 
+                                    value="{viewModel>/Detail/Header/sort_sequence}"
+                                    editable="{viewModel>/App/EditMode}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L6 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <!-- <Label text="{I18N>/SORT}" required="true"/> -->
+                                <suiteCom:CalculationBuilder
+                                    id="calculationBuilder"
+                                    allowStringLiterals="true"
+                                    layoutType="VisualOnly"
+                                    expression="{viewModel>/Detail/Header/qttive_eval_article_calc_formula_name}"
+                                    allowComparisonOperators="true"
+                                    allowLogicalOperators="true"
+                                    title="{I18N>/QTTIVE_ITEM_CALC}"
+                                    readOnly="{=!${viewModel>/App/EditMode}}"
+                                > 
+                                
+                                    <!-- variables="{/variables}"
+                                    <suiteCom:variables>
+                                        <suiteCom:CalculationBuilderVariable key="{key}" label="{label}"/>
+                                    </suiteCom:variables> -->
+
+                                </suiteCom:CalculationBuilder>
+                                <layoutData>
+                                    <layout:GridData span="L12 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                                <Label text="{I18N>/EVAL_ITEM_DESC}" required="true"/>
+                                <TextArea 
+                                    value="{viewModel>/Detail/Header/evaluation_article_desc}"
+                                    width="100%"
+                                    rows="5"
+                                    editable="{viewModel>/App/EditMode}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L12 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                            
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            
+            <uxap:ObjectPageSection 
+                titleUppercase="false" 
+                title="{I18N>/SCLE}" 
+                visible="{=
+                    ${viewModel>/Args/new} !== 'Y' &amp;&amp;
+                    ${viewModel>/Args/leaf} === 'Y'
+                }"
+            >
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <Table
+                            id="tblEvalItemScle"
+                            items="{viewModel>/Detail/Item}"
+                            mode="MultiSelect"
+                        >
+                            <columns>
+                                <Column width="3em">
+                                    <core:Icon src="sap-icon://edit"/>
+                                    <!-- sap-icon://delete -->
+                                </Column>
+                                <Column>
+                                    <Text text="{I18N>/SCLE}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{I18N>/MIN_OVER}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{I18N>/MAX_UNDER}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{I18N>/DISTRB_SCOR}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{I18N>/SORT}" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <core:Icon src="sap-icon://edit"/>
+                                        <Input 
+                                            value="{viewModel>option_article_name}" 
+                                            editable="{viewModel>/App/EditMode}"
+                                        />
+                                        <Input 
+                                            value="{viewModel>option_article_start_value}" 
+                                            editable="{viewModel>/App/EditMode}"
+                                        />
+                                        <Input 
+                                            value="{viewModel>option_article_end_value}"
+                                            editable="{viewModel>/App/EditMode}" 
+                                        />
+                                        <Input 
+                                            value="{viewModel>evaluation_score}" 
+                                            editable="{viewModel>/App/EditMode}"
+                                        />
+                                        <Input 
+                                            value="{viewModel>sort_sequence}" 
+                                            editable="{viewModel>/App/EditMode}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
 		</uxap:sections>
 
 		<uxap:footer>
 			<OverflowToolbar>
                 <ToolbarSpacer />
-                <Button text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />
-				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelButtonPress" />
-				<Button text="{I18N>/DELETE}" type="Transparent" press=".onPageDeleteButtonPress" />
-                <Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+                <Button 
+                    text="{I18N>/UPDATE}" 
+                    enabled="{=!${viewModel>/App/EditMode}}"
+                    type="Transparent" 
+                    press="onPressModeChange($event, 'UPDATE')" 
+                />
+				<Button 
+                    text="{I18N>/CANCEL}" 
+                    enabled="{viewModel>/App/EditMode}"
+                    type="Transparent" 
+                    press="onPressModeChange($event, 'CANCEL')" 
+                />
+				<Button 
+                    text="{I18N>/DELETE}" 
+                    enabled="{viewModel>/App/EditMode}"
+                    type="Transparent" 
+                    press=".onPageDeleteButtonPress" 
+                />
+                <Button 
+                    text="{I18N>/SAVE}" 
+                    enabled="{viewModel>/App/EditMode}"
+                    type="Emphasized" 
+                    press="onPressSave" 
+                />
 			</OverflowToolbar>
 		</uxap:footer>
         

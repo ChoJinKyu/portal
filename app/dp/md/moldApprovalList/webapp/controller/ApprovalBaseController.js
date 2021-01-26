@@ -6,7 +6,7 @@ sap.ui.define([
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
-    "cm/util/control/ui/EmployeeDialog",
+    "dp/md/util/controller/EmployeeDeptDialog",
     "sap/m/ColumnListItem",
     "sap/m/Label",
     "sap/m/MessageBox",
@@ -28,7 +28,7 @@ sap.ui.define([
 	"sap/ui/core/dnd/DropPosition",
 	"sap/ui/core/dnd/DropLayout",
 	"sap/f/dnd/GridDropInfo",
-], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator, EmployeeDialog,
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator, EmployeeDeptDialog, 
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList,
     Sorter, Token, DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
@@ -463,10 +463,10 @@ sap.ui.define([
             oModel.setProperty("/Approvers/"+rowIndex+"/approver_name", userName + " / " + departmentLocalName);
         },
 
-       onMultiInputWithCodeValuePress: function(){ 
+       onMultiInputWithEmployeeValuePress: function(){ 
           
             if(!this.oEmployeeMultiSelectionValueHelp){
-               this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+               this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
                     title: "Choose Referer",
                     multiSelection: true,
                     items: {
@@ -706,7 +706,7 @@ sap.ui.define([
             this.setOrderByApproval();
             this.setSelectedApproval(String(Number(oParam)+1));
         },
-        onItemPress: function (oEvent) {
+        onItemPress : function (oEvent) {
             console.log("//// onApproverItemPress", oEvent);
         },
 

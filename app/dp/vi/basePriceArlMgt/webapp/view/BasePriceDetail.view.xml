@@ -64,7 +64,7 @@
                                 <co:MicroProcessFlowItem 
                                     state="{= ${detailModel>/approve_status_code} === 'AR' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
-                                    icon="{= ${detailModel>/approve_status_code} === 'AR' ? 'sap-icon://circle-task' : (${detailModel>/approve_status_code} === 'DR' ? 'sap-icon://complete' : '')}" />
+                                    icon="{= ${detailModel>/approve_status_code} === 'AR' ? 'sap-icon://circle-task' : (${detailModel>/approve_status_code} === 'DR' ? '' : 'sap-icon://complete')}" />
                                 <co:MicroProcessFlowItem 
                                     state="{= ${detailModel>/approve_status_code} === 'AP' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
@@ -111,7 +111,7 @@
                                     <rte:RichTextEditor 
                                         width="100%" 
                                         height="200px" 
-                                        value="{detailModel>/approval_request_desc}" 
+                                        value="{detailModel>/approval_contents}" 
                                         customToolbar="true" 
                                         showGroupFont="true" 
                                         showGroupLink="true" 
@@ -252,34 +252,34 @@
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"
-                    visible="{= ${detailViewModel>/viewMode}}"
+                    enabled="{= ${detailViewModel>/viewMode}}"
                     press=".onDeveloping" />
                 <Button
                     text="{I18N>/EDIT}" 
-                    visible="{= !${detailViewModel>/viewMode}}"
+                    enabled="{= !${detailViewModel>/viewMode}}"
                     press=".onEditToggle" />
-                <Button
-                    text="{I18N>/CANCEL}"
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onEditToggle" />
-				<Button
-                    text="{I18N>/DRAFT}" 
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onDraft" />
                 <!-- <Button
                     text="{I18N>/PREVIEW}" 
                     enabled="{= ${detailModel>/approve_status_code} === '10' ? true : false}"
                     press=".onPreview" /> -->
                 <!-- <Button
                     text="{I18N>/CANCEL}" press=".onBack" /> -->
+				<Button
+                    text="{I18N>/DRAFT}" 
+                    enabled="{= ${detailViewModel>/viewMode}}"
+                    press=".onDraft" />
+                <Button
+                    text="{I18N>/CANCEL}"
+                    enabled="{= ${detailViewModel>/viewMode}}"
+                    press=".onEditToggle" />
                 <Button
                     text="{I18N>/DELETE}" 
-                    visible="{= !${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
+                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
                     press=".onDelete" />
                 <Button
                     type="Emphasized"
                     text="{I18N>/REQUEST}"
-                    visible="{= !${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
+                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
                     press=".onRequest" />
 			</OverflowToolbar>
 		</uxap:footer>

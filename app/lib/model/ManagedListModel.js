@@ -98,15 +98,24 @@ sap.ui.define([
 
         read: function (sPath, oParameters) {
             oParameters = oParameters || {};
-            var that = this,
-                successHandler = oParameters.success;
+            var fSuccessHandler = oParameters.success,
+                fFetchAllSuccess = oParameters.fetchAllSuccess;
             this._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
                 success: function (oData) {
-                    that._transactionPath = sPath;
-                    that.setData(oData, sPath, false);
-                    if (successHandler)
-                        successHandler.apply(that._oTransactionModel, arguments);
-                }
+                    this._transactionPath = sPath;
+                    this.setData(oData, sPath, false);
+                    if (fSuccessHandler)
+                        fSuccessHandler.apply(this._oTransactionModel, arguments);
+                }.bind(this),
+                fetchAllSuccess: function(aSuccesses){
+                    var aData = this.getProperty(sPath);
+                    aSuccesses.forEach(function(oSuccess){
+                        aData = aData.concat(oSuccess.results);
+                    }.bind(this));
+                    this.setProperty(sPath, aData);
+                    if (fFetchAllSuccess)
+                        fFetchAllSuccess.apply(this._oTransactionModel, arguments);
+                }.bind(this)
             }));
         },
 

@@ -37,7 +37,15 @@ entity Im_Supplier_Idea {
     current_proposal_contents : String(500)   @title: '현재제안내용' ;	
     change_proposal_contents : String(500)   @title: '변경제안내용' ;	
     idea_contents : LargeString    @title: '아이디어내용' ;	
-    attch_group_number : String(100)   @title: '첨부파일그룹번호' ;	
+    attch_group_number : String(100)   @title: '첨부파일그룹번호' ;
+    material_code : String(40)  @title: '자재코드' ;	
+    purchasing_uom_code : String(3)   @title: '구매단위코드' ;	
+    currency_code : String(3)   @title: '통화코드' ;	
+    vi_amount : Decimal(20,0)   @title: 'VI금액' ;	
+    monthly_mtlmob_quantity : Decimal(20,0)   @title: '월물동수량' ;	
+    monthly_purchasing_amount : Decimal(20,0)   @title: '월간구매금액' ;	
+    annual_purchasing_amount : Decimal(20,0)   @title: '연간구매금액' ;	
+    perform_contents : String(500)   @title: '성과내용' ;
 }
 
 extend Im_Supplier_Idea with util.Managed;

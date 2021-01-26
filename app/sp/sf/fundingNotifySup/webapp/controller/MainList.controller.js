@@ -173,14 +173,33 @@ sap.ui.define([
                 oRecord = this.getModel("list").getProperty(sPath),
                 sSupplierCode = this.byId("sSupplierCode").getSelectedKey();
 
-            this.getRouter().navTo("mainCreateObject", {
-                tenantId: oRecord.tenant_id,
-                fundingNotifyNumber: oRecord.funding_notify_number,
-                supplierCode:sSupplierCode,
-                "?query": {
-                    //param1: "1111111111"
-                }
-            });
+            if(!!sSupplierCode){
+                this.getRouter().navTo("mainCreateObject", {
+                    tenantId: oRecord.tenant_id,
+                    fundingNotifyNumber: oRecord.funding_notify_number,
+                    supplierCode:sSupplierCode,
+                    "?query": {
+                        //param1: "1111111111"
+                    }
+                });
+            }else {
+                MessageBox.alert("협력사를 선택하세요.");
+                return;
+                // MessageBox.confirm("협력사를 선택 하지 않을 시에는 입력 됩니다.", {
+                //     onClose: function (sButton) {
+                //         if (sButton === MessageBox.Action.OK) {
+                //              this.getRouter().navTo("mainCreateObject", {
+                //                 tenantId: oRecord.tenant_id,
+                //                 fundingNotifyNumber: oRecord.funding_notify_number,
+                //                 supplierCode:'KR01818401',
+                //                 "?query": {
+                //                     //param1: "1111111111"
+                //                 }
+                //             });
+                //         };
+                //     }.bind(this)
+                // })
+            }
         },
 
         /* =========================================================== */

@@ -95,7 +95,8 @@
             ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../../lib"
+            "ext.lib": "../../../../lib",
+            "cm.util": "../../../../cm/util"
         },
         "routing": {
             "config": {
@@ -116,7 +117,7 @@
                 },
                 {
                     "name": "detail",
-                    "pattern": "detail/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code}",
+                    "pattern": "detail/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code},{evaluation_operation_unit_code},{evaluation_operation_unit_name},{use_flag}",
                     "target": [
                         "detail"
                     ]

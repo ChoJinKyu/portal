@@ -66,9 +66,7 @@ sap.ui.define([
 
             // 하드코딩 시작
             var oCodeData = {
-                basis: [{code: "COST", text: "Cost Analysis (Cost Table)"},
-                         {code: "RFQ", text: "Cost Analysis (RFQ)"},
-                         {code: "FMC", text: "Family Part-No"}],
+                basis: [],
                 currency: [],
                 viewMode: false
             };
@@ -99,6 +97,21 @@ sap.ui.define([
                 }
             });
             // Currency 데이터 조회 끝
+
+            // Basis 데이터 조회 시작
+            var oCommonODataModel = this.getOwnerComponent().getModel("commonODataModel");
+            oCommonODataModel.read("/Code", {
+                filters : [new Filter("group_code", FilterOperator.EQ, "DP_VI_BASE_PRICE_GROUND_CODE")],
+                success : function(data){
+                    if( data && data.results ) {
+                        oDetailViewModel.setProperty("/basis", data.results);
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+            // Basis 데이터 조회 끝
 
             // 해당 View(BasePriceDetail)에서 사용할 메인 Model 생성
             this.setModel(new JSONModel(), "detailModel");
@@ -139,7 +152,10 @@ sap.ui.define([
 
                 // Master 조회
                 this._readData("/Base_Price_Arl_Master", aMasterFilters, function (data) {
-                    oDetailModel.setProperty("/", data.results && data.results[0] ? data.results[0] : {});
+                    var oMaster = data.results && data.results[0] ? data.results[0] : {};
+                    // metatdata 삭제
+                    delete oMaster.__metadata;
+                    oDetailModel.setProperty("/", oMaster);
 
                     // Detail 조회
                     this._readData("/Base_Price_Arl_Detail", aMasterFilters, function (detailsData) {
@@ -153,9 +169,18 @@ sap.ui.define([
                         aPriceFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSelectedData.tenant_id));
                         aPriceFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.approval_number));
                         
-                        // material code만큼 or 조건 생성
                         aDetails.forEach(function (oDetail) {
+                            // material code만큼 or 조건 생성
                             aItemSequenceFilter.push(new Filter("item_sequence", FilterOperator.EQ, oDetail.item_sequence));
+
+                            // row에 맞는 purOrg 세팅
+                            oDetail.purOrg = oRootModel.getProperty("/purOrg/"+oDetail.company_code);
+
+                            // item_sequence 데이터 타입을 int로 변경
+                            oDetail.item_sequence = parseInt(oDetail.item_sequence);
+
+                            // metatdata 삭제
+                            delete oDetail.__metadata;
                         });
 
                         aPriceFilters.push(new Filter({
@@ -168,6 +193,10 @@ sap.ui.define([
                             // Price 갯수만큼 반복하면서 해당 details에 데이터 세팅
                             for( var i=0; i<pricesData.results.length; i++ ) {
                                 var oPrice = pricesData.results[i];
+                                // item_sequence 데이터 타입을 int로 변경
+                                oPrice.item_sequence = parseInt(oPrice.item_sequence);
+                                // metatdata 삭제
+                                delete oPrice.__metadata;
 
                                 for( var k=0; k<aDetails.length; k++ ) {
                                     if( aDetails[k].item_sequence === oPrice.item_sequence ) {
@@ -175,6 +204,17 @@ sap.ui.define([
                                         aDetails[k].prices.push(oPrice);
                                         break;
                                     }
+                                }
+
+                                // new_base_price, current_base_price, first_purchasing_net_price 데이터 타입을 int로 변경
+                                if( oPrice.new_base_price ) {
+                                    oPrice.new_base_price = parseFloat(oPrice.new_base_price);
+                                }
+                                if( oPrice.current_base_price ) {
+                                    oPrice.current_base_price = parseFloat(oPrice.current_base_price);
+                                }
+                                if( oPrice.first_purchasing_net_price ) {
+                                    oPrice.first_purchasing_net_price = parseFloat(oPrice.first_purchasing_net_price);
                                 }
                             }
 
@@ -206,7 +246,7 @@ sap.ui.define([
                                     "requestor_empno": "5452",
                                     "create_user_id": "5460", 
                                     "update_user_id": "5460", 
-                                    "approval_request_date": oToday,
+                                    "request_date": this._changeDateFormat(oToday),
                                     "details": []};
                 oDetailModel.setData(oNewBasePriceData);
                 oDetailViewModel.setProperty("/detailsLength", 0);
@@ -321,7 +361,7 @@ sap.ui.define([
                         purOrg: this.getModel("rootModel").getProperty("/purOrg/LGCKR"),
                         org_code: "",
                         org_type_code: "PU",
-                        au_code: "10",
+                        //au_code: "10",
                         base_price_ground_code: "10",
                         local_create_dtm: oToday, 
                         local_update_dtm: oToday, 
@@ -397,18 +437,41 @@ sap.ui.define([
             var sMessage = oI18NModel.getText("/NCM01001");
             var sCmd = "insert";
 
-            // entity에 없는 필드 삭제(OData에 없는 property 전송 시 에러)
-            delete oData.approval_requestor_empno_fk;
-            
-            // detail 데이터가 있을 경우 checked property 삭제(OData에 없는 property 전송 시 에러)
+            // master entity에 없는 property 삭제
+            delete oData.approval_type_code_nm;
+            delete oData.approve_status_code_nm;
+            delete oData.company_code;
+            delete oData.legacy_approval_number;
+            delete oData.org_code;
+            delete oData.org_type_code;
+            delete oData.requestor_dept_local_nm;
+            delete oData.requestor_job_title;
+            delete oData.requestor_local_nm;
+            delete oData.system_create_dtm;
+            delete oData.system_update_dtm;
+
+            // details entity에 없는 property 삭제(OData에 없는 property 전송 시 에러)
             if( aDetails ) {
-                aDetails.forEach(function (oDetails) {
-                    delete oDetails.checked;
-                    //delete oDetails.basis;
-                    delete oDetails.material_code_fk;
-                    delete oDetails.supplier_local_name;
-                    delete oDetails.purOrg;
-                });
+                aDetails.forEach(function (oDetail) {
+                    delete oDetail.checked;
+                    delete oDetail.base_price_ground_code_nm;
+                    delete oDetail.material_desc;
+                    delete oDetail.material_spec;
+                    delete oDetail.org_name;
+                    delete oDetail.supplier_local_name;
+                    delete oDetail.system_create_dtm;
+                    delete oDetail.system_update_dtm;
+                    delete oDetail.purOrg;
+                    oDetail.base_date = this._changeDateFormat(oDetail.base_date, "-");
+
+                    // prices entity에 없는 property 삭제
+                    oDetail.prices.forEach(function (oPrice) {
+                        delete oPrice.change_reason_nm;
+                        delete oPrice.market_code_nm;
+                        delete oPrice.system_create_dtm;
+                        delete oPrice.system_update_dtm;
+                    });
+                }.bind(this));
             }
 
             // 상신일 경우 approve_status_code를 20으로 변경
@@ -432,7 +495,7 @@ sap.ui.define([
             var oSendData = {
                             "inputData" : { 
                                 "cmd" : sCmd,
-                                "basePriceArlMst" : [this.getModel("detailModel").getData()]
+                                "basePriceArlMst" : [oData]
                                 , "debug" : true
                             } 
                         };
@@ -442,7 +505,7 @@ sap.ui.define([
                 data : JSON.stringify(oSendData),
                 contentType: "application/json",
                 success: function(data){
-                    if(data.return_code === "OK") {
+                    if(data.return_code === "200") {
                         MessageToast.show(sMessage);
                         this.onBack();
                     } else {
@@ -451,7 +514,7 @@ sap.ui.define([
                 }.bind(this),
                 error: function(e){
                     console.log("error", e);
-                    MessageBox.error(JSON.parse(e.responseText).error.message.value);
+                    MessageBox.error(JSON.parse(e.responseText).error.message);
                 }
             });
         },
@@ -467,10 +530,11 @@ sap.ui.define([
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
+                        var oDetail = this.getModel("detailModel").getData();
                         var oSendData = {
                                             "inputData" : { 
                                                 "cmd" : "delete",
-                                                "basePriceArlMst" : [this.getModel("detailModel").getData()]
+                                                "basePriceArlMst" : [{tenant_id: oDetail.tenant_id, approval_number: oDetail.approval_number}]
                                                 , "debug" : true
                                             } 
                                         };
@@ -482,7 +546,7 @@ sap.ui.define([
                             success: function(data){
                                 console.log("_sendSaveData", data);
                                 
-                                if(data.return_code === "OK") {
+                                if(data.return_code === "200") {
                                     MessageToast.show(oI18nModel.getText("/NCM01002"));
                                     this.onBack();
                                 } else {
@@ -491,7 +555,7 @@ sap.ui.define([
                             }.bind(this),
                             error: function(e){
                                 console.log("error", e);
-                                MessageBox.error(JSON.parse(e.responseText).error.message.value);
+                                MessageBox.error(JSON.parse(e.responseText).error.message);
                             }
                         });
                     }
@@ -587,7 +651,7 @@ sap.ui.define([
                 }.bind(this),
                 error: function(data){
                     console.log('error', data);
-                    MessageBox.error(JSON.parse(data.responseText).error.message.value);
+                    MessageBox.error(JSON.parse(data.responseText).error.message);
                 }
             });
         },
@@ -627,17 +691,18 @@ sap.ui.define([
                 sSelectedDialogPath = oBindingContext.getPath();
             }
             
-            var oModel = this.getModel();
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            var oSupplierODataModel = this.getModel("supplierODataModel");
+            //var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            var aFilters = [];
             var sQuery = oEvent.getSource().getValue();
 
             if( sQuery ) {
                 aFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, sQuery));
             }
 
-            oModel.read("/Supplier_Mst", {
+            oSupplierODataModel.read("/Suppliers", {
                 filters : aFilters,
-                urlParameters: {"$top": 40},
+                //urlParameters: {"$top": 40},
                 success: function(data) {
                     if( oBindingContext ) { 
                         this._openSupplierDialog(sQuery);
@@ -647,7 +712,7 @@ sap.ui.define([
                 }.bind(this),
                 error: function(data){
                     console.log('error', data);
-                    MessageBox.error(JSON.parse(data.responseText).error.message.value);
+                    MessageBox.error(JSON.parse(data.responseText).error.message);
                 }
             });
         },
@@ -706,7 +771,7 @@ sap.ui.define([
                 }.bind(this),
                 error: function(data){
                     console.log('error', data);
-                    MessageBox.error(JSON.parse(data.responseText).error.message.value);
+                    MessageBox.error(JSON.parse(data.responseText).error.message);
                 }
             });
         },
@@ -793,7 +858,7 @@ sap.ui.define([
         //         }.bind(this),
         //         error: function(data){
         //             console.log('error', data);
-        //             MessageBox.error(JSON.parse(data.responseText).error.message.value);
+        //             MessageBox.error(JSON.parse(data.responseText).error.message);
         //         }
         //     });
         // },
@@ -900,16 +965,16 @@ sap.ui.define([
                  this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent) {
                      var oSelectedDialogItem = oEvent.getParameter("item");
                      this._oDetail.material_code = oSelectedDialogItem.material_code;
-                     this._oDetail.material_code_fk = this._oDetail.material_code_fk || {};
-                     this._oDetail.material_code_fk.material_desc = oSelectedDialogItem.material_desc;
-                     this._oDetail.material_code_fk.material_spec = oSelectedDialogItem.material_spec;
+                     this._oDetail.material_desc = oSelectedDialogItem.material_desc;
+                     this._oDetail.material_spec = oSelectedDialogItem.material_spec;
+                     this._oDetail.base_uom_code = oSelectedDialogItem.base_uom_code;
                      oDetailModel.refresh();
                  }.bind(this));
              }
 
              this.oSearchMultiMaterialOrgDialog.open();
 
-             var aTokens = [new Token({key: oDetail.material_code, text: (oDetail.material_code_fk ? oDetail.material_code_fk.material_desc : "")})];
+             var aTokens = [new Token({key: oDetail.material_code, text: oDetail.material_desc})];
              this.oSearchMultiMaterialOrgDialog.setTokens(aTokens);
          }
 

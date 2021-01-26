@@ -586,6 +586,21 @@ sap.ui.define([
 		},
 
 		_initTableTemplates: function(){
+            var oQuarterView = new ComboBox({
+                    selectedKey: "{SupplierFin>fiscal_quarter}",
+                    editable: false
+            });
+            oQuarterView.bindItems({
+                path: 'util>/Code',
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
+                    new Filter("group_code", FilterOperator.EQ, 'DP_GS_DATE_QUARTER')
+                ],
+                template: new Item({
+                    key: "{util>code}",
+                    text: "{util>code_name}"
+                })
+            });
 			this.oReadOnlyTemplate = new ColumnListItem({
 				cells: [
 					new Text({
@@ -594,9 +609,7 @@ sap.ui.define([
 					new Text({
 						text: "{SupplierFin>fiscal_year}"
                     }),
-                    new Text({
-						text: "{SupplierFin>fiscal_quarter}"
-                    }),
+                    oQuarterView,
                     new Text({
                         text: {
                             path: 'SupplierFin>sales_amount',
@@ -655,22 +668,22 @@ sap.ui.define([
 				type: sap.m.ListType.Inactive
 			});
 
-            var oQuarter = new ComboBox({
+            var oQuarterEdit = new ComboBox({
                     selectedKey: "{SupplierFin>fiscal_quarter}",
                     editable: "{= ${SupplierFin>_row_state_} === 'C' }",
                     required : true
-                });
-                oQuarter.bindItems({
-                    path: 'util>/Code',
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
-                        new Filter("group_code", FilterOperator.EQ, 'DP_GS_DATE_QUARTER')
-                    ],
-                    template: new Item({
-                        key: "{util>code}",
-                        text: "{util>code_name}"
-                    })
-                });
+            });
+            oQuarterEdit.bindItems({
+                path: 'util>/Code',
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
+                    new Filter("group_code", FilterOperator.EQ, 'DP_GS_DATE_QUARTER')
+                ],
+                template: new Item({
+                    key: "{util>code}",
+                    text: "{util>code_name}"
+                })
+            });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
@@ -684,7 +697,7 @@ sap.ui.define([
                         editable: "{= ${SupplierFin>_row_state_} === 'C' }",
                         required: true
                     }),                    
-                    oQuarter,                                        
+                    oQuarterEdit,                                        
                     new Input({
                         value: {
                             path: 'SupplierFin>sales_amount'

@@ -9,15 +9,14 @@ using {cm.Hr_Employee as hrEmployee} from '../../cm/CM_HR_EMPLOYEE-model';
 /* Master Association */
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 using {
-    sp.Sc_Outcome_Code               as scOutcomeCode,
-    sp.Sc_Nego_Parent_Type_Code      as scNegoParentTypeCode,
-    sp.Sc_Nego_Type_Code             as scNegoTypeCode,
-    sp.Sc_Award_Type_Code_View       as scAwardTypeCodeView,
-    sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
+    sp.Sc_Outcome_Code                   as scOutcomeCode,
+    sp.Sc_Nego_Parent_Type_Code          as scNegoParentTypeCode,
+    sp.Sc_Nego_Type_Code                 as scNegoTypeCode,
+    sp.Sc_Award_Type_Code_View           as scAwardTypeCodeView,
+    sp.Sc_Nego_Prog_Status_Code_View     as scNegoProgStatusCodeView,
 } from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
-
 
 entity Sc_Nego_Headers {
     key tenant_id                       : String(5) not null @title : '테넌트ID';
@@ -35,12 +34,23 @@ entity Sc_Nego_Headers {
         nego_document_title             : String(300)        @title : '협상문서제목';
         nego_document_desc              : String(4000)       @title : '협상문서설명';
         nego_progress_status_code       : String(30)         @title : '협상진행상태코드';
+        nego_progress_status : Association to scNegoProgStatusCodeView
+                            on nego_progress_status.tenant_id       = $self.tenant_id
+                              and nego_progress_status.nego_progress_status_code = $self.nego_progress_status_code;
         award_progress_status_code      : String(25)         @title : '낙찰진행상태코드';
         //    award_date : Date   @title: '낙찰일자' ;
         reply_times                     : Integer            @title : '회신횟수';
         supplier_count                  : Integer            @title : '공급업체개수';
         nego_type_code                  : String(25)         @title : '협상유형코드';
+        nego_type      : Association to scNegoTypeCode
+                            on nego_type.tenant_id       = $self.tenant_id
+                              and nego_type.nego_type_code = $self.nego_type_code;
         //    purchasing_order_type_code : String(30)   @title: '구매주문유형코드' ;
+        outcome_code   : type of scOutcomeCode:outcome_code  @title : '아웃컴코드';
+        outcome        : Association to scOutcomeCode
+                            on outcome.tenant_id = $self.tenant_id 
+                              and outcome.nego_type_code = $self.nego_type_code
+                              and outcome.outcome_code = $self.outcome_code;
         negotiation_output_class_code   : String(100)        @title : '협상산출물분류코드';
         // buyer_empno                     : String(30)         @title : '구매담당자사번';
         buyer_empno                     : type of hrEmployee : employee_number @title : '구매담당자사번';
@@ -54,7 +64,6 @@ entity Sc_Nego_Headers {
         //    cancel_date : Date   @title: '취소일자' ;
         auto_rfq                        : String(1)          @title : 'Auto RFQ';
         items_count                     : Integer            @title : '품목수';
-        itesm_count                     : Integer            @title : '품목수-삭제예정'; //삭제예정
         negotiation_style_code          : String(30)         @title : '협상스타일코드';
         //    by_step_bidding_flag : String(1)   @title: '단계별입찰여부' ;
         //    round_bidding_flag : String(1)   @title: '회차입찰여부' ;
@@ -70,6 +79,9 @@ entity Sc_Nego_Headers {
         remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
         note_content                    : LargeBinary        @title : '노트내용';
         award_type_code                 : String(100)        @title : '낙찰유형코드';
+        award_type : Association to scAwardTypeCodeView
+                            on award_type.tenant_id       = $self.tenant_id
+                              and award_type.award_type_code = $self.award_type_code;
         target_amount_config_flag       : String(1)          @title : '목표금액설정여부';
         target_amount                   : Decimal(28, 2)     @title : '목표금액';
         //    award_supplier_option_mtd_cd : String(100)   @title: '낙찰공급업체선택방법코드' ;

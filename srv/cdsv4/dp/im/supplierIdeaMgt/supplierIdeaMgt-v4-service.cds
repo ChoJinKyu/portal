@@ -75,7 +75,18 @@ service SupplierIdeaMgtV4Service {
         idea_contents : String;
         attch_group_number : String;
         create_user_id : String;
-        update_user_id : String;
+        update_user_id : String;        
+        material_code : String;
+
+        
+        purchasing_uom_code : String;
+        currency_code : String;
+        vi_amount : String;
+        monthly_mtlmob_quantity : String;
+        monthly_purchasing_amount : String;
+        
+        annual_purchasing_amount : String;
+        perform_contents : String;
         crd_type_code : String;
     }
     action SaveIdeaProc (inputdata : IdeaIn ) returns IdeaStatusResult;

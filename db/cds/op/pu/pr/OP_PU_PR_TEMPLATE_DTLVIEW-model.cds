@@ -11,6 +11,7 @@ entity Pu_Pr_Template_DtlView {
         default_template_number : String(10)          @title: '기본템플릿번호' ;	
         approval_flag       : Boolean       not null  @title: '품의여부' ;	
         use_flag            : Boolean       not null  @title: '사용여부' ;	
-        ettstatus           : String(30)    not null  @title: 'ETT 상태' ;	
+        ettLabel            : String(30)    not null  @title: 'ETT Label' ;	
+        ettStatus           : String(30)    not null  @title: 'ETT 상태' ;	
         
 }	

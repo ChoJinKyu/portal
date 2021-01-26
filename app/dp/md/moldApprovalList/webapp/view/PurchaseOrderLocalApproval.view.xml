@@ -54,18 +54,18 @@
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="Report No"
+                        title="{I18N>/APPROVAL_NUMBER}"
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
-                        title="Requester"
+                        title="{I18N>/REQUESTOR}"
                         text="[{appMaster>/user_english_name}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
-                        title="Request Date"
+                        title="{I18N>/REQUEST_DATE}"
                         text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<Label text="{I18N>/STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
@@ -74,7 +74,7 @@
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
-                        <Title text="Process"/>
+                        <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox>
                         <sc:MicroProcessFlow>
@@ -140,13 +140,13 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-                <Button type="Transparent" text="Edit"           press=".onPageEditButtonPress"          visible="{mode>/btnEditFlag}" />
-				<Button type="Transparent" text="Cancel"         press=".onPageCancelEditButtonPress"    visible="{mode>/btnCancelFlag}" />
-				<Button type="Transparent" text="Draft"          press=".onPageDraftButtonPress"         visible="{mode>/btnDraftFlag}" />
-				<Button type="Transparent" text="Preview"        press=".onPagePreviewButtonPress" />
+                <Button type="Transparent" text="{I18N>/EDIT}"           press=".onPageEditButtonPress"          visible="{mode>/btnEditFlag}" />
+				<Button type="Transparent" text="{I18N>/CANCEL}"         press=".onPageCancelEditButtonPress"    visible="{mode>/btnCancelFlag}" />
+				<Button type="Transparent" text="{I18N>/DRAFT}"          press=".onPageDraftButtonPress"         visible="{mode>/btnDraftFlag}" />
+				<Button type="Transparent" text="{I18N>/PREVIEW}"        press=".onPagePreviewButtonPress" />
 				<Button type="Transparent" text="PO Sheet"       press=".onPagePOSheetButtonPress" />
 				<Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" visible="{mode>/btnRequestCancelFlag}" />
-				<Button type="Emphasized"  text="Request"        press=".onPageRequestButtonPress"       visible="{mode>/btnRequestFlag}"/>
+				<Button type="Emphasized"  text="{I18N>/REQUEST}"        press=".onPageRequestButtonPress"       visible="{mode>/btnRequestFlag}"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

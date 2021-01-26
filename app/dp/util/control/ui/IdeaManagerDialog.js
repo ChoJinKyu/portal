@@ -11,8 +11,10 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input",
-    "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
+    "ext/lib/control/m/CodeComboBox",
+    "sap/m/SearchField",
+    "ext/lib/model/ManagedModel"
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, CodeComboBox, SearchField, ManagedModel) {
     "use strict";
 
     var IdeaManagerDialog = Parent.extend("dp.util.control.ui.IdeaManagerDialog", {
@@ -20,7 +22,7 @@ sap.ui.define([
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "55em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "company_code" },
+                keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
                 textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
             }
         },
@@ -28,9 +30,46 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oCompanyCode = new SearchField({ placeholder: this.getModel("I18N").getText("/COMPANY_CODE")});
-            this.oBizunitCode = new SearchField({ placeholder: this.getModel("I18N").getText("/BIZUNIT_CODE")});
-            this.oLocalUserName = new SearchField({ placeholder: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")});
+
+            var that = this;
+
+            this.oCompanyCode = new CodeComboBox({ 
+                showSecondaryValues: true,
+                useEmpty: true,
+                keyField: 'company_code',
+                textField: 'company_name',
+                additionalText:"company_code",
+                items: {
+                    path: '/',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
+                    ],
+                    serviceName: 'cm.util.OrgService',
+                    entityName: 'Company'
+                },
+                required: true
+            });
+
+            this.oBizunitCode = new CodeComboBox({ 
+                showSecondaryValues:true,
+                useEmpty:true,
+                keyField: 'bizunit_code',
+                textField: 'bizunit_name',
+                additionalText:"bizunit_code",
+                items: {
+                    path: '/',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
+                    ],
+                    serviceName: 'cm.util.OrgService',
+                    entityName: 'Unit'
+                },
+                required: true
+            });
+
+            this.oLocalUserName = new SearchField({
+                 placeholder: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")
+            });
             
             this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
             this.oBizunitCode.attachEvent("change", this.loadData.bind(this));
@@ -86,13 +125,19 @@ sap.ui.define([
             ];
         },
 
-        loadData: function(){
-            var sCompanyCode = this.oCompanyCode.getValue(),
-                sBizunitCode = this.oBizunitCode.getValue(),
+        loadData: function(oThis){
+
+            var that = this,
+                sCompanyCode = this.oCompanyCode.mProperties.selectedKey,
+                sBizunitCode = this.oBizunitCode.mProperties.selectedKey,
                 sLocalUserName = this.oLocalUserName.getValue(),
                 aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ];
+
+                console.log(sCompanyCode);
+                console.log(sBizunitCode);
+                console.log(sLocalUserName);
 
                 if(sCompanyCode){
                     aFilters.push(new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));
@@ -115,6 +160,8 @@ sap.ui.define([
                 success: function(oData){
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
+                    this.oDialog.setBusy(false);
+      
                 }.bind(this)
             });
         }

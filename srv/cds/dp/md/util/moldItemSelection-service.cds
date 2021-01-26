@@ -10,7 +10,19 @@ using { cm as cmDept } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using { dp as moldSche } from '../../../../../db/cds/dp/md/DP_MD_SCHEDULE-model';
 
 @path: '/dp.util.MoldItemSelectionService'
-service MoldItemSelectionService {
+service MoldItemSelectionService { 
+
+     // not in 대상 조회 
+    view moldIdView as 
+      select 
+        key m2.tenant_id
+        , key m2.approval_type_code 
+        , dtl.mold_id 
+      from  approvalMst.Approval_Mst m2  
+      join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
+      and m2.tenant_id = dtl.tenant_id
+    ;
+
     /** 
       // 팝업 조회 용 
      */

@@ -338,24 +338,24 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval : function(){             
-            var oRows = this.byId("psTable").getRows();
-            oRows.forEach(function(oCell, idx){
-               oCell.mAggregations.cells.forEach(function(item, jdx){ 
-                    if(jdx == 7 || jdx == 8){
-                         item.removeStyleClass("readonlyField");
-                    }
-                });
-            });
+            // var oRows = this.byId("psTable").getRows();
+            // oRows.forEach(function(oCell, idx){
+            //    oCell.mAggregations.cells.forEach(function(item, jdx){ 
+            //         if(jdx == 7 || jdx == 8){
+            //              item.removeStyleClass("readonlyField");
+            //         }
+            //     });
+            // });
          },
         _toShowModeEachApproval : function(){ 
-            var oRows = this.byId("psTable").getRows();
-            oRows.forEach(function(oCell, idx){
-               oCell.mAggregations.cells.forEach(function(item, jdx){ 
-                    if(jdx == 7 || jdx == 8){
-                         item.addStyleClass("readonlyField");
-                    }
-                });
-            });
+            // var oRows = this.byId("psTable").getRows();
+            // oRows.forEach(function(oCell, idx){
+            //    oCell.mAggregations.cells.forEach(function(item, jdx){ 
+            //         if(jdx == 7 || jdx == 8){
+            //              item.addStyleClass("readonlyField");
+            //         }
+            //     });
+            // });
             // this.byId("currency").addStyleClass("readonlyField");
             // this.byId("target_amount").addStyleClass("readonlyField");
          } ,

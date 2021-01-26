@@ -283,7 +283,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         }
 
         // 04. Tempory Table Drop
-        this.destoryTable("change", isDisplaySql);
+        this.destoryTable("approval", isDisplaySql);
 
         // 05. Return Value : Processing
         for (String key : resultMap.keySet()) { 

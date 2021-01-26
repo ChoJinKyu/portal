@@ -120,17 +120,17 @@ sap.ui.define([
         },
 
         _toEditModeEachApproval: function(){
-            this.getView().byId("advanced").removeStyleClass("readonlyField");
-            this.getView().byId("part").removeStyleClass("readonlyField");
-            this.getView().byId("residual").removeStyleClass("readonlyField");
+            // this.getView().byId("advanced").removeStyleClass("readonlyField");
+            // this.getView().byId("part").removeStyleClass("readonlyField");
+            // this.getView().byId("residual").removeStyleClass("readonlyField");
 
             //this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
 		},
 
 		_toShowModeEachApproval: function(){
-            this.getView().byId("advanced").addStyleClass("readonlyField");
-            this.getView().byId("part").addStyleClass("readonlyField");
-            this.getView().byId("residual").addStyleClass("readonlyField");
+            // this.getView().byId("advanced").addStyleClass("readonlyField");
+            // this.getView().byId("part").addStyleClass("readonlyField");
+            // this.getView().byId("residual").addStyleClass("readonlyField");
             
             //this.getView().byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
 		},

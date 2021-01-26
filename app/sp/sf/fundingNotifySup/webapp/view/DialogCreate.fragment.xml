@@ -49,13 +49,19 @@
                         </VBox>
                         <VBox>
                             <Label text="투자 유형 :" required="true"/>
-                            <ComboBox id="investmentType" selectedKey="" width="100%">
-                                <core:Item key="a" text="신규설비투자"/>
-                                <core:Item key="b" text="기존설비 대체"/>
-                                <core:Item key="c" text="품질향상"/>
-                                <core:Item key="d" text="생산성향상"/>
-                                <core:Item key="e" text="신모델"/>
-                                <core:Item key="f" text="동반진출"/>
+                            <ComboBox id="investmentType"
+                                width="100%"
+                                items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_INVESTMENT_TYPE_CODE'}
+                                            ]
+                                        }"
+
+                                selectedKey="{applicationSup>/popUpInvestPlanMst/investment_type_code}"
+                            >
+                                <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12"/>
@@ -63,9 +69,9 @@
                         </VBox>
                         <VBox>
                             <Label text="과제명 :" required="true"/>
-                            <Input editable="true"
+                            <Input 
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/investment_project_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 30
@@ -77,14 +83,10 @@
                         </VBox>
                         <VBox>
                             <Label text="투자기간 :" required="true"/>
-                            <DatePicker editable="true"
+                            <DatePicker 
                                 displayFormat='yyyy-MM'
-                                value="{
-                                    path:'',
-                                    formatOptions: {
-                                        UTC: true, displayFormat: 'yyyy-MM'
-                                    }
-                                }"/>
+                                valueFormat ="yyyy-MM"
+                                value="{applicationSup>/popUpInvestPlanMst/investment_yyyymm}"/>
                             <!-- <DatePicker editable="true"
                                 value="{
                                     path:'',
@@ -100,25 +102,20 @@
                         <VBox>
                             <Label text="신청금액(원) :" required="true"/>
                             <Input editable="{midObjectView>/editMode}"
-                                value="{
-                                    path: '',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        maxLength: 30
-                                    }
-                                }"/>
+                                    value="{applicationSup>/popUpInvestPlanMst/appl_amount}"
+                                    type="Number"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="투자 배경 및 목적 :" required="true"/>
-                            <Input editable="{midObjectView>/editMode}"
+                            <Input 
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/investment_purpose',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 30
+                                        maxLength: 300
                                     }
                                 }"/>
                             <layoutData>
@@ -127,12 +124,12 @@
                         </VBox>
                         <VBox>
                             <Label text="적용모델 :" required="true"/>
-                            <Input editable="{midObjectView>/editMode}"
+                            <Input 
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/apply_model_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 30
+                                        maxLength: 300
                                     }
                                 }"/>
                             <layoutData>
@@ -142,25 +139,20 @@
                         <VBox>
                             <Label text="년간 예상물동 :" required="true"/>
                             <Input editable="{midObjectView>/editMode}"
-                                value="{
-                                    path: '',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        maxLength: 30
-                                    }
-                                }"/>
+                                    value="{applicationSup>/popUpInvestPlanMst/annual_mtlmob_quantity}"
+                                    type="Number"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="투자내역 :" required="true"/>
-                            <Input editable="{midObjectView>/editMode}"
+                            <Input 
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/investment_desc',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 30
+                                        maxLength: 300
                                     }
                                 }"/>
                             <layoutData>
@@ -169,14 +161,10 @@
                         </VBox>
                         <VBox>
                             <Label text="집행시기 :" required="true"/>
-                            <DatePicker editable="true"
+                            <DatePicker 
                                 displayFormat='yyyy-MM'
-                                value="{
-                                    path:'',
-                                    formatOptions: {
-                                        UTC: true, displayFormat: 'yyyy-MM'
-                                    }
-                                }"/>
+                                valueFormat ="yyyy-MM"
+                                value="{applicationSup>/popUpInvestPlanMst/execution_yyyymm}"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
@@ -184,12 +172,12 @@
                         
                         <VBox>
                             <Label text="투자효과 :" required="true"/>
-                            <Input editable="{midObjectView>/editMode}"
+                            <Input 
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/investment_effect',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 30
+                                        maxLength: 300
                                     }
                                 }"/>
                             <layoutData>
@@ -199,12 +187,12 @@
                         
                         <VBox>
                             <Label text="투자장소 :" required="true"/>
-                            <Input editable="{midObjectView>/editMode}"
+                            <Input 
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/investment_place',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 30
+                                        maxLength: 300
                                     }
                                 }"/>
                             <layoutData>
@@ -215,55 +203,50 @@
                 </form:SimpleForm>
             </VBox>
             <VBox>
-                <Table id="investmentDtl"
-                    sticky="HeaderToolbar,ColumnHeaders"
-                    inset="false"
-                    mode="MultiSelect"
-                    class="sapFDynamicPageAlignContent"
-                    items="{localModel>/items}"
-                    width="auto">
-                    <headerToolbar>
-                        <OverflowToolbar>
-                            <ToolbarSpacer/>
-                            <Button id="dtlAddRow" text="추가" type="Transparent" press=".onInvestmentDtlAddButtonPress" />
-                            <Button id="dtlDeleteRow" text="삭제" type="Transparent" press=".onInvestmentDtlDeleteButtonPress" />
-                        </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column>
-                            <Text text="품목" />
-                        </Column>
-                        <Column>
-                            <Text text="구입단가(원)" required="true" />
-                        </Column>
-                        <Column>
-                            <Text text="구입대수"  />
-                        </Column>
-                        <Column>
-                            <Text text="구입금액(원)" />
-                        </Column>
-                    </columns>
-                    <items>
-                        <ColumnListItem>
-                            <cells>
-                                <Input value="{localModel>itemCode1}"/>
-                                <Input value="{localModel>itemCode2}"/>
-                                <Input value="{localModel>itemCode3}" change=".onTest"/>
-                                <Input value="{localModel>itemCode4}"/>
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
-                <HBox alignItems="Center" justifyContent="End">
+                <HBox>
+                    <Table id="investmentDtl"
+                        sticky="HeaderToolbar,ColumnHeaders"
+                        inset="false"
+                        mode="MultiSelect"
+                        class="sapFDynamicPageAlignContent"
+                        items="{applicationSup>/popUpInvestPlanDtl}"
+                        width="auto">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <ToolbarSpacer/>
+                                <Button id="dtlAddRow" text="추가" type="Transparent" press=".onInvestmentDtlAddButtonPress" />
+                                <Button id="dtlDeleteRow" text="삭제" type="Transparent" press=".onInvestmentDtlDeleteButtonPress" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column>
+                                <Text text="품목" />
+                            </Column>
+                            <Column>
+                                <Text text="구입단가(원)" required="true" />
+                            </Column>
+                            <Column>
+                                <Text text="구입대수"  />
+                            </Column>
+                            <Column>
+                                <Text text="구입금액(원)" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Input value="{applicationSup>investment_item_name}"/>
+                                    <Input value="{applicationSup>investment_item_purchasing_price}" change=".onPurchasingAtm"/>
+                                    <Input value="{applicationSup>investment_item_purchasing_qty}" change=".onPurchasingAtm"/>
+                                    <Input value="{applicationSup>investment_item_purchasing_amt}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </HBox>
+                <HBox class="investmentItemPurchasingAmtSum" alignItems="Center" justifyContent="End">
                     <Label text="총 구입금액 : "/>
-                    <Input editable="{midObjectView>/editMode}"
-                        value="{
-                            path: '',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        }"/>
+                    <Text id ="investment_item_purchasing_amt_sum" class="inputPurchasingAmt" />
                 </HBox>
             </VBox>
         </content>

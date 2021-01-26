@@ -154,10 +154,7 @@
 
                             <table:columns>
                                 <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{
-                                                path:'detailModel>/tdtl/0/pr_template_number',
-                                                formatter:'.dTtFormatter' 
-                                            }"/>
+                                    <Label text="{I18N>/ITEM_NUMBER}"/>
                                     <table:template>
                                         <Text id="t_model" text="{detailModel>pr_item_number}"/>
                                     </table:template>

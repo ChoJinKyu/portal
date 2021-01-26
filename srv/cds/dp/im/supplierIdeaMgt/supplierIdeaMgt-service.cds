@@ -167,7 +167,15 @@ service SupplierIdeaMgtService {
             isi.current_proposal_contents,
             isi.change_proposal_contents,
             isi.idea_contents,
-            isi.attch_group_number
+            isi.attch_group_number,
+            isi.material_code,
+            isi.purchasing_uom_code,
+            isi.monthly_mtlmob_quantity,
+            isi.currency_code,
+            isi.vi_amount,
+            isi.monthly_purchasing_amount,
+            isi.annual_purchasing_amount,
+            isi.perform_contents
         from Idea.Im_Supplier_Idea   isi 
         inner join Supplier.Sm_Supplier_Mst  ssm 
         on ssm.tenant_id = isi.tenant_id

@@ -37,70 +37,75 @@ sap.ui.define([
 
             var oView = this.getView();
 
-            //DetailMatched
+            // I18N 모델 
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            i18nModel = this.getModel("I18N");
+
+
+            //DetailView Model
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0
+            });
+            this.setModel(oViewModel, "DetailView");
+
+            
+            //MainView 넘어온 데이터 받기 -> DetailMatched
             var oOwnerComponent = this.getOwnerComponent();
             this.oRouter = oOwnerComponent.getRouter();
             this.oRouter.getRoute("detail").attachPatternMatched(this._onDetailMatched, this);
 
-            // 로그인 세션 작업완료시 수정
-              this.tenant_id = "L2100";
-              this.company_code = "LGCKR";
+            // 로그인 세션 작업완료시 수정해야함!
+            this.tenant_id = "L2100";
+            this.company_code = "LGCKR";    
+            this.language_cd ="KO";                    
+            this.iNum = 1;
 
-              var aSearchFilters = [];                
+            // 자주쓸것같은 Filter
+            var aSearchFilters = [];                
                 aSearchFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
                 aSearchFilters.push(new Filter("company_code", 'EQ', this.company_code));        
 
-
+            
             //this.setModel(oViewModel, "ManagerView");
-            // 임시 테이블 insert , delete 연습
-
-            this.getView().setModel(new JSONModel(),"testModel");
-	        this.getView().getModel("testModel").setData({
-	           
-	           "table": [{
-	              "user_local_name" : "1",
-                  "deppartment_local_name" : "첫번째 데이터",
-                  "evaluation_execute_role_code" : "1"
-	           }]
-               
+            this.getView().setModel(new JSONModel(),"supEvalSetupModel");
+	        this.getView().getModel("supEvalSetupModel").setData({	           
+	           "table": []               
             });
            
-            this.getView().setModel(new JSONModel(),"testModel2");
-	        this.getView().getModel("testModel2").setData({
-	           
-	           "table": [{
-                    "evaluation_type_code" : "Eval001",
-                    "evaluation_type_name" : "실적평가",
-                    "evaluation_type_distrb_score_rate"  : "50",
-                    "use_flag" : "Y"           
-               }]
+            //this.getView().setModel(new ManagedListModel(),"testModel2");
+	        // this.getView().getModel("testModel2").setData({	           
+	        //    "table": [{
+            //         "evaluation_type_code" : "Eval001",
+            //         "evaluation_type_name" : "실적평가",
+            //         "evaluation_type_distrb_score_rate"  : "50",
+            //         "use_flag" : "Y"           
+            //    }]
                
-            });
+            // });
 
-             this.getView().setModel(new JSONModel(),"testModel3");
-	        this.getView().getModel("testModel3").setData({
+            //  this.getView().setModel(new ManagedListModel(),"testModel3");
+	        // this.getView().getModel("testModel3").setData({
 	           
-	           "table": [
-                   {
-                    "qttive_item_code" : "1",
-                    "qttive_item_name" : "1",
-                    "qttive_item_uom_code" : "1",
-                    "qttive_item_measure_mode_code" : "1",
-                    "qttive_item_desc" : "1",
-                    "sort_sequence" : "1"
-                    }
-               ]
+	        //    "table": [
+            //        {
+            //         "qttive_item_code" : "1",
+            //         "qttive_item_name" : "1",
+            //         "qttive_item_uom_code" : "1",
+            //         "qttive_item_measure_mode_code" : "1",
+            //         "qttive_item_desc" : "1",
+            //         "sort_sequence" : "1"
+            //         }
+            //    ]
                
-            });
-            
-            // 나중에 지우기 자동컬럼생성
-            this.iNum = 4;
+            // });
+                        
 
             // search filed init
-
             this.oSF = oView.byId("searchField");
-
    
+            // copy 해온 부분 
 
             //signal 테이블 edit/show 모드 설정
             // this._initTableTemplates();
@@ -118,62 +123,69 @@ sap.ui.define([
 
             //주기 multicombobox
             // @ts-ignore
-            this.cycle_multibox = new sap.m.MultiComboBox({
-                width: "100%",
-                selectedKeys: "{=${monitoring_cycle_code}.split(';')}",
-                placeholder: "{I18N>/CYCLE}",
-                items: {
-                    path: '/TaskMonitoringCycleCodeView',
-                    // @ts-ignore
-                    template: new sap.ui.core.ListItem({
-                        key: "{code}",
-                        text: "{code_name}"
-                    })
-                }
-            });
+            // this.cycle_multibox = new sap.m.MultiComboBox({
+            //     width: "100%",
+            //     selectedKeys: "{=${monitoring_cycle_code}.split(';')}",
+            //     placeholder: "{I18N>/CYCLE}",
+            //     items: {
+            //         path: '/TaskMonitoringCycleCodeView',
+            //         // @ts-ignore
+            //         template: new sap.ui.core.ListItem({
+            //             key: "{code}",
+            //             text: "{code_name}"
+            //         })
+            //     }
+            // });
 
            
-            // I18N 모델 
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-            i18nModel = this.getModel("I18N");
 
 
         },
-
 
         /**
         * Manager Section 행 추가
         * @public
-        */               
-
-        onManagaerAdd : function(oEvent){
-            
-
-            var oModel = this.getView().getModel("testModel").getData();	
-			var oData = {
-	             user_local_name : this.iNum,
-                  deppartment_local_name : this.iNum+"번째 데이터",
-                  evaluation_execute_role_code : this.iNum++
-	           };
-			
-			
-			oModel.table.push(oData);
-			
-			//this.getView().getModel("data").setProperty("/Employee",oViewData);
-			this.getView().getModel("testModel").setData(oModel);
-
-        },
+        **/            
+        onManagerAdd : function(oEvent){            
+            var oModel = this.getModel("supEvalSetupModel").getData();
+			oModel.table.push({
+	           "tenant_id": this.tenant_id,
+                "company_code": this.company_code,
+                "org_type_code":  this.org_type_code,
+                "org_code":this.org_code,
+                "evaluation_operation_unit_code": "",
+                "evaluation_op_unt_person_empno": "",
+                "user_local_name": "",
+                "department_local_name": "",
+                "evaluation_execute_role_code": this.iNum++	
+            });
+            this.getView().getModel("supEvalSetupModel").setData(oModel);
+                
+            // // "ext/lib/model/ManagedListModel" 쓸떄
+            // 	var oModel = this.getModel("supEvalSetupModel");
+            // 	oModel.addRecord({
+            //         "tenant_id": this.tenant_id,
+            //         "company_code": this.company_code,
+            //         "org_type_code":  this.org_type_code,
+            //         "org_code":this.org_code,
+            //         "evaluation_operation_unit_code": "",
+            //         "evaluation_op_unt_person_empno": "",
+            //         "user_local_name": "",
+            //         "department_local_name": "",
+            //         "evaluation_execute_role_code": ""
+            //     }, "/managerListView", 0);
+            // 	this.validator.clearValueState(this.byId("managerTable"));
+            //  	this.byId("managerTable").clearSelection();		
+            },
 
 
         /**
         * Manager Section 행 삭제
         * @public
         */
+        onManagerDelete : function(oEvent){
 
-        onManagaerDelete : function(oEvent){
-
-            // 1. 연습 맨밑에꺼 하나씩삭제
+            // 1. 맨밑에꺼 하나씩 차례대로
             // var oModel = this.getView().getModel("testModel").getData();	
 
             // var iLength = oModel.table.length;
@@ -213,7 +225,7 @@ sap.ui.define([
             // 3. copy and paste
 
             var oTable = this.byId("managerTable"),
-                oModel = this.getModel("testModel"),
+                oModel = this.getModel("supEvalSetupModel"),
                 oView = this.getView(),
                 data = {},
                 oSelected = [],
@@ -228,9 +240,7 @@ sap.ui.define([
             var that = this;
             var sendData = {}, aInputData=[];
 
-
-            // aItems.forEach(function(oItem){
-                
+            // aItems.forEach(function(oItem){                
                 // if(oItem.getBindingContext("list").getProperty("")=="")
                 // aIndices.push(oModel.getData().table[oItem]);
 
@@ -242,11 +252,9 @@ sap.ui.define([
                 //     } ;    
                 //  aInputData.push(oDeletingKey);
 
-
-
             // });
 
-            // sendData.inputData = aInputData;
+            sendData.inputData = aInputData;
 
             console.log("delPrList >>>>", aIndices);
 
@@ -273,10 +281,9 @@ sap.ui.define([
                         //     }
                         // );
 
-                        oModel.setData(oModel.getData());
+                        //oModel.setData(oModel.getData(),);
 
-                        oView.byId("managerTable").clearSelection();
-                        
+                        oView.byId("managerTable").clearSelection();                        
 
                         } else if (sButton === MessageBox.Action.CANCEL) { 
 
@@ -290,7 +297,13 @@ sap.ui.define([
                 MessageBox.error("선택된 데이터가 없습니다.");
             }
 
-              
+            // var table = this.byId("managerTable"),
+            // model = this.getModel("supEvalSetupService");
+            
+            // table.getSelectedIndices().reverse().forEach(function (idx) {
+            //     model.markRemoved(idx);
+            // });
+			// this.byId("managerTable").clearSelection();             
 
 
         },
@@ -307,7 +320,6 @@ sap.ui.define([
 				MessageToast.show("Search is fired!");
 			}
 		},
-
         onSuggest: function (event) {
 			var sValue = event.getParameter("suggestValue"),
 				aFilters = [];
@@ -337,7 +349,7 @@ sap.ui.define([
             var that = this;
             var sPreviousHash = History.getInstance().getPreviousHash();
 
-            if (that.getModel("testModel").getProperty("/isEditMode") === false) {
+            if (that.getModel("supEvalSetupModel").getProperty("/isEditMode") === false) {
                 if (sPreviousHash !== undefined) {
                     // eslint-disable-next-line sap-no-history-manipulation
                     history.go(-1);
@@ -358,10 +370,11 @@ sap.ui.define([
                             } else {
                                 that.getRouter().navTo("main", {}, true);
                             }
-                            //법인, 사업본부 아이템 remove
-                            that.removeFormattedTextValue();
-                            that.removeRichTextEditorValue();
-                            that.getView().getModel().refresh(true);
+                            // //법인, 사업본부 아이템 remove
+                            // that.removeFormattedTextValue();
+                            // that.removeRichTextEditorValue();
+                             that.getView().getModel().refresh(true);
+                             that.getView().getModel("DetailView").refresh(true);
                         }
 
                     }
@@ -369,6 +382,7 @@ sap.ui.define([
 
             }
         },
+
 
         /**
          * footer Cancel 버튼 기능
@@ -379,41 +393,109 @@ sap.ui.define([
         },
 
 
+        /**
+         * Employee Code Dilog
+         * 
+         */
+        onInputWithEmployeeValuePress: function(){
+            this.byId("employeeDialog").open();
+        },
+        onEmployeeDialogApplyPress: function(oEvent){
+            this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
+            this.byId("test").setValue(oEvent.getParameter("item").user_local_name);
+
+        },
+
+        
+          /**
+         * 
+         * 담당자 Person 콤보박스 및 변경에따른 부서 binding
+         * @public
+         */
+        onChangePerson: function (oEvent) {
+           
+             var oSelectedkey = oEvent.getSource().getSelectedKey();
+             var oSelected = oEvent.getSource().getSelectedItem().getBindingContext();
+
+             var oModel = oSelected.getModel();
+             var sValue = oModel.getProperty(oSelected.getPath()).department_local_name;
+      
+           // var oTable = oEvent.getSource().getSelectedItem().getBindingContext().getModel();
+
+            var oTable = this.byId("managerTable");
+
+            var oTableCon = oEvent.getSource().getParent().getParent().getRowBindingContext();
+
+            //oEvent.getSource().oParent.oParent.getRowBindingContext();
+            
+            oTableCon.getModel().setProperty(oTableCon.getPath()+"/department_local_name",sValue)
+            
+            //oTable.setProperty("department_local_name",sDepartment);
+            
+           // oTable.setData(oTable);
+
+
+            // if (oSelectedkey === "") {
+            //     oSelectedkey = this.tenant_id;
+            // }
+            // // var oSelectedkey = sap.ui.getCore().byId("tenant_edit_combo").getSelectedKey();
+            // var company_combo = sap.ui.getCore().byId("company_edit_combo");                            //법인  
+            // // @ts-ignore
+            // var bizunit_combo = sap.ui.getCore().byId("bizunit_edit_combo");                          //사업본부
+            // // var oCompanyBindingComboBox = company_combo.getBinding("items");                       //법인 items
+            // var aFiltersComboBox = [];
+            // // @ts-ignore
+            // var oFilterComboBox = new sap.ui.model.Filter("tenant_id", "EQ", oSelectedkey);
+            // aFiltersComboBox.push(oFilterComboBox);
+            // // oCompanyBindingComboBox.filter(aFiltersComboBox);
+            // var companySorter = new sap.ui.model.Sorter("company_name", false);        //sort Ascending
+            // var bizunitSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+
+            // company_combo.bindAggregation("items", {
+            //     path: "/OrgCompanyView",
+            //     sorter: companySorter,
+            //     filters: aFiltersComboBox,
+            //     // @ts-ignore
+            //     template: new sap.ui.core.Item({
+            //         key: "{company_code}",
+            //         text: "{company_name}"
+            //     })
+            // });
+            // bizunit_combo.bindAggregation("items", {
+            //     path: "/OrgUnitView",
+            //     sorter: bizunitSorter,
+            //     filters: aFiltersComboBox,
+            //     // @ts-ignore
+            //     template: new sap.ui.core.Item({
+            //         key: "{bizunit_code}",
+            //         text: "{bizunit_name}"
+            //     })
+            // });
+        },
+        
         _onDetailMatched: function (oEvent) {
             var oView = this.getView();
-            oView.getModel().refresh(true);
 
-            // this.scenario_number = oEvent.getParameter("arguments")["scenario_number"];
-            this.tenant_id = oEvent.getParameter("arguments")["tenant_id"];
+            oView.getModel().refresh(true);
+            oView.setBusy(true);
+
+            this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
+            this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
             this.company_code = oEvent.getParameter("arguments")["company_code"],            
             this.org_code = oEvent.getParameter("arguments")["org_code"];
             this.org_type_code = oEvent.getParameter("arguments")["org_type_code"];
+            this.evaluation_operation_unit_code = oEvent.getParameter("arguments")["evaluation_operation_unit_code"];
+            this.evaluation_operation_unit_name = oEvent.getParameter("arguments")["evaluation_operation_unit_name"],            
+            this.use_flag = oEvent.getParameter("arguments")["use_flag"];                                     
 
+       
 
-                            //Vendor Pool List
-            var oVPComboFilters = [];                
-            oVPComboFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
-            oVPComboFilters.push(new Filter("company_code", 'EQ', this.company_code));
-            oVPComboFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code)); 
-            oVPComboFilters.push(new Filter("org_code", 'EQ', this.org_code));        
-
-            var oVPCombo = this.byId("oVPCombo");
-            oVPCombo.bindItems({
-                path : "/OpUnitMst", 
-                filters: oVPComboFilters ,                   
-                template : new Item({
-                    key:"{evaluation_operation_unit_name}",
-                    text:"{evaluation_operation_unit_name}"
-                    }) 
-                                        
-            });
-        //     oView.getModel().read("/OpUnitMst", {
-        //         success: function (oData) {
-               
-        //         }.bind(this),
-        //         error: function () {}
-        //     });
-        // },
+            //     oView.getModel().read("/OpUnitView", {
+            //         success: function (oData) {                
+            //         }.bind(this),
+            //         error: function () {}
+            //     });
+            // },
       
 
             // senario_number max view
@@ -426,53 +508,214 @@ sap.ui.define([
       
             
 
-            //필수입력항목 검사 결과 초기화
-        //     this.validator.clearValueState(sap.ui.getCore().byId("simpleform_edit"));
+            // 필수입력항목 검사 결과 초기화
+            // this.validator.clearValueState(sap.ui.getCore().byId("simpleform_edit"));
+
+                       
+            // Create 버튼 눌렀을때
+            if (this.scenario_number === "New") {
+                this.getModel("DetailView").setProperty("/isEditMode", true);
+                this.getModel("DetailView").setProperty("/isCreate", true);
+
+                    
+            //Vendor Pool List
+            // var oVPComboFilters = [];                
+            // oVPComboFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
+            // oVPComboFilters.push(new Filter("company_code", 'EQ', this.company_code));
+            // oVPComboFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code)); 
+            // oVPComboFilters.push(new Filter("org_code", 'EQ', this.org_code));        
+
+            // var oVPCombo = this.byId("searchMultiComboCode");
+            // oVPCombo.bindItems({
+            //     path : "/OpUnitView", 
+            //     filters: oVPComboFilters ,                   
+            //     template : new Item({
+            //         key:"{evaluation_operation_unit_name}",
+            //         text:"{evaluation_operation_unit_name}"
+            //         }) 
+                                        
+            // });
+            //oVPCombo.setSelectedKey("all");
+            //  oVPCombo.setSelectedKeys("공사");
 
 
-        //     if (this.scenario_number === "New") {
-        //         this.getModel("DetailView").setProperty("/isEditMode", true);
-        //         this.getModel("DetailView").setProperty("/isCreate", true);
-        //         oView.bindElement("/TaskMonitoringMasterView");
+            // oView.bindElement("/TaskMonitoringMasterView");
 
-        //         this._toEditMode();
+            // this._toEditMode();
 
-        //     } else {
-        //         this.getModel("DetailView").setProperty("/isEditMode", false);
-        //         this.getModel("DetailView").setProperty("/isCreate", false);
-        //         var scenario_number = this.scenario_number.split('l');
-        //         this.bindPath = "/TaskMonitoringMasterView(scenario_number=" + this.scenario_number + ",tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',bizunit_code='" + this.bizunit_code + "')";
-        //         oView.bindElement(this.bindPath);
-        //         var detail_info_Path = "/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + ")";
-        //         var monitoringVBox = this.byId("monitoringVBox");
-        //         var scenarioVBox = this.byId("scenarioVBox");
-        //         var systemVBox = this.byId("systemVBox");
-        //         monitoringVBox.bindElement(detail_info_Path);
-        //         scenarioVBox.bindElement(detail_info_Path);
-        //         systemVBox.bindElement(detail_info_Path);
+            } else { // Detail 일때
+                this.getModel("DetailView").setProperty("/isEditMode", false);
+                this.getModel("DetailView").setProperty("/isCreate", false);              
+
+ 
+                // 키값 파라미터가 모두있고 단건일때 이렇게도 쓰인다.
+                // var s = oView.getModel().crateKey("/OpUnitView",{
+                //     tenant_id : this.tenant_id,
+                //     ...
+                // })
+
+                // 키값 이외에 임의의 필터를 줄때                
+                var OpUnitViewFilters = [];      
+                OpUnitViewFilters.push(new Filter("language_cd", 'EQ', this.language_cd));
+                OpUnitViewFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
+                OpUnitViewFilters.push(new Filter("company_code", 'EQ', this.company_code));     
+                OpUnitViewFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code));
+                OpUnitViewFilters.push(new Filter("org_code", 'EQ', this.org_code));     
+                OpUnitViewFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
+                      
+                oView.getModel().read("/OpUnitView", {
+                    filters: OpUnitViewFilters,
+                    success: function (oData) {
+                        // 단건이면 oData가 Object , 다건이면 Array -> oData.value or oData.results[i].value
+                        // filter하면 array
+
+                        if(oData.results[0]!=null){
+                        var oValues = oData.results[0];
+                        var oOperationUnit2 =  this.getModel("DetailView");
+                        
+                        //운영단위코드 evaluation_operation_unit_code
+                        oOperationUnit2.setProperty("/evaluation_operation_unit_code", oValues.evaluation_operation_unit_code);
+
+                        //운영단위명 evaluation_operation_unit_name
+                        oOperationUnit2.setProperty("/evaluation_operation_unit_name", oValues.evaluation_operation_unit_name);
+
+                        //배점설계여부 distrb_score_eng_flag
+                        oOperationUnit2.setProperty("/distrb_score_eng_flag", oValues.distrb_score_eng_flag);
+
+                        //발의품의여부 evaluation_request_approval_flag
+                        oOperationUnit2.setProperty("/evaluation_request_approval_flag", oValues.evaluation_request_approval_flag);
+                        
+                        //운영전략수립여부 operation_plan_flag
+                        oOperationUnit2.setProperty("/operation_plan_flag", oValues.operation_plan_flag);
+
+                        //사용여부 use_flag
+                        oOperationUnit2.setProperty("/use_flag", oValues.use_flag);  
+                    
+                        //평가대상 V/P레벨 eval_apply_vendor_pool_lvl_no
+                        oOperationUnit2.setProperty("/eval_apply_vendor_pool_lvl_no", oValues.eval_apply_vendor_pool_lvl_no);
+
+                        // V/P운영단위 vendor_pool_operation_unit_code 
+                        oOperationUnit2.setProperty("/vendor_pool_operation_unit_code", oValues.vendor_pool_operation_unit_code);
+                        
+                        var oVPCombo = this.byId("searchMultiComboCode");
+                        var sKey = this.getModel("DetailView").getProperty("/vendor_pool_operation_unit_code").split(",");                        
+                        oVPCombo.setSelectedKeys(sKey);
+
+                            
+                         //Manager Table read
+                    var oManagerListFilters = [];      
+                    oManagerListFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
+                    oManagerListFilters.push(new Filter("company_code", 'EQ', this.company_code));     
+                    oManagerListFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code));
+                    oManagerListFilters.push(new Filter("org_code", 'EQ', this.org_code));     
+                    oManagerListFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
+
+                    oView.getModel().read("/managerListView", {
+                    filters: oManagerListFilters,
+                    success: function (oData) {
+                            var oManager = oData.results[0];
+                                     this.getView().getModel("supEvalSetupModel").setData(oManager);
+
+                        }.bind(this),
+                        error: function () {}
+                    });
+
+                        }
+
+                    }.bind(this),
+                    error: function () {
+                    }
+
+                   
+
+                });
+
+               
+                //     }
+                
+                // var scenario_number = this.scenario_number.split('l');
+                // this.bindPath = "/TaskMonitoringMasterView(scenario_number=" + this.scenario_number + ",tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',bizunit_code='" + this.bizunit_code + "')";
+                // oView.bindElement(this.bindPath);
+                
+                // var detail_info_Path = "/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + ")";
+                // var monitoringVBox = this.byId("monitoringVBox");
+                // var scenarioVBox = this.byId("scenarioVBox");
+                // var systemVBox = this.byId("systemVBox");
+                // monitoringVBox.bindElement(detail_info_Path);
+                // scenarioVBox.bindElement(detail_info_Path);
+                // systemVBox.bindElement(detail_info_Path);
 
         //         this._toShowMode();
+// ("/OpUnitView(tenant_id='" + this.tenant_id + "',company_code=" + this.scenario_number + ")"
 
-        //         oView.getModel().read("/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + ")", {
-        //             success: function (oData) {
-        //                 this.detailData = oData;
-        //                 this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
-        //                 this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
-        //                 this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
-        //                 this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
-        //                 this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
-        //                 this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
-        //             }.bind(this),
-        //             error: function () {
-        //                 this.byId("PurposeFormattedText").setHtmlText("No Description");
-        //                 this.byId("ScenarioDescFormattedText").setHtmlText("No Description");
-        //                 this.byId("ReSourceSystemFormattedText").setHtmlText("No Description");
-        //             }
-        //         });
 
-        //     }
+             }
 
+                     oView.setBusy(false);
          },
+
+         /**
+             * footer Edit 버튼 기능
+             * Edit모드로 변경
+             * @public
+             */
+            onPageEditButtonPress: function () {
+                this._toEditMode();
+            },
+
+            /**
+            * Edit모드일 때 설정 
+            * @private
+            */
+            _toEditMode: function () {
+                this.getModel("DetailView").setProperty("/isEditMode", true);
+                
+                // this._showFormFragment('Detail_Edit');
+                // this.byId("page").setSelectedSection("pageSectionMain");
+                // this.byId("page").setProperty("showFooter", true);
+
+                // //첨부파일
+                // this.byId("UploadCollection").setUploadEnabled(true);
+
+                // //담당자
+                // this.byId("managerVBox").setVisible(false);
+                // var btn = this.byId("managerTableBtn");
+
+                // btn.setIcon("sap-icon://expand-all");
+                // this.byId("managerListTable").setMode(sap.m.ListMode.MultiSelect);
+
+                // this.byId("managerListTable").setMode(sap.m.ListMode.MultiSelect);
+                // this._bindMidTable(this.oEditableManagerTemplate, "Edit");
+
+                // // signal table
+                // this.byId("signalList").setMode(sap.m.ListMode.MultiSelect);
+                // this._bindMidTable(this.oEditableTemplate, "Edit");
+
+                // // @ts-ignore
+                // //주기 text -> multicombobox로 변경
+                // this.byId("cycleVBox").removeItem(this.cycleText);
+                // this.byId("cycleVBox").insertItem(this.cycle_multibox, 1);
+
+                // //회사,법인,사업본부 SelectionChange Event
+                // if (this.scenario_number !== "New") {
+                //     sap.ui.getCore().byId("tenant_edit_combo").fireSelectionChange();
+                // }
+                // //회사, 법인 combobox item reset
+                // sap.ui.getCore().byId("company_edit_combo").removeAllItems();
+                // sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
+                // //remove description
+                // if (this.scenario_number === "New") {
+                //     this.removeRichTextEditorValue();
+                // } else {
+                //     //richTextEditor
+                //     this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText === '' ? null : this.PurposeFormattedText);
+                //     this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText === '' ? null : this.ScenarioDescFormattedText);
+                //     this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText === '' ? null : this.ReSourceSystemFormattedText);
+                // }
+
+            },
+
+
         //remove
         // removeRichTextEditorValue: function () {
         //     this.byId("reMonitoringPurpose").setValue(null);
@@ -1556,90 +1799,32 @@ sap.ui.define([
         //     });
 
         // },
-
-
-
-        /**
-         * footer Edit 버튼 기능
-         * Edit모드로 변경
-         * @public
-         */
-        // onPageEditButtonPress: function () {
-        //     this._toEditMode();
-
-
-
-        // },
-
-        /**
-        * Edit모드일 때 설정 
-        * @private
-        */
-        // _toEditMode: function () {
-        //     this.getModel("DetailView").setProperty("/isEditMode", true);
-        //     this._showFormFragment('Detail_Edit');
-        //     this.byId("page").setSelectedSection("pageSectionMain");
-        //     this.byId("page").setProperty("showFooter", true);
-        //     //첨부파일
-        //     this.byId("UploadCollection").setUploadEnabled(true);
-        //     //담당자
-        //     this.byId("managerVBox").setVisible(false);
-        //     var btn = this.byId("managerTableBtn");
-        //     btn.setIcon("sap-icon://expand-all");
-        //     this.byId("managerListTable").setMode(sap.m.ListMode.MultiSelect);
-
-        //     this.byId("managerListTable").setMode(sap.m.ListMode.MultiSelect);
-        //     this._bindMidTable(this.oEditableManagerTemplate, "Edit");
-        //     // signal table
-        //     this.byId("signalList").setMode(sap.m.ListMode.MultiSelect);
-        //     this._bindMidTable(this.oEditableTemplate, "Edit");
-        //     // @ts-ignore
-        //     //주기 text -> multicombobox로 변경
-        //     this.byId("cycleVBox").removeItem(this.cycleText);
-        //     this.byId("cycleVBox").insertItem(this.cycle_multibox, 1);
-        //     //회사,법인,사업본부 SelectionChange Event
-        //     if (this.scenario_number !== "New") {
-        //         sap.ui.getCore().byId("tenant_edit_combo").fireSelectionChange();
-        //     }
-        //     //회사, 법인 combobox item reset
-        //     sap.ui.getCore().byId("company_edit_combo").removeAllItems();
-        //     sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
-        //     //remove description
-        //     if (this.scenario_number === "New") {
-        //         this.removeRichTextEditorValue();
-        //     } else {
-        //         //richTextEditor
-        //         this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText === '' ? null : this.PurposeFormattedText);
-        //         this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText === '' ? null : this.ScenarioDescFormattedText);
-        //         this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText === '' ? null : this.ReSourceSystemFormattedText);
-        //     }
-
-        // },
+        
 
         /**
          * Show모드일 때 설정 
          * @private
          */
-        // _toShowMode: function () {
-        //     this.getModel("DetailView").setProperty("/isEditMode", false);
-        //     this._showFormFragment('Detail_Show');
-        //     this.byId("page").setSelectedSection("pageSectionMain");
-        //     this.byId("page").setProperty("showFooter", true);
-        //     var btn = this.byId("managerTableBtn");
-        //     btn.setIcon("sap-icon://collapse-all");
-        //     // signal table
-        //     this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
-        //     this.byId("signalList").setMode(sap.m.ListMode.None);
-        //     // 담당자 table
-        //     this.byId("managerListTable").setMode(sap.m.ListMode.None);
-        //     this._bindMidTable(this.oReadOnlyManagerTemplate, "Navigation");
-        //     //주기 multicombobox -> text로 변경
-        //     this.byId("cycleVBox").removeItem(this.cycle_multibox);
-        //     this.byId("cycleVBox").insertItem(this.cycleText, 1);
+        _toShowMode: function () {
+            this.getModel("DetailView").setProperty("/isEditMode", false);
+            // this._showFormFragment('Detail_Show');
+            // this.byId("page").setSelectedSection("pageSectionMain");
+            // this.byId("page").setProperty("showFooter", true);
+            // var btn = this.byId("managerTableBtn");
+            // btn.setIcon("sap-icon://collapse-all");
+            // // signal table
+            // this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+            // this.byId("signalList").setMode(sap.m.ListMode.None);
+            // // 담당자 table
+            // this.byId("managerListTable").setMode(sap.m.ListMode.None);
+            // this._bindMidTable(this.oReadOnlyManagerTemplate, "Navigation");
+            // //주기 multicombobox -> text로 변경
+            // this.byId("cycleVBox").removeItem(this.cycle_multibox);
+            // this.byId("cycleVBox").insertItem(this.cycleText, 1);
 
 
 
-        // },
+        },
 
         /**
         * signal 테이블 template 

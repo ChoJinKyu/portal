@@ -71,8 +71,11 @@
                             <form:content>
                                 <VBox>
                                     <Label text="거래사업부 :" required="true"/>
-                                    <ComboBox id="transactionDivision" selectedKey="{applicationSup>/org_code}" required="true" 
-                                            items="{transactionDivision>/}" width="100%">
+                                    <ComboBox 
+                                        id="transactionDivision" 
+                                        selectedKey="{applicationSup>/org_code}"
+                                        required="true" 
+                                        items="{transactionDivision>/}" width="100%">
                                         <items>
                                             <core:Item key="{transactionDivision>org_code}" text="{transactionDivision>org_code} :  {transactionDivision>org_name}" />
                                         </items>
@@ -140,6 +143,7 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="상환방법 :" required="true"/>
+                                    <!-- selectedKey="{applicationSup>/repayment_method_code}" -->
                                     <ComboBox id="search_repayment_method_code" editable="false"
                                         width="100%"
                                         items="{
@@ -150,7 +154,7 @@
                                                     ]
                                                 }"
 
-                                        selectedKey="{applicationSup>/repayment_method_code}"
+                                        selectedKey="A"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
@@ -262,7 +266,7 @@
                             <items>
                                 <ColumnListItem>
                                     <cells>
-                                        <Text text="{applicationSup>investment_project_name}"/>
+                                        <Link text="{applicationSup>investment_project_name}" press=".onOpenInvestmentDtl" />
                                         <Text text="{applicationSup>investment_desc}"/>
                                         <Text text="{applicationSup>execution_yyyymm}"/>
                                         <Text text="{applicationSup>appl_amount}"/>
@@ -339,7 +343,6 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-                    
 		</uxap:sections>
 
 		<!-- 하단 버튼 처리 툴바 -->
@@ -353,8 +356,8 @@
                     press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
                 <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
-                <Button id="pageSaveButton" type="Transparent" text="임시저장" press=".onPageSaveButtonPress" />
-                <Button id="pageSubmissionButton" type="Emphasized" text="제출" press=".onPageSubmissionButtonPress" />
+                <Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress" />
+                <Button id="pageSubmissionButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

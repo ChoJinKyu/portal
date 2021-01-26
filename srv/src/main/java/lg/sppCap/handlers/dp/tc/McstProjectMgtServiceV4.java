@@ -51,61 +51,69 @@ public class McstProjectMgtServiceV4 implements EventHandler {
         log.info("### DP_TC_CREATE_MCST_PROJECT_PROC 프로시저 호출시작  start###");
 
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
-        //String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";  
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
 
-        // Commit Option
-        //jdbc.execute(v_sql_commitOption);
-                    
-        StringBuffer v_sql_callProc = new StringBuffer();
-        // v_sql_callProc.append("CALL DP_TC_CREATE_MCST_PROJECT_PROC (");
-        // v_sql_callProc.append(" I_TENANT_ID => ?, ");
-        // v_sql_callProc.append(" I_PROJECT_CODE => ?, ");
-        // v_sql_callProc.append(" I_MODEL_CODE => ?, ");
-        // v_sql_callProc.append(" I_MCST_CODE => ?, ");
-        // v_sql_callProc.append(" I_USER_ID => ?, ");
-        // v_sql_callProc.append(" O_VERSION_NUMBER => ?, ");
-        // v_sql_callProc.append(" O_RETURN_CODE => ?, ");
-        // v_sql_callProc.append(" O_RETURN_MSG => ? ");  
-        // v_sql_callProc.append(" )");  
+        //baseExtrate 정보는 프로시저 직접 호출.
+        StringBuffer v_sql_callProcBaseExt = new StringBuffer();
+        v_sql_callProcBaseExt.append("CALL DP_TC_CREATE_MCST_PROJECT_PROC(");        
+        v_sql_callProcBaseExt.append("I_TENANT_ID => ?,"); 
+        v_sql_callProcBaseExt.append("I_PROJECT_CODE => ?,");        
+        v_sql_callProcBaseExt.append("I_MODEL_CODE => ?, ");
+        v_sql_callProcBaseExt.append("I_MCST_CODE => ?,");
+        v_sql_callProcBaseExt.append("I_USER_ID => ?,");
+        v_sql_callProcBaseExt.append("O_VERSION_NUMBER => ?,");
+        v_sql_callProcBaseExt.append("O_RETURN_CODE => ?,");
+        v_sql_callProcBaseExt.append("O_RETURN_MSG => ?)");
 
-
-        v_sql_callProc.append("CALL test03 (");
-        v_sql_callProc.append(" O_TABLE => ? ");  
-        v_sql_callProc.append(" )"); 
-        
-        
+        CreatePjtInputData v_inputData = context.getInputData();
         CreatePjtOutputData v_result = CreatePjtOutputData.create();
-        // Procedure Call
-        SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<CreatePjtOutputData>(){
-            @Override
-            public CreatePjtOutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                v_result.setVersionNumber(v_rs.getString("version_number"));
-                v_result.setReturnCode(v_rs.getString("return_code"));
-                v_result.setReturnMsg(v_rs.getString("return_msg"));
-                return v_result;
+
+        if(!v_inputData.isEmpty()) {
+            log.info("-----> v_inputData");
+
+            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+
+            paramList.add(new SqlParameter("I_TENANT_ID", Types.NVARCHAR));
+            paramList.add(new SqlParameter("I_PROJECT_CODE", Types.NVARCHAR));
+            paramList.add(new SqlParameter("I_MODEL_CODE", Types.NVARCHAR));
+            paramList.add(new SqlParameter("I_MCST_CODE", Types.NVARCHAR));
+            paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_VERSION_NUMBER", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_CODE", Types.NVARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_MSG", Types.NVARCHAR));
+
+            Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+                @Override
+                public CallableStatement createCallableStatement(Connection con) throws SQLException {
+                    CallableStatement stmt = con.prepareCall(v_sql_callProcBaseExt.toString());
+                    stmt.setObject(1, v_inputData.get("tenant_id"));
+                    stmt.setObject(2, v_inputData.get("project_code"));
+                    stmt.setObject(3, v_inputData.get("model_code"));
+                    stmt.setObject(4, v_inputData.get("mcst_code"));
+                    stmt.setObject(5, v_inputData.get("user_id"));
+                    stmt.registerOutParameter(6, Types.NVARCHAR);
+                    stmt.registerOutParameter(7, Types.NVARCHAR);
+                    stmt.registerOutParameter(8, Types.NVARCHAR);
+                    return stmt;
+                }
+            }, paramList);
+
+            log.info("--------> v_inputData O_RETURN_CODE :: "+ resultMap.get("O_RETURN_CODE"));
+            log.info("--------> v_inputData O_RETURN_MSG :: "+ resultMap.get("O_RETURN_MSG"));
+            log.info("--------> v_inputData O_VERSION_NUMBER :: "+ resultMap.get("O_VERSION_NUMBER"));
+            if("OK".equals(resultMap.get("O_RETURN_CODE"))) {
+                v_result.setReturnCode((String)resultMap.get("O_RETURN_CODE"));
+                v_result.setReturnMsg((String)resultMap.get("O_RETURN_MSG"));
+                v_result.setVersionNumber((String)resultMap.get("O_VERSION_NUMBER"));
+            } else {
+                v_result.setReturnCode((String)resultMap.get("O_RETURN_CODE"));
+                v_result.setReturnMsg((String)resultMap.get("O_RETURN_MSG"));
             }
-        });  
 
+            context.setResult(v_result);
+            context.setCompleted();
+        }
 
-        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-        paramList.add(oTable);        
-
-        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
-            @Override
-            public CallableStatement createCallableStatement(Connection con) throws SQLException {
-                CallableStatement stmt = con.prepareCall(v_sql_callProc.toString());
-                // stmt.setString("I_TENANT_ID", context.getInputData().getTenantId());
-                // stmt.setString("I_PROJECT_CODE", context.getInputData().getProjectCode());
-                // stmt.setString("I_MODEL_CODE", context.getInputData().getModelCode());
-                // stmt.setString("I_MCST_CODE", context.getInputData().getTenantId());
-                // stmt.setString("I_USER_ID", context.getInputData().getUserId());
-                return stmt;
-            }
-        }, paramList);       
-      
-
-        context.setResult(v_result);
-        context.setCompleted();
 
         log.info("### DP_TC_CREATE_MCST_PROJECT_PROC 프로시저 호출 종료 end ###");
     }

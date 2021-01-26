@@ -10,13 +10,4 @@ service CodeMgtService {
     entity CodeDetails as projection on codeDtl.Code_Dtl;
     entity CodeLanguages as projection on codeLng.Code_Lng;
 
-/*    view CodeCombo as 
-    select 
-        key tenant_id,
-        key company_code,
-        key group_code,
-        key code,
-        key language_cd,
-        code_name
-    from codeLng.Code_Lng; */
 }

@@ -20,6 +20,6 @@ entity Mi_Sac_Mi_Bom_Mapping_View {
         exchange                    : String(1)     @title : '거래소코드';
         net_price_confirmed_type    : String(1)     @title : '단가결정시점유형';
         target_currency             : String(1)     @title : '현지통화코드';
-        plant                       : String(1)     @title : '플랜트';
+        plant                       : String(10)     @title : '플랜트';
         value                       : Integer       @title : 'Value';
 }

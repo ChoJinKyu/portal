@@ -36,14 +36,14 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE")}),
+                        new Label({ text: this.getModel("I18N").getText("/EMPLOYEE"), required: true}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT")}),
+                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT"), required: true}),
                         this.oDepartment
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -129,12 +129,23 @@ sap.ui.define([
                     })
                 );
             }
-            aSorters.push(new Sorter("user_local_name", true));
+            aSorters.push(new Sorter("user_local_name", false));
+            this.oDialog.setBusy(true);
             ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
+                fetchAll: true,  //TODL: please disable fetchAll option for performance
                 filters: aFilters,
                 sorters: aSorters,
-                success: function(oData){
+                success: function(oData, bHasMore){
                     this.oDialog.setData(oData.results, false);
+                    if(!bHasMore) this.oDialog.setBusy(false);
+                }.bind(this),
+                fetchAllSuccess: function(aDatas){
+                    var aDialogData = this.oDialog.getData();
+                    aDatas.forEach(function(oData){
+                        aDialogData = aDialogData.concat(oData.results);
+                    }.bind(this));
+                    this.oDialog.setData(aDialogData);
+                    this.oDialog.setBusy(false);
                 }.bind(this)
             });
         }

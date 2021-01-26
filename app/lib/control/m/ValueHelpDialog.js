@@ -213,6 +213,10 @@ sap.ui.define([
             }
         },
 
+        getData: function(){
+            return this.getModel().getData();
+        },
+
         getTokens: function(){
             if(this.oMultiInput)
                 return jQuery.map(this.oMultiInput.getTokens(), function(oToken){

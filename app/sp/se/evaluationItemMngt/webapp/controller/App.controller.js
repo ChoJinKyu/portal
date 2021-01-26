@@ -1,5 +1,5 @@
 sap.ui.define([
-		"sap/ui/core/mvc/Controller"
+	"./BaseController"
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -11,7 +11,8 @@ sap.ui.define([
 		return Controller.extend("sp.se.evaluationItemMngt.controller.App", {
 			onInit: function () {
                 this.getOwnerComponent().getModel("viewModel").setProperty("/App",{
-                    layout : "OneColumn"
+                    layout : "OneColumn",
+                    EditMode : false
                 });
             }
 		});
