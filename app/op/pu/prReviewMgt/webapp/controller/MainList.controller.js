@@ -1,7 +1,6 @@
 sap.ui.define([
     "op/util/controller/BaseController",
-    "ext/lib/util/Multilingual",
-    "ext/lib/model/ManagedListModel",
+
     "sap/ui/model/json/JSONModel",
     "cm/util/control/ui/EmployeeDialog",    
     "ext/lib/util/Validator",
@@ -12,11 +11,11 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
-    "ext/lib/util/ExcelUtil",
+    
     "dp/util/control/ui/MaterialMasterDialog",
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, EmployeeDialog, Validator,
+], function (BaseController, JSONModel, EmployeeDialog, Validator,
     TablePersoController, MainListPersoService,
-    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil, MaterialMasterDialog, Aop) {
+    Filter, FilterOperator, MessageBox, MessageToast, Fragment, MaterialMasterDialog, Aop) {
     "use strict";
 
     var toggleButtonId = "";
@@ -31,13 +30,11 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            // call the base component's init function
+            // call the base controller's init function
             BaseController.prototype["op.init"].apply(this, arguments);
             // today
             var lToday = new Date();
             var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()));
-            // 다국어
-            this.setModel(new Multilingual().getModel(), "I18N");
             // 화면제어
             this.setModel(new JSONModel(), "mainListViewModel");
             // 조회조건 : 
@@ -104,7 +101,7 @@ sap.ui.define([
         },
         // 화면호출시실행
         onRenderedFirst: function () {
-            //this.onSearch();
+            this.search("jSearch", "Pr_ReviewListView", "list");
         },
         /* =========================================================== */
         /* event handlers                                              */
@@ -127,102 +124,68 @@ sap.ui.define([
                     ]
                 }
             }))
-            .attachEvent("apply", (function (oEvent) {
+            .attachEvent("apply", (function (event) {
                 // Default - material_code
                 this.getModel(model).setProperty(
                     paths, 
-                    oEvent.mParameters.item[paths.split("/")[paths.split("/").length-1]]
+                    event.mParameters.item[paths.split("/")[paths.split("/").length-1]]
                 );
             }).bind(this));
             // Dialog Open
             Dialog.open();
         },
-
-		/**
-		 * Event handler when a search button pressed
-		 * @param {sap.ui.base.Event} oEvent the button press event
-		 * @public
-		 */
-        onSearch: function (oEvent) {
+        // 조회
+        onSearch: function (event) {
             // Call Service
-            (function _search(){
-                var oDeferred = new $.Deferred();
-                this.getView()
-                    .setBusy(true)
-                    .getModel().read("/Pr_ReviewListView", $.extend({
-                        filters: this.generateFilters(
-                            this.getModel("jSearch").getData()
-                        ),
-                    }, {
-                        success: oDeferred.resolve,
-                        error: oDeferred.reject
-                    }));
-                    return oDeferred.promise();
-                }).call(this)
-                // 성공시
-                .done((function (oData) {
-                    this.getView().setModel(new JSONModel({
-                        "Pr_ReviewListView": oData.results
-                    }), "list");
-                }).bind(this))
-                // 실패시
-                .fail(function (oError) {
-                })
-                // 모래시계해제
-                .always((function () {
-                    this.getView().setBusy(false);
-                }).bind(this));
+            this.search("jSearch", "Pr_ReviewListView", "list");
         },
-
 		/**
 		 * Event handler when pressed the item of table
-		 * @param {sap.ui.base.Event} oEvent
+		 * @param {sap.ui.base.Event}
 		 * @public
 		 */
-        onColumnListItemPress: function (oEvent) {
-            console.log(">>>>>>>>>>>> onMainTableItemPress", arguments);
+        onColumnListItemPress: function () {
             var [event, record] = arguments;
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-
             this.getRouter().navTo("midView", {
-                layout: oNextUIState.layout,
-                vMode: "VIEW",
-                tenantId: record.tenant_id,
-                company_code: record.company_code,
-                pr_number: record.pr_number
+                layout: this.getOwnerComponent()
+                            .getHelper()
+                            .getNextUIState(1)
+                            .layout,
+                "?query": {
+                    tenant_id: record.tenant_id,
+                    company_code: record.company_code,
+                    pr_number: record.pr_number,
+                    pr_item_number: record.pr_item_number
+                }
             });
-
-            if (oNextUIState.layout === "TwoColumnsMidExpanded") {   
-                this.getModel("mainListViewModel").setProperty("/headerExpanded", false);             
-                //this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
-            }
-
-            /*
-            var oItem = oEvent.getSource();
-            oItem.setNavigated(true);
-            var oParent = oItem.getParent();
-            // store index of the item clicked, which can be used later in the columnResize event
-            this.iIndex = oParent.indexOfItem(oItem);
-            */
         },
-        // Excel Download
+        onButtonPress: function () {
+            var [event, action, ...args] = arguments;
+            var value;
+            // 재작성요청
+            action == 'rewrite'
+            &&
+            (value = (function() {
+            })());
+
+            // 닫기
+            action == 'close'
+            &&
+            (value = (function() {
+            })());
+
+            // 구매담당자변경
+            action == 'change'
+            &&
+            (value = (function() {
+            })());
+
+            return {action, value};
+        },
+        // Excel Download - 추가 화일명이 필요한 경우, arguments 뒤에 인자로 붙인다.
+        // 어쩔 수 없음, Binding Expression 에서 함수 Parsing 해결이 되면, 다시 재작성
         onExcelDownload: function () {
-            var [event, tId, items] = arguments;
-            ExcelUtil.fnExportExcel({
-                fileName: "PR Review List",
-                table: this.byId(tId),
-                data: items
-            });
-        },
-        /**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
-		 * @public
-		 */
-        onUpdateFinished: function (event) {},
+            return BaseController.prototype["onExcel"].call(this, arguments);
+        }
     });
 });

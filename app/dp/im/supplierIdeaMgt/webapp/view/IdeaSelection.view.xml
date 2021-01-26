@@ -41,20 +41,14 @@
                         defaultIndent="XL1 L1 M1 S1"
                         defaultSpan="XL3 L3 M3 S3">
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <ObjectStatus
-                            title="{I18N>/IDEA} {I18N>/SEQUENCE} "
-                            text="{master>/idea_number}"/>
-                        <ObjectStatus
-                            title="{I18N>/SUPPLIER} "
-                            text="{master>/supplier_local_name}"/>
-                        <ObjectStatus
-                            id="createUser"         
-                            title="{I18N>/IDEA} {I18N>/WRITER} "
-                            text="{master>/idea_create_user_local_name}"/>
-                        <ObjectStatus
-                            id="ideaDate"         
-                            title="{I18N>/IDEA} {I18N>/WRITE_DATE} "
-                            text="{
+                        <Label text="{I18N>/IDEA} {I18N>/SEQUENCE} :"/>
+                        <ObjectStatus text="{master>/idea_number}"/>
+                        <Label text="{I18N>/SUPPLIER} :"/>
+                        <ObjectStatus text="{master>/supplier_local_name}"/>
+                        <Label text="{I18N>/IDEA} {I18N>/WRITER} :"/>
+                        <ObjectStatus text="{master>/idea_create_user_local_name}"/>
+                        <Label text="{I18N>/IDEA} {I18N>/WRITE_DATE} :"/>
+                        <ObjectStatus id="ideaDate" text="{
                                     path: 'master>/idea_date',
                                     type: 'sap.ui.model.type.Date',
                                     formatOptions: {
@@ -63,9 +57,11 @@
                                 }"/>
                     </layout:VerticalLayout>
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <Label text="{I18N>/PROGRESS}{I18N>/STATUS} :"/>
                         <ObjectStatus
-                            title="{I18N>/PROGRESS}{I18N>/STATUS}"
-                            text="{master>/idea_progress_status_name}"/>
+                            class="sapMObjectStatusLarge"
+                            text="{master>/idea_progress_status_name}"
+                            state="Error" />
                     </layout:VerticalLayout>
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
@@ -197,7 +193,7 @@
                                     <Label text="{I18N>/IDEA} {I18N>/MANAGER} : " labelFor="ideaManager" required="true"></Label>
                                     <Input id="ideaManager"  width="80%"  visible="{viewModel>/editMode}" placeholder="All"
                                         showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
-                                                        liveChange=".onNameChk" value="{details>/idea_manager_local_name}" >
+                                                        liveChange=".onNameChk" value="{master>/idea_manager_local_name}" >
                                     </Input>
                                     <Input id="ideaManagerId"  visible="false" value="{details>/idea_manager_empno}"  ></Input>
                                     <Text id="ideaManagerTxt" width="80%" textAlign="Left"  text="{master>/idea_manager_local_name}" visible="{viewModel>/showMode}"/>
@@ -262,25 +258,25 @@
                                         <Label text="VI {I18N>/AMOUNT} (KRW): " labelFor="partNo" />
                                         <Input id="viAmount"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/vi_amount}" textAlign="Right" />
-                                        <Text id="viAmountTxt" width="80%" textAlign="Left"  text="{details>/vi_amount}" visible="{viewModel>/showMode}"/>
+                                        <Text id="viAmountTxt" width="80%" textAlign="Right"  text="{details>/vi_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA): " labelFor="partNo" />
                                         <Input id="monthMtlmob"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_mtlmob_quantity}" textAlign="Right"/>
-                                        <Text id="monthMtlmobTxt" width="80%" textAlign="Left"  text="{details>/monthly_mtlmob_quantity}" visible="{viewModel>/showMode}"/>
+                                        <Text id="monthMtlmobTxt" width="80%" textAlign="Right"  text="{details>/monthly_mtlmob_quantity}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} impact (KRW): " labelFor="partNo" />
                                         <Input id="mmImpct"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_purchasing_amount}" textAlign="Right"/>
-                                        <Text id="mmImpctTxt" width="80%" textAlign="Left"  text="{details>/monthly_purchasing_amount}" visible="{viewModel>/showMode}"/>
+                                        <Text id="mmImpctTxt" width="80%" textAlign="Right"  text="{details>/monthly_purchasing_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/ANNUAL} impact (KRW): " labelFor="partNo" />
                                         <Input id="annualImpact"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/annual_purchasing_amount}" textAlign="Right"/>
-                                        <Text id="annualImpactTxt" width="80%" textAlign="Left"  text="{details>/annual_purchasing_amount}" visible="{viewModel>/showMode}"/>
+                                        <Text id="annualImpactTxt" width="80%" textAlign="Right"  text="{details>/annual_purchasing_amount}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                 </VBox>
                             </layout:Grid>                      

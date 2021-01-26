@@ -29,17 +29,17 @@
                                     singleContainerFullSize="false">
                                         <f:content id="informationPageSectionForm">
                                                 <Label text="{I18N>/TYPE_NAME}" />
-                                                <Text text="{monitoring_type_name}"/>
+                                                <Text text="{monitoring_type_name}" width="100%"/>
                                                 <Label text="{I18N>/PURCHASING_TYPE_NAME}" />
-                                                <Text text="{=${monitoring_purchasing_type_name}.replaceAll(';',', ')}"/>
+                                                <Text text="{=${monitoring_purchasing_type_name}.replaceAll(';',', ')}" width="100%"/>
                                                 <Label text="{I18N>/SCENARIO}" />
-                                                <Text text="{scenario_name}"/>
+                                                <Text text="{scenario_name}" width="100%"/>
                                                 <Label text="{I18N>/TENANT_NAME}" />
-                                                <Text text="{tenant_name}"/>
+                                                <Text text="{tenant_name}" width="100%"/>
                                                 <Label text="{I18N>/COMPANY}"/>
-                                                <Text text="{=${company_name}.replaceAll(';',', ')}"/>
+                                                <Text text="{=${company_name}.replaceAll(';',', ')}" width="100%"/>
                                                 <Label text="{I18N>/BUSINESS_UNIT}" />
-                                                <Text text="{=${bizunit_name}.replaceAll(';',', ')}"/>
+                                                <Text text="{=${bizunit_name}.replaceAll(';',', ')}" width="100%"/>
                                         </f:content>
                                     </f:SimpleForm>
                             </VBox>

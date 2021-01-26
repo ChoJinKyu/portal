@@ -18,7 +18,7 @@ sap.ui.define([
     "sap/f/library",    
 ], function (
     BaseController, 
-    History, 
+    History,  
     JSONModel,
     TreeListModel, 
     TransactionManager, 

@@ -21,7 +21,7 @@ entity Md_Mst_Spec_View {
         mold_mfger_name                 : String;
         supplier_name                   : String;
         production_supplier_name        : String;
-        tenant_id                       : String(5) not null   @title : '테넌트ID';
+    key tenant_id                       : String(5) not null   @title : '테넌트ID';
         company_code                    : String(10) not null  @title : '회사코드';
         org_type_code                   : String(10) not null  @title : '조직유형코드';
         org_code                        : String(10) not null  @title : '조직코드';

@@ -1,12 +1,16 @@
 sap.ui.define([
 		"sap/ui/core/mvc/Controller",
         "sap/ui/model/json/JSONModel",
-        "ext/lib/util/Multilingual"
+        "ext/lib/util/Multilingual",
+        "sap/ui/core/Component",
+        "sap/ui/core/routing/HashChanger",
+        "sap/ui/core/ComponentContainer",
+        "sap/m/MessageToast"
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, JSON, Multilingual) {
+	function (Controller, JSON, Multilingual, Component, HashChanger, ComponentContainer, MessageToast) {
         "use strict";
                
 
@@ -52,15 +56,44 @@ sap.ui.define([
                 var oRbg = this.getView().byId(oRbgName);
                 var outcome = oRbg.getSelectedIndex() + 1;
                 
+                // // 기존 시작 =========================================================================================
+                // if( this._cNum == "1" || this._cNum =="3"){
+                //     this.getOwnerComponent().getRouter().navTo("detailPage", { type : this._cNum, outcome : String(outcome) } );
+                // }else{
+                //     this.getOwnerComponent().getRouter().navTo("detailPage2", { type : this._cNum, outcome : String(outcome) } );
+                // }
+                // this._clickEvent("0");
+                // // 기존 끝 =========================================================================================
 
-                // debugger;
+                // App To App
 
-                if( this._cNum == "1" || this._cNum =="3"){
-                    this.getOwnerComponent().getRouter().navTo("detailPage", { type : this._cNum, outcome : String(outcome) } );
-                }else{
-                    this.getOwnerComponent().getRouter().navTo("detailPage2", { type : this._cNum, outcome : String(outcome) } );
-                }
-                this._clickEvent("0");
+                //portal에 있는 toolPage 
+                var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
+                //이동하려는 app의 component name,url
+                var sComponent = "sp.sc.scQBPages",
+                    sUrl = "../sp/sc/scQBPages/webapp";
+                    
+                //  생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome 
+                var changeHash =  "NC/" + this._cNum + "/" + String(outcome) ;   
+                HashChanger.getInstance().replaceHash("");
+
+                Component.load({
+                    name: sComponent,
+                    url: sUrl
+                }).then(function (oComponent) {
+                    var oContainer = new ComponentContainer({
+                        name: sComponent,
+                        async: true,
+                        url: sUrl
+                    });
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oContainer);
+                    //hash setting
+                    HashChanger.getInstance().setHash(changeHash);
+                }).catch(function (e) {
+                    MessageToast.show("error");
+                })
+
                 
             },
             _clickEvent: function(num){

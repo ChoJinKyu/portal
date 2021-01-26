@@ -40,7 +40,7 @@ PROCEDURE SP_SF_FUNDING_APPL_DRAFT_PROC(
 	,OUT O_RESULT TABLE(RESULT_CODE NVARCHAR(2),
 					 ERR_TYPE NVARCHAR(20),
 					 ERR_CODE NVARCHAR(20),
-					 RTN_FUNDING_NOTIFY_NUMBER NVARCHAR(10)
+					 RTN_FUNDING_APPL_NUMBER NVARCHAR(10)
 					 )
 )
 LANGUAGE SQLSCRIPT
@@ -53,7 +53,7 @@ BEGIN
 	변수 정의
 	***********************************************/
 	--자금지원 신청번호
-    DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10) := :I_SAVE_DATA.FUNDING_APPL_NUMBER[1];
+    DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10);
     
     --저장데이터 커서
     DECLARE CURSOR CUR_DATA FOR
@@ -62,23 +62,30 @@ BEGIN
     
 	
 	FOR REC_DATA AS CUR_DATA DO
-		/************************************************
-		VALIDATION
-		************************************************/
-		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	
+		--자금지원 신청번호 추출
+		V_FUNDING_APPL_NUMBER := REC_DATA.FUNDING_APPL_NUMBER;
+		
+		
 		BEGIN
-			O_RESULT =  SELECT 
-							'NG' AS RESULT_CODE
-							,'VALID_ERR' AS ERR_TYPE
-							,::SQL_ERROR_CODE AS ERR_CODE
-							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_NOTIFY_NUMBER 
-						FROM DUMMY;
-		END;
-			
-		--조직코드 필수 체크1
-		IF (COALESCE(:I_SAVE_DATA.ORG_CODE[1],'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'Not selected org.';  
-		END IF;
+			/************************************************
+			VALIDATION
+			************************************************/
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION
+			BEGIN
+				O_RESULT =  SELECT 
+								'NG' AS RESULT_CODE
+								,'VALID_ERR' AS ERR_TYPE
+								,::SQL_ERROR_CODE AS ERR_CODE
+								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+							FROM DUMMY;
+			END;
+				
+			--조직코드 필수 체크1
+			IF (COALESCE(:I_SAVE_DATA.ORG_CODE[1],'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'Not selected org.';  
+			END IF;
+		END;	
 			
 		
 		/***********************************************
@@ -91,7 +98,7 @@ BEGIN
 								'NG' AS RESULT_CODE
 								,'SAVE_ERR' AS ERR_TYPE
 								,::SQL_ERROR_CODE AS ERR_CODE
-								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_NOTIFY_NUMBER 
+								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 							FROM DUMMY;
 			END;
 		
@@ -221,7 +228,7 @@ BEGIN
 					'OK' AS RESULT_CODE
 					,'' AS ERR_TYPE
 					,'' AS ERR_CODE
-					,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_NOTIFY_NUMBER 
+					,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 				FROM DUMMY;
 
 END;

@@ -66,6 +66,132 @@ public class MdCategoryServiceV4 implements EventHandler {
     @Qualifier(MdCategoryV4Service_.CDS_NAME)
     private CdsService mdCategoryV4Service;
 
+    // Vendor Pool별 Material/Supplier Mapping 목록 Value Keyin 저장 처리
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event=MdVpMaterialMappSaveProcContext.CDS_NAME)
+	public void onMdVpMaterialMappSaveProc(MdVpMaterialMappSaveProcContext context) {
+
+        log.info("### onMdVpMaterialMappSaveProc array건 처리 [On] ###");
+
+        // Paramter 입력값
+        VpValueInfo v_params = context.getParams();
+        //log.info("### VpValueInfo array ###["+v_params.getTenantId()+"]###["+v_params.getCompanyCode()+"]###["+v_params.getOrgTypeCode()+"]###["+v_params.getOrgCode()+"]###["+v_params.getVendorPoolCode()+"]###");
+        // Array건 입력값
+        Collection<VpMaterialValue> v_values = v_params.getValues();
+    
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+		// local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+		StringBuffer v_sql_createTable = new StringBuffer();
+		v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PG_MD_VP_MAPPING_VALUE( ")
+									.append("TENANT_ID NVARCHAR(5), ")
+									.append("COMPANY_CODE NVARCHAR(10), ")
+									.append("ORG_TYPE_CODE NVARCHAR(30), ")
+									.append("ORG_CODE NVARCHAR(10), ")
+									.append("VENDOR_POOL_CODE NVARCHAR(20), ")
+									.append("MATERIAL_CODE NVARCHAR(40), ")
+									.append("SUPPLIER_CODE NVARCHAR(10), ")
+									.append("SPMD_CHARACTER_SERIAL_NO BIGINT, ")
+									.append("ATTR_VALUE NVARCHAR(100), ")
+									.append("UPDATE_USER_ID NVARCHAR(255) ")
+								.append(")");
+        String v_sql_dropable = "DROP TABLE #LOCAL_TEMP_PG_MD_VP_MAPPING_VALUE";
+		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PG_MD_VP_MAPPING_VALUE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String v_sql_callProc = "CALL PG_MD_VP_MAPPING_VALUE_SAVE_PROC( I_TABLE => #LOCAL_TEMP_PG_MD_VP_MAPPING_VALUE, O_TABLE => ? )";
+
+        // Result return
+        ReturnRslt rtnRslt = ReturnRslt.create();
+        Map<String, Object> rsltInfoMap = new HashMap<String, Object>();
+        ObjectMapper oMapper = new ObjectMapper();
+    
+		try {
+            // Commit Option
+            jdbc.execute(v_sql_commitOption);
+            // Local Temp Table 생성
+            jdbc.execute(v_sql_createTable.toString());
+
+            // Local Temp Table에 insert
+            List<Object[]> batch = new ArrayList<Object[]>();
+            if(!v_values.isEmpty() && v_values.size() > 0){
+                for(VpMaterialValue v_inRow : v_values){
+                    
+                    //log.info("### VpMaterialValue array ###["+v_inRow.get("material_code")+"]###["+v_inRow.get("supplier_code")+"]###["+v_inRow.get("item_serial_no")+"]###["+v_inRow.get("attr_value")+"]###");
+                    Object[] values = new Object[] {
+                        v_params.getTenantId()
+                        , v_params.getCompanyCode()
+                        , v_params.getOrgTypeCode()
+                        , v_params.getOrgCode()
+                        , v_params.getVendorPoolCode()
+
+                        , v_inRow.get("material_code")
+                        , v_inRow.get("supplier_code")
+                        , Integer.parseInt((String)v_inRow.get("item_serial_no"))
+                        , v_inRow.get("attr_value")
+                        , "procSaveId"   // TODO:세션 ID로 처리
+                    };
+
+                    //for(Object sObj : values) log.info("######### array ###["+sObj+"]###");
+                    batch.add(values);
+                }
+            }
+
+            int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch);
+            //for(int iInsrtCnt : updateCounts) log.info("### [2-1] array ###["+iInsrtCnt+"]###");
+
+            // Procedure Call
+            List<Map<String, String>> rsltList = new ArrayList<Map<String, String>>();
+            SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<Map<String, String>>() {
+                @Override
+                public Map<String, String> mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                    Map<String, String> rsltMap = new HashMap<String, String>();
+                    rsltMap.put("tenantId", v_rs.getString("tenant_id"));
+                    rsltMap.put("companyCode", v_rs.getString("company_code"));
+                    rsltMap.put("orgTypeCode", v_rs.getString("org_type_code"));
+                    rsltMap.put("orgCode", v_rs.getString("org_code"));
+                    rsltMap.put("vendorPoolCode", v_rs.getString("vendor_pool_code"));
+                    rsltMap.put("materialCode", v_rs.getString("material_code"));
+                    rsltMap.put("supplierCode", v_rs.getString("supplier_code"));
+                    rsltMap.put("successFlag", v_rs.getString("success_flag"));
+                    rsltMap.put("rtnMesg", v_rs.getString("rtn_mesg"));
+
+                    rsltList.add(rsltMap);  // 결과값 Return;
+
+                    return rsltMap;
+                }
+            });
+
+            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+            paramList.add(oTable);
+
+            Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+                @Override
+                public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                    CallableStatement callableStatement = connection.prepareCall(v_sql_callProc);
+                    return callableStatement;
+                }
+            }, paramList);
+
+            rsltInfoMap.put("procRslt", rsltList);  // Procedure Result
+
+            rtnRslt.setRsltCd("000");
+            rtnRslt.setRsltMesg("SUCCESS");
+
+		} catch (Exception e) {
+            e.printStackTrace();
+
+            rtnRslt.setRsltCd("999");
+            rtnRslt.setRsltMesg("Exception Fail...");
+		} finally {
+            // Local Temp Table DROP
+            try { jdbc.execute(v_sql_dropable); } catch(Exception ex) {}
+
+            try { rtnRslt.setRsltInfo(oMapper.writeValueAsString(rsltInfoMap)); } catch(Exception ex) {}  // result 추가JSON 정보
+            context.setResult(rtnRslt);
+			context.setCompleted();
+		}
+
+    }
+
     // VendorPool Category Item Mapping 프로시져 array건 처리
     @Transactional(rollbackFor = SQLException.class)
     @On(event=MdVpMappingItemMultiProcContext.CDS_NAME)

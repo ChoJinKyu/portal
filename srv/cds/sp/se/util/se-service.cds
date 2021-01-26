@@ -4,6 +4,7 @@ using { sp.Se_Operation_Unit_Manager as opUnitManager } from '../../../../../db/
 using { sp.Se_Eval_Type as evalType } from '../../../../../db/cds/sp/se/SP_SE_EVAL_TYPE-model';
 using { sp.Se_Operation_Unit_Mst as opUnitMst } from '../../../../../db/cds/sp/se/SP_SE_OPERATION_UNIT_MST-model';
 using { sp.Se_Eval_Item_Export_Tree_View as exportTreeView} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_EXPORT_TREE_VIEW-model';
+using { sp.Se_Copy_T as copyT} from '../../../../../db/cds/sp/se/SP_SE_COPY_T-model';
 
 namespace sp;
 @path : '/sp.evaluationUtilService'
@@ -151,4 +152,11 @@ service EvaluationUtilService{
           AND  cv_scle.code       = etv.evaluation_result_input_type_cd
           AND  cv_scle.language_cd = 'KO';
 
+    view YearView as
+    select Key to_char(now(),'yyyy') - copy_no + 1 || '' as year_code : String(4),
+           to_char(now(),'yyyy') - copy_no + 1 || '' as year_name : String(4)
+    from   copyT
+    where  copy_no <= 5
+    ;
+     
 }

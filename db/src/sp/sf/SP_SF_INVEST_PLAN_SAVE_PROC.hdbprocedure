@@ -1,0 +1,349 @@
+/**************************************************************************
+ 프로시저명: SP_SF_INVEST_PLAN_SAVE_PROC
+ 내용: 투자계획서 저장
+ 상세설명: 투자계획서 마스터, 디테일을 저장한다.
+ validation : 
+  
+ 작성자: 위성찬
+ 작성일자: 2021-01-26
+ 수정일자: 2021-01-26
+**************************************************************************/
+PROCEDURE SP_SF_INVEST_PLAN_SAVE_PROC(
+	IN I_MST_DATA TABLE( 
+		CRUD_TYPE NVARCHAR(1), 					--CRUD 구분
+		FUNDING_APPL_NUMBER NVARCHAR(10), 		--자금지원공고번호
+		INVESTMENT_PLAN_SEQUENCE INTEGER, 		--투자계획순번
+		INVESTMENT_TYPE_CODE NVARCHAR(30), 		--투자유형코드
+		INVESTMENT_PROJECT_NAME NVARCHAR(200), 	--투자과제명
+		INVESTMENT_YYYYMM NVARCHAR(6), 			--투자년월
+		APPL_AMOUNT DECIMAL, 					--신청금액
+		INVESTMENT_PURPOSE NVARCHAR(500), 		--투자목적
+		APPLY_MODEL_NAME NVARCHAR(200), 		--적용모델명
+		ANNUAL_MTLMOB_QUANTITY DECIMAL, 		--연간물동수량
+		INVESTMENT_DESC NVARCHAR(500), 			--투자내역
+		EXECUTION_YYYYMM NVARCHAR(6), 			--집행년월
+		INVESTMENT_EFFECT NVARCHAR(500), 		--투자효과
+		INVESTMENT_PLACE NVARCHAR(500) 			--투자장소
+	)
+	,IN I_DTL_DATA TABLE( 
+		CRUD_TYPE NVARCHAR(1), 						--CRUD 구분
+		FUNDING_APPL_NUMBER NVARCHAR(10), 			--자금지원신청번호
+		INVESTMENT_PLAN_SEQUENCE INTEGER, 			--투자계획순번
+		INVESTMENT_PLAN_ITEM_SEQUENCE INTEGER, 		--투자계획품목순번
+		INVESTMENT_ITEM_NAME NVARCHAR(500), 		--투자품목명
+		INVESTMENT_ITEM_PURCHASING_PRICE DECIMAL, 	--투자품목구매가격
+		INVESTMENT_ITEM_PURCHASING_QTY DECIMAL, 	--투자품목구매수량
+		INVESTMENT_ITEM_PURCHASING_AMT DECIMAL 		--투자품목구매금액
+	)
+	,I_USER_ID NVARCHAR(30)
+	,OUT O_RESULT TABLE(RESULT_CODE NVARCHAR(2),
+					 ERR_TYPE NVARCHAR(20),
+					 ERR_CODE NVARCHAR(20),
+					 RTN_FUNDING_APPL_NUMBER NVARCHAR(10)
+					 )
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+
+AS
+BEGIN
+
+	/***********************************************
+	변수 정의
+	***********************************************/
+	DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10);	--자금지원 신청번호
+	DECLARE V_MST_SEQ INT := 0;					--투자계획서 마스터 SEQ
+	DECLARE V_DTL_SEQ INT := 0;					--투자계획서 상세 SEQ
+	
+    DECLARE V_INV_MST_CNT INT := 0;				--투자계획서 마스터 건수
+	DECLARE V_INV_DTL_CNT INT := 0;				--투자계획서 상세 건수
+	DECLARE V_MST_CRUD_TYPE NVARCHAR(1);		--마스터 CRUD 타입
+	DECLARE V_DTL_CRUD_TYPE NVARCHAR(1);		--상세 CRUD 타입
+	
+	--마스터 데이터 커서
+	DECLARE CURSOR CUR_MST_DATA FOR
+    SELECT *
+    FROM   :I_MST_DATA
+	;
+    
+	--상세 데이터 커서
+    DECLARE CURSOR CUR_DTL_DATA FOR
+    SELECT *
+    FROM   :I_DTL_DATA
+	;
+	
+	--투자계획서 상세 건수
+	SELECT COUNT(*) AS INV_DTL_CNT
+	INTO V_INV_DTL_CNT
+	FROM :I_DTL_DATA
+	;
+	
+	
+	-----------------------------------------------마스터 데이터 커서
+	FOR REC_MST_DATA AS CUR_MST_DATA DO
+	
+		V_MST_CRUD_TYPE := REC_MST_DATA.CRUD_TYPE;					--CRUD 타입
+		V_FUNDING_APPL_NUMBER := REC_MST_DATA.FUNDING_APPL_NUMBER;	--자금지원 신청번호 추출
+		V_MST_SEQ := REC_MST_DATA.INVESTMENT_PLAN_SEQUENCE;			--투자계획서 마스터 시퀀스
+		
+		BEGIN
+		
+			/************************************************
+			VALIDATION
+			************************************************/
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION
+			BEGIN
+				O_RESULT =  SELECT 
+								'NG' AS RESULT_CODE
+								,'VALID_ERR' AS ERR_TYPE
+								,::SQL_ERROR_CODE AS ERR_CODE
+								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+							FROM DUMMY;
+			END;
+			
+			-------------------------------------------------------------------------------[필수체크]	
+			--투자유형 필수 체크
+			IF (COALESCE(REC_MST_DATA.INVESTMENT_TYPE_CODE ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11000 SET MESSAGE_TEXT = '투자유형을 선택해주세요.';  
+			END IF;
+			
+			--과제명 필수체크
+			IF (COALESCE(REC_MST_DATA.INVESTMENT_PROJECT_NAME ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11001 SET MESSAGE_TEXT = '과제명을 입력해주세요.';  
+			END IF;
+			
+			--투자기간 필수체크
+			IF (COALESCE(REC_MST_DATA.INVESTMENT_YYYYMM ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11002 SET MESSAGE_TEXT = '투자기간을 입력해주세요.';  
+			END IF;
+			
+			--신청금액 필수체크
+			IF (COALESCE(REC_MST_DATA.APPL_AMOUNT ,0) = 0) THEN
+				SIGNAL SQL_ERROR_CODE 11003 SET MESSAGE_TEXT = '신청금액을 입력해주세요.';  
+			END IF;
+			
+			--투자배경 및 목적 필수체크
+			IF (COALESCE(REC_MST_DATA.INVESTMENT_PURPOSE ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11004 SET MESSAGE_TEXT = '투자배경 및 목적을 입력해주세요.';  
+			END IF;
+			
+			--적용모델 필수체크
+			IF (COALESCE(REC_MST_DATA.APPLY_MODEL_NAME ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11005 SET MESSAGE_TEXT = '적용모델명을 입력해주세요.';  
+			END IF;
+			
+			--연간 예상물동 필수체크
+			IF (COALESCE(REC_MST_DATA.ANNUAL_MTLMOB_QUANTITY ,0) = 0) THEN
+				SIGNAL SQL_ERROR_CODE 11006 SET MESSAGE_TEXT = '연간 물동수량을 입력해주세요.';  
+			END IF;
+			
+			--투자 내역 필수체크
+			IF (COALESCE(REC_MST_DATA.INVESTMENT_DESC ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11007 SET MESSAGE_TEXT = '투자내역을 입력해주세요.';  
+			END IF;
+			
+			--집행년월 필수체크
+			IF (COALESCE(REC_MST_DATA.EXECUTION_YYYYMM ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11008 SET MESSAGE_TEXT = '집행년월을 입력해주세요.';  
+			END IF;
+			
+			--투자효과 필수체크
+			IF (COALESCE(REC_MST_DATA.INVESTMENT_EFFECT ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11009 SET MESSAGE_TEXT = '투자효과를 입력해주세요.';
+			END IF;
+			
+			--투자장소 필수체크
+			IF (COALESCE(REC_MST_DATA.INVESTMENT_PLACE ,'') = '') THEN
+				SIGNAL SQL_ERROR_CODE 11010 SET MESSAGE_TEXT = '투자장소를 입력해주세요.';
+			END IF;
+		
+			-------------------------------------------------------------------------------[투자계획서 상세를 입력했는지 체크]
+			IF V_INV_DTL_CNT < 1 THEN
+				SIGNAL SQL_ERROR_CODE 11011 SET MESSAGE_TEXT = '상세내역을 추가해주세요.';
+			END IF;
+			
+		END;
+		
+		
+		/***********************************************
+		저장처리 시작
+		**********************************************/
+		BEGIN
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION
+			BEGIN
+				O_RESULT =  SELECT 
+								'NG' AS RESULT_CODE
+								,'SAVE_ERR' AS ERR_TYPE
+								,::SQL_ERROR_CODE AS ERR_CODE
+								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+							FROM DUMMY;
+			END;
+		
+			
+			-------------------------------------------------------------------------------[투자계획 마스터 테이블 INSERT/UPDATE]
+			IF V_MST_CRUD_TYPE = 'C' THEN
+			
+				--------------------------[투자계획순번 채번]
+				SELECT IFNULL(MAX(INVESTMENT_PLAN_SEQUENCE), 0)+1
+				INTO V_MST_SEQ
+				FROM SP_SF_FUNDING_INVEST_PLAN_MST
+				WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+				;
+				
+				--------------------------[INSERT]
+				INSERT INTO SP_SF_FUNDING_INVEST_PLAN_MST(
+					 FUNDING_APPL_NUMBER		--
+					,INVESTMENT_PLAN_SEQUENCE	--
+					,INVESTMENT_TYPE_CODE		--
+					,INVESTMENT_PROJECT_NAME	--
+					,INVESTMENT_YYYYMM			--
+					,APPL_AMOUNT				--
+					,INVESTMENT_PURPOSE			--
+					,APPLY_MODEL_NAME			--
+					,ANNUAL_MTLMOB_QUANTITY		--
+					,INVESTMENT_DESC			--
+					,EXECUTION_YYYYMM			--
+					,INVESTMENT_EFFECT			--
+					,INVESTMENT_PLACE			--
+					,LOCAL_CREATE_DTM			--
+					,LOCAL_UPDATE_DTM           --       
+					,CREATE_USER_ID         	--
+					,UPDATE_USER_ID				--
+					,SYSTEM_CREATE_DTM			--
+					,SYSTEM_UPDATE_DTM			--
+				)
+				SELECT
+					 :V_FUNDING_APPL_NUMBER
+					,:V_MST_SEQ
+					,REC_MST_DATA.INVESTMENT_TYPE_CODE
+					,REC_MST_DATA.INVESTMENT_PROJECT_NAME
+					,REC_MST_DATA.INVESTMENT_YYYYMM
+					,REC_MST_DATA.APPL_AMOUNT
+					,REC_MST_DATA.INVESTMENT_PURPOSE
+					,REC_MST_DATA.APPLY_MODEL_NAME
+					,REC_MST_DATA.ANNUAL_MTLMOB_QUANTITY
+					,REC_MST_DATA.INVESTMENT_DESC
+					,REC_MST_DATA.EXECUTION_YYYYMM
+					,REC_MST_DATA.INVESTMENT_EFFECT
+					,REC_MST_DATA.INVESTMENT_PLACE
+					,CURRENT_TIMESTAMP
+					,CURRENT_TIMESTAMP
+					,:I_USER_ID
+					,:I_USER_ID
+					,CURRENT_TIMESTAMP
+					,CURRENT_TIMESTAMP
+				FROM SP_SF_FUNDING_APPLICATION
+				WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
+				;
+				
+			ELSEIF V_MST_CRUD_TYPE = 'U' THEN
+				UPDATE SP_SF_FUNDING_INVEST_PLAN_MST
+				SET 
+					 INVESTMENT_TYPE_CODE			= REC_MST_DATA.INVESTMENT_TYPE_CODE		--투자유형코드
+					,INVESTMENT_PROJECT_NAME		= REC_MST_DATA.INVESTMENT_PROJECT_NAME	--투자과제명
+					,INVESTMENT_YYYYMM				= REC_MST_DATA.INVESTMENT_YYYYMM		--투자년월
+					,APPL_AMOUNT					= REC_MST_DATA.APPL_AMOUNT				--신청금액
+					,INVESTMENT_PURPOSE				= REC_MST_DATA.INVESTMENT_PURPOSE		--투자목적
+					,APPLY_MODEL_NAME				= REC_MST_DATA.APPLY_MODEL_NAME			--적용모델명
+					,ANNUAL_MTLMOB_QUANTITY			= REC_MST_DATA.ANNUAL_MTLMOB_QUANTITY	--연간물동수량
+					,INVESTMENT_DESC				= REC_MST_DATA.INVESTMENT_DESC			--투자내역
+					,EXECUTION_YYYYMM				= REC_MST_DATA.EXECUTION_YYYYMM			--집행년월
+					,INVESTMENT_EFFECT				= REC_MST_DATA.INVESTMENT_EFFECT		--투자효과
+					,INVESTMENT_PLACE				= REC_MST_DATA.INVESTMENT_PLACE			--투자장소
+					,LOCAL_CREATE_DTM				= CURRENT_TIMESTAMP
+					,LOCAL_UPDATE_DTM				= CURRENT_TIMESTAMP
+					,CREATE_USER_ID					= :I_USER_ID
+					,UPDATE_USER_ID					= :I_USER_ID
+					,SYSTEM_CREATE_DTM				= CURRENT_TIMESTAMP
+					,SYSTEM_UPDATE_DTM				= CURRENT_TIMESTAMP
+				WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+				AND INVESTMENT_PLAN_SEQUENCE = :V_MST_SEQ
+				;     
+			END IF;
+			
+			
+			-------------------------------------------------------------------------------[디테일 데이터 커서]
+			FOR REC_DTL_DATA AS CUR_DTL_DATA DO
+				
+				V_DTL_CRUD_TYPE := REC_DTL_DATA.CRUD_TYPE;					--CRUD 타입
+				V_DTL_SEQ := REC_DTL_DATA.INVESTMENT_PLAN_ITEM_SEQUENCE;	--투자계획서 상세 시퀀스
+				
+				
+				-------------------------------------------------------------------------------[투자계획 상세 테이블 INSERT/UPDATE]
+				IF V_DTL_CRUD_TYPE = 'C' THEN
+					--------------------------[INSERT]
+					INSERT INTO SP_SF_FUNDING_INVEST_PLAN_DTL(
+						 FUNDING_APPL_NUMBER
+						,INVESTMENT_PLAN_SEQUENCE
+						,INVESTMENT_PLAN_ITEM_SEQUENCE
+						,INVESTMENT_ITEM_NAME
+						,INVESTMENT_ITEM_PURCHASING_PRICE
+						,INVESTMENT_ITEM_PURCHASING_QTY
+						,INVESTMENT_ITEM_PURCHASING_AMT
+						,LOCAL_CREATE_DTM					--
+						,LOCAL_UPDATE_DTM           		--       
+						,CREATE_USER_ID         			--
+						,UPDATE_USER_ID						--
+						,SYSTEM_CREATE_DTM					--
+						,SYSTEM_UPDATE_DTM					--
+					)
+					SELECT
+						 :V_FUNDING_APPL_NUMBER
+						,:V_MST_SEQ
+						,(SELECT IFNULL(MAX(INVESTMENT_PLAN_ITEM_SEQUENCE),0)+1 AS NEW_SEQ
+							FROM SP_SF_FUNDING_INVEST_PLAN_DTL
+							WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+							AND INVESTMENT_PLAN_SEQUENCE = :V_MST_SEQ
+						) AS NEW_SEQ
+						,REC_DTL_DATA.INVESTMENT_ITEM_NAME
+						,REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_PRICE
+						,REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_QTY
+						,REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_AMT
+						,CURRENT_TIMESTAMP
+						,CURRENT_TIMESTAMP
+						,:I_USER_ID
+						,:I_USER_ID
+						,CURRENT_TIMESTAMP
+						,CURRENT_TIMESTAMP
+					FROM SP_SF_FUNDING_APPLICATION AP
+					WHERE AP.FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+					;
+					
+				ELSEIF V_DTL_CRUD_TYPE = 'U' THEN
+					--------------------------[UPDATE]
+					UPDATE SP_SF_FUNDING_INVEST_PLAN_DTL
+					SET
+						 INVESTMENT_ITEM_NAME				= REC_DTL_DATA.INVESTMENT_ITEM_NAME
+						,INVESTMENT_ITEM_PURCHASING_PRICE	= REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_PRICE
+						,INVESTMENT_ITEM_PURCHASING_QTY		= REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_QTY
+						,INVESTMENT_ITEM_PURCHASING_AMT		= REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_AMT
+						,LOCAL_CREATE_DTM					= CURRENT_TIMESTAMP
+						,LOCAL_UPDATE_DTM					= CURRENT_TIMESTAMP
+						,CREATE_USER_ID						= :I_USER_ID
+						,UPDATE_USER_ID						= :I_USER_ID
+						,SYSTEM_CREATE_DTM					= CURRENT_TIMESTAMP
+						,SYSTEM_UPDATE_DTM					= CURRENT_TIMESTAMP
+					WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+					AND INVESTMENT_PLAN_SEQUENCE = :V_MST_SEQ
+					AND INVESTMENT_PLAN_ITEM_SEQUENCE = :V_DTL_SEQ
+					;
+					
+				END IF;
+				
+			END FOR;
+			    
+		END;
+		
+	END FOR;
+	
+	/***********************************************
+	처리 끝
+	**********************************************/
+    O_RESULT =  SELECT 
+					'OK' AS RESULT_CODE
+					,'' AS ERR_TYPE
+					,'' AS ERR_CODE
+					,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+				FROM DUMMY;
+
+END;

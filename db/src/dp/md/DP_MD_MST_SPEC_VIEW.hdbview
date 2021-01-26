@@ -174,5 +174,6 @@ SELECT
 
 from dp_md_mst a
 left join dp_md_spec b
-on a.mold_id=b.mold_id
+on a.tenant_id=b.tenant_id
+and a.mold_id=b.mold_id
 ;

@@ -20,9 +20,10 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
-    "sap/ui/core/Fragment"
+    "sap/ui/core/Fragment",
+    "ext/lib/model/TreeListModel"
 ], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController,
-    MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
+    MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, TreeListModel) {
     "use strict";
 
     return BaseController.extend("dp.pd.activityStandardDayMgt.controller.MainList", {
@@ -95,7 +96,7 @@ sap.ui.define([
             var sTenantId = "L1100",
                 oSearchCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
                 oSearchAUCombo = this.getView().byId("searchAUCombo").getSelectedKey(),
-                oSearchPCCombo = this.getView().byId("searchPCCombo").getSelectedKey(),
+                oSearchPCField = this.getView().byId("searchPCField").getValue(),
                 oSearchPTCombo = this.getView().byId("searchPTCombo").getSelectedKey(),
                 oSearchActivity = this.getView().byId("searchActivity").getValue();
 
@@ -111,8 +112,8 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, oSearchAUCombo));
             }
 
-            if (oSearchPCCombo && oSearchPCCombo.length > 0) {
-                aSearchFilters.push(new Filter("category_code", FilterOperator.EQ, oSearchPCCombo));
+            if (oSearchPCField && oSearchPCField.length > 0) {
+                aSearchFilters.push(new Filter("category_name", FilterOperator.EQ, oSearchPCField));
             }
            
             if (oSearchPTCombo && oSearchPTCombo.length > 0) {
@@ -151,50 +152,6 @@ sap.ui.define([
             });
         },
 
-        onSearchPartCategory: function (oEvent) {
-            var oButton = oEvent.getSource(),
-                oView = this.getView();
-
-            if (!this._pDialog) {
-                this._pDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.pd.activityStandardDayMgt.view.pdActivityStdDayView",
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                }.bind(this));
-            }
-
-            this._pDialog.then(function (oDialog) {
-                oDialog.open();
-            });
-        },
-
-        handleSearch: function (oEvent) {
-            var sValue = oEvent.getParameter("value");
-            var oFilters = [];
-            oFilters.push(new Filter({
-                filters: [
-                    new Filter("product_activity_code", FilterOperator.Contains, sValue),
-                    new Filter("product_activity_name", FilterOperator.Contains, sValue)
-                ],
-                and: false
-            }));
-            var oBinding = oEvent.getSource().getBinding("items");
-            oBinding.filter(oFilters);
-        },
-
-        handleClose: function (oEvent) {
-            var productActivityCode = oEvent.mParameters.selectedItem.mAggregations.cells[0].getText();
-            var productActivityName = oEvent.mParameters.selectedItem.mAggregations.cells[1].getText();
-
-            var oTable = this.byId("mainTable");
-            var idx = oTable.getSelectedContextPaths()[0].split("/")[2];
-            oTable.getAggregation('items')[idx].getCells()[2].mAggregations.items[1].setValue(productActivityCode);
-            oTable.getAggregation('items')[idx].getCells()[3].mAggregations.items[1].setValue(productActivityName);
-        },
-
         _doInitTablePerso: function(){
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
@@ -202,6 +159,39 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
+        },
+
+        onSearchPartCategory: function (oEvent) {
+            var oButton = oEvent.getSource(),
+                oView = this.getView();
+
+            if (!this.treeDialog) {
+                this.treeDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.pd.activityStandardDayMgt.view.PartCategory",
+                    controller: this
+                }).then(function (tDialog) {
+                    oView.addDependent(tDialog);
+                    return tDialog;
+                }.bind(this));
+            }
+
+            this.treeDialog.then(function (tDialog) {
+                tDialog.open();
+            }.bind(this));
+        },
+
+        partCategoryPopupClose: function (oEvent) {
+            this.byId("PartCategory").close();
+        },
+
+        selectPartCategoryValue: function (oEvent) {
+            var row = this.getView().getModel("pdActivityStdDayView").getObject(oEvent.getParameters().rowContext.sPath);
+
+            this.getView().byId("searchPCField").setValue(row.category_name);
+            this.getView().byId("searchPCInput").setValue(row.category_code);
+
+            this.partCategoryPopupClose();
         },
 
     });
