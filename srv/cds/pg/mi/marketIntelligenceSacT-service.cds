@@ -31,8 +31,9 @@ service marketIntelligenceSacTService {
        ,key target_currency_code
        ,key exrate_start_date
            ,exchange_rate
-           ,'PG0101_00010'  as  mi_measure : String
-    from DailyExchRate;
+           ,'PG0101_00010'  as  mi_measure : String(20)
+    from DailyExchRate
+    ;
 
 
 
