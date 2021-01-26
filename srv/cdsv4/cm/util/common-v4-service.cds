@@ -1,6 +1,6 @@
 using {cm as CodeName} from '../../../../db/cds/cm/util/CM_GET_CODE_NAME_SERVICE_FUNC-model';
-using {cm as CtrlOption} from '../../../../db/cds/cm/util/CM_GET_CTRL_OPTION_FUNC-model';
-using {cm as SysdateMtz} from '../../../../db/cds/cm/util/CM_DB_SYSDATE_MTZ_FUNC-model';
+// using {cm as CtrlOption} from '../../../../db/cds/cm/util/CM_GET_CTRL_OPTION_FUNC-model';
+// using {cm as SysdateMtz} from '../../../../db/cds/cm/util/CM_DB_SYSDATE_MTZ_FUNC-model';
 using {cm as dummyMgt } from '../../../../db/cds/cm/CM_DUMMY-model';
 
 namespace cm;

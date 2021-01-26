@@ -1,5 +1,5 @@
-using {cm as DeptName} from '../../../../db/cds/cm/util/CM_GET_DEPT_NAME_FUNC-model';
-using {cm as EmpName} from '../../../../db/cds/cm/util/CM_GET_EMP_NAME_FUNC-model';
+// using {cm as DeptName} from '../../../../db/cds/cm/util/CM_GET_DEPT_NAME_FUNC-model';
+// using {cm as EmpName} from '../../../../db/cds/cm/util/CM_GET_EMP_NAME_FUNC-model';
 
 namespace cm;
 
