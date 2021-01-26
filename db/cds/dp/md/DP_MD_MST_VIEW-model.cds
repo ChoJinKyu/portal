@@ -3,7 +3,7 @@ namespace dp;
 @cds.persistence.exists
 entity Md_Mst_View {
         chk                             : Boolean               @title:'Checkbox';
-        tenant_id                       : String(5)   not null  @title:'테넌트ID';
+    key tenant_id                       : String(5)   not null  @title:'테넌트ID';
         company_code                    : String(10)  not null  @title:'회사코드';
         org_type_code                   : String(10)  not null  @title:'조직유형코드';
         org_code                        : String(10)  not null  @title:'조직코드';
