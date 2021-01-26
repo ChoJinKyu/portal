@@ -8,10 +8,10 @@
 @serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
 # Local PC : mvn spring-boot:run : v2
 @serviceUrlV2 = http://localhost:8080/odata/v2
-# Local PC : mvn spring-boot:run : v4
-@serviceUrl = http://localhost:8080/odata/v4
 # Local PC[DB+AP] : cds serve all --with-mocks --in-memory?
 @serviceUrl = http://localhost:4004
+# Local PC : mvn spring-boot:run : v4
+@serviceUrl = http://localhost:8080/odata/v4
 
 #################################################
 # OData Service Configuration
@@ -21,7 +21,7 @@
 # Odata v2 service
 @reviews-serviceV2 = {{serviceUrlV2}}/sp.sourcingService
 # Odata v4 service
-@reviews-service = {{serviceUrl}}/sp.sourcingTest01V4Service
+@reviews-service = {{serviceUrl}}/sp.sourcingV4Service
 
 #################################################
 # OData Service Configuration
@@ -55,16 +55,8 @@ GET {{reviews-service}}/$metadata
 #   (draftActivate|draftPrepare|draftEdit|\bPUT\b|\bPOST\b|\bDELETE\b|\bPATCH\b)
 #################################################
 
-### Show System Variable
-GET {{reviews-service}}/ScLanguage?
-&$skip=0&$top=1
-# &$expand=*
-Cookie: {{cookie}}
-Accept-Language: en-UK
-
-
 ### Multi Select | Default
-GET {{reviews-service}}/ScOutcomeCode?
+GET {{reviews-service}}/Sc_Outcome_Code?$orderby=sort_no
 &$expand=*
 # &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
 # &$select=tenant_id,nego_header_id,nego_document_round,HasActiveEntity,IsActiveEntity,SiblingEntity,DraftAdministrativeData
@@ -72,175 +64,60 @@ GET {{reviews-service}}/ScOutcomeCode?
 Cookie: {{cookie}}
 
 ### Multi Select | Expand All[Texts,Localized]
-GET {{reviews-service}}/ScOutcomeCode?
-&$expand=texts,localized
+GET {{reviews-service}}/Sc_Outcome_Code?
+&$expand=nego_type($expand=nego_parent_type($expand=*)),texts,localized
 Cookie: {{cookie}}
 Accept-Language: ko
+
 ### Multi Select | Expand All[Texts,Localized]
-GET {{reviews-service}}/ScOutcomeCode?
-&$expand=texts,localized
+GET {{reviews-service}}/Sc_Outcome_Code?
+&$expand=nego_type($expand=nego_parent_type($expand=*)),texts,localized
 Cookie: {{cookie}}
 Accept-Language: en
 
+### Multi Select | Materialized[Select,Filter,Localized]
+GET {{reviews-service}}/Sc_Outcome_Code?
+&$orderby=nego_type/sort_no desc,sort_no
+&$select=sort_no,tenant_id,nego_type_code,outcome_code,outcome_name
+&$expand=nego_type($select=sort_no,nego_type_name;$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name))
+Cookie: {{cookie}}
+Accept-Language: ko
+
+### Multi Select | Materialized[Select,Filter,Localized]
+GET {{reviews-service}}/Sc_Outcome_Code?
+&$orderby=sort_no,nego_type/sort_no desc
+&$select=sort_no,tenant_id,nego_type_code,outcome_code,outcome_name
+&$expand=nego_type($select=sort_no,nego_type_name;$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name))
+Cookie: {{cookie}}
+Accept-Language: ko
+
+### Multi Select | Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴
+GET {{reviews-service}}/Sc_Outcome_Code?
+&$orderby=nego_type/evaluation_type/sort_no,nego_type/sort_no,sort_no
+&$select=sort_no,tenant_id,nego_type_code,outcome_code,outcome_name
+&$expand=nego_type($select=sort_no,nego_type_name,evaluation_type;$expand=nego_parent_type($select=sort_no,nego_parent_type_name),evaluation_type($select=sort_no,evaluation_type_name))
+Cookie: {{cookie}}
+Accept-Language: ko
+
+### Multi Select | Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴-Compact
+GET {{reviews-service}}/Sc_Outcome_Code?
+&$orderby=nego_type/evaluation_type/sort_no,nego_type/sort_no,sort_no
+&$select=tenant_id,nego_type_code,outcome_code,outcome_name
+&$expand=nego_type($select=nego_type_name,evaluation_type;$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name))
+Cookie: {{cookie}}
+Accept-Language: ko
+
+### Multi Select V2 | Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴-Compact
+GET {{reviews-serviceV2}}/Sc_Outcome_Code?$format=json
+&$orderby=nego_type/evaluation_type/sort_no,nego_type/sort_no,sort_no
+# &$select=tenant_id,nego_type_code,nego_type/nego_type_name,outcome_code,outcome_name
+&$select=tenant_id,nego_type_code,nego_type/nego_type_name,outcome_code,outcome_name,nego_type/evaluation_type/evaluation_type_name
+&$expand=nego_type,nego_type/evaluation_type
+# &$expand=nego_type($select=nego_type_name,evaluation_type;$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name))
+Cookie: {{cookie}}
+Accept-Language: ko
+
 ### Multi Select | Localized
-GET {{reviews-service}}/ScOutcomeCode?
+GET {{reviews-service}}/Sc_Outcome_Code?
 &$expand=localized
 Cookie: {{cookie}}
-
-### Multi Select | Expand[1..*] Texts[TEXT] Test#1
-GET {{reviews-service}}/ScOutcomeCodeLocalized?&$expand=*
-### Multi Select | Expand[1..*] Texts[TEXT,LANGU] Test#2
-GET {{reviews-service}}/ScOutcomeCodeLocalized2?&$expand=*
-### Multi Select | Expand[1..0] TeLocalized[TEXT] Test#3
-GET {{reviews-service}}/ScOutcomeCodeLocalized3?&$expand=*
-### Multi Select | Expand[1..0] TeLocalized[TEXT,LANGU] Test#4
-GET {{reviews-service}}/ScOutcomeCodeLocalized4?&$expand=*
-Accept-Language: ko-KR
-### Multi Select | Expand[1..0] TeLocalized[TEXT,LANGU] Test#4
-GET {{reviews-service}}/ScOutcomeCodeLocalized4?&$expand=*
-Accept-Language: ko,en-US;q=0.9,en;q=0.8
-### Multi Select | Expand[1..0] TeLocalized[TEXT,LANGU] Test#4
-GET {{reviews-service}}/ScOutcomeCodeLocalized4?&$expand=*
-Accept-Language: en-US
-### Multi Select | Expand[1..0] TeLocalized[TEXT,LANGU] Test#4
-GET {{reviews-service}}/ScOutcomeCodeLocalized4?&$expand=*
-Accept-Language: jp,en-US;q=0.9,en;q=0.8
-### Multi Select | Expand[1..0] TeLocalized[TEXT,LANGU] Test#4
-GET {{reviews-service}}/ScOutcomeCodeLocalized4?&$expand=*
-Accept-Language: en-US,en-US;q=0.9,jp;q=0.8
-
-### SQL Editor Test
-#   SELECT TOP 1000
-#   session_context('LOCALE'),
-#   	"TENANT_ID",
-#   	"OUTCOME_CODE",
-#   	"NEGO_TYPE_CODE",
-#   	"NEGO_TYPE_NAME",
-#   	texts[locale='en_US'].NEGO_TYPE_NAME,
-#   	texts[locale='en_US'].locale,
-#   	localized.NEGO_TYPE_NAME,
-#   	localized.locale
-#   FROM "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_OUTCOME_CODE"
-#   ;
-#   SELECT TOP 1000
-#   session_context('LOCALE'),
-#   	"TENANT_ID",
-#   	"OUTCOME_CODE",
-#   	"NEGO_TYPE_CODE",
-#   	"NEGO_TYPE_NAME",
-#   	texts.NEGO_TYPE_NAME,
-#   	texts.locale,
-#   	localized.NEGO_TYPE_NAME,
-#   	localized.locale
-# #   FROM "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_OUTCOME_CODE"
-# SELECT TOP 1000
-# 	"NEGO_TYPE_NAME",
-#     texts["LOCALE"='ko'].NEGO_TYPE_NAME,texts[locale='ko'].locale
-# FROM "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_OUTCOME_CODE"
-# ;
-# SELECT TOP 1000
-# 	"NEGO_TYPE_NAME",
-#     texts["LOCALE"='en_US'].NEGO_TYPE_NAME,texts[locale='en_US'].locale
-# FROM "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_OUTCOME_CODE"
-# ;
-# SELECT TOP 1000
-# 	"NEGO_TYPE_NAME",
-#     texts["LOCALE"='en_US'].NEGO_TYPE_NAME,texts[locale='en_US'].locale,
-# 	localized.NEGO_TYPE_NAME, localized.locale
-# FROM "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_OUTCOME_CODE"
-# ;
-
-### Single Template Insert
-POST {{reviews-service}}/ScOutcomeCode?
-Cookie: {{cookie}}
-Content-Type: application/json
-
-{
-   "tenant_id": "L2100",
-    "nego_type_code": "RFQ",
-    "outcome_code": "010",
-    # "sort_no": 1,
-    "outcome_name": "RFQ (견적계획)",
-    "local_create_dtm": "2021-01-21T13:17:01Z",
-    "local_update_dtm": "2021-01-21T13:17:01Z",
-    "create_user_id": "anonymous",
-    "update_user_id": "anonymous",
-    "system_create_dtm": "2021-01-21T04:17:01Z",
-    "system_update_dtm": "2021-01-21T04:17:01Z"
-}
-
-
-### Single Template Update
-PUT {{reviews-service}}/ScOutcomeCode(tenant_id='L2100',nego_type_code='RFQ',outcome_code='010')?
-# &$select=*
-# &$expand=*
-Cookie: {{cookie}}
-Accept:application/json;odata.metadata=minimal;IEEE754Compatible=true
-Content-Type: application/json
-
-{
-   "tenant_id": "L2100",
-    "nego_type_code": "RFQ",
-    "outcome_code": "010",
-    "sort_no": 0.0,
-    "outcome_name": "RFQ (견적계획)",
-    "local_create_dtm": "2021-01-21T13:17:01Z",
-    "local_update_dtm": "2021-01-21T13:17:01Z",
-    "create_user_id": "anonymous",
-    "update_user_id": "anonymous",
-    "system_create_dtm": "2021-01-21T04:17:01Z",
-    "system_update_dtm": "2021-01-21T04:17:01Z",
-    "texts": [ {"outcome_name": "견적 요청", "locale": "ko"}
-    , {"outcome_name": "견적 요청", "locale": "ko_KR"}
-    , {"outcome_name": "RFQ", "locale": "en_US"}
-    , {"outcome_name": "RFQ", "locale": "en"}
-    , {"outcome_name": "要求报价", "locale": "zh-Hans_KR"}
-    , {"outcome_name": "要求报价", "locale": "zh"}
-    , {"outcome_name": "견적 요청(빈로케일)", "locale": ""}
-    , {"outcome_name": "견적 요청(빈로케일)", "locale": " "}
-    ]
-}
-
-///////////////////////////////////////////////////////////////////////////////////
-/// Outcome 2 without util.managed
-///////////////////////////////////////////////////////////////////////////////////
-
-
-### Multi Select | Expand All[Texts,Localized]
-GET {{reviews-service}}/ScOutcomeCode2?
-&$expand=texts,localized
-Cookie: {{cookie}}
-
-
-### Single Template Insert
-POST {{reviews-service}}/ScOutcomeCode2?
-Cookie: {{cookie}}
-Content-Type: application/json
-
-{
-   "tenant_id": "L2100",
-    "nego_type_code": "RFQ",
-    "outcome_code": "010",
-    "sort_no": 0,
-    "nego_type_name": null
-}
-
-### Single Template Insert
-PUT {{reviews-service}}/ScOutcomeCode2(tenant_id='L2100',nego_type_code='RFQ',outcome_code='010')?
-Cookie: {{cookie}}
-Content-Type: application/json
-
-{
-   "tenant_id": "L2100",
-    "nego_type_code": "RFQ",
-    "outcome_code": "010",
-    "sort_no": 0,
-    "nego_type_name": null
-}
-
-# {
-#     "error": {
-#         "code": "400001",
-#         "message": "Invalid CQN: Element 'local_update_dtm' does not exist in entity 'sp.SourcingTest01V4Service.ScOutcomeCode2'"
-#     }
-# }

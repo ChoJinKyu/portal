@@ -15,7 +15,9 @@ entity Sc_Tester00 : util.Managed {
 
 define view Sc_Language as
     select from cm.Currency_Lng{
-        language_code,
+    key tenant_id    ,
+    key currency_code,
+    key language_code,
         // cast( CURRENT_TIMESTAMP         as DateTime)    as current_timestamp         : DateTime   , 
         // cast( CURRENT_DATE              as String(30))  as currentDate               : String(30) , 
         // CURRENT_TIME                    as CURRENT_TIME      :Time       ,
