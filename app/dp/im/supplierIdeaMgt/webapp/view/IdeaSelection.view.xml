@@ -197,7 +197,7 @@
                                     <Label text="{I18N>/IDEA} {I18N>/MANAGER} : " labelFor="ideaManager" required="true"></Label>
                                     <Input id="ideaManager"  width="80%"  visible="{viewModel>/editMode}" placeholder="All"
                                         showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
-                                                        liveChange=".onNameChk" value="{details>/idea_manager_local_name}" >
+                                                        liveChange=".onNameChk" value="{master>/idea_manager_local_name}" >
                                     </Input>
                                     <Input id="ideaManagerId"  visible="false" value="{details>/idea_manager_empno}"  ></Input>
                                     <Text id="ideaManagerTxt" width="80%" textAlign="Left"  text="{master>/idea_manager_local_name}" visible="{viewModel>/showMode}"/>
