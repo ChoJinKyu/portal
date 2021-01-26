@@ -1,0 +1,15 @@
+
+{
+"materialCode": {"tableId": "materialCodeTable",
+                "oDataUrl": "/Material_Mst",
+                "filterPropertyName": "material_code",
+                "modelPath": "/materialCode"},
+"familyMaterialCode": {"tableId": "familyMaterialCodeTable",
+                    "oDataUrl": "/Material_Mst",
+                    "filterPropertyName": "material_code",
+                    "modelPath": "/failyMaterialCode"},
+"supplier": {"tableId": "supplierTable",
+            "oDataUrl": "/Supplier_Mst",
+            "filterPropertyName": "supplier_code",
+            "modelPath": "/supplier"}
+}
