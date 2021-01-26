@@ -240,7 +240,7 @@
 
                             <table:Column label="{I18N>/APPROVAL_STATUS_NAME}" width="8rem" hAlign="Center" >
                                 <table:template>
-                                    <Text text="{ path: 'list>approval_status' , formatter : '.labelFormatter' }" wrapping="false"/>
+                                    <Text text="{ path: 'list>approval_status' , formatter : '.labelColorFormatter' }" wrapping="false"/>
                                 </table:template>
                             </table:Column>
 

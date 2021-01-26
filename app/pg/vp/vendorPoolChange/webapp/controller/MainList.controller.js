@@ -195,9 +195,7 @@ sap.ui.define([
         },
 
         
-
         resetValue: function () {
-
             this.getView().byId("pop_higher_level_path").setText("");
             this.getView().byId("pop_operation_unit_name").setText("");
             this.getView().byId("pop_operation_unit_name1").setText("");
@@ -393,34 +391,7 @@ sap.ui.define([
 		 * @private
 		 */
         _onRoutedThisPage: function () {
-            // this.getModel("mainListView").setProperty("/headerExpanded", true);
 
-            // var self = this;
-            // var oModel = this.getModel('orgMap');
-            // oModel.setTransactionModel(this.getModel('purOrg'));
-            // oModel.read("/Pur_Org_Type_Mapping", {
-            //     filters: [
-            //         new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-            //         new Filter("process_type_code", FilterOperator.EQ, 'DP05') //금형 DP05
-            //     ],
-            //     success: function(oData){
-
-            //         var oModelDiv = self.getModel('division');
-            //         oModelDiv.setTransactionModel(self.getModel('purOrg'));
-            //         oModelDiv.read("/Pur_Operation_Org", {
-            //             filters: [
-            //                 new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-            //                 new Filter("org_type_code", FilterOperator.EQ, oData.results[0].org_type_code)
-            //             ],
-            //             sorters: [
-            //                 new Sorter("org_code", false)
-            //             ],
-            //             success: function(oData){
-
-            //             }
-            //         });
-            //     }
-            // });
         },
 
 		/**
@@ -519,7 +490,6 @@ sap.ui.define([
             } else {
                 return null;
             }
-
         },
 
         /*
@@ -541,15 +511,9 @@ sap.ui.define([
         /*
          *  $List 영역에서 Status Label 포맷을 위한 Formatter
          * */
-        labelFormatter : function (status) {
-            if (status === "IW") return 3;
-            if (status === "DR") return 1;
-            if (status === "RQ") return 8;
-            if (status === "IP") return 9;
-        },
 
-        labeFormatter2 : function (status) {
-            switch (status) {
+        labelColorFormatter : function (sStautsCodeParam) {
+            switch (sStautsCodeParam) {
                 case 'IW' : 
                     return 3;
                 case 'DR' : 
