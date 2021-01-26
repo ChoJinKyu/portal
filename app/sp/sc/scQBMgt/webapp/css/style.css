@@ -113,4 +113,12 @@
     
 }
 
+#abcd {
+    max-width: 48rem !important;
+}
+
+.maxWidth48 {
+    max-width: 48rem !important;
+}
+
 

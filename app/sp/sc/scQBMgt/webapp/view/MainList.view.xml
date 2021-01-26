@@ -31,7 +31,6 @@
         <f:title>
             <f:DynamicPageTitle stateChange="stateChange">
                 <f:heading>
-                    <!-- <Title text="{i18n>appTitle}" /> -->
                     <Title text="Negotiation Workbench" />
                 </f:heading>
                 <f:snappedContent>
@@ -39,83 +38,16 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" visible="false" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
             </f:DynamicPageTitle>
         </f:title>
 
         <f:header> 
             <f:DynamicPageHeader pinnable="true">
-                <!-- <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
-                         >
-                    <form:content> -->
-                    <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false"
-                                considerSelectionVariants="true" entitySet="MICategoryHierarchyStructureView" search="filterSearch" >
-
-                                <smartFilterBar:controlConfiguration>
-                                    
-                                    <smartFilterBar:ControlConfiguration key="path_code" index="1" label="{I18N>/CATEGORY_CODE}" width="100%"
-                                        groupId="_BASIC" visibleInAdvancedArea="true" >
-                                        <smartFilterBar:customControl>
-                                            <HBox width="100%">
-                                                <Input id="filterCategoryCode" placeholder="Category Code" liveChange="liveCategoryCode"/>
-                                                <Input id="filterCategoryCode2" placeholder="Category Code" liveChange="liveCategoryCode"/>
-                                                <Input id="filterCategoryCode3" placeholder="Category Code" liveChange="liveCategoryCode"/>
-                                                <layoutData>
-                                                    <layout:GridData span="XL3 L3 M3 S3" />
-                                                </layoutData>
-                                            </HBox>
-                                            
-                                            
-                                        </smartFilterBar:customControl>
-                                        
-                                    </smartFilterBar:ControlConfiguration>
-
-                                    <smartFilterBar:ControlConfiguration key="category_name" index="2" label=""
-                                        groupId="_BASIC" visibleInAdvancedArea="true">
-                                        <smartFilterBar:customControl>
-                                            <Input id="filterCategoryName" placeholder="Category Name" />
-                                        </smartFilterBar:customControl>
-                                    </smartFilterBar:ControlConfiguration>
-                                    <smartFilterBar:ControlConfiguration key="system_create_dtm" index="3" label="{I18N>/WRITE_DATE}"
-                                        groupId="_BASIC" visibleInAdvancedArea="true" class="widthAdd">
-                                        <smartFilterBar:customControl>
-                                        <DateRangeSelection 
-                                            id="filterCreateDate" 
-                                            showFooter="true" placeholder="YYYY/MM/DD - YYYY/MM/DD" displayFormat="yyyy/MM/dd"
-                                            change="filterCreateDateChange"/>	
-                                        </smartFilterBar:customControl>
-                                    </smartFilterBar:ControlConfiguration>
-                                    
-
-                                    <!-- <smartFilterBar:ControlConfiguration key="aaa" index="3" label="TEST"
-                                        groupId="_BASIC" visibleInAdvancedArea="true">
-                                        <smartFilterBar:customControl>
-                                            <ComboBox
-                                                items="{
-                                                    path: '/MICategoryHierarchyStructureView',
-                                                    sorter: {
-                                                        path: 'parent_node_id',
-                                                        descending: false,
-                                                        group: true
-                                                    }
-                                                }">
-                                                <core:Item key="{category_code}" text="{category_code}" />
-                                            </ComboBox>
-                                        </smartFilterBar:customControl>
-                                    </smartFilterBar:ControlConfiguration> -->
-
-                                </smartFilterBar:controlConfiguration>
-                                <smartFilterBar:layoutData>
-                                    <FlexItemData shrinkFactor="0"/>
-                                </smartFilterBar:layoutData>
-                                
-                            </smartFilterBar:SmartFilterBar>
-
-
-
-
-                        <!-- <VBox width="100%">
+                <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" >
+                    <form:content>
+                        <VBox width="100%">
                             <HBox width="100%" class="sapUiSmallMarginBottom">
                                 <VBox width="25%">
                                     <Label text="Negotiation Type" labelFor="Negotiation Type" class="sapMLabelNoText" ></Label>
@@ -248,9 +180,9 @@
                                     </layoutData>
                                 </VBox>
                             </HBox>
-                        </VBox>  -->
-                    <!-- </form:content>
-                </form:SimpleForm> -->
+                        </VBox> 
+                    </form:content>
+                </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -260,20 +192,13 @@
                             enableAutoBinding="true" tableBindingPath="{viewModel>/NegoHeaders}"
                             class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
                             initiallyVisibleFields=""
-                            beforeRebindTable="beforeRebindTable"
-                            >
-				<!-- layout data used to make the table growing but the filter bar fixed -->
-				<!-- <smartTable:layoutData>
-					<FlexItemData growFactor="1" baseSize="0%"/>
-				</smartTable:layoutData> -->
+                            beforeRebindTable="beforeRebindTable">
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
-                            <!-- <OverflowToolbarButton text="abcd" type="Transparent" enabled="true" /> -->
                             <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true" press="test1" />
                             <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
                             <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
-                            <!-- <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/> -->
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                     <t:Table 
@@ -617,446 +542,11 @@
                                     <Text text="{interface_source}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-
-
-
-
-
-                            <!-- <t:Column width="10rem">
-                                <Label text="nego_document_number" design="Bold"/>
-                                <t:template>
-                                    <Text text="{Header/nego_document_number}" wrapping="false" />
-                                </t:template> 
-                            </t:Column> -->
                         </t:columns>
-
-
-
-
-
-
-
-                        <!-- <columns>
-                            <Column width="100px" hAlign="Left">
-                                <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "NegoHeaders/nego_document_number", "maxLength": "5","columnIndex":"4", 
-                                        "leadingProperty": "NegoHeaders/nego_document_number"}' />
-                                </customData>
-                                <Text text="nego_document_number" />
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="{NegoHeaders/nego_document_number}" />
-                                </cells>
-                            </ColumnListItem>
-                        </items> -->
                     </t:Table>
                     
 			</smartTable:SmartTable>
-            
-
-            <!-- <VBox> -->
-            <!-- <smartTable:SmartTable id="stable1" tableBindingPath="{main>/list}" entitySet="{main>/list}"
-                tableType="Table"
-                app:p13nDialogSettings="{group:{visible:false}}"
-                useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="false"
-                useTablePersonalisation="true" showTablePersonalisation="false" header="Negotiation Workbench List" showRowCount="true"
-                persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true"
-                demandPopin="true" class="sapUiResponsiveContentPadding"> -->
-                <!-- <smartTable:SmartTable id="aa" entitySet="NegoHeaders"
-                        smartFilterId="smartFilterBar" tableType="ResponsiveTable"
-                        useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="false"
-                        useTablePersonalisation="true" header="Line Items" showRowCount="true"
-                        enableAutoBinding="true"
-                        initiallyVisibleFields="tenant_id"
-                        demandPopin="true" class="sapUiResponsiveContentPadding"> -->
-                    <!-- <smartTable:customToolbar>
-                        <OverflowToolbar >
-                            <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
-                            <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
-                        
-                           
-                            <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
-                                            buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
-                            <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="Template Download"/>           
-    
-                            <MenuButton buttonMode="Split" useDefaultActionOnly="true" 
-                                        icon="sap-icon://excel-attachment" defaultAction=".onExport">
-                                <menu>
-                                   
-                                </menu>
-                            </MenuButton>
-                        </OverflowToolbar>
-                    </smartTable:customToolbar> -->
-                    <!-- <t:Table id="testTable" rows="{viewModel>/NegoHeaders}">
-                        <t:columns>
-                            <t:Column width="10rem">
-                                <Label text="tenant_id" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>tenant_id}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="4rem">
-                                <Label text="Rev." design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>nego_header_id}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="5rem">
-                                <Label text="Status" design="Bold"/>
-                                <t:template>
-                                    <Text text="{operation_unit_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                        </t:columns>
-                    </t:Table> -->
-                <!-- </smartTable:SmartTable> -->
-
-
-                <!-- <t:Table id="table1"
-				rows="{main>/list}"
-				selectionMode="MultiToggle"
-				visibleRowCount="14"
-                cellClick="tableCellClick"
-                showColumnVisibilityMenu="true"
-                threshold="10"
-                enableColumnFreeze="true"
-                rowSelectionChange="rowSelection"
-                enableGrouping="true"
-				ariaLabelledBy="title"> 
-				<t:extension>
-					<OverflowToolbar>
-						<Title text="Negotiation Workbench List (17)"/>
-						<ToolbarSpacer/>
-                        <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true"  />
-                        <Button text="{I18N>/CREATE}" type="Transparent" press=".onMainTableCreate" enabled="true"  />
-                        <Button
-                            icon="sap-icon://sort" type="Transparent"
-                            tooltip="Sort"
-                            press="getSelectedIndices"/>
-                        <Button
-                            icon="sap-icon://filter" type="Transparent"
-                            tooltip="Filter"
-                            press="getSelectedIndices"/>
-                        <Button
-                            icon="sap-icon://settings" type="Transparent"
-                            tooltip="setting"
-                            press="getSelectedIndices"/>
-					</OverflowToolbar>
-				</t:extension>
-
-				<t:columns>
-					<t:Column width="10rem">
-						<Label text="Negotiation No" design="Bold"/>
-						<t:template>
-							<Text text="{c1}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="4rem">
-						<Label text="Rev." design="Bold"/>
-						<t:template>
-							<Text text="{c2}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="5rem">
-						<Label text="Status" design="Bold"/>
-						<t:template>
-							<Text text="{c3}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="7rem">
-						<Label text="Award Status" design="Bold" />
-						<t:template>
-							<Text text="{c4}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="6rem" hAlign="End">
-						<Label text="회신횟수" design="Bold"/>
-						<t:template>
-							<Text text="{c5}" wrapping="false"  />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="6rem" hAlign="End">
-						<Label text="협력사수" design="Bold"/>
-						<t:template>
-							<Text text="{c6}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="7rem">
-						<Label text="Participation" design="Bold"/>
-						<t:template>
-							<Text text="{c7}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="6rem" hAlign="Center">
-						<Label text="잔여시간" design="Bold"/>
-						<t:template>
-							<Text text="{c8}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="18rem" hAlign="Center">
-						<Label text="제목" design="Bold" />
-						<t:template>
-							<Text text="{c9}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="5rem" hAlign="End">
-						<Label text="품목수" design="Bold"/>
-						<t:template>
-							<Text text="{c10}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="10rem">
-						<Label text="Negotiation 유형"  design="Bold"/>
-						<t:template>
-							<Text text="{c11}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="8rem" hAlign="Center">
-						<Label text="Quote Style" design="Bold"/>
-						<t:template>
-							<Text text="{c12}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="8rem" hAlign="Center">
-						<Label text="Bid Open Status" design="Bold"/>
-						<t:template>
-							<Text text="{c13}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="12rem" hAlign="Center">
-						<Label text="Outcome" design="Bold"/>
-						<t:template>
-							<Text text="{c14}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="10rem">
-						<Label text="Req Submission No" design="Bold"/>
-						<t:template>
-							<Text text="{c15}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="10rem">
-						<Label text="Submission Status" design="Bold"/>
-						<t:template>
-							<Text text="{c16}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="8rem" hAlign="Center">
-						<Label text="Req Reapproval" design="Bold"/>
-						<t:template>
-							<Text text="{c17}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="10rem">
-						<Label text="Part No" design="Bold"/>
-						<t:template>
-							<Text text="{c18}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="10rem">
-						<Label text="Description" design="Bold"/>
-						<t:template>
-							<Text text="{c19}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="8rem" hAlign="Center">
-						<Label text="요청자" design="Bold"/>
-						<t:template>
-							<Text text="{c20}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="10rem" hAlign="Center">
-						<Label text="요청 부서" design="Bold"/>
-						<t:template>
-							<Text text="{c21}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="12rem" hAlign="Center">
-						<Label text="Award 유형" design="Bold"/>
-						<t:template>
-							<Text text="{c22}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="구매담당자" design="Bold" />
-						<t:template>
-							<Text text="{c23}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="구매팀" design="Bold"/>
-						<t:template>
-							<Text text="{c24}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Open Date" design="Bold"/>
-						<t:template>
-							<Text text="{c25}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Close Date" design="Bold"/>
-						<t:template>
-							<Text text="{c26}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Extention Period" design="Bold"/>
-						<t:template>
-							<Text text="{c27}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Extention Times" design="Bold" />
-						<t:template>
-							<Text text="{c28}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Actual Extension Times" design="Bold"/>
-						<t:template>
-							<Text text="{c29}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Requisition Flag" design="Bold"/>
-						<t:template>
-							<Text text="{c30}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Price Submission No" design="Bold"/>
-						<t:template>
-							<Text text="{c31}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Price Submission Status" design="Bold"/>
-						<t:template>
-							<Text text="{c32}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="생성 날짜" design="Bold"/>
-						<t:template>
-							<Text text="{c33}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-                    <t:Column width="14rem" hAlign="Center">
-						<Label text="Interface Source" design="Bold"/>
-						<t:template>
-							<Text text="{c34}" wrapping="false" />
-						</t:template> 
-					</t:Column>
-					
-				</t:columns>
-			</t:Table> -->
-            <!-- </smartTable:SmartTable> -->
-                <!-- <t:table> -->
-
-
-
-                 <!-- <ScrollContainer vertical="true" height="400px"> -->
-                        <!-- <Table id="ListTable" mode="MultiSelect" itemPress="ListTableItemPress" width="auto" class="sapFDynamicPageAlignContent " >
-                            <headerToolbar>
-                                <OverflowToolbar asyncMode="true">   
-                                    <Title id="title" text="Negotiation Workbench List (2)" level="H2"/> 
-                                    <ToolbarSpacer/>
-                                    <Button text="Ariba" type="Transparent" enabled="true"  />
-                                    <Button id="mainTableButtonAllOpen" text="Create" type="Transparent" press=".onMainTableCreate" enabled="true"  />
-                                    <Button
-                                        icon="sap-icon://sort"
-                                        tooltip="Sort"
-                                        press="getSelectedIndices"/>
-                                    <Button
-                                        icon="sap-icon://filter"
-                                        tooltip="Sort"
-                                        press="getSelectedIndices"/>
-                                    <Button
-                                        icon="sap-icon://settings"
-                                        tooltip="Sort"
-                                        press="getSelectedIndices"/>
-                                    <ToolbarSeparator/>
-                                </OverflowToolbar>
-                            </headerToolbar>
-                            <columns>
-                                <Column  width="6rem" hAlign="Begin">
-                                    <Text text="Negotiation No" />
-                                </Column>
-                                <Column  width="4rem" hAlign="Begin">
-                                    <Text text="Rev." />
-                                </Column>
-                                <Column  width="4rem" hAlign="Begin">
-                                    <Text text="Status" />
-                                </Column>
-                                <Column  width="8rem" hAlign="Begin">
-                                    <Text text="Award Status" />
-                                </Column>
-                                <Column  width="8rem" hAlign="Begin">
-                                    <Text text="Reply(Count)" />
-                                </Column>
-                                <Column  width="10rem" hAlign="Begin">
-                                    <Text text="Suppliers(Count)" />
-                                </Column>
-                                <Column  width="5rem" hAlign="Begin">
-                                    <Text text="Partici pation" />
-                                </Column>
-                                <Column  width="8rem" hAlign="Begin">
-                                    <Text text="ReMaining time" />
-                                </Column>
-                                <Column  width="10rem" hAlign="Begin">
-                                    <Text text="Title" />
-                                </Column>
-                                <Column  width="5rem" hAlign="Begin">
-                                    <Text text="Parts(Count)" />
-                                </Column>
-                                <Column  width="10rem" hAlign="Begin">
-                                    <Text text="Negotiation Type" />
-                                </Column>
-                                <Column  width="5rem" hAlign="Begin">
-                                    <Text text="Quote Style" />
-                                </Column>
-                                <Column  width="5rem" hAlign="Begin">
-                                    <Text text="Bid Open Status" />
-                                </Column>
-                                <Column  width="5rem" hAlign="Begin">
-                                    <Text text="Out come" />
-                                </Column>
-                                <Column  width="8rem" hAlign="Begin">
-                                    <Text text="Req Submission Status" />
-                                </Column>
-                                <Column  width="100px" hAlign="Begin">
-                                    <Text text="Req Reapproval" />
-                                </Column>
-                                <Column  width="5rem" hAlign="Begin">
-                                    <Text text="Part No" />
-                                </Column>
-                                
-                            </columns>
-                            <items   type="Active">
-                            </items>
-                        </Table> -->
-                        <!-- </ScrollContainer> -->
-                    
-            <!-- </VBox> -->
-            
-            
         </f:content>
-        
-        
-        <!-- <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
-            </OverflowToolbar>
-        </f:footer> -->
     </f:DynamicPage>
     
 </mvc:View>

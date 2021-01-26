@@ -595,6 +595,8 @@ sap.ui.define([
                 //이동하려는 app의 component name,url
                 var sComponent = "sp.sc.scQBPages",
                     sUrl = "../sp/sc/scQBPages/webapp";
+
+                debugger;
                     
                 // 생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome / Header Id
                 var changeHash = "NW/" + pNegoTypeCode + "/" + pOutcome + "/" + pHeader_id;   
