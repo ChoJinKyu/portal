@@ -1,120 +1,120 @@
-VIEW SP_SM_MAKER_VIEW AS
-    SELECT
-        MASTER.TENANT_ID                AS TENANT_ID,
-		MASTER.SUPPLIER_CODE			AS MAKER_CODE,
-		MASTER.SUPPLIER_LOCAL_NAME		AS MAKER_LOCAL_NAME,
-		MASTER.SUPPLIER_ENGLISH_NAME	AS MAKER_ENGLISH_NAME,
-		MASTER.TAX_ID					AS TAX_ID,
-		MASTER.VAT_NUMBER 				AS VAT_NUMBER,
-		MASTER.COUNTRY_CODE 			AS COUNTRY_CODE,
-		MASTER.COUNTRY_NAME 			AS COUNTRY_NAME,
-		ORG.SUPPLIER_STATUS_CODE 		AS MAKER_STATUS_CODE,
-		SUPPLIER_STATUS_LNG.CODE_NAME	AS MAKER_STATUS_NAME,
-		MASTER.ZIP_CODE 				AS ZIP_CODE,
-		MASTER.LOCAL_ADDRESS_1			AS MAKER_LOCAL_CITY,
-		MASTER.LOCAL_ADDRESS_2			AS MAKER_LOCAL_REGION,
-		MASTER.LOCAL_ADDRESS_3			AS MAKER_LOCAL_ADDRESS,
-		MASTER.LOCAL_FULL_ADDRESS		AS MAKER_LOCAL_FULL_ADDRESS,
-		MASTER.ENGLISH_ADDRESS_1		AS MAKER_ENGLISH_CITY,
-		MASTER.ENGLISH_ADDRESS_2		AS MAKER_ENGLISH_REGION,
-		MASTER.ENGLISH_ADDRESS_3		AS MAKER_ENGLISH_ADDRESS,
-		MASTER.ENGLISH_FULL_ADDRESS 	AS MAKER_ENGLISH_FULL_ADDRESS,
-		MASTER.AFFILIATE_CODE 			AS AFFILIATE_CODE,
-		MASTER.AFFILIATE_CODE_NAME 		AS AFFILIATE_NAME,
-		MASTER.COMPANY_CLASS_CODE		AS COMPANY_CLASS_CODE,
-		MASTER.COMPANY_CLASS_NAME		AS COMPANY_CLASS_NAME,
-		MASTER.REPRE_NAME				AS REPRESENT_NAME,
-		MASTER.TEL_NUMBER				AS COMPANY_TEL_NUMBER,
-		MASTER.EMAIL_ADDRESS			AS COMPANY_EMAIL_ADDRESS,
-		ROLE.OLD_SUPPLIER_CODE			AS OLD_MAKER_CODE,
-		MASTER.LOCAL_CREATE_DTM			AS LOCAL_CREATE_DTM,
-		MASTER.LOCAL_UPDATE_DTM			AS LOCAL_UPDATE_DTM,
-		MASTER.CREATE_USER_ID			AS CREATE_USER_ID,
-		MASTER.UPDATE_USER_ID			AS UPDATE_USER_ID,
-		MASTER.SYSTEM_CREATE_DTM		AS SYSTEM_CREATE_DTM,
-		MASTER.SYSTEM_UPDATE_DTM		AS SYSTEM_UPDATE_DTM
-	FROM		SP_SM_SUPPLIER_MST MASTER
-	INNER JOIN	SP_SM_SUPPLIER_ORG ORG
-	ON			MASTER.TENANT_ID				= ORG.TENANT_ID
-	AND			MASTER.SUPPLIER_CODE			= ORG.SUPPLIER_CODE
-	INNER JOIN	SP_SM_SUPPLIER_ROLE ROLE
-	ON			MASTER.TENANT_ID				= ROLE.TENANT_ID
-	AND			MASTER.SUPPLIER_CODE			= ROLE.SUPPLIER_CODE
-	INNER JOIN	CM_ORG_UNIT BIZUNIT
-	ON			ORG.TENANT_ID					= BIZUNIT.TENANT_ID
-	AND			ORG.ORG_CODE					= BIZUNIT.BIZUNIT_CODE
-    LEFT OUTER JOIN	CM_CODE_LNG SUPPLIER_STATUS_LNG
-    ON          ORG.TENANT_ID           		= SUPPLIER_STATUS_LNG.TENANT_ID
-    AND         ORG.SUPPLIER_STATUS_CODE  		= SUPPLIER_STATUS_LNG.CODE
-    AND         SUPPLIER_STATUS_LNG.GROUP_CODE	= 'SP_SM_SUPPLIER_STATUS_CODE'
-    AND			SUPPLIER_STATUS_LNG.LANGUAGE_CD	= UPPER(SUBSTRING( SESSION_CONTEXT('LOCALE'),1,2))
-    WHERE		ROLE.BP_ROLE_CODE				= '100006'
-    GROUP BY
-        MASTER.TENANT_ID,
-		MASTER.SUPPLIER_CODE,
-		MASTER.SUPPLIER_LOCAL_NAME,
-		MASTER.SUPPLIER_ENGLISH_NAME,
-		MASTER.TAX_ID,
-		MASTER.VAT_NUMBER,
-		MASTER.COUNTRY_CODE,
-		MASTER.COUNTRY_NAME,
-		ORG.SUPPLIER_STATUS_CODE,
-		SUPPLIER_STATUS_LNG.CODE_NAME,
-		MASTER.ZIP_CODE,
-		MASTER.LOCAL_ADDRESS_1,
-		MASTER.LOCAL_ADDRESS_2,
-		MASTER.LOCAL_ADDRESS_3,
-		MASTER.LOCAL_FULL_ADDRESS,
-		MASTER.ENGLISH_ADDRESS_1,
-		MASTER.ENGLISH_ADDRESS_2,
-		MASTER.ENGLISH_ADDRESS_3,
-		MASTER.ENGLISH_FULL_ADDRESS,
-		MASTER.AFFILIATE_CODE,
-		MASTER.AFFILIATE_CODE_NAME,
-		MASTER.COMPANY_CLASS_CODE,
-		MASTER.COMPANY_CLASS_NAME,
-		MASTER.REPRE_NAME,
-		MASTER.TEL_NUMBER,
-		MASTER.EMAIL_ADDRESS,
-		ROLE.OLD_SUPPLIER_CODE,
-		MASTER.LOCAL_CREATE_DTM,
-		MASTER.LOCAL_UPDATE_DTM,
-		MASTER.CREATE_USER_ID,
-		MASTER.UPDATE_USER_ID,
-		MASTER.SYSTEM_CREATE_DTM,
-		MASTER.SYSTEM_UPDATE_DTM
-    ORDER BY
-        MASTER.TENANT_ID,
-		MASTER.SUPPLIER_CODE,
-		MASTER.SUPPLIER_LOCAL_NAME,
-		MASTER.SUPPLIER_ENGLISH_NAME,
-		MASTER.TAX_ID,
-		MASTER.VAT_NUMBER,
-		MASTER.COUNTRY_CODE,
-		MASTER.COUNTRY_NAME,
-		ORG.SUPPLIER_STATUS_CODE,
-		SUPPLIER_STATUS_LNG.CODE_NAME,
-		MASTER.ZIP_CODE,
-		MASTER.LOCAL_ADDRESS_1,
-		MASTER.LOCAL_ADDRESS_2,
-		MASTER.LOCAL_ADDRESS_3,
-		MASTER.LOCAL_FULL_ADDRESS,
-		MASTER.ENGLISH_ADDRESS_1,
-		MASTER.ENGLISH_ADDRESS_2,
-		MASTER.ENGLISH_ADDRESS_3,
-		MASTER.ENGLISH_FULL_ADDRESS,
-		MASTER.AFFILIATE_CODE,
-		MASTER.AFFILIATE_CODE_NAME,
-		MASTER.COMPANY_CLASS_CODE,
-		MASTER.COMPANY_CLASS_NAME,
-		MASTER.REPRE_NAME,
-		MASTER.TEL_NUMBER,
-		MASTER.EMAIL_ADDRESS,
-		ROLE.OLD_SUPPLIER_CODE,
-		MASTER.LOCAL_CREATE_DTM,
-		MASTER.LOCAL_UPDATE_DTM,
-		MASTER.CREATE_USER_ID,
-		MASTER.UPDATE_USER_ID,
-		MASTER.SYSTEM_CREATE_DTM,
-		MASTER.SYSTEM_UPDATE_DTM
+view sp_sm_maker_view as
+    select
+        master.tenant_id                as tenant_id,
+		master.supplier_code			as maker_code,
+		master.supplier_local_name		as maker_local_name,
+		master.supplier_english_name	as maker_english_name,
+		master.tax_id					as tax_id,
+		master.vat_number 				as vat_number,
+		master.country_code 			as country_code,
+		master.country_name 			as country_name,
+		org.supplier_status_code 		as maker_status_code,
+		supplier_status_lng.code_name	as maker_status_name,
+		master.zip_code 				as zip_code,
+		master.local_address_1			as maker_local_city,
+		master.local_address_2			as maker_local_region,
+		master.local_address_3			as maker_local_address,
+		master.local_full_address		as maker_local_full_address,
+		master.english_address_1		as maker_english_city,
+		master.english_address_2		as maker_english_region,
+		master.english_address_3		as maker_english_address,
+		master.english_full_address 	as maker_english_full_address,
+		master.affiliate_code 			as affiliate_code,
+		master.affiliate_code_name 		as affiliate_name,
+		master.company_class_code		as company_class_code,
+		master.company_class_name		as company_class_name,
+		master.repre_name				as represent_name,
+		master.tel_number				as company_tel_number,
+		master.email_address			as company_email_address,
+		role.old_supplier_code			as old_maker_code,
+		master.local_create_dtm			as local_create_dtm,
+		master.local_update_dtm			as local_update_dtm,
+		master.create_user_id			as create_user_id,
+		master.update_user_id			as update_user_id,
+		master.system_create_dtm		as system_create_dtm,
+		master.system_update_dtm		as system_update_dtm
+	from		sp_sm_supplier_mst master
+	inner join	sp_sm_supplier_org org
+	on			master.tenant_id				= org.tenant_id
+	and			master.supplier_code			= org.supplier_code
+	inner join	sp_sm_supplier_role role
+	on			master.tenant_id				= role.tenant_id
+	and			master.supplier_code			= role.supplier_code
+	inner join	cm_org_unit bizunit
+	on			org.tenant_id					= bizunit.tenant_id
+	and			org.org_code					= bizunit.bizunit_code
+    left outer join	cm_code_lng supplier_status_lng
+    on          org.tenant_id           		= supplier_status_lng.tenant_id
+    and         org.supplier_status_code  		= supplier_status_lng.code
+    and         supplier_status_lng.group_code	= 'SP_SM_SUPPLIER_STATUS_CODE'
+    and			supplier_status_lng.language_cd	= upper(substring( session_context('LOCALE'),1,2))
+    where		role.bp_role_code				= '100006'
+    group by
+        master.tenant_id,
+		master.supplier_code,
+		master.supplier_local_name,
+		master.supplier_english_name,
+		master.tax_id,
+		master.vat_number,
+		master.country_code,
+		master.country_name,
+		org.supplier_status_code,
+		supplier_status_lng.code_name,
+		master.zip_code,
+		master.local_address_1,
+		master.local_address_2,
+		master.local_address_3,
+		master.local_full_address,
+		master.english_address_1,
+		master.english_address_2,
+		master.english_address_3,
+		master.english_full_address,
+		master.affiliate_code,
+		master.affiliate_code_name,
+		master.company_class_code,
+		master.company_class_name,
+		master.repre_name,
+		master.tel_number,
+		master.email_address,
+		role.old_supplier_code,
+		master.local_create_dtm,
+		master.local_update_dtm,
+		master.create_user_id,
+		master.update_user_id,
+		master.system_create_dtm,
+		master.system_update_dtm
+    order by
+        master.tenant_id,
+		master.supplier_code,
+		master.supplier_local_name,
+		master.supplier_english_name,
+		master.tax_id,
+		master.vat_number,
+		master.country_code,
+		master.country_name,
+		org.supplier_status_code,
+		supplier_status_lng.code_name,
+		master.zip_code,
+		master.local_address_1,
+		master.local_address_2,
+		master.local_address_3,
+		master.local_full_address,
+		master.english_address_1,
+		master.english_address_2,
+		master.english_address_3,
+		master.english_full_address,
+		master.affiliate_code,
+		master.affiliate_code_name,
+		master.company_class_code,
+		master.company_class_name,
+		master.repre_name,
+		master.tel_number,
+		master.email_address,
+		role.old_supplier_code,
+		master.local_create_dtm,
+		master.local_update_dtm,
+		master.create_user_id,
+		master.update_user_id,
+		master.system_create_dtm,
+		master.system_update_dtm
 	;
