@@ -1,0 +1,333 @@
+<mvc:View controllerName="pg.vp.vendorPoolChange.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:table="sap.ui.table"
+    xmlns:lib-m="ext.lib.control.m"
+    height="100%">
+	<App id="app">
+        <f:DynamicPage id="page"
+            headerExpanded="{mainListView>/headerExpanded}" 
+            toggleHeaderOnTitleClick="true">
+            <!-- DynamicPage Title -->
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title text="{i18n>appTitle}" />
+                    </f:heading>
+                    <f:snappedContent>
+                        <form:SimpleForm 
+                            id="pageSearchFormS" 
+                            maxContainerCols="3" 
+                            editable="true" 
+                            layout="ResponsiveGridLayout" 
+                            adjustLabelSpan="false" 
+                            labelSpanL="4" 
+                            labelSpanM="4" 
+                            emptySpanL="0" 
+                            emptySpanM="0" 
+                            columnsL="2" 
+                            columnsM="2">
+                            <form:content>
+                                <VBox>
+                                    <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG_S" required="true"></Label>
+                                    <ComboBox id="search_Operation_ORG_S" width="12rem" items="{
+                                        path: 'search>/VpOperationOrg',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        sorter: { path: 'operation_org_code'}
+                                    }">
+                                        <items>
+                                            <core:Item key="{search>operation_org_code}" text="{search>operation_org_name}" />
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/OPERATION_UNIT}" labelFor="search_Operation_UNIT_S" required="true"></Label>
+                                    <ComboBox   id="search_Operation_UNIT_S" width="12rem"
+                                             items="{
+                                                        path : 'util>/Code',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
+                                                        ]
+                                                    }"
+                                             change="handleTable">
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox> 
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
+                                    </layoutData>                                     
+                                </VBox>                                
+                                 <VBox>
+                                 <Label text="{I18N>/CHANGE_DATE}" labelFor="search_Operation_DATE_S" required="true"></Label>
+                                 <DateRangeSelection 
+                                            id="search_Operation_DATE_S" 
+                                            showFooter="true" displayFormat="yyyy-MM-dd"
+                                            width="13rem" />	
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData> 
+                                </VBox>
+                              <VBox>
+                                    <Label text="{I18N>/CHANGER}" labelFor="search_Operation_CHANGER_S" required="true"></Label>
+                                    <ComboBox id="search_Operation_CHANGER_S" width="12rem"  items="{path: '/VpEmpView'}">
+                                        <items>
+                                            <core:Item key="{changer_empno}" text="{changer_name}" />
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                            </form:content>
+                        </form:SimpleForm>
+                    </f:snappedContent>
+                    <f:expandedContent>
+                        <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                            <form:content>
+                                <VBox>
+                                    <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG_E" required="true"></Label>
+                                    <ComboBox id="search_Operation_ORG_E" width="12rem"  items="{
+                                        path: 'search>/VpOperationOrg',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        sorter: { path: 'operation_org_code'}
+                                    }">
+                                        <items>
+                                            <core:Item key="{search>operation_org_code}" text="{search>operation_org_name}" />
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/OPERATION_UNIT}" labelFor="search_Operation_UNIT_E" required="true"></Label>
+                                    <ComboBox   id="search_Operation_UNIT_E" width="12rem"
+                                            items="{
+                                                        path : 'util>/Code',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
+                                                        ]
+                                                    }"
+                                    >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>  
+                                   <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData>                                    
+                                </VBox>
+                                <VBox>
+                                 <Label text="{I18N>/CHANGE_DATE}" labelFor="search_Operation_DATE_E" required="true"></Label>
+                                 <DateRangeSelection 
+                                            id="search_Operation_DATE_E" 
+                                            showFooter="true" displayFormat="yyyy-MM-dd"
+                                            width="13rem" />	
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData> 
+                                </VBox>
+                              <VBox>
+                                    <Label text="{I18N>/CHANGER}" labelFor="search_Operation_CHANGER_E" required="true"></Label>
+                                    <ComboBox id="search_Operation_CHANGER_E" width="12rem"  items="{path: '/VpEmpView'}">
+                                        <items>
+                                            <core:Item key="{changer_empno}" text="{changer_name}" />
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                            </form:content>
+                        </form:SimpleForm>
+                    </f:expandedContent>
+                    <f:actions>
+                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                    </f:actions>
+                    <f:actions>
+                        <Button id="pageRequestButton" text="{I18N>/REQUEST}" type="Emphasized" press=".onPageRequestButtonPress" />
+                    </f:actions>
+                </f:DynamicPageTitle>
+            </f:title>
+            <!-- DynamicPage Header -->
+            <f:header>
+                <f:DynamicPageHeader pinnable="true">
+                    <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text= "{I18N>/VENDOR_POOL}" labelFor="search_Vp_Name"></Label>
+                                <HBox>
+                                    <SearchField id="search_Vp_Name"
+                                                search=".onDialogTreeCreate"
+                                                width="12rem"
+                                                />
+                                    <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
+                                </HBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>                        
+                            <VBox>
+                            <Label text="Working Status: " labelFor="searchCodeSegmentButton"></Label>
+                            <SegmentedButton id="searchCodeSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                <items>
+                                    <SegmentedButtonItem text="All" key="" width="6em" />
+                                    <SegmentedButtonItem text="In Work" key="IW" width="6em" />
+                                    <SegmentedButtonItem text="Draft" key="DR" width="6em" />
+                                    <SegmentedButtonItem text="Requested" key="RQ" width="6em" />
+                                    <SegmentedButtonItem text="In Progress" key="IP" width="6em" />
+                                    <!-- <SegmentedButtonItem text="{I18N>/ALL}" key="" width="6em" />
+                                    <SegmentedButtonItem text="{I18N>/WORK}" key="IW" width="6em" />
+                                    <SegmentedButtonItem text="{I18N>/DRAFT}" key="DR" width="6em" />
+                                    <SegmentedButtonItem text="{I18N>/REQUEST}" key="RQ" width="6em" />
+                                    <SegmentedButtonItem text="{I18N>/PROGRESS}" key="IP" width="6em" /> -->
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData span="XL10 L9 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:DynamicPageHeader>
+            </f:header>
+            <f:content>
+                <!-- <VBox> -->
+                    <table:Table
+                        id="mainTable"
+                        selectionMode="MultiToggle"
+                        fixedColumnCount="0"
+                        rows="{
+                            path: 'list>/VpChangeList',
+                            filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]
+                            }"
+                        enableColumnReordering="false"
+                        visibleRowCountMode="Auto">
+                    <table:columns>
+                            <table:Column label="{I18N>/HIGHER_LEVEL}" width="8rem" hAlign="Center">
+                                <table:template>
+                                    <Text text="{list>higher_level_path}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="{I18N>/VENDOR_POOL}" width="9rem" hAlign="Center" >
+                                <table:template>
+                                    <Text text="{list>vendor_pool_local_name}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="{I18N>/APPROVAL_NO}" width="8rem" hAlign="Center" >
+                                <table:template>
+                                    <Text text="{list>approval_number}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="{I18N>/APPROVAL_TITLE_NAME}" width="8rem" hAlign="Center" >
+                                <table:template>
+                                    <Text text="{list>approval_title}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="{I18N>/APPROVAL_STATUS_NAME}" width="8rem" hAlign="Center" >
+                                <table:template>
+                                    <Text text="{ path: 'list>approval_status' , formatter : '.labelFormatter' }" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="{I18N>/REQUEST_DATE}" width="8rem" hAlign="Center">
+                                <table:template>
+                                    <Text text="{list>request_date}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="{I18N>/CHANGE_DATE}" width="8rem" hAlign="Center" >
+                                <table:template>
+                                    <Text text="{ path: 'list>change_date', formatter : '.setDateFormatter'}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column label="{I18N>/CHANGER}" width="8rem" hAlign="Center">
+                                <table:template>
+                                    <Text text="{list>changer_name}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column headerSpan="3" hAlign="Center" width="8rem">
+                                <table:multiLabels>
+                                    <Label text="{I18N>/ASIS}" />
+                                    <Label text="{I18N>/SUPPLIER_CODE}" />
+                                </table:multiLabels>
+                                <table:template>
+                                    <Text text="{list>asis_supplier_code}" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column  hAlign="Center" width="8rem">
+                                <table:multiLabels>
+                                    <Label text="{I18N>/ASIS}" />
+                                    <Label text="{I18N>/SUPPLIER_LOCAL_NAME}" />
+                                </table:multiLabels>
+                                <table:template>
+                                    <Text text="{list>asis_supplier_local_name}" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column hAlign="Center" width="8rem">
+                                <table:multiLabels>
+                                    <Label text="{I18N>/ASIS}" />
+                                    <Label text="{I18N>/SUPPLIER_TYPE}" />
+                                </table:multiLabels>
+                                <table:template>
+                                    <Text text="{list>asis_supplier_register_status_name}" />
+                                </table:template>
+                            </table:Column>
+
+                             <table:Column headerSpan="3" hAlign="Center" width="8rem">
+                                <table:multiLabels>
+                                    <Label text="{I18N>/TOBE}" />
+                                    <Label text="{I18N>/SUPPLIER_CODE}" />
+                                </table:multiLabels>
+                                <table:template>
+                                    <Text text="{list>tobe_supplier_code}" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column  hAlign="Center" width="8rem">
+                                <table:multiLabels>
+                                    <Label text="{I18N>/TOBE}" />
+                                    <Label text="{I18N>/SUPPLIER_LOCAL_NAME}" />
+                                </table:multiLabels>
+                                <table:template>
+                                    <Text text="{list>tobe_supplier_local_name}" />
+                                </table:template>
+                            </table:Column>
+                            
+                            <table:Column  hAlign="Center" width="8rem">
+                                <table:multiLabels>
+                                    <Label text="{I18N>/TOBE}" />
+                                    <Label text="{I18N>/SUPPLIER_TYPE}" />
+                                </table:multiLabels>
+                                <table:template>
+                                    <Text text="{list>tobe_supplier_register_status_name}" />
+                                </table:template>
+                            </table:Column>
+                        </table:columns>
+                    </table:Table>            
+                <!-- </VBox> -->
+            </f:content>
+            <!-- DynamicPage Footer -->
+            <f:footer>
+            </f:footer>
+        </f:DynamicPage>
+	</App>
+</mvc:View>

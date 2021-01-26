@@ -1,0 +1,238 @@
+{
+    "_version": "1.12.0",
+    "sap.app": {
+        "id": "pg.vp.vendorPoolChange",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "ach": "set-ach",
+        "resources": "resources.json",
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v2/pg.vendorPoolChangeService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "vpSearchService": {
+                "uri": "srv-api/odata/v2/pg.vendorPoolSearchService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "mappingService": {
+                "uri": "srv-api/odata/v2/pg.vendorPoolMappingService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "vpMappingProc": {
+                "uri": "srv-api/odata/v4/pg.VpMappingV4Service/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            },
+            "commonUtilService": {
+                "uri": "srv-api/odata/v2/cm.util.CommonService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "orgMgrService": {
+                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "sap-icon://task",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "pg.vp.vendorPoolChange.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.66.0",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {},
+                "sap.f": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "handleValidation": true,
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "pg.vp.vendorPoolChange.i18n.i18n"
+                }
+            },
+            "util": {
+                "dataSource": "commonUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "mapping": {
+                "dataSource": "mappingService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "vpMappingProc": {
+                "dataSource": "vpMappingProc",
+                "preload": false,
+                "settings": {
+                    "operationMode": "Server",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true
+                }
+            },
+            "org": {
+                "dataSource": "orgMgrService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "search": {
+                "dataSource": "vpSearchService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true,
+                    "useBatch": true
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": false,
+                "settings": {
+                    "operationMode": "Server",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true
+                }
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "resourceRoots": {
+            "ext.lib": "../../../../lib",
+            "ext.util": "../../../util"
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "pg.vp.vendorPoolChange.view",
+                "controlId": "fcl",
+                "transition": "slide",
+                "bypassed": {
+                    "target": [
+                        "notFound"
+                    ]
+                },
+                "async": true
+            },
+            "routes": [
+                {
+                    "pattern": ":layout:",
+                    "name": "mainPage",
+                    "target": [
+                        "mainObject"
+                    ]
+                },
+                {
+                    "pattern": "midObject/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{target}",
+                    "name": "midPage",
+                    "target": [
+                        "midTreeObject"
+                    ]
+                },
+                {
+                    "pattern": "midObjectDetail/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{target}",
+                    "name": "midPageDetail",
+                    "target": [
+                        "midTreeObject",
+                        "midDetailObject"
+                    ]
+                }
+            ],
+            "targets": {
+                "mainObject": {
+                    "viewName": "MainList",
+                    "controlAggregation": "beginColumnPages"
+                },
+                "midTreeObject": {
+                    "viewName": "MidObjectTree",
+                    "controlAggregation": "beginColumnPages"
+                },
+                "midDetailObject": {
+                    "viewName": "MidObjectDetail",
+                    "controlAggregation": "midColumnPages"
+                },
+                "notFound": {
+                    "viewName": "MidObjectNotFound",
+                    "viewId": "notFound"
+                }
+            }
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "sppCap_ui_dev"
+    }
+}
