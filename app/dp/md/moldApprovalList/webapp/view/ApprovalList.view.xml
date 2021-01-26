@@ -272,7 +272,7 @@
                     width="auto"
                     items="{
                         path: 'list>/Approvals',
-                        sorter: { path: 'sort_no'}
+                        sorter: { path: 'sort_no'}         
                     }"
                     >
                     <headerToolbar>

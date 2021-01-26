@@ -29,11 +29,12 @@ sap.ui.define([
     'sap/ui/core/util/ExportTypeCSV',
     "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/ExcelUtil",
-    "ext/lib/util/Validator"
+    "ext/lib/util/Validator",
+    "sap/ui/model/Sorter"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
     , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
-    , Validator) {
+    , Validator, Sorter) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -86,6 +87,7 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "list_temp");
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "requestors");
             this.setModel(new JSONModel(), "excelModel");
@@ -1126,16 +1128,38 @@ sap.ui.define([
 		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
 		 * @private
 		 */
+        
         _applySearch: function (aSearchFilters) {
             console.log(aSearchFilters);
+            //aSearchFilters.push(n)
+            // var aSorter = [];
+            // aSorter.push(new Sorter("approval_number", true));
+            this.setModel(new ManagedListModel(), "list");
             var oView = this.getView(),
-                oModel = this.getModel("list");
+                oModel = this.getModel("list_temp"),
+                nModel = this.getModel("list") 
+                ;
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
             oModel.read("/Approvals", {
                 filters: aSearchFilters,
                 success: function (oData) {
+                    if( oModel.getData().Approvals != undefined && oModel.getData().Approvals.length > 0 ){
+                        var approval_number = ""; 
+                        var idx = 0; 
+                        for(var i = 0 ; i < oModel.getData().Approvals.length ; i++){
+                            if(approval_number !== oModel.getData().Approvals[i].approval_number){
+                                nModel.addRecord(oModel.getData().Approvals[i] , "/Approvals", idx);
+                                approval_number = oModel.getData().Approvals[i].approval_number;
+                                idx++;
+                            }
+                        }
+
+
+                    }               
+                    console.log("nModel ::::", nModel);
                     oView.setBusy(false);
+                    
                 }
             });
            

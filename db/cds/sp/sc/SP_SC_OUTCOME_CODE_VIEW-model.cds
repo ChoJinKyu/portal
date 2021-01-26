@@ -77,6 +77,10 @@ entity Sc_Nego_Type_Code {
                              and evaluation_type.evaluation_type_code = $self.evaluation_type_code
                              @title : '평가유형 Navi.';
         nego_type_name        : localized String(240)                                    @title : '협상타입이름';
+        Outcomes : Association to many Sc_Outcome_Code 
+                             on Outcomes.tenant_id       = $self.tenant_id
+                             and Outcomes.nego_type_code = $self.nego_type_code
+                             @title : 'Outcomes Navi.';
 // nego_type_desc : localized String(1000)           @title : 'Description';
 };
 

@@ -115,7 +115,16 @@ GET {{reviews-serviceV2}}/Sc_Nego_Type_Code?$format=json
 Cookie: {{cookie}}
 Accept-Language: ko
 
-### Multi Select | Localized
-GET {{reviews-service}}/Sc_Outcome_Code?
+### Multi Select | NegoType + Outcome
+GET {{reviews-service}}/Sc_Nego_Type_Code?
+&$orderby=evaluation_type/sort_no,sort_no
+&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type
+&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($select=outcome_name)
+Cookie: {{cookie}}
+Accept-Language: ko
+
+### Multi Select | Outcome with NegoType
+GET {{reviews-service}}/Sc_Nego_Type_Code(tenant_id='L2100',nego_type_code='RFQ')/Outcomes?
 &$expand=localized
 Cookie: {{cookie}}
+Accept-Language: ko
