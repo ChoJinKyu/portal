@@ -10,8 +10,8 @@
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
     xmlns="sap.m"
-	height="100%">
-
+    height="100%"
+>
 	<uxap:ObjectPageLayout 
         id="page"
 		showTitleInHeaderContent="true"
@@ -23,11 +23,35 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{I18N>/PURCHASE_REQUISITION} {I18N>/'DISPLAY'}" wrapping="true" />
+					<Title text="(미정)구매요청 검토" wrapping="true" />
 				</uxap:expandedHeading>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavigationBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavigationBackPress" />
+                    <!-- 전체화면 -->
+                    <!-- visible="{= ${midObjectView>/screen} !== 'Full' }"
+                    <OverflowToolbarButton 
+                        icon="sap-icon://full-screen" 
+                        type="Transparent"
+                        tooltip="Enter Full Screen Mode" 
+                        press=".onNavigationActions.call(this, $event, 'default', { action: 'Full' })"
+                    />  -->
+                    <!-- 전체화면해제 -->
+                    <!-- visible="{= ${midObjectView>/screen} === 'Full' }"
+                    <OverflowToolbarButton 
+                        icon="sap-icon://exit-full-screen" 
+                        type="Transparent"
+                        tooltip="Exit Full Screen Mode" 
+                        press=".onNavigationActions.call(this, $event, 'default', { action: 'Exit' })"
+                    />  -->
+                    <!-- 뒤로가기 -->
+                    <!-- visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }" -->
+                    <OverflowToolbarButton 
+                        icon="sap-icon://decline" 
+                        type="Transparent"
+                        text="back" 
+                        tooltip="Back to the list" 
+                        press=".onNavigationActions.call(this, $event, 'default', { action: 'NavBack' })"
+                    />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -37,15 +61,18 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="{I18N>/PR_NUMBER} :"/>
                     <ObjectStatus
-                        text="{detailModel>/mst/pr_number}"/>
+                        text="{detailModel>/mst/pr_number}"
+                    />
                     <Label text="{I18N>/PR_REQUEST_DATE} :"/>
                     <ObjectStatus
-                        text="{ path: 'detailModel>/mst/request_date',
-                                type: 'sap.ui.model.type.Date',
-                                formatOptions: {
+                        text="{ 
+                            path: 'detailModel>/mst/request_date',
+                            type: 'sap.ui.model.type.Date',
+                            formatOptions: {
                                 pattern: 'yyyy-MM-dd'
-                                }
-                            }"/>
+                            }
+                        }"
+                    />
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -96,33 +123,35 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                           <HBox alignItems="Center">
-                            <VBox>
-                                <Label
-                                    text="{I18N>/APPROVAL_TITLE}"                                      
-                                    class="sapUiTinyMarginEnd"
-                                    textAlign="Left"
-                                    labelFor="input"/>
-                            </VBox> 
-                             <VBox alignItems="Center">
-                                <Label
-                                    text="{detailModel>/mst/pr_header_text}"
-                                    visible="true"
-                                    width="40em"  >
-                                </Label>
-                            </VBox>
-                           </HBox>                           
+                            <HBox alignItems="Center">
+                                <VBox>
+                                    <Label
+                                        text="{I18N>/APPROVAL_TITLE}"                                      
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                    />
+                                </VBox> 
+                                <VBox alignItems="Center">
+                                    <Label
+                                        text="{detailModel>/mst/pr_header_text}"
+                                        visible="true"
+                                        width="40em"
+                                    />
+                                </VBox>
+                            </HBox>
                             <HBox alignItems="Center">
                                 <VBox>
                                 <Label
-                                    text="{I18N>/APPROVAL_CONTENTS}"                           
+                                    text="{I18N>/APPROVAL_CONTENTS}"
                                     class="sapUiTinyMarginEnd"
                                     textAlign="Left"
-                                    labelFor="input"/>
+                                    labelFor="input"
+                                />
                                 </VBox> 
                                 <VBox alignItems="Center">
-                                <FormattedText htmlText="{detailModel>/mst/approval_contents}"  width="40em"  />
-                                </VBox>   
+                                    <FormattedText htmlText="{detailModel>/mst/approval_contents}"  width="40em"/>
+                                </VBox>
                             </HBox>
                             
                         </layout:VerticalLayout> 						
@@ -135,18 +164,17 @@
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection>
                         <!-- Participating Supplier Table -->
-                        <table:Table id="pritemTable"
-                                selectionMode="None"
-                                fixedColumnCount="1"
-                                visibleRowCountMode="Auto"
-                                rows="{detailModel>/dtl}"
-                                >
-                             <table:extension>
+                        <table:Table 
+                            id="pritemTable"
+                            selectionMode="None"
+                            fixedColumnCount="1"
+                            visibleRowCountMode="Auto"
+                            rows="{detailModel>/dtl}"
+                        >
+                            <table:extension>
                                 <OverflowToolbar>
                                     <Title text="{I18N>/ITEM} ({= ${detailModel>/dtl}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <!-- Add the Personalization button -->
-                                    
                                     <Button icon="sap-icon://group-2" />
                                     <Button icon="sap-icon://action-settings" />
                                 </OverflowToolbar>
@@ -189,17 +217,18 @@
                                         <Text text="{detailModel>pr_unit}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column  width="8em"  hAlign="Center">
+                                <table:Column  width="8em" hAlign="Center">
                                     <Label text="납품일" />           
                                     <table:template>
                                         <Text text="{
-                                                    path:'detailModel>delivery_request_date',
-                                                    type:'sap.ui.model.odata.type.DateTime',
-                                                    formatOptions: {
-                                                        UTC: true,
-                                                        pattern: 'yyyy-MM-dd'
-                                                    }
-                                                }"/>
+                                                path:'detailModel>delivery_request_date',
+                                                type:'sap.ui.model.odata.type.DateTime',
+                                                formatOptions: {
+                                                    UTC: true,
+                                                    pattern: 'yyyy-MM-dd'
+                                                }
+                                            }"
+                                        />
                                     </table:template>
                                 </table:Column>    
                                 <table:Column  width="10em" hAlign="Center">
@@ -229,14 +258,12 @@
                                     </table:template>
                                 </table:Column> 
 
-
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="{I18N>/PURCHASING_GROUP_CODE}"/>           
                                     <table:template>
                                         <Text text="{detailModel>purchasing_group_code}"/>
                                     </table:template>
                                 </table:Column>
-
 
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="{I18N>/MATERIAL_GROUP_CODE}"/>           
@@ -245,14 +272,12 @@
                                     </table:template>
                                 </table:Column>
 
-
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="{I18N>/STORAGE_LOCATION}"/>           
                                     <table:template>
                                         <Text text="{detailModel>sloc_code}"/>
                                     </table:template>
-                                </table:Column>  
-
+                                </table:Column>
 
                                 <table:Column width="10em" hAlign="Center">
                                     <Label text="{I18N>/REMARK}"/>           
@@ -260,8 +285,6 @@
                                         <Text text="{detailModel>remark}"/>
                                     </table:template>
                                 </table:Column>  
-
-
 
                             </table:columns>
                           </table:Table>
@@ -271,7 +294,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
             <!-- 품목 정보 끝 -->
-
 
             <!-- 첨부파일 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="Attachment">
@@ -323,26 +345,24 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection titleUppercase="false">
 						<uxap:blocks>
-                           
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                           
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-
-		</uxap:sections>
+        </uxap:sections>
+        
 		<uxap:footer>
 			<OverflowToolbar>
-				<ToolbarSpacer />
-			    <Button type="Emphasized" id="Btn_Cancel"  text="{I18N>/CLOSE}"   press=".onNavigationBackPress" />
-				<Button type="Transparent"  id="Btn_PageEdit"  
-                    visible="{= ${detailModel>/mst/pr_create_status_code}==='10'?true:false }"  text="{I18N>/EDIT}"     press=".onPageEditButtonPress"/>
-                <Button type="Transparent" id="Btn_Copy"  text="{I18N>/COPY}"   press=".onPageCopyButtonPress" />    
+                <ToolbarSpacer />
+                <Button text="(미정)변경이력" type="Transparent" press=".onButtonPress($event, 'changed')" />
+                <Button text="(미정)발주이력" type="Transparent" press=".onButtonPress($event, 'ordered')" />
+                <Button text="(미정)사용실적" type="Transparent" press=".onButtonPress($event, 'results')" />
+			    <Button text="{I18N>/CLOSE}" type="Emphasized"  press=".onButtonPress.call(this, $event, 'default', { action: 'NavBack' })" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
