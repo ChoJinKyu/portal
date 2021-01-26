@@ -109,18 +109,23 @@ sap.ui.define([
                 }.bind(this));
             },
             remaining_hours_formatter:function(closing_date){
+                if(closing_date){
 
-                var newDate = new Date();
-                var dDate= new Date(2021,0,30);
-                var a = newDate.getTime();
-                var b = dDate.getTime();
-                var c = b - a ;
-                var result = c / 1000 / 60 / 60;
-                result = Math.floor(result);
-                // debugger;
-                // var result = closing_date - newDate ;
+                
+                    var newDate = new Date();
+                    var dDate= closing_date;
+                    var a = newDate.getTime();
+                    var b = dDate.getTime();
+                    var c = b - a ;
+                    var result = c / 1000 / 60 / 60;
+                    result = Math.floor(result);
+                    // debugger;
+                    // var result = closing_date - newDate ;
 
-                return result+" 시간";
+                    return result+" 시간";
+                }else{
+                    return " "
+                }
                 
             },
 			onInit: function () {

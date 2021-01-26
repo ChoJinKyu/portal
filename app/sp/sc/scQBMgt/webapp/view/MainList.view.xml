@@ -296,8 +296,8 @@
                                 </t:customData>
                                 <Label text="Negotiation No" design="Bold"/>
                                 <t:template>
-                                    <!-- <ObjectStatus text="{Header/nego_document_number}" /> -->
-                                    <ObjectStatus text="1" active="true" press=""  />
+                                    <ObjectStatus text="{Header/nego_document_number}" active="true" press="" />
+                                    <!-- <ObjectStatus text="1" active="true" press=""  /> -->
                                     <!-- <Text text="{Header/nego_document_number}" wrapping="false" /> -->
                                     <!-- <Text text="1" wrapping="false" /> -->
                                 </t:template>
@@ -404,6 +404,15 @@
                                 <Label text="Quote Style" design="Bold"/>
                                 <t:template>
                                     <Text text="{Header/negotiation_style_code}" wrapping="false" />
+                                </t:template>  
+                            </t:Column> 
+                            <t:Column width="8rem" hAlign="Center" sortProperty="Header/bidding_result_open_status_code" filterProperty="Header/bidding_result_open_status_code">
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/bidding_result_open_status_code", "leadingProperty": "Header/bidding_result_open_status_code", "sortProperty": "Header/bidding_result_open_status_code", "filterProperty": "Header/bidding_result_open_status_code"}'/>
+                                </t:customData>
+                                <Label text="Bid Open Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{Header/bidding_result_open_status_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             <t:Column width="12rem" hAlign="Center" sortProperty="Header/negotiation_output_class_code" filterProperty="Header/negotiation_output_class_code">
