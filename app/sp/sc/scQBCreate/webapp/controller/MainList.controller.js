@@ -56,9 +56,6 @@ sap.ui.define([
                 var oRbg = this.getView().byId(oRbgName);
                 var outcome = oRbg.getSelectedIndex() + 1;
                 
-
-                debugger;
-
                 // // 기존 시작 =========================================================================================
                 // if( this._cNum == "1" || this._cNum =="3"){
                 //     this.getOwnerComponent().getRouter().navTo("detailPage", { type : this._cNum, outcome : String(outcome) } );
@@ -68,8 +65,8 @@ sap.ui.define([
                 // this._clickEvent("0");
                 // // 기존 끝 =========================================================================================
 
-                // App To App Test
-                
+                // App To App
+
                 //portal에 있는 toolPage 
                 var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
                 //이동하려는 app의 component name,url
@@ -77,7 +74,7 @@ sap.ui.define([
                     sUrl = "../sp/sc/scQBPages/webapp";
                     
                 //  생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome 
-                var changeHash =  "NC" + this._cNum + "/" + String(outcome) + "/" ;   
+                var changeHash =  "NC/" + this._cNum + "/" + String(outcome) ;   
                 HashChanger.getInstance().replaceHash("");
 
                 Component.load({

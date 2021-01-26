@@ -22,12 +22,15 @@ sap.ui.define([
                 // 1 : Negotiation Type
                 // 2 : outcome
                 // 3 : Header Id(NW일 때만)
+                $.sap.negoMode = paramArray[0]; // Nav - Back 용
 
                 var pMode = paramArray[0];
                 var pType = paramArray[1];
                 var pOutcome = paramArray[2];
                 if(pMode == "NW"){
                     var pHeaderId =paramArray[3];
+                }else{
+                    var pHeaderId ="0"; //생성일 때 Header Id = 0
                 }
 
                 console.log("parameterArray ===================", paramArray);
@@ -45,7 +48,8 @@ sap.ui.define([
                 } else {
                     routeName = "detailPage2";
                 }
-                this.getOwnerComponent().getRouter().navTo(routeName, { type : pType, outcome : pOutcome, header_id : "0" } );
+                
+                this.getOwnerComponent().getRouter().navTo(routeName, { type : pType, outcome : pOutcome, header_id : pHeaderId } );
 
 
                 var inputModel = new JSONModel();
