@@ -1,10 +1,10 @@
-namespace xx.util;
-
 using { xx.Message as xx_Message } from '../../../../db/cds/xx/template/XX_MESSAGE-model';
 using { xx.Code_View as xx_Code } from '../../../../db/cds/xx/XX_CODE_VIEW-model';
 using { xx.Country_View as xx_Country } from '../../../../db/cds/xx/XX_COUNTRY_VIEW-model';
 using { xx.Currency_View as xx_Currency } from '../../../../db/cds/xx/XX_CURRENCY_VIEW-model';
-using { cm.Time_Zone as cm_Time_Zone } from '../../../../db/cds/cm/CM_TIME_ZONE-model';
+using { cm.Time_Zone as cm_Timezone } from '../../../../db/cds/cm/CM_TIME_ZONE-model';
+
+namespace xx.util;
 
 @path : '/xx.util.CommonService'
 service CommonService {
@@ -17,7 +17,7 @@ service CommonService {
         select
             key a.tenant_id,
             key a.group_code,
-            key a.language_code,
+            key a.language_cd,
             key a.code,
             a.code_name,
             a.parent_group_code,
@@ -26,8 +26,25 @@ service CommonService {
         from
             xx_Code a
         where
-            a.language_code = 'KO'
+            a.language_cd = 'KO'
             and $now between a.start_date and a.end_date
+    ;
+
+    @readonly
+    view CodeAll as
+        select
+            key a.tenant_id,
+            key a.group_code,
+            key a.language_cd,
+            key a.code,
+            a.code_name,
+            a.parent_group_code,
+            a.parent_code,
+            a.sort_no
+        from
+            xx_Code a
+        where
+            a.language_cd = 'KO'
     ;
 
     @readonly
@@ -36,7 +53,7 @@ service CommonService {
             key a.tenant_id,
             key a.language_code,
             key a.country_code,
-            a.country_code_name,
+            a.country_name,
             a.language,
             a.iso_code,
             a.eu_code,
@@ -69,6 +86,23 @@ service CommonService {
     ;
 
     @readonly
+    view CurrencyAll as
+        select
+            key a.tenant_id,
+            key a.language_code,
+            key a.currency_code,
+            a.currency_code_name,
+            a.scale,
+            a.extension_scale,
+            a.currency_prefix,
+            a.currency_suffix
+        from
+            xx_Currency a
+        where
+            a.language_code = 'KO'
+    ;
+
+    @readonly
     view Timezone as
         select
             key a.tenant_id,
@@ -87,9 +121,7 @@ service CommonService {
             a.dst_end_day_of_week,
             a.dst_end_time_rate
         from
-            cm_Time_Zone a
-        where
-            a.dst_flag = true
+            cm_Timezone a
     ;
 
 

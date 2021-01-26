@@ -371,7 +371,7 @@ sap.ui.define([
                 var refer = this.getModel("referer");
                 if(refer.getData().Referers != undefined && refer.getData().Referers.length > 0){
                     refer.getData().Referers.forEach(function(item){ 
-                        console.log("item>>> " , item);
+                     //   console.log("item>>> " , item);
                         var oToken = new Token();
                         oToken.setKey(item.referer_empno);
                         oToken.setText(item.referer_name);
@@ -706,7 +706,7 @@ sap.ui.define([
             this.setOrderByApproval();
             this.setSelectedApproval(String(Number(oParam)+1));
         },
-        onItemPress: function (oEvent) {
+        onItemPress : function (oEvent) {
             console.log("//// onApproverItemPress", oEvent);
         },
 
@@ -825,7 +825,7 @@ sap.ui.define([
                 console.log("/RefererSearch ", oData);
             }.bind(this));
 
-            console.log(" oEmployee ", this.getModel('oEmployee'));
+           // console.log(" oEmployee ", this.getModel('oEmployee'));
 
         },
 
@@ -858,7 +858,7 @@ sap.ui.define([
             }
         },
         _setApprvalItemSetting : function(obj){
-        console.log("_setApprvalItemSetting  " , obj);
+      //  console.log("_setApprvalItemSetting  " , obj);
             var row = this.getApprovalSeletedRow();
             var approver = this.getModel("approver");
               for (var i = 0; i < approver.getData().Approvers.length; i++) { 
@@ -892,7 +892,7 @@ sap.ui.define([
             var multi = this.byId("referMulti").getTokens();
             if(multi != undefined && multi.length > 0){
                 multi.forEach(function(item){ 
-                    console.log(item);
+                   // console.log(item);
                     referModel.addRecord({
                         "referer_empno": item.getKey(),
                         "approval_number": that.approval_number,
@@ -946,7 +946,7 @@ sap.ui.define([
             var refArr = [];
             if (ref.Referers != undefined && ref.Referers.length > 0) {
                 ref.Referers.forEach(function (item) {
-                    console.log("item", item);
+                   // console.log("item", item);
                     if (item._row_state_ != "D") {
                         refArr.push({
                             tenant_id: that.tenant_id
@@ -970,7 +970,7 @@ sap.ui.define([
                 }
             }
 
-            console.log("data>>>> ", data);
+           // console.log("data>>>> ", data);
 
             var msg = this.getModel("I18N").getText("/NCM00001") ;
             var isOk = false;

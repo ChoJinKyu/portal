@@ -30,7 +30,7 @@
                          singleContainerFullSize="true">
 			<form:content>
 				<!-- Approval Line 
-                description : UI 드리그앤 드롭으로 변경 
+                description : UI 드래그앤 드롭으로 변경 
                 date : 2021.01.21 
                 author : jinseon.lee 
                 --> 
@@ -40,14 +40,14 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
                         mode="SingleSelectMaster" 
-                        cellClick=".onItemPress" 
+                        type="None"
                         width="auto"
                         items="{approver>/Approvers}" 
                         >
                     <headerToolbar>
                         <OverflowToolbar>
                             <Label text="Approval Line"/> 
-                            <ObjectStatus icon="sap-icon://move" text=""  tooltip="드래그앤드랍으로 승인라인을 변경할 수 있습니다." /> 
+                            <ObjectStatus icon="sap-icon://move" text="" tooltip="드래그앤드랍으로 승인라인을 변경할 수 있습니다." /> 
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
@@ -86,7 +86,7 @@
                           
                     </dragDropConfig>					
                     <items>
-                        <ColumnListItem>
+                        <ColumnListItem type="Active" press=".onItemPress">
                             <cells>
                                 <Text text="{approver>approver_empno}"  />
                                 <Text text="{approver>approve_sequence}" />
@@ -108,10 +108,8 @@
                                 </Input>
                                 <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
-                              
                                 <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
                                 <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
-                               
                             </cells>
                         </ColumnListItem>
                     </items>

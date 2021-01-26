@@ -236,8 +236,8 @@
                             <ColumnListItem>
                                 <cells>
                                     <Input value="{applicationSup>investment_item_name}"/>
-                                    <Input value="{applicationSup>investment_item_purchasing_price}"/>
-                                    <Input value="{applicationSup>investment_item_purchasing_qty}" change=".onTest"/>
+                                    <Input value="{applicationSup>investment_item_purchasing_price}" change=".onPurchasingAtm"/>
+                                    <Input value="{applicationSup>investment_item_purchasing_qty}" change=".onPurchasingAtm"/>
                                     <Input value="{applicationSup>investment_item_purchasing_amt}"/>
                                 </cells>
                             </ColumnListItem>
@@ -246,14 +246,7 @@
                 </HBox>
                 <HBox class="investmentItemPurchasingAmtSum" alignItems="Center" justifyContent="End">
                     <Label text="총 구입금액 : "/>
-                    <Input class="inputPurchasingAmt" editable="{midObjectView>/editMode}"
-                        value="{
-                            path: '',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        }"/>
+                    <Text id ="investment_item_purchasing_amt_sum" class="inputPurchasingAmt" />
                 </HBox>
             </VBox>
         </content>

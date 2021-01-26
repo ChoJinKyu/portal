@@ -62,6 +62,7 @@
             "db/cds/sp/fundingMgr",
             "db/cds/sp/sc",
             "db/cds/sp/sf",
+            "db/cds/sp/sm",
             "db/cds/sp/se",
             "db/cds/sp/vi",
             "db/cds/mc",
