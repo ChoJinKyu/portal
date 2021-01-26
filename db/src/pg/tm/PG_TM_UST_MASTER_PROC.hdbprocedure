@@ -109,7 +109,6 @@ as
 begin
 
     declare lv_max_seq						integer default 0;
-    -- declare trim(session_context('APPLICATIONUSER'))                       nvarchar(255) default '';
 
     declare lv_sourcemaster_count			integer default 0;
     declare lv_sourcescenario_count			integer default 0;
