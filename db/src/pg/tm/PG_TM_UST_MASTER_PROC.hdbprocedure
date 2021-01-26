@@ -117,7 +117,9 @@ begin
     declare lv_sourcepurchasingtype_count	integer default 0;
     declare lv_sourcetypecode_count			integer default 0;
     declare lv_sourcemanager_count			integer default 0;
+    declare lv_sourcemanager_rowcount       integer default 0;
     declare lv_sourceoperation_count		integer default 0;
+    declare lv_sourceoperation_rowcount		integer default 0;
 
     declare lv_tenant_id                    nvarchar(5) default '';
     declare lv_scenario_number              integer default 0;
@@ -776,7 +778,19 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourcemanager_count <= 0 then
+    select  count(*) 
+    into    lv_sourcemanager_rowcount 
+    from    :i_table_manager 
+    ;
+
+    if  lv_sourcemanager_rowcount = 0 then
+
+        delete from pg_tm_manager_dtl 
+        where       tenant_id       = lv_tenant_id
+        and         scenario_number = lv_scenario_number
+        ;
+
+    elseif	lv_sourcemanager_count <= 0 then
     else
     
         delete from pg_tm_manager_dtl 
@@ -878,7 +892,19 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourceoperation_count <= 0 then
+    select  count(*) 
+    into    lv_sourceoperation_rowcount 
+    from    :i_table_operation 
+    ;
+
+    if  lv_sourceoperation_rowcount = 0 then
+
+        delete from pg_tm_operation_mode_code_lng 
+        where       tenant_id       = lv_tenant_id
+        and         scenario_number = lv_scenario_number
+        ;
+        
+    elseif	lv_sourceoperation_count <= 0 then
     else
     
         delete from pg_tm_operation_mode_code_lng 
