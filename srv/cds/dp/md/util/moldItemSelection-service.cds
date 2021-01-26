@@ -123,13 +123,7 @@ service MoldItemSelectionService {
                              and cl.group_code = 'DP_MD_ITEM_TYPE' 
                              and cl.language_cd = 'KO' 
                              and cl.tenant_id = m.tenant_id 
-        where
-            m.mold_id not in (
-                 select dtl.mold_id from 
-                    approvalMst.Approval_Mst m2  
-                    join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
-                    where m2.approval_type_code = 'I'
-            );
+        ;
 
      // 집행품의 
      view MoldItemSelect_B as
