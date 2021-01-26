@@ -37,10 +37,10 @@
                     <form:content>
                         <VBox>
                             <Label
-                                text="컴퍼니: "
+                                text="{I18N>/COMPANY}: "
                                 labelFor="searchCompany">
                             </Label>
-                            <ComboBox id="searchCompany" width="100%" selectedKey="" items="{
+                            <ComboBox id="searchCompany" width="100%" selectedKey="*" items="{
                                 path: '/CompanyView'
                                
                                 }">
@@ -55,10 +55,10 @@
                         </VBox>
                         <VBox>
                            <Label
-                                text="조직: "
+                                text="{I18N>/ORGANIZATION}: "
                                 labelFor="searchOrg">
                             </Label>
-                            <ComboBox id="searchOrg" width="100%" selectedKey="" items="{
+                            <ComboBox id="searchOrg" width="100%" selectedKey="*" items="{
                                 path: '/OrgView'
                                
                                 }">
@@ -70,30 +70,33 @@
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <!-- <VBox>
+                        <VBox>
                            <Label
-                                text="Project Type: "
+                                text="{I18N>/PROJECT_TYPE}: "
                                 labelFor="searchPrjType">
-                            </Label>
+                            </Label>                            
                             <ComboBox id="searchPrjType" width="100%" selectedKey="" items="{
-                                path: '/OrgView'
-                               
+                                    path: 'util>/Code',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
+                                        {path: 'group_code', operator: 'EQ', value1: 'DP_PART_PJT_TYPE'}
+                                    ]
                                 }">
                                 <items>
-                                    <core:Item key="{org_code}" text="{org_code}" />
+                                    <core:Item key="{util>code}" text="{util>code}: {util>code_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
-                        </VBox> -->
+                        </VBox>
                          <VBox>
                             <Label
                                 text="Activity: "
                                 labelFor="searchKeyword">
                             </Label>
                             <Input id="searchKeyword" 
-                                placeholder=""/>
+                                placeholder="" change=".onPageSearchButtonPress"/>
                             <layoutData>
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />
@@ -123,7 +126,6 @@
             cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
-            fixedColumnCount="3"
             columnResize="onColumnResize">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -131,13 +133,12 @@
                     <ToolbarSpacer/>
                     <Button text="Copy" id="buttonCopy" press=""  type="Transparent"/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
-                    <Button text="{I18N>/DELETE}" id="buttonDelete" press=""  type="Transparent"/>                    
-                    <Button text="TEST" id="testButton" press=".onTestPress"  type="Transparent"/>
+                    <Button text="{I18N>/DELETE}" id="buttonDelete" press=""  type="Transparent"/>
                     <Button text="{I18N>/SAVE}" id="buttonSave" press=""  type="Transparent"/>
 
                     <ToolbarSeparator/>
-                    <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
-                    <Button icon="sap-icon://action-settings" press=".onPersoButtonPressed" >
+                    <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                    
+                    <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                         <layoutData>
                             <OverflowToolbarLayoutData priority="NeverOverflow" />
                         </layoutData>
@@ -147,68 +148,80 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <t:Column id="company_code" width="7rem">
-                <Label text="Company" textAlign="Center" width="100%"/>
+                <t:Column id="company_code" hAlign="Center">
+                <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>company_code}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="org_code" width="20rem">
-                <Label text="조직코드" textAlign="Center" width="100%"/>
+                <t:Column id="org_code" hAlign="Center">
+                <Label text="{I18N>/ORG_CODE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>org_code}"/>
                 </t:template>
-                </t:Column>                
-                <t:Column id="activity_code" width="9rem">
-                <Label text="Activity 명" textAlign="Center" width="100%"/>
+                </t:Column>
+                <t:Column id="part_project_type_code" hAlign="Center">
+                <Label text="{I18N>/PROJECT_TYPE}" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>activity_code}"/>
+                    <Text text="{list>part_project_type_name}"/>
+                </t:template>
+                </t:Column>                
+                <t:Column id="activity_code">
+                <Label text="{I18N>/ACTIVITY_NAME}" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>activity_name}"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="develope_event_name" width="9rem">
-                <Label text="EVENT" textAlign="Center" width="100%"/>
+                <t:Column id="develope_event_name" hAlign="Center">
+                <Label text="{I18N>/EVENT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>develope_event_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="actual_role_name" width="9rem">
-                <Label text="역할" textAlign="Center" width="100%"/>
+                <t:Column id="actual_role_name" hAlign="Center">
+                <Label text="{I18N>/ROLE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>actual_role_name}"/>                    
                 </t:template>
                 </t:Column>
-                <t:Column id="attachment_mandatory_flag" width="7rem">
-                <Label text="산출물 필수" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>attachment_mandatory_flag}" />
+                <t:Column id="attachment_mandatory_flag" hAlign="Center">
+                <Label text="{I18N>/ATTACHMENT_MANDATORY}" textAlign="Center" width="100%"/>
+                <t:template>                    
+                    <Text text="{= !!${list>attachment_mandatory_flag} ? 'Y' : 'N'}" wrapping="false" />
                 </t:template>
                 </t:Column>
-                <t:Column id="approve_mandatory_flag" width="15rem">
-                <Label text="결재 필수" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>approve_mandatory_flag}"/>
+                <t:Column id="approve_mandatory_flag" hAlign="Center">
+                <Label text="{I18N>/APPROVE_MANDATORY}" textAlign="Center" width="100%"/>
+                <t:template>                    
+                    <Text text="{= !!${list>approve_mandatory_flag} ? 'Y' : 'N'}" wrapping="false" />
                 </t:template>
                 </t:Column>
-                <t:Column id="activity_complete_type_name" width="6rem">
-                <Label text="Activity 완료 유형" textAlign="Center" width="100%" wrapping="true"/>
+                <t:Column id="activity_complete_type_name">
+                <Label text="{I18N>/ACTIVITY_COMPLETE_TYPE}" textAlign="Center" width="100%" wrapping="true"/>
                 <t:template>
                     <Text text="{list>activity_complete_type_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="job_type_name" width="6rem">
-                <Label text="업무 유형" textAlign="Center" width="100%" wrapping="true"/>
+                <t:Column id="job_type_name">
+                <Label text="{I18N>/JOB_TYPE}" textAlign="Center" width="100%" wrapping="true"/>
                 <t:template>
                     <Text text="{list>job_type_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="local_update_dtm" width="6rem">
-                <Label text="수정일시" textAlign="Center" width="100%" wrapping="true" />
+                <t:Column id="active_flag" hAlign="Center">
+                <Label text="{I18N>/USE_FLAG}" textAlign="Center" width="100%" wrapping="true"/>
+                <t:template>                    
+                    <Text text="{= !!${list>active_flag} ? 'Y' : 'N'}" wrapping="false" />
+                </t:template>
+                </t:Column>
+                <t:Column id="local_update_dtm" hAlign="Center">
+                <Label text="{I18N>/UPDATE} {I18N>/DATE_TIME}" textAlign="Center" width="100%" wrapping="true" />
                 <t:template>
                     <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}"/>                    
                 </t:template>
                 </t:Column> 
-                <t:Column id="update_user_id" width="6rem">
-                <Label text="수정자" textAlign="Center" width="100%" wrapping="true" />
+                <t:Column id="update_user_id" hAlign="Center">
+                <Label text="{I18N>/UPDATE_USER_ID}" textAlign="Center" width="100%" wrapping="true" />
                 <t:template>
                     <Text text="{list>update_user_id}"/>                                       
                 </t:template>

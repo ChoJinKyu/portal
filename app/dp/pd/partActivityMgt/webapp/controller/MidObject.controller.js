@@ -30,7 +30,7 @@ sap.ui.define([
 
     var oTransactionManager;
 
-    return BaseController.extend("dp.pd.partActivityMgt.controller.IdeaSelection", {
+    return BaseController.extend("dp.pd.partActivityMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
 
@@ -76,7 +76,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("details"));
 
-            this.getRouter().getRoute("selectionPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
         },
