@@ -312,7 +312,7 @@ service taskMonitoringSacDService {
     view TmImportDeclareTypeCodeView @(title : '수입신고형태코드 View') as
         select
             key tenant_id       as  TENANT_ID
-           ,key code            as  ID : String
+           ,key case when length(trim(code)) = 0 then '_B' else code end  as  ID : String
                ,code_name       as  Description
                ,language_cd     as  LANGUAGE_CODE
         from  CmCodeDtlView
@@ -352,7 +352,7 @@ service taskMonitoringSacDService {
     view OpErpItemCategoryCodeView @(title : 'ERP품목범주(품목범주코드) View') as
         select
             key tenant_id       as  TENANT_ID
-           ,key code            as  ID : String
+           ,key case when ascii(code) = 0 then '_B' else code end  as  ID : String
                ,code_name       as  Description
                ,language_cd     as  LANGUAGE_CODE
         from  CmCodeDtlView
