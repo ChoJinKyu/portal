@@ -39,8 +39,7 @@
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
-                        mode="SingleSelectMaster" 
-                        type="None"
+                        mode="None" 
                         width="auto"
                         items="{approver>/Approvers}" 
                         >
@@ -86,7 +85,7 @@
                           
                     </dragDropConfig>					
                     <items>
-                        <ColumnListItem type="Active" press=".onItemPress">
+                        <ColumnListItem type="Active" press=".onItemApprovalPress">
                             <cells>
                                 <Text text="{approver>approver_empno}"  />
                                 <Text text="{approver>approve_sequence}" />

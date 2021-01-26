@@ -173,9 +173,16 @@ sap.ui.define([
             // oTransactionManager = new TransactionManager();
             // oTransactionManager.addDataModel(this.getModel("VpMst"));
 
-
+            this.byId("table_1lv").setVisible(true);
+            this.byId("table_2lv").setVisible(true);
+            this.byId("table_3lv").setVisible(true);
+            this.byId("table_4lv").setVisible(false);
+            this.byId("table_5lv").setVisible(false);   
+            
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
             that = this;
+
+
 
             // this._doInitTablePerso();
         },
@@ -1518,6 +1525,9 @@ sap.ui.define([
                 }
 
             }
+
+            this.checkOrg();
+
             this.handleTable();
 
 
@@ -1923,35 +1933,62 @@ sap.ui.define([
 
             //     console.groupEnd();
         },
-        checkOrg: function (oEvent) {
+        checkOrg: function () {
 
             // debugger
-            var pselectedOrg = oEvent.getSource().mProperties.selectedKey;
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
+
+            // var aSearchFilters = [];
             var aSelectedOrg = [];
-            aSelectedOrg.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
-            aSelectedOrg.push(new Filter("operation_org_code", FilterOperator.EQ, pselectedOrg));
 
-            var oView = this.getView(),
-                oModel = this.getModel("orglist");
-            oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel());
-            oModel.read("/VpOperationOrg", {
-                filters: aSelectedOrg,
-                success: function (oData) {
+            var pselectedOrg ;
+            var pselectedUnit ;
 
-                    if (oData.results.length === 1) {
-                        var results = oData.results[0];
-                        maxLv = results.org_max_level
 
-                        
-                    } else {
-                        //
+
+            if (sSurffix === "S") {
+                pselectedOrg = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
+                pselectedUnit = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+
+
+            }
+            else if (sSurffix === "E") {
+
+                pselectedOrg = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
+                pselectedUnit = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+
+            }    
+
+            if (pselectedOrg && pselectedOrg.length > 0 && pselectedUnit && pselectedUnit.length > 0)
+            {
+                // aSelectedOrg.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+                aSelectedOrg.push(new Filter("org_code", FilterOperator.EQ, pselectedOrg));
+                aSelectedOrg.push(new Filter("operation_unit_code", FilterOperator.EQ, pselectedUnit));
+
+                var oView = this.getView(),
+                    oModel = this.getModel("orglist");
+                oView.setBusy(true);
+                oModel.setTransactionModel(this.getModel());
+                oModel.read("/vpMaxLevelView", {
+                    filters: aSelectedOrg,
+                    success: function (oData) {
+
+                        if (oData.results.length === 1) {
+                            var results = oData.results[0];
+                            maxLv = results.max_level
+
+                            
+                        } else {
+                            //
+                        }
+                        oView.setBusy(false);
+                    }, error: function (e) {
+                        console.log("error occrupie!!!");
                     }
-                    oView.setBusy(false);
-                }, error: function (e) {
-                    console.log("error occrupie!!!");
-                }
-            });
+                });
+            }
+            
+
 
             // var row = this.getView().getModel("VpOperationOrg").getObject(event.getParameters().rowContext.sPath);
 

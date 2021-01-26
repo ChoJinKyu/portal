@@ -25,10 +25,11 @@ entity Sm_Maker_Request {
   key   maker_request_sequence      : Integer64  not null   @title: '제조사요청순번' ;	
         maker_request_type_code     : String(30)            @title: '제조사요청타입코드' ;	
         maker_progress_status_code  : String(30)            @title: '제조사진행상태코드' ;	
+        requestor_empno             : String(30)            @title: '요청자사번' ;	
         tax_id                      : String(30)            @title: '세금등록번호' ;	
         supplier_code               : String(10)            @title: '공급업체 코드' ;	
         supplier_local_name         : String(240)           @title: '공급업체 로컬명' ;	
-        supplier_engligh_name       : String(240)           @title: '공급업체 영문명' ;	
+        supplier_english_name       : String(240)           @title: '공급업체 영문명' ;	
         country_code                : String(2)             @title: '국가코드' ;	
         country_name                : String(30)            @title: '국가명' ;	
         vat_number                  : String(30)            @title: 'VAT등록번호' ;	
@@ -48,8 +49,8 @@ entity Sm_Maker_Request {
         repre_name                  : String(30)            @title: '대표자명' ;	
         tel_number                  : String(50)            @title: '전화번호' ;	
         email_address               : String(240)           @title: '이메일주소' ;	
-        status_code                 : String(30)            @title: '상태코드' ;	
-        status_name                 : String(50)            @title: '상태명' ;	
+        supplier_status_code        : String(30)            @title: 'Maker 상태코드' ;	
+        supplier_status_name        : String(50)            @title: 'Maker 상태명' ;	
         biz_certi_attch_number      : String(100)           @title: '사업자등록증첨부파일번호' ;	
         attch_number_2              : String(100)           @title: '첨부파일번호2' ;	
         attch_number_3              : String(100)           @title: '첨부파일번호3' ;	

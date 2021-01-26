@@ -1,6 +1,6 @@
 using { dp as OperationOrg } from '../../../../../db/cds/dp/pd/DP_PD_OPERATION_ORG_VIEW-model';
 using { dp as PartCategoryActivity} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEGORY_ACTIVITY-model';
-using { dp as PartCategoryView} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEGORY_VIEW-model';
+using { dp as PartCategoryView} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEGORY-model';
 using { dp as getCmCodeCombo } from '../../../../../db/cds/dp/pd/DP_PD_GET_CM_CODE_COMBO_VIEW-model';
 using { dp as activityStdDayView } from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_STANDARD_DAY_VIEW-model';
 

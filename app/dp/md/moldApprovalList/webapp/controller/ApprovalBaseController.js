@@ -416,7 +416,7 @@ sap.ui.define([
             }.bind(this));
             
             this._bindView("/Approvers", "approver", filter, function (oData) {
-                 //this.setSelectedApproval(0);
+                 this.setSelectedApproval(0);
                  if (oData.results.length < 1) {
                     this.onApproverAdd(0);
                  }
@@ -706,11 +706,17 @@ sap.ui.define([
             this.setOrderByApproval();
             this.setSelectedApproval(String(Number(oParam)+1));
         },
-        onItemPress : function (oEvent) {
-            console.log("//// onApproverItemPress", oEvent);
+        onItemApprovalPress : function (oEvent) {
+
+         var sPath = oEvent.getSource().getBindingContext("approver").getPath(),
+            oRecord = this.getModel("approver").getProperty(sPath);
+
+            //  console.log("//// onApproverItemPress", oRecord);
+            // console.log("//// onApproverItemPress oEvent", oEvent);
+            // console.log("//// onApproverItemPress sPath", sPath);
+        
+           this.setSelectedApproval(String(oRecord.approve_sequence));   
         },
-
-
         // 삭제 
         setApproverRemoveRow: function (oParam) {
             var oModel = this.getModel("approver");
