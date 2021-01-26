@@ -1,5 +1,6 @@
 namespace dp;	
-using util from '../../cm/util/util-model';  	
+using util from '../../cm/util/util-model';
+using {dp as partCategoryLng} from '../pd/DP_PD_PART_CATEGORY_LNG-model';
 // using {dp as partCategory} from '../pd/DP_PD_PART_CATEGORY-model';	
 	
 entity Pd_Part_Category {	
@@ -9,6 +10,12 @@ entity Pd_Part_Category {
   key org_code : String(10)  not null @title: '조직코드' ;	
   key category_group_code : String(30)  not null @title: '카테고리 그룹 코드' ;	
   key category_code : String(40)  not null @title: '카테고리 코드' ;	
+
+          children    : Composition of many partCategoryLng.Pd_Part_Category_Lng
+                          on  children.tenant_id  = tenant_id
+                          and children.category_code = category_code
+                          and children.category_group_code = category_group_code;
+
     parent_category_code : String(40)   @title: '상위 카테고리 코드' ;	
     sequence : Decimal default 1  @title: '순번' ;	
     active_flag : Boolean   @title: 'Status' ;	
