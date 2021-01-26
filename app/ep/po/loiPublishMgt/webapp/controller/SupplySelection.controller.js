@@ -54,14 +54,14 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedListModel(), "details");
+            this.setModel(new JSONModel(), "details");
             this.setModel(new JSONModel(), "midObjectViewModel");
 
             this.setModel(new JSONModel(), "loiSupplySelection");
 
-            oTransactionManager = new TransactionManager();
-            oTransactionManager.addDataModel(this.getModel("master"));
-            oTransactionManager.addDataModel(this.getModel("details"));
+            // oTransactionManager = new TransactionManager();
+            // oTransactionManager.addDataModel(this.getModel("master"));
+            // oTransactionManager.addDataModel(this.getModel("details"));
 
             this.getRouter().getRoute("selectionPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -201,6 +201,8 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 that = this;
 
+            console.log("details===", oDetailsModel);    
+
             // '122010'	'RFQ진행중'
             // '122020'	'RFQ완료'
             // '122030'	'작성중'
@@ -294,7 +296,7 @@ sap.ui.define([
                                         that._toShowMode();
                                     }
                                 });
-                                
+
                                 //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 
                                 // if (flag == "D") {
@@ -342,13 +344,15 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
+
             this._sTenantId = oArgs.tenantId;
             this._sCompanyCode = oArgs.companyCode;
             this._sLoiWriteNumber = oArgs.loiWriteNumber;
             this._sLoiItemNumber = oArgs.loiItemNumber;
             this._sLoiSelectionNumber = oArgs.loiSelectionNumber;
             this._sLoiNumber = oArgs.loiNumber;
-            this._sExistRfq = oArgs.existRfq;
+            this._sQuotationNumber = oArgs.quotationNumber;
+            this._sQuotationItemNumber = oArgs.quotationItemNumber;
             this.getModel("midObjectViewModel").setProperty("/viewLoiNumber", oArgs.loiNumber);
 
             console.log("##getOwnerComponent==", this.getOwnerComponent().getRootControl().byId("fcl"));
@@ -368,66 +372,80 @@ sap.ui.define([
                 loiWriteNumberArr = oArgs.loiWriteNumber.split(","),
                 loiItemNumberArr = oArgs.loiItemNumber.split(",");
 
-            tenantIdArr.forEach(function (item, index) {
+            loiItemNumberArr.forEach(function (item, index) {
+                console.log("item==", item);
+                console.log("index==", index);
                 var arr = {
-                    "tenant_id": item,
-                    "company_code": "",
-                    "loi_write_number": "",
-                    "loi_item_number": "",
+                    "tenant_id": tenantIdArr[0],
+                    "company_code": companyCodeArr[0],
+                    "loi_write_number": loiWriteNumberArr[0],
+                    "loi_item_number": item,
                 };
                 loiDtlArr[index] = arr;
+
             });
 
-            companyCodeArr.forEach(function (item, index) {
-                loiDtlArr[index]["company_code"] = item;
+            var quotationArr = [];
+
+            var quotationNumberArr = oArgs.quotationNumber.split(","),
+                quotationItemNumberArr = oArgs.quotationItemNumber.split(",");
+
+            quotationNumberArr.forEach(function (item, index) {
+                var arr = {
+                    "quotation_number": item,
+                    "quotation_item_number": ""
+                };
+                quotationArr[index] = arr;
+
             });
 
-            loiWriteNumberArr.forEach(function (item, index) {
-                loiDtlArr[index]["loi_write_number"] = item;
+            quotationItemNumberArr.forEach(function (item, index) {
+                quotationArr[index]["quotation_item_number"] = item;
             });
 
-            loiItemNumberArr.forEach(function (item, index) {
-                loiDtlArr[index]["loi_item_number"] = item;
-            });
+            // loiWriteNumberArr.forEach(function (item, index) {
+            //     loiDtlArr[index]["loi_write_number"] = item;
+            // });
+
+            // loiItemNumberArr.forEach(function (item, index) {
+            //     loiDtlArr[index]["loi_item_number"] = item;
+            // });
 
             console.log("loiDtlArr==", loiDtlArr);
+            console.log("quotationArr==", quotationArr);
 
             this._sLoiDtlArr = loiDtlArr;
 
-            //품목조회
-            if(this._sExistRfq) {
-                this.getModel("midObjectViewModel").setProperty("/existRfq", true);
-            }else {
-                this.getModel("midObjectViewModel").setProperty("/existRfq", false);
-            }
 
-            //뷰생성해서 변경예정
-            var orFilter = [];
-            var andFilter = [];
+            var input = {
+                inputData: {
+                    loiRfqType: [],
+                    loiDtlType: []
+                }
+            };
 
-            loiDtlArr.forEach(function (item) {
-                andFilter = [];
-                andFilter.push(new Filter("tenant_id", FilterOperator.EQ, item.tenant_id));
-                andFilter.push(new Filter("company_code", FilterOperator.EQ, item.company_code));
-                andFilter.push(new Filter("loi_write_number", FilterOperator.EQ, item.loi_write_number));
-                andFilter.push(new Filter("loi_item_number", FilterOperator.EQ, item.loi_item_number));
-                orFilter.push(new Filter(andFilter, true));
-                //orFilter.push()
-                console.log("andFilter==", andFilter);
-            });
-            console.log("orFilter==", orFilter);
-            //orFilter = new Filter(orFilter, false);
+            input.inputData.loiRfqType = quotationArr;
+            input.inputData.loiDtlType = loiDtlArr;
 
-            var oDetailsModel = this.getModel("details");
-            oDetailsModel.setTransactionModel(this.getModel());
-            oDetailsModel.read("/LOIPublishItemView", {
-                filters: [
-                    new Filter(orFilter, false)
-                ],
-                success: function (oData) {
+            console.log("input==", JSON.stringify(input));
+
+            var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SupplySelectionResult";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(input),
+                contentType: "application/json",
+                success: function (data) {
+                    console.log("#########Success#####", data);
                     oView.setBusy(false);
-                    console.log("details=====", oData);
-                    //oView.getModel("details").updateBindings(true);
+                    oView.getModel("details").setData(data.value);
+                    console.log("details11=======", oView.getModel("details").getData());
+                    // oView.getModel("details").updateBindings(true);
+                    //console.log("details22=======", oView.getModel("details"));
+                },
+                error: function (e) {
+                    console.log("error====", e);
                 }
             });
 
@@ -501,7 +519,7 @@ sap.ui.define([
             this.byId("pageNavBackButton").setEnabled(false);
             this.byId("pageSaveButton").setVisible(true);
             this.byId("pageByPassButton").setVisible(true);
-            this.byId("pageRequestButton").setVisible(true);            
+            this.byId("pageRequestButton").setVisible(true);
             if (statusCode === "122030" || statusCode === "122050") {
                 this.byId("pageSaveButton").setEnabled(true);
             } else {
@@ -535,9 +553,9 @@ sap.ui.define([
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             // this._showFormFragment('MidObject_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
-            if(statusCode == "122060") {
+            if (statusCode == "122060") {
                 this.byId("page").setProperty("showFooter", false);
-            }else {
+            } else {
                 this.byId("page").setProperty("showFooter", true);
             }
             //this.byId("pageEditButton").setVisible(true);
@@ -550,7 +568,7 @@ sap.ui.define([
             //}
             //this.byId("pageDeleteButton").setEnabled(true);
             this.byId("pageNavBackButton").setEnabled(true);
-            
+
             this.byId("pageSaveButton").setVisible(false);
             this.byId("pageByPassButton").setVisible(false);
             this.byId("pageRequestButton").setVisible(false);
@@ -564,74 +582,6 @@ sap.ui.define([
             // this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
             console.log("####################isEditMode", this.getModel("midObjectViewModel").getProperty("/isEditMode"));
         },
-
-        // _initTableTemplates: function(){
-        // 	this.oReadOnlyTemplate = new ColumnListItem({
-        // 		cells: [
-        // 			new Text({
-        // 				text: "{details>_row_state_}"
-        // 			}), 
-        // 			new ObjectIdentifier({
-        // 				text: "{details>control_option_code}"
-        // 			}), 
-        // 			new ObjectIdentifier({
-        // 				text: "{details>control_option_level_code}"
-        // 			}), 
-        // 			new Text({
-        // 				text: "{details>control_option_level_val}"
-        // 			}), 
-        // 			new Text({
-        // 				text: "{details>control_option_val}"
-        // 			})
-        // 		],
-        // 		type: sap.m.ListType.Inactive
-        // 	});
-
-        // 	this.oEditableTemplate = new ColumnListItem({
-        // 		cells: [
-        // 			new Text({
-        // 				text: "{details>_row_state_}"
-        // 			}), 
-        // 			new Text({
-        // 				text: "{details>control_option_code}"
-        // 			}), 
-        // 			new ComboBox({
-        //                 selectedKey: "{details>control_option_level_code}",
-        //                 items: {
-        //                     id: "testCombo1",
-        //                     path: 'util>/CodeDetails',
-        //                     filters: [
-        //                         new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-        //                         new Filter("group_code", FilterOperator.EQ, 'TEST')
-        //                     ],
-        //                     template: new Item({
-        //                         key: "{util>code}",
-        //                         text: "{util>code_description}"
-        //                     })
-        //                 },
-        //                 required: true
-        //             }), 
-        // 			new Input({
-        // 				value: {
-        // 					path: "details>control_option_level_val",
-        //                     type: new sap.ui.model.type.String(null, {
-        // 						maxLength: 100
-        // 					}),
-        // 				},
-        // 				required: true
-        // 			}),
-        // 			new Input({
-        // 				value: {
-        // 					path: "details>control_option_val",
-        //                     type: new sap.ui.model.type.String(null, {
-        // 						maxLength: 100
-        // 					})
-        // 				},
-        // 				required: true
-        // 			})
-        // 		]
-        //     });
-        // },
 
         // _bindMidTable: function(oTemplate, sKeyboardMode){
         // 	this.byId("midTable").bindItems({
