@@ -36,14 +36,17 @@
 
                                 <VBox>
                                     <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG_S" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_S" width="10rem" items="{
+                                    <ComboBox 
+                                        id="search_Operation_ORG_S" 
+                                        width="10rem" 
+                                        items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                         ],
                                         sorter: { path: 'operation_org_code'}
-                                        
-                                    }" change="checkOrg" >
+                                        }" 
+                                        change="checkOrg" >
                                         <items>
                                             <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
@@ -62,6 +65,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                             change="checkOrg"
                                              
                                     >
                                     <core:Item key="{util>code}" text="{util>code_name}" />
@@ -119,6 +123,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                             change="checkOrg"
                                             
                                     >
                                     <core:Item key="{util>code}" text="{util>code_name}" />

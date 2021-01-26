@@ -1,15 +1,17 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController"
+    "ext/lib/controller/BaseController"
 ], function (BaseController) {
-	"use strict";
+    "use strict";
 
-	return BaseController.extend("pg.tm.tmMonitoring.controller.App", {
+    return BaseController.extend("pg.tm.tmMonitoring.controller.App", {
 
-		onInit : function () {
-			// apply content density mode to root view
+        onInit: function () {
+            // apply content density mode to root view
             this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             this.getRouter().navTo("main");
-		}
-	});
+
+           
+        }
+    });
 
 });

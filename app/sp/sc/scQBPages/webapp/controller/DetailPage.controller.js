@@ -73,6 +73,8 @@ sap.ui.define([
             },
             _onRouteMatched: function (e) {
 
+                debugger;
+
                 var outcome = e.getParameter("arguments").outcome;
                 console.log("_onRouteMatched " + outcome);
 

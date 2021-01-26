@@ -39,113 +39,83 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" visible="false" />
                 </f:actions>
-                <!-- <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions> -->
             </f:DynamicPageTitle>
         </f:title>
 
         <f:header> 
             <f:DynamicPageHeader pinnable="true">
                 <!-- <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
-                        labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" >
-                    <form:content>
-                        <VBox>
-                            <Label text="Negotiation Type" labelFor="Negotiation Type" ></Label>
-                                <Input />
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M6 S12" />
-                                </layoutData>
-                           
-                        </VBox>
-                        <VBox>
-                            <Label text="Negotiation No" labelFor="Negotiation No"  />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Outcome" labelFor="Outcome"  />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Buyer" labelFor="Buyer"  />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Date" />
-                            <ComboBox width="100%" />
-
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M4 S4" />
-                            </layoutData>
-                            
-                        </VBox>
-                        <VBox>
-                            <Label text="From"/>
-                            <DatePicker
-                                placeholder="YYYY/MM/DD"
-                                change="handleChange"
-                                class="sapUiSmallMarginBottom"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M4 S4" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="To"/>
-                            <DatePicker
-                                placeholder="YYYY/MM/DD"
-                                change="handleChange"
-                                class="sapUiSmallMarginBottom"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M4 S4" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Title"   />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        
-                        <VBox>
-                            <Label text="Status"  />
-                            <ComboBox width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Status"  />
-                            <ComboBox width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Status"  />
-                            <ComboBox width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                           
-                    </form:content>
-                </form:SimpleForm> -->
-                <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
                          >
-                    <form:content>
-                        <VBox width="100%">
+                    <form:content> -->
+                    <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false"
+                                considerSelectionVariants="true" entitySet="MICategoryHierarchyStructureView" search="filterSearch" >
+
+                                <smartFilterBar:controlConfiguration>
+                                    
+                                    <smartFilterBar:ControlConfiguration key="path_code" index="1" label="{I18N>/CATEGORY_CODE}" width="100%"
+                                        groupId="_BASIC" visibleInAdvancedArea="true" >
+                                        <smartFilterBar:customControl>
+                                            <HBox width="100%">
+                                                <Input id="filterCategoryCode" placeholder="Category Code" liveChange="liveCategoryCode"/>
+                                                <Input id="filterCategoryCode2" placeholder="Category Code" liveChange="liveCategoryCode"/>
+                                                <Input id="filterCategoryCode3" placeholder="Category Code" liveChange="liveCategoryCode"/>
+                                                <layoutData>
+                                                    <layout:GridData span="XL3 L3 M3 S3" />
+                                                </layoutData>
+                                            </HBox>
+                                            
+                                            
+                                        </smartFilterBar:customControl>
+                                        
+                                    </smartFilterBar:ControlConfiguration>
+
+                                    <smartFilterBar:ControlConfiguration key="category_name" index="2" label=""
+                                        groupId="_BASIC" visibleInAdvancedArea="true">
+                                        <smartFilterBar:customControl>
+                                            <Input id="filterCategoryName" placeholder="Category Name" />
+                                        </smartFilterBar:customControl>
+                                    </smartFilterBar:ControlConfiguration>
+                                    <smartFilterBar:ControlConfiguration key="system_create_dtm" index="3" label="{I18N>/WRITE_DATE}"
+                                        groupId="_BASIC" visibleInAdvancedArea="true" class="widthAdd">
+                                        <smartFilterBar:customControl>
+                                        <DateRangeSelection 
+                                            id="filterCreateDate" 
+                                            showFooter="true" placeholder="YYYY/MM/DD - YYYY/MM/DD" displayFormat="yyyy/MM/dd"
+                                            change="filterCreateDateChange"/>	
+                                        </smartFilterBar:customControl>
+                                    </smartFilterBar:ControlConfiguration>
+                                    
+
+                                    <!-- <smartFilterBar:ControlConfiguration key="aaa" index="3" label="TEST"
+                                        groupId="_BASIC" visibleInAdvancedArea="true">
+                                        <smartFilterBar:customControl>
+                                            <ComboBox
+                                                items="{
+                                                    path: '/MICategoryHierarchyStructureView',
+                                                    sorter: {
+                                                        path: 'parent_node_id',
+                                                        descending: false,
+                                                        group: true
+                                                    }
+                                                }">
+                                                <core:Item key="{category_code}" text="{category_code}" />
+                                            </ComboBox>
+                                        </smartFilterBar:customControl>
+                                    </smartFilterBar:ControlConfiguration> -->
+
+                                </smartFilterBar:controlConfiguration>
+                                <smartFilterBar:layoutData>
+                                    <FlexItemData shrinkFactor="0"/>
+                                </smartFilterBar:layoutData>
+                                
+                            </smartFilterBar:SmartFilterBar>
+
+
+
+
+                        <!-- <VBox width="100%">
                             <HBox width="100%" class="sapUiSmallMarginBottom">
                                 <VBox width="25%">
                                     <Label text="Negotiation Type" labelFor="Negotiation Type" class="sapMLabelNoText" ></Label>
@@ -194,11 +164,10 @@
                                     <HBox width="95%">
                                         <VBox class="sapUiTinyMarginEnd">
                                             <Label text="Date" />
-                                            <!-- <ComboBox placeholder="Create Date" width="100%" > -->
                                             <ComboBox selectedKey="3" width="100%" >
-                                                <core:Item key="1" text="open date"/>
-                                                <core:Item key="2" text="close date"/>
-                                                <core:Item key="3" text="create date"/>
+                                                <core:Item key="1" text="Open Date"/>
+                                                <core:Item key="2" text="Close Date"/>
+                                                <core:Item key="3" text="Create Date"/>
                                             </ComboBox>
 
                                             <layoutData>
@@ -279,19 +248,17 @@
                                     </layoutData>
                                 </VBox>
                             </HBox>
-                        </VBox> 
-                    </form:content>
-                </form:SimpleForm>
+                        </VBox>  -->
+                    <!-- </form:content>
+                </form:SimpleForm> -->
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-
-        
-			<smartTable:SmartTable id="sTable1" entitySet="NegoHeaders" smartFilterId="smartFilterBar" tableType="Table" 
+			<smartTable:SmartTable id="sTable1" entitySet="NegoItemPrices" smartFilterId="smartFilterBar" tableType="Table" 
                             useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
                             useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
                             enableAutoBinding="true" tableBindingPath="{viewModel>/NegoHeaders}"
-                            class="sapUiResponsiveContentPadding sapUiLargeMarginBottom"
+                            class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
                             initiallyVisibleFields=""
                             beforeRebindTable="beforeRebindTable"
                             >
@@ -303,152 +270,161 @@
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
                             <!-- <OverflowToolbarButton text="abcd" type="Transparent" enabled="true" /> -->
-                            <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true"  />
+                            <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true" press="test1" />
                             <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
                             <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
                             <!-- <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/> -->
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                     <t:Table 
-                        id="table1"
-                        cellClick="tableCellClick"
-                        showColumnVisibilityMenu="true"
                         enableColumnFreeze="true"
-                        enableGrouping="false">
+                        visibleRowCount="14"
+                        rows="{
+                                    path: '/NegoItemPrices',
+                                    sorter: {
+                                        path: 'nego_header_id',
+                                        descending: false
+                                    },
+                                    parameters: {
+                                        'expand': 'Header'
+                                    }
+                                }">
                         <t:columns>
-                            <t:Column width="10rem" sortProperty="nego_document_number" filterProperty="nego_document_number">
+                            <t:Column width="10rem" sortProperty="Header/nego_document_number" filterProperty="Header/nego_document_number">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_number", "leadingProperty": "nego_document_number", "sortProperty": "nego_document_number", "filterProperty": "nego_document_number"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/nego_document_number", "leadingProperty": "Header/nego_document_number", "sortProperty": "Header/nego_document_number", "filterProperty": "Header/nego_document_number"}'/>
                                 </t:customData>
                                 <Label text="Negotiation No" design="Bold"/>
                                 <t:template>
-                                    <Text text="{nego_document_number}" wrapping="false" />
+                                    <ObjectStatus text="{Header/nego_document_number}" active="true" press="onNegoNumberPress"  />
+                                    <!-- <ObjectStatus text="1" active="true" press=""  /> -->
+                                    <!-- <Text text="{Header/nego_document_number}" wrapping="false" /> -->
+                                    <!-- <Text text="1" wrapping="false" /> -->
                                 </t:template>
                             </t:Column> 
-                            <t:Column width="4rem" hAlign="Center" sortProperty="nego_document_round" filterProperty="nego_document_round">
+                            <t:Column width="6rem" hAlign="Center" sortProperty="Header/nego_document_round" filterProperty="Header/nego_document_round">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_round", "leadingProperty": "nego_document_round", "sortProperty": "nego_document_round", "filterProperty": "nego_document_round"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/nego_document_round", "leadingProperty": "Header/nego_document_round", "sortProperty": "Header/nego_document_round", "filterProperty": "Header/nego_document_round"}'/>
                                 </t:customData>
-                                    <Label text="Rev." design="Bold"/>
-                                    <t:template>
-                                        <Text text="{nego_document_round}" wrapping="false" />
-                                    </t:template> 
+                                <Label text="Revision" design="Bold"/>
+                                <t:template>
+                                    <Text text="{Header/nego_document_round}" wrapping="false" />
+                                </t:template> 
                             </t:Column> 
-                            <t:Column width="8rem" hAlign="Center" sortProperty="nego_progress_status_code" filterProperty="nego_progress_status_code">
+                            <t:Column width="12rem" hAlign="Center" sortProperty="Header/nego_progress_status_code" filterProperty="Header/nego_progress_status_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_progress_status_code", "leadingProperty": "nego_progress_status_code", "sortProperty": "nego_progress_status_code", "filterProperty": "nego_progress_status_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/nego_progress_status_code", "leadingProperty": "Header/nego_progress_status_code", "sortProperty": "Header/nego_progress_status_code", "filterProperty": "Header/nego_progress_status_code"}'/>
                                 </t:customData>
-                                    <Label text="Status" design="Bold"/>
-                                    <t:template>
-                                        <Text text="{nego_progress_status_code}" wrapping="false" />
-                                    </t:template>
+                                <Label text="Negotiation Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{Header/nego_progress_status_code}" wrapping="false" />
+                                </t:template>
                             </t:Column> 
-
-                            <t:Column width="6rem" hAlign="End" sortProperty="reply_times" filterProperty="reply_times">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="Header/award_progress_status_code" filterProperty="Header/award_progress_status_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "reply_times", "leadingProperty": "reply_times", "sortProperty": "reply_times", "filterProperty": "reply_times"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/award_progress_status_code", "leadingProperty": "Header/award_progress_status_code", "sortProperty": "Header/award_progress_status_code", "filterProperty": "Header/award_progress_status_code"}'/>
+                                </t:customData>
+                                <Label text="Award Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{Header/award_progress_status_code}" wrapping="false" />
+                                </t:template>
+                            </t:Column> 
+                            <t:Column width="6rem" hAlign="End" sortProperty="Header/reply_times" filterProperty="Header/reply_times">
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/reply_times", "leadingProperty": "Header/reply_times", "sortProperty": "Header/reply_times", "filterProperty": "Header/reply_times"}'/>
                                 </t:customData>
                                 <Label text="회신횟수" design="Bold"/>
                                 <t:template>
-                                    <Text text="{reply_times}" wrapping="false"  />
+                                    <Text text="{Header/reply_times}" wrapping="false"  />
                                 </t:template> 
                             </t:Column> 
 
-                            <t:Column width="6rem" hAlign="End" sortProperty="supplier_count" filterProperty="supplier_count">
+                            <t:Column width="6rem" hAlign="End" sortProperty="Header/supplier_count" filterProperty="Header/supplier_count">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "supplier_count", "leadingProperty": "supplier_count", "sortProperty": "supplier_count", "filterProperty": "supplier_count"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/supplier_count", "leadingProperty": "Header/supplier_count", "sortProperty": "Header/supplier_count", "filterProperty": "Header/supplier_count"}'/>
                                 </t:customData>
                                 <Label text="협력사수" design="Bold"/>
                                 <t:template>
-                                    <Text text="{supplier_count}" wrapping="false" />
+                                    <Text text="{Header/supplier_count}" wrapping="false" />
                                 </t:template>
-                            </t:Column> 
-
-                            <!-- <t:Column width="7rem" sortProperty="supplier_participation_flag" filterProperty="supplier_participation_flag">
+                            </t:Column>
+                            <t:Column width="7rem" sortProperty="Header/supplier_participation_flag" filterProperty="Header/supplier_participation_flag">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "supplier_participation_flag", "leadingProperty": "supplier_participation_flag", "sortProperty": "supplier_participation_flag", "filterProperty": "supplier_participation_flag"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/supplier_participation_flag", "leadingProperty": "Header/supplier_participation_flag", "sortProperty": "Header/supplier_participation_flag", "filterProperty": "Header/supplier_participation_flag"}'/>
                                 </t:customData>
                                 <Label text="Participation" design="Bold"/>
                                 <t:template>
-                                    <Text text="{supplier_participation_flag}" wrapping="false" />
+                                    <Text text="{Header/supplier_participation_flag}" wrapping="false" />
                                 </t:template> 
-                            </t:Column>  -->
-                            <!-- <t:Column width="6rem" hAlign="Center" sortProperty="closing_date" filterProperty="closing_date">
+                            </t:Column>
+                            <t:Column width="7rem" hAlign="Center" sortProperty="Header/remaining_hours" filterProperty="Header/remaining_hours">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/remaining_hours", "leadingProperty": "Header/remaining_hours", "sortProperty": "Header/remaining_hours", "filterProperty": "Header/remaining_hours"}'/>
                                 </t:customData>
                                 <Label text="잔여시간" design="Bold"/>
                                 <t:template>
-                                    <Text text="{path: 'closing_date',type : 'sap.ui.model.type.Date', 
-                                            formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
-                                    
+                                    <Text text="{path: 'Header/remaining_hours',
+                                                type : 'sap.ui.model.type.Date', 
+                                                formatOptions: { pattern: 'yyyy/MM/dd' },
+                                                parts: [ {path: 'Header/closing_date'} ], 
+                                                formatter: '.remaining_hours_formatter'}" wrapping="false" />
                                 </t:template> 
-                            </t:Column>  -->
-                            <t:Column width="18rem" hAlign="Begin" sortProperty="nego_document_title" filterProperty="nego_document_title">
+                            </t:Column>
+                            <t:Column width="18rem" hAlign="Begin" sortProperty="Header/nego_document_title" filterProperty="Header/nego_document_title">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_title", "leadingProperty": "nego_document_title", "sortProperty": "nego_document_title", "filterProperty": "nego_document_title"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/nego_document_title", "leadingProperty": "Header/nego_document_title", "sortProperty": "Header/nego_document_title", "filterProperty": "Header/nego_document_title"}'/>
                                 </t:customData>
-                                <Label text="제목" design="Bold" />
+                                <Label text="Title" design="Bold" />
                                 <t:template>
-                                    <Text text="{nego_document_title}" wrapping="false" />
+                                    <Text text="{Header/nego_document_title}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <!-- <t:Column width="5rem" hAlign="End" sortProperty="" filterProperty="">
+                            <t:Column width="5rem" hAlign="End" sortProperty="Header/items_count" filterProperty="Header/items_count">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "", "leadingProperty": "", "sortProperty": "", "filterProperty": ""}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/items_count", "leadingProperty": "Header/items_count", "sortProperty": "Header/items_count", "filterProperty": "Header/items_count"}'/>
                                 </t:customData>
                                 <Label text="품목수" design="Bold"/>
                                 <t:template>
-                                    <Text text="{viewModel>aa}" wrapping="false" />
+                                    <Text text="{Header/items_count}" wrapping="false" />
                                 </t:template>   
-                            </t:Column>  -->
-                            <t:Column width="10rem" hAlign="Center" sortProperty="nego_type_code" filterProperty="nego_type_code">
+                            </t:Column> 
+                            <t:Column width="10rem" hAlign="Center" sortProperty="Header/nego_type_code" filterProperty="Header/nego_type_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_type_code", "leadingProperty": "nego_type_code", "sortProperty": "nego_type_code", "filterProperty": "nego_type_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/nego_type_code", "leadingProperty": "Header/nego_type_code", "sortProperty": "Header/nego_type_code", "filterProperty": "Header/nego_type_code"}'/>
                                 </t:customData>
                                 <Label text="Negotiation Type"  design="Bold"/>
                                 <t:template>
-                                    <Text text="{nego_type_code}" wrapping="false" />
+                                    <Text text="{Header/nego_type_code}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
-                            <t:Column width="8rem" hAlign="Center" sortProperty="negotiation_style_code" filterProperty="negotiation_style_code">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="Header/negotiation_style_code" filterProperty="Header/negotiation_style_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_style_code", "leadingProperty": "negotiation_style_code", "sortProperty": "negotiation_style_code", "filterProperty": "negotiation_style_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/negotiation_style_code", "leadingProperty": "Header/negotiation_style_code", "sortProperty": "Header/negotiation_style_code", "filterProperty": "Header/negotiation_style_code"}'/>
                                 </t:customData>
                                 <Label text="Quote Style" design="Bold"/>
                                 <t:template>
-                                    <Text text="{negotiation_style_code}" wrapping="false" />
+                                    <Text text="{Header/negotiation_style_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <!-- <t:Column width="8rem" hAlign="Center" sortProperty="bidding_result_open_status_code" filterProperty="bidding_result_open_status_code">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="Header/bidding_result_open_status_code" filterProperty="Header/bidding_result_open_status_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "bidding_result_open_status_code", "leadingProperty": "bidding_result_open_status_code", "sortProperty": "bidding_result_open_status_code", "filterProperty": "bidding_result_open_status_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/bidding_result_open_status_code", "leadingProperty": "Header/bidding_result_open_status_code", "sortProperty": "Header/bidding_result_open_status_code", "filterProperty": "Header/bidding_result_open_status_code"}'/>
                                 </t:customData>
                                 <Label text="Bid Open Status" design="Bold"/>
                                 <t:template>
-                                    <Text text="{bidding_result_open_status_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>  -->
-                            <t:Column width="12rem" hAlign="Center" sortProperty="negotiation_output_class_code" filterProperty="negotiation_output_class_code">
+                                    <Text text="{Header/bidding_result_open_status_code}" wrapping="false" />
+                                </t:template>  
+                            </t:Column> 
+                            <t:Column width="12rem" hAlign="Center" sortProperty="Header/negotiation_output_class_code" filterProperty="Header/negotiation_output_class_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_output_class_code", "leadingProperty": "negotiation_output_class_code", "sortProperty": "negotiation_output_class_code", "filterProperty": "negotiation_output_class_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/negotiation_output_class_code", "leadingProperty": "Header/negotiation_output_class_code", "sortProperty": "Header/negotiation_output_class_code", "filterProperty": "Header/negotiation_output_class_code"}'/>
                                 </t:customData>
                                 <Label text="Outcome" design="Bold"/>
                                 <t:template>
-                                    <Text text="{negotiation_output_class_code}" wrapping="false" />
+                                    <Text text="{Header/negotiation_output_class_code}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
-                            <t:Column width="8rem" hAlign="Center" sortProperty="partial_allow_flag" filterProperty="partial_allow_flag">
-                                <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "partial_allow_flag", "leadingProperty": "partial_allow_flag", "sortProperty": "partial_allow_flag", "filterProperty": "partial_allow_flag"}'/>
-                                </t:customData>
-                                <Label text="부분허용여부" design="Bold"/>
-                                <t:template>
-                                    <Text text="{partial_allow_flag}" wrapping="false" />
-                                </t:template> 
-                            </t:Column> 
-                            <!-- =============================추가 컬럼 안됨 -->
-                            <!-- <t:Column  width="10rem" sortProperty="pr_approve_number" filterProperty="pr_approve_number">
+                            <t:Column  width="10rem" sortProperty="pr_approve_number" filterProperty="pr_approve_number">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "pr_approve_number", "leadingProperty": "pr_approve_number", "sortProperty": "pr_approve_number", "filterProperty": "pr_approve_number"}'/>
                                 </t:customData>
@@ -456,26 +432,43 @@
                                 <t:template>
                                     <Text text="{pr_approve_number}" wrapping="false" />
                                 </t:template> 
-                            </t:Column>  -->
-                            <!-- <t:Column width="10rem" sortProperty="request_submit_status_code" filterProperty="request_submit_status_code">
+                            </t:Column>
+                            <t:Column width="10rem" sortProperty="req_submission_status" filterProperty="req_submission_status">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "request_submit_status_code", "leadingProperty": "request_submit_status_code", "sortProperty": "request_submit_status_code", "filterProperty": "request_submit_status_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "req_submission_status", "leadingProperty": "req_submission_status", "sortProperty": "req_submission_status", "filterProperty": "req_submission_status"}'/>
                                 </t:customData>
                                 <Label text="Submission Status" design="Bold"/>
                                 <t:template>
-                                    <Text text="{request_submit_status_code}" wrapping="false" />
+                                    <Text text="{req_submission_status}" wrapping="false" />
                                 </t:template>   
                             </t:Column>
-                            <t:Column width="8rem" hAlign="Center" sortProperty="request_reapprove_flag" filterProperty="request_reapprove_flag">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="req_reapproval" filterProperty="req_reapproval">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "request_reapprove_flag", "leadingProperty": "request_reapprove_flag", "sortProperty": "request_reapprove_flag", "filterProperty": "request_reapprove_flag"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "req_reapproval", "leadingProperty": "req_reapproval", "sortProperty": "req_reapproval", "filterProperty": "req_reapproval"}'/>
                                 </t:customData>
                                 <Label text="Req Reapproval" design="Bold"/>
                                 <t:template>
-                                    <Text text="{request_reapprove_flag}" wrapping="false" />
+                                    <Text text="{req_reapproval}" wrapping="false" />
                                 </t:template> 
                             </t:Column>
-                            
+                            <t:Column width="8rem" hAlign="Center" sortProperty="material_code" filterProperty="material_code">
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "material_code", "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code"}'/>
+                                </t:customData>
+                                <Label text="Part No" design="Bold"/>
+                                <t:template>
+                                    <Text text="{material_code}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
+                            <t:Column width="20rem" hAlign="Begin" sortProperty="material_desc" filterProperty="material_desc">
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc"}'/>
+                                </t:customData>
+                                <Label text="Description" design="Bold"/>
+                                <t:template>
+                                    <Text text="{material_desc}" wrapping="false" />
+                                </t:template> 
+                            </t:Column>
                             <t:Column width="8rem" hAlign="Center" sortProperty="requestor_empno" filterProperty="requestor_empno">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "requestor_empno", "leadingProperty": "requestor_empno", "sortProperty": "requestor_empno", "filterProperty": "requestor_empno"}'/>
@@ -494,90 +487,90 @@
                                 <t:template>
                                     <Text text="{request_department_code}" wrapping="false" />
                                 </t:template>  
-                            </t:Column> -->
-                            <t:Column  width="12rem" hAlign="Center" sortProperty="award_type_code" filterProperty="award_type_code">
+                            </t:Column>
+
+
+                            <t:Column  width="12rem" hAlign="Center" sortProperty="Header/award_type_code" filterProperty="Header/award_type_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "award_type_code", "leadingProperty": "award_type_code", "sortProperty": "award_type_code", "filterProperty": "award_type_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/award_type_code", "leadingProperty": "Header/award_type_code", "sortProperty": "Header/award_type_code", "filterProperty": "Header/award_type_code"}'/>
                                 </t:customData>
-                                <Label text="Award 유형" design="Bold"/>
+                                <Label text="Award Type" design="Bold"/>
                                 <t:template>
-                                    <Text text="{award_type_code}" wrapping="false" />
+                                    <Text text="{Header/award_type_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             
-                            <t:Column width="14rem" hAlign="Center" sortProperty="buyer_empno" filterProperty="buyer_empno">
+                            <t:Column width="14rem" hAlign="Center" sortProperty="Header/buyer_empno" filterProperty="Header/buyer_empno">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_empno", "leadingProperty": "buyer_empno", "sortProperty": "buyer_empno", "filterProperty": "buyer_empno"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/buyer_empno", "leadingProperty": "Header/buyer_empno", "sortProperty": "Header/buyer_empno", "filterProperty": "Header/buyer_empno"}'/>
                                 </t:customData>
                                 <Label text="구매담당자" design="Bold" />
                                 <t:template>
-                                    <Text text="{buyer_empno}" wrapping="false" />
+                                    <Text text="{Header/buyer_empno}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             
-                            <t:Column width="14rem" hAlign="Center" sortProperty="buyer_department_code" filterProperty="buyer_department_code">
+                            <t:Column width="14rem" hAlign="Center" sortProperty="Header/buyer_department_code" filterProperty="Header/buyer_department_code">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_department_code", "leadingProperty": "buyer_department_code", "sortProperty": "buyer_department_code", "filterProperty": "buyer_department_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/buyer_department_code", "leadingProperty": "Header/buyer_department_code", "sortProperty": "Header/buyer_department_code", "filterProperty": "Header/buyer_department_code"}'/>
                                 </t:customData>
                                 <Label text="구매팀" design="Bold"/>
                                 <t:template>
-                                    <Text text="{buyer_department_code}" wrapping="false" />
+                                    <Text text="{Header/buyer_department_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             
-                            <t:Column width="14rem" hAlign="Center" sortProperty="open_date" filterProperty="open_date">
+                            <t:Column width="14rem" hAlign="Center" sortProperty="Header/open_date" filterProperty="Header/open_date">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "open_date", "leadingProperty": "open_date", "sortProperty": "open_date", "filterProperty": "open_date"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/open_date", "leadingProperty": "Header/open_date", "sortProperty": "Header/open_date", "filterProperty": "Header/open_date"}'/>
                                 </t:customData>
                                 <Label text="Open Date" design="Bold"/>
                                 <t:template>
-                                    <Text text="{path: 'open_date',type : 'sap.ui.model.type.Date', 
+                                    <Text text="{path: 'Header/open_date',type : 'sap.ui.model.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
                                     
                                 </t:template>  
                             </t:Column> 
                             
-                            <t:Column width="14rem" hAlign="Center" sortProperty="closing_date" filterProperty="closing_date">
+                            <t:Column width="14rem" hAlign="Center" sortProperty="Header/closing_date" filterProperty="Header/closing_date">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/closing_date", "leadingProperty": "Header/closing_date", "sortProperty": "Header/closing_date", "filterProperty": "Header/closing_date"}'/>
                                 </t:customData>
                                 <Label text="Close Date" design="Bold"/>
                                 <t:template>
-                                    <Text text="{path: 'closing_date',type : 'sap.ui.model.type.Date', 
+                                    <Text text="{path: 'Header/closing_date',type : 'sap.ui.model.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             
-                            
-                            <t:Column width="10rem" hAlign="Center" sortProperty="close_date_ext_enabled_hours" filterProperty="close_date_ext_enabled_hours">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="Header/close_date_ext_enabled_hours" filterProperty="Header/close_date_ext_enabled_hours">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "close_date_ext_enabled_hours", "leadingProperty": "close_date_ext_enabled_hours", "sortProperty": "close_date_ext_enabled_hours", "filterProperty": "close_date_ext_enabled_hours"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/close_date_ext_enabled_hours", "leadingProperty": "Header/close_date_ext_enabled_hours", "sortProperty": "Header/close_date_ext_enabled_hours", "filterProperty": "Header/close_date_ext_enabled_hours"}'/>
                                 </t:customData>
                                 <Label text="Extention Period" design="Bold"/>
                                 <t:template>
-                                    <Text text="{close_date_ext_enabled_hours}" wrapping="false" />
+                                    <Text text="{Header/close_date_ext_enabled_hours}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <t:Column width="10rem" hAlign="Center" sortProperty="close_date_ext_enabled_count" filterProperty="close_date_ext_enabled_count">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="Header/close_date_ext_enabled_count" filterProperty="Header/close_date_ext_enabled_count">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "close_date_ext_enabled_count", "leadingProperty": "close_date_ext_enabled_count", "sortProperty": "close_date_ext_enabled_count", "filterProperty": "close_date_ext_enabled_count"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/close_date_ext_enabled_count", "leadingProperty": "Header/close_date_ext_enabled_count", "sortProperty": "Header/close_date_ext_enabled_count", "filterProperty": "Header/close_date_ext_enabled_count"}'/>
                                 </t:customData>
                                 <Label text="Extention Times" design="Bold" />
                                 <t:template>
-                                    <Text text="{close_date_ext_enabled_count}" wrapping="false" />
+                                    <Text text="{Header/close_date_ext_enabled_count}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                               
-                            <t:Column width="10rem" hAlign="Center" sortProperty="actual_extension_count" filterProperty="actual_extension_count">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="Header/actual_extension_count" filterProperty="Header/actual_extension_count">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "actual_extension_count", "leadingProperty": "actual_extension_count", "sortProperty": "actual_extension_count", "filterProperty": "actual_extension_count"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/actual_extension_count", "leadingProperty": "Header/actual_extension_count", "sortProperty": "Header/actual_extension_count", "filterProperty": "Header/actual_extension_count"}'/>
                                 </t:customData>
                                 <Label text="Actual Extension Times" design="Bold"/>
                                 <t:template>
-                                    <Text text="{actual_extension_count}" wrapping="false" />
+                                    <Text text="{Header/actual_extension_count}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <!--
                             <t:Column width="14rem" hAlign="Center" sortProperty="requisition_flag" filterProperty="requisition_flag">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "requisition_flag", "leadingProperty": "requisition_flag", "sortProperty": "requisition_flag", "filterProperty": "requisition_flag"}'/>
@@ -586,8 +579,7 @@
                                 <t:template>
                                     <Text text="{requisition_flag}" wrapping="false" />
                                 </t:template>  
-                            </t:Column> -->
-                            <!--
+                            </t:Column>
                             <t:Column width="14rem" hAlign="Center" sortProperty="price_submission_no" filterProperty="price_submission_no">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "price_submission_no", "leadingProperty": "price_submission_no", "sortProperty": "price_submission_no", "filterProperty": "price_submission_no"}'/>
@@ -606,19 +598,17 @@
                                     <Text text="{price_submisstion_status}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            -->
-                            
                             <t:Column width="14rem" hAlign="Center" sortProperty="local_create_dtm" filterProperty="local_create_dtm">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm"}'/>
                                 </t:customData>
-                                <Label text="생성 날짜" design="Bold"/>
+                                <Label text="Create Date" design="Bold"/>
                                 <t:template>
                                     <Text text="{path: 'local_create_dtm',type : 'sap.ui.model.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd' }}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <!-- <t:Column width="14rem" hAlign="Center" sortProperty="interface_source" filterProperty="interface_source">
+                            <t:Column width="14rem" hAlign="Center" sortProperty="interface_source" filterProperty="interface_source">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "interface_source", "leadingProperty": "interface_source", "sortProperty": "interface_source", "filterProperty": "interface_source"}'/>
                                 </t:customData>
@@ -626,352 +616,44 @@
                                 <t:template>
                                     <Text text="{interface_source}" wrapping="false" />
                                 </t:template>  
-                            </t:Column>  -->
+                            </t:Column> 
 
 
 
 
 
-
-                            <!-- <t:Column width="18rem" hAlign="Center" sortProperty="" filterProperty="">
-                                <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "", "leadingProperty": "", "sortProperty": "", "filterProperty": ""}'/>
-                                </t:customData>
-                                <Label text="" design="Bold" />
+                            <!-- <t:Column width="10rem">
+                                <Label text="nego_document_number" design="Bold"/>
                                 <t:template>
-                                    <Text text="{}" wrapping="false" />
-                                </t:template>  
-                            </t:Column>  -->
-
-
-
-                            
-                            <!-- <t:Column width="18rem" hAlign="Center" sortProperty="" filterProperty="">
-                                <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "", "leadingProperty": "", "sortProperty": "", "filterProperty": ""}'/>
-                                </t:customData>
-                                <Label text="제목" design="Bold" />
-                                <t:template>
-                                    <Text text="{nego_document_title}" wrapping="false" />
-                                </t:template>  
-                            </t:Column>  -->
-
-
-
-
-    <!-- =========================================================================================== -->
-                            
-                            <!-- <t:Column width="10rem" hAlign="Center">
-                                <Label text="요청 부서" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c21}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="12rem" hAlign="Center">
-                                <Label text="Award 유형" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c22}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="구매담당자" design="Bold" />
-                                <t:template>
-                                    <Text text="{c23}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="구매팀" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c24}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Open Date" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c25}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Close Date" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c26}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Extention Period" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c27}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Extention Times" design="Bold" />
-                                <t:template>
-                                    <Text text="{c28}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Actual Extension Times" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c29}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Requisition Flag" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c30}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Price Submission No" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c31}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Price Submission Status" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c32}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="생성 날짜" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c33}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Interface Source" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c34}" wrapping="false" />
+                                    <Text text="{Header/nego_document_number}" wrapping="false" />
                                 </t:template> 
                             </t:Column> -->
-                    
-                            
-
-
-
-
-
-
-                            
-
-
-
-
-
-
-
-
-
                         </t:columns>
+
+
+
+
+
+
+
+                        <!-- <columns>
+                            <Column width="100px" hAlign="Left">
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "NegoHeaders/nego_document_number", "maxLength": "5","columnIndex":"4", 
+                                        "leadingProperty": "NegoHeaders/nego_document_number"}' />
+                                </customData>
+                                <Text text="nego_document_number" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{NegoHeaders/nego_document_number}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items> -->
                     </t:Table>
-                    <!-- <t:Table id="mainTable" rows="{viewModel>/NegoHeaders}" cellClick="tableCellClick"
-                        enableCellFilter="true"
-                        enableCustomFilter="true"
-                        showColumnVisibilityMenu="true"
-                        enableColumnFreeze="true"
-                        enableGrouping="true">
-                        <t:columns>
-                            <t:Column width="10rem">
-                                <Label text="Negotiation No" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>nego_document_number}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="4rem">
-                                <Label text="Rev." design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>nego_document_round}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="5rem">
-                                <Label text="Status" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>nego_progress_status_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="6rem" hAlign="End">
-                                <Label text="회신횟수" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>reply_times}" wrapping="false"  />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="6rem" hAlign="End">
-                                <Label text="협력사수" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>supplier_count}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="7rem">
-                                <Label text="Participation" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>supplier_participation_flag}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="6rem" hAlign="Center">
-                                <Label text="잔여시간" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>closing_date}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="18rem" hAlign="Center">
-                                <Label text="제목" design="Bold" />
-                                <t:template>
-                                    <Text text="{viewModel>nego_document_title}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="5rem" hAlign="End">
-                                <Label text="품목수" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>aa}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="10rem">
-                                <Label text="Negotiation Type"  design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>nego_type_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="8rem" hAlign="Center">
-                                <Label text="Quote Style" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>negotiation_style_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="8rem" hAlign="Center">
-                                <Label text="Bid Open Status" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>bidding_result_open_status_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="12rem" hAlign="Center">
-                                <Label text="Outcome" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>negotiation_output_class_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="10rem">
-                                <Label text="Req Submission No" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>request_submit_number}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="10rem">
-                                <Label text="Submission Status" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>request_submit_status_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="8rem" hAlign="Center">
-                                <Label text="Req Reapproval" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>request_reapprove_flag}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="10rem">
-                                <Label text="Part No" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>material_code}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="10rem">
-                                <Label text="Description" design="Bold"/>
-                                <t:template>
-                                    <Text text="{viewModel>material_desc}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="8rem" hAlign="Center">
-                                <Label text="요청자" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c20}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="10rem" hAlign="Center">
-                                <Label text="요청 부서" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c21}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="12rem" hAlign="Center">
-                                <Label text="Award 유형" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c22}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="구매담당자" design="Bold" />
-                                <t:template>
-                                    <Text text="{c23}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="구매팀" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c24}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Open Date" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c25}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Close Date" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c26}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Extention Period" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c27}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Extention Times" design="Bold" />
-                                <t:template>
-                                    <Text text="{c28}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Actual Extension Times" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c29}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Requisition Flag" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c30}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Price Submission No" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c31}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Price Submission Status" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c32}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="생성 날짜" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c33}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                            <t:Column width="14rem" hAlign="Center">
-                                <Label text="Interface Source" design="Bold"/>
-                                <t:template>
-                                    <Text text="{c34}" wrapping="false" />
-                                </t:template> 
-                            </t:Column>
-                        </t:columns>
-                    </t:Table> -->
+                    
 			</smartTable:SmartTable>
             
 

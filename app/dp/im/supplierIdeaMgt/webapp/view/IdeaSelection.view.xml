@@ -41,20 +41,14 @@
                         defaultIndent="XL1 L1 M1 S1"
                         defaultSpan="XL3 L3 M3 S3">
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <ObjectStatus
-                            title="{I18N>/IDEA} {I18N>/SEQUENCE} "
-                            text="{master>/idea_number}"/>
-                        <ObjectStatus
-                            title="{I18N>/SUPPLIER} "
-                            text="{master>/supplier_local_name}"/>
-                        <ObjectStatus
-                            id="createUser"         
-                            title="{I18N>/IDEA} {I18N>/WRITER} "
-                            text="{master>/idea_create_user_local_name}"/>
-                        <ObjectStatus
-                            id="ideaDate"         
-                            title="{I18N>/IDEA} {I18N>/WRITE_DATE} "
-                            text="{
+                        <Label text="{I18N>/IDEA} {I18N>/SEQUENCE} :"/>
+                        <ObjectStatus text="{master>/idea_number}"/>
+                        <Label text="{I18N>/SUPPLIER} :"/>
+                        <ObjectStatus text="{master>/supplier_local_name}"/>
+                        <Label text="{I18N>/IDEA} {I18N>/WRITER} :"/>
+                        <ObjectStatus text="{master>/idea_create_user_local_name}"/>
+                        <Label text="{I18N>/IDEA} {I18N>/WRITE_DATE} :"/>
+                        <ObjectStatus id="ideaDate" text="{
                                     path: 'master>/idea_date',
                                     type: 'sap.ui.model.type.Date',
                                     formatOptions: {
@@ -63,9 +57,11 @@
                                 }"/>
                     </layout:VerticalLayout>
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <Label text="{I18N>/PROGRESS}{I18N>/STATUS} :"/>
                         <ObjectStatus
-                            title="{I18N>/PROGRESS}{I18N>/STATUS}"
-                            text="{master>/idea_progress_status_name}"/>
+                            class="sapMObjectStatusLarge"
+                            text="{master>/idea_progress_status_name}"
+                            state="Error" />
                     </layout:VerticalLayout>
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>

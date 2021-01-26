@@ -96,7 +96,7 @@
                                     <layout:GridData span="XL1 L1 M1 S1" />
                                 </layoutData>
                             </Label>
-                            <Input value="{filterModel>/project_name/value}" >
+                            <Input value="{filterModel>/project_name/value}" submit="onSearch">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S2" />
                                 </layoutData>

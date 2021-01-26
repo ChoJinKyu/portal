@@ -25,13 +25,13 @@ PROCEDURE EP_SUPPLY_SELECTION_RESULT (
                             , SUPPLIER_CODE NVARCHAR(10)
                             , SUPPLIER_NAME NVARCHAR(240)
                             , QUOTATION_AMOUNT DECIMAL
-                            , DELIVERY_REQUEST_DATE DATE
-                            , QUOTATION_DUE_DATE DATE
+                            , DELIVERY_REQUEST_DATE NVARCHAR(10)
+                            , QUOTATION_DUE_DATE NVARCHAR(10)
                             , QUOTATION_REMARK NVARCHAR(500)
                             , OFFLINE_SELECTION_SUPPLIER_CODE NVARCHAR(10)
                             , OFFLINE_SELECTION_SUPPLIER_NAME NVARCHAR(240)
                             , OFFLINE_QUOTATION_AMOUNT DECIMAL
-                            , OFFLINE_QUOTATION_DUE_DATE DATE
+                            , OFFLINE_QUOTATION_DUE_DATE NVARCHAR(10)
                             , OFFLINE_QUOTATION_REMARK NVARCHAR(500)
 
     )
@@ -76,13 +76,13 @@ BEGIN
                             , 'B' AS SUPPLIER_CODE 
                             , '신성이엔지' AS SUPPLIER_NAME 
                             , 10000000 AS QUOTATION_AMOUNT 
-                            , CURRENT_TIMESTAMP AS DELIVERY_REQUEST_DATE
-                            , CURRENT_TIMESTAMP AS QUOTATION_DUE_DATE 
+                            , '2021-02-01' AS DELIVERY_REQUEST_DATE
+                            , '2021-02-01' AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_CODE 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_NAME 
-                            , NULL AS OFFLINE_QUOTATION_AMOUNT 
-                            , NULL AS OFFLINE_QUOTATION_DUE_DATE 
+                            , 0 AS OFFLINE_QUOTATION_AMOUNT 
+                            , '' AS OFFLINE_QUOTATION_DUE_DATE 
                             , NULL AS OFFLINE_QUOTATION_REMARK 
                     FROM    DUMMY               
 
@@ -106,13 +106,13 @@ BEGIN
                             , 'B' AS SUPPLIER_CODE 
                             , '신성이엔지' AS SUPPLIER_NAME 
                             , 10000000 AS QUOTATION_AMOUNT 
-                            , CURRENT_TIMESTAMP AS DELIVERY_REQUEST_DATE
-                            , CURRENT_TIMESTAMP AS QUOTATION_DUE_DATE 
+                            , '2021-02-21' AS DELIVERY_REQUEST_DATE
+                            , '2021-03-01' AS QUOTATION_DUE_DATE 
                             , '비고' AS QUOTATION_REMARK 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_CODE 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_NAME 
-                            , NULL AS OFFLINE_QUOTATION_AMOUNT 
-                            , NULL AS OFFLINE_QUOTATION_DUE_DATE 
+                            , 0 AS OFFLINE_QUOTATION_AMOUNT 
+                            , '' AS OFFLINE_QUOTATION_DUE_DATE 
                             , NULL AS OFFLINE_QUOTATION_REMARK 
                     FROM    DUMMY   
                     ;
@@ -137,14 +137,14 @@ BEGIN
                             , '오프라인' AS SELECTION_RESULT 
                             , NULL AS SUPPLIER_CODE 
                             , NULL AS SUPPLIER_NAME 
-                            , NULL AS QUOTATION_AMOUNT 
-                            , ITEM.DELIVERY_REQUEST_DATE
-                            , NULL AS QUOTATION_DUE_DATE 
+                            , 0 AS QUOTATION_AMOUNT 
+                            , TO_CHAR(ITEM.DELIVERY_REQUEST_DATE, 'YYYY-MM-DD') AS DELIVERY_REQUEST_DATE
+                            , '' AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE AS OFFLINE_SELECTION_SUPPLIER_NAME 
                             , ITEM.OFFLINE_QUOTATION_AMOUNT 
-                            , ITEM.OFFLINE_QUOTATION_DUE_DATE 
+                            , TO_CHAR(ITEM.OFFLINE_QUOTATION_DUE_DATE, 'YYYY-MM-DD') AS OFFLINE_QUOTATION_DUE_DATE 
                             , ITEM.OFFLINE_QUOTATION_REMARK 
                     FROM    :I_DTL_TABLE I_ITEM
                     INNER JOIN EP_LI_DTL ITEM
@@ -182,14 +182,14 @@ BEGIN
                             , '오프라인' AS SELECTION_RESULT 
                             , NULL AS SUPPLIER_CODE 
                             , NULL AS SUPPLIER_NAME 
-                            , NULL AS QUOTATION_AMOUNT 
-                            , ITEM.DELIVERY_REQUEST_DATE
-                            , NULL AS QUOTATION_DUE_DATE 
+                            , 0 AS QUOTATION_AMOUNT 
+                            , TO_CHAR(ITEM.DELIVERY_REQUEST_DATE, 'YYYY-MM-DD') AS DELIVERY_REQUEST_DATE
+                            , '' AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE AS OFFLINE_SELECTION_SUPPLIER_NAME 
                             , ITEM.OFFLINE_QUOTATION_AMOUNT 
-                            , ITEM.OFFLINE_QUOTATION_DUE_DATE 
+                            , TO_CHAR(ITEM.OFFLINE_QUOTATION_DUE_DATE, 'YYYY-MM-DD') AS OFFLINE_QUOTATION_DUE_DATE
                             , ITEM.OFFLINE_QUOTATION_REMARK 
                     FROM    :I_DTL_TABLE I_ITEM
                     INNER JOIN EP_LI_DTL ITEM
@@ -222,13 +222,13 @@ BEGIN
                             , 'B' AS SUPPLIER_CODE 
                             , '신성이엔지' AS SUPPLIER_NAME 
                             , 10000000 AS QUOTATION_AMOUNT 
-                            , CURRENT_TIMESTAMP AS DELIVERY_REQUEST_DATE
-                            , CURRENT_TIMESTAMP AS QUOTATION_DUE_DATE 
+                            , '2021-02-01' AS DELIVERY_REQUEST_DATE
+                            , '2021-02-01' AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_CODE 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_NAME 
-                            , NULL AS OFFLINE_QUOTATION_AMOUNT 
-                            , NULL AS OFFLINE_QUOTATION_DUE_DATE 
+                            , 0 AS OFFLINE_QUOTATION_AMOUNT 
+                            , '' AS OFFLINE_QUOTATION_DUE_DATE 
                             , NULL AS OFFLINE_QUOTATION_REMARK 
                     FROM    DUMMY               
 
@@ -252,13 +252,13 @@ BEGIN
                             , 'B' AS SUPPLIER_CODE 
                             , '신성이엔지' AS SUPPLIER_NAME 
                             , 10000000 AS QUOTATION_AMOUNT 
-                            , CURRENT_TIMESTAMP AS DELIVERY_REQUEST_DATE
-                            , CURRENT_TIMESTAMP AS QUOTATION_DUE_DATE 
+                            , '2021-02-21' AS DELIVERY_REQUEST_DATE
+                            , '2021-03-01' AS QUOTATION_DUE_DATE 
                             , '비고' AS QUOTATION_REMARK 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_CODE 
                             , NULL AS OFFLINE_SELECTION_SUPPLIER_NAME 
-                            , NULL AS OFFLINE_QUOTATION_AMOUNT 
-                            , NULL AS OFFLINE_QUOTATION_DUE_DATE 
+                            , 0 AS OFFLINE_QUOTATION_AMOUNT 
+                            , '' AS OFFLINE_QUOTATION_DUE_DATE 
                             , NULL AS OFFLINE_QUOTATION_REMARK 
                     FROM    DUMMY   
                 ) A ORDER BY A.ITEM_SEQUENCE ASC

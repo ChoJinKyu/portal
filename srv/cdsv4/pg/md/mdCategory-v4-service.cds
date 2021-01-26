@@ -34,6 +34,36 @@ service MdCategoryV4Service {
     view MdVpMaterialMappListView(language_code: String, tenant_id: String, company_code: String, org_type_code: String, org_code: String, vendor_pool_code: String) as 
             select from vpMaterialMappListView.Md_Vp_Material_Mapp_List_View(language_code: :language_code, tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code, vendor_pool_code: :vendor_pool_code);
 
+    // Vendor Pool별 Material/Supplier Mapping 목록 Value Keyin 저장 Procedure 호출
+    // Fiori Json Array 데이터 Ajax로 V4호출
+    // URL : /pg.md.MdCategoryV4Service/MdVpMaterialMappSaveProc
+    //{
+    //	"params" : {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260087", "values":[
+    //		{"material_code":"MCode-1", "supplier_code":"SCode-1", "item_serial_no":"1", "attr_value":"Value-1값"},
+    //		{"material_code":"MCode-1", "supplier_code":"SCode-1", "item_serial_no":"2", "attr_value":"Value-2값"},
+    //		{"material_code":"MCode-1", "supplier_code":"SCode-1", "item_serial_no":"3", "attr_value":"Value-3값"},
+    //		{"material_code":"MCode-1", "supplier_code":"SCode-2", "item_serial_no":"1", "attr_value":"Value-1값"},
+    //		{"material_code":"MCode-1", "supplier_code":"SCode-2", "item_serial_no":"100", "attr_value":"Value-100값"},
+    //		{"material_code":"MCode-2", "supplier_code":"SCode-1", "item_serial_no":"5", "attr_value":"Value-5값"}
+    //	]}
+    //}
+    action MdVpMaterialMappSaveProc( params : VpValueInfo ) returns ReturnRslt;
+
+    type VpValueInfo {
+        tenant_id: String;
+        company_code: String;
+        org_type_code: String;
+        org_code: String;
+        vendor_pool_code: String;
+        values: array of VpMaterialValue;
+    };
+    type VpMaterialValue {
+        material_code: String;
+        supplier_code: String;
+        item_serial_no: String;
+        attr_value: String;
+    };
+
     // DB Object로 생성된 View를 조회 하는 경우 (model-cds가 존재해야함)
     //@cds.query.limit.default: 10
     //@cds.query.limit.max: 20
@@ -331,6 +361,7 @@ service MdCategoryV4Service {
 		and cid.org_code = :org_code
 		and cid.spmd_category_code = :spmd_category_code
 		;
+
 
 
 
