@@ -118,7 +118,7 @@ sap.ui.define([
             //importOrg filter
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'this.tenantId' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId ),
                                     new Filter("company_code", FilterOperator.EQ, importCompanyCode)
                                 ],
                                 and: true
@@ -343,29 +343,29 @@ sap.ui.define([
 				//It comes Add button pressed from the before page.
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					tenant_id: "this.tenantId"
+					tenant_id: this._sTenantId
 				});
 				this._toEditMode();
 			}else{
 
                 var self = this;
-				this._bindView("/MoldMasters(tenant_id='" + this.tenantId + "',mold_id='" + this._sMoldId + "')", "master", [], function(oData){
+				this._bindView("/MoldMasters(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "master", [], function(oData){
                     self._toShowMode();
                 });
 
-                this._bindView("/MoldMasterSpec(tenant_id='" + this.tenantId + "',mold_id='" + this._sMoldId + "')", "mstSpecView", [], function(oData){
+                this._bindView("/MoldMasterSpec(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "mstSpecView", [], function(oData){
                     
                 });
 
                 var schFilter = [
-                                    new Filter("tenant_id", FilterOperator.EQ, this.tenantId),
+                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                                     new Filter("mold_id", FilterOperator.EQ, this._sMoldId)
                                 ];
                 this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
                     
                 });
 
-                this._bindView("/MoldSpec(tenant_id='" + this.tenantId + "',mold_id='"+this._sMoldId+"')", "spec", [], function(oData){
+                this._bindView("/MoldSpec(tenant_id='" + this._sTenantId + "',mold_id='"+this._sMoldId+"')", "spec", [], function(oData){
                     
                 });
             }
@@ -485,7 +485,7 @@ sap.ui.define([
 
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'this.tenantId' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId ),
                                     new Filter("company_code", FilterOperator.EQ, params.selectedItem.getKey() )
                                 ],
                                 and: true
