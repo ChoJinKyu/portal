@@ -125,6 +125,9 @@ Accept-Language: ko
 
 ### Multi Select | Outcome with NegoType
 GET {{reviews-service}}/Sc_Nego_Type_Code(tenant_id='L2100',nego_type_code='RFQ')/Outcomes?
-&$expand=localized
+&$orderby=sort_no
+&$select=outcome_name
+&$expand=nego_type($select=nego_type_name;$expand=evaluation_type($select=evaluation_type_name))
+# &$expand=localized
 Cookie: {{cookie}}
 Accept-Language: ko
