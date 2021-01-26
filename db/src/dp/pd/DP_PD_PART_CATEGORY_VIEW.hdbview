@@ -17,7 +17,8 @@ SELECT
       l1.code_name as category_name,
       pa.active_flag,
       pa.update_user_id,
-      pa.local_update_dtm
+      pa.local_update_dtm,
+      CASE pa.HIERARCHY_TREE_SIZE WHEN 1 THEN 'leaf' ELSE 'expanded' END AS DRILL_STATE
        FROM HIERARCHY (	
 				    SOURCE (
 				        SELECT  tenant_id,
