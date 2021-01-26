@@ -77,49 +77,49 @@ Accept-Language: en
 
 ### Multi Select | "Outcome" Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴
 GET {{reviews-service}}/Sc_Outcome_Code?
-&$orderby=nego_type/evaluation_type/sort_no,nego_type/sort_no,sort_no
+&$orderby=nego_type/nego_supeval_type/sort_no,nego_type/sort_no,sort_no
 &$select=sort_no,tenant_id,nego_type_code,outcome_code,outcome_name
-&$expand=nego_type($select=sort_no,nego_type_name,evaluation_type;$expand=nego_parent_type($select=sort_no,nego_parent_type_name),evaluation_type($select=sort_no,evaluation_type_name))
+&$expand=nego_type($select=sort_no,nego_type_name,nego_supeval_type;$expand=nego_parent_type($select=sort_no,nego_parent_type_name),nego_supeval_type($select=sort_no,nego_supeval_type_name))
 Cookie: {{cookie}}
 Accept-Language: ko
 
 ### Multi Select | "Outcome" Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴-Compact
 GET {{reviews-service}}/Sc_Outcome_Code?
-&$orderby=nego_type/evaluation_type/sort_no,nego_type/sort_no,sort_no
+&$orderby=nego_type/nego_supeval_type/sort_no,nego_type/sort_no,sort_no
 &$select=tenant_id,nego_type_code,outcome_code,outcome_name
-&$expand=nego_type($select=nego_type_name,evaluation_type;$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name))
+&$expand=nego_type($select=nego_type_name,nego_supeval_type;$expand=nego_parent_type($select=nego_parent_type_name),nego_supeval_type($select=nego_supeval_type_name))
 Cookie: {{cookie}}
 Accept-Language: ko
 
 ### Multi Select V2 | "Outcome" Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴-Compact
 GET {{reviews-serviceV2}}/Sc_Outcome_Code?$format=json
-&$orderby=nego_type/evaluation_type/sort_no,nego_type/sort_no,sort_no
-&$select=tenant_id,nego_type_code,nego_type/nego_type_name,outcome_code,outcome_name,nego_type/evaluation_type/evaluation_type_name
-&$expand=nego_type,nego_type/evaluation_type
+&$orderby=nego_type/nego_supeval_type/sort_no,nego_type/sort_no,sort_no
+&$select=tenant_id,nego_type_code,nego_type/nego_type_name,outcome_code,outcome_name,nego_type/nego_supeval_type/nego_supeval_type_name
+&$expand=nego_type,nego_type/nego_supeval_type
 Cookie: {{cookie}}
 Accept-Language: ko
 
 ### Multi Select | "Negotiation Type" Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴-Compact
 GET {{reviews-service}}/Sc_Nego_Type_Code?
-&$orderby=evaluation_type/sort_no,sort_no
-&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type
-&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name)
+&$orderby=nego_supeval_type/sort_no,sort_no
+&$select=tenant_id,nego_type_code,nego_type_name,nego_supeval_type
+&$expand=nego_parent_type($select=nego_parent_type_name),nego_supeval_type($select=nego_supeval_type_name)
 Cookie: {{cookie}}
 Accept-Language: ko
 
 ### Multi Select V2 | "Negotiation Type" Materialized[Select,Filter,Localized]-OrderBy=가격|비가격,협상유형,아웃컴-Compact
 GET {{reviews-serviceV2}}/Sc_Nego_Type_Code?$format=json
-&$orderby=evaluation_type/sort_no,sort_no
-&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type/evaluation_type_name
-&$expand=evaluation_type
+&$orderby=nego_supeval_type/sort_no,sort_no
+&$select=tenant_id,nego_type_code,nego_type_name,nego_supeval_type/nego_supeval_type_name
+&$expand=nego_supeval_type
 Cookie: {{cookie}}
 Accept-Language: ko
 
 ### Multi Select | NegoType + Outcome
 GET {{reviews-service}}/Sc_Nego_Type_Code?
-&$orderby=evaluation_type/sort_no,sort_no
-&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type
-&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($select=outcome_name)
+&$orderby=nego_supeval_type/sort_no,sort_no
+&$select=tenant_id,nego_type_code,nego_type_name,nego_supeval_type
+&$expand=nego_parent_type($select=nego_parent_type_name),nego_supeval_type($select=nego_supeval_type_name),Outcomes($select=outcome_name)
 Cookie: {{cookie}}
 Accept-Language: ko
 
@@ -127,7 +127,7 @@ Accept-Language: ko
 GET {{reviews-service}}/Sc_Nego_Type_Code(tenant_id='L2100',nego_type_code='RFQ')/Outcomes?
 &$orderby=sort_no
 &$select=outcome_name
-&$expand=nego_type($select=nego_type_name;$expand=evaluation_type($select=evaluation_type_name))
+&$expand=nego_type($select=nego_type_name;$expand=nego_supeval_type($select=nego_supeval_type_name))
 # &$expand=localized
 Cookie: {{cookie}}
 Accept-Language: ko

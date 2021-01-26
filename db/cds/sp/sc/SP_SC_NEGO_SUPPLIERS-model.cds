@@ -16,7 +16,8 @@ entity Sc_Nego_Suppliers {
         operation_org_code               : String(30)          @title : '운영조직코드';
         operation_unit_code              : String(30)          @title : '운영단위코드';
         nego_supplier_register_type_code : String(10)          @title : '협상공급업체등록유형코드';
-        evaluation_type_code             : String(10)          @title : '평가유형코드';
+        evaluation_type_code             : String(10)          @title : '_평가유형코드-폐기예정';
+        nego_supeval_type_code           : String(10)          @title : '협상공급업체평가유형코드';
         supplier_code                    : String(10)          @title : '공급업체코드';
         supplier_name                    : String(300)         @title : '공급업체명';
         //    supplier_group_code : String(30)   @title: '공급업체그룹코드' ;
