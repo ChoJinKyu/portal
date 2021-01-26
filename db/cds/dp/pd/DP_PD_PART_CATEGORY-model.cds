@@ -13,8 +13,8 @@ entity Pd_Part_Category {
 
           children    : Composition of many partCategoryLng.Pd_Part_Category_Lng
                           on  children.tenant_id  = tenant_id
-                          and children.category_code = category_code
-                          and children.category_group_code = category_group_code;
+                          and children.category_group_code = category_group_code
+                          and children.category_code = category_code;
 
     parent_category_code : String(40)   @title: '상위 카테고리 코드' ;	
     sequence : Decimal default 1  @title: '순번' ;	
