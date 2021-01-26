@@ -23,6 +23,17 @@ service marketIntelligenceSacTService {
     view MiSacMaterialInfoView @(title : '자재별 정보 View') as select from MaterialInfo.Mi_Sac_Material_Info_View;            //자재별 정보
     view MiSacExchRateView @(title : '환율 View') as select from ExchRate.Mi_Sac_Exch_Rate_View;                               //환율
 
-    view MiSacDailyExchRateView @(title : '일별환율 View') as select from DailyExchRate;
+    view MiSacDailyExchRateView @(title : '일별환율 View') as 
+    select
+        key tenant_id
+       ,key exrate_type_code
+       ,key source_currency_code
+       ,key target_currency_code
+       ,key exrate_start_date
+           ,exchange_rate
+           ,'PG0101_00010'  as  mi_measure : String
+    from DailyExchRate;
+
+
 
 }
