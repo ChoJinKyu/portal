@@ -1,27 +1,26 @@
 specVersion: "1.0"
 metadata:
-  name: vendorPoolChange
+  name: pg.vp.vendorPoolChange
 type: application
-resources:
-  configuration:
-    propertiesFileSourceEncoding: UTF-8
-builder:
-  resources:
-    excludes:
-      - "/test/**"
-      - "/localService/**"
-  customTasks:
-    - name: webide-extension-task-updateManifestJson
-      afterTask: generateVersionInfo
+ui5Theme: sap_fiori_3
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
       configuration:
-        appFolder: webapp
-        destDir: dist
-    - name: webide-extension-task-resources
-      afterTask: webide-extension-task-updateManifestJson
+        ignoreCertError: false
+        backend:
+          - path: /sap
+            url: https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
+            destination: sppCap_srv_dev
+        ui5:
+          path:
+            - /resources
+            - /test-resources
+          url: https://ui5.sap.com
+          version: ""
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
       configuration:
-        nameSpace: pg
-    - name: webide-extension-task-copyFile
-      afterTask: webide-extension-task-resources
-      configuration:
-        srcFile: "/xs-app.json"
-        destFile: "/xs-app.json"
+        port: 35729
+        path: webapp
