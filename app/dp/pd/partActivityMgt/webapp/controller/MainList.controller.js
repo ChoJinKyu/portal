@@ -5,8 +5,7 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/util/Validator",
     "sap/ui/model/json/JSONModel",
-    "ext/lib/formatter/DateFormatter",
-    // "sap/m/TablePersoController",
+    "ext/lib/formatter/DateFormatter",    
     "sap/ui/table/TablePersoController",
     "./MainListPersoService",
     "sap/ui/core/Fragment",
@@ -24,10 +23,10 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Input",
     "sap/m/VBox",
-    "dp/util/control/ui/IdeaManagerDialog"
+    "ext/lib/util/ExcelUtil"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,IdeaManagerDialog) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, ExcelUtil) {
     "use strict";
 
     var oTransactionManager;
@@ -73,7 +72,8 @@ sap.ui.define([
 
             this.enableMessagePopover();
 
-            var today = new Date();
+            this._doInitTablePerso();
+           
         },
 
         onRenderedFirst: function () {
@@ -95,8 +95,8 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoRefresh: function () {
-            //MainListPersoService.resetPersData();
-            //this._oTPC.refresh();
+            MainListPersoService.resetPersData();
+            this._oTPC.refresh();
         },
 
 		/**
@@ -118,27 +118,51 @@ sap.ui.define([
             }
         },
 
-        onTestPress: function (oEvent) {
-          //  var sPath = oEvent.getSource().getBindingContext("list").getPath(),
-          //      oRecord = this.getModel("list").getProperty(sPath);
-
-            this._sTenantId = 'L2100';
-            this._sCompanyCode = 'LGCKR';
-            this._sIdeaNumber = '2012000001';
-            this.getRouter().navTo("selectionPage", {
-                //layout: oNextUIState.layout,
-                tenantId: 'L2100',
-                companyCode: 'LGCKR',
-                ideaNumber: '2012000001'
-            }, true);
-        },
-
         onCreate: function (oEvent) {
             this.getRouter().navTo("selectionPage", {
                 tenantId: this.tenant_id,
                 companyCode: this.companyCode,
                 ideaNumber: 'new'
             }, true);
+        },
+
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "Part Activity_"+ this._getDTtype();
+            var oData = this.getModel("list").getProperty("/pdPartactivityTemplateView"); //binded Data
+            // var oData = oTable.getModel().getProperty("/Uom");
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
+
+        onStatusColor: function (sStautsCodeParam) {
+
+            var sReturnValue = 5;
+            //색상 정의 필요
+            if( sStautsCodeParam === "DRAFT" ) {
+                sReturnValue = 5;
+            }else if( sStautsCodeParam === "30" ) {
+                sReturnValue = 7;
+            }else if( sStautsCodeParam === "40" ) {
+                sReturnValue = 3;
+            }
+
+            return sReturnValue;
+        },
+
+
+        /**
+         * Cell 클릭 후 상세화면으로 이동
+         */
+        onCellClickPress: function(oEvent) {
+            this._goDetailView(oEvent);
         },
 
         
@@ -180,83 +204,32 @@ sap.ui.define([
 
         _getSearchStates: function () {
 
-            // var searchKeyword = this.getView().byId("searchKeyword").getValue();
-            // var searchIdeaProcess = this.getView().byId("searchIdeaProcess").getSelectedKeys();
-            // var searchIdeaType = this.getView().byId("searchIdeaType").getSelectedKeys();
-            // var searchProductGroup = this.getView().byId("searchProductGroup").getSelectedKeys();
-            // var requestFromDate = this.getView().byId("searchRequestDate").getDateValue(),
-            //     requestToDate = this.getView().byId("searchRequestDate").getSecondDateValue();
-            // var searchIdeaManagerId = this.getView().byId("searchIdeaManagerId").getValue();
-            // var searchIdeaManager = this.getView().byId("searchIdeaManager").getValue();
-
+            var searchKeyword = this.getView().byId("searchKeyword").getValue();
+            var searchCompany = this.getView().byId("searchCompany").getSelectedKey();
+            var searchOrg = this.getView().byId("searchOrg").getSelectedKey();
+            var searchPrjType = this.getView().byId("searchPrjType").getSelectedKey();
 
             var aSearchFilters = [];
 
-            
+            if (searchKeyword != "") {                
+                aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchKeyword.toLowerCase().replace("'","''")+"'"));
+            }
 
-            // if (searchKeyword != "") {
-            //     aSearchFilters.push(new Filter("idea_title", FilterOperator.Contains, searchKeyword) );
-            // }
+            if (searchCompany && searchCompany.length > 0) {
+				aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, searchCompany));
+            }
 
+            if (searchOrg && searchOrg.length > 0) {
+				aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, searchOrg));
+            }
 
-            
-            // if (searchIdeaProcess.length > 0) {
-            //     var _tempFilters = [];
-            //     searchIdeaProcess.forEach(function (item, idx, arr) {
-            //         _tempFilters.push(new Filter("idea_progress_status_code", FilterOperator.EQ, item));
-            //     });
-            //     aSearchFilters.push(
-            //         new Filter({
-            //             filters: _tempFilters,
-            //             and: false
-            //         })
-            //     );
-            // }
-            
-            // if (searchIdeaType.length > 0) {
-            //     var _tempFilters = [];
-            //     searchIdeaType.forEach(function (item, idx, arr) {
-            //         _tempFilters.push(new Filter("idea_type_code", FilterOperator.EQ, item));
-            //     });
-            //     aSearchFilters.push(
-            //         new Filter({
-            //             filters: _tempFilters,
-            //             and: false
-            //         })
-            //     );
-            // }
-            
-            // if (searchProductGroup.length > 0) {
-            //     var _tempFilters = [];
-            //     searchProductGroup.forEach(function (item, idx, arr) {
-            //         _tempFilters.push(new Filter("idea_product_group_code", FilterOperator.EQ, item));
-            //     });
-            //     aSearchFilters.push(
-            //         new Filter({
-            //             filters: _tempFilters,
-            //             and: false
-            //         })
-            //     );
-            // }
-
-
-            // if (requestFromDate && requestToDate) {
-            //    aSearchFilters.push(new Filter("idea_date", FilterOperator.BT, this._getDTtype(true,requestFromDate), this._getDTtype(false,requestToDate)));
-            // }
-
-            // if (searchIdeaManagerId != "") {
-            //     aSearchFilters.push(new Filter("idea_manager_empno", FilterOperator.EQ, searchIdeaManagerId) );
-            // }else if(searchIdeaManager!=""){
-            //     aSearchFilters.push(new Filter("idea_manager_local_name", FilterOperator.Contains, searchIdeaManager) );
-            // }
+            if (searchPrjType && searchPrjType.length > 0) {
+				aSearchFilters.push(new Filter("part_project_type_code", FilterOperator.EQ, searchPrjType));
+            }
 
             return aSearchFilters;
         },
-
-
-        /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10T00:00:00
-         */
+                
         _getDTtype: function (StartFlag, oDateParam) {
             let oDate = oDateParam || new Date(),
                 iYear = oDate.getFullYear(),
@@ -266,14 +239,7 @@ sap.ui.define([
                 iMinutes = oDate.getMinutes(),
                 iSeconds = oDate.getSeconds();
  
-            let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate)+"T" ;
-            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds);
-
-            if( StartFlag ) {
-                sReturnValue += "00:00:00";
-            }else {
-                sReturnValue += "23:59:59";
-            }
+            let sReturnValue = iYear + this._getPreZero(iMonth) + this._getPreZero(iDate);                      
 
             return sReturnValue;
         },
@@ -288,32 +254,25 @@ sap.ui.define([
 
         _getSorter: function () {
             var aSorter = [];
-            aSorter.push(new Sorter("idea_number", true));
+            // aSorter.push(new Sorter("idea_number", true));
             return aSorter;
         },
 
-        onStatusColor: function (sStautsCodeParam) {
-
-            var sReturnValue = 5;
-            //색상 정의 필요
-            if( sStautsCodeParam === "DRAFT" ) {
-                sReturnValue = 5;
-            }else if( sStautsCodeParam === "30" ) {
-                sReturnValue = 7;
-            }else if( sStautsCodeParam === "40" ) {
-                sReturnValue = 3;
-            }
-
-            return sReturnValue;
-        },
-
-
-        /**
-         * Cell 클릭 후 상세화면으로 이동
-         */
-        onCellClickPress: function(oEvent) {
-            this._goDetailView(oEvent);
-        },
+        _doInitTablePerso: function(){
+			// init and activate controller
+			// this._oTPC = new TablePersoController({
+			// 	table: this.byId("mainTable"),
+			// 	componentName: "partActivityMgt",
+			// 	persoService: MainListPersoService,
+			// 	hasGrouping: true
+            // }).activate();
+            
+            // 개인화 - UI 테이블의 경우만 해당
+            this._oTPC = new TablePersoController({
+                customDataKey: "partActivityMgt",
+                persoService: MainListPersoService            
+            }).setTable(this.byId("mainTable"));
+        },        
 
         _goDetailView: function(oEvent){
 
@@ -331,55 +290,7 @@ sap.ui.define([
                 companyCode: rowData.company_code,
                 ideaNumber: rowData.idea_number
             }, true);
-        },
-
-
-        /**
-         * function : 아이디어 관리자 팝업 Call 함수
-         * date : 2021/01/14
-         */
-        onIdeaManagerDialogPress : function(){
-            
-            if(!this.oSearchIdeaManagerDialog){
-                this.oSearchIdeaManagerDialog = new IdeaManagerDialog({
-                    title: this.getModel("I18N").getText("/SEARCH_IDEA_MANAGER"),
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
-                        ]
-                    }
-                });
-                this.oSearchIdeaManagerDialog.attachEvent("apply", function(oEvent){ 
-                    this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name);
-                    // this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name+"("+oEvent.getParameter("item").idea_manager_empno+")");
-                    this.byId("searchIdeaManagerId").setValue(oEvent.getParameter("item").idea_manager_empno);
-                    
-                }.bind(this));
-                }
-            this.oSearchIdeaManagerDialog.open();
-
-        },
-
-        
-        /**
-         * 코드 체크
-         */
-        onNameChk : function(e) {
-            console.log(e);
-            var oView = this.getView();
-            //var searchIdeaManager = this.getView().byId("searchIdeaManager");
-            var searchIdeaManagerId = this.getView().byId("searchIdeaManagerId");
-            //console.log(searchIdeaManager.getValue());
-            //if(searchIdeaManager.getValue() == ""){
-                searchIdeaManagerId.setValue("");
-            //}
-        },
-
-
-
-
-
+        }
 
     });
 });

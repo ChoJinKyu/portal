@@ -41,7 +41,7 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Company: "></Label>
+                            <Label text="회사: "></Label>
                             <ComboBox
                                 id="searchCompanyCombo"
                                 width="100%"
@@ -80,23 +80,11 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <!-- <SearchField value="{list>product_activity_name}" search=".onSearchPartCategory" /> -->
-                            <Label text="Part Category: "></Label>
-                            <ComboBox
-                                id="searchPCCombo"
-                                width="100%"
-                                selectedKey=""
-                                items="{
-                                    path: '/PdOperationOrg',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                    ],
-                                    sorter: { path: 'operation_org_code'}
-                                }">
-                                <items>
-                                    <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
-                                </items>
-                            </ComboBox>
+                            <Label text="Part Category: " labelFor="searchPCField"></Label>
+                            <HBox>
+                                <SearchField id="searchPCField" search=".onSearchPartCategory" />
+                                <Input id="searchPCInput" placeholder="Input data" visible ="false"></Input>
+                            </HBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -116,7 +104,7 @@
                                     sorter: { path: 'sort_no'}
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="[{util>code}] {util>code_description}" />
+                                    <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
