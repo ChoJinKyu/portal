@@ -99,11 +99,11 @@
                                                 ],
                                                 sorter: { path: 'sort_no'} 
                                             }"
-                                    enabled="{approver>selRow}" >  
+                                    editable="{approver>selRow}" >  
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
                                 <Input value="{approver>approver_name}" placeholder="Search employee"
-                                    enabled="{approver>selRow}"
+                                    editable="{approver>selRow}"
                                     showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                 </Input>
                                 <Text text="{approver>approve_status_code}" />
