@@ -11,32 +11,128 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input",
-    "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
+    "sap/m/ComboBox",
+    "sap/ui/core/Item",
+    "sap/m/SearchField",
+    "ext/pg/util/control/ui/VendorPoolDialogPop"
+], function (
+    Parent, 
+    Renderer, 
+    ODataV2ServiceProvider, 
+    Filter, 
+    FilterOperator, 
+    Sorter, 
+    GridData, 
+    VBox, 
+    Column, 
+    Label, 
+    Text, 
+    Input, 
+    ComboBox, 
+    Item, 
+    SearchField,
+    VendorPoolDialogPop
+    ) {
     "use strict";
-
-    var vendorPoolDialog = Parent.extend("pg.util.control.ui.VendorPoolDialog", {
+    var that;
+    var vendorPoolDialogPop = Parent.extend("pg.util.control.ui.VendorPoolDialog", {
 
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "60em" },
-                keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
-                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
+                keyField: { type: "string", group: "Misc", defaultValue: "vendor_pool_code" },
+                textField: { type: "string", group: "Misc", defaultValue: "vendor_pool_local_name" }
             }
         },
 
         renderer: Renderer,
 
         createSearchFilters: function () {
-            this.oVendorPoolCode = new SearchField({ placeholder: this.getModel("I18N").getText("/VENDOR_POOL_CODE") });
-            //this.oBizunitCode = new SearchField({ placeholder: this.getModel("I18N").getText("/BIZUNIT_CODE") });
-            //this.oLocalUserName = new SearchField({ placeholder: this.getModel("I18N").getText("/LOCAL_USER_NAME") });
+            that = this;
+            this.oPlant = new Input({ placeholder: this.getModel("I18N").getText("/PLANT") });
+            this.oOperationOrg = new Input({ placeholder: this.getModel("I18N").getText("/OPERATION_ORG") });
 
-            this.oVendorPoolCode.attachEvent("change", this.loadData.bind(this));
-            //this.oBizunitCode.attachEvent("change", this.loadData.bind(this));
-            //this.oLocalUserName.attachEvent("change", this.loadData.bind(this));
+            var oItemTemplate = new sap.ui.core.Item({
+                key: "{code}",
+                text: "{code_name}"
+            });
+
+            this.oOperationUnitComb = new ComboBox({
+                id: "operationUint",
+                items: {
+                    path: "/items",
+                    template: oItemTemplate
+                }
+            });
+
+            this.oVendorPoolCode = new Input({
+                placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE"),
+                showValueHelp : true,
+                valueHelpOnly : true,
+                valueHelpRequest: function (oEvent) {
+                    this.oVendorPoolDialogPop = new VendorPoolDialogPop({
+                        multiSelection: false,
+                        keyField: "VENDOR_POOL_CODE",
+                        textField: "VENDOR_POOL_NAME",
+                        filters: [
+                            new VBox({
+                                items: [
+                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
+                                    new Input({placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE")})
+                                ],
+                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
+                            })
+                        ],
+                        columns: [
+                            new Column({
+                                width: "75%",
+                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
+                                template: new Text({ text: "vendorpool code" })
+                            }),
+                            new Column({
+                                width: "25%",
+                                hAlign: "Center",
+                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
+                                template: new Text({ text: "vendorpool name" })
+                            })
+                        ]
+                    });
+
+                    this.oVendorPoolDialogPop.setContentWidth("300px");
+                    var sSearchObj = {};
+                    sSearchObj.tanent_id = "L2100";
+                    //sSearchObj.vendor_pool_code = oSearchValue;
+                    this.oVendorPoolDialogPop.open(sSearchObj);
+                    this.oVendorPoolDialogPop.attachEvent("apply", function (oEvent) {
+                        console.log("oEvent : ", oEvent.mParameters.item);
+                    }.bind(this));
+                }
+            });
+
+            //this.oVendorPoolCode.attachEvent("change", this.loadData.bind(this));
 
             return [
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/PLANT") }),
+                        this.oPlant
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12" })
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_ORG") }),
+                        this.oOperationOrg
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12" })
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
+                        this.oOperationUnitComb
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12" })
+                }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
@@ -44,21 +140,6 @@ sap.ui.define([
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
                 })
-                //,
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/BIZUNIT_CODE") }),
-                //         this.oBizunitCode
-                //     ],
-                //     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
-                // }),
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/LOCAL_USER_NAME") }),
-                //         this.oLocalUserName
-                //     ],
-                //     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
-                // })
             ];
         },
 
@@ -101,7 +182,7 @@ sap.ui.define([
                     })
                 );
             }
-            
+
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpInfoLeafView", {
                 filters: aFilters,
                 sorters: [
@@ -110,22 +191,41 @@ sap.ui.define([
                 success: function (oData) {
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
+                }, error: function(e){
+                    console.log(e);
                 }.bind(this)
             });
         },
 
-        open: function(sSearchObj){
+        loadOperationUnitData: function () {
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("group_code", FilterOperator.EQ, "SP_SM_SUPPLIER_TYPE"));
+
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/xx.util.CommonService/").read("/Code", {
+                filters: aFilters,
+                success: function (oData) {
+                    var mData = {
+                        items : oData.results
+                    };
+                    var oModel = new sap.ui.model.json.JSONModel(mData);
+                    that.oOperationUnitComb.setModel(oModel);
+                }.bind(this)
+            });
+        },
+
+        open: function (sSearchObj) {
             this.oSearchObj = sSearchObj;
             console.log("sSearchObj:" + sSearchObj);
-            if(!this.oDialog) {
+            if (!this.oDialog) {
                 this.openWasRequested = true;
                 return;
             }
             this.loadData();
+            this.loadOperationUnitData();
             this.oDialog.open();
         }
-
     });
 
-    return vendorPoolDialog;
+    return vendorPoolDialogPop;
 }, /* bExport= */ true);

@@ -283,7 +283,7 @@
                             <ToolbarSpacer/>
                             <Button id="mainTableCreateButton"          type="Emphasized" text="{I18N>/CREATE_LEVEL}"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
                             <!-- Add the Personalization button -->
-                            <Button id="mainTableEditButton"             text="{I18N>/INFO_EDIT}"        press=".onMainTableEditButtonPress"     enabled="false" />
+                            <Button id="mainTableEditButton"             text="{I18N>/INFO_EDIT}"        press=".onMainTableEditButtonPress"     enabled="true" />
                             <Button id="mainTableChangeListButton"       text="{I18N>/CHANGE_LIST}"      press=".onMainTableChangeListButtonPress"   enabled="false" />
                             <Button id="mainTableCombineButton"          text="{I18N>/COMBINE_MOVE}"     press=".onMainTableCombineButtonPress"   enabled="false" />
                             <Button id="mainTableSplitButton"            text="{I18N>/SPLIT}"            press=".onMainTableSplitButtonPress"  enabled="false" />
