@@ -640,12 +640,12 @@ public class MoldApprovalV4 implements EventHandler {
                     mst.setRpayRate(null);*/
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(mst); 
                     Result rst = moldApprovalService.run(u);
-
+/*
                     Payment del = Payment.create();
                     del.setTenantId(row.getTenantId());
                     del.setMoldId(row.getMoldId());
                     Delete d2 = Delete.from(Payment_.CDS_NAME).matching(del); 
-                    Result rst2 = moldApprovalService.run(d2);
+                    Result rst2 = moldApprovalService.run(d2);*/
                 }else{ 
                     mst.setSplitPayTypeCode(row.getSplitPayTypeCode());
                     /*mst.setPrepayRate(new BigDecimal((String)((row.getPrepayRate()==null||row.getPrepayRate()=="")?"0":row.getPrepayRate())));
@@ -653,7 +653,7 @@ public class MoldApprovalV4 implements EventHandler {
                     mst.setRpayRate(new BigDecimal((String)((row.getRpayRate()==null||row.getRpayRate()=="")?"0":row.getRpayRate())));*/
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(mst); 
                     Result rst = moldApprovalService.run(u);
-
+/*
                     Payment payment = Payment.create();
                     payment.setTenantId(row.getTenantId());
                     payment.setMoldId(row.getMoldId());
@@ -665,7 +665,7 @@ public class MoldApprovalV4 implements EventHandler {
                     payment.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
                         payment.setUpdateUserId(aMaster.getUpdateUserId()); 
                         CqnInsert i = Insert.into(Quotation_.CDS_NAME).entry(payment); 
-                        Result rst2 = moldApprovalService.run(i);
+                        Result rst2 = moldApprovalService.run(i);*/
                 }
 
             }  
