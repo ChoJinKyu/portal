@@ -69,7 +69,8 @@ sap.ui.define([
 
             this.setModel(new JSONModel(), "visibleTF");
 
-            oTransactionManager = new TransactionManager();
+            oTransactionManager = new TransactionManager();            
+            
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 
@@ -314,19 +315,16 @@ sap.ui.define([
 
         _goDetailView: function(oEvent){
 
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
             var oView = this.getView();
             var oTable = oView.byId("mainTable"),
                 oModel = this.getView().getModel("list");
-            var rowData = oEvent.getParameter('rowBindingContext').getObject();
+            var rowData = oEvent.getParameter('rowBindingContext').getObject();                    
 
-            var idea_number = rowData.idea_number;
-            console.log("####idea_number====", idea_number);
-
-            this.getRouter().navTo("selectionPage", {
-                //layout: oNextUIState.layout,
+            this.getRouter().navTo("midPage", {
+                layout: oNextUIState.layout,
                 tenantId: rowData.tenant_id,
-                companyCode: rowData.company_code,
-                ideaNumber: rowData.idea_number
+                activityCode: rowData.activity_code
             }, true);
         }
 

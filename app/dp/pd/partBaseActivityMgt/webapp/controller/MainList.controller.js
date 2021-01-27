@@ -180,30 +180,12 @@ sap.ui.define([
             });
         },
 
-        onStatusColor: function (sStautsCodeParam) {
-
-            var sReturnValue = 5;
-            //색상 정의 필요
-            if( sStautsCodeParam === "DRAFT" ) {
-                sReturnValue = 5;
-            }else if( sStautsCodeParam === "30" ) {
-                sReturnValue = 7;
-            }else if( sStautsCodeParam === "40" ) {
-                sReturnValue = 3;
-            }
-
-            return sReturnValue;
-        },
-
-
         /**
          * Cell 클릭 후 상세화면으로 이동
          */
         onCellClickPress: function(oEvent) {
             this._goDetailView(oEvent);
         },
-
-        
 
         /* =========================================================== */
         /* internal methods                                            */
@@ -242,28 +224,26 @@ sap.ui.define([
 
         _getSearchStates: function () {
 
-            // var searchKeyword = this.getView().byId("searchKeyword").getValue();
-            // var searchCompany = this.getView().byId("searchCompany").getSelectedKey();
+            var searchPartBaseKeyword = this.getView().byId("searchPartBaseKeyword").getValue();
+            var searchDescKeyword = this.getView().byId("searchDescKeyword").getValue();
+            var searchUseflag = this.getView().byId("searchUseflag").getSelectedKey();
             // var searchOrg = this.getView().byId("searchOrg").getSelectedKey();
             // var searchPrjType = this.getView().byId("searchPrjType").getSelectedKey();
 
             var aSearchFilters = [];
 
-            // if (searchKeyword != "") {                
-            //     aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchKeyword.toLowerCase().replace("'","''")+"'"));
-            // }
+            if (searchPartBaseKeyword != "") {                
+                aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchPartBaseKeyword.toLowerCase().replace("'","''")+"'"));
+            }
 
-            // if (searchCompany && searchCompany.length > 0) {
-			// 	aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, searchCompany));
-            // }
+            if (searchDescKeyword != "") {                
+                aSearchFilters.push(new Filter("tolower(description)", FilterOperator.Contains, "'"+searchDescKeyword.toLowerCase().replace("'","''")+"'"));
+            }
 
-            // if (searchOrg && searchOrg.length > 0) {
-			// 	aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, searchOrg));
-            // }
-
-            // if (searchPrjType && searchPrjType.length > 0) {
-			// 	aSearchFilters.push(new Filter("part_project_type_code", FilterOperator.EQ, searchPrjType));
-            // }
+            if(!this.isValNull(searchUseflag)){
+                    var bUseFlag = (searchUseflag === "true")?true:false;
+                    aSearchFilters.push(new Filter("active_flag", FilterOperator.EQ, bUseFlag));
+            }           
 
             return aSearchFilters;
         },
@@ -313,20 +293,27 @@ sap.ui.define([
         },        
 
         _goDetailView: function(oEvent){
+            
+            // var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+			// 	sPath = oEvent.getSource().getBindingContext("list").getPath(),
+			// 	oRecord = this.getModel("list").getProperty(sPath);
 
+			// this.getRouter().navTo("midPage", {
+			// 	layout: oNextUIState.layout, 
+			// 	tenantId: oRecord.tenant_id,
+			// 	uomCode: oRecord.uom_code
+			// });
+
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
             var oView = this.getView();
             var oTable = oView.byId("mainTable"),
                 oModel = this.getView().getModel("list");
-            var rowData = oEvent.getParameter('rowBindingContext').getObject();
+            var rowData = oEvent.getParameter('rowBindingContext').getObject();            
 
-            var idea_number = rowData.idea_number;
-            console.log("####idea_number====", idea_number);
-
-            this.getRouter().navTo("selectionPage", {
-                //layout: oNextUIState.layout,
+            this.getRouter().navTo("midPage", {
+                layout: oNextUIState.layout,
                 tenantId: rowData.tenant_id,
-                companyCode: rowData.company_code,
-                ideaNumber: rowData.idea_number
+                activityCode: rowData.activity_code
             }, true);
         }
 
