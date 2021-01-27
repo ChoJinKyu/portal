@@ -6,6 +6,8 @@ using {dp as mtlMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model'
 using {dp as mtlOrg} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
 using {dp as uom} from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
+using {cm as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using {cm as orgDiv} from '../../../../../db/cds/cm/CM_ORG_DIVISION-model';
 
 namespace dp;
 
@@ -15,6 +17,12 @@ service McstBomMgtService {
     entity mcstProjectPartList as projection on mcstPartList.Tc_Mcst_Project_Part_List;
     entity mcstProjectPartMapMst as projection on mcstPartMapMst.Tc_Mcst_Project_Part_Map_Mst;
     entity mcstProjectPartMapDtl as projection on mcstPartMapDtl.Tc_Mcst_Project_Part_Map_Dtl;
+
+    @readonly
+    entity Hr_Employee             as projection on hrEmployee.Hr_Employee;
+
+    @readonly
+    entity Org_Division            as projection on orgDiv.Org_Division;        
 
     @readonly
     entity Hr_Department            as projection on hrDept.Hr_Department;
