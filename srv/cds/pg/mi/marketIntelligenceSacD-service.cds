@@ -233,7 +233,8 @@ service marketIntelligenceSacDService {
     //            ,commercial_unit_flag            as  COMMERCIAL_UNIT_FLAG
     //            ,value_base_commitment_flag      as  VALUE_BASE_COMMITMENT_FLAG
     //            ,disable_date                    as  DISABLE_DATE
-    //     from  UnitOfMeasure;
+    //     from  UnitOfMeasure
+    // ;
 
     // Vendor Pool Mst View: Vendor Pool Mst
     view VpVendorPoolMstView @(title : 'Vendor Pool Mst View') as
