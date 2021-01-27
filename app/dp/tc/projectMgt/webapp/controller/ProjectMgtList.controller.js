@@ -190,14 +190,12 @@ sap.ui.define([
             const view_mode = "READ";
             let oModel = oContext.getModel();
             let oObj = oModel.getProperty(oContext.getPath());
-            let sMcstCode = sap.ui.core.Fragment.byId("fragmentProjectSelection","dialogProjectSelection").data("mcst_code");
             var oNavParam = {
                 tenant_id: oContext.getObject("tenant_id"),
                 project_code: oContext.getObject("project_code"),
                 model_code: oContext.getObject("model_code"),
-                mcst_code: sMcstCode,
-                view_mode: view_mode,
-                version_number: oContext.getObject("version_number")
+                version_number: oContext.getObject("version_number"),
+                view_mode: view_mode
             };
 
             this.getRouter().navTo("McstProjectInfo", oNavParam);
@@ -535,18 +533,25 @@ sap.ui.define([
         , onExcludeCalSavePress: function() {
             //MessageToast.show("Update Service", {at: "Center Center"});
             var oApplyData = this.getModel("updateModel").getProperty("/");
-            if(!oApplyData.mcst_excl_reason) {
+            if(oApplyData.mcst_excl_flag && !oApplyData.mcst_excl_reason) {
                 MessageBox.alert("제외 사유를 입력하세요.", {at: "Center Center"});
                 return;
             }
+            
             let oParam = {
                 oODataModel : this.getModel(),
                 inData : oApplyData,// 저장할 데이터 row
                 sEntityName : "Project",
                 bOnlyField : true
             };
-            var oProjectData = this._fnGetEntityFromMetadata(oParam)
-                oProjectData.mcst_excl_flag = this.getModel("updateModel").getProperty("/mcst_excl_flag");
+            var oProjectData = this._fnGetEntityFromMetadata(oParam);
+            oProjectData.mcst_excl_flag = this.getModel("updateModel").getProperty("/mcst_excl_flag");
+            if(oProjectData.mcst_excl_flag) {
+                oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
+            } else {
+                oProjectData.mcst_excl_reason = "";    
+            } 
+                
             var oKey = {
                 tenant_id : oProjectData.tenant_id,
                 company_code : oProjectData.company_code,

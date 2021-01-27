@@ -64,6 +64,13 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
+            },
+            "McstBomMgtService" : {
+                "uri": "srv-api/odata/v2/dp.McstBomMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -202,6 +209,22 @@
                     "autoExpandSelect": true
                 }
             },
+            "mcstBomMgtModel": {
+                "dataSource": "McstBomMgtService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "groupId": "$direct",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true
+                }
+            },
+            "partListModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            },
             "popupListModel": {
                 "type": "sap.ui.model.json.JSONModel",
                 "settings": {
@@ -242,10 +265,16 @@
                     "target": "ProjectInfo"
                 },
                 {
-                    "pattern": "McstProjectInfo/{tenant_id}/{project_code}/{model_code}/{mcst_code}/{view_mode}/:version_number:",
+                    "pattern": "McstProjectInfo/{tenant_id}/{project_code}/{model_code}/{version_number}/{view_mode}",
                     "name": "McstProjectInfo",
                     "target": "McstProjectInfo"
+                },
+                {
+                    "pattern": "McstBomInfo/{tenant_id}/{project_code}/{model_code}/{version_number}/{view_mode}",
+                    "name": "McstBomInfo",
+                    "target": "McstBomInfo"
                 }
+
             ],
             "targets": {
                 "ProjectMgtList": {
@@ -259,6 +288,10 @@
                 "McstProjectInfo": {
                     "viewId": "McstProjectInfo",
                     "viewName": "McstProjectInfo"
+                },
+                "McstBomInfo": {
+                    "viewId": "McstBomInfo",
+                    "viewName": "McstBomInfo"
                 }
             }
         }
