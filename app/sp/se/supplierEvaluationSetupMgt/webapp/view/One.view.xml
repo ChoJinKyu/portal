@@ -1,0 +1,485 @@
+<mvc:View 
+xmlns="sap.m" 
+xmlns:core="sap.ui.core"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns:uxap="sap.uxap"
+xmlns:table="sap.ui.table"
+xmlns:f="sap.ui.layout.form"
+class="sapUiSizeCompact"
+displayBlock="true"
+xmlns:lib-m="ext.lib.control.m"
+xmlns:cm-ui="cm.util.control.ui"
+controllerName="sp.se.supplierEvaluationSetupMgt.controller.One"
+xmlns:flex="sap.f"
+>
+   
+    <!-- <App id="idAppControl"> -->
+        <Page title="설정정보" 
+        showNavButton="true" 
+        navButtonType="Back" 
+        navButtonPress="onNavToBack"> 
+        <!-- showNavButton="true"  : 상단 < 버튼  -->
+
+            <content>  
+                <uxap:ObjectPageLayout
+                    id="page" 
+                    alwaysShowContentHeader="false" 
+                    preserveHeaderStateOnScroll="true" 
+                    headerContentPinnable="false" 
+                    upperCaseAnchorBar="false" 
+                    enableLazyLoading="true" 
+                    showFooter="true" 
+                    class="sapUiContentPadding">
+
+                    <uxap:headerTitle/>
+                    <uxap:headerContent/>
+                    
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="true" title="ObjectPageSection">
+                            <uxap:subSections>            
+                                <uxap:ObjectPageSubSection id="pageSubSection1"/>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+
+                <!-- BaseInfo  -->
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/BASE_INFO}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                        <VBox>
+                                            <f:SimpleForm 
+                                                id="SimpleFormChange354" 
+                                                maxContainerCols="2"
+                                                editable="true"
+                                                layout="ColumnLayout"
+                                                adjustLabelSpan="false">
+
+                                                <f:content>
+                                                    <!-- Column1. 운영단위코드 -->
+                                                    <Label text="{I18N>/OPERATION_UNIT_CODE}"/>                                                                        
+                                                    <Input  id="opCodeInput" 
+                                                            width="100%" 
+                                                            placeholder="OPERATION_UNIT_CODE"
+                                                            value="{DetailView>/evaluation_operation_unit_code}"
+                                                            editable="{=${DetailView>/isEditMode}}"
+                                                            />
+                                                            
+                                                    <!-- 배점설계여부 -->
+                                                    <Label text="{I18N>/DISTRB_SCOR_ENG_FLAG}"/>
+                                                    <SegmentedButton
+                                                            selectedKey="{=${DetailView>/distrb_score_eng_flag} === true? 'Yes' : 'No'}"
+                                                            enabled="{DetailView>/isEditMode}">                                                            
+                                                            <items>
+                                                                <SegmentedButtonItem text="Yes" key="Yes" />
+                                                                <SegmentedButtonItem text="No" key="No" />
+                                                            </items>
+                                                    </SegmentedButton>
+
+                                                    <!-- 운영 전략 수립 여부 -->
+                                                    <Label text="{I18N>/OPERATION_PLAN_FLAG}"/> 
+                                                    <SegmentedButton 
+                                                            selectedKey="{=${DetailView>/operation_plan_flag} === true? 'Yes' : 'No'}"
+                                                            enabled="{DetailView>/isEditMode}">                                                       
+                                                            <items>
+                                                                <SegmentedButtonItem text="Yes" key="Yes" />
+                                                                <SegmentedButtonItem text="No" key="No" />
+                                                            </items>
+                                                    </SegmentedButton>
+
+                                                    <!-- V/P 운연단위 -->
+                                                    <Label text="{I18N>/VP_OPERATION_UNIT}"/> 
+                                                    <MultiComboBox id="searchMultiComboCode" width="100%" showSecondaryValues="true" 
+                                                            items="{
+                                                            path: 'common>/Code',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_SM_SUPPLIER_TYPE'}
+                                                            ]
+                                                            }" editable="{=${DetailView>/isEditMode}}"
+                                                            selectedKeys="{=
+                                                                ${DetailView>/vendor_pool_operation_unit_code}.split(',')
+                                                            }">
+                                                        <items>
+                                                            <core:ListItem key="{common>code}" text="{common>code_name}" additionalText="{common>code}"/>
+                                                        </items>
+                                                    </MultiComboBox>
+                                                        <!-- <MultiComboBox
+                                                        id="oVPCombo"                                                           
+                                                            />                                                             -->
+                                                            <!-- 
+                                                            
+                                                            selectionChange="handleSelectionChange"
+                                                            selectionFinish="handleSelectionFinish"
+                                                            width="350px"
+                                                        
+                                                            items="{
+                                                            path: '/OpUnitMap',
+                                                            sorter: { path: 'user_local_name' }
+                                                        }" 
+
+                                                            <core:Item key="{testModel>deppartment_local_name}" text="{testModel>deppartment_local_name}"/>
+                                                        
+                                                        </MultiComboBox>-->                            
+
+                                                    <!-- Column2. 운영단위 명 -->
+                                                    <Label text="{I18N>/OPERATION_UNIT_NAME}"/>
+                                                    
+                                                    <Input  id="opCodeName" 
+                                                        width="100%" 
+                                                        placeholder="OPERATION_UNIT_NAME"
+                                                        value="{DetailView>/evaluation_operation_unit_name}"
+                                                        editable="{=${DetailView>/isEditMode}}"
+                                                        />
+
+                                                                <!-- <lib-m:CodePicker id="searchCountryPicker"
+                                                                placeholder="Enter a Country name"
+                                                                keyField="user_local_name"
+                                                                textField="user_local_name"
+                                                                suggestionItems="{
+                                                                    path: '/',
+                                                                    filters: [
+                                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                    ],                                        
+                                                                    serviceUrl: 'srv-api/odata/v2/sp.supEvalSetupService/',
+                                                                    entityName: 'managerListView'
+                                                                }">
+                                                                <lib-m:CodePickerValueHelp contentWidth="500px" title="user_local_name"
+                                                                    keyFieldHeaderText="user_local_name" textFieldHeaderText="user_local_name" />
+                                                            </lib-m:CodePicker> -->
+
+                                                        
+                                                    
+                                                    <!-- 발의 품의 여부 -->
+                                                    <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}"/> 
+                                                        <SegmentedButton  
+                                                        selectedKey="{=${DetailView>/evaluation_request_approval_flag} === true? 'Yes' : 'No'}"
+                                                        enabled="{DetailView>/isEditMode}">
+                                                            <items>
+                                                                <SegmentedButtonItem text="Yes" key="Yes" />
+                                                                <SegmentedButtonItem text="No" key="No" />
+                                                            </items>
+                                                        </SegmentedButton>
+
+                                                    <!-- 사용 여부 -->
+                                                    <Label text="{I18N>/USE_FLAG}"/> 
+                                                        <SegmentedButton  
+                                                        selectedKey="{=${DetailView>/use_flag} === true? 'Yes' : 'No'}"
+                                                        enabled="{DetailView>/isEditMode}" >
+                                                            <items>
+                                                                <SegmentedButtonItem text="Yes" key="Yes" />
+                                                                <SegmentedButtonItem text="No" key="No" />
+                                                            </items>
+                                                        </SegmentedButton>
+
+                                                    <!-- 평가 대상 V/P 레벨 -->
+                                                    <Label text="{I18N>/EVAL_APPLY_VENDOR_POOL_LVL_NO}"/> 
+                                                        <SegmentedButton
+                                                        selectedKey="{=${DetailView>/eval_apply_vendor_pool_lvl_no}}"
+                                                        enabled="{DetailView>/isEditMode}">
+                                                            <items>
+                                                                <SegmentedButtonItem text="1레벨" key="1"/>
+                                                                <SegmentedButtonItem text="2레벨" key="2" />
+                                                                <SegmentedButtonItem text="3레벨" key="3" />
+                                                                <!-- <SegmentedButtonItem text="4레벨" key="4" />
+                                                                <SegmentedButtonItem text="5레벨" key="5" /> -->
+                                                            </items>
+                                                        </SegmentedButton>                                                                    
+
+                                                </f:content>
+                                            </f:SimpleForm>
+                                        </VBox>
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+
+                <!-- Manager  -->
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/PERSON}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>                                           
+                                                                
+                                        <table:Table                                             
+                                        id="managerTable"
+                                        rows="{path: 'DetailView>/manager'}" 
+                                        visibleRowCount="4"  
+                                        visibleRowCountMode="auto" 
+                                        with="auto"            
+                                        >
+                                            <table:extension>
+                                                <OverflowToolbar>
+                                                    <ToolbarSpacer/>   
+                                                    <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onManagerAdd" enabled="{DetailView>/isEditMode}" />
+                                                    <Button text="{I18N>/DELETE}" type="Transparent" press="onManagerDelete" enabled="{DetailView>/isEditMode}"/>
+                                                </OverflowToolbar>
+                                            </table:extension>
+
+                                            <table:columns>
+                                          
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/ROLE}" textAlign="Center" width="100%" required="true" />
+                                                    <table:template>
+                                                        
+
+                                                            <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
+                                                            path: 'common>/Code',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_EVAL_EXECUTE_ROLE_CODE'}
+                                                            ]
+                                                            }"  enabled="{DetailView>/isEditMode}" required="true">
+                                                            <items>
+                                                                <core:Item key="{common>code}" text="{common>code_name}" />
+                                                            </items>
+                                                        </ComboBox>
+                                                    </table:template>
+                                                </table:Column>      
+
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/PERSON}"/>
+                                                    <table:template>                                                   
+                                                       
+                                                        <Input 
+                                                            id="inputWithEmployeeValueHelp"
+                                                            width="100%"
+                                                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
+                                                            value="{DetailView>user_local_name}"
+                                                            enabled="{DetailView>/isEditMode}" required="true"
+                                                            >
+                                                        </Input>
+
+                                                    </table:template>
+                                                </table:Column>     
+
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/DEPARTMENT}"/>
+                                                    <table:template>
+                                                        <Text text="{DetailView>department_local_name}" 
+                                                        editable="{= ${list>_row_state_} === 'C' }" required="true"
+                                                      />  
+                                                    </table:template>
+                                                </table:Column>     
+
+                                            </table:columns>
+                                        </table:Table>      
+                                                
+
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/VALUATION_TYPE}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+
+                                        <Table id="valuationTable"
+
+                                                inset="false"
+                                                class="sapFDynamicPageAlignContent"
+                                                width="auto"
+                                                items="{
+                                                    path: 'DetailView>/evaluationType1'
+                                            }">
+                                            <headerToolbar>
+                                                <Toolbar>
+                                                    <ToolbarSpacer/>
+                                                    <HBox>
+                                                        <Button 
+                                                            type="Transparent" 
+                                                            text="{I18N>/NEW}" 
+                                                            press=".onAddDetailDetailPress"
+                                                            enabled="{DetailView>/isEditMode}"
+                                                            />
+                                                    </HBox>
+                                                </Toolbar>
+                                            </headerToolbar>
+                                            <columns>
+                                                <Column>
+                                                    <Text text="{I18N>/EVALUATION_TYPE_CODE}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/EVALUATION_TYPE_NAME}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/EVALUATION_RATE}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/USE_FLAG}" />
+                                                </Column>
+                                            </columns>
+                                            <items>
+                                                <ColumnListItem type="Navigation" press=".onHandleItemPress">
+                                                    <cells>
+                                                        <Text
+                                                                text="{DetailView>evaluation_type_code}" />
+                                                        <Text
+                                                                text="{DetailView>evaluation_type_name}" />
+                                                        <Text
+                                                                text="{DetailView>evaluation_type_distrb_score_rate}" />
+                                                        <Text
+                                                                text="{= ${DetailView>use_flag}? 'Y' : 'N' }"/>  
+                                                    </cells>
+                                                </ColumnListItem>
+                                            </items>
+                                        </Table>
+
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>                        
+
+
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/QUANTITATIVE_ITEM}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                        <table:Table
+                                        id="quantitativeTable"
+                                        rows="{path: 'DetailView>/quantitative'}" 
+                                        visibleRowCount="8"  
+                                        visibleRowCountMode="auto"  
+                                        >
+                                            <table:extension>
+                                                <OverflowToolbar>
+                                                    <ToolbarSpacer/>                                                                        
+                                                    <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onQunAdd" enabled="{=${DetailView>/isEditMode}}"/>
+                                                    <Button text="{I18N>/DELETE}" type="Transparent" press="onQunDelete" enabled="{=${DetailView>/isEditMode}}"/>
+                                                </OverflowToolbar>
+                                            </table:extension>
+
+                                            <table:columns>
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/QUANTITATIVE_ITEM_CODE}"/>
+                                                    <table:template>
+                                                        <Input   
+                                                            width="100%" 
+                                                            placeholder="OPERATION_UNIT_CODE"
+                                                            value="{DetailView>qttive_item_code}"
+                                                            editable="{=${DetailView>/isEditMode}}"
+                                                            />
+                                                    </table:template>
+                                                </table:Column>      
+
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/QUANTITATIVE_ITEM_NAME}"/>
+                                                    <table:template>
+                                                        <Input   
+                                                            width="100%" 
+                                                            placeholder="QUANTITATIVE_ITEM_NAME"
+                                                            value="{DetailView>qttive_item_name}"
+                                                            editable="{=${DetailView>/isEditMode}}"
+                                                            />
+                                                    </table:template>
+                                                </table:Column>     
+
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/UNIT}"/>
+                                                    <table:template>
+                                                        <ComboBox selectedKey="{DetailView>qttive_item_uom_code}" width="100%" items="{
+                                                            path: 'common>/Code',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_QTTIVE_UOM_CODE'}
+                                                            ]
+                                                            }" editable="{DetailView>/isEditMode}" required="true">
+                                                            <items>
+                                                                <core:Item key="{common>code}" text="{common>code_name}" />
+                                                            </items>
+                                                        </ComboBox>
+                                                    </table:template>
+                                                </table:Column>    
+                                                
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/MEASURE_MODE}"/>
+                                                    <table:template>
+                                                        <ComboBox selectedKey="{DetailView>qttive_item_measure_mode_code}" width="100%" items="{
+                                                            path: 'common>/Code',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_MEASURE_MODE_CODE'}
+                                                            ]
+                                                            }" editable="{DetailView>/isEditMode}" required="true">
+                                                            <items>
+                                                                <core:Item key="{common>code}" text="{common>code_name}" />
+                                                            </items>
+                                                        </ComboBox>
+                                                    </table:template>
+                                                </table:Column>        
+
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/QUANTITATIVE_ITEM_DESC}"/>
+                                                    <table:template>
+                                                        <Input   
+                                                            width="100%" 
+                                                            placeholder="QUANTITATIVE_ITEM_DESC"
+                                                            value="{DetailView>qttive_item_desc}"
+                                                            editable="{DetailView>/isEditMode}"
+                                                            />
+                                                    </table:template>
+                                                </table:Column>    
+
+                                                <table:Column hAlign="Center">
+                                                    <Label text="{I18N>/SORT_NUMBER}"/>
+                                                    <table:template>
+                                                        <Input   
+                                                                width="100%" 
+                                                                placeholder="SORT_NUMBER"
+                                                                value="{DetailView>sort_sequence}"
+                                                                editable="{DetailView>/isEditMode}"
+                                                                />
+                                                    </table:template>
+                                                </table:Column>    
+
+                                            </table:columns>
+                                        </table:Table>  
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>            
+
+                    <uxap:footer>
+                    <OverflowToolbar>
+                        <ToolbarSpacer/>
+                        <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
+                        <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
+                        <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
+                        <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
+                    </OverflowToolbar>
+                    </uxap:footer>
+
+
+
+                    </uxap:ObjectPageLayout>
+                        <cm-ui:EmployeeDialog id="employeeDialog" 
+                        title="직원 검색"
+                        items="{
+                            filters: [
+                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_EVAL_EXECUTE_ROLE_CODE'}
+                            ]
+                        }"
+                        apply=".onEmployeeDialogApplyPress"
+                        
+                    />
+
+                    <cm-ui:CompanyDetailDialog id="CompanyDetailDialog" 
+                        title="{I18N>/COMPANY_CODE}"
+                        apply=".onCompanyDetailDialogApplyPress"
+                       
+                    />
+                    
+                    </content>
+                </Page>
+    <!-- </App> -->
+</mvc:View>
