@@ -2,5 +2,6 @@
 using from './productActivityMgt/productActivity-Service';
 using from './partActivityMgt/partActivity-Service';
 using from './partBaseActivityMgt/partBaseActivity-Service';
+using from './partCategoryMgt/partCategory-Service';
 using from './activityMappingMgt/activityMapping-Service';
-using from './activityStandardDayMgt/activityStandardDay-Service';npm 
+using from './activityStandardDayMgt/activityStandardDay-Service';
