@@ -26,7 +26,6 @@ sap.ui.define([
         , onInit: function () {
             let oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new JSONModel(), "partListModel");
             this.oRouter = this.getOwnerComponent().getRouter();
             this.oRouter.getRoute("McstBomInfo").attachPatternMatched(this.onAttachPatternMatched, this);
         }
@@ -92,7 +91,7 @@ sap.ui.define([
                     console.log("PartsListView", data);
 
                     if( data && data.results && 0<data.results.length ) {
-                        this.getModel("partListModel").setData(data.results);
+                        this.getModel("partListModel").setData(data);
                         if(oParam.hasOwnProperty("view_mode") && oParam.view_mode === "EDIT") {
                             oView.getModel("detailModel").setProperty("/mode", {readMode : false, editMode : true});
                         } else {
