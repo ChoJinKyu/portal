@@ -84,29 +84,81 @@
                     </HBox>
                     <HBox>
                         <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task"/>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+	                        <sc:content>
+                                <sc:MicroProcessFlowItem stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
+                                            <Text text="PR" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
+                                            <Text text="Budget" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
+                                            <Text text="RFQ" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://message-success" color="#04B395" />
+                                            <Text text="Mold&#10;Spec" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
+                                            <Text text="Purchase&#10;Contract" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://message-success" color="#04B395" />
+                                            <Text text="PO" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://message-success" color="#F94B50"/>
+                                            <Text text="RCV" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
+                                            <Text text="Lease&#10;Contract" textAlign="Center"  class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
+                                            <Text text="Invoice" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
                             </sc:content>
                         </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
