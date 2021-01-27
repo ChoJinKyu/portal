@@ -54,6 +54,7 @@ entity Sm_Supplier_Mst {
         company_register_number             : String(30)  	        @title: '회사등록번호' ;
         company_class_code                  : String(30)  	        @title: '회사분류코드' ;
         company_class_name                  : String(50)  	        @title: '회사분류코드' ;
+        subcon_flag                         : Boolean               @title: '하도급여부';
         repre_name                          : String(30)  	        @title: '대표자명' ;
         biz_type                            : String(50)  	        @title: '업태' ;
         industry                            : String(50)  	        @title: '업종' ;
