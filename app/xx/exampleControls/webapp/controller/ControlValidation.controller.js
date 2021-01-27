@@ -36,6 +36,21 @@ sap.ui.define([
 					value4: null,
 				}, {
 					value1: null,
+					value2: "a@a.com",
+					value3: "a@a.com",
+					value4: null,
+				}, {
+					value1: null,
+					value2: null,
+					value3: "a@a.com",
+					value4: null,
+				}, {
+					value1: null,
+					value2: null,
+					value3: null,
+					value4: null,
+				}, {
+					value1: null,
 					value2: null,
 					value3: null,
 					value4: null,
@@ -56,6 +71,18 @@ sap.ui.define([
             this.getView().setModel(oMessageManager.getMessageModel(), "message");
             oMessageManager.registerObject(this.getView(), true);
 
+            // debugger;
+            // $.ajax({
+            //     url: "https://lg-common-dev-workspaces-ws-wjcbj-app1.jp10.applicationstudio.cloud.sap/static/css/SpoqaHanSansNeo.css",
+            //     // url: "https://lg-common-dev-workspaces-ws-wjcbj-app1.jp10.applicationstudio.cloud.sap/static/css/notosanskr.css",
+            //     success: function(e){
+            //         debugger;
+            //     },
+            //     error: function(e){
+            //         debugger;
+            //     }
+            // });
+
 		},
 
 
@@ -68,6 +95,7 @@ sap.ui.define([
         },
         
         onPageValidateButtonPress: function(){
+            this.validator.setModel(this.getModel("form"), "form");
             if(this.validator.validate(this.byId("page")) !== true) {
                 return;
             }

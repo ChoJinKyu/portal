@@ -205,7 +205,8 @@ sap.ui.define([
                 return;
             }
             this.loadData();
-            if(this.beforeOpen) this.beforeOpen();
+            if(this.beforeOpen)
+                this.beforeOpen.call(this);
             this.oDialog.open();
         }
 
