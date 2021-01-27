@@ -6,7 +6,7 @@ sap.ui.define(["jquery.sap.global"],
             {
                 id: "activityStandardDayMgt-mainList-mainColumnCom",
                 order: 0,
-                text: "Company",
+                text: "회사",
                 visible: true
             },
             {
