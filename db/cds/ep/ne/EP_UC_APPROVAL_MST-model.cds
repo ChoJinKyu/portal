@@ -15,11 +15,14 @@ entity Uc_Approval_Mst {
         net_price_contract_end_date    : Date;
         effective_start_date           : Date;
         effective_end_date             : Date;
+        contract_apply_date            : Date;
         buyer_empno                    : String(30);
         purchasing_department_code     : String(50);
         quotation_number               : Decimal;
         attch_group_number             : String(100);
         approval_number                : String(50);
+        last_contract_flag             : Boolean;
+        current_contract_flag          : Boolean;
         net_price_contract_chg_type_cd : String(30);
         delete_reason                  : String(3000);
         use_flag                       : Boolean;
