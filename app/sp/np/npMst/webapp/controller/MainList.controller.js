@@ -334,12 +334,15 @@ sap.ui.define([
                         var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
                         sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item);
                     */                    
-                    // this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
-                    //     vendorPoolCode = oEvent.mParameters.item;
-                    //     //console.log("materialItem : ", materialItem);
-                    //     that.byId("search_material_code").setValue(vendorPoolCode.material_code);
+                    this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
+                        console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
 
-                    // }.bind(this));
+                    }.bind(this));
+
+                    this.oSearchVendorPollDialog.attachEvent("searchPress", function (oEvent) {
+                       console.log("call search!!!");
+                    }.bind(this));
+
                 }
 
                 //searObject : 태넌트아이디, 검색 인풋아이디

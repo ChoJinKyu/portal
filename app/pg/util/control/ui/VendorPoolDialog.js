@@ -104,7 +104,9 @@ sap.ui.define([
                     //sSearchObj.vendor_pool_code = oSearchValue;
                     this.oVendorPoolDialogPop.open(sSearchObj);
                     this.oVendorPoolDialogPop.attachEvent("apply", function (oEvent) {
-                        console.log("oEvent : ", oEvent.mParameters.item);
+                        console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                        that.oVendorPoolCode.setValue(null);
+                        that.oVendorPoolCode.setValue(oEvent.mParameters.item.vendor_pool_code);
                     }.bind(this));
                 }
             });
@@ -190,9 +192,8 @@ sap.ui.define([
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
-                }, error: function(e){
-                    console.log(e);
+                    that.oDialog.setData(aRecords, false);
+                    this.oDialog.oTable.setBusy(false);
                 }.bind(this)
             });
         },
