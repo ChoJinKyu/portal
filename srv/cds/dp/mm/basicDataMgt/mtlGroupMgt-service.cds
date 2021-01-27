@@ -34,28 +34,14 @@ service MtlGroupMgtService {
     select key m.tenant_id,
            key m.material_group_code,
            ifnull((select l.material_group_name
-                  from MtlGroupLng as l
-                  where l.tenant_id = m.tenant_id
-                  and l.material_group_code = m.material_group_code
-                  and l.language_code = 'KO'), m.material_group_name) as material_group_name : String(100),
+                   from MtlGroupLng as l
+                   where l.tenant_id = m.tenant_id
+                   and l.material_group_code = m.material_group_code
+                   and l.language_code = 'KO'), m.material_group_name) as material_group_name : String(100),
            m.material_group_desc,
            m.use_flag
     from MtlGroup as m
     ;
 
-/*    view MtlGroupView as
-    select key m.tenant_id,
-           key m.material_group_code,
-           ifnull(l.material_group_name, m.material_group_name) as material_group_name : String(100),
-           ifnull(l.material_group_desc, m.material_group_desc) as  material_group_desc : String(1000),
-           m.use_flag,
-           l.language_code
-    from  mtlGroup.Mm_Material_Group m
-    left join mtlGroupLng.Mm_Material_Group_Lng l
-    on l.tenant_id = m.tenant_id
-    and l.material_group_code = m.material_group_code 
-    and l.language_code = 'KO'
-    ;
-*/
 
 }
