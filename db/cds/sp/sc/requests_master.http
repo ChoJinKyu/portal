@@ -10,10 +10,10 @@
 @serviceUrlV2 = http://localhost:8080/odata/v2
 # Local PC[DB+AP] : cds serve all --with-mocks --in-memory?
 @serviceUrl = http://localhost:4004
-# Local PC : mvn spring-boot:run : v4
-@serviceUrl = http://localhost:8080/odata/v4
 # Cloud Container Service : sppCap New
 @serviceUrl = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4
+# Local PC : mvn spring-boot:run : v4
+@serviceUrl = http://localhost:8080/odata/v4
 
 #################################################
 # OData Service Configuration

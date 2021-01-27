@@ -17,6 +17,14 @@ using {
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 
+/***********************************************************************************/
+/*************************** For NegoHeaders-buyer_empno ***************************/
+// Sc_Employee_View = Hr_Employee + Hr_Department                           
+/* How to Use:
+        buyer_employee : Association to Sc_Employee_View    //UseCase        
+                            on buyer_employee.tenant_id = $self.tenant_id
+                              and buyer_employee.employee_number = $self.buyer_empno;
+*/
 using {cm.Hr_Employee} from '../../cm/CM_HR_EMPLOYEE-model';
 using {cm.Hr_Department} from '../../cm/CM_HR_DEPARTMENT-model';
 @cds.autoexpose  // Sc_Employee_View = Hr_Employee + Hr_Department
@@ -37,9 +45,7 @@ define entity Sc_Employee_View as select from Hr_Employee as he
                             , hd.department_local_name)
                   as department_name : Hr_Department: department_local_name
     };
-/*      buyer_empno : Association to Sc_Employee_View    //UseCase        
-            on buyer_empno.tenant_id = $self.tenant_id
-              and buyer_empno.department_id = $self.department_id */
+
 
 entity Sc_Nego_Headers {
     key tenant_id : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
