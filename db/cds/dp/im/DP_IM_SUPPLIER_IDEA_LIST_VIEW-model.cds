@@ -45,5 +45,6 @@ entity Im_Supplier_Idea_List_View {
     monthly_mtlmob_quantity : Decimal;   // '월물동수량' ;	
     monthly_purchasing_amount : Decimal; // '월간구매금액' ;	
     annual_purchasing_amount : Decimal;  // '연간구매금액' ;	
-    perform_contents : String;           // '성과내용' ;	
+    perform_contents : String;           // '성과내용' ;
+    color_type_code : Decimal;           // '컬러 타입' ;
 }

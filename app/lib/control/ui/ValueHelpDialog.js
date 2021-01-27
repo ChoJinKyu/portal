@@ -206,7 +206,11 @@ sap.ui.define([
                         if(isMatched !== true)
                             this.oTable.removeSelectionInterval(nIndex, nIndex);
                     }.bind(this));
+                    
                 }
+                this.oTable.setBusy(false);
+            }else{
+                this.oTable.setBusy(false);
             }
         },
 

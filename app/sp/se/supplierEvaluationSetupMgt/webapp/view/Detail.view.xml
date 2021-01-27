@@ -4,13 +4,14 @@
     controllerName="sp.se.supplierEvaluationSetupMgt.controller.Detail"
 	xmlns="sap.f" xmlns:m="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
+
     <m:App id="app"> 
 	<FlexibleColumnLayout 
         id="flexibleColumnLayout" 
         stateChange="onStateChanged" 
         afterBeginColumnNavigate="onNavigateDaetail" 
         backgroundDesign="Solid" 
-        layout="OneColumn"
+        layout="{viewModel>/App/layout}"
     >
 		<beginColumnPages>
 			<mvc:XMLView id="beginView" viewName="sp.se.supplierEvaluationSetupMgt.view.One"/>
@@ -20,4 +21,6 @@
 		</midColumnPages>
 	</FlexibleColumnLayout>
     </m:App>
+
+    
 </mvc:View>

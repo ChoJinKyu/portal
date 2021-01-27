@@ -7,6 +7,7 @@
     xmlns:layout="sap.ui.layout"
     xmlns:core="sap.ui.core"
     xmlns:lib-m="ext.lib.m"
+    xmlns:cm-ui="cm.util.control.ui"
     xmlns:t="sap.ui.table"
     xmlns:co="sap.suite.ui.commons"
     xmlns:rte="sap.ui.richtexteditor"
@@ -40,14 +41,14 @@
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
                     <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_local_nm}"/>
-                    <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                    <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/request_date', formatter: '.onChangeDateFormat'}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<Label text="{I18N>/STATUS} :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="{path:'detailModel>/approve_status_code', formatter: '.onSetStatus'}" state="Error" />
+                    <ObjectStatus class="sapMObjectStatusLarge" text="{path:'detailModel>/approve_status_code', formatter: '.onSetStatusText'}" state="Error" />
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
 
@@ -58,24 +59,29 @@
                         <co:MicroProcessFlow>
                             <co:content>
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approve_status_code} === 'DR' ? 'Error' : 'None'}" 
+                                    state="{detailViewModel>/processFlowStates/0}" 
                                     stepWidth="5rem" 
-                                    icon="{= ${detailModel>/approve_status_code} === 'DR' ? 'sap-icon://circle-task' : 'sap-icon://complete'}" />
+                                    icon="{detailViewModel>/processFlowIcons/0}" />
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approve_status_code} === 'AR' ? 'Error' : 'None'}" 
+                                    state="{detailViewModel>/processFlowStates/1}"
                                     stepWidth="5rem"
-                                    icon="{= ${detailModel>/approve_status_code} === 'AR' ? 'sap-icon://circle-task' : (${detailModel>/approve_status_code} === 'DR' ? '' : 'sap-icon://complete')}" />
+                                    icon="{detailViewModel>/processFlowIcons/1}" />
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approve_status_code} === 'AP' ? 'Error' : 'None'}" 
+                                    state="{detailViewModel>/processFlowStates/2}"
                                     stepWidth="5rem"
-                                    icon="{= ${detailModel>/approve_status_code} === 'AP' ? 'sap-icon://circle-task' : ''}" />
+                                    icon="{detailViewModel>/processFlowIcons/2}" />
+                                <co:MicroProcessFlowItem 
+                                    state="{detailViewModel>/processFlowStates/3}"
+                                    stepWidth="5rem"
+                                    icon="{detailViewModel>/processFlowIcons/3}" />
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
                     <HBox>
                         <Text text="{rootModel>/processList/0/code_name}" width="4rem" />
                         <Text text="{rootModel>/processList/1/code_name}" width="6rem" textAlign="Center" />
-                        <Text text="{rootModel>/processList/2/code_name}" width="6rem" textAlign="Center" />
+                        <Text text="{rootModel>/processList/2/code_name}" width="7rem" textAlign="Center" />
+                        <Text text="{rootModel>/processList/3/code_name}" width="4rem" textAlign="Center" />
                     </HBox>
 				</layout:VerticalLayout>
                 <!-- Process 시작 -->
@@ -169,7 +175,8 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <!-- Approval & Reference 시작 -->
-                            <VBox>
+                            <core:Fragment fragmentName="dp.vi.basePriceArlMgt.view.ApprovalLine" type="XML" />
+                            <!-- <VBox>
                             <Table id="ApprovalTable"
                                     growing="true"
                                     growingThreshold="20"
@@ -206,7 +213,6 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                             <Text text="{appdetailModel>no}" />
                                             <ComboBox  width="100%"
                                                 selectedKey="{appdetailModel>type}"
@@ -237,7 +243,7 @@
                             <Input value="{detailModel>/abc}"
                                 showValueHelp="true"
                                 valueHelpRequest=".onOpenMaterialCode" />
-                            </VBox>
+                            </VBox> -->
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -285,4 +291,13 @@
 		</uxap:footer>
         <!-- footer 끝 -->
     </uxap:ObjectPageLayout>
+    <cm-ui:EmployeeDialog id="employeeDialog" 
+        title="직원 검색"
+        items="{
+            filters: [
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+            ]
+        }"
+        apply=".onEmployeeDialogApplyPress"
+    />
 </mvc:View>

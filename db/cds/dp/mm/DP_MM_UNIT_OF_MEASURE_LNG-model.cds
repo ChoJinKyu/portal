@@ -32,12 +32,14 @@ entity Mm_Unit_Of_Measure_Lng {
   key language_code : String(4)  not null @title: 'Language' ;	
     uom_name : String(30)  @title: 'UOM명(SAP:Commercial UOM, Oracle:UOM)' ;	
     uom_desc : String(50)  @title: 'UOM설명' ;	  
+/*    
     system_uom_code : String(3) @title: 'SAP UOM Code';
     system_uom_name : String(30) @title: 'SAP UOM Name';  	
     commercial_uom_code : String(5)  @title: '상업UOM코드' ;	
     technical_uom_code : String(6)   @title: '기술UOM코드' ;	
     commercial_uom_name : String(30)   @title: '상업UOM명' ;	
     technical_uom_name : String(30)   @title: '기술UOM명' ;	
+*/    
 }	
 
 extend Mm_Unit_Of_Measure_Lng with util.Managed;

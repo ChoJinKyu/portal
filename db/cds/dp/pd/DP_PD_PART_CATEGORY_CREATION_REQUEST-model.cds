@@ -9,6 +9,7 @@ entity Pd_Part_Category_Creation_Request {
   key org_code : String(10)  not null @title: '조직코드' ;	
   key request_number : String(30)  not null @title: '요청번호' ;	
   key category_group_code : String(30)  not null @title: '카테고리 그룹 코드' ;	
+    approval_number : String(50)   @title: '품의번호' ;	
     request_title : String(50)   @title: '요청제목' ;	
     request_category_name : String(50)   @title: '요청카테고리명' ;	
     similar_category_code : String(40)   @title: '유사카테고리코드' ;	
@@ -20,4 +21,28 @@ entity Pd_Part_Category_Creation_Request {
     creator_empno : String(30)   @title: '생성자사번' ;	
     create_category_code : String(40)   @title: '생성카테고리코드' ;	
 }	
-extend Pd_Part_Category_Creation_Request with util.Managed;
+extend Pd_Part_Category_Creation_Request with util.Managed;	
+
+@cds.persistence.exists
+entity Pd_Part_Category_Creation_Request_View {
+  key  tenant_id                             : String;
+  key  company_code                          : String;
+  key  org_type_code                         : String;
+  key  org_code                              : String;
+  key  request_number                        : String;
+  key  category_group_code                   : String;
+        approval_number                       : String;
+        request_title                        : String;
+        request_category_name                : String;
+        similar_category_code                : String;
+        similar_category_name                : String;
+        requestor_empno                      : String;
+        requestor                            : String;
+        request_date_time                    : DateTime;
+        attch_group_number                   : String;
+        progress_status_code                 : String;
+        creator_empno                        : String;
+        category_creator                     : String;
+        create_category_code                 : String;
+        create_category_name                 : String;
+};
