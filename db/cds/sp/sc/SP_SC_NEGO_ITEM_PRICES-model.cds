@@ -6,6 +6,69 @@ using {sp as negoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 
 // using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 
+// Operating Org	N	( PUR_ORG_TYPE_MAPPING-PROCESS_TYPE_CODE  & ORG_TYPE_CODE )
+// PUR_OPERATION_ORG-ORG_CODE
+// PUR_OPERATION_ORG- ORG_NAME	
+// Requisition No	N	OP_PU_PR_MST-PR_NUMBER	구매요청번호 - 구매요청번호
+// Submission No	N	CM_APPROVAL_MST - 품의서번호	구매요청번호 - 승인된 품의서번호
+// Part No	N	MM_MATERIAL_MST-MATERIAL_CODE	
+// Specification	N	MM_MATERIAL_DESC_LNG-MATERIAL_DESC	어디서 관리하는 정보인지
+// 상세 단가 (금액)			팝업을 누를경우 추가 정보 입력
+// 향후 Cost table과 연동함
+// 해당 필드에 무슨 값을 보여주는지?
+// 추천정보			
+// Group Id			
+// Vender Pool	N		Vendor Pool 팝업에서 선택한 단일 Vendorpool을 입력함
+// UOM	N	MM_UOM_CLASS-BASE_UOM_CODE	
+// Currency	N	CURRENCY_CODE (김종현샘에게 Table 확인필요)	
+// Response Currency	N		적용여부 판단필요
+// Exchange Rate Type	N		적용여부 판단필요
+// Exchange Rate Date	N		적용여부 판단필요
+// S/Parts Supply Type	N		삭제함
+// Location			
+// 예산 부서	N	HR_EMPLYEE-DEPARTMENT_ID
+// HR_EMPLYEE-DEPARTMENT_KOREAN_NAME	
+// 요청자	N	HR_EMPLYEE-EMPLOYEE_NUMBER
+// HR_EMPLYEE-USER_KOREAN_NAME	사번을 선택하면 사번-이름으로 보여줌
+// 요청 부서	N	HR_EMPLYEE-DEPARTMENT_ID
+// HR_EMPLYEE-HR_DEPARTMENT-DEPARTMENT_KOREAN_NAME	부서을 선택하면 부서-부서명으로 보여줌
+// 만약 없는 부서을 입력하면 Error
+// 부서 팝업을 설정
+// Incoterms	N	CM_CODE_MST	공통코드에 등록되어 있음
+// 화면에 List로 보여줌
+// Payment Terms	N	CM_CODE_MST	공통코드에 등록되어 있음
+// 화면에 List로 보여줌
+// Market	N	CM_CODE_MST	공통코드에 등록되어 있음
+// 화면에 List로 보여줌
+/***********************************************************************************/
+/*************************** For NegoItemPrices-supplier_code **********************/
+// Sc_Employee_View = SP_SUPPLIER_MST-SUPPLIER_CODE                          
+/* How to Use:
+        buyer_employee : Association to Sc_Employee_View    //UseCase        
+                            on buyer_employee.tenant_id = $self.tenant_id
+                              and buyer_employee.employee_number = $self.buyer_empno;
+*/
+/* using {cm.Hr_Employee} from '../../cm/CM_HR_EMPLOYEE-model';
+using {cm.Hr_Department} from '../../cm/CM_HR_DEPARTMENT-model';
+@cds.autoexpose  // Sc_Employee_View = Hr_Employee + Hr_Department
+define entity Sc_Employee_View as select from Hr_Employee as he
+    left outer join Hr_Department as hd
+    on he.tenant_id = hd.tenant_id 
+      and he.department_id = hd.department_id
+    {
+        key he.tenant_id,
+        key he.employee_number,
+            map($user.locale,'ko',he.user_korean_name
+                            ,'en',he.user_english_name
+                            , he.user_local_name)
+                  as employee_name : Hr_Employee: user_local_name,
+            he.department_id : Hr_Department: department_id,
+            map($user.locale,'ko',hd.department_korean_name
+                            ,'en',hd.department_english_name
+                            , hd.department_local_name)
+                  as department_name : Hr_Department: department_local_name
+    }; */
+
 entity Sc_Nego_Item_Prices {
     key tenant_id                    : String(5) not null  @title : '테넌트ID';
     key nego_header_id               : Integer64 not null  @title : '협상헤더ID';

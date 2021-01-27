@@ -1,0 +1,37 @@
+VIEW DP_PD_PART_CATEGORY_CREATION_REQUEST_VIEW
+/* ( i_tenant_id NVARCHAR(5), i_category_group_code NVARCHAR(30), i_langauge_cd NVARCHAR(30) )  */
+ AS
+SELECT pcc.TENANT_ID,
+    pcc.COMPANY_CODE,
+    pcc.ORG_TYPE_CODE,
+    pcc.ORG_CODE,
+    pcc.REQUEST_NUMBER,
+    pcc.CATEGORY_GROUP_CODE,
+    pcc.REQUEST_TITLE,
+    pcc.REQUEST_CATEGORY_NAME,
+    pcc.SIMILAR_CATEGORY_CODE,
+    pc1.CODE_NAME as SIMILAR_CATEGORY_NAME,
+    pcc.REQUESTOR_EMPNO,
+    -- 요청자명
+    pcc.REQUEST_DATE_TIME,
+    pcc.ATTCH_GROUP_NUMBER,
+    pcc.PROGRESS_STATUS_CODE,  -- 'DP_PD_PROGRESS_STATUS'
+    pcc.CREATOR_EMPNO,
+    -- 카테고리 생성자명
+    pcc.CREATE_CATEGORY_CODE,
+    pc2.CODE_NAME as CREATE_CATEGORY_NAME
+ FROM DP_PD_PART_CATEGORY_CREATION_REQUEST pcc
+	left join (select code, code_name
+	        from CM_CODE_LNG 
+	        where TENANT_ID = 'L2101' AND group_code='DP_PD_PROGRESS_STATUS' and LANGUAGE_CD='KO') cl
+	on pcc.PROGRESS_STATUS_CODE = cl.CODE
+	left join (select code_name, tenant_id, category_group_code, category_code
+	        from DP_PD_PART_CATEGORY_LNG 
+	        where TENANT_ID = 'L2101' and CATEGORY_GROUP_CODE = 'CO' and LANGUAGE_CD='KO') pc1
+	on pcc.CATEGORY_GROUP_CODE = pc1.CATEGORY_GROUP_CODE AND pcc.SIMILAR_CATEGORY_CODE = pc1.CATEGORY_CODE
+	left join (select code_name, tenant_id, category_group_code, category_code
+	        from DP_PD_PART_CATEGORY_LNG 
+	        where TENANT_ID = 'L2101' and CATEGORY_GROUP_CODE = 'CO' and LANGUAGE_CD='KO') pc2
+	on pcc.CATEGORY_GROUP_CODE = pc2.CATEGORY_GROUP_CODE AND pcc.CREATE_CATEGORY_CODE = pc2.CATEGORY_CODE
+ WHERE pcc.TENANT_ID = 'L2101'
+;

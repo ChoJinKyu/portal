@@ -2,6 +2,7 @@ sap.ui.define([
     "ext/lib/controller/BaseController",
     "sp/util/control/ui/SupplierDialog",
     "sp/util/control/ui/SupplierWithOrgDialog",
+    "sp/util/control/ui/MakerDialog",
     "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
@@ -23,6 +24,7 @@ sap.ui.define([
         BaseController,
         SupplierDialog,
         SupplierWithOrgDialog,
+        MakerDialog,
         History,
         JSONModel,
         Filter,
@@ -52,68 +54,94 @@ sap.ui.define([
                 this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
                 that = this;
             },
-            onInputSupplierWithOrgValuePress: function(){
+            onInputSupplierWithOrgValuePress: function () {
 
-                if(!this.oSupplierWithOrgValueHelp){
+                if (!this.oSupplierWithOrgValueHelp) {
                     this.oSupplierWithOrgValueHelp = new SupplierWithOrgDialog({
                         //title: "Supplier",
                         items: {
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, "L2100")
                             ],
-                            sorters : [new Sorter("company_code", true)]
-                        }, 
+                            sorters: [new Sorter("company_code", true)]
+                        },
                         multiSelection: false
-                        
+
                     });
-                    
-                    this.oSupplierWithOrgValueHelp.attachEvent("apply", function(oEvent){
+
+                    this.oSupplierWithOrgValueHelp.attachEvent("apply", function (oEvent) {
                         this.byId("input_supplierwithorg_code").setValue(oEvent.getParameter("item").supplier_code);
                     }.bind(this));
                 }
                 this.oSupplierWithOrgValueHelp.open();
             },
 
-            onMultiInputSupplierWithOrgValuePress: function(){
-                if(!this.oSupplierWithOrgMultiValueHelp){
+            onMultiInputSupplierWithOrgValuePress: function () {
+                if (!this.oSupplierWithOrgMultiValueHelp) {
                     this.oSupplierWithOrgMultiValueHelp = new SupplierWithOrgDialog({
                         multiSelection: true,
                     });
-                    
-                    this.oSupplierWithOrgMultiValueHelp.attachEvent("apply", function(oEvent){
+
+                    this.oSupplierWithOrgMultiValueHelp.attachEvent("apply", function (oEvent) {
                         this.byId("multiinput_supplierwithorg_code").setTokens(oEvent.getSource().getTokens());
                     }.bind(this));
                 }
                 this.oSupplierWithOrgMultiValueHelp.open();
                 this.oSupplierWithOrgMultiValueHelp.setTokens(this.byId("multiinput_supplierwithorg_code").getTokens());
             },
-            onInputSupplierValuePress: function(){
+            onInputSupplierValuePress: function () {
 
-                if(!this.oCodeSelectionValueHelp){
+                if (!this.oCodeSelectionValueHelp) {
                     this.oCodeSelectionValueHelp = new SupplierDialog({
                         multiSelection: false
                     });
-                    
-                    this.oCodeSelectionValueHelp.attachEvent("apply", function(oEvent){
+
+                    this.oCodeSelectionValueHelp.attachEvent("apply", function (oEvent) {
                         this.byId("input_supplier_code").setValue(oEvent.getParameter("item").supplier_code);
                     }.bind(this));
                 }
                 this.oCodeSelectionValueHelp.open();
             },
 
-            onMultiInputSupplierValuePress: function(){
-                if(!this.oCodeMultiSelectionValueHelp){
+            onMultiInputSupplierValuePress: function () {
+                if (!this.oCodeMultiSelectionValueHelp) {
                     this.oCodeMultiSelectionValueHelp = new SupplierDialog({
                         multiSelection: true
                     });
-                    
-                    this.oCodeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+
+                    this.oCodeMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
                         this.byId("multiinput_supplier_code").setTokens(oEvent.getSource().getTokens());
                     }.bind(this));
                 }
                 this.oCodeMultiSelectionValueHelp.open();
                 this.oCodeMultiSelectionValueHelp.setTokens(this.byId("multiinput_supplier_code").getTokens());
-            }
+            },
 
+            onInputMakerValuePress: function () {
+                if (!this.oMakerSelectionValueHelp) {
+                    this.oMakerSelectionValueHelp = new MakerDialog({
+                        multiSelection: false
+                    });
+
+                    this.oMakerSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                        this.byId("input_maker_code").setValue(oEvent.getParameter("item").maker_code);
+                    }.bind(this));
+                }
+                this.oMakerSelectionValueHelp.open();
+
+            },
+            onMultiInputMakerValuePress: function () {
+                if (!this.oMakerMultiSelectionValueHelp) {
+                    this.oMakerMultiSelectionValueHelp = new MakerDialog({
+                        multiSelection: true
+                    });
+
+                    this.oMakerMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                        this.byId("multiinput_maker_code").setTokens(oEvent.getSource().getTokens());
+                    }.bind(this));
+                }
+                this.oMakerMultiSelectionValueHelp.open();
+                this.oMakerMultiSelectionValueHelp.setTokens(this.byId("multiinput_maker_code").getTokens());
+            }
         });
     });

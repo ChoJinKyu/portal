@@ -14,10 +14,13 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/MenuItem",
+    "sap/ui/table/Column",
+    "sap/m/Label",
+    "sap/m/Text",
     "sap/ui/core/util/MockServer",
 ],
   function (BaseController, Multilingual, JSONModel, TreeListModel, TransactionManager, Sorter, Filter, FilterOperator, ManagedListModel, TablePersoController, 
-    jQuery, Fragment, MessageBox, MessageToast, MenuItem, MockServer) {
+    jQuery, Fragment, MessageBox, MessageToast, MenuItem, Column, Label, Text, MockServer) {
     "use strict";
     var oTransactionManager;
 
@@ -27,11 +30,13 @@ sap.ui.define([
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
             // this.getView().setModel(new ManagedListModel(), "list");
-            // this.getView().setModel(new JSONModel(),"list"); 
-            this.viewModel = new JSONModel({
-                MdVpItemList : {}
-            });
-            this.getView().setModel(this.viewModel, "list");
+
+            // this.viewModel = new JSONModel({
+            //     MdVpItemList : {}
+            // });
+            this.getView().setModel(new ManagedListModel(), "list");
+            this.getView().setModel(new JSONModel(),"title"); 
+            // this.getView().setModel(this.viewModel, "title");
             
             // 개인화 - UI 테이블의 경우만 해당
             this._oTPC = new TablePersoController({
@@ -106,7 +111,6 @@ sap.ui.define([
 
         onSearch:function () {
             var oView = this.getView();
-            this.mainTreeListModel = this.mainTreeListModel || new TreeListModel(this.getView().getModel("list"), { returnType: "Array" });
 
             //filters
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),
@@ -140,8 +144,11 @@ sap.ui.define([
                 type: "GET",
                 success: function(oData){ 
                     // this.byId("title").setText("Vendor Pool별 관리특성 List ("+oData.value.length+")");
+                    var v_list = oView.getModel("title").getData();
+                    v_list.MdVpMatrial = oData.value;
+                    oView.getModel("title").updateBindings(true); 
+                    debugger;
                     this.setItemList(oData);
-
                 }.bind(this)   
                                      
             });
@@ -166,40 +173,56 @@ sap.ui.define([
                 for(var i=0; i<dataArr.length; i++){
 
                     var itemCnt = dataArr[i].vendor_pool_item_mapping_cnt;
-                    var leafNode = dataArr[i].drill_state;
-                    if(leafNode != "leaf"){
-                        //select:false
-                    }
                     var categoryItems = [];
+                    var dataArrName;
+
                     if(itemCnt != 0){ //itemArr != null ){
                         var categoryCode = "",
                             categoryName = "";
                         for(var j=1; j<=itemCnt; j++){
                             if(j<10){
                                 itemArr = dataArr[i]["spmd_attr_info_00"+j];
+                                dataArrName = "spmd_attr_info_00"+j
                             }else if(j<100){
                                 itemArr = dataArr[i]["spmd_attr_info_0"+j];
+                                dataArrName = "spmd_attr_info_0"+j
                             }// else{
                             //     itemArr = dataArr[i]["spmd_attr_info_"+j];
                             // }
 
                             var item = JSON.parse(itemArr);
-                            // var column = that.byId("tableColumns");
-                            // column.bindAggregation("items", { 
+                            // categoryCode = item.cateCode,
+                            // categoryName = item.cateName,
+                            // categoryItems.push(item.itemName);
+                            dataArr[i][dataArrName+"_cateCode"] = item.cateCode;
+                            dataArr[i][dataArrName+"_cateName"] = item.cateName;
+                            dataArr[i][dataArrName+"_itemCode"] = item.itemCode;
+                            dataArr[i][dataArrName+"_itemName"] = item.itemName;
+                            // debugger;
+                            
+                            this.oTableColumns = this.byId("tableColumns");
+                            this.oTableColumns.setHeaderSpan(2);
+                            //"title>/MdVpMatrial/"+i+"/"+dataArrName+"_cateName",
+                            this.oTableColumns.bindAggregation("multiLabels", "title>/MdVpMatrial", function(index, context) {
+                                console.log(index, context)
+                                // // return new multiLabels({
+                                // template : new Label({
+                                //     text: "{title>"+dataArrName+"_cateName}"
+                                //     // label: new Label({ text: "{list>"+dataArrName+"_cateName}"})
+                                //     // template: new Text({ text: ""})
+                                // }), new Label({
+                                //     text: "{title>"+dataArrName+"_itemName}"
+                                // });
+                                
+                                return new Label({
+                                    text: "{title>"+dataArrName+"_cateName}"
+                                }),
+                                new Label({
+                                    text: "{title>"+dataArrName+"_itemName}"
+                                });
+                            });
+                            // setHeaderSpan("")
 
-                            //     path: "category>/MdCategory", 
-
-                            //     // @ts-ignore 
-
-                            //     template: new sap.m.MenuItem({ 
-
-                            //         key: "{category>spmd_category_code}", 
-
-                            //         text: "{category>spmd_category_code}: {category>spmd_category_code_name}" 
-
-                            //     }) 
-
-                            // }); 
 
                             
                             // that.byId("tableColumns").appendChildf('<t:Column headerSpan="2" hAlign="Center">'

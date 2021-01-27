@@ -337,7 +337,8 @@ sap.ui.define([
                             success: function (rst) {
                                 if(rst.return_code =="S"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    v_this.onSearch(rst.return_msg );
+                                    // v_this.onSearch(rst.return_msg );
+                                    v_this.onPageNavBackButtonPress();
                                 }else{
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
@@ -474,10 +475,6 @@ sap.ui.define([
             var oView = this.getView();
             var ideaManagerId = this.getView().byId("ideaManagerId");
             ideaManagerId.setValue("");
-        },
-
-
-
-
+        }
     });
 });

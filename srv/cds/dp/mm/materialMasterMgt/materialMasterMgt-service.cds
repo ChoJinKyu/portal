@@ -55,7 +55,11 @@ service MaterialMasterMgtService {
     view MaterialMstView as
     select  key m.tenant_id,
             key m.material_code,
-            ifnull(l.material_desc, m.material_desc) as material_desc: String(300),
+            ifnull((select l.material_desc 
+             from MaterialDesc l
+             where l.tenant_id = m.tenant_id
+             and l.material_code = m.material_code
+             and l.language_code = 'KO' ), m.material_desc) as material_desc: String(300),
             m.material_spec,
             m.material_type_code,
             m.base_uom_code,
@@ -68,11 +72,7 @@ service MaterialMasterMgtService {
             m.maker_code,
             m.maker_part_profile_code,
             m.maker_material_code
-    from Master.Mm_Material_Mst m
-    left join Description.Mm_Material_Desc_Lng l
-    on l.tenant_id = m.tenant_id 
-    and l.material_code = m.material_code
-    and l.language_code = 'KO'
+    from MaterialMst m
     ;
 
     @readonly

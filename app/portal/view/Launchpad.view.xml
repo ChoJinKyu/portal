@@ -32,6 +32,9 @@
                         <m:IconTabFilter text="{menu>menu_name}" key="{menu>menu_code}" />
                     </m:items>
                 </m:IconTabHeader>
+
+                <m:Link text="SAC 바로가기" target="_blank" href="https://lgcns.jp10.hcs.cloud.sap"></m:Link>
+
                 <m:Button icon="sap-icon://search" type="Transparent">
                     <m:layoutData>
                         <m:OverflowToolbarLayoutData priority="NeverOverflow" />

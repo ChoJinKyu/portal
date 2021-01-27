@@ -1,5 +1,6 @@
 using {cm as approvalMst} from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
 using {dp as approvalDtl} from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
+using {dp as asset } from '../../../../../db/cds/dp/md/DP_MD_ASSET-model';
 using {cm as approver} from '../../../../../db/cds/cm/CM_APPROVER-model';
 using {dp as moldMst} from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 using {cm as referer} from '../../../../../db/cds/cm/CM_REFERER-model';
@@ -26,10 +27,9 @@ service BudgetExecutionApprovalService {
                 mst.mold_number,
                 mst.mold_sequence,
                 mst.mold_id,
-                mst.mold_progress_status_code,
                 mst.spec_name,
                 mst.model,
-                mst.asset_number,
+                ass.asset_number,
                 mst.mold_item_type_code,
                 (
                     select l.code_name from codeLng.Code_Lng l
@@ -81,14 +81,7 @@ service BudgetExecutionApprovalService {
                         and l.language_cd = 'KO'
                         and l.tenant_id   = mst.tenant_id
                 ) as account_code_nm              : String(240),
-                mst.accounting_department_code,
-                mst.acq_department_code, 
-                ( 
-                    select d.department_local_name  
-                    from Dept as d 
-                    where d.tenant_id = mst.tenant_id 
-                    and mst.acq_department_code = d.department_id
-                ) as acq_department_code_nm    : String(240) , 
+                mst.accounting_department_code, 
                 mst.production_supplier_code,
                 mst.remark,
                 mst.mold_develope_request_type_code,
@@ -105,10 +98,6 @@ service BudgetExecutionApprovalService {
                 mst.book_currency_code,
                 mst.budget_exrate_date,
                 mst.budget_exrate,
-                mst.split_pay_type_code,
-                mst.prepay_rate,
-                mst.progresspay_rate,
-                mst.rpay_rate,
                 mst.mold_sales_status_code,
                 mst.pr_number,
                 mst.import_company_code, 
@@ -125,23 +114,21 @@ service BudgetExecutionApprovalService {
                 mst.mold_type_code,
                 mst.mold_mfger_code,
                 mst.mold_developer_empno,
-                mst.customer_asset_type_code,
-                mst.asset_type_code,
+               ass.cust_asset_type_code , 
+               ass.asset_type_code , 
                 (
                     select l.code_name from codeLng.Code_Lng l
                     where
                             l.group_code  = 'DP_MD_ASSET_TYPE'
-                        and l.code        = mst.asset_type_code
+                        and l.code        = ass.asset_type_code
                         and l.language_cd = 'KO'
-                        and l.tenant_id   = mst.tenant_id
+                        and l.tenant_id   = ass.tenant_id
                 ) as asset_type_code_nm           : String(240),
-                mst.asset_status_code,
-                mst.scrap_date,
-                mst.acq_date,
-                mst.acq_amount,
+                ass.asset_status_code,
                 mst.use_department_code
         from approvalDtl.Md_Approval_Dtl dtl
-        join moldMst.Md_Mst mst  on dtl.mold_id = mst.mold_id 
+        join moldMst.Md_Mst mst  on dtl.mold_id = mst.mold_id and dtl.tenant_id = mst.tenant_id 
+        join asset.Md_Asset ass  on mst.mold_id = ass.mold_id  and mst.tenant_id = ass.tenant_id 
         left outer join orgCompany.Org_Company as com on com.company_code = mst.import_company_code 
         left outer join org as plant on mst.import_company_org_code = plant.org_code and mst.import_company_code = plant.company_code 
         and plant.org_type_code = (select ma.org_type_code from purOrgTypeMap.Pur_Org_Type_Mapping as ma where ma.tenant_id = dtl.tenant_id and ma.process_type_code = 'DP05') 

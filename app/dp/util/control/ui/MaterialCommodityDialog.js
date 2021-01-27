@@ -28,14 +28,14 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oMaterialCommodity = new SearchField({ placeholder: "Commodity Name(x)"});
+            this.oMaterialCommodity = new SearchField({ placeholder: this.getModel("I18N").getText("/COMMODITY")});
             
             this.oMaterialCommodity.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
                     items: [
-                        new Label({ text: "Commodity Name(x)"}),
+                        new Label({ text: this.getModel("I18N").getText("/COMMODITY")}),
                         this.oMaterialCommodity
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M6 S12"})
@@ -47,12 +47,12 @@ sap.ui.define([
             return [
                 new Column({
                     width: "30%",
-                    label: new Label({text: "Commodity(x)"}),
+                    label: new Label({text: this.getModel("I18N").getText("/COMMODITY")}),
                     template: new Text({text: "{commodity_code}"})
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: "Commodity Name(x)"}),
+                    label: new Label({text: this.getModel("I18N").getText("/COMMODITY")+" "+this.getModel("I18N").getText("/NAME")}),
                     template: new Text({text: "{commodity_name}"})
                 })
             ];
@@ -65,7 +65,7 @@ sap.ui.define([
                 ];
 
                 if(sMaterialCommodity){
-                    aFilters.push(new Filter("tolower(commodity_name)", FilterOperator.Contains, "'" + sMaterialCommodity.toLowerCase().replace("'","''") + "'"));
+                    aFilters.push(new Filter("tolower(commodity_code)", FilterOperator.Contains, "'" + sMaterialCommodity.toLowerCase().replace("'","''") + "'"));
                 }
 
 

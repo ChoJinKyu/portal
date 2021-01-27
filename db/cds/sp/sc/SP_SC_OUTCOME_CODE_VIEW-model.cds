@@ -61,6 +61,17 @@ entity Sc_Evaluation_Type_Code {
 
 extend Sc_Evaluation_Type_Code with util.Managed;
 
+@cds.autoexpose  // 협상공급업체평가유형(가격|가격&비가격)
+entity Sc_Nego_Supeval_Type_Code {
+    key tenant_id               : type of orgTenant.Org_Tenant : tenant_id  @title : '테넌트ID';
+    key nego_supeval_type_code  : String(30) not null                       @title : '협상공급업체평가유형코드';
+        sort_no                 : Decimal not null                          @title : '정렬번호';
+        nego_supeval_type_name  : localized String(240)                     @title : '협상공급업체평가유형이름';
+// nego_supeval_type_desc : localized String(1000)           @title : 'Description';
+};
+
+extend Sc_Nego_Supeval_Type_Code with util.Managed;
+
 @cds.autoexpose  // 협상유형코드(RFQ|RFP|BID|2ndBID)
 entity Sc_Nego_Type_Code {
     key tenant_id             : type of orgTenant.Org_Tenant : tenant_id                 @title : '테넌트ID';
@@ -71,6 +82,11 @@ entity Sc_Nego_Type_Code {
                              on nego_parent_type.tenant_id       = $self.tenant_id
                              and nego_parent_type.nego_parent_type_code = $self.nego_parent_type_code
                              @title : '협상상위유형 Navi.';
+        nego_supeval_type_code  : type of Sc_Nego_Supeval_Type_Code : nego_supeval_type_code   @title : '평가유형코드';
+        nego_supeval_type : Association to Sc_Nego_Supeval_Type_Code 
+                             on nego_supeval_type.tenant_id       = $self.tenant_id
+                             and nego_supeval_type.nego_supeval_type_code = $self.nego_supeval_type_code
+                             @title : '협상공급업체평가유형 Navi.';
         evaluation_type_code  : type of Sc_Evaluation_Type_Code : evaluation_type_code   @title : '평가유형코드';
         evaluation_type : Association to Sc_Evaluation_Type_Code 
                              on evaluation_type.tenant_id       = $self.tenant_id
@@ -101,7 +117,7 @@ entity Sc_Outcome_Code {
     key outcome_code   : String(30) not null                @title : '아웃컴코드';
         sort_no        : Decimal not null                   @title : '정렬번호';
         outcome_name   : localized String(240)              @title : '아웃컴이름';
-// nego_type_descr  : localized String(1000)@title : 'Description';
+// outcome_descr  : localized String(1000)@title : 'Description';
 };
 
 extend Sc_Outcome_Code with util.Managed;

@@ -62,6 +62,31 @@
                                 <layout:GridData span="XL5 L5 M5 S10" />
                             </layoutData>
                         </VBox>
+
+                        <VBox>
+                            <Label text="Single Maker" labelFor="input_maker_code"></Label>
+                            <Input id="input_maker_code"
+                            placeholder="Choose a maker from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputMakerValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi Maker" labelFor="multiinput_maker_code"></Label>
+                            <MultiInput id="multiinput_maker_code"
+                            placeholder="Choose a maker from the ValueHelp"
+                            tokens="{/processTypes}"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputMakerValuePress">
+                                <tokens>
+                                    <Token key="{key}" text="{text}" />
+                                </tokens>
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
                     </form:content>
                 </form:SimpleForm>
             </VBox>

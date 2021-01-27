@@ -80,7 +80,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
         msg.setResultCode(0);
 
         String v_sql_createSetId = "SELECT DP_MD_MST_SET_ID_SEQ.NEXTVAL FROM DUMMY";
-        String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
+        String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(TENANT_ID => ?, MOLD_ID => ?)";
         
 
         // Set Id 뒤 5자리 생성
@@ -89,6 +89,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
         for (SavedMolds row :  v_inMultiData) {
             if((Boolean) row.get("chk")){
                 MoldMasters master = MoldMasters.create();
+                master.setTenantId((String) row.get("tenant_id"));
                 master.setMoldId((String) row.get("mold_id"));
                 master.setMoldProgressStatusCode("DEV_RCV");
                 master.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
@@ -111,6 +112,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
                 Result resultMaster = developmentReceiptService.run(masterUpdate);
 
                 MoldSpecs spec = MoldSpecs.create();
+                spec.setTenantId((String) row.get("tenant_id"));
                 spec.setMoldId((String) row.get("mold_id"));
                 spec.setDieForm((String) row.get("die_form"));
                 spec.setMoldSize((String) row.get("mold_size"));
@@ -119,7 +121,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
                 Result resultSpec = developmentReceiptService.run(specUpdate);
                 
                 // Procedure Call
-                jdbc.update(v_sql_callProc, row.get("mold_id"));
+                jdbc.update(v_sql_callProc, row.get("tenant_id"), row.get("mold_id"));
             }
         }
 
@@ -139,6 +141,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
 
         StringBuffer v_sql_createTableMst = new StringBuffer();
         v_sql_createTableMst.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MST (");
+        v_sql_createTableMst.append("TENANT_ID NVARCHAR(5),");
         v_sql_createTableMst.append("MOLD_ID NVARCHAR(100),");
         v_sql_createTableMst.append("MOLD_PRODUCTION_TYPE_CODE NVARCHAR(30),");
         v_sql_createTableMst.append("MOLD_ITEM_TYPE_CODE NVARCHAR(30),");
@@ -155,11 +158,11 @@ public class DevelopmentReceiptV4 implements EventHandler {
         v_sql_createTableMst.append("FAMILY_PART_NUMBER_5 NVARCHAR(240),");
         v_sql_createTableMst.append("SET_ID NVARCHAR(100))");
 
-        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST";
         
-        String v_sql_createTableSpec = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_SPEC (MOLD_ID NVARCHAR(100), DIE_FORM NVARCHAR(240), MOLD_SIZE NVARCHAR(100))";
-        String v_sql_insertTableSpec = "INSERT INTO #LOCAL_TEMP_SPEC VALUES (?, ?, ?)";
+        String v_sql_createTableSpec = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_SPEC (TENANT_ID NVARCHAR(5), MOLD_ID NVARCHAR(100), DIE_FORM NVARCHAR(240), MOLD_SIZE NVARCHAR(100))";
+        String v_sql_insertTableSpec = "INSERT INTO #LOCAL_TEMP_SPEC VALUES (?, ?, ?, ?)";
         String v_sql_dropTableSpec = "DROP TABLE #LOCAL_TEMP_SPEC";
         
         String v_sql_callProc = "CALL DP_MD_MST_SET_ID_UPDATE_PROC(I_MST_TABLE => #LOCAL_TEMP_MST, I_SPEC_TABLE => #LOCAL_TEMP_SPEC)";
@@ -175,6 +178,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
             for(SavedMolds v_inRow : v_inMultiData){
                 if((Boolean) v_inRow.get("chk")){
                     Object[] valuesM = new Object[] {
+                        v_inRow.get("tenant_id"),
                         v_inRow.get("mold_id"),
                         v_inRow.get("mold_production_type_code"),
                         v_inRow.get("mold_item_type_code"),
@@ -192,6 +196,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
                         v_inRow.get("set_id")};
                     batchM.add(valuesM);
                     Object[] valuesS = new Object[] {
+                        v_inRow.get("tenant_id"),
                         v_inRow.get("mold_id"),
                         v_inRow.get("die_form"),
                         v_inRow.get("mold_size")};

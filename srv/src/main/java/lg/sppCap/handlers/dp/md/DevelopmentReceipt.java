@@ -69,10 +69,11 @@ public class DevelopmentReceipt implements EventHandler {
 
         List<Map<String, Object>> entries = context.getCqn().entries();
 
-        String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
+        String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(TENANT_ID => ?, MOLD_ID => ?)";
         
             for (Map<String, Object> row : entries) {
                 MoldMstView v_result = MoldMstView.create();
+                v_result.setTenantId((String) row.get("tenant_id"));
                 v_result.setMoldId((String) row.get("mold_id"));
                 v_result.setMoldProgressStatusCode("DEV_RCV");
                 
@@ -94,6 +95,7 @@ public class DevelopmentReceipt implements EventHandler {
                 
                 if((Boolean) row.get("chk")){
                     MoldMasters master = MoldMasters.create();
+                    master.setTenantId((String) row.get("tenant_id"));
                     master.setMoldId((String) row.get("mold_id"));
                     master.setMoldProgressStatusCode("DEV_RCV");
                     master.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
@@ -116,6 +118,7 @@ public class DevelopmentReceipt implements EventHandler {
                     Result resultMaster = developmentReceiptService.run(masterUpdate);
 
                     MoldSpecs spec = MoldSpecs.create();
+                    spec.setTenantId((String) row.get("tenant_id"));
                     spec.setMoldId((String) row.get("mold_id"));
                     spec.setDieForm((String) row.get("die_form"));
                     spec.setMoldSize((String) row.get("mold_size"));
@@ -125,7 +128,7 @@ public class DevelopmentReceipt implements EventHandler {
                     Result resultSpec = developmentReceiptService.run(specUpdate);
 
                     // Procedure Call
-                    jdbc.update(v_sql_callProc, row.get("mold_id"));
+                    jdbc.update(v_sql_callProc, row.get("tenant_id"), row.get("mold_id"));
                 }
 
                 v_results.add(v_result);
@@ -147,21 +150,25 @@ public class DevelopmentReceipt implements EventHandler {
         Map<String, Object> filterValues = result.targetValues();
 
         MoldMasters master = MoldMasters.create();
+        master.setTenantId((String) filterValues.get("tenant_id"));
         master.setMoldId((String) filterValues.get("mold_id"));
         CqnDelete masterDelete = Delete.from(MoldMasters_.CDS_NAME).matching(master);
         Result resultMaster = developmentReceiptService.run(masterDelete);
 
         MoldSpecs spec = MoldSpecs.create();
+        spec.setTenantId((String) filterValues.get("tenant_id"));
         spec.setMoldId((String) filterValues.get("mold_id"));
         CqnDelete specDelete = Delete.from(MoldSpecs_.CDS_NAME).matching(spec);
         Result resultSpec = developmentReceiptService.run(specDelete);
 
         MoldSchedules schedule = MoldSchedules.create();
+        schedule.setTenantId((String) filterValues.get("tenant_id"));
         schedule.setMoldId((String) filterValues.get("mold_id"));
         CqnDelete scheduleDelete = Delete.from(MoldSchedules_.CDS_NAME).matching(schedule);
         Result resultSchedule = developmentReceiptService.run(scheduleDelete);
 
         MoldMstView v_result = MoldMstView.create();
+        v_result.setTenantId((String) filterValues.get("tenant_id"));
         v_result.setMoldId((String) filterValues.get("mold_id"));
         v_results.add(v_result);
 

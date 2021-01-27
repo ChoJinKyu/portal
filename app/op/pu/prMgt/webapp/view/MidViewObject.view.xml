@@ -9,6 +9,7 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
+    xmlns:richtexteditor="sap.ui.richtexteditor"
     xmlns="sap.m"
 	height="100%">
 
@@ -92,11 +93,11 @@
 
 		<uxap:sections id="pss">
 
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="{I18N>/BASIC_INFO}">
+			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="{I18N>/BASIC_INFO}" >
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                           <HBox alignItems="Center">
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%"> 
+                           <HBox alignItems="Center" width="100%">
                             <VBox>
                                 <Label
                                     text="{I18N>/APPROVAL_TITLE}"                                      
@@ -112,7 +113,7 @@
                                 </Label>
                             </VBox>
                            </HBox>                           
-                            <HBox alignItems="Center">
+                            <HBox alignItems="Center" width="100%">
                                 <VBox>
                                 <Label
                                     text="{I18N>/APPROVAL_CONTENTS}"                           
@@ -120,8 +121,25 @@
                                     textAlign="Left"
                                     labelFor="input"/>
                                 </VBox> 
-                                <VBox alignItems="Center">
-                                <FormattedText htmlText="{detailModel>/mst/approval_contents}"  width="40em"  />
+                                <VBox alignItems="Left" width="100%">
+                                 <richtexteditor:RichTextEditor
+                                    editorType="TinyMCE4"
+                                    width="100%"
+                                    height="200px"
+                                    editable="false"
+                                    customToolbar="false"
+                                    showGroupClipboard="false"
+                                    showGroupFont="false"
+                                    showGroupFontStyle="false"
+                                    showGroupInsert="false"
+                                    showGroupLink="false"
+                                    showGroupStructure="false"
+                                    showGroupTextAlign="false"
+                                    showGroupUndo="false"
+                                    
+                                    value="{detailModel>/mst/approval_contents}">
+                                </richtexteditor:RichTextEditor>
+                                <!-- <FormattedText htmlText="{detailModel>/mst/approval_contents}"  width="40em"  /> -->
                                 </VBox>   
                             </HBox>
                             

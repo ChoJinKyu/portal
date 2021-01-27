@@ -63,7 +63,7 @@ service MoldApprovalV4Service {
         mold_sequence: String ;
         mold_id: String ;
         mold_progress_status_code: String ;
-        asset_number: String ;
+      //  asset_number: String ;
         mold_item_type_code: String ;
         mold_production_type_code: String ;
         mold_location_type_code: String ;
@@ -84,7 +84,7 @@ service MoldApprovalV4Service {
         receiving_complete_date: String ;
         account_code: String ;
         accounting_department_code: String ;
-        acq_department_code: String ;
+      //  acq_department_code: String ;
         production_supplier_code: String ;
         remark: String ;
         mold_develope_request_type_code: String ;
@@ -102,9 +102,11 @@ service MoldApprovalV4Service {
         budget_exrate_date: String ;
         budget_exrate: String ;
         split_pay_type_code: String ;
-        prepay_rate: String ;
-        progresspay_rate: String ;
-        rpay_rate: String ;
+        pay_sequence           : String;
+        pay_type_code         : String;
+        prepay: String ;
+        progresspay: String ;
+        rpay: String ;
         mold_sales_status_code: String ;
         pr_number: String ;
         import_company_code: String ;
@@ -114,12 +116,12 @@ service MoldApprovalV4Service {
         mold_type_code: String ;
         mold_mfger_code: String ;
         mold_developer_empno: String ;
-        customer_asset_type_code: String ;
-        asset_type_code: String ;
-        asset_status_code: String ;
-        scrap_date: String ;
-        acq_date: String ;
-        acq_amount: String ;
+       //  customer_asset_type_code: String ;
+       // asset_type_code: String ;
+      //  asset_status_code: String ;
+      //  scrap_date: String ;
+      //  acq_date: String ;
+      //  acq_amount: String ;
         use_department_code : String ;
         _row_state_ : String;
     };
@@ -140,6 +142,30 @@ service MoldApprovalV4Service {
         remark                : String;
     };
 
+    type Payment_v4 {
+        tenant_id             : String;
+        mold_id               : String;
+        pay_sequence          : String;
+        pay_type_code         : String;
+        pay_rate              : Decimal;
+        pay_price             : Decimal;
+    };
+
+    // 자산 테이블 
+    type Asset_v4 { 
+        tenant_id             : String;
+        mold_id               : String;
+        asset_number          : String;
+        cust_asset_type_code  : String;
+        asset_type_code       : String;
+        asset_status_code     : String;
+        acq_department_code   : String;
+        acq_date              : String;
+        scrap_date            : String;
+        acq_amount            : Decimal;
+    }; 
+
+
     type data {
         approvalMaster :  ApprovalMaster_v4 ;
         approvalDetails : array of ApprovalDetails_v4;
@@ -147,6 +173,8 @@ service MoldApprovalV4Service {
         moldMaster : array of MoldMaster_v4;
         referer : array of Referer_v4; 
         quotation : array of Quotation_v4;
+        payment : array of Payment_v4;
+        asset : array of Asset_v4;
     }
 
     type ApprDeleteData {

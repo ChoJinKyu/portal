@@ -1,0 +1,10 @@
+<mvc:View
+	controllerName="sp.se.supplierEvaluationSetupMgt.controller.Two"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+
+	<!-- <App id="app"/> -->
+    <Page>
+    </Page>
+</mvc:View>

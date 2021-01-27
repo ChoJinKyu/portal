@@ -8,7 +8,6 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
     "sap/m/TablePersoController",
-    //"./NpSearchService",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     'sap/ui/core/Fragment',
@@ -48,7 +47,6 @@ sap.ui.define([
         ManagedListModel,
         DateFormatter,
         TablePersoController,
-        //NpSearchService,
         Filter,
         FilterOperator,
         Fragment,
@@ -159,8 +157,8 @@ sap.ui.define([
 
             fnSearch: function () {
 
-                this.validator.validate(this.byId('pageSearchFormE'));
-                if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
+                //this.validator.validate(this.byId('pageSearchFormE'));
+                //if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
 
                 var status = "";
                 var oFilter = [];
@@ -321,7 +319,7 @@ sap.ui.define([
                 if (!this.oSearchVendorPollDialog) {
                     this.oSearchVendorPollDialog = new VendorPoolDialog({
                         title: "Choose VendorPool",
-                        MultiSelection: true,
+                        multiSelection: true,
                         items: {
                             filters: [
                                 new Filter("tenant_id", "EQ", "L2100")
@@ -336,12 +334,15 @@ sap.ui.define([
                         var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
                         sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item);
                     */                    
-                    // this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
-                    //     vendorPoolCode = oEvent.mParameters.item;
-                    //     //console.log("materialItem : ", materialItem);
-                    //     that.byId("search_material_code").setValue(vendorPoolCode.material_code);
+                    this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
+                        console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
 
-                    // }.bind(this));
+                    }.bind(this));
+
+                    this.oSearchVendorPollDialog.attachEvent("searchPress", function (oEvent) {
+                       console.log("call search!!!");
+                    }.bind(this));
+
                 }
 
                 //searObject : 태넌트아이디, 검색 인풋아이디

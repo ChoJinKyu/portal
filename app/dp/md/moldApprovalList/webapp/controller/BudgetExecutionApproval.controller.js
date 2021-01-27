@@ -151,6 +151,7 @@ sap.ui.define([
         },
         onBudgetChange : function ( oEvent ){
             this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'), function(oData){
+               console.log("/// investment_ecst_type_code " , oData);
                 console.log(oData);
             });
         } ,

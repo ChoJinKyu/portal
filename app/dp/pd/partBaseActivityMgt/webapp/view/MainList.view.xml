@@ -1,0 +1,191 @@
+<mvc:View controllerName="dp.pd.partBaseActivityMgt.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:t="sap.ui.table"
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.control.m"
+    xmlns:u="sap.ui.unified"
+    xmlns:tnt="sap.tnt"
+    xmlns:co="sap.suite.ui.commons"
+    height="100%">
+
+    <f:DynamicPage id="page2"
+        headerExpanded="{mainListViewModel>/headerExpanded}" 
+        toggleHeaderOnTitleClick="true">        
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="Part Base Activity Management" />
+                </f:heading>
+                <f:snappedContent>
+                </f:snappedContent>
+                <f:expandedContent>
+                </f:expandedContent>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>                        
+                         <VBox>
+                            <Label
+                                text="{I18N>/PART_BASE_ACTIVITY_NAME}: "
+                                labelFor="searchPartBaseKeyword">
+                            </Label>
+                            <Input id="searchPartBaseKeyword" 
+                                placeholder="" change=".onPageSearchButtonPress"/>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label
+                                text="{I18N>/DESCRIPTION}: "
+                                labelFor="searchDescKeyword">
+                            </Label>
+                            <Input id="searchDescKeyword" 
+                                placeholder="" change=".onPageSearchButtonPress"/>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label
+                                text="{I18N>/STATUS}: "
+                                labelFor="searchUseflag">
+                            </Label>
+                            <SegmentedButton 
+                                id="searchUseflag"
+                                selectedKey="" 
+                                width="100%">
+                                <items>
+                                    <SegmentedButtonItem text="All" width="3em"/>
+                                    <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                    <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>                        
+                    </form:content>
+                </form:SimpleForm>   
+                
+                <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+                    <items>
+                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
+                    </items>
+                </HBox>           
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <f:content>
+            <t:Table id="mainTable"
+            selectionMode="MultiToggle"
+            rows="{
+                path: 'list>/PdPartBaseActivityView',
+                sorter: { 
+                    path: 'local_update_dtm',
+                    descending: true 
+                }                   
+            }"
+            cellClick=".onCellClickPress"
+            rowSelectionChange=".onCheck"
+            visibleRowCountMode="Auto"
+            columnResize="onColumnResize">
+            <t:extension>
+                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                    <Title id="mainTableTitle" text="부품 기준 Activity List {= ${list>/PdPartBaseActivityView}.length > 0 ? '(' + ${list>/PdPartBaseActivityView}.length + ')' : ''}" level="H2"/>
+                    <ToolbarSpacer/>
+                    <!-- <Button text="Copy" id="buttonCopy" press=".onCopy"  type="Transparent"/> -->
+                    <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
+                    <!-- <Button text="{I18N>/DELETE}" id="buttonDelete" press="onMainTableDeleteButtonPress"  type="Transparent"/> -->
+                    <!-- <Button text="{I18N>/SAVE}" id="buttonSave" press=""  type="Transparent"/> -->
+
+                    <ToolbarSeparator/>
+                    <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                    
+                    <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                        <layoutData>
+                            <OverflowToolbarLayoutData priority="NeverOverflow" />
+                        </layoutData>
+                    </Button>
+                </OverflowToolbar>
+            </t:extension>
+            <t:rowSettingsTemplate>
+            </t:rowSettingsTemplate>
+            <t:columns>
+                <!-- <t:Column id="mainColumnState" hAlign="Center" width="2em" >
+                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                    <t:template>
+                        <ObjectStatus icon="{
+                            path: 'list>_row_state_',
+                            formatter: '.formatter.toModelStateColumnIcon'
+                        }" />
+                    </t:template>
+                </t:Column> -->
+                <t:Column id="activity_code" hAlign="Center">
+                <Label text="{I18N>/PROD_ACTIVITY_CODE}" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>activity_code}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="activity_name" hAlign="Center">
+                <Label text="{I18N>/PROD_ACTIVITY_NAME}" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>activity_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="description" hAlign="Center">
+                <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>description}"/>
+                </t:template>
+                </t:Column>                
+                <t:Column id="sequence">
+                <Label text="{I18N>/SEQUENCE}" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>sequence}"/>
+                </t:template>
+                </t:Column>  
+                <t:Column id="active_flag" hAlign="Center">
+                <Label text="{I18N>/STATUS}" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>active_flag}"/>
+                </t:template>
+                </t:Column>                
+                <t:Column id="local_update_dtm" hAlign="Center">
+                <Label text="{I18N>/UPDATE} {I18N>/DATE_TIME}" textAlign="Center" width="100%" wrapping="true" />
+                <t:template>
+                    <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}"/>                    
+                </t:template>
+                </t:Column> 
+                <t:Column id="update_user_id" hAlign="Center">
+                <Label text="{I18N>/UPDATE_USER_ID}" textAlign="Center" width="100%" wrapping="true" />
+                <t:template>
+                    <Text text="{list>update_user_id}"/>                                       
+                </t:template>
+                </t:Column>                                                                                                                                       
+            </t:columns>
+            </t:Table>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>
