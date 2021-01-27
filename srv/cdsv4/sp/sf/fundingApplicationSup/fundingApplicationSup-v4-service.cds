@@ -24,7 +24,7 @@ using { cm as CodeView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 
 namespace sp;
 
-@path : '/sp.fundingApplicationSupV4Service'
+@path : '/sp.FundingApplicationSupV4Service'
 service FundingApplicationSupV4Service {
 
     //************************************************
@@ -311,12 +311,13 @@ service FundingApplicationSupV4Service {
     // 프로시저 호출 액션
     //************************************************
     //------------------임시저장
-    // action procSaveTemp (applSaveType: applSaveDataType //신청서 저장 타입
-    //                     ,user_id : String(30)           //작성자id
-    // ) returns rtnObj;
-    action procSaveTemp (applSaveType : array of applSaveDataType,
-                            user_id : String(30)
+    action procSaveTemp (applSaveType: applSaveDataType //신청서 저장 타입
+                        ,user_id : String(30)           //작성자id
     ) returns array of rtnObj;
+
+    // action procSaveTemp (applSaveType : array of applSaveDataType,
+    //                         user_id : String(30)
+    // ) returns array of rtnObj;
 
     //------------------제출
     action procRequest (applSaveType: applSaveDataType  //신청서 저장 타입

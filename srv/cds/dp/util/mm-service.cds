@@ -27,7 +27,7 @@ service MmService {
              from uom.UomLng l 
              where l.tenant_id = m.tenant_id
              and l.uom_code = m.uom_code
-             and l.language_code = 'KO' ), m.uom_name)  as uom_name : String(30)
+             and l.language_code = 'KO' ), m.uom_name)  as uom_name : String(30)            
     from  uom.Uom as m
     ;
 
@@ -50,6 +50,15 @@ service MmService {
     @readonly
     view MaterialClass as
     select  key m.tenant_id,
+            key m.material_class_code,
+            m.material_class_name,
+            m.material_class_desc,
+            m.use_flag
+    from MtlClass.MtlClassView as m
+    where m.use_flag = true
+    ;
+    /*
+    select  key m.tenant_id,
             key m.material_class_code, 
             ifnull((select l.material_class_name
                     from MtlClass.MtlClassLng l
@@ -61,10 +70,19 @@ service MmService {
             m.use_flag
     from MtlClass.MtlClass as m
     where m.use_flag = true
-    ;
-
+    */
+    
     @readonly
     view MaterialCommodity as 
+    select key m.tenant_id,
+           key m.commodity_code,
+           m.commodity_name,
+           m.commodity_desc,
+           m.use_flag
+    from Commodity.MtlCommodityView m
+    where m.use_flag = true
+    ;
+    /*
     select  key m.tenant_id,
             key m.commodity_code,
             ifnull((select l.commodity_name
@@ -77,8 +95,18 @@ service MmService {
     from Commodity.MtlCommodity as m 
     where m.use_flag = true
     ;
+    */
     @readonly
     view MaterialGroup as 
+    select key m.tenant_id,
+           key m.material_group_code,
+           m.material_group_name,
+           m.material_group_desc,
+           m.use_flag
+    from MtlGroup.MtlGroupView m
+    where m.use_flag = true
+    ;
+    /*
     select  key m.tenant_id,
             key m.material_group_code,
             ifnull((select l.material_group_name
@@ -91,8 +119,128 @@ service MmService {
     from MtlGroup.MtlGroup as m 
     where m.use_flag = true
     ;
+  
+    */
 
-   // 자재코드 검색 View
+    // 자재 Master view
+    view MaterialMst as
+    select  key m.tenant_id,
+            key m.material_code,
+            m.material_desc,
+            m.material_spec,
+            m.material_type_code,
+            m.base_uom_code,
+            m.material_group_code,
+            m.purchasing_uom_code,
+            m.variable_po_unit_indicator,
+            m.material_class_code,
+            m.commodity_code,
+            m.maker_part_number,
+            m.maker_code,
+            m.maker_part_profile_code,
+            m.maker_material_code
+    from Material.MaterialMstView m
+    ;
+
+    @readonly
+    view MaterialMstView as
+    select key mst.tenant_id,
+           key mst.material_code,
+           mst.material_desc,
+           mst.material_spec,
+           mst.material_type_code,
+           mst.material_type_name,
+           mst.base_uom_code,
+           mst.material_group_code,
+           mst.material_group_name,
+           mst.purchasing_uom_code,
+           mst.variable_po_unit_indicator,
+           mst.variable_po_unit_indic_name,
+           mst.material_class_code,
+           mst.material_class_name,
+           mst.commodity_code,
+           mst.commodity_name,
+           mst.maker_part_number,
+           mst.maker_code,
+           mst.maker_part_profile_code,
+           mst.maker_material_code
+    from  Material.MaterialMstAllView mst
+    ;
+
+    // 플랜트별 자재 속성 정보
+    @readonly
+    view MaterialOrg as 
+    select key org.tenant_id,
+           key org.material_code,
+           key org.company_code,
+           key org.org_type_code,
+           key org.org_code,
+           org.org_name,
+           org.material_status_code,
+           org.purchasing_group_code,
+           org.batch_management_flag,
+           org.automatic_po_allow_flag,
+           org.hs_code,
+           org.import_group_code,
+           org.user_item_type_code,
+           org.purchasing_item_flag,
+           org.purchasing_enable_flag,
+           org.osp_item_flag,
+           org.buyer_empno,
+           org.eng_item_flag,
+           org.develope_person_empno,
+           org.charged_osp_item_flag
+    from Material.MaterialOrgView org
+    ;
+
+    view MaterialOrgView as
+    select key org.tenant_id,
+           key org.material_code,
+           key org.company_code,
+           key org.org_type_code,
+           key org.org_code,
+           org.org_name,
+           org.material_desc,
+           org.material_spec,
+           org.material_type_code,
+           org.material_type_name,
+           org.base_uom_code,
+           org.material_group_code,
+           org.material_group_name,
+           org.purchasing_uom_code,
+           org.variable_po_unit_indicator,
+           org.variable_po_unit_indic_name,
+           org.material_class_code,
+           org.material_class_name,
+           org.commodity_code,
+           org.commodity_name,
+           org.maker_part_number,
+           org.maker_code,
+           org.maker_part_profile_code,
+           org.maker_material_code,
+           org.material_status_code,
+           org.material_status_name,
+           org.purchasing_group_code,
+           org.batch_management_flag,
+           org.automatic_po_allow_flag,
+           org.hs_code,
+           org.import_group_code,
+           org.import_group_name,
+           org.user_item_type_code,
+           org.user_item_type_name,
+           org.purchasing_item_flag,
+           org.purchasing_enable_flag,
+           org.osp_item_flag,
+           org.buyer_empno,
+           org.buyer_local_name,
+           org.eng_item_flag,
+           org.develope_person_empno,
+           org.develope_person_local_name,
+           org.charged_osp_item_flag
+    from Material.MaterialOrgAllView org
+    ;
+
+    // 자재코드 검색 View
     @readonly
     view SearchMaterialMstView as
     select key mst.tenant_id,
@@ -174,5 +322,7 @@ service MmService {
     and fav.material_code = org.material_code
     and fav.user_id = 'A'
     ;
+
+
 
 }

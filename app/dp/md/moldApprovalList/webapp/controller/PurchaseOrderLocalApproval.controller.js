@@ -86,9 +86,9 @@ sap.ui.define([
                     splitPayTypeCode = oData.results[0].split_pay_type_code;
                     currencyCode = oData.results[0].currency_code;
                     oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
-                    oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
-                    oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
-                    oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
+                    oModel.setProperty("/prepay", oData.results[0].prepay);
+                    oModel.setProperty("/progresspay", oData.results[0].progresspay);
+                    oModel.setProperty("/rpay", oData.results[0].rpay);
                 }
 
                 oModel.setProperty("/purchasing_amount", poAmount);
@@ -247,35 +247,35 @@ sap.ui.define([
                 if(formName === "splitPayTypeCode"){
                     poData[idx].split_pay_type_code = formValue;
                 }else if(formName === "advanced"){
-                    poData[idx].prepay_rate = formValue;
+                    poData[idx].prepay = formValue;
                 }else if(formName === "part"){
-                    poData[idx].progresspay_rate = formValue;
+                    poData[idx].progresspay = formValue;
                 }else if(formName === "residual"){
-                    poData[idx].rpay_rate = formValue;
+                    poData[idx].rpay = formValue;
                 }
             }*///partialPayment
             var pModel = this.getModel("payment"),
                 split_pay_type_code = pModel.getData().split_pay_type_code,
-                prepay_rate =  pModel.getData().prepay_rate,
-                progresspay_rate =  pModel.getData().progresspay_rate,
-                rpay_rate =  pModel.getData().rpay_rate,
+                prepay =  pModel.getData().prepay,
+                progresspay =  pModel.getData().progresspay,
+                rpay =  pModel.getData().rpay,
                 purchasing_amount =  pModel.getData().purchasing_amount,
-                total = Number(prepay_rate) + Number(progresspay_rate) + Number(rpay_rate);
+                total = Number(prepay) + Number(progresspay) + Number(rpay);
 
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
-                    if(prepay_rate !== undefined && progresspay_rate !== undefined && rpay_rate !== undefined){
-                        if(!(prepay_rate === null || prepay_rate === "") && prepay_rate >= total){
+                    if(prepay !== undefined && progresspay !== undefined && rpay !== undefined){
+                        if(!(prepay === null || prepay === "") && prepay >= total){
                             MessageToast.show("선급금이 Total 금액 미만이어야 합니다.");
                             return;
-                        }else if(!(progresspay_rate === null || progresspay_rate === "") && progresspay_rate >= total){
+                        }else if(!(progresspay === null || progresspay === "") && progresspay >= total){
                             MessageToast.show("중도금이 Total 금액 미만이어야 합니다.");
                             return;
-                        }else if(!(rpay_rate === null || rpay_rate === "") && rpay_rate >= total){
+                        }else if(!(rpay === null || rpay === "") && rpay >= total){
                             MessageToast.show("잔금이 Total 금액 미만이어야 합니다.");
                             return;
                         }
-                        if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
+                        if(!(prepay === null || prepay === "") && !(progresspay === null || progresspay === "") && !(rpay === null || rpay === "")){
                             if(total !== purchasing_amount){
                                 MessageToast.show("금액 합계가 맞지 않습니다.");
                                 return;
@@ -286,18 +286,18 @@ sap.ui.define([
                     if(split_pay_type_code === null || split_pay_type_code === ""){
                         pModel.getData().split_pay_type_code = "R";
                     }
-                    if(prepay_rate !== undefined && progresspay_rate !== undefined && rpay_rate !== undefined){
-                        if(!(prepay_rate === null || prepay_rate === "") && prepay_rate >= 100){
+                    if(prepay !== undefined && progresspay !== undefined && rpay !== undefined){
+                        if(!(prepay === null || prepay === "") && prepay >= 100){
                             MessageToast.show("선급금 비율이 100미만이어야 합니다.");
                             return;
-                        }else if(!(progresspay_rate === null || progresspay_rate === "") && progresspay_rate >= 100){
+                        }else if(!(progresspay === null || progresspay === "") && progresspay >= 100){
                             MessageToast.show("중도금 비율이 100미만이어야 합니다.");
                             return;
-                        }else if(!(rpay_rate === null || rpay_rate === "") && rpay_rate >= 100){
+                        }else if(!(rpay === null || rpay === "") && rpay >= 100){
                             MessageToast.show("잔금 비율이 100미만이어야 합니다.");
                             return;
                         }
-                        if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
+                        if(!(prepay === null || prepay === "") && !(progresspay === null || progresspay === "") && !(rpay === null || rpay === "")){
                             if(total !== 100){
                                 MessageToast.show("Rate가 100이 아닙니다.");
                                 return;
@@ -409,11 +409,11 @@ sap.ui.define([
                 orderItems = oModel.getData().PurchaseOrderItems,
                 pModel = this.getModel("payment"),
                 split_pay_type_code = pModel.getData().split_pay_type_code,
-                prepay_rate =  pModel.getData().prepay_rate,
-                progresspay_rate =  pModel.getData().progresspay_rate,
-                rpay_rate =  pModel.getData().rpay_rate,
+                prepay =  pModel.getData().prepay,
+                progresspay =  pModel.getData().progresspay,
+                rpay =  pModel.getData().rpay,
                 purchasing_amount =  pModel.getData().purchasing_amount,
-                total = Number(prepay_rate) + Number(progresspay_rate) + Number(rpay_rate);
+                total = Number(prepay) + Number(progresspay) + Number(rpay);
 
             if(orderItems.length > 1){
                 var accountCode = orderItems[0].account_code,
@@ -437,13 +437,13 @@ sap.ui.define([
 
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
-                    if(prepay_rate >= total){
+                    if(prepay >= total){
                         MessageToast.show("선급금이 Total 금액 미만이어야 합니다.");
                         return;
-                    }else if(progresspay_rate >= total){
+                    }else if(progresspay >= total){
                         MessageToast.show("중도금이 Total 금액 미만이어야 합니다.");
                         return;
-                    }else if(rpay_rate >= total){
+                    }else if(rpay >= total){
                         MessageToast.show("잔금이 Total 금액 미만이어야 합니다.");
                         return;
                     }
@@ -452,13 +452,13 @@ sap.ui.define([
                         return;
                     }
                 }else{
-                    if(prepay_rate >= 100){
+                    if(prepay >= 100){
                         MessageToast.show("선급금 비율이 100미만이어야 합니다.");
                         return;
-                    }else if(progresspay_rate >= 100){
+                    }else if(progresspay >= 100){
                         MessageToast.show("중도금 비율이 100미만이어야 합니다.");
                         return;
-                    }else if(rpay_rate >= 100){
+                    }else if(rpay >= 100){
                         MessageToast.show("잔금 비율이 100미만이어야 합니다.");
                         return;
                     }
@@ -469,9 +469,9 @@ sap.ui.define([
                 }
             }else{          
                 split_pay_type_code = null;
-                prepay_rate =  null;
-                progresspay_rate =  null;
-                rpay_rate =  null;
+                prepay =  null;
+                progresspay =  null;
+                rpay =  null;
             }
 
             this.approval_type_code = "V";
@@ -493,9 +493,9 @@ sap.ui.define([
                         tenant_id : this.tenant_id,
                         mold_id : item.mold_id,
                         split_pay_type_code : split_pay_type_code,
-                        prepay_rate : prepay_rate,
-                        progresspay_rate : progresspay_rate,
-                        rpay_rate : rpay_rate,
+                        prepay : prepay,
+                        progresspay : progresspay,
+                        rpay : rpay,
                         _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
                 }.bind(this));
@@ -514,9 +514,9 @@ sap.ui.define([
                         tenant_id : this.tenant_id, 
                         mold_id : item.mold_id, 
                         split_pay_type_code : "",
-                        prepay_rate : null,
-                        progresspay_rate : null,
-                        rpay_rate : null,
+                        prepay : null,
+                        progresspay : null,
+                        rpay : null,
                         _row_state_ : "D"
                     });
                 }.bind(this));

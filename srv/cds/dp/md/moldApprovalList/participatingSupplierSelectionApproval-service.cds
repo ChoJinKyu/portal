@@ -1,23 +1,13 @@
-//using {cm as approvalMst} from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
 using {dp as approvalDtl} from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
-//using {cm as approver} from '../../../../../db/cds/cm/CM_APPROVER-model';
+using { dp as qtn } from '../../../../../db/cds/dp/md/DP_MD_QUOTATION-model';
 using {dp as moldMst} from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 using {cm as referer} from '../../../../../db/cds/cm/CM_REFERER-model';
-//using {cm as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using { cm as codeLng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
-using { dp as qtn } from '../../../../../db/cds/dp/md/DP_MD_QUOTATION-model';
 using { sp.Sm_Supplier_Mst as supplier} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 
 namespace dp;
 @path : '/dp.ParticipatingSupplierSelectionApprovalService'
 service ParticipatingSupplierSelectionApprovalService {
-
-    // entity ApprovalMasters as projection on approvalMst.Approval_Mst;
-    // entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl; 
-    // entity Approver as projection on approver.Approver;
-    // entity MoldMasters     as projection on moldMst.Md_Mst;
-    // entity Referers        as projection on referer.Referer; 
-    // entity quotation as projection on qtn.Md_Quotation;
     
     view ParticipatingSupplier as
     select

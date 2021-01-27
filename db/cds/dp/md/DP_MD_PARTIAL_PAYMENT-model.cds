@@ -1,7 +1,7 @@
 namespace dp;
 
 using util from '../../cm/util/util-model';
-
+/** 금형분할결제 */
 entity Md_Partial_Payment {
     key tenant_id         : String(5)   not null @title : '테넌트ID';
     key mold_id           : String(100) not null @title : '금형ID';

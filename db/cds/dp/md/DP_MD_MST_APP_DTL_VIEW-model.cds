@@ -14,7 +14,6 @@ entity Md_Mst_App_Dtl_View {
         mold_progress_status_code       : String(30)            @title:'금형진행상태코드';
         spec_name                       : String(500)           @title:'규격명';
         model                           : String(100)           @title:'모델';
-        asset_number                    : String(100)           @title:'자산번호';
         mold_item_type_code             : String(30)            @title:'금형품목유형코드';
         mold_production_type_code       : String(30)            @title:'금형제작유형코드';
         mold_location_type_code         : String(30)            @title:'금형위치유형코드';
@@ -53,9 +52,9 @@ entity Md_Mst_App_Dtl_View {
         budget_exrate_date              : String(8)             @title:'예산환율일자';
         budget_exrate                   : Decimal(20,2)         @title:'예산환율';
         split_pay_type_code             : String(30)            @title:'분할지급코드';
-        prepay_rate                     : Decimal(20,2)         @title:'선급금비율';
-        progresspay_rate                : Decimal(20,2)         @title:'중도금비율';
-        rpay_rate                       : Decimal(20,2)         @title:'잔여금액비율';
+        prepay                          : Decimal(20,2)         @title:'선급금비율';
+        progresspay                     : Decimal(20,2)         @title:'중도금비율';
+        rpay                            : Decimal(20,2)         @title:'잔여금액비율';
         mold_sales_status_code          : String(30)            @title:'금형매출상태코드';
         pr_number                       : String(240)           @title:'구매요청번호';
         import_company_code             : String(30)            @title:'수입회사코드';
@@ -70,9 +69,6 @@ entity Md_Mst_App_Dtl_View {
         mold_type_code                  : String(30)            @title:'금형유형코드';
         mold_mfger_code                 : String(10)            @title:'금형공급업체코드';
         mold_developer_empno            : String(255)           @title:'금형개발자사번';
-        customer_asset_type_code        : String(30)            @title:'고객자산유형코드';
-        asset_type_code                 : String(30)            @title:'자산유형코드';
-        asset_status_code               : String(30)            @title:'자산상태코드';
         scrap_date                      : String(8)             @title:'폐기일자';
         acq_date                        : String(8)             @title:'취득일자';
         acq_amount                      : Decimal(20,2)         @title:'취득금액';

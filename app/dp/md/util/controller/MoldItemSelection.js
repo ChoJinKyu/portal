@@ -79,7 +79,7 @@ sap.ui.define([
             oThis.setModel(new ManagedModel(), "moldItemPop");
             oThis.setModel(new ManagedListModel(), "notInMold");
             oThis.setModel(new ManagedListModel(), "moldItemPopList");
-            oThis.setModel(new ManagedListModel(), "moldItemPopList_temp");
+           // oThis.setModel(new ManagedListModel(), "moldItemPopList_temp");
             oThis.setModel(new ManagedListModel(), "moldSelectionCompanyPopList");
             oThis.setModel(new ManagedListModel(), "moldSelectionPlantPopList");
 
@@ -219,7 +219,7 @@ sap.ui.define([
             console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
             var oView = oThis.getView(),
                 oModel = oThis.getModel("moldItemPopList"),
-                oModel_temp = oThis.getModel("moldItemPopList_temp"),
+                oModel_temp = oThis.getModel("moldItemPopList"),
                 companyModel = oThis.getModel("moldSelectionCompanyPopList"),
                 plantModel = oThis.getModel("moldSelectionPlantPopList")
 
@@ -230,9 +230,9 @@ sap.ui.define([
             oModel_temp.read("/MoldItemSelect", {
                 filters: aSearchFilters,
                 success: function (oData) { 
-                    oModel.setData(oData,"/MoldItemSelect");
-                    console.log(" oData ", oData);
-                    console.log(" oModel_temp ", oModel_temp);
+                   // oModel.setData(oData,"/MoldItemSelect");
+                  //  console.log(" oData ", oData);
+                   // console.log(" oModel_temp ", oModel_temp);
                     oView.setBusy(false);
                 }
             });

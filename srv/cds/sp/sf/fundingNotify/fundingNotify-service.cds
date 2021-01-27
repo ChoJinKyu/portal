@@ -2,8 +2,8 @@ using sp.Sf_Funding_Notify from '../../../../../db/cds/sp/sf/SP_SF_FUNDING_NOTIF
 using sp.Sf_Funding_Application from '../../../../../db/cds/sp/sf/SP_SF_FUNDING_APPLICATION-model'; //자금지원 신청서
 
 namespace sp;
-@path : '/sp.fundingNotifyService'
-service fundingNotifyService {
+@path : '/sp.FundingNotifyService'
+service FundingNotifyService {
     entity SfFundingNotify as projection on sp.Sf_Funding_Notify;
 
     //---------------------자금지원공고 목록 조회 뷰

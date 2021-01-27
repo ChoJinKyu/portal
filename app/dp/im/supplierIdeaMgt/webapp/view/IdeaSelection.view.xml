@@ -67,21 +67,20 @@
                         <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
                         <sc:MicroProcessFlow>
                             <sc:content>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
                                 <sc:MicroProcessFlowItem icon="sap-icon://circle-task-2" stepWidth="3em"/>
+                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
                                 <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
                                 <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
                                 <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
                             </sc:content>
                         </sc:MicroProcessFlow>
                         <layout:HorizontalLayout>
-                            <Text text="PR" width="4em" textAlign="Center"/>
-                            <Text text="Budget" width="4em" textAlign="Center"/>
-                            <Text text="RFQ" width="5em" textAlign="Center"/>
-                            <Text text="Mold Spec" width="5em" textAlign="Center"/>
-                            <Text text="Purchase Contract" width="5em" textAlign="Center"/>
-                            <Text text="PO" width="5em" textAlign="Center"/>
+                            <Text text="작성" width="4em" textAlign="Center"/>
+                            <Text text="접수" width="4em" textAlign="Center"/>
+                            <Text text="검토" width="5em" textAlign="Center"/>
+                            <Text text="실행" width="5em" textAlign="Center"/>
+                            <Text text="완료" width="5em" textAlign="Center"/>
+                            
                         </layout:HorizontalLayout>
                     </layout:VerticalLayout>
                 </layout:Grid>
@@ -99,8 +98,9 @@
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
                             <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
                                 <VBox>
-                                    <Label text="{I18N>/COMPANY}: " labelFor="ideaCompany"  required="true"></Label>
-                                    <Input id="hidIdeaNumber"  visible="false" value="{details>/idea_number}"/>
+                                <!-- liveChange=".onCellChg"  -->
+                                    <Label text="{I18N>/CORPORATION}: " labelFor="ideaCompany"  required="true"></Label>
+                                    <Input id="hidIdeaNumber"  visible="false" value="{details>/idea_number}"  />
                                     <ComboBox id="ideaCompany" width="250em" editable="false"
                                         selectedKey="{details>/company_code}"
                                         items="{
@@ -240,11 +240,11 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection id="pageSectionMain3" titleUppercase="false" title="{I18N>/BASIC_INFO}">
+			<uxap:ObjectPageSection id="pageSectionMain3" titleUppercase="false" title="{I18N>/IMPROVEMENT_EFFECT}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection3" >
                     <form:SimpleForm id="midObjectForm3" editable="{midObjectViewModel>/isEditMode}">
-                        <core:Title text="정량적" />
+                        <core:Title text="{I18N>/QUANTITATIVE}" />
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
                             <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
                                 <VBox>
@@ -281,7 +281,7 @@
                                 </VBox>
                             </layout:Grid>                      
                         </VBox>
-                        <core:Title text="정성적" />
+                        <core:Title text="{I18N>/QUALITATIVE}" />
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
                             <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
                                 <VBox>

@@ -102,9 +102,11 @@ service MoldApprovalV4Service {
         budget_exrate_date: String ;
         budget_exrate: String ;
         split_pay_type_code: String ;
-        prepay_rate: String ;
-        progresspay_rate: String ;
-        rpay_rate: String ;
+        pay_sequence           : String;
+        pay_type_code         : String;
+        prepay: String ;
+        progresspay: String ;
+        rpay: String ;
         mold_sales_status_code: String ;
         pr_number: String ;
         import_company_code: String ;
@@ -140,6 +142,15 @@ service MoldApprovalV4Service {
         remark                : String;
     };
 
+    type Payment_v4 {
+        tenant_id             : String;
+        mold_id               : String;
+        pay_sequence          : String;
+        pay_type_code         : String;
+        pay_rate              : Decimal;
+        pay_price             : Decimal;
+    };
+
     type data {
         approvalMaster :  ApprovalMaster_v4 ;
         approvalDetails : array of ApprovalDetails_v4;
@@ -147,6 +158,7 @@ service MoldApprovalV4Service {
         moldMaster : array of MoldMaster_v4;
         referer : array of Referer_v4; 
         quotation : array of Quotation_v4;
+        payment : array of Payment_v4;
     }
 
     type ApprDeleteData {

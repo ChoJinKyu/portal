@@ -9,3 +9,6 @@ using from './sm/sp_sm_index';
 
 //협력사평가관리
 using from './se/sp_se_index';
+
+//양산단가품의등록
+using from './vi/sp_vi_index';

@@ -176,24 +176,6 @@
                             </table:template>
                         </table:Column>
                         <table:Column width="12em" hAlign="Center" visible="false">
-                            <Label text="Advanced"/>
-                            <table:template>
-                                <Text id="prepay_rate" text="{purOrderItem>prepay_rate}" />
-                            </table:template>
-                        </table:Column>
-                        <table:Column width="12em" hAlign="Center" visible="false">
-                            <Label text="Part"/>
-                            <table:template>
-                                <Text id="progresspay_rate" text="{purOrderItem>progresspay_rate}" />
-                            </table:template>
-                        </table:Column>
-                        <table:Column width="12em" hAlign="Center" visible="false">
-                            <Label text="Residual"/>
-                            <table:template>
-                                <Text id="rpay_rate" text="{purOrderItem>rpay_rate}" />
-                            </table:template>
-                        </table:Column>
-                        <table:Column width="12em" hAlign="Center" visible="false">
                             <Label text="Account Code"/>
                             <table:template>
                                 <Text id="account_code" text="{purOrderItem>account_code}" />
@@ -226,21 +208,21 @@
                 </VBox>
                 <VBox>
                     <Label text="Advanced"/>
-                    <Input id="advanced" value="{payment>/prepay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
+                    <Input id="advanced" value="{payment>/prepay}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
                     <layoutData>
                         <layout:GridData span="XL2 L3 M6 S12" />
                     </layoutData>
                 </VBox>
                 <VBox>
                     <Label text="Part"/>
-                    <Input id="part" value="{payment>/progresspay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
+                    <Input id="part" value="{payment>/progresspay}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
                     <layoutData>
                         <layout:GridData span="XL2 L3 M6 S12" />
                     </layoutData>
                 </VBox>
                 <VBox>
                     <Label text="Residual"/>
-                    <Input id="residual" value="{payment>/rpay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
+                    <Input id="residual" value="{payment>/rpay}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
                     <layoutData>
                         <layout:GridData span="XL2 L3 M6 S12" />
                     </layoutData>
