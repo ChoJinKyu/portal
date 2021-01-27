@@ -172,9 +172,7 @@ sap.ui.define([
 
 						oTransactionManager.submit({
 							success: function(ok){
-
                                 console.log('ok',ok);
-
 								me._toShowMode();
 								MessageToast.show(me.getModel('I18N').getText('/NCM01001') || 'NCM01001');
 							}
@@ -226,26 +224,29 @@ sap.ui.define([
 				//It comes Add button pressed from the before page.
                 var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					tenant_id: "L2100"
+					tenant_id: this._sTenantId
 				});
 				this._toEditMode();
 			}else{
 
                 var self = this;
-				this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
+				this._bindView("/MoldMasters(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "master", [], function(oData){
                     self._toShowMode();
                 });
 
-                this._bindView("/MoldMasterSpec('" + this._sMoldId + "')", "mstSpecView", [], function(oData){
+                this._bindView("/MoldMasterSpec(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "mstSpecView", [], function(oData){
                     
                 });
 
-                var schFilter = [new Filter("mold_id", FilterOperator.EQ, this._sMoldId)];
+                var schFilter = [
+                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                                    new Filter("mold_id", FilterOperator.EQ, this._sMoldId)
+                                ];
                 this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
                     
                 });
 
-                this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
+                this._bindView("/MoldSpec(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "spec", [], function(oData){
                     
                 });
 
@@ -345,7 +346,9 @@ sap.ui.define([
                 sectionId = "pageSubSection4";
             }
 
-            this._loadTemplate(this._sTenantId, templateId, sectionId);
+            var tenantId = this._sTenantId;
+            debugger
+            this._loadTemplate(tenantId, templateId, sectionId);
         },
         _loadTemplate: function(tenant_id, templateId, sectionId){
             var input = {};

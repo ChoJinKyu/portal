@@ -8,13 +8,13 @@
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
 	</VBox>
-	<VBox height="3.5rem"><Label text="INSPECTION FLAG"/>
+	<VBox height="3.5rem"><Label text="INSPECTION FLAG" required="true"/>
 		<Switch state="{tmpCcDpMdSpec>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
 	</VBox>
-	<VBox height="3.5rem"><Label text="ASSEMBLY APPROVAL FLAG"/>
+	<VBox height="3.5rem"><Label text="ASSEMBLY APPROVAL FLAG" required="true"/>
 		<Switch state="{tmpCcDpMdSpec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
@@ -50,8 +50,8 @@
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
 	</VBox>
-	<VBox height="3.5rem"><Label text="MOLD WEIGHT"/>
-		<Input value="{tmpCcDpMdSpec>/mold_weight}"/>
+	<VBox height="3.5rem"><Label text="MOLD WEIGHT" required="true"/>
+		<Input value="{tmpCcDpMdSpec>/mold_weight}" required="true"/>
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
@@ -68,8 +68,8 @@
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
 	</VBox>
-	<VBox height="3.5rem"><Label text="ORDER QTY"/>
-		<Input value="{tmpCcDpMdSpec>/order_qty}"/>
+	<VBox height="3.5rem"><Label text="ORDER QTY" required="true"/>
+		<Input value="{tmpCcDpMdSpec>/order_qty}" required="true"/>
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
@@ -205,7 +205,18 @@
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
 	</VBox>
-	<VBox height="3.5rem"><Label text="MOLD TYPE CODE"/>
+	<VBox height="3.5rem"><Label text="MOLD TYPE CODE" required="true"/>
+		<Select   width="100%" forceSelection="false"			selectedKey="{tmpCcDpMdSpec>/mold_type_code}"
+			items="{
+						path : 'util>/Code',
+						filters : [
+							{path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+							{path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+						]
+					}"
+			editable="true">
+			<core:Item key="{util>code}" text="{util>code_name}" />
+		</Select>
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>

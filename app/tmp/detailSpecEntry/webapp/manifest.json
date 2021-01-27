@@ -41,7 +41,7 @@
         }
       },
       "tmpMgrService": {
-        "uri": "srv-api/odata/v2/tmp.TmpMgrService/",
+        "uri": "srv-api/odata/v2/tmp.Tmp1MgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
