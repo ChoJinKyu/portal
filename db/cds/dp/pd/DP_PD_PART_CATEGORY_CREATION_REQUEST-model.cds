@@ -21,3 +21,24 @@ entity Pd_Part_Category_Creation_Request {
     create_category_code : String(40)   @title: '생성카테고리코드' ;	
 }	
 extend Pd_Part_Category_Creation_Request with util.Managed;
+
+@cds.persistence.exists
+entity Pd_Part_Category_Creation_Request_View {
+  key  tenant_id                             : String;
+  key  company_code                          : String;
+  key  org_type_code                         : String;
+  key  org_code                              : String;
+  key  request_number                        : String;
+  key  category_group_code                   : String;
+        request_title                        : String;
+        request_category_name                : String;
+        similar_category_code                : String;
+        similar_category_name                : String;
+        requestor_empno                      : String;
+        request_date_time                    : DateTime;
+        attch_group_number                   : String;
+        progress_status_code                 : String;
+        creator_empno                        : String;
+        create_category_code                 : String;
+        create_category_name                 : String;
+}
