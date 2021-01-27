@@ -3,7 +3,7 @@ using {cm.Approver as arlApprover} from '../../../../../db/cds/cm/CM_APPROVER-mo
 using {cm.Referer as arlReferer} from '../../../../../db/cds/cm/CM_REFERER-model';
 using {sp.VI_Base_Price_Aprl_Item as arlItem} from '../../../../../db/cds/sp/vi/SP_VI_BASE_PRICE_APRL_ITEM-model';
 using {sp.Vi_Base_Price_Aprl_Dtl as arlDetail} from '../../../../../db/cds/sp/vi/SP_VI_BASE_PRICE_APRL_DTL-model';
-//using {sp.Vi_Base_Price_Aprl_Type as arlTyp} from '../../../../../db/cds/sp/vi/SP_VI_BASE_PRICE_APRL_TYPE-model';
+using {sp.Vi_Base_Price_Aprl_Type as arlTyp} from '../../../../../db/cds/sp/vi/SP_VI_BASE_PRICE_APRL_TYPE-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
@@ -27,6 +27,12 @@ service BasePriceAprlService {
 
     entity Base_Price_Aprl_Master        as
         select from arlMasterSuper sup
+        inner join arlItem sub
+            on sup.tenant_id = sub.tenant_id
+            and sup.approval_number = sub.approval_number
+        inner join arlTyp typ 
+            on sup.tenant_id = typ.tenant_id
+            and sup.approval_number = typ.approval_number    
         inner join employee emp
             on sup.tenant_id = emp.tenant_id
             and sup.requestor_empno = emp.employee_number
@@ -35,7 +41,7 @@ service BasePriceAprlService {
             and emp.department_id = dept.department_id
         left outer join codeLng as cd01
             on cd01.tenant_id = sup.tenant_id
-            and cd01.group_code = 'SP_VI_NET_PRICE_TYPE_CODE'
+            and cd01.group_code = 'SP_VI_APPROVAL_TYPE'
             and cd01.code = sup.approval_type_code
             and cd01.language_cd = 'KO'
         left outer join codeLng as cd02
@@ -43,6 +49,11 @@ service BasePriceAprlService {
             and cd02.group_code = 'CM_APPROVE_STATUS'
             and cd02.code = sup.approve_status_code
             and cd02.language_cd = 'KO'
+        left outer join codeLng as cd03    
+            on cd03.tenant_id = typ.tenant_id
+            and cd03.group_code = 'SP_VI_NET_PRICE_TYPE_CODE'
+            and cd03.code = typ.net_price_type_code
+            and cd03.language_cd = 'KO'
         {
             key sup.tenant_id,
             key sup.approval_number,
@@ -57,6 +68,8 @@ service BasePriceAprlService {
                 sup.approval_contents,
                 sup.approve_status_code,
                 cd02.code_name as approve_status_code_nm  : String(240),
+                typ.net_price_type_code, 
+                cd03.code_name as net_price_type_code_nm  : String(240),
                 sup.requestor_empno,
                 emp.user_local_name        as requestor_local_nm      : String(240),
                 emp.job_title              as requestor_job_title     : String(100),
