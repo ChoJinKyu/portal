@@ -1,5 +1,3 @@
-jQuery.sap.require("sap.ui.core.util.Export");
-jQuery.sap.require("sap.ui.core.util.ExportTypeCSV");
 sap.ui.define([
     "./BaseController",
     "sap/ui/core/routing/History",
@@ -25,15 +23,13 @@ sap.ui.define([
     'sap/m/Label',
     'sap/m/SearchField',
     "ext/lib/util/Multilingual",
-    'sap/ui/core/util/Export',
-    'sap/ui/core/util/ExportTypeCSV',
     "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/ExcelUtil",
     "ext/lib/util/Validator",
     "sap/ui/model/Sorter"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
-    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
+    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, ODataModel, ExcelUtil
     , Validator, Sorter) {
     "use strict";
     /**
