@@ -194,30 +194,6 @@ sap.ui.define([
             this.byId("ceateVpCategorytree").close();
         },
 
-        
-        resetValue: function () {
-            this.getView().byId("pop_higher_level_path").setText("");
-            this.getView().byId("pop_operation_unit_name").setText("");
-            this.getView().byId("pop_operation_unit_name1").setText("");
-            this.getView().byId("pop_vendor_pool_local_name").setValue("");
-            this.getView().byId("pop_vendor_pool_english_name").setValue("");
-            this.getView().byId("pop_vendor_pool_desc").setValue("");
-            this.getView().byId("pop_repr_department_code").setValue("");
-            // this.getView().byId("pop_repr_department_code").setSelectedKey("");
-            // this.getView().byId("general_industry_class_code").setSelectedKey("");
-            this.getView().byId("pop_industry_class_code").setSelectedKey("");
-            this.getView().byId("pop_inp_type_code").setSelectedKey("");
-            this.getView().byId("pop_plan_base").setSelectedKey("");
-            this.getView().byId("pop_regular_evaluation_flag").setState(false);
-            this.getView().byId("pop_sd_exception_flag").setState(false);
-            this.getView().byId("pop_vendor_pool_apply_exception_flag").setState(false);
-            this.getView().byId("pop_maker_material_code_mngt_flag").setState(false);
-            this.getView().byId("pop_equipment_grade_code").setSelectedKey("");
-            this.getView().byId("pop_equipment_type_code").setSelectedKey("");
-            this.getView().byId("pop_dom_oversea_netprice_diff_rate").setValue("");
-            this.getView().byId("pop_domestic_net_price_diff_rate").setValue("");
-        },
-
         handleTable: function (event) {
 
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
@@ -422,9 +398,6 @@ sap.ui.define([
 
         /*
          *  Search 영역에서 입력 한 정보를 필터링 하기 위한 function
-         *  
-         *  Return Value : aSearchFilters
-         * 
          * */ 
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
