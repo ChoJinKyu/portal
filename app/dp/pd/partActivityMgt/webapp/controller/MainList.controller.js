@@ -152,11 +152,16 @@ sap.ui.define([
         },
 
         onCreate: function (oEvent) {
-            this.getRouter().navTo("midPage", {
-                tenantId: this.tenant_id,
-                companyCode: this.companyCode,
-                ideaNumber: 'new'
-            }, true);
+            // this.getRouter().navTo("midPage", {
+            //     tenantId: this.tenant_id,
+            //     companyCode: this.companyCode,
+            //     ideaNumber: 'new'
+            // }, true);
+            MessageBox.alert("준비중입니다.");
+        },
+
+        onCopy: function (oEvent) {
+           MessageBox.alert("준비중입니다.");
         },
 
         onExportPress: function (_oEvent) {
