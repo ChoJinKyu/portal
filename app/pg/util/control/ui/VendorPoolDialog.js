@@ -183,7 +183,6 @@ sap.ui.define([
                 );
             }
 
-            this.oTable.setBusy(true);
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpInfoLeafView", {
                 filters: aFilters,
                 sorters: [
@@ -192,7 +191,6 @@ sap.ui.define([
                 success: function (oData) {
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
-                    this.oTable.setBusy(false);
                 }, error: function(e){
                     console.log(e);
                 }.bind(this)
