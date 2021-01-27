@@ -1,0 +1,182 @@
+PROCEDURE DP_TC_SAVE_MCST_PART_LIST_PROC (IN I_TABLE TABLE(TENANT_ID NVARCHAR(5)
+					                                      ,PROJECT_CODE NVARCHAR(30)
+					                                      ,MODEL_CODE NVARCHAR(40) 
+					                                      ,VERSION_NUMBER NVARCHAR(30)
+					                                      ,MATERIAL_CODE NVARCHAR(40)
+					                                      ,COMMODITY_CODE NVARCHAR(100)
+					                                      ,UOM_CODE NVARCHAR(3)
+					                                      ,MATERIAL_REQM_QUANTITY DECIMAL
+					                                      ,BUYER_EMPNO NVARCHAR(30)
+					                                      ,DIRECT_REGISTER_FLAG BOOLEAN
+					                                      ,MAPPING_ID INTEGER
+					                                      ,CRUD_TYPE_CODE NVARCHAR(1)
+					                                      )
+					                     ,IN I_USER_ID NVARCHAR(255)
+					                     ,OUT O_MSG DP_TC_PROC_OUT_TYPE
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+/**************************************************************************
+Scrum          : VI/재료비관리
+Program Name   : DP_TC_SAVE_MCST_PART_LIST_PROC
+Creator        : Jeong Jeong Ho
+Description    : 재료비 프로젝트 BOM(Part) List 저장(insert/update/delete)
+History        : 2021-01-05 initial creation
+***************************************************************************/
+AS
+BEGIN
+    --Part List
+    DECLARE CURSOR old_mtl_cursor FOR
+        SELECT *
+          FROM :I_TABLE;
+    
+    DECLARE param_error CONDITION FOR SQL_ERROR_CODE 10000;
+    DECLARE txn_error CONDITION FOR SQL_ERROR_CODE 10001;
+    DECLARE var_rollback NVARCHAR(10) := 'ROLLBACK';
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            EXEC (:var_rollback);
+            --O_RETURN_CODE := ::SQL_ERROR_CODE;
+            --O_RETURN_MSG := ::SQL_ERROR_MESSAGE;            
+            O_MSG = SELECT 'NG' RETURN_CODE, ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE RETURN_MSG FROM DUMMY;
+        END;
+  
+    IF IFNULL(:I_USER_ID, '-1') = '-1' OR TRIM(:I_USER_ID ) = '' THEN
+        SIGNAL param_error SET MESSAGE_TEXT = 'Param Error.(Please Check User Info)';
+    END IF;
+    
+    
+    --삭제 Data중 Mapping Detail 정보 제거
+    BEGIN
+	    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+        	SIGNAL txn_error SET MESSAGE_TEXT = 'Delete BOM Mapping Detail Info Error.';
+        END;
+        
+        DELETE
+          FROM DP_TC_MCST_PROJECT_PART_MAP_DTL pmd
+         WHERE EXISTS (SELECT 1
+         	             FROM :I_TABLE it
+         	            WHERE it.CRUD_TYPE_CODE = 'D'
+         	              AND it.TENANT_ID = pmd.TENANT_ID
+         	              AND it.MAPPING_ID = pmd.MAPPING_ID
+         	              AND it.MAPPING_ID IS NOT NULL);
+    END;
+    
+    --삭제 Data중 Mapping Master 정보 제거
+    BEGIN
+	    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+        	SIGNAL txn_error SET MESSAGE_TEXT = 'Delete BOM Mapping Master Info Error.';
+        END;
+        
+        DELETE
+          FROM DP_TC_MCST_PROJECT_PART_MAP_MST pmm
+         WHERE EXISTS (SELECT 1
+         	             FROM :I_TABLE it
+         	            WHERE it.CRUD_TYPE_CODE = 'D'
+         	              AND it.TENANT_ID = pmm.TENANT_ID
+         	              AND it.MAPPING_ID = pmm.MAPPING_ID
+         	              AND it.MAPPING_ID IS NOT NULL);
+    END;
+    
+    --Delete Part(CRUD_TYPE_CODE=D)
+    BEGIN
+	    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+        	SIGNAL txn_error SET MESSAGE_TEXT = 'Delete Mcst Project Part List Error.';
+        END;
+        
+        DELETE
+          FROM DP_TC_MCST_PROJECT_PART_LIST ppl
+         WHERE EXISTS (SELECT 1
+                         FROM :I_TABLE it
+         	            WHERE it.CRUD_TYPE_CODE = 'D'
+         	              AND it.TENANT_ID = ppl.TENANT_ID
+         	              AND it.PROJECT_CODE = ppl.PROJECT_CODE
+         	              AND it.MODEL_CODE = ppl.MODEL_CODE
+         	              AND it.VERSION_NUMBER = ppl.VERSION_NUMBER
+         	              AND it.MATERIAL_CODE = ppl.MATERIAL_CODE);
+    END;
+    
+    
+    --Delete Part(CRUD_TYPE_CODE=D)
+    BEGIN
+	    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+        	SIGNAL txn_error SET MESSAGE_TEXT = 'Delete Mcst Project Part List Error.';
+        END;
+        
+        MERGE
+         INTO DP_TC_MCST_PROJECT_PART_LIST ppl
+        USING :I_TABLE it
+           ON 'D' != it.CRUD_TYPE_CODE
+		  AND ppl.TENANT_ID = it.TENANT_ID
+	      AND ppl.PROJECT_CODE = it.PROJECT_CODE
+	      AND ppl.MODEL_CODE = it.MODEL_CODE
+	      AND ppl.VERSION_NUMBER = it.VERSION_NUMBER
+	      AND ppl.MATERIAL_CODE = it.MATERIAL_CODE
+
+         WHEN MATCHED THEN
+	   UPDATE
+	      SET ppl.MATERIAL_REQM_QUANTITY = it.MATERIAL_REQM_QUANTITY
+	        , ppl.MATERIAL_REQM_DIFF_QUANTITY = CASE WHEN it.MATERIAL_REQM_QUANTITY = ppl.MATERIAL_REQM_QUANTITY
+	                                                 THEN null
+	                                                 ELSE it.MATERIAL_REQM_QUANTITY - ppl.MATERIAL_REQM_QUANTITY
+	                                            END
+	        , ppl.CHANGE_INFO_CODE = CASE WHEN it.MATERIAL_REQM_QUANTITY = ppl.MATERIAL_REQM_QUANTITY
+	                                      THEN null
+	                                      ELSE 'Req_Qty_Chg' --cm_code_dtl:DP_TC_CHANGE_INFO_CODE.Req_Qty_Chg(소요량변경)
+	                                 END
+            , ppl.LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
+            , ppl.UPDATE_USER_ID = I_USER_ID
+            , ppl.SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP
+
+         WHEN NOT MATCHED THEN
+	   INSERT 
+	   	    ( TENANT_ID
+            , PROJECT_CODE
+            , MODEL_CODE
+            , VERSION_NUMBER
+            , MATERIAL_CODE
+            , COMMODITY_CODE
+            , UOM_CODE
+            , MATERIAL_REQM_QUANTITY
+            , BUYER_EMPNO
+            --, SUPPLIER_CODE
+            , CHANGE_INFO_CODE
+            , DIRECT_REGISTER_FLAG
+            --, MAPPING_ID
+            , LOCAL_CREATE_DTM
+            , LOCAL_UPDATE_DTM
+            , CREATE_USER_ID
+            , UPDATE_USER_ID
+            , SYSTEM_CREATE_DTM
+            , SYSTEM_UPDATE_DTM
+			) VALUES (
+			  it.TENANT_ID
+			, it.PROJECT_CODE
+			, it.MODEL_CODE
+			, it.VERSION_NUMBER
+			, it.MATERIAL_CODE
+			, it.COMMODITY_CODE
+			, it.UOM_CODE
+			, it.MATERIAL_REQM_QUANTITY
+			, it.BUYER_EMPNO
+			, 'Add'
+			, true
+            , CURRENT_TIMESTAMP
+            , CURRENT_TIMESTAMP
+            , I_USER_ID  --TRIM(session_context('APPLICATIONUSER'))
+            , I_USER_ID
+            , CURRENT_TIMESTAMP
+            , CURRENT_TIMESTAMP
+            )
+        ;
+        
+    END;
+    
+    --O_RETURN_CODE := 'OK';
+    --O_RETURN_MSG := 'Success';
+    O_MSG = SELECT 'OK' RETURN_CODE, 'Success' RETURN_MSG FROM DUMMY;
+END;

@@ -49,14 +49,37 @@ service McstBomMgtV4Service {
     action TcUpdateMcstBomProc(inputData : UpdateDataType) returns OutputData;
 
     type DeleteDataType : {
-        tenant_id            : String(5);
-        project_code         : String(30);
-        model_code           : String(40);
-        version_number       : String(30);        
-        mapping_id           : Integer;
-        user_id              : String(255);
+        tenant_id      : String(5);
+        project_code   : String(30);
+        model_code     : String(40);
+        version_number : String(30);
+        mapping_id     : Integer;
+        user_id        : String(255);
     }
 
     //재료비 프로젝트 BOM Mapping 삭제
     action TcDeleteMcstBomProc(inputData : DeleteDataType) returns OutputData;
+
+    type SavePartListData : {
+        tenant_id              : String(5);
+        project_code           : String(30);
+        model_code             : String(40);
+        version_number         : String(30);
+        material_code          : String(40);
+        commodity_code         : String(100);
+        uom_code               : String(3);
+        material_reqm_quantity : Decimal;
+        buyer_empno            : String(30);
+        direct_register_flag   : Boolean;
+        mapping_id             : Integer;
+        crud_type_code         : String(1);
+    }
+
+    type SavePartListDataType : {
+        partList : array of SavePartListData;
+        user_id : String(255);
+    }
+
+    //재료비 프로젝트 Part List(BOM) 저장
+    action TcSaveMcstPartListProc(inputData : SavePartListDataType) returns OutputData;
 }

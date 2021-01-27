@@ -3,6 +3,7 @@ using {dp as mcstPartList} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJECT_
 using {dp as mcstPartMapMst} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJECT_PART_MAP_MST-model';
 using {dp as mcstPartMapDtl} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJECT_PART_MAP_DTL-model';
 using {dp as mtlMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
+using {dp as mtlOrg} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
 using {dp as uom} from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 
@@ -17,6 +18,32 @@ service McstBomMgtService {
 
     @readonly
     entity Hr_Department            as projection on hrDept.Hr_Department;
+
+    view Org_Material as
+        select key msi.tenant_id
+             , key mmo.company_code
+             , key mmo.org_type_code
+             , key mmo.org_code
+             , key msi.material_code
+             , msi.material_type_code
+             , msi.material_desc
+             , msi.material_spec
+             , msi.base_uom_code
+             , msi.material_group_code
+             , msi.purchasing_uom_code
+             , msi.variable_po_unit_indicator
+             , msi.material_class_code
+             , msi.commodity_code
+             , msi.maker_part_number
+             , msi.maker_code
+             , msi.maker_part_profile_code
+             , msi.maker_material_code
+             , msi.delete_mark
+             , mmo.buyer_empno
+          from mtlMst.Mm_Material_Mst msi
+     left join mtlOrg.Mm_Material_Org mmo
+            on msi.tenant_id = mmo.tenant_id
+           and msi.material_code = mmo.material_code;
 
     view PartListView as
         select key ppl.tenant_id
