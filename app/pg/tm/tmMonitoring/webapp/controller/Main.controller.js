@@ -30,11 +30,8 @@ sap.ui.define([
             onInit: function () {
                 var oMultilingual = new Multilingual();
                 this.setModel(oMultilingual.getModel(), "I18N");
-
                 this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
-
                 this.getView().byId("tenant_combo").fireSelectionChange();
-
             },
 
             /** table excel export
@@ -77,7 +74,6 @@ sap.ui.define([
             },
 
             /** table columns dialog
-            * @private 
             */
             _getSmartTable: function () {
                 if (!this._oSmartTable) {
@@ -120,8 +116,6 @@ sap.ui.define([
                     mBindingParams.filters.push(new Filter([]));
                 }
                 mBindingParams.filters.push(new Filter(aSearchFilters, true));
-
-
 
             },
 
