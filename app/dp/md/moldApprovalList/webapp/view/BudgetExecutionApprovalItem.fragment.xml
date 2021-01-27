@@ -58,7 +58,7 @@
 				</VBox>
 				<VBox height="6em">
 					<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
-                    <!-- edit Mode -->
+                    <!-- Md_Asset > acq_department_code -->
 					<Input id="acquisition_department" 
                            value="{mdCommon>/acq_department_code_nm}"
                           
@@ -304,7 +304,8 @@
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/>
+							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/> 
+                            <!-- Md_Asset > asset_type_code -->
 							<table:template>
 								<Select id="b_asset_type_code" 
                                         required="true" 
