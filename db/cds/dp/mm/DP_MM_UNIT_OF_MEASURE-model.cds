@@ -36,7 +36,7 @@ entity Mm_Unit_Of_Measure {
     conversion_addition_constant : Decimal(10,0)   @title: '환산 추가 상수' ;	
     decplaces_rounding : Decimal(10,0)   @title: '소수자리수 반올림' ;    	
     conversion_rate : Decimal   @title: '환산비율' ;
-    system_uom_code : String(5) @title: 'SAP UOM Code(PK)';
+ /*   system_uom_code : String(5) @title: 'SAP UOM Code(PK)';
     system_uom_name : String(30) @title: 'SAP UOM Name';
     commercial_uom_code : String(3)   @title: '상업UOM코드' ;	
     technical_uom_code : String(6)   @title: '기술UOM코드' ;	
@@ -47,6 +47,7 @@ entity Mm_Unit_Of_Measure {
     uom_iso_primary_code_flag : Boolean   @title: 'UOM ISO 1차코드여부' ;	
     commercial_unit_flag : Boolean   @title: '상업단위여부' ;	
     value_base_commitment_flag : Boolean   @title: '값기준 약정 여부' ;	
+*/    
 }	
 
 extend Mm_Unit_Of_Measure with util.Managed;

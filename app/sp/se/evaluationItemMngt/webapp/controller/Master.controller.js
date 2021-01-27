@@ -256,13 +256,39 @@ sap.ui.define([
                     }
                 });
             }
+            , onSelectionChangeOrgCode : function(oEvent){
+                var sOrgCode, oControl;
+
+                oControl = oEvent.getSource();
+                sOrgCode = oControl.getSelectedKey();
+
+                if(!sOrgCode){
+                    return;
+                }
+
+                this._bindUnitComboItem(sOrgCode);
+            }
+            , onSelectionChangeUnitCode : function(oEvent){
+                var sOrgCode, sEvalOperationUnitCode, oControl, oComboOrgCode;
+                
+                oControl = oEvent.getSource();
+                oComboOrgCode = this.byId("orgCode");
+                sOrgCode = oComboOrgCode.getSelectedKey();
+                sEvalOperationUnitCode = oControl.getSelectedKey();
+
+                if(!sEvalOperationUnitCode){
+                    return;
+                }
+
+                this._bindEavluTypeItem(sOrgCode, sEvalOperationUnitCode);
+            }
             /***
              * 신규 생성 이벤트
              * @param oEvent - 이벤트 객체
              * @param sBtnGubun - 버튼 구분자
              */
             , onPressCreate : function(oEvent, sBtnGubun){
-                var oNavParam, oTreeTable, aSelectedIdx;
+                var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel;
 
                 oTreeTable = this.byId("treeTable");
                 aSelectedIdx = oTreeTable.getSelectedIndices();
@@ -280,6 +306,15 @@ sap.ui.define([
                 }else if(sBtnGubun === "LowLevel"){
                     oNavParam.level = "low";
                 }
+                oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
+                oRowData = oContext.getObject();
+                oViewModel = this.getView().getModel("viewModel");
+
+                oViewModel.setProperty("/Detail", {
+                    Header : oRowData,
+                    NewHeader : {}
+                });
+
                 //leaf
                 this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
             }
@@ -470,7 +505,7 @@ sap.ui.define([
                 });
 
             }
-
+            
             , onPressCollapseAll : function(){
                 var oTreeTable;
                 oTreeTable = this.byId("treeTable");

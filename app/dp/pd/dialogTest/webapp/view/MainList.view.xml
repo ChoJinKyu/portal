@@ -1,0 +1,164 @@
+<mvc:View controllerName="dp.pd.dialogTest.controller.MainList" 
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    height="100%">
+
+    <Page title="팝업 테스트">
+        <content>
+
+            <VBox>
+
+                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" class="searchBox"
+                    adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="Idea Manager Dialog(Single)" labelFor="searchIdeaManagerInput"></Label>
+                            <Input 
+                                id="searchIdeaManagerInput"
+                                width="100%"
+                                placeholder="Idea Manager Dialog(Single)"
+                                showValueHelp="true"
+                                valueHelpRequest=".onDialogIdeaManagerPress"/>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Idea Manager Dialog(Multi)" labelFor="searchIdeaManagerMultiInput"></Label>
+                                <MultiInput 
+                                    id="searchIdeaManagerMultiInput"
+                                    width="100%"
+                                    placeholder="Idea Manager Dialog(Multi)"
+                                    showValueHelp="true" 
+                                    valueHelpRequest=".onDialogMultiIdeaManagerPress">
+                                </MultiInput>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Hscode Dialog(Single)" labelFor="searchHsCodeInput"></Label>
+                            <Input 
+                                id="searchHsCodeInput"
+                                width="100%"
+                                placeholder="Hscode Dialog(Single)"
+                                showValueHelp="true"
+                                valueHelpRequest=".onDialogHsCodePress"/>
+                                <layoutData>
+                                    <layout:GridData
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Hscode Dialog(Multi)" labelFor="searchHsCodeMultiInput"></Label>
+                                <MultiInput 
+                                    id="searchHsCodeMultiInput"
+                                    width="100%"
+                                    placeholder="Hscode Dialog(Multi)"
+                                    showValueHelp="true" 
+                                    valueHelpRequest=".onDialogMultiHsCodePress">
+                                </MultiInput>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Material Class Dialog(Single)" labelFor="searchMaterialClassInput"></Label>
+                            <Input 
+                                id="searchMaterialClassInput"
+                                placeholder="Material Class Dialog(Single)"
+                                showValueHelp="true"
+                                valueHelpRequest=".onDialogMaterialClassPress"/>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Material Class Dialog(Multi)" labelFor="searchMaterialClassMultiInput"></Label>
+                                <MultiInput 
+                                    id="searchMaterialClassMultiInput"
+                                    placeholder="Material Class Dialog(Multi)"
+                                    showValueHelp="true" 
+                                    valueHelpRequest=".onDialogMultiMaterialClassPress">
+                                </MultiInput>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Material Commodity Dialog(Single)" labelFor="searchMaterialCommodityInput"></Label>
+                                <Input 
+                                    id="searchMaterialCommodityInput"
+                                    placeholder="Material Commodity Dialog(Single)"
+                                    showValueHelp="true"
+                                    valueHelpRequest=".onDialogMaterialCommodityPress"/>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Material Commodity Dialog(Multi)" labelFor="searchMaterialCommodityMultiInput"></Label>
+                                <MultiInput 
+                                    id="searchMaterialCommodityMultiInput"
+                                    placeholder="Material Commodity Dialog(Multi)"
+                                    showValueHelp="true" 
+                                    valueHelpRequest=".onDialogMultiMaterialCommodityPress">
+                                </MultiInput>
+                            <layoutData>
+                                <layout:GridData 
+                                    moveForward="XL1 L1 M1 S1"
+                                    span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Material Group Dialog(Single)" labelFor="searchMaterialGroupInput"></Label>
+                                <Input 
+                                    id="searchMaterialGroupInput"
+                                    placeholder="Material Group Dialog(Single)"
+                                    showValueHelp="true"
+                                    valueHelpRequest=".onDialogMaterialGroupPress"/>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Material Group Dialog(Multi)" labelFor="searchMaterialGroupMultiInput"></Label>
+                                <MultiInput 
+                                    id="searchMaterialGroupMultiInput"
+                                    placeholder="Material Group Dialog(Multi)"
+                                    showValueHelp="true" 
+                                    valueHelpRequest=".onDialogMultiMaterialGroupPress">
+                                </MultiInput>
+                            <layoutData>
+                                <layout:GridData 
+                                    moveForward="XL1 L1 M1 S1"
+                                    span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </VBox>
+
+        </content>
+        <footer>
+        </footer>
+    </Page>
+</mvc:View>

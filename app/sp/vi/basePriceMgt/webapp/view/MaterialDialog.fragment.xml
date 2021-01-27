@@ -1,0 +1,108 @@
+<core:FragmentDefinition
+    class="sapUiSizeCompact"    
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+    displayBlock="true">
+	
+	<Dialog title="{I18N>/MATERIAL_CODE}"
+            contentWidth="50%"
+            contentHeight="50%">
+		<content>
+        <!-- <HBox width="100%">
+            <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop"> -->
+                <!-- <HBox>
+                    <VBox justifyContent="Center" class="sapUiSmallMarginEnd" >
+                        <Label text="Material Code : " />
+                    </VBox>
+                    <Input value="" />
+                    <Button text="Search" press="" class="sapUiSmallMarginBegin" />
+                </HBox> -->
+                <!-- Material Code List 시작 -->
+                <Table 
+                    id="materialCodeTable"
+                    items="{dialogModel>/materialCode}"
+                    mode="SingleSelectMaster"
+                    selectionChange=".onSelectDialogRow" >
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <content>
+                                <Title text="{I18N>/MATERIAL_CODE_LIST}" level="H2" />
+                                <ToolbarSpacer />
+                                <SearchField search=".onGetMaterialCodeDialogData" width="15rem">
+                                    <customData>
+                                        <core:CustomData key="dialog" value="materialCode" />
+                                    </customData>
+                                </SearchField>
+                            </content>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column hAlign="Center" width="4rem" >
+                            <header>
+                                <Label text="{I18N>/BUSINESS_DIVISION}" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="7rem" >
+                            <header>
+                                <Label text="{I18N>/MATERIAL_CODE}" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="14rem" >
+                            <header>
+                                <Label text="{I18N>/DESCRIPTION}" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="{I18N>/SPEC_DESC}" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="3rem" >
+                            <header>
+                                <Label text="{I18N>/UOM}"/>                            
+                            </header>
+                        </Column>                                                                                                 
+                        <Column hAlign="Center" width="3rem" >
+                            <header>
+                                <Label text="{I18N>/UIT}"/>                            
+                            </header>
+                        </Column>                                                                                                 
+                        <Column hAlign="Center" width="8rem" >
+                            <header>
+                                <Label text="{I18N>/ITEM_STATUS}"/>                            
+                            </header>
+                        </Column>                                                                                                 
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{dialogModel>org_code}"/>
+                                <Text text="{dialogModel>material_code}"/>
+                                <Text text="{dialogModel>material_desc}"/>
+                                <Text text="{dialogModel>material_spec}"/>
+                                <Text text="{dialogModel>base_uom_code}"/>
+                                <Text text="{dialogModel>uit}"/>
+                                <Text text="{dialogModel>item_status}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                <!-- Material Code List 끝 -->        
+            <!-- </VBox>
+        </HBox> -->
+		</content>
+        <beginButton>
+            <Button text="Close" press=".onClose" />
+        </beginButton>
+        <!-- <endButton>
+            <Button  text="Apply" 
+                type="Emphasized"
+                press=".onDailogRowDataApply" />
+        </endButton> -->
+	</Dialog>
+</core:FragmentDefinition>

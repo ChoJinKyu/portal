@@ -13,21 +13,21 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/sp.fundingNotifyService/",
+                "uri": "srv-api/odata/v2/sp.FundingNotifyService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
             "fundingAppService": {
-                "uri": "srv-api/odata/v2/sp.fundingApplicationService/",
+                "uri": "srv-api/odata/v2/sp.FundingApplicationService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
             "OrgCodeListViewService": {
-                "uri": "srv-api/odata/v4/sp.fundingApplicationSupV4Service/",
+                "uri": "srv-api/odata/v4/sp.FundingApplicationSupV4Service/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"

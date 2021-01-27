@@ -25,11 +25,11 @@ entity It_Mst_Import_Exch_Rate {
     key company_code       : String(10) not null @title : '회사코드';
     key org_type_code      : String(30) not null @title : '조직유형코드';
     key org_code           : String(10) not null @title : '조직코드';
-    key currency_code      : String(8) not null  @title : '통화코드';
+    key currency_code      : String(3) not null  @title : '통화코드';
     key exrate_start_date  : Date not null       @title : '환율시작일자';
         exrate_end_date    : Date                @title : '환율종료일자';
         exrate             : Decimal(20, 10)     @title : '환율';
-        currency_unit_rate : Decimal(9, 0)       @title : '통화단위비율';
+        currency_unit_rate : Decimal             @title : '통화단위비율';
 }
 
 extend It_Mst_Import_Exch_Rate with util.Managed;

@@ -23,7 +23,7 @@ entity Sm_Country_Mst {
     key tenant_id        : String(5) not null  @title : '테넌트ID';
     key country_code     : String(2) not null  @title : '국가코드';
         country_iso_code : String(3) not null  @title : '국가ISO코드';
-        country_name     : String(30) not null @title : '국가명';
+        country_name     : String(240) not null @title : '국가명';
         region_name      : String(240)         @title : '지역명';
         iso_flag         : String(1)           @title : 'ISO Flag';
         eu_flag          : String(1)           @title : 'EU Flag';

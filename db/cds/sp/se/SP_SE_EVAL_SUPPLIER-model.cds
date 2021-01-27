@@ -9,7 +9,6 @@ entity Se_Eval_Supplier {
   key supplier_code       : String(10)  not null @title: '공급업체코드' ;	
       supplier_group_code : String(30)           @title: '공급업체그룹코드' ;	
       supplier_group_name : String(50)           @title: '공급업체그룹명' ;	
-      option_article_name : String(240)          @title: '선택항목명' ;	
       repr_supplier_flag  : Boolean              @title: '대표공급업체여부' ;	
 }	
 extend Se_Eval_Supplier with util.Managed;	

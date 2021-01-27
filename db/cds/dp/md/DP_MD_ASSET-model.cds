@@ -5,9 +5,8 @@ using util from '../../cm/util/util-model';
 // 자산
 entity Md_Asset {
     key tenant_id            : String(5) not null   @title : '테넌트ID';
-    key asset_id             : String(100) not null @title : '자산ID';
-        mold_id              : String(100) not null @title : '금형ID';
-        asset_number         : String(100) not null @title : '자산번호';
+    key mold_id              : String(100) not null @title : '금형ID';
+        asset_number         : String(100)          @title : '자산번호';
         cust_asset_type_code : String(30)           @title : '고객자산유형코드';
         asset_type_code      : String(30)           @title : '자산유형코드';
         asset_status_code    : String(30)           @title : '자산상태코드';

@@ -28,14 +28,16 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oMaterialClassCode = new SearchField({ placeholder: "자재 클래스 명(x)"});
+            this.oMaterialClassCode = new SearchField({ 
+                placeholder : this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")
+            });
             
             this.oMaterialClassCode.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
                     items: [
-                        new Label({ text: "자재 클래스 명(x)"}),
+                        new Label({ text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")}),
                         this.oMaterialClassCode
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M6 S12"})
@@ -47,12 +49,12 @@ sap.ui.define([
             return [
                 new Column({
                     width: "30%",
-                    label: new Label({text: "자재 클래스 코드(x)"}),
+                    label: new Label({text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")}),
                     template: new Text({text: "{material_class_code}"})
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: "자재 클래스 명(x)"}),
+                    label: new Label({text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/NAME")}),
                     template: new Text({text: "{material_class_name}"})
                 })
             ];
@@ -65,7 +67,7 @@ sap.ui.define([
                 ];
 
                 if(sMaterialClassCode){
-                    aFilters.push(new Filter("tolower(material_class_name)", FilterOperator.Contains, "'" + sMaterialClassCode.toLowerCase().replace("'","''") + "'"));
+                    aFilters.push(new Filter("tolower(material_class_code)", FilterOperator.Contains, "'" + sMaterialClassCode.toLowerCase().replace("'","''") + "'"));
                 }
 
 

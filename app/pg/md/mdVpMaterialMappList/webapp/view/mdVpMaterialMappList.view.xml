@@ -9,6 +9,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:u="sap.ui.unified"
     height="100%">
 
 <f:DynamicPage id="page" 
@@ -175,74 +176,85 @@
          
       <f:content>
         <VBox>
-            <t:TreeTable 
-                id="treeTable"
-                filter="treetablefilter"
-                visibleRowCountMode="Auto"
-                enableSelectAll="false"
-                minAutoRowCount="16"
-                fixedColumnCount="3"
-                selectionBehavior="Row"
-                onAfterRendering="onAfterRendering"
-                enableColumnReordering="false"
-                rows="{
-                    path : 'list>/MdVpItemList',
-                    parameters : {
-                            arrayNames: ['nodes'],
-                            numberOfExpandedLevels: 4
-                    }
-                }">
+            <t:Table id="mainTable"
+                    selectionMode="MultiToggle"
+                    rows="{
+                        path: 'list>/MdVpMatrial',
+                        filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ]
+                    }"
+                    rowSelectionChange=".onCheck"
+                    visibleRowCount="15"
+                    fixedColumnCount="9"
+                    columnResize="onColumnResize">
                 <t:extension>
                     <OverflowToolbar>
                         <Title id="title" level="H2"/> 
                         <ToolbarSpacer/>
-                        <Button id="mainTableButtonAllClose" text="Collapse All" type="Transparent" press=".onMainTablecollapseAll" />
-                        <Button id="mainTableDeleteButton" text="Creation Request" type="Emphasized" press=".onMainTableDeleteButtonPress"/>
+                        <Button id="mainTableCancelButton" text="Cancel" type="Transparent" press=".onMainTableCancelButtonPress" />
+                        <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress"/>
                         <ToolbarSeparator/>
-                        
+                            <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
+                                            buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
+                            <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/>
                     </OverflowToolbar>
                 </t:extension>
                 
                 <t:columns>
-                    <t:Column label="Vendor Pool" width="15rem">    
+                    <t:Column id="mainStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px">
+                        <Label text="" textAlign="Center" width="100%"/>
                         <t:template>
-                            <!-- <Text text="{list>vendor_pool_local_name}" wrapping="false" /> -->
+                            <ObjectStatus icon="{
+                                path: 'list>_row_state_',
+                                formatter: '.formatter.toModelStateColumnIcon'
+                            }" />
+                            <!-- <Text text="{list>_row_state_}"></Text> -->
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="VP Lv.3" width="8rem" hAlign="Center" >    
+                        <t:template>
                             <Text text="{list>vendor_pool_local_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="대표부서명" width="10rem">    
+                    <t:Column label="자재코드" width="8rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>material_code}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="자재명" width="8rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>material_code_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="사용여부" width="6rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>use_flag}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="VP매핑여부" width="6rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>mapping_flag}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="공급업체코드" width="8rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>supplier_code}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="공급업체명" width="8rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>supplier_code_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="대표부서명" width="8rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>department_local_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="상태" width="8rem">    
-                        <t:template>
-                            <Text text="{list>confirmed_status_code}" wrapping="false" />
-                        </t:template>
-                    </t:Column>
                 </t:columns>
-                <t:columns id="tableColumns">
-					<!-- <t:Column headerSpan="2" hAlign="Center">
-						<t:multiLabels>
-							<Label text="Contact"/>
-							<Label text="Phone" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-                            <Text text="{list>attrItemName1}" wrapping="false" />
-						</t:template>
-					</t:Column>
-					<t:Column>
-						<t:multiLabels>
-							<Label text="Contact"/>
-							<Label text="Phone22" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-                            <Text text="{list>attrItemName1}" wrapping="false" />
-						</t:template>
-					</t:Column> -->
-                </t:columns>
-                    
-            </t:TreeTable> 
+                                  
+            </t:Table> 
         </VBox>
       </f:content>
     </f:DynamicPage>

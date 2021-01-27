@@ -9,38 +9,36 @@
  수정일자: 2021-01-20
 **************************************************************************/
 PROCEDURE SP_SF_FUNDING_APPL_DRAFT_PROC(
-	IN I_SAVE_DATA TABLE( 
-					FUNDING_APPL_NUMBER			   NVARCHAR(10),	--자금지원신청번호
-					FUNDING_NOTIFY_NUMBER          NVARCHAR(10),    --자금지원공고번호
-					SUPPLIER_CODE                  NVARCHAR(10),    --공급업체코드
-					TENANT_ID                      NVARCHAR(5),     --테넌트ID
-					COMPANY_CODE                   NVARCHAR(10),    --회사코드
-					ORG_TYPE_CODE                  NVARCHAR(2),     --조직유형코드
-					ORG_CODE                       NVARCHAR(10),    --조직코드
-					FUNDING_APPL_DATE              DATE,           	--자금지원신청일자
-					PURCHASING_DEPARTMENT_NAME     NVARCHAR(100),   --구매부서명
-					PYEAR_SALES_AMOUNT             DECIMAL,        	--전년매출금액
-					MAIN_BANK_NAME                 NVARCHAR(100),   --주요은행명
-					FUNDING_APPL_AMOUNT            DECIMAL,        	--자금지원신청금액
-					FUNDING_HOPE_YYYYMM            NVARCHAR(6),     --자금지원희망년월
-					REPAYMENT_METHOD_CODE          NVARCHAR(30),    --상환방법코드
-					APPL_USER_NAME                 NVARCHAR(240),   --신청사용자명
-					APPL_USER_TEL_NUMBER           NVARCHAR(15),    --신청사용자전화번호
-					APPL_USER_EMAIL_ADDRESS        NVARCHAR(240),   --신청사용자이메일주소
-					FUNDING_REASON_CODE            NVARCHAR(30),    --자금지원사유코드
-					COLLATERAL_TYPE_CODE           NVARCHAR(30),    --담보구분코드
-					COLLATERAL_AMOUNT              DECIMAL,        	--담보금액
-					COLLATERAL_START_DATE          DATE,           	--담보시작일자
-					COLLATERAL_END_DATE            DATE,           	--담보종료일자
-					COLLATERAL_ATTCH_GROUP_NUMBER  NVARCHAR(100),   --담보첨부파일그룹번호
-					FUNDING_STEP_CODE              NVARCHAR(30),    --자금지원단계코드
-					FUNDING_STATUS_CODE            NVARCHAR(30)     --자금지원상태코드
-	)
-	,I_USER_ID NVARCHAR(30)
-	,OUT O_RESULT TABLE(RESULT_CODE NVARCHAR(2),
-					 ERR_TYPE NVARCHAR(20),
-					 ERR_CODE NVARCHAR(20),
-					 RTN_FUNDING_APPL_NUMBER NVARCHAR(10)
+	 IN I_FUNDING_APPL_NUMBER			NVARCHAR(10)	--자금지원신청번호
+	,IN I_FUNDING_NOTIFY_NUMBER          NVARCHAR(10)   --자금지원공고번호
+	,IN I_SUPPLIER_CODE                  NVARCHAR(10)   --공급업체코드
+	,IN I_TENANT_ID                      NVARCHAR(5)    --테넌트ID
+	,IN I_COMPANY_CODE                   NVARCHAR(10)   --회사코드
+	,IN I_ORG_TYPE_CODE                  NVARCHAR(2)    --조직유형코드
+	,IN I_ORG_CODE                       NVARCHAR(10)   --조직코드
+	,IN I_FUNDING_APPL_DATE              DATE           --자금지원신청일자
+	,IN I_PURCHASING_DEPARTMENT_NAME     NVARCHAR(100)  --구매부서명
+	,IN I_PYEAR_SALES_AMOUNT             DECIMAL        --전년매출금액
+	,IN I_MAIN_BANK_NAME                 NVARCHAR(100)  --주요은행명
+	,IN I_FUNDING_APPL_AMOUNT            DECIMAL        --자금지원신청금액
+	,IN I_FUNDING_HOPE_YYYYMM            NVARCHAR(6)    --자금지원희망년월
+	,IN I_REPAYMENT_METHOD_CODE          NVARCHAR(30)   --상환방법코드
+	,IN I_APPL_USER_NAME                 NVARCHAR(240)  --신청사용자명
+	,IN I_APPL_USER_TEL_NUMBER           NVARCHAR(15)   --신청사용자전화번호
+	,IN I_APPL_USER_EMAIL_ADDRESS        NVARCHAR(240)  --신청사용자이메일주소
+	,IN I_FUNDING_REASON_CODE            NVARCHAR(30)   --자금지원사유코드
+	,IN I_COLLATERAL_TYPE_CODE           NVARCHAR(30)   --담보구분코드
+	,IN I_COLLATERAL_AMOUNT              DECIMAL        --담보금액
+	,IN I_COLLATERAL_START_DATE          DATE           --담보시작일자
+	,IN I_COLLATERAL_END_DATE            DATE           --담보종료일자
+	,IN I_COLLATERAL_ATTCH_GROUP_NUMBER  NVARCHAR(100)  --담보첨부파일그룹번호
+	,IN I_FUNDING_STEP_CODE              NVARCHAR(30)   --자금지원단계코드
+	,IN I_FUNDING_STATUS_CODE            NVARCHAR(30)   --자금지원상태코드
+	,IN I_USER_ID NVARCHAR(30)
+	,OUT O_RESULT TABLE(RESULT_CODE NVARCHAR(2)
+					   ,ERR_TYPE NVARCHAR(20)
+					   ,ERR_CODE NVARCHAR(20)
+					   ,RTN_FUNDING_APPL_NUMBER NVARCHAR(10)
 					 )
 )
 LANGUAGE SQLSCRIPT
@@ -55,171 +53,164 @@ BEGIN
 	--자금지원 신청번호
     DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10);
     
-    --저장데이터 커서
-    DECLARE CURSOR CUR_DATA FOR
-    SELECT *
-    FROM   :I_SAVE_DATA;	
     
+	--자금지원 신청번호 추출
+	V_FUNDING_APPL_NUMBER := :I_FUNDING_APPL_NUMBER;
 	
-	FOR REC_DATA AS CUR_DATA DO
 	
-		--자금지원 신청번호 추출
-		V_FUNDING_APPL_NUMBER := REC_DATA.FUNDING_APPL_NUMBER;
-		
-		
+	BEGIN
+		/************************************************
+		VALIDATION
+		************************************************/
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN
-			/************************************************
-			VALIDATION
-			************************************************/
-			DECLARE EXIT HANDLER FOR SQLEXCEPTION
-			BEGIN
-				O_RESULT =  SELECT 
-								'NG' AS RESULT_CODE
-								,'VALID_ERR' AS ERR_TYPE
-								,::SQL_ERROR_CODE AS ERR_CODE
-								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-							FROM DUMMY;
-			END;
-				
-			--조직코드 필수 체크1
-			IF (COALESCE(:I_SAVE_DATA.ORG_CODE[1],'') = '') THEN
-				SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'Not selected org.';  
-			END IF;
-		END;	
-			
-		
-		/***********************************************
-		저장처리 시작
-		**********************************************/
-		BEGIN
-			DECLARE EXIT HANDLER FOR SQLEXCEPTION
-			BEGIN
-				O_RESULT =  SELECT 
-								'NG' AS RESULT_CODE
-								,'SAVE_ERR' AS ERR_TYPE
-								,::SQL_ERROR_CODE AS ERR_CODE
-								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-							FROM DUMMY;
-			END;
-		
-			/***********************************************
-			자금지원 신청번호가 있는지 체크
-			 - 신청번호가 없으면 신규채번후 INSERT
-			 - 신청번호가 있으면 UPDATE
-			**********************************************/
-			IF (COALESCE(:V_FUNDING_APPL_NUMBER,'') = '') THEN
-			
-				/************************************************
-				자금지원 신청번호 신규 채번
-				************************************************/
-				SELECT 'A' || YEAR(CURRENT_DATE) || '-' || LPAD(SP_SF_FUNDING_APPLICATION_SEQ.NEXTVAL, 4, '0')
-				INTO V_FUNDING_APPL_NUMBER
-				FROM DUMMY
-				;
-				
-				
-				/************************************************
-				자금지원 신청 테이블 INSERT
-				************************************************/			
-				INSERT INTO SP_SF_FUNDING_APPLICATION (
-					 FUNDING_APPL_NUMBER				--자금지원신청번호
-					,FUNDING_NOTIFY_NUMBER              --자금지원공고번호
-					,SUPPLIER_CODE                      --공급업체코드
-					,TENANT_ID                          --테넌트ID
-					,COMPANY_CODE                       --회사코드
-					,ORG_TYPE_CODE                      --조직유형코드
-					,ORG_CODE                           --조직코드
-					,FUNDING_APPL_DATE                	--자금지원신청일자
-					,PURCHASING_DEPARTMENT_NAME         --구매부서명
-					,PYEAR_SALES_AMOUNT               	--전년매출금액
-					,MAIN_BANK_NAME                     --주요은행명
-					,FUNDING_APPL_AMOUNT              	--자금지원신청금액
-					,FUNDING_HOPE_YYYYMM                --자금지원희망년월
-					,REPAYMENT_METHOD_CODE              --상환방법코드
-					,APPL_USER_NAME                     --신청사용자명
-					,APPL_USER_TEL_NUMBER               --신청사용자전화번호
-					,APPL_USER_EMAIL_ADDRESS            --신청사용자이메일주소
-					,FUNDING_REASON_CODE                --자금지원사유코드
-					,COLLATERAL_TYPE_CODE               --담보구분코드
-					,COLLATERAL_AMOUNT                	--담보금액
-					,COLLATERAL_ATTCH_GROUP_NUMBER      --담보첨부파일그룹번호
-					,FUNDING_STEP_CODE                  --자금지원단계코드
-					,FUNDING_STATUS_CODE               	--자금지원상태코드       
-					,LOCAL_CREATE_DTM                    
-					,LOCAL_UPDATE_DTM                   
-					,CREATE_USER_ID         		
-					,UPDATE_USER_ID
-					,SYSTEM_CREATE_DTM
-					,SYSTEM_UPDATE_DTM
-				) VALUES (
-					 :V_FUNDING_APPL_NUMBER					--자금지원신청번호
-					,REC_DATA.FUNDING_NOTIFY_NUMBER         --자금지원공고번호
-					,REC_DATA.SUPPLIER_CODE                 --공급업체코드
-					,REC_DATA.TENANT_ID                     --테넌트ID
-					,REC_DATA.COMPANY_CODE                  --회사코드
-					,REC_DATA.ORG_TYPE_CODE                 --조직유형코드
-					,REC_DATA.ORG_CODE                      --조직코드
-					,CURRENT_TIMESTAMP              		--자금지원신청일자
-					,REC_DATA.PURCHASING_DEPARTMENT_NAME    --구매부서명
-					,REC_DATA.PYEAR_SALES_AMOUNT            --전년매출금액
-					,REC_DATA.MAIN_BANK_NAME                --주요은행명
-					,REC_DATA.FUNDING_APPL_AMOUNT           --자금지원신청금액
-					,REC_DATA.FUNDING_HOPE_YYYYMM           --자금지원희망년월
-					,'A'          							--상환방법코드
-					,REC_DATA.APPL_USER_NAME                --신청사용자명
-					,REC_DATA.APPL_USER_TEL_NUMBER          --신청사용자전화번호
-					,REC_DATA.APPL_USER_EMAIL_ADDRESS       --신청사용자이메일주소
-					,REC_DATA.FUNDING_REASON_CODE           --자금지원사유코드
-					,REC_DATA.COLLATERAL_TYPE_CODE          --담보구분코드
-					,REC_DATA.COLLATERAL_AMOUNT             --담보금액
-					,REC_DATA.COLLATERAL_ATTCH_GROUP_NUMBER --담보첨부파일그룹번호
-					,'S10'            						--자금지원단계코드
-					,'110'            						--자금지원상태코드
-					,CURRENT_TIMESTAMP
-					,CURRENT_TIMESTAMP
-					,:I_USER_ID
-					,:I_USER_ID
-					,CURRENT_TIMESTAMP
-					,CURRENT_TIMESTAMP
-				)
-				;
-				
-			ELSE
-			
-				/************************************************
-				자금지원 신청 테이블 UPDATE
-				************************************************/
-				UPDATE SP_SF_FUNDING_APPLICATION
-				SET 
-					 ORG_CODE						= REC_DATA.ORG_CODE							--조직코드
-					,TENANT_ID						= REC_DATA.TENANT_ID                    	--테넌트ID
-					,COMPANY_CODE                   = REC_DATA.COMPANY_CODE    					--회사코드
-					,ORG_TYPE_CODE                  = REC_DATA.ORG_TYPE_CODE    				--조직유형코드
-					,PURCHASING_DEPARTMENT_NAME		= REC_DATA.PURCHASING_DEPARTMENT_NAME		--구매부서명
-					,PYEAR_SALES_AMOUNT				= REC_DATA.PYEAR_SALES_AMOUNT				--전년매출금액
-					,MAIN_BANK_NAME					= REC_DATA.MAIN_BANK_NAME					--주요은행명
-					,FUNDING_APPL_AMOUNT			= REC_DATA.FUNDING_APPL_AMOUNT				--자금지원신청금액
-					,FUNDING_HOPE_YYYYMM			= REC_DATA.FUNDING_HOPE_YYYYMM				--자금지원희망년월
-					,APPL_USER_NAME					= REC_DATA.APPL_USER_NAME					--신청사용자명
-					,APPL_USER_TEL_NUMBER			= REC_DATA.APPL_USER_TEL_NUMBER				--신청사용자전화번호
-					,APPL_USER_EMAIL_ADDRESS		= REC_DATA.APPL_USER_EMAIL_ADDRESS			--신청사용자이메일주소
-					,FUNDING_REASON_CODE			= REC_DATA.FUNDING_REASON_CODE				--자금지원사유코드
-					,COLLATERAL_TYPE_CODE			= REC_DATA.COLLATERAL_TYPE_CODE				--담보구분코드
-					,COLLATERAL_AMOUNT				= REC_DATA.COLLATERAL_AMOUNT				--담보금액
-					,COLLATERAL_ATTCH_GROUP_NUMBER	= REC_DATA.COLLATERAL_ATTCH_GROUP_NUMBER	--담보첨부파일그룹번호
-					,LOCAL_CREATE_DTM				= CURRENT_TIMESTAMP
-					,LOCAL_UPDATE_DTM				= CURRENT_TIMESTAMP
-					,CREATE_USER_ID					= :I_USER_ID
-					,UPDATE_USER_ID					= :I_USER_ID
-					,SYSTEM_CREATE_DTM				= CURRENT_TIMESTAMP
-					,SYSTEM_UPDATE_DTM				= CURRENT_TIMESTAMP
-				WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
-				;         
-				
-			END IF;
-			
+			O_RESULT =  SELECT 
+							'NG' AS RESULT_CODE
+							,'VALID_ERR' AS ERR_TYPE
+							,::SQL_ERROR_CODE AS ERR_CODE
+							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+						FROM DUMMY;
 		END;
-	END FOR;
+			
+		--조직코드 필수 체크1
+		IF (COALESCE(:I_ORG_CODE,'') = '') THEN
+			SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'Not selected org.';  
+		END IF;
+	END;	
+		
+	
+	/***********************************************
+	저장처리 시작
+	**********************************************/
+	BEGIN
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			O_RESULT =  SELECT 
+							'NG' AS RESULT_CODE
+							,'SAVE_ERR' AS ERR_TYPE
+							,::SQL_ERROR_CODE AS ERR_CODE
+							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+						FROM DUMMY;
+		END;
+	
+		/***********************************************
+		자금지원 신청번호가 있는지 체크
+		 - 신청번호가 없으면 신규채번후 INSERT
+		 - 신청번호가 있으면 UPDATE
+		**********************************************/
+		IF (COALESCE(:V_FUNDING_APPL_NUMBER,'') = '') THEN
+		
+			/************************************************
+			자금지원 신청번호 신규 채번
+			************************************************/
+			SELECT 'A' || YEAR(CURRENT_DATE) || '-' || LPAD(SP_SF_FUNDING_APPLICATION_SEQ.NEXTVAL, 4, '0')
+			INTO V_FUNDING_APPL_NUMBER
+			FROM DUMMY
+			;
+			
+			
+			/************************************************
+			자금지원 신청 테이블 INSERT
+			************************************************/			
+			INSERT INTO SP_SF_FUNDING_APPLICATION (
+				 FUNDING_APPL_NUMBER				--자금지원신청번호
+				,FUNDING_NOTIFY_NUMBER              --자금지원공고번호
+				,SUPPLIER_CODE                      --공급업체코드
+				,TENANT_ID                          --테넌트ID
+				,COMPANY_CODE                       --회사코드
+				,ORG_TYPE_CODE                      --조직유형코드
+				,ORG_CODE                           --조직코드
+				,FUNDING_APPL_DATE                	--자금지원신청일자
+				,PURCHASING_DEPARTMENT_NAME         --구매부서명
+				,PYEAR_SALES_AMOUNT               	--전년매출금액
+				,MAIN_BANK_NAME                     --주요은행명
+				,FUNDING_APPL_AMOUNT              	--자금지원신청금액
+				,FUNDING_HOPE_YYYYMM                --자금지원희망년월
+				,REPAYMENT_METHOD_CODE              --상환방법코드
+				,APPL_USER_NAME                     --신청사용자명
+				,APPL_USER_TEL_NUMBER               --신청사용자전화번호
+				,APPL_USER_EMAIL_ADDRESS            --신청사용자이메일주소
+				,FUNDING_REASON_CODE                --자금지원사유코드
+				,COLLATERAL_TYPE_CODE               --담보구분코드
+				,COLLATERAL_AMOUNT                	--담보금액
+				,COLLATERAL_ATTCH_GROUP_NUMBER      --담보첨부파일그룹번호
+				,FUNDING_STEP_CODE                  --자금지원단계코드
+				,FUNDING_STATUS_CODE               	--자금지원상태코드       
+				,LOCAL_CREATE_DTM                    
+				,LOCAL_UPDATE_DTM                   
+				,CREATE_USER_ID         		
+				,UPDATE_USER_ID
+				,SYSTEM_CREATE_DTM
+				,SYSTEM_UPDATE_DTM
+			) VALUES (
+				 :V_FUNDING_APPL_NUMBER					--자금지원신청번호
+				,:I_FUNDING_NOTIFY_NUMBER         --자금지원공고번호
+				,:I_SUPPLIER_CODE                 --공급업체코드
+				,:I_TENANT_ID                     --테넌트ID
+				,:I_COMPANY_CODE                  --회사코드
+				,:I_ORG_TYPE_CODE                 --조직유형코드
+				,:I_ORG_CODE                      --조직코드
+				,CURRENT_TIMESTAMP              		--자금지원신청일자
+				,:I_PURCHASING_DEPARTMENT_NAME    --구매부서명
+				,:I_PYEAR_SALES_AMOUNT            --전년매출금액
+				,:I_MAIN_BANK_NAME                --주요은행명
+				,:I_FUNDING_APPL_AMOUNT           --자금지원신청금액
+				,:I_FUNDING_HOPE_YYYYMM           --자금지원희망년월
+				,'A'          							--상환방법코드
+				,:I_APPL_USER_NAME                --신청사용자명
+				,:I_APPL_USER_TEL_NUMBER          --신청사용자전화번호
+				,:I_APPL_USER_EMAIL_ADDRESS       --신청사용자이메일주소
+				,:I_FUNDING_REASON_CODE           --자금지원사유코드
+				,:I_COLLATERAL_TYPE_CODE          --담보구분코드
+				,:I_COLLATERAL_AMOUNT             --담보금액
+				,:I_COLLATERAL_ATTCH_GROUP_NUMBER --담보첨부파일그룹번호
+				,'S10'            						--자금지원단계코드
+				,'110'            						--자금지원상태코드
+				,CURRENT_TIMESTAMP
+				,CURRENT_TIMESTAMP
+				,:I_USER_ID
+				,:I_USER_ID
+				,CURRENT_TIMESTAMP
+				,CURRENT_TIMESTAMP
+			)
+			;
+			
+		ELSE
+		
+			/************************************************
+			자금지원 신청 테이블 UPDATE
+			************************************************/
+			UPDATE SP_SF_FUNDING_APPLICATION
+			SET 
+				 ORG_CODE						= :I_ORG_CODE							--조직코드
+				,TENANT_ID						= :I_TENANT_ID                    	--테넌트ID
+				,COMPANY_CODE                   = :I_COMPANY_CODE    					--회사코드
+				,ORG_TYPE_CODE                  = :I_ORG_TYPE_CODE    				--조직유형코드
+				,PURCHASING_DEPARTMENT_NAME		= :I_PURCHASING_DEPARTMENT_NAME		--구매부서명
+				,PYEAR_SALES_AMOUNT				= :I_PYEAR_SALES_AMOUNT				--전년매출금액
+				,MAIN_BANK_NAME					= :I_MAIN_BANK_NAME					--주요은행명
+				,FUNDING_APPL_AMOUNT			= :I_FUNDING_APPL_AMOUNT				--자금지원신청금액
+				,FUNDING_HOPE_YYYYMM			= :I_FUNDING_HOPE_YYYYMM				--자금지원희망년월
+				,APPL_USER_NAME					= :I_APPL_USER_NAME					--신청사용자명
+				,APPL_USER_TEL_NUMBER			= :I_APPL_USER_TEL_NUMBER				--신청사용자전화번호
+				,APPL_USER_EMAIL_ADDRESS		= :I_APPL_USER_EMAIL_ADDRESS			--신청사용자이메일주소
+				,FUNDING_REASON_CODE			= :I_FUNDING_REASON_CODE				--자금지원사유코드
+				,COLLATERAL_TYPE_CODE			= :I_COLLATERAL_TYPE_CODE				--담보구분코드
+				,COLLATERAL_AMOUNT				= :I_COLLATERAL_AMOUNT				--담보금액
+				,COLLATERAL_ATTCH_GROUP_NUMBER	= :I_COLLATERAL_ATTCH_GROUP_NUMBER	--담보첨부파일그룹번호
+				,LOCAL_CREATE_DTM				= CURRENT_TIMESTAMP
+				,LOCAL_UPDATE_DTM				= CURRENT_TIMESTAMP
+				,CREATE_USER_ID					= :I_USER_ID
+				,UPDATE_USER_ID					= :I_USER_ID
+				,SYSTEM_CREATE_DTM				= CURRENT_TIMESTAMP
+				,SYSTEM_UPDATE_DTM				= CURRENT_TIMESTAMP
+			WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+			;         
+			
+		END IF;
+		
+	END;
+	
 	
 	/***********************************************
 	저장처리 끝

@@ -31,12 +31,16 @@ using {pg.It_Mst_Cost_Center as CctrMst} from '../../../../db/cds/pg/it/PG_IT_MS
 using {pg.It_Mst_Item_Category as ItemCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_ITEM_CATEGORY-model';  // ITEM CATEGORY Mst(품목범주)
 using {pg.It_Mst_Aa_Category as AaCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_AA_CATEGORY-model';        // AA CATEGORY Mst(계정범주)
 
+//PG MD
+using {pg.Md_Material_Item_Value as MaterialItemValue} from '../../../../db/cds/pg/md/PG_MD_MATERIAL_ITEM_VALUE-model';        // Material Item Value(자재특성값)
+
 namespace pg;
 
 @path : '/pg.individualSpendSacDService'
 service individualSpendSacDService {
 
     // Entity List
+    entity MdMaterialItemValue @(title : '자재별 특성 정보') as projection on MaterialItemValue;
     // View List
 
     // Tenant View: 회사

@@ -4,7 +4,6 @@ namespace sp;
 using util from '../../cm/util/util-model';
 using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
-using {cm.Hr_Employee as hrEmployee} from '../../cm/CM_HR_EMPLOYEE-model';
 
 /* Master Association */
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
@@ -17,6 +16,36 @@ using {
 } from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
+
+/***********************************************************************************/
+/*************************** For NegoHeaders-buyer_empno ***************************/
+// Sc_Employee_View = Hr_Employee + Hr_Department                           
+/* How to Use:
+        buyer_employee : Association to Sc_Employee_View    //UseCase        
+                            on buyer_employee.tenant_id = $self.tenant_id
+                              and buyer_employee.employee_number = $self.buyer_empno;
+*/
+using {cm.Hr_Employee} from '../../cm/CM_HR_EMPLOYEE-model';
+using {cm.Hr_Department} from '../../cm/CM_HR_DEPARTMENT-model';
+@cds.autoexpose  // Sc_Employee_View = Hr_Employee + Hr_Department
+define entity Sc_Employee_View as select from Hr_Employee as he
+    left outer join Hr_Department as hd
+    on he.tenant_id = hd.tenant_id 
+      and he.department_id = hd.department_id
+    {
+        key he.tenant_id,
+        key he.employee_number,
+            map($user.locale,'ko',he.user_korean_name
+                            ,'en',he.user_english_name
+                            , he.user_local_name)
+                  as employee_name : Hr_Employee: user_local_name,
+            he.department_id : Hr_Department: department_id,
+            map($user.locale,'ko',hd.department_korean_name
+                            ,'en',hd.department_english_name
+                            , hd.department_local_name)
+                  as department_name : Hr_Department: department_local_name
+    };
+
 
 entity Sc_Nego_Headers {
     key tenant_id : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
@@ -53,7 +82,10 @@ entity Sc_Nego_Headers {
                               and outcome.outcome_code = $self.outcome_code;
         negotiation_output_class_code   : String(100)        @title : '협상산출물분류코드';
         // buyer_empno                     : String(30)         @title : '구매담당자사번';
-        buyer_empno                     : type of hrEmployee : employee_number @title : '구매담당자사번';
+        buyer_empno                     : type of Sc_Employee_View : employee_number @title : '구매담당자사번';
+        buyer_employee : Association to Sc_Employee_View    //UseCase        
+                            on buyer_employee.tenant_id = $self.tenant_id
+                              and buyer_employee.employee_number = $self.buyer_empno;
         buyer_department_code           : String(10)         @title : '구매담당자부서코드';
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;

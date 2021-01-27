@@ -21,13 +21,13 @@ using util from '../../cm/util/util-model';
 
 
 entity It_Mst_Import_Img {
-    key tenant_id            : String(5) not null  @title : '테넌트ID';
-    key company_code         : String(10) not null @title : '회사코드';
-    key org_type_code        : String(30) not null @title : '조직유형코드';
-    key org_code             : String(10) not null @title : '조직코드';
-    key management_type_code : String(30) not null @title : '관리구분코드';
-    key management_code      : String(30) not null @title : '관리코드';
-        code_name            : String(100)         @title : '코드명';
+    key tenant_id                  : String(5) not null  @title : '테넌트ID';
+    key company_code               : String(10) not null @title : '회사코드';
+    key org_type_code              : String(30) not null @title : '조직유형코드';
+    key org_code                   : String(10) not null @title : '조직코드';
+    key erp_import_config_code     : String(3) not null  @title : 'ERP수입설정코드';
+    key erp_import_management_code : String(3) not null  @title : 'ERP수입관리코드';
+        code_name                  : String(240)         @title : '코드명';
 }
 
 extend It_Mst_Import_Img with util.Managed;

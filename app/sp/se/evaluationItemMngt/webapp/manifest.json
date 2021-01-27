@@ -23,6 +23,7 @@
                     "odataVersion": "2.0"
                 }
             },
+            
             "commonService": {
                 "uri": "srv-api/odata/v2/cm.util.CommonService/",
                 "type": "OData",
@@ -91,6 +92,7 @@
                     "refreshAfterChange": true
                 }
             },
+            
             "common" : {
                 "dataSource": "commonService",
                 "preload": true,
@@ -127,16 +129,16 @@
                 {
                     "name": "Master",
                     "pattern": "",
-                    "target": ["TargetApp"]
+                    "target": ["Master", "Detail"]
                 },
                 {
                     "name": "Detail",
                     "pattern": "Detail/{new}/:level:/:leaf:/:evaluArticleCode:",
-                    "target": ["TargetApp", "Detail"]
+                    "target": ["Master", "Detail"]
                 }
             ],
 			"targets": {
-				"TargetApp": {
+				"Master": {
 					"viewType": "XML",
 					"transition": "slide",
 					"clearControlAggregation": true,

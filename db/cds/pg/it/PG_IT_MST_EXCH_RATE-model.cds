@@ -23,8 +23,8 @@ using util from '../../cm/util/util-model';
 entity It_Mst_Exch_Rate {
     key tenant_id            : String(5) not null  @title : '테넌트ID';
     key exrate_type_code     : String(30) not null @title : '환율유형코드';
-    key source_currency_code : String(8) not null  @title : '소스통화코드';
-    key target_currency_code : String(8) not null  @title : '대상통화코드';
+    key source_currency_code : String(3) not null  @title : '소스통화코드';
+    key target_currency_code : String(3) not null  @title : '대상통화코드';
     key exrate_start_date    : Date not null       @title : '환율시작일자';
         exchange_rate        : Decimal(20, 10)     @title : '환율';
 }
