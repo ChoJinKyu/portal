@@ -35,10 +35,12 @@ entity Pd_Part_Category_Creation_Request_View {
         similar_category_code                : String;
         similar_category_name                : String;
         requestor_empno                      : String;
+        requestor                            : String;
         request_date_time                    : DateTime;
         attch_group_number                   : String;
         progress_status_code                 : String;
         creator_empno                        : String;
+        category_creator                     : String;
         create_category_code                 : String;
         create_category_name                 : String;
 }
