@@ -35,12 +35,12 @@ service FundingApplicationSupService {
     *   - company_code(세션값)
     */
     view OrgCodeListView as
-        select	distinct
-             op.tenant_id       //tenant_id 컬럼에 저장될 값
-            ,op.company_code    //company_code 컬럼에 저장될 값
-            ,op.org_type_code   //org_type_code 컬럼에 저장될 값
-            ,op.org_code	    //콤보에 매핑될 value
-            ,op.org_name	    //콤보에 매핑될 text
+        select	
+             key op.tenant_id       //tenant_id 컬럼에 저장될 값
+            ,key op.company_code    //company_code 컬럼에 저장될 값
+            ,key op.org_type_code   //org_type_code 컬럼에 저장될 값
+            ,key op.org_code	    //콤보에 매핑될 value
+            ,op.org_name	        //콤보에 매핑될 text
             ,op.purchase_org_code
             ,op.plant_code
             ,op.affiliate_code
@@ -49,12 +49,11 @@ service FundingApplicationSupService {
             ,op.au_code
             ,op.hq_au_code
             ,op.use_flag
-        from cm_pur_operation_org op
-        join cm_pur_org_type_mapping tm on op.tenant_id = tm.tenant_id
+        from cm_pur_operation_org as op
+        join cm_pur_org_type_mapping as tm on op.tenant_id = tm.tenant_id
         and op.org_type_code = tm.org_type_code
         where map(tm.company_code, '*', op.company_code, tm.company_code) = op.company_code
         and tm.process_type_code = 'SP07'
-        order by op.org_name
         ;
 
 
@@ -74,7 +73,6 @@ service FundingApplicationSupService {
              ,language_cd
              ,sort_no
         from CodeView.Code_View
-        order by sort_no
         ; 
 
 
@@ -117,7 +115,7 @@ service FundingApplicationSupService {
             ,fa.collateral_attch_group_number   //담보 약식확인서 첨부파일 그룹번호
             ,fa.funding_step_code               //자금지원 단계 코드
             ,fa.funding_status_code             //자금지원 상태 코드
-        from sp.Sf_Funding_Application fa
+        from sp.Sf_Funding_Application as fa
         where 1=1
         ;
 
@@ -147,7 +145,7 @@ service FundingApplicationSupService {
                         where funding_appl_number = pm.funding_appl_number
                         and investment_plan_sequence = pm.investment_plan_sequence
                     ),0) as sum_item_pur_amt : Decimal   //총 구입금액
-        from sp.Sf_Funding_Invest_Plan_Mst pm
+        from sp.Sf_Funding_Invest_Plan_Mst as pm
         where 1=1
         ;
 
