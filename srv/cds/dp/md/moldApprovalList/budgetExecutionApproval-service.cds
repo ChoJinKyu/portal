@@ -97,7 +97,6 @@ service BudgetExecutionApprovalService {
                 mst.book_currency_code,
                 mst.budget_exrate_date,
                 mst.budget_exrate,
-                mst.split_pay_type_code,
                 mst.mold_sales_status_code,
                 mst.pr_number,
                 mst.import_company_code, 
