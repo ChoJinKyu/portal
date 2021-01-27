@@ -316,7 +316,7 @@ public class MoldApprovalV4 implements EventHandler {
 
         Collection<ApprovalMasterV4> aMaster = data.getApprovalMaster();
         ResultMsg msg = ResultMsg.create();
-        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ?)";
+        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ? I_TENANT_ID => ?)";
             
         System.out.println("data>>> " + data);
         try {
@@ -331,7 +331,7 @@ public class MoldApprovalV4 implements EventHandler {
                     msg.setCompanyCode(row.getCompanyCode());
                     msg.setPlantCode(row.getOrgCode());
                     
-                    jdbc.update(v_sql_callProc, row.getApprovalNumber(), row.getApprovalTypeCode());
+                    jdbc.update(v_sql_callProc, row.getApprovalNumber(), row.getApprovalTypeCode(), row.getTenantId());
 
                 }
             }
