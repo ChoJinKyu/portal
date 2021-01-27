@@ -33,11 +33,17 @@ sap.ui.define([
         , onBeforeRendering: function() {
         }
         
+        , onBeforeShow: function() {
+        }
+
         , onAttachPatternMatched: function(oEvent) {
+
+            this.getView().byId("itbProgress").setSelectedKey("1");
+
             let oParam = {};
-            if(oEvent) {
+            if(oEvent) {//Router 로 이동된 경우
                 oParam = oEvent.getParameter("arguments");
-            } else {
+            } else {//직접 이동된 경우
                 oParam.tenant_id    = this.getModel("detailModel").getProperty("/tenant_id");
                 oParam.project_code = this.getModel("detailModel").getProperty("/project_code");
                 oParam.model_code   = this.getModel("detailModel").getProperty("/model_code");
@@ -78,7 +84,7 @@ sap.ui.define([
                 filters : aFilters,
                 urlParameters : { "$expand" : sExpand },
                 success : function(data){
-                    debugger;
+                    //debugger;
                     oView.setBusy(false);
                     console.log("McstProjectInfo.Controller", data);
 
@@ -104,8 +110,17 @@ sap.ui.define([
          * Icon Tab 선택시 발생하는 event
          */
         , onTabSelect: function(oEvent) {
-            return;
             if(oEvent.getParameter("selectedKey") ==="1") {
+                return;
+            } else if(oEvent.getParameter("selectedKey") ==="2") {
+                let oParam = {
+                    tenant_id : this.getModel("detailModel").getProperty("/tenant_id"),
+                    project_code : this.getModel("detailModel").getProperty("/project_code"),
+                    model_code : this.getModel("detailModel").getProperty("/model_code"),
+                    version_number : this.getModel("detailModel").getProperty("/version_number"),
+                    view_mode : "READ"
+                };
+                this.getRouter().navTo("McstBomInfo", oParam);
             }
         }
 
@@ -117,8 +132,6 @@ sap.ui.define([
             $.ajax({
                 url: url,
                 type: "POST",
-                //datatype: "json",
-                //data: input,
                 data : JSON.stringify(oSendData),
                 contentType: "application/json",
                 success: function(data){
