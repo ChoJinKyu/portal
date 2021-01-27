@@ -192,6 +192,7 @@ xmlns:flex="sap.f"
                                         </VBox>
                                     </uxap:blocks>
                                 </uxap:ObjectPageSubSection>
+                                
                             </uxap:subSections>
                         </uxap:ObjectPageSection>
                     </uxap:sections>
@@ -316,7 +317,7 @@ xmlns:flex="sap.f"
                                                 </Column>
                                             </columns>
                                             <items>
-                                                <ColumnListItem type="Navigation" press=".onHandleItemPress">
+                                                <ColumnListItem type="Navigation" press=".onNavTwo">
                                                     <cells>
                                                         <Text
                                                                 text="{DetailView>evaluation_type_code}" />

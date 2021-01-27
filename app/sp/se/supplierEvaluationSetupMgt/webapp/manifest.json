@@ -22,10 +22,6 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
-            },            
-            "up": {
-                "uri": "../uploadCollection.json",
-                "type": "JSON"
             }
         }
     },
@@ -117,8 +113,7 @@
                     "target": [
                         "main"
                     ]
-                },
-              
+                },              
                 {
                     "name": "detail",
                     "pattern": "detail/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code},{evaluation_operation_unit_code},{evaluation_operation_unit_name},{use_flag}",
@@ -126,8 +121,8 @@
                 },
                 {   
                     "name": "two",
-                    "pattern":"",
-                    "target": ["one","two"]
+                    "pattern":"two/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code},{evaluation_operation_unit_code},{evaluation_type_code}",
+                    "target": ["detail"]
                 }
             ],
             "targets": {
@@ -144,13 +139,7 @@
                     "viewId": "one",
                     "clearControlAggregation": true,
 					"controlAggregation": "beginColumnPages"
-                },
-                "detail": {
-                    "viewName": "Detail",
-                    "viewType": "XML",
-                    "viewLevel": 1,
-                    "viewId": "detail"
-                },
+                },                
                 "two": {
                     "viewName": "Two",
                     "viewType": "XML",
@@ -159,10 +148,11 @@
                     ,"clearControlAggregation": true,
 					"controlAggregation": "midColumnPages"
                 },
-                "notFound": {
-                    "viewName": "NotFound",
-                    "viewPath": "ext.lib.view",
-                    "viewId": "notFound"
+                "detail": {
+                    "viewName": "Detail",
+                    "viewType": "XML",
+                    "viewLevel": 1,
+                    "viewId": "detail"
                 }
             }
         }
