@@ -15,7 +15,7 @@ using {cm.Currency_Lng as CurrencyLng} from '../../../../db/cds/cm/CM_CURRENCY_L
 
 //DP MM
 using {dp.Mm_Material_Mst as MaterialMst} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';          // Material Mst(자재일반)
-using {dp.Mm_Unit_Of_Measure as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';  // Unit Of Measure(측정단위)
+// using {dp.Mm_Unit_Of_Measure as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';  // Unit Of Measure(측정단위)
 
 //PG VP
 using {pg.Vp_Vendor_Pool_Mst as VendorPoolMst} from '../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';                // Vendor Pool Mst(Vendor Pool Mst)
@@ -207,33 +207,33 @@ service marketIntelligenceSacDService {
         from  MaterialMst;
 
     // Unit Of Measure View: 측정단위
-    view DpUOMView @(title : 'UOM View') as
-        select
-            key tenant_id                       as  TENANT_ID
-           ,key uom_code                        as  ID : String
-               ,technical_uom_name              as  Description
-               ,commercial_uom_code             as  COMMERCIAL_UOM_CODE
-               ,technical_uom_code              as  TECHNICAL_UOM_CODE
-               ,commercial_uom_name             as  COMMERCIAL_UOM_NAME
-               ,technical_uom_name              as  TECHNICAL_UOM_NAME
-               ,base_unit_flag                  as  BASE_UNIT_FLAG
-               ,uom_class_code                  as  UOM_CLASS_CODE
-               ,uom_desc                        as  UOM_DESCRIPTION
-               ,decimal_places                  as  DECIMAL_PLACES
-               ,floating_decpoint_index         as  FLOATING_DECPOINT_INDEX
-               ,conversion_numerator            as  CONVERSION_NUMERATOR
-               ,conversion_denominator          as  CONVERSION_DENOMINATOR
-               ,conversion_index                as  CONVERSION_INDEX
-               ,conversion_rate                 as  CONVERSION_RATE
-               ,conversion_addition_constant    as  CONVERSION_ADDITION_CONSTANT
-               ,decplaces_rounding              as  DECPLACES_ROUNDING
-               ,family_unit_flag                as  FAMILY_UNIT_FLAG
-               ,uom_iso_code                    as  UOM_ISO_CODE
-               ,uom_iso_primary_code_flag       as  UOM_ISO_PRIMARY_CODE_FLAG
-               ,commercial_unit_flag            as  COMMERCIAL_UNIT_FLAG
-               ,value_base_commitment_flag      as  VALUE_BASE_COMMITMENT_FLAG
-               ,disable_date                    as  DISABLE_DATE
-        from  UnitOfMeasure;
+    // view DpUOMView @(title : 'UOM View') as
+    //     select
+    //         key tenant_id                       as  TENANT_ID
+    //        ,key uom_code                        as  ID : String
+    //            ,technical_uom_name              as  Description
+    //            ,commercial_uom_code             as  COMMERCIAL_UOM_CODE
+    //            ,technical_uom_code              as  TECHNICAL_UOM_CODE
+    //            ,commercial_uom_name             as  COMMERCIAL_UOM_NAME
+    //            ,technical_uom_name              as  TECHNICAL_UOM_NAME
+    //            ,base_unit_flag                  as  BASE_UNIT_FLAG
+    //            ,uom_class_code                  as  UOM_CLASS_CODE
+    //            ,uom_desc                        as  UOM_DESCRIPTION
+    //            ,decimal_places                  as  DECIMAL_PLACES
+    //            ,floating_decpoint_index         as  FLOATING_DECPOINT_INDEX
+    //            ,conversion_numerator            as  CONVERSION_NUMERATOR
+    //            ,conversion_denominator          as  CONVERSION_DENOMINATOR
+    //            ,conversion_index                as  CONVERSION_INDEX
+    //            ,conversion_rate                 as  CONVERSION_RATE
+    //            ,conversion_addition_constant    as  CONVERSION_ADDITION_CONSTANT
+    //            ,decplaces_rounding              as  DECPLACES_ROUNDING
+    //            ,family_unit_flag                as  FAMILY_UNIT_FLAG
+    //            ,uom_iso_code                    as  UOM_ISO_CODE
+    //            ,uom_iso_primary_code_flag       as  UOM_ISO_PRIMARY_CODE_FLAG
+    //            ,commercial_unit_flag            as  COMMERCIAL_UNIT_FLAG
+    //            ,value_base_commitment_flag      as  VALUE_BASE_COMMITMENT_FLAG
+    //            ,disable_date                    as  DISABLE_DATE
+    //     from  UnitOfMeasure;
 
     // Vendor Pool Mst View: Vendor Pool Mst
     view VpVendorPoolMstView @(title : 'Vendor Pool Mst View') as

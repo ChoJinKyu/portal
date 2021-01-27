@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="PG_TM_CV_TEST" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_TEST.hdbcalculationview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="PG_TM_MASTER_VIEW">
+    <resourceUri>PG_TM_MASTER_VIEW</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="PG_TM_MASTER_VIEW">
+  <attributes>
+    <attribute id="MONITORING_TYPE_CODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONITORING_TYPE_CODE"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MONITORING_TYPE_CODE"/>
+    </attribute>
+    <attribute id="MONITORING_TYPE_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONITORING_TYPE_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MONITORING_TYPE_NAME"/>
+    </attribute>
+    <attribute id="SCENARIO_NAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="SCENARIO_NAME"/>
+    </attribute>
+    <attribute id="TENANT_ID" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TENANT_ID"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="TENANT_ID"/>
+    </attribute>
+    <attribute id="TENANT_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TENANT_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="TENANT_NAME"/>
+    </attribute>
+    <attribute id="COMPANY_CODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANY_CODE"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="COMPANY_CODE"/>
+    </attribute>
+    <attribute id="COMPANY_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANY_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="COMPANY_NAME"/>
+    </attribute>
+    <attribute id="BIZUNIT_CODE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BIZUNIT_CODE"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="BIZUNIT_CODE"/>
+    </attribute>
+    <attribute id="BIZUNIT_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BIZUNIT_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="BIZUNIT_NAME"/>
+    </attribute>
+    <attribute id="MANAGER" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANAGER"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MANAGER"/>
+    </attribute>
+    <attribute id="MANAGER_LOCAL_NAME" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANAGER_LOCAL_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MANAGER_LOCAL_NAME"/>
+    </attribute>
+    <attribute id="ENROLLMENT_DATE" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENROLLMENT_DATE"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="ENROLLMENT_DATE"/>
+    </attribute>
+    <attribute id="ACTIVATE_FLAG" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACTIVATE_FLAG"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="ACTIVATE_FLAG"/>
+    </attribute>
+    <attribute id="OPERATION_MODE_DISPLAY_FLAG" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPERATION_MODE_DISPLAY_FLAG"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="OPERATION_MODE_DISPLAY_FLAG"/>
+    </attribute>
+    <attribute id="OPERATION_MODE_CALLING_FLAG" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPERATION_MODE_CALLING_FLAG"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="OPERATION_MODE_CALLING_FLAG"/>
+    </attribute>
+    <attribute id="OPERATION_MODE_ALRAM_FLAG" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPERATION_MODE_ALRAM_FLAG"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="OPERATION_MODE_ALRAM_FLAG"/>
+    </attribute>
+    <attribute id="MONITORING_PURCHASING_TYPE_CODE" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONITORING_PURCHASING_TYPE_CODE"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MONITORING_PURCHASING_TYPE_CODE"/>
+    </attribute>
+    <attribute id="MONITORING_PURCHASING_TYPE_NAME" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONITORING_PURCHASING_TYPE_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MONITORING_PURCHASING_TYPE_NAME"/>
+    </attribute>
+    <attribute id="MONITORING_CYCLE_CODE" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONITORING_CYCLE_CODE"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MONITORING_CYCLE_CODE"/>
+    </attribute>
+    <attribute id="MONITORING_CYCLE_NAME" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONITORING_CYCLE_NAME"/>
+      <keyMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="MONITORING_CYCLE_NAME"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="SCENARIO_NUMBER" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SCENARIO_NUMBER"/>
+      <measureMapping columnObjectName="PG_TM_MASTER_VIEW" columnName="SCENARIO_NUMBER"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
