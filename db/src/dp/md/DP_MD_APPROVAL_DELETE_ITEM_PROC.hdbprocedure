@@ -111,7 +111,7 @@ BEGIN
         END;
     END FOR;
 
-   /*
+   
     IF I_APPROVAL_TYPE_CODE = 'V' THEN 
         BEGIN 
             DELETE FROM DP_MD_PARTIAL_PAYMENT 
@@ -119,7 +119,7 @@ BEGIN
             AND TENANT_ID = I_TENANT_ID;
         END ;
     END IF;
-    */
+    
     
     IF I_APPROVAL_TYPE_CODE = 'A' OR I_APPROVAL_TYPE_CODE = 'E' THEN 
         BEGIN 
