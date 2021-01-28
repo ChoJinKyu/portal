@@ -4,39 +4,63 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnChainCode",
+                id: "productActivityMgt-mainList-mainColumnCode",
                 order: 0,
-                text: "Chain",
-                visible: true
-            },
-            {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnLanguageCode",
-                order: 1,
-                text: "Language",
-                visible: false
-            },
-            {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageCode",
-                order: 4,
                 text: "Code",
-                visible: false
-            },
-            {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageContents",
-                order: 2,
-                text: "Contents",
                 visible: true
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageTypeCode",
+                id: "productActivityMgt-mainList-mainColumnName",
+                order: 1,
+                text: "Name",
+                visible: false
+            },
+            {
+                id: "productActivityMgt-mainList-mainColumnStartDate",
+                order: 2,
+                text: "Start Date",
+                visible: false
+            },
+            {
+                id: "productActivityMgt-mainList-mainColumnEndDate",
                 order: 3,
-                text: "Type",
+                text: "End Date",
+                visible: true
+            },
+            {
+                id: "productActivityMgt-mainList-mainColumnSiteFlag",
+                order: 4,
+                text: "Site",
+                visible: true
+            },
+            {
+                id: "productActivityMgt-mainList-mainColumnCompanyFlag",
+                order: 5,
+                text: "Company",
+                visible: true
+            },
+            {
+                id: "productActivityMgt-mainList-mainColumnRoleFlag",
+                order: 5,
+                text: "Role",
+                visible: true
+            },
+            {
+                id: "productActivityMgt-mainList-mainColumnOrganizationFlag",
+                order: 6,
+                text: "Organization",
+                visible: true
+            },
+            {
+                id: "productActivityMgt-mainList-mainColumnUserFlag",
+                order: 7,
+                text: "User",
                 visible: true
             }
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
-        var ProductActivityMgtPersoService = {
+        var MainListPersoService = {
 
             oData: {
                 _persoSchemaVersion: "1.0",
@@ -87,15 +111,14 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnChainCode") != -1 ||
-                    sId.indexOf("mainColumnLanguageCode") != -1 ||
-                    sId.indexOf("mainColumnMessageCode") != -1) {
-                    return "Keys";
+                if (sId.indexOf("mainColumnCode") != -1 ||
+                    sId.indexOf("mainColumnName") != -1) {
+                    return "Columns of Key";
                 }
                 return "Others";
             }
         };
 
-        return ProductActivityMgtPersoService;
+        return MainListPersoService;
 
     });
