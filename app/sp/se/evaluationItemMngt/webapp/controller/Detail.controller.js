@@ -256,17 +256,33 @@ sap.ui.define([
                 })
             }
             , onPressItemAdd : function(){
-                var oView, oViewModel, aItems, oNewData;
+                var oView, oViewModel, oHeader, aItems, oNewData, aFields;
                 
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
+                oHeader = oViewModel.getProperty("/Detail/Header");
                 aItems = oViewModel.getProperty("/Detail/Item");
+                aFields = [
+                    "tenant_id",
+                    "company_code",
+                    "org_type_code",
+                    "org_code",
+                    "evaluation_operation_unit_code",
+                    "evaluation_type_code",
+                    "evaluation_article_code",
+                    "option_article_number"
+                ];
 
                 oNewData = {
                     crudFlg : "C",
                     rowEditable : true,
                     transaction_code : "I"
                 };
+                aFields.forEach(function(sField){
+                    if(oHeader[sField]){
+                        oNewData[sField] = oHeader[sField];
+                    }
+                });
                 
                 aItems.push(oNewData);
                 oViewModel.setProperty("/Detail/Item", aItems);
@@ -293,7 +309,63 @@ sap.ui.define([
                 
                 this.getOwnerComponent().getRouter().navTo("Master");
             }
+            , onPressDelete : function(){
+                var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
+                    oI18NModel;
 
+                oView = this.getView();
+                oI18NModel = oView.getModel("I18N");
+                oViewModel = oView.getModel("viewModel");
+                oArgs = oViewModel.getProperty("/Args");
+                oComponent = this.getOwnerComponent();
+                sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
+
+                if(oArgs.new === "Y"){
+                    return;
+                }
+
+                MessageBox.confirm(oI18NModel.getProperty("/NCM00001"),{
+                    onClose: function (sAction) {
+                        if(sAction === MessageBox.Action.CANCEL){
+                            return;
+                        }
+                        
+                        oSaveData = this._getSaveData("D");
+                        oView.setBusy(true);
+                        $.ajax({
+                            url: sURLPath,
+                            type: "POST",
+                            data: JSON.stringify(oSaveData),
+                            contentType: "application/json",
+                            success: function (data) {
+                                oView.setBusy(false);
+                                oComponent.getRouter().navTo("Master",{
+                                    search : true
+                                });
+                            },
+                            error: function (e) {
+                                var sDetails;
+
+                                sDetails = "";
+                                try{
+                                    sDetails += "<p><strong>" + e.responseJSON.error.code + "</strong></p>\n" +
+                                    "<ul>" +
+                                        "<li>" + e.responseJSON.error.message + "</li>" +
+                                    "</ul>";
+                                }catch(error){
+                                    
+                                }
+
+                                MessageBox.error(e.status + " - " + e.statusText,{
+                                    title: "Error",
+                                    details : sDetails
+                                })
+                                oView.setBusy(false);
+                            }
+                        });
+                    }.bind(this)
+                });
+            }
             , onPressSave : function(){
                 var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
                     oI18NModel;
@@ -318,7 +390,7 @@ sap.ui.define([
                             sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
                         }
                         
-                        oSaveData = this._getSaveData();
+                        oSaveData = this._getSaveData("U");
                         oView.setBusy(true);
                         $.ajax({
                             url: sURLPath,
@@ -374,7 +446,7 @@ sap.ui.define([
 
                 return bValid;
             }
-            , _getSaveData : function(){
+            , _getSaveData : function(sTransactionCode){
                 var oSaveData, oUserInfo, oView, oViewModel,
                     aItemFields, aScleFields, oHeader, oItemType,
                     sHeadField, aScleItem, oNewHeader, sLevel, oArgs;
@@ -452,7 +524,7 @@ sap.ui.define([
                 }
 
                 oItemType.sort_sequence = parseInt(oItemType.sort_sequence) || null;
-                oItemType.transaction_code = "I";
+                oItemType.transaction_code = sTransactionCode;
 
                 oSaveData.ItemType.push(oItemType);
 
@@ -460,6 +532,10 @@ sap.ui.define([
                 aScleItem.forEach(function(oRowData){
                     var oNewRowData, sScleField;
                     oNewRowData = {};
+
+                    if(!oRowData.transaction_code){
+                        return;
+                    }
 
                     for(sScleField in oRowData){
                         if(

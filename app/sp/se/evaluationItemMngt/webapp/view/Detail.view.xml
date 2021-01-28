@@ -390,11 +390,12 @@
 				<Button 
                     text="{I18N>/DELETE}" 
                     enabled="{=
-                        ${viewModel>/App/EditMode} &amp;&amp;
+                        !${viewModel>/App/EditMode} &amp;&amp;
+                        ${viewModel>/Args/new} !== 'Y' &amp;&amp;
                         ${viewModel>/Detail/Header/hierarchy_tree_size} === '1'
                     }"
                     type="Transparent" 
-                    press=".onPageDeleteButtonPress" 
+                    press="onPressDelete" 
                 />
                 <Button 
                     text="{I18N>/SAVE}" 
