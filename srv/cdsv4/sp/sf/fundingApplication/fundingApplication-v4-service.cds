@@ -41,7 +41,7 @@ service FundingApplicationV4Service {
     // 프로시저 관련 type 정의
     //************************************************
     //리턴타입: 프로시저 저장 후 리턴 값
-    type rtnObj : {
+    type RtnObj : {
         result_code: String(2);
  	    err_type: String(20);
         err_code: String(20);
@@ -49,7 +49,7 @@ service FundingApplicationV4Service {
     } 
 
     //리턴타입: 투자계획서 상세 작업후 리턴값
-    type rtnObjInvDtl : {
+    type RtnObjInvDtl : {
         result_code: String(2);
  	    err_type: String(20);
         err_code: String(20);
@@ -57,37 +57,8 @@ service FundingApplicationV4Service {
         rtn_investment_plan_sequence: Integer;
     } 
 
-    //저장타입: 신청서 마스터
-    type applSaveDataType : {
-        funding_appl_number           : String(10);     //자금지원신청번호
-        funding_notify_number         : String(10);     //자금지원공고번호
-        supplier_code                 : String(10);     //공급업체코드
-        tenant_id                     : String(5);      //테넌트ID
-        company_code                  : String(10);     //회사코드
-        org_type_code                 : String(2);      //조직유형코드
-        org_code                      : String(10);     //조직코드
-        funding_appl_date             : Date;           //자금지원신청일자
-        purchasing_department_name    : String(100);    //구매부서명
-        pyear_sales_amount            : Decimal;        //전년매출금액
-        main_bank_name                : String(100);    //주요은행명
-        funding_appl_amount           : Decimal;        //자금지원신청금액
-        funding_hope_yyyymm           : String(6);      //자금지원희망년월
-        repayment_method_code         : String(30);     //상환방법코드
-        appl_user_name                : String(240);    //신청사용자명
-        appl_user_tel_number          : String(15);     //신청사용자전화번호
-        appl_user_email_address       : String(240);    //신청사용자이메일주소
-        funding_reason_code           : String(30);     //자금지원사유코드
-        collateral_type_code          : String(30);     //담보구분코드
-        collateral_amount             : Decimal;        //담보금액
-        collateral_start_date         : Date;           //담보시작일자
-        collateral_end_date           : Date;           //담보종료일자
-        collateral_attch_group_number : String(100);    //담보첨부파일그룹번호
-        funding_step_code             : String(30);     //자금지원단계코드
-        funding_status_code           : String(30);     //자금지원상태코드
-    };
-
     //저장타입: 투자계획서 마스터
-    type invPlanMstType : {
+    type InvPlanMstType : {
         crud_type : String(1);                  //C:신규/R:읽기/U:수정/D:삭제
         funding_appl_number : String(10);       //자금지원신청번호
         investment_plan_sequence : Integer;     //투자계획순번
@@ -105,7 +76,7 @@ service FundingApplicationV4Service {
     };
 
     //저장타입: 투자계획서 상세
-    type invPlanDtlType : {
+    type InvPlanDtlType : {
         crud_type : String(1);                      //C:신규/R:읽기/U:수정/D:삭제
         funding_appl_number : String(10);           //자금지원신청번호	
         investment_plan_sequence : Integer;         //투자계획순번	
@@ -117,13 +88,13 @@ service FundingApplicationV4Service {
     };
 
     //삭제타입: 투자계획서 마스터
-    type invPlanMstDelType : {
+    type InvPlanMstDelType : {
         funding_appl_number : String(10);           //자금지원신청번호	
         investment_plan_sequence : Integer;         //투자계획순번	
     };
     
     //삭제타입: 투자계획서 상세
-    type invPlanDtlDelType : {
+    type InvPlanDtlDelType : {
         funding_appl_number : String(10);           //자금지원신청번호	
         investment_plan_sequence : Integer;         //투자계획순번	
         investment_plan_item_sequence : Integer;    //투자계획품목순번	
@@ -135,34 +106,75 @@ service FundingApplicationV4Service {
     // 프로시저 호출 액션
     //************************************************
     //------------------임시저장
-    action procSaveTemp (applSaveType: applSaveDataType //신청서 저장 타입
-                        ,user_id : String(30)           //작성자id
-    ) returns array of rtnObj;
-
-    // action procSaveTemp (applSaveType : array of applSaveDataType,
-    //                         user_id : String(30)
-    // ) returns array of rtnObj;
+    action ProcSaveTemp (funding_appl_number           : String(10),    //자금지원신청번호
+                        funding_notify_number         : String(10),    //자금지원공고번호
+                        supplier_code                 : String(10),    //공급업체코드
+                        tenant_id                     : String(5),     //테넌트ID
+                        company_code                  : String(10),    //회사코드
+                        org_type_code                 : String(2),     //조직유형코드
+                        org_code                      : String(10),    //조직코드
+                        purchasing_department_name    : String(100),   //구매부서명
+                        pyear_sales_amount            : Decimal,       //전년매출금액
+                        main_bank_name                : String(100),   //주요은행명
+                        funding_appl_amount           : Decimal,       //자금지원신청금액
+                        funding_hope_yyyymm           : String(6),     //자금지원희망년월
+                        repayment_method_code         : String(30),    //상환방법코드
+                        appl_user_name                : String(240),   //신청사용자명
+                        appl_user_tel_number          : String(15),    //신청사용자전화번호
+                        appl_user_email_address       : String(240),   //신청사용자이메일주소
+                        funding_reason_code           : String(30),    //자금지원사유코드
+                        collateral_type_code          : String(30),    //담보구분코드
+                        collateral_amount             : Decimal,       //담보금액
+                        collateral_attch_group_number : String(100),   //담보첨부파일그룹번호
+                        funding_step_code             : String(30),    //자금지원단계코드
+                        funding_status_code           : String(30),    //자금지원상태코드
+                        user_id : String(30)           //작성자id
+    ) returns array of RtnObj;
 
     //------------------제출
-    action procRequest (applSaveType: applSaveDataType  //신청서 저장 타입
-                        ,user_id : String(30)           //작성자id
-    ) returns rtnObj;
+    action ProcRequest (funding_appl_number           : String(10),    //자금지원신청번호
+                        funding_notify_number         : String(10),    //자금지원공고번호
+                        supplier_code                 : String(10),    //공급업체코드
+                        tenant_id                     : String(5),     //테넌트ID
+                        company_code                  : String(10),    //회사코드
+                        org_type_code                 : String(2),     //조직유형코드
+                        org_code                      : String(10),    //조직코드
+                        funding_appl_date             : Date,          //자금지원신청일자
+                        purchasing_department_name    : String(100),   //구매부서명
+                        pyear_sales_amount            : Decimal,       //전년매출금액
+                        main_bank_name                : String(100),   //주요은행명
+                        funding_appl_amount           : Decimal,       //자금지원신청금액
+                        funding_hope_yyyymm           : String(6),     //자금지원희망년월
+                        repayment_method_code         : String(30),    //상환방법코드
+                        appl_user_name                : String(240),   //신청사용자명
+                        appl_user_tel_number          : String(15),    //신청사용자전화번호
+                        appl_user_email_address       : String(240),   //신청사용자이메일주소
+                        funding_reason_code           : String(30),    //자금지원사유코드
+                        collateral_type_code          : String(30),    //담보구분코드
+                        collateral_amount             : Decimal,       //담보금액
+                        collateral_start_date         : Date,          //담보시작일자
+                        collateral_end_date           : Date,          //담보종료일자
+                        collateral_attch_group_number : String(100),   //담보첨부파일그룹번호
+                        funding_step_code             : String(30),    //자금지원단계코드
+                        funding_status_code           : String(30),    //자금지원상태코드
+                        user_id                       : String(30)           //작성자id
+    ) returns array of RtnObj;
 
     //------------------투자계획서 저장
-    action procSaveInvPlan (mstType: invPlanMstType //마스터 데이터 타입
-                           ,dtlType: array of invPlanDtlType //상세 데이터 타입
-                           ,user_id : String(30)    //작성자id
-    ) returns rtnObj;
+    // action ProcSaveInvPlan (mstType: invPlanMstType //마스터 데이터 타입
+    //                        ,dtlType: array of invPlanDtlType //상세 데이터 타입
+    //                        ,user_id : String(30)    //작성자id
+    // ) returns array of RtnObj;
 
-    //------------------투자계획서 마스터 삭제
-    action procDelInvPlan (mstType: array of invPlanMstDelType  //마스터 삭제 데이터 타입
-                           ,user_id : String(30)                //작성자id
-    ) returns rtnObj;
+    // //------------------투자계획서 마스터 삭제
+    // action procDelInvPlan (mstType: array of invPlanMstDelType  //마스터 삭제 데이터 타입
+    //                        ,user_id : String(30)                //작성자id
+    // ) returns array of RtnObj;
 
-    //------------------투자계획서 상세 삭제
-    action procDelInvPlanDtl (dtlType: array of invPlanDtlType  //상세 삭제 데이터 타입
-                           ,user_id : String(30)                //작성자id
-    ) returns rtnObjInvDtl;
+    // //------------------투자계획서 상세 삭제
+    // action procDelInvPlanDtl (dtlType: array of invPlanDtlType  //상세 삭제 데이터 타입
+    //                        ,user_id : String(30)                //작성자id
+    // ) returns array of RtnObj;
 
     
 }
