@@ -26,4 +26,4 @@ service ActivityStandardDayService {
     where tenant_id = 'L2101'
     group by org_code 
     ;
-} 
+}
