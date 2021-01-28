@@ -1,4 +1,5 @@
 //업무테이블 관련
+using sp.Sf_Funding_Notify from '../../../../../db/cds/sp/sf/SP_SF_FUNDING_NOTIFY-model';
 using sp.Sf_Funding_Application from '../../../../../db/cds/sp/sf/SP_SF_FUNDING_APPLICATION-model';
 using sp.Sf_Funding_Invest_Plan_Mst from '../../../../../db/cds/sp/sf/SP_SF_FUNDING_INVEST_PLAN_MST-model';
 using sp.Sf_Funding_Invest_Plan_Dtl from '../../../../../db/cds/sp/sf/SP_SF_FUNDING_INVEST_PLAN_DTL-model';
@@ -11,15 +12,19 @@ using { cm.Pur_Org_Type_Mapping as cm_pur_org_type_mapping } from '../../../../.
 using sp.Sm_Supplier_Mst from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 
 // 공통코드 뷰
-using { cm as CodeView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
+using { cm.Code_View as codeView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
+//using { cm.util as cmUtil } from '../../../../../srv/cds/cm/util/common-service';
+
+
 
 namespace sp;
+
 @path : '/sp.FundingApplicationService'
 service FundingApplicationService {
-    // entity SfFundingApplication as projection on sp.Sf_Funding_Application;
-    // entity SfFundingInvestPlanMst as projection on sp.Sf_Funding_Invest_Plan_Mst;
+    entity SfFundingApplication as projection on sp.Sf_Funding_Application;
+    entity SfFundingInvestPlanMst as projection on sp.Sf_Funding_Invest_Plan_Mst;
     entity SfFundingInvestPlanDtl as projection on sp.Sf_Funding_Invest_Plan_Dtl;
-    
+
 
     //************************************************
     // 조회관련 뷰
@@ -32,11 +37,11 @@ service FundingApplicationService {
     */
     view OrgCodeListView as
         select	
-             key op.tenant_id       //tenant_id 컬럼에 저장될 값
-            ,key op.company_code    //company_code 컬럼에 저장될 값
-            ,key op.org_type_code   //org_type_code 컬럼에 저장될 값
-            ,key op.org_code	    //콤보에 매핑될 value
-            ,op.org_name	        //콤보에 매핑될 text
+             key op.tenant_id           //tenant_id 컬럼에 저장될 값
+            ,key op.company_code        //company_code 컬럼에 저장될 값
+            ,key op.org_type_code       //org_type_code 컬럼에 저장될 값
+            ,key op.org_code	        //콤보에 매핑될 value
+            ,op.org_name	            //콤보에 매핑될 text
             ,op.purchase_org_code
             ,op.plant_code
             ,op.affiliate_code
@@ -46,7 +51,8 @@ service FundingApplicationService {
             ,op.hq_au_code
             ,op.use_flag
         from cm_pur_operation_org as op
-        join cm_pur_org_type_mapping as tm on op.tenant_id = tm.tenant_id
+        inner join cm_pur_org_type_mapping as tm 
+        on op.tenant_id = tm.tenant_id
         and op.org_type_code = tm.org_type_code
         where map(tm.company_code, '*', op.company_code, tm.company_code) = op.company_code
         and tm.process_type_code = 'SP07'
@@ -68,7 +74,7 @@ service FundingApplicationService {
              ,code_name
              ,language_cd
              ,sort_no
-        from CodeView.Code_View
+        from codeView
         ; 
 
 
@@ -93,13 +99,7 @@ service FundingApplicationService {
             ,fa.funding_appl_amount             //자금지원 신청 금액
             ,fa.funding_hope_yyyymm             //자금지원 희망 년월
             ,fa.repayment_method_code           //상환방법 코드
-            ,(select 
-                code_name
-             from CodeView.Code_View
-             where tenant_id = fa.tenant_id
-             and group_code = 'SP_SF_REPAYMENT_METHOD'
-             and code = fa.repayment_method_code
-             and language_cd = 'KO')  as repayment_method_code_name : String    //상환방법코드명
+            ,cv_m.code_name as repayment_method_code_name : String    //상환방법코드명
             ,fa.appl_user_name                  //신청자 명 
             ,fa.appl_user_tel_number            //신청자 전화번호
             ,fa.appl_user_email_address         //신청자 email
@@ -112,6 +112,11 @@ service FundingApplicationService {
             ,fa.funding_step_code               //자금지원 단계 코드
             ,fa.funding_status_code             //자금지원 상태 코드
         from sp.Sf_Funding_Application as fa
+        left outer join codeView cv_m           //상환방법 공통코드 조인
+        on   cv_m.tenant_id  = fa.tenant_id
+        and  cv_m.group_code = 'SP_SF_REPAYMENT_METHOD'
+        and  cv_m.code       = fa.repayment_method_code
+        and  cv_m.language_cd = 'KO'
         where 1=1
         ;
 
@@ -125,18 +130,18 @@ service FundingApplicationService {
         select
              key pm.funding_appl_number         //자금지원신청번호
             ,key pm.investment_plan_sequence    //시퀀스
-            ,    pm.investment_type_code        //투자유형코드
-            ,    pm.investment_project_name     //과제명
-            ,    pm.investment_yyyymm           //투자년월
-            ,    pm.appl_amount                 //신청금액
-            ,    pm.investment_purpose          //투자목적
-            ,    pm.apply_model_name            //적용모델명
-            ,    pm.annual_mtlmob_quantity      //연간물동수량
-            ,    pm.investment_desc             //투자내역
-            ,    pm.execution_yyyymm            //집행년월
-            ,    pm.investment_effect           //투자효과
-            ,    pm.investment_place            //투자장소
-            ,    ifnull((select sum(investment_item_purchasing_amt) as sum_item_pur_amt
+            ,pm.investment_type_code            //투자유형코드
+            ,pm.investment_project_name         //과제명
+            ,pm.investment_yyyymm               //투자년월
+            ,pm.appl_amount                     //신청금액
+            ,pm.investment_purpose              //투자목적
+            ,pm.apply_model_name                //적용모델명
+            ,pm.annual_mtlmob_quantity          //연간물동수량
+            ,pm.investment_desc                 //투자내역
+            ,pm.execution_yyyymm                //집행년월
+            ,pm.investment_effect               //투자효과
+            ,pm.investment_place                //투자장소
+            ,ifnull((select sum(investment_item_purchasing_amt) as sum_item_pur_amt
                         from sp.Sf_Funding_Invest_Plan_Dtl
                         where funding_appl_number = pm.funding_appl_number
                         and investment_plan_sequence = pm.investment_plan_sequence
@@ -156,34 +161,37 @@ service FundingApplicationService {
         select
              key pm.funding_appl_number         //자금지원신청번호
             ,key pm.investment_plan_sequence    //시퀀스
-            ,    pm.investment_type_code        //투자유형코드
-            ,    pm.investment_project_name     //과제명
-            ,    pm.investment_yyyymm           //투자년월
-            ,    pm.appl_amount                 //신청금액
-            ,    pm.investment_purpose          //투자목적
-            ,    pm.apply_model_name            //적용모델명
-            ,    pm.annual_mtlmob_quantity      //연간물동수량
-            ,    pm.investment_desc             //투자내역
-            ,    pm.execution_yyyymm            //집행년월
-            ,    pm.investment_effect           //투자효과
-            ,    pm.investment_place            //투자장소
-            ,    ifnull((select sum(investment_item_purchasing_amt) as sum_item_pur_amt
+            ,pm.investment_type_code            //투자유형코드
+            ,pm.investment_project_name         //과제명
+            ,pm.investment_yyyymm               //투자년월
+            ,pm.appl_amount                     //신청금액
+            ,pm.investment_purpose              //투자목적
+            ,pm.apply_model_name                //적용모델명
+            ,pm.annual_mtlmob_quantity          //연간물동수량
+            ,pm.investment_desc                 //투자내역
+            ,pm.execution_yyyymm                //집행년월
+            ,pm.investment_effect               //투자효과
+            ,pm.investment_place                //투자장소
+            ,ifnull((select sum(investment_item_purchasing_amt) as sum_item_pur_amt
                         from sp.Sf_Funding_Invest_Plan_Dtl
                         where funding_appl_number = pm.funding_appl_number
                         and investment_plan_sequence = pm.investment_plan_sequence
                     ),0) as sum_item_pur_amt : Decimal   //총 구입금액
-            ,	ap.supplier_code                //업체코드
-            ,	sm.supplier_local_name          //업체명
-            ,	ap.tenant_id                    //
-            ,	ap.company_code                 //
-            ,	ap.org_type_code                //
-            ,	ap.org_code                     //
-            ,	org.org_name                    //
+            ,ap.supplier_code                   //업체코드
+            ,sm.supplier_local_name             //업체명
+            ,ap.tenant_id                       //
+            ,ap.company_code                    //
+            ,ap.org_type_code                   //
+            ,ap.org_code                        //
+            ,org.org_name                       //
         from sp.Sf_Funding_Invest_Plan_Mst pm
-        join sp.Sf_Funding_Application ap on pm.funding_appl_number = ap.funding_appl_number
-        join sp.Sm_Supplier_Mst sm on sm.tenant_id = ap.tenant_id
+        inner join sp.Sf_Funding_Application ap 
+        on pm.funding_appl_number = ap.funding_appl_number
+        inner join sp.Sm_Supplier_Mst sm 
+        on sm.tenant_id = ap.tenant_id
 		and sm.supplier_code = ap.supplier_code
-        left join cm_pur_operation_org org on ap.tenant_id = org.tenant_id
+        left outer join cm_pur_operation_org org 
+        on ap.tenant_id = org.tenant_id
         and ap.company_code = org.company_code
         and ap.org_type_code = org.org_type_code
         and ap.org_code = org.org_code
@@ -199,15 +207,61 @@ service FundingApplicationService {
     */
     view InvestPlanDtlView as 
         select
-             key pd.funding_appl_number                 //자금지원신청번호
-            ,key pd.investment_plan_sequence            //투자계획 순번
-            ,key pd.investment_plan_item_sequence       //투자계획 품목 순번
-            ,    pd.investment_item_name                //투자품목명
-            ,    pd.investment_item_purchasing_price    //투자품목구매가격
-            ,    pd.investment_item_purchasing_qty      //투자품목구매수량
-            ,    pd.investment_item_purchasing_amt      //투자품목구매금액
+             key pd.funding_appl_number             //자금지원신청번호
+            ,key pd.investment_plan_sequence        //투자계획 순번
+            ,key pd.investment_plan_item_sequence   //투자계획 품목 순번
+            ,pd.investment_item_name                //투자품목명
+            ,pd.investment_item_purchasing_price    //투자품목구매가격
+            ,pd.investment_item_purchasing_qty      //투자품목구매수량
+            ,pd.investment_item_purchasing_amt      //투자품목구매금액
         from sp.Sf_Funding_Invest_Plan_Dtl pd
         where 1=1
         ;  
-        
+
+
+
+
+    //----------------------자금지원 현황목록 조회----------------------
+    view FundingApplListView as  
+        select
+             key appl.funding_appl_number				//신청번호
+            ,ntfy.funding_notify_number					//공고번호
+            ,ntfy.funding_notify_title				    //공고제목
+            ,appl.supplier_code							//업체코드
+            ,supp.supplier_local_name as supplier_name : String	//업체명
+            ,appl.funding_step_code						//스텝코드
+            ,cvStep.code_name  as funding_step_name : String        //스텝명
+            ,appl.funding_status_code					//상태코드
+            ,cvStatus.code_name  as funding_status_name : String    //상태명
+            ,appl.org_code								//조직코드
+            ,org.org_name as org_name : String						//조직명
+            ,appl.funding_appl_date						//자금지원 신청일자
+            ,appl.purchasing_department_name			//부서명
+            ,appl.funding_appl_amount					//신청금액
+        from sp.Sf_Funding_Application appl
+        inner join sp.Sf_Funding_Notify ntfy        //공고정보 조인
+        on appl.funding_notify_number = ntfy.funding_notify_number
+        and appl.tenant_id = ntfy.tenant_id
+        inner join sp.Sm_Supplier_Mst supp          //협력사정보 조인
+        on appl.tenant_id = supp.tenant_id
+        and appl.supplier_code = supp.supplier_code
+        left outer join cm_pur_operation_org org 
+        on appl.tenant_id = org.tenant_id
+        and appl.company_code = org.company_code
+        and appl.org_type_code = org.org_type_code
+        and appl.org_code = org.org_code
+        left outer join codeView cvStep             //단계명 공통코드 조인
+        on   cvStep.tenant_id  = appl.tenant_id
+        and  cvStep.group_code = 'SP_SF_FUNDING_STEP_CODE'
+        and  cvStep.code       = appl.funding_step_code
+        and  cvStep.language_cd = 'KO'
+        left outer join codeView cvStatus           //상태명 공통코드 조인
+        on   cvStatus.tenant_id  = appl.tenant_id
+        and  cvStatus.group_code = 'SP_SF_FUNDING_STATUS_CODE'
+        and  cvStatus.code       = appl.funding_status_code
+        and  cvStatus.language_cd = 'KO'
+        where 1=1    
+        ; 
+
+
 }

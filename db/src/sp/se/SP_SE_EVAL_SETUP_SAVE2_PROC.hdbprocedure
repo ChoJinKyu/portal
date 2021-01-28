@@ -114,6 +114,43 @@ BEGIN
                                       FROM   :I_EGRAD
                                       WHERE  TRANSACTION_CODE = 'D')
         ;
+
+        INSERT INTO SP_SE_EVAL_GRADE
+            (TENANT_ID
+            ,COMPANY_CODE
+            ,ORG_TYPE_CODE
+            ,ORG_CODE
+            ,EVALUATION_OPERATION_UNIT_CODE
+            ,EVALUATION_TYPE_CODE
+            ,EVALUATION_GRADE
+            ,EVALUATION_GRADE_START_SCORE
+            ,EVALUATION_GRADE_END_SCORE
+            ,INP_APPLY_CODE
+            ,LOCAL_CREATE_DTM
+            ,LOCAL_UPDATE_DTM
+            ,CREATE_USER_ID
+            ,UPDATE_USER_ID
+            ,SYSTEM_CREATE_DTM
+            ,SYSTEM_UPDATE_DTM) 
+        SELECT TENANT_ID
+              ,COMPANY_CODE
+              ,ORG_TYPE_CODE
+              ,ORG_CODE
+              ,EVALUATION_OPERATION_UNIT_CODE
+              ,EVALUATION_TYPE_CODE
+              ,EVALUATION_GRADE
+              ,EVALUATION_GRADE_START_SCORE
+              ,EVALUATION_GRADE_END_SCORE
+              ,INP_APPLY_CODE
+              ,NOW()
+              ,NOW()
+              ,:I_USER_ID
+              ,:I_USER_ID
+              ,NOW()
+              ,NOW()
+        FROM   :I_EGRAD
+        WHERE  TRANSACTION_CODE = 'I'
+        ;
     
         MERGE INTO SP_SE_EVAL_GRADE AS GRA
         USING :I_EGRAD AS IGRA
@@ -124,45 +161,12 @@ BEGIN
         AND   GRA.EVALUATION_OPERATION_UNIT_CODE = IGRA.EVALUATION_OPERATION_UNIT_CODE
         AND   GRA.EVALUATION_TYPE_CODE = IGRA.EVALUATION_TYPE_CODE
         AND   GRA.EVALUATION_GRADE = IGRA.EVALUATION_GRADE
-        AND   IGRA.TRANSACTION_CODE IN ('I', 'U')
+        AND   IGRA.TRANSACTION_CODE = 'U'
         WHEN MATCHED THEN
             UPDATE 
             SET    EVALUATION_GRADE_START_SCORE = IGRA.EVALUATION_GRADE_START_SCORE
                   ,EVALUATION_GRADE_END_SCORE = IGRA.EVALUATION_GRADE_END_SCORE
                   ,INP_APPLY_CODE = IGRA.INP_APPLY_CODE
-        WHEN NOT MATCHED THEN
-            INSERT (TENANT_ID
-                   ,COMPANY_CODE
-                   ,ORG_TYPE_CODE
-                   ,ORG_CODE
-                   ,EVALUATION_OPERATION_UNIT_CODE
-                   ,EVALUATION_TYPE_CODE
-                   ,EVALUATION_GRADE
-                   ,EVALUATION_GRADE_START_SCORE
-                   ,EVALUATION_GRADE_END_SCORE
-                   ,INP_APPLY_CODE
-                   ,LOCAL_CREATE_DTM
-                   ,LOCAL_UPDATE_DTM
-                   ,CREATE_USER_ID
-                   ,UPDATE_USER_ID
-                   ,SYSTEM_CREATE_DTM
-                   ,SYSTEM_UPDATE_DTM)
-            VALUES (IGRA.TENANT_ID
-                   ,IGRA.COMPANY_CODE
-                   ,IGRA.ORG_TYPE_CODE
-                   ,IGRA.ORG_CODE
-                   ,IGRA.EVALUATION_OPERATION_UNIT_CODE
-                   ,IGRA.EVALUATION_TYPE_CODE
-                   ,IGRA.EVALUATION_GRADE
-                   ,IGRA.EVALUATION_GRADE_START_SCORE
-                   ,IGRA.EVALUATION_GRADE_END_SCORE
-                   ,IGRA.INP_APPLY_CODE
-                   ,NOW()
-                   ,NOW()
-                   ,:I_USER_ID
-                   ,:I_USER_ID
-                   ,NOW()
-                   ,NOW())
         ;
     END;
     

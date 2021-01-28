@@ -22,7 +22,7 @@ entity Pu_Pr_Account {
             cctr_code       : String(10)            @title: '비용부서코드' ;	
             wbs_code        : String(30)            @title: 'WBS코드' ;	
             asset_number    : String(30)            @title: '자산번호' ;	
-            order_number    : String(3)             @title: '오더번호' ;	
+            order_number    : String(30)             @title: '오더번호' ;	
             pr_quantity     : Decimal               @title: '구매요청수량' ;	
             distrb_rate     : Decimal               @title: '배분율' ;	
     }	

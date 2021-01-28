@@ -42,7 +42,11 @@
                             <VBox>
                                 <!-- 평가항목 명 -->
                                 <Label text="{I18N>/EVAL_ITEM_NM}" required="true"/>
-                                <Input value="{viewModel>/Detail/NewHeader/evaluation_article_name}"/>
+                                <Input 
+                                    required="true"
+                                    fieldGroupIds="newRequired"
+                                    value="{viewModel>/Detail/NewHeader/evaluation_article_name}"
+                                />
                                 <layoutData>
                                     <layout:GridData span="L12 M12 S12" />
                                 </layoutData>
@@ -52,6 +56,8 @@
                                 <Label text="{I18N>/NODE_TYPE}" required="true"/>
                                 <ComboBox 
                                     id="comboNodeType"
+                                    required="true"
+                                    fieldGroupIds="newRequired"
                                     width="100%" 
                                     showSecondaryValues="true"
                                     selectedKey="{viewModel>/Detail/NewHeader/evaluation_article_lvl_attr_cd}"
@@ -97,7 +103,7 @@
                             </VBox>
                             <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
                                 <!-- 평가수행방식 -->
-                                <Label text="{I18N>/EVAL_EXEC_MODE}" required="true"/>
+                                <Label text="{I18N>/EVAL_EXEC_MODE}"/>
                                 <SegmentedButton 
                                     id="btnEvaluExeMode"
                                     selectedKey="{viewModel>/Detail/Header/evaluation_execute_mode_code}"
@@ -109,7 +115,7 @@
                             </VBox>
                             <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
                                 <!-- 평가항목구분 -->
-                                <Label text="{I18N>/EVAL_ITEM_TYPE}" required="true"/>
+                                <Label text="{I18N>/EVAL_ITEM_TYPE}"/>
                                 <SegmentedButton 
                                     id="btnEvaluArtType"
                                     selectedKey="{viewModel>/Detail/Header/evaluation_article_type_code}"
@@ -121,7 +127,7 @@
                             </VBox>
                             <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
                                 <!-- 배점유형 -->
-                                <Label text="{I18N>/DISTRB_SCOR_TYPE}" required="true"/>
+                                <Label text="{I18N>/DISTRB_SCOR_TYPE}"/>
                                 <ComboBox 
                                     id="comboEvaluDisScrType"
                                     width="100%"
@@ -134,7 +140,7 @@
                             </VBox>
                             <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
                                 <!-- Scale 유형 -->
-                                <Label text="{I18N>/SCLE_TYPE}" required="true"/>
+                                <Label text="{I18N>/SCLE_TYPE}"/>
                                 <ComboBox  
                                     id="comboEvaluResultInputType"
                                     width="100%"
@@ -147,12 +153,15 @@
                             </VBox>
                             <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
                                 <!-- 단위 -->
-                                <Label text="{I18N>/UNIT}" required="true"/>
+                                <Label text="{I18N>/UNIT}"/>
                                 <ComboBox 
                                     id="comboQttItemUom"
                                     width="100%"
                                     selectedKey="{viewModel>/Detail/Header/qttive_item_uom_code}"
-                                    editable="{viewModel>/App/EditMode}"
+                                    editable="{=
+                                        ${viewModel>/App/EditMode} &amp;&amp;
+                                        ${viewModel>/Detail/Header/evaluation_execute_mode_code} === 'QTTVE_EVAL'
+                                    }"
                                 />
                                 <layoutData>
                                     <layout:GridData span="L6 M6 S12" />
@@ -162,6 +171,8 @@
                                 <!-- 정렬 -->
                                 <Label text="{I18N>/SORT}" required="true"/>
                                 <Input 
+                                    required="true"
+                                    fieldGroupIds="detailRequired"
                                     value="{viewModel>/Detail/Header/sort_sequence}"
                                     editable="{viewModel>/App/EditMode}"
                                 />
@@ -175,11 +186,14 @@
                                     id="calculationBuilder"
                                     allowStringLiterals="true"
                                     layoutType="VisualOnly"
-                                    expression="{viewModel>/Detail/Header/qttive_eval_article_calc_formula_name}"
+                                    expression="{viewModel>/Detail/Header/qttive_eval_article_calc_formula}"
                                     allowComparisonOperators="true"
                                     allowLogicalOperators="true"
                                     title="{I18N>/QTTIVE_ITEM_CALC}"
-                                    readOnly="{=!${viewModel>/App/EditMode}}"
+                                    readOnly="{=
+                                        !${viewModel>/App/EditMode} ||
+                                        ${viewModel>/Detail/Header/evaluation_execute_mode_code} !== 'QTTVE_EVAL'
+                                    }"
                                 > 
                                 </suiteCom:CalculationBuilder>
                                 <layoutData>
@@ -188,7 +202,7 @@
                             </VBox>
                             <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
                                 <!-- 평가항목설명 -->
-                                <Label text="{I18N>/EVAL_ITEM_DESC}" required="true"/>
+                                <Label text="{I18N>/EVAL_ITEM_DESC}"/>
                                 <TextArea 
                                     value="{viewModel>/Detail/Header/evaluation_article_desc}"
                                     width="100%"
@@ -211,7 +225,11 @@
                 title="{I18N>/SCLE}" 
                 visible="{=
                     ${viewModel>/Args/new} !== 'Y' &amp;&amp;
-                    ${viewModel>/Args/leaf} === 'Y'
+                    ${viewModel>/Args/leaf} === 'Y' &amp;&amp;
+                    !(
+                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'NSCLE' || 
+                        !${viewModel>/Detail/Header/evaluation_result_input_type_cd}
+                    )
                 }"
             >
 				<uxap:subSections>
@@ -247,25 +265,45 @@
                                     <core:Icon src="sap-icon://edit"/>
                                     <!-- sap-icon://delete -->
                                 </Column>
-                                <Column>
+                                <Column
+                                    visible="{=
+                                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} !== 'NSCLE'
+                                    }"
+                                >
                                     <!-- Scale -->
-                                    <Text text="{I18N>/SCLE}" />
+                                    <Label text="{I18N>/SCLE}" />
                                 </Column>
-                                <Column>
+                                <Column
+                                    visible="{=
+                                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'RANGE'
+                                    }"
+                                >
                                     <!-- Min(이상) -->
-                                    <Text text="{I18N>/MIN_OVER}" />
+                                    <Label text="{I18N>/MIN_OVER}" />
                                 </Column>
-                                <Column>
+                                <Column
+                                    visible="{=
+                                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'RANGE'
+                                    }"
+                                >
                                     <!-- Max(미만) -->
-                                    <Text text="{I18N>/MAX_UNDER}" />
+                                    <Label text="{I18N>/MAX_UNDER}" />
                                 </Column>
-                                <Column>
+                                <Column
+                                    visible="{=
+                                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'SCLE'
+                                    }"
+                                >
                                     <!-- 배점 -->
-                                    <Text text="{I18N>/DISTRB_SCOR}" />
+                                    <Label text="{I18N>/DISTRB_SCOR}" />
                                 </Column>
-                                <Column>
+                                <Column
+                                    visible="{=
+                                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} !== 'NSCLE'
+                                    }"
+                                >
                                     <!-- 정렬 -->
-                                    <Text text="{I18N>/SORT}" />
+                                    <Label text="{I18N>/SORT}" required="true"/>
                                 </Column>
                             </columns>
                             <items>
@@ -288,40 +326,37 @@
                                             value="{viewModel>option_article_name}" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable} &amp;&amp;
-                                                ${viewModel>/Detail/Header/evaluation_result_input_type_cd} !== 'NSCLE'
+                                                ${viewModel>rowEditable}
                                             }"
                                         />
                                         <Input 
                                             value="{viewModel>option_article_start_value}" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable} &amp;&amp;
-                                                ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'RANGE'
+                                                ${viewModel>rowEditable}
                                             }"
                                         />
                                         <Input 
                                             value="{viewModel>option_article_end_value}"
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable} &amp;&amp;
-                                                ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'RANGE'
+                                                ${viewModel>rowEditable}
                                             }"
                                         />
                                         <Input 
                                             value="{viewModel>evaluation_score}" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable} &amp;&amp;
-                                                ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'SCLE'
+                                                ${viewModel>rowEditable}
                                             }"
                                         />
                                         <Input 
+                                            required="true"
+                                            fieldGroupIds="detailRequired"
                                             value="{viewModel>sort_sequence}" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable} &amp;&amp;
-                                                ${viewModel>/Detail/Header/evaluation_result_input_type_cd} !== 'NSCLE'
+                                                ${viewModel>rowEditable}
                                             }"
                                         />
                                     </cells>
@@ -355,11 +390,12 @@
 				<Button 
                     text="{I18N>/DELETE}" 
                     enabled="{=
-                        ${viewModel>/App/EditMode} &amp;&amp;
+                        !${viewModel>/App/EditMode} &amp;&amp;
+                        ${viewModel>/Args/new} !== 'Y' &amp;&amp;
                         ${viewModel>/Detail/Header/hierarchy_tree_size} === '1'
                     }"
                     type="Transparent" 
-                    press=".onPageDeleteButtonPress" 
+                    press="onPressDelete" 
                 />
                 <Button 
                     text="{I18N>/SAVE}" 

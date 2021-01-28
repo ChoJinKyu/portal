@@ -51,6 +51,10 @@ sap.ui.define([
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
 
+                if(oArgs.search){
+                    this.onPressSearch();
+                }
+
                 oViewModel.setProperty("/App/layout", "OneColumn");
             }
             /***
@@ -310,6 +314,9 @@ sap.ui.define([
                 oRowData = oContext.getObject();
                 oViewModel = this.getView().getModel("viewModel");
 
+                oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
+                oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
+
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData,
                     NewHeader : {}
@@ -538,6 +545,10 @@ sap.ui.define([
 
                 oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
                 oNavParam.leaf = oRowData.leaf_flag;
+
+
+                oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
+                oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
                 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData

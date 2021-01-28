@@ -19,7 +19,7 @@ using {op.Pu_Wbs_Mst as wbsMst} from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_
 @path : '/op.prReviewMgtService'
 service PrReviewMgtService {
 
-    // 구매요청 검토/접수 목록
+   // 구매요청 검토/접수 목록
     view Pr_ReviewListView @(title : '구매요청 검토/접수 List View') as
         select 
              key dtl.tenant_id  // 테넌트ID
@@ -28,11 +28,11 @@ service PrReviewMgtService {
             ,key dtl.pr_item_number  // 구매요청품목번호
 
             ,mst.pr_type_code  // 구매요청유형코드
-            ,cd1.code_name as pr_type_name : String(240)  // 구매요청 유형
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE', mst.pr_type_code, 'KO') as pr_type_name : String(240)  // 구매요청 유형
             ,mst.pr_type_code_2  // 구매요청품목그룹코드
-            ,cd2.code_name as pr_type_name_2 : String(240)  // 품목그룹
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_2', mst.pr_type_code_2, 'KO') as pr_type_name_2 : String(240)  // 품목그룹
             ,mst.pr_type_code_3  // 구매요청품목코드
-            ,cd3.code_name as pr_type_name_3 : String(240)  // 카테고리
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_3', mst.pr_type_code_3, 'KO') as pr_type_name_3 : String(240)  // 카테고리
 
             ,dtl.org_code  // 조직코드
             ,dtl.material_code  // 자재코드
@@ -41,8 +41,8 @@ service PrReviewMgtService {
             ,dtl.requestor_empno  // 요청자사번
             ,dtl.requestor_name  // 요청자명
             ,dtl.request_date  // 요청일자
-            ,mst.requestor_department_code  // 요청자부서코드
-            ,mst.requestor_department_name  // 요청자부서명
+            ,ifnull(hrEmp.department_id, mst.requestor_department_code) as requestor_department_code : String(240)  // 요청자부서코드
+            ,ifnull(cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_id), mst.requestor_department_name) as requestor_department_name : String(240)  // 요청자부서명
 
             ,dtl.pr_desc  // 구매요청내역
             ,dtl.pr_unit  // 구매요청단위
@@ -54,7 +54,7 @@ service PrReviewMgtService {
             ,dtl.buyer_department_code  // 구매담당자부서
 
             ,mst.pr_create_status_code  // 구매요청생성상태코드
-            ,cd5.code_name as pr_create_status_name : String(240)  // 구매요청생성상태코드
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, 'KO') as pr_create_status_name : String(240)  // 구매요청생성상태코드
 
             ,mst.approval_flag  // 품의여부
             ,mst.approval_number  // 품의번호
@@ -66,7 +66,7 @@ service PrReviewMgtService {
             ,dtl.price_unit  // 가격단위
             ,mst.pr_template_number  // 구매요청템플릿번호
             ,mst.pr_create_system_code  // 구매요청생성시스템코드
-            ,cd4.code_name as pr_create_system_name : String(240)  // 구매요청생성시스템
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, 'KO') as pr_create_system_name : String(240)  // 구매요청생성시스템
             ,dtl.pr_progress_status_code  // 구매요청진행상태코드
             ,dtl.approval_date  // 결재일자
             ,dtl.remark  // 비고
@@ -82,6 +82,12 @@ service PrReviewMgtService {
         on  dtl.tenant_id    = mst.tenant_id
         and dtl.company_code = mst.company_code
         and dtl.pr_number    = mst.pr_number
+
+        left outer join hrEmployee hrEmp
+        on  hrEmp.tenant_id = dtl.tenant_id
+        and hrEmp.employee_number = dtl.requestor_empno
+
+/*      Function 으로 변경
         left outer join cdView cd1
         on  cd1.tenant_id   = mst.tenant_id
         and cd1.group_code  = 'OP_PR_TYPE_CODE'
@@ -107,9 +113,10 @@ service PrReviewMgtService {
         and cd5.group_code  = 'OP_PR_CREATE_STATUS_CODE'
         and cd5.language_cd = 'KO'
         and cd5.code        = mst.pr_create_status_code
+*/
     ;
 
-    // 구매요청 검토/접수 상세
+   // 구매요청 검토/접수 상세
     view Pr_ReviewDtlView @(title : '구매요청 검토/접수 Detail View') as
         select
              key mst.tenant_id  // 테넌트ID
@@ -149,8 +156,8 @@ service PrReviewMgtService {
             ,dtl.requestor_empno  // 구매요청자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.requestor_empno) as requestor_name : String(240)  // 구매요청자명
             ,cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_id) as requestor_department_name : String(240)
-            //,mst.requestor_department_code  // 요청자부서코드
-            //,mst.requestor_department_name  // 요청자부서명
+           //,mst.requestor_department_code  // 요청자부서코드
+           //,mst.requestor_department_name  // 요청자부서명
             ,dtl.requestor_name as erp_requestor_name // 요청자명
  
             ,dtl.buyer_empno  // 구매담당자사번
@@ -189,7 +196,8 @@ service PrReviewMgtService {
         and dtl.company_code = mst.company_code
         and dtl.pr_number    = mst.pr_number
 
-        //inner join hrEmployee hrEmp
+       // 정상일때 inner join으로 변경하자.  -- by dokim
+       //inner join hrEmployee hrEmp
         left outer join hrEmployee hrEmp
         on  hrEmp.tenant_id = dtl.tenant_id
         and hrEmp.employee_number = dtl.requestor_empno
@@ -209,7 +217,7 @@ service PrReviewMgtService {
         and mtl.material_code = dtl.material_code
     ;
 
-    // 구매요청 검토/접수 상세 - 계정정보
+   // 구매요청 검토/접수 상세 - 계정정보
     view Pr_ReviewDtlAcctView @(title : '구매요청 검토/접수 Detail Account View') as
         select
              key acct.tenant_id  // 테넌트ID
@@ -239,15 +247,15 @@ service PrReviewMgtService {
         and dtl.pr_number      = acct.pr_number
         and dtl.pr_item_number = acct.pr_item_number
 
-        // Master Table에 아직 Data가 없다. 있을때 inner join으로 변경하자.  -- by dokim
-        //inner join acctMst acctMst
+       // Master Table에 아직 Data가 없다. 있을때 inner join으로 변경하자.  -- by dokim
+       //inner join acctMst acctMst
         left outer join acctMst acctMst
         on  acctMst.tenant_id     = acct.tenant_id
         and acctMst.company_code  = acct.company_code
         and acctMst.language_code = 'KO'
         and acctMst.account_code  = acct.account_code
 
-        //inner join cctrMst cctrMst
+       //inner join cctrMst cctrMst
         left outer join cctrMst cctrMst
         on  cctrMst.tenant_id     = acct.tenant_id
         and cctrMst.company_code  = acct.company_code
@@ -255,26 +263,23 @@ service PrReviewMgtService {
         and cctrMst.cctr_code     = acct.cctr_code
         and $now between cctrMst.effective_start_date and cctrMst.effective_end_date
 
-        //inner join wbsMst wbsMst
+       //inner join wbsMst wbsMst
         left outer join wbsMst wbsMst
         on  wbsMst.tenant_id    = acct.tenant_id
         and wbsMst.company_code = acct.company_code
         and wbsMst.wbs_code = acct.wbs_code
 
-        //inner join assetMst assetMst
+       //inner join assetMst assetMst
         left outer join assetMst assetMst
         on  assetMst.tenant_id    = acct.tenant_id
         and assetMst.company_code = acct.company_code
         and assetMst.asset_number = acct.asset_number
 
-        //inner join orderMst orderMst
+       //inner join orderMst orderMst
         left outer join orderMst orderMst
         on  orderMst.tenant_id    = acct.tenant_id
         and orderMst.company_code = acct.company_code
         and orderMst.order_number = acct.order_number
-
-
-
 
     ;
 

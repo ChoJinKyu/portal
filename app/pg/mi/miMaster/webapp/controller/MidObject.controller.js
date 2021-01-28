@@ -2,7 +2,6 @@ sap.ui.define([
     "./BaseController",
     "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
-    "ext/lib/util/ValidatorUtil",
     "ext/lib/formatter/DateFormatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -10,7 +9,7 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
     "ext/lib/util/Validator"
-], function (BaseController, Multilingual, JSONModel, ValidatorUtil, DateFormatter, Filter, FilterOperator,  MessageBox, MessageToast, ValueState, Validator) {
+], function (BaseController, Multilingual, JSONModel, DateFormatter, Filter, FilterOperator,  MessageBox, MessageToast, ValueState, Validator) {
     "use strict";
 
     return BaseController.extend("pg.mi.miMaster.controller.MidObject", {
@@ -808,7 +807,12 @@ sap.ui.define([
              
              var mTitle = this.getModel("I18N").getText("/ADDITION") + " " + this.getModel("I18N").getText("/CONFIRM");	 
              if(bCreateFlag){
-                 if(ValidatorUtil.isValid(this.getView(),"requiredField")){
+
+                //if(this.validator.validate(this.byId("input_mi_material_code")) !== true) return;
+                //if(this.validator.validate(this.byId("combobox_category_code")) !== true) return;
+
+                //if(!this._onPageValidate()){ 에서 이미 validate 체크완료 2021.01.28 ValidatorUtil 제거
+                // if(ValidatorUtil.isValid(this.getView(),"requiredField")){
                      MessageBox.confirm(this.getModel("I18N").getText("/NPG00014"), {
                          title : mTitle,
                          initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -820,9 +824,9 @@ sap.ui.define([
                              }
                          }.bind(this)
                      });
-                 }else{
-                     console.log("checkRequire")
-                 }
+                 //}else{
+                 //    console.log("checkRequire")
+                // }
              }else{
                 var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/CONFIRM");
                  MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {

@@ -27,6 +27,12 @@ using {pg.It_Mst_Item_Category as ItemCategoryMst} from '../../../../db/cds/pg/i
 using {pg.It_Mst_Aa_Category as AaCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_AA_CATEGORY-model';        // AA CATEGORY Mst(계정범주)
 using {pg.It_Mst_Mrp_Manager as MrpManagerMst} from '../../../../db/cds/pg/it/PG_IT_MST_MRP_MANAGER-model';        // MRP Manager Mst(MRP관리자)
 
+//PG TM
+using {pg.Tm_Master as TmMst} from '../../../../db/cds/pg/tm/PG_TM_MASTER-model';                                           // TASK MONITORING Mst(모니터링 마스터)
+using {pg.Tm_Scenario_Number_Lng as TmScenarioNumberLng} from '../../../../db/cds/pg/tm/PG_TM_SCENARIO_NUMBER_LNG-model';   // TASK MONITORING SCENARIO LANGUAGE(모니터링 시나리오번호 다국어)
+using {pg.Tm_Comp_Code as TmCompCode} from '../../../../db/cds/pg/tm/PG_TM_COMP_CODE-model';                                // TASK MONITORING COMPANY CODE(모니터링 법인코드)
+using {pg.Tm_Bizunit_Code as TmBizunitCode} from '../../../../db/cds/pg/tm/PG_TM_BIZUNIT_CODE-model';                       // TASK MONITORING BIZUNIT CODE(모니터링 사업부문코드)
+
 namespace pg;
 
 @path : '/pg.taskMonitoringSacDService'
@@ -367,5 +373,51 @@ service taskMonitoringSacDService {
                ,language_cd     as  LANGUAGE_CODE
         from  CmCodeDtlView
         where group_code  =  'OP_INCOTERMS';
+
+    // TmMonitoringScenario View: 모니터링 시나리오
+    view TmMonitoringScenarioView @(title : '모니터링 시나리오 View') as
+        select
+            key  x1.tenant_id           as  TENANT_ID
+           ,key  x3.company_code||'_'||x4.bizunit_code||'_'||x1.scenario_number  as  ID : String
+                ,x2.scenario_name       as  Description
+                ,x3.company_code        as  COMPANY_CODE  
+                ,x4.bizunit_code        as  BIZUNIT_CODE
+                ,x1.activate_flag       as  ACTIVATE_FLAG
+        from	(
+                    select  
+                             a.tenant_id
+                            ,a.scenario_number
+                            ,a.activate_flag
+                    from	TmMst  a
+                )  x1
+                inner  join  (
+                    select
+                             b.tenant_id
+                            ,b.scenario_number
+                            ,b.scenario_name
+                    from	TmScenarioNumberLng  b
+                    where	b.language_code  =  'KO'
+                )  x2
+                    on  x1.tenant_id        =  x2.tenant_id
+                    and x1.scenario_number  =  x2.scenario_number
+                inner  join  (
+                    select
+                             c.tenant_id
+                            ,c.scenario_number
+                            ,c.company_code
+                    from	TmCompCode  c
+                )  x3
+                    on  x1.tenant_id        =  x3.tenant_id
+                    and x1.scenario_number  =  x3.scenario_number
+                inner  join  (
+                    select
+                             d.tenant_id
+                            ,d.scenario_number
+                            ,d.bizunit_code
+                    from	TmBizunitCode  d
+                )  x4
+                    on  x1.tenant_id        =  x4.tenant_id
+                    and x1.scenario_number  =  x4.scenario_number
+        ;
 
 }

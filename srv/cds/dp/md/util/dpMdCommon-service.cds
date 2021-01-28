@@ -52,7 +52,7 @@ service DpMdCommonService {
     and mst.approve_status_code = 'AP' /* 승인 */
     and dm.mold_progress_status_code in ('SUP_APP','BUD_APP')  /* 다음단계 넘어가기 전까지의 몰드상태 */
     and dm.mold_id not in (
-        select dtl.mold_id 
+        select dtl2.mold_id 
         from approvalMst.Approval_Mst m2  
         join approvalDtl.Md_Approval_Dtl dtl2 on m2.approval_number = dtl2.approval_number 
         and m2.tenant_id = dtl2.tenant_id
