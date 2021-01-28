@@ -45,7 +45,13 @@
                                 <Input 
                                     required="true"
                                     fieldGroupIds="newRequired"
-                                    value="{viewModel>/Detail/NewHeader/evaluation_article_name}"
+                                    value="{
+                                        path : 'viewModel>/Detail/NewHeader/evaluation_article_name',
+                                        type : 'sap.ui.model.odata.type.String',
+                                        constraints : {
+                                            maxLength : 240
+                                        }
+                                    }"
                                 />
                                 <layoutData>
                                     <layout:GridData span="L12 M12 S12" />
@@ -173,7 +179,13 @@
                                 <Input 
                                     required="true"
                                     fieldGroupIds="detailRequired"
-                                    value="{viewModel>/Detail/Header/sort_sequence}"
+                                    value="{
+                                        path : 'viewModel>/Detail/Header/sort_sequence',
+                                        type : 'sap.ui.model.odata.type.Decimal',
+                                        constraints : {
+                                            scale : 0
+                                        }
+                                    }"
                                     editable="{viewModel>/App/EditMode}"
                                 />
                                 <layoutData>
@@ -186,9 +198,9 @@
                                     id="calculationBuilder"
                                     allowStringLiterals="true"
                                     layoutType="VisualOnly"
-                                    expression="{viewModel>/Detail/Header/qttive_eval_article_calc_formula}"
                                     allowComparisonOperators="true"
                                     allowLogicalOperators="true"
+                                    expression="{viewModel>/Detail/Header/qttive_eval_article_calc_formula}"
                                     title="{I18N>/QTTIVE_ITEM_CALC}"
                                     readOnly="{=
                                         !${viewModel>/App/EditMode} ||
@@ -197,14 +209,20 @@
                                 > 
                                 </suiteCom:CalculationBuilder>
                                 <layoutData>
-                                    <layout:GridData span="L12 M12 S12" />
+                                    <layout:GridData span="L12 M12 S12" linebreak="true"/>
                                 </layoutData>
                             </VBox>
                             <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
                                 <!-- 평가항목설명 -->
                                 <Label text="{I18N>/EVAL_ITEM_DESC}"/>
                                 <TextArea 
-                                    value="{viewModel>/Detail/Header/evaluation_article_desc}"
+                                    value="{
+                                        path : 'viewModel>/Detail/Header/evaluation_article_desc',
+                                        type : 'sap.ui.model.odata.type.String',
+                                        constraints : {
+                                            maxLength : 3000
+                                        }
+                                    }"
                                     width="100%"
                                     rows="5"
                                     editable="{viewModel>/App/EditMode}"
@@ -323,28 +341,52 @@
                                         />
                                         <!-- <Button icon="sap-icon://edit" /> -->
                                         <Input 
-                                            value="{viewModel>option_article_name}" 
+                                            value="{
+                                                path : 'viewModel>option_article_name',
+                                                type : 'sap.ui.model.odata.type.String',
+                                                constraints : {
+                                                    maxLength : 240
+                                                }
+                                            }" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
                                                 ${viewModel>rowEditable}
                                             }"
                                         />
                                         <Input 
-                                            value="{viewModel>option_article_start_value}" 
+                                            value="{
+                                                path : 'viewModel>option_article_start_value',
+                                                type : 'sap.ui.model.odata.type.String',
+                                                constraints : {
+                                                    maxLength : 100
+                                                }
+                                            }" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
                                                 ${viewModel>rowEditable}
                                             }"
                                         />
                                         <Input 
-                                            value="{viewModel>option_article_end_value}"
+                                            value="{
+                                                path : 'viewModel>option_article_end_value',
+                                                type : 'sap.ui.model.odata.type.String',
+                                                constraints : {
+                                                    maxLength : 100
+                                                }
+                                            }"
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
                                                 ${viewModel>rowEditable}
                                             }"
                                         />
                                         <Input 
-                                            value="{viewModel>evaluation_score}" 
+                                            value="{
+                                                path : 'viewModel>evaluation_score',
+                                                type : 'sap.ui.model.odata.type.Decimal',
+                                                constraints : {
+                                                    scale : 0
+                                                }
+                                            }" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
                                                 ${viewModel>rowEditable}
@@ -353,7 +395,13 @@
                                         <Input 
                                             required="true"
                                             fieldGroupIds="detailRequired"
-                                            value="{viewModel>sort_sequence}" 
+                                            value="{
+                                                path : 'viewModel>sort_sequence',
+                                                type : 'sap.ui.model.odata.type.Decimal',
+                                                constraints : {
+                                                    scale : 0
+                                                }
+                                            }" 
                                             editable="{=
                                                 ${viewModel>/App/EditMode} &amp;&amp;
                                                 ${viewModel>rowEditable}

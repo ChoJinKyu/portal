@@ -148,8 +148,10 @@ sap.ui.define([
                 if(!oHeader){
                     return;
                 }
-
-                this.byId("calculationBuilder").bindAggregation("variables",{
+                
+                var oCalculationBuilder;
+                oCalculationBuilder = this.byId("calculationBuilder");
+                oCalculationBuilder.bindAggregation("variables",{
                     path : "/QttiveItemCode",
                     template : new CalculationBuilderVariable({ key : "{qttive_item_code}", label : "{qttive_item_name}" }),
                     filters : [

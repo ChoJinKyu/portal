@@ -16,7 +16,6 @@ PROCEDURE SP_SF_FUNDING_APPL_DRAFT_PROC(
 	,IN I_COMPANY_CODE                   NVARCHAR(10)   --회사코드
 	,IN I_ORG_TYPE_CODE                  NVARCHAR(2)    --조직유형코드
 	,IN I_ORG_CODE                       NVARCHAR(10)   --조직코드
-	,IN I_FUNDING_APPL_DATE              DATE           --자금지원신청일자
 	,IN I_PURCHASING_DEPARTMENT_NAME     NVARCHAR(100)  --구매부서명
 	,IN I_PYEAR_SALES_AMOUNT             DECIMAL        --전년매출금액
 	,IN I_MAIN_BANK_NAME                 NVARCHAR(100)  --주요은행명
@@ -29,8 +28,6 @@ PROCEDURE SP_SF_FUNDING_APPL_DRAFT_PROC(
 	,IN I_FUNDING_REASON_CODE            NVARCHAR(30)   --자금지원사유코드
 	,IN I_COLLATERAL_TYPE_CODE           NVARCHAR(30)   --담보구분코드
 	,IN I_COLLATERAL_AMOUNT              DECIMAL        --담보금액
-	,IN I_COLLATERAL_START_DATE          DATE           --담보시작일자
-	,IN I_COLLATERAL_END_DATE            DATE           --담보종료일자
 	,IN I_COLLATERAL_ATTCH_GROUP_NUMBER  NVARCHAR(100)  --담보첨부파일그룹번호
 	,IN I_FUNDING_STEP_CODE              NVARCHAR(30)   --자금지원단계코드
 	,IN I_FUNDING_STATUS_CODE            NVARCHAR(30)   --자금지원상태코드
@@ -120,7 +117,7 @@ BEGIN
 				,COMPANY_CODE                       --회사코드
 				,ORG_TYPE_CODE                      --조직유형코드
 				,ORG_CODE                           --조직코드
-				,FUNDING_APPL_DATE                	--자금지원신청일자
+				--,FUNDING_APPL_DATE                	--자금지원신청일자
 				,PURCHASING_DEPARTMENT_NAME         --구매부서명
 				,PYEAR_SALES_AMOUNT               	--전년매출금액
 				,MAIN_BANK_NAME                     --주요은행명
@@ -150,13 +147,13 @@ BEGIN
 				,:I_COMPANY_CODE                  --회사코드
 				,:I_ORG_TYPE_CODE                 --조직유형코드
 				,:I_ORG_CODE                      --조직코드
-				,CURRENT_TIMESTAMP              		--자금지원신청일자
+				--,CURRENT_TIMESTAMP              		--자금지원신청일자
 				,:I_PURCHASING_DEPARTMENT_NAME    --구매부서명
 				,:I_PYEAR_SALES_AMOUNT            --전년매출금액
 				,:I_MAIN_BANK_NAME                --주요은행명
 				,:I_FUNDING_APPL_AMOUNT           --자금지원신청금액
 				,:I_FUNDING_HOPE_YYYYMM           --자금지원희망년월
-				,'A'          							--상환방법코드
+				,:I_REPAYMENT_METHOD_CODE		  --상환방법코드
 				,:I_APPL_USER_NAME                --신청사용자명
 				,:I_APPL_USER_TEL_NUMBER          --신청사용자전화번호
 				,:I_APPL_USER_EMAIL_ADDRESS       --신청사용자이메일주소
@@ -164,8 +161,8 @@ BEGIN
 				,:I_COLLATERAL_TYPE_CODE          --담보구분코드
 				,:I_COLLATERAL_AMOUNT             --담보금액
 				,:I_COLLATERAL_ATTCH_GROUP_NUMBER --담보첨부파일그룹번호
-				,'S10'            						--자금지원단계코드
-				,'110'            						--자금지원상태코드
+				,'S10'            				  --자금지원단계코드
+				,'110'            				  --자금지원상태코드
 				,CURRENT_TIMESTAMP
 				,CURRENT_TIMESTAMP
 				,:I_USER_ID
@@ -182,20 +179,21 @@ BEGIN
 			************************************************/
 			UPDATE SP_SF_FUNDING_APPLICATION
 			SET 
-				 ORG_CODE						= :I_ORG_CODE							--조직코드
+				 ORG_CODE						= :I_ORG_CODE						--조직코드
 				,TENANT_ID						= :I_TENANT_ID                    	--테넌트ID
-				,COMPANY_CODE                   = :I_COMPANY_CODE    					--회사코드
+				,COMPANY_CODE                   = :I_COMPANY_CODE    				--회사코드
 				,ORG_TYPE_CODE                  = :I_ORG_TYPE_CODE    				--조직유형코드
 				,PURCHASING_DEPARTMENT_NAME		= :I_PURCHASING_DEPARTMENT_NAME		--구매부서명
 				,PYEAR_SALES_AMOUNT				= :I_PYEAR_SALES_AMOUNT				--전년매출금액
 				,MAIN_BANK_NAME					= :I_MAIN_BANK_NAME					--주요은행명
-				,FUNDING_APPL_AMOUNT			= :I_FUNDING_APPL_AMOUNT				--자금지원신청금액
-				,FUNDING_HOPE_YYYYMM			= :I_FUNDING_HOPE_YYYYMM				--자금지원희망년월
+				,FUNDING_APPL_AMOUNT			= :I_FUNDING_APPL_AMOUNT			--자금지원신청금액
+				,FUNDING_HOPE_YYYYMM			= :I_FUNDING_HOPE_YYYYMM			--자금지원희망년월
+                ,REPAYMENT_METHOD_CODE          = :I_REPAYMENT_METHOD_CODE          --상환방법코드
 				,APPL_USER_NAME					= :I_APPL_USER_NAME					--신청사용자명
-				,APPL_USER_TEL_NUMBER			= :I_APPL_USER_TEL_NUMBER				--신청사용자전화번호
-				,APPL_USER_EMAIL_ADDRESS		= :I_APPL_USER_EMAIL_ADDRESS			--신청사용자이메일주소
-				,FUNDING_REASON_CODE			= :I_FUNDING_REASON_CODE				--자금지원사유코드
-				,COLLATERAL_TYPE_CODE			= :I_COLLATERAL_TYPE_CODE				--담보구분코드
+				,APPL_USER_TEL_NUMBER			= :I_APPL_USER_TEL_NUMBER			--신청사용자전화번호
+				,APPL_USER_EMAIL_ADDRESS		= :I_APPL_USER_EMAIL_ADDRESS		--신청사용자이메일주소
+				,FUNDING_REASON_CODE			= :I_FUNDING_REASON_CODE			--자금지원사유코드
+				,COLLATERAL_TYPE_CODE			= :I_COLLATERAL_TYPE_CODE			--담보구분코드
 				,COLLATERAL_AMOUNT				= :I_COLLATERAL_AMOUNT				--담보금액
 				,COLLATERAL_ATTCH_GROUP_NUMBER	= :I_COLLATERAL_ATTCH_GROUP_NUMBER	--담보첨부파일그룹번호
 				,LOCAL_CREATE_DTM				= CURRENT_TIMESTAMP

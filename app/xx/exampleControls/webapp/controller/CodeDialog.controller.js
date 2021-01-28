@@ -10,8 +10,9 @@ sap.ui.define([
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
+    "dp/util/control/ui/MaterialOrgDialog"
 ], function (Controller, JSONModel, MessageBox, MessageToast, CodeDialog, EmployeeDialog, CompanyDetailDialog, CmDialogHelp,
-        Filter, FilterOperator, Sorter) {
+        Filter, FilterOperator, Sorter, MaterialOrgDialog) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -158,6 +159,30 @@ sap.ui.define([
             this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
         },
 
+        onMaterialOrgMultiDialogPress: function(oEvent){
+            if(!this.oSearchMultiMaterialOrgDialog){
+                this.oSearchMultiMaterialOrgDialog = new MaterialOrgDialog({
+                    title: "Choose MaterialOrg",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    },
+                    getValue: this.byId("searchMultiMaterialOrgFromDialog").getValue()
+                });
+                this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent){
+                    this.byId("searchMultiMaterialOrgFromDialog").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            
+            this.oSearchMultiMaterialOrgDialog.open();
+
+            var aTokens = this.byId("searchMultiMaterialOrgFromDialog").getTokens();
+            this.oSearchMultiMaterialOrgDialog.setTokens(aTokens);
+            
+            this.byId("searchMultiMaterialOrgFromDialog").setValue("");
+        },
 
 	});
 });

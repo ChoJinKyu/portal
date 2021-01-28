@@ -21,7 +21,8 @@ service MoldItemSelectionService {
         , dtl.mold_id 
       from  approvalMst.Approval_Mst m2  
       join approvalDtl.Md_Approval_Dtl dtl on m2.approval_number = dtl.approval_number 
-      and m2.tenant_id = dtl.tenant_id
+      and m2.tenant_id = dtl.tenant_id 
+      and m2.approve_status_code not in ('RJ')  // 반려된 아이템은 not in 대상에서 제외 
     ;
 
     /** 

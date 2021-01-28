@@ -22,18 +22,14 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "material_desc" },
-                aggregations: {
-                    filters: [
-                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                    ]
-                }
+                textField: { type: "string", group: "Misc", defaultValue: "material_desc" }
             }
         },
 
         renderer: Renderer,
 
         createSearchFilters: function(){
+            //this.oTenantId =  new Input({ placeholder: this.getModel("I18N").getText("/TENANT_ID") });
             this.oSearchCode = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
             this.oSearchDesc = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
             this.oSearchSpec = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")});
@@ -49,7 +45,8 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                        new Filter("org_type_code", FilterOperator.EQ, "PL")
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.PurOrgMgtService',
                     entityName: 'Pur_Operation_Org'
@@ -57,16 +54,18 @@ sap.ui.define([
                 required:true
             });
 
+            this.oSearchOrg.oModels.undefined.setSizeLimit(10000);
+
             this.oSearchUIT = new CodeComboBox({
                 showSecondaryValues:true,
                 useEmpty:true,
                 keyField: 'code',
-                textField: 'code_description',
+                textField: 'code_name',
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-                        new Filter("group_code", FilterOperator.EQ, 'DP_MM_USER_ITEM_TYPE')
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                        new Filter("group_code", FilterOperator.EQ, "DP_MM_USER_ITEM_TYPE")
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.util.CommonService',
                     entityName: 'Code'
@@ -81,7 +80,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ],
                     serviceUrl: 'srv-api/odata/v2/dp.HsCodeMgtService',
                     entityName: 'HsCode'
@@ -89,49 +88,55 @@ sap.ui.define([
             });
 
             return [
+                // new VBox({
+                //     items: [
+                //         new Label({ text: this.getModel("I18N").getText("/TENANT_ID"), required:true}),  //테넌트ID
+                //         this.oTenantId
+                //     ],
+                //     layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                // }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/ORG_CODE"), required:true}),  //조직코드
                         this.oSearchOrg
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE")}),            // 자재코드
                         this.oSearchCode
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
                 }),
-                new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
-                        this.oSearchUIT
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }),
-
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/MATERIAL_DESC")}),    // 자재내역
                         this.oSearchDesc
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}),   //자재스펙
                         this.oSearchSpec
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                    layoutData: new GridData({ span: "XL3 L3 M3 S10", linebreak: true})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/HS_CODE") }),  //HS_CODE
                         this.oSearchHSCode
                     ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
+                        this.oSearchUIT
+                    ],
+                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                }),
 
             ];
         },
@@ -188,22 +193,40 @@ sap.ui.define([
                 })
             ];
         },
-        
+ 
         loadData: function(){
-            var sOrg = this.oSearchOrg.getSelectedKey(),
-                sUIT = this.oSearchUIT.getSelectedKey(),
+            var sTenantId = "L2100";
+
+            var oParam = this.getProperty("getValue");
+            var sOrg;
+            var sOrgCode = false;
+            if(oParam != "" ) {
+                sOrg = this.oSearchOrg.setSelectedKey(oParam);
+                this.oSearchOrg.setEnabled(false);
+            } else if (oParam == "") {
+                sOrg = this.oSearchOrg.getSelectedKey();
+                this.oSearchOrg.setEnabled(true);
+            } else {
+                sOrg = this.oSearchOrg.getSelectedKey();
+            }
+
+             var sUIT = this.oSearchUIT.getSelectedKey(),
                 sHSCode = this.oSearchHSCode.getSelectedKey(),
                 sCode = this.oSearchCode.getValue(),
                 sDesc = this.oSearchDesc.getValue(),
                 sSpec = this.oSearchSpec.getValue(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L1100")
-                ],
-                sOrgCode=false;
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                ];
                               
             if(sOrg){
                 sOrgCode=true;
-                aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrg));
+                var oParam = this.getProperty("getValue");
+                if(oParam != "") {
+                    aFilters.push(new Filter("org_code", FilterOperator.EQ, oParam));
+                } else {
+                    aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrg));
+                }
             }
 
             if(sUIT){
@@ -231,7 +254,7 @@ sap.ui.define([
                 aFilters.push(new Filter("tolower(material_spec)", FilterOperator.Contains, "'" + sSpec.toLowerCase().replace("'","''") + "'"));
             }
 
-             if(sOrgCode) {
+             if(sOrgCode || oParam != "") {
                 ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialOrgView", {
                     filters: aFilters,
                     success: function(oData){
@@ -244,7 +267,13 @@ sap.ui.define([
                 this.oDialog.setBusy(false);
                 return;
             }
+        },
+        
+        beforeOpen: function() {
+            // this.oTenantId.setValue("L2100");
         }
+
+
     });
 
     return MaterialOrgDialog;

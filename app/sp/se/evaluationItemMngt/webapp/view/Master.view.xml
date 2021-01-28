@@ -68,10 +68,12 @@
                 >
                     <VBox>
                         <!-- 평가조직 -->
-                        <Label text="{I18N>/EVAL_ORG}" />
+                        <Label text="{I18N>/EVAL_ORG}" required="true"/>
                         <ComboBox 
                             id="orgCode" 
                             width="100%" 
+                            required="true"
+                            fieldGroupIds="searchRequired"
                             showSecondaryValues="true"
                             selectionChange="onSelectionChangeOrgCode"
                             selectedKey="{viewModel>/cond/EQ/org_code}"
@@ -82,10 +84,12 @@
                     </VBox>
                     <VBox>
                         <!-- 평가운영단위 -->
-                        <Label text="{I18N>/EVAL_OP_UNT}" />
+                        <Label text="{I18N>/EVAL_OP_UNT}" required="true"/>
                         <ComboBox 
                             id="unitCode" 
                             width="100%" 
+                            required="true"
+                            fieldGroupIds="searchRequired"
                             showSecondaryValues="true"
                             selectionChange="onSelectionChangeUnitCode"
                             selectedKey="{viewModel>/cond/EQ/evaluation_operation_unit_code}"
@@ -96,7 +100,7 @@
                     </VBox>
                     <VBox>
                         <!-- 평가유형명 -->
-                        <Label text="{I18N>/EVALUATION_TYPE_NAME}" />
+                        <Label text="{I18N>/EVALUATION_TYPE_NAME}" required="true"/>
                         <SegmentedButton 
                             id="evaluType" 
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
