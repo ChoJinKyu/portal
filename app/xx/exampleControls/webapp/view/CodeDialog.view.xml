@@ -104,6 +104,17 @@
                             </layoutData>
                         </VBox>
 
+                        <VBox>
+                            <Label text="MaterialOrg (dp.util.control.ui.MaterialOrgDialog): " labelFor="searchMultiMaterialOrgFromDialog"></Label>
+                            <MultiInput id="searchMultiMaterialOrgFromDialog"
+                                placeholder="Choose codes from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMaterialOrgMultiDialogPress">
+                            </MultiInput>
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
                             <Button text="Open Employee Dialog" type="Transparent" press=".onInputWithCompanyDetailValuePress"/>
                             <layoutData>
