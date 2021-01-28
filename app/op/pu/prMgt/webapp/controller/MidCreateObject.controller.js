@@ -1,12 +1,15 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-    "sap/ui/model/json/JSONModel", 
-    "sap/ui/core/routing/History",
     "ext/lib/model/ManagedListModel",
     "ext/lib/model/ManagedModel",
     "ext/lib/util/Multilingual",
-    "sap/ui/richtexteditor/RichTextEditor",
+    "ext/lib/util/Validator",
 	"ext/lib/formatter/DateFormatter",
+	"ext/lib/formatter/NumberFormatter",
+    "ext/lib/control/ui/CodeValueHelp",
+    "sap/ui/model/json/JSONModel", 
+    "sap/ui/core/routing/History",
+    "sap/ui/richtexteditor/RichTextEditor",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
@@ -15,17 +18,19 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
-    "sap/ui/Device" // fileupload 
-    ,"sap/ui/core/syncStyleClass" 
-    , "sap/m/ColumnListItem" 
-    , "sap/m/Label"
-    , "dp/util/control/ui/MaterialMasterDialog"
-    , "cm/util/control/ui/EmployeeDialog"
-    , "ext/lib/control/ui/CodeValueHelp"
-], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, Multilingual, RichTextEditor , DateFormatter, Filter, FilterOperator, Sorter
-            ,Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label
-            , MaterialMasterDialog, EmployeeDialog, CodeValueHelp) {
-    
+    "sap/ui/Device", // fileupload 
+    "sap/ui/core/syncStyleClass" ,
+    "sap/m/ColumnListItem", 
+    "sap/m/Label",
+    "cm/util/control/ui/EmployeeDialog",
+    "dp/util/control/ui/MaterialMasterDialog",
+    "dp/util/control/ui/MaterialOrgDialog",
+    "op/util/control/ui/WbsDialog"
+], function (BaseController, ManagedListModel, ManagedModel, Multilingual, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
+            JSONModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
+            Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
+            EmployeeDialog, MaterialMasterDialog, MaterialOrgDialog, WbsDialog) {
+            
     "use strict";
     
     var sSelectedPath;
@@ -38,6 +43,8 @@ sap.ui.define([
 	return BaseController.extend("op.pu.prMgt.controller.MidCreateObject", {
 
         dateFormatter: DateFormatter,
+        numberFormatter: NumberFormatter,
+        validator: new Validator(),
         
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -173,34 +180,34 @@ sap.ui.define([
         /**
          * 품의내용 폅집기 창 
          */
-        // _fnSetRichEditor : function (){ 
-        //     var that = this,
-        //         sHtmlValue = '';            
-        //     var oApprovalLayout = this.getView().byId("approvalLayout");
-        //     var oApprovalRTE = oApprovalLayout.getContent()[0];
+        _fnSetRichEditor : function (){ 
+            var that = this,
+                sHtmlValue = '';            
+            var oApprovalLayout = this.getView().byId("approvalContentsTextEditor");
+            var oApprovalRTE = oApprovalLayout.getContent()[0];
 
-        //     if(!that.oApprovalRichTextEditor){
-        //         sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-        //             function (RTE, EditorType) {
-        //                 that.oApprovalRichTextEditor = new RTE("prCreateApprovalRTE", {
-        //                     editorType: EditorType.TinyMCE4,
-        //                     width: "100%",
-        //                     height: "200px",
-        //                     customToolbar: true,
-        //                     showGroupFont: true,
-        //                     showGroupLink: true,
-        //                     showGroupInsert: true,
-        //                     value: sHtmlValue,
-        //                     ready: function () {
-        //                         this.addButtonGroup("styleselect").addButtonGroup("table");
-        //                     }
-        //                 });
-        //                 oApprovalLayout.addContent(that.oApprovalRichTextEditor);
-        //         });
-        //     } else {
-        //         that.oApprovalRichTextEditor.setValue("");
-        //     }                
-        // },
+            if(!that.oApprovalRichTextEditor){
+                sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                    function (RTE, EditorType) {
+                        that.oApprovalRichTextEditor = new RTE("prCreateApprovalRTE", {
+                            editorType: EditorType.TinyMCE4,
+                            width: "100%",
+                            height: "200px",
+                            customToolbar: true,
+                            showGroupFont: true,
+                            showGroupLink: true,
+                            showGroupInsert: true,
+                            value: sHtmlValue,
+                            ready: function () {
+                                this.addButtonGroup("styleselect").addButtonGroup("table");
+                            }
+                        });
+                        oApprovalLayout.addContent(that.oApprovalRichTextEditor);
+                });
+            } else {
+                that.oApprovalRichTextEditor.setValue("");
+            }                
+        },
 
         /**
          * 구매요청 템플릿 리스트 조회
@@ -487,6 +494,9 @@ sap.ui.define([
             
             aDetails.push(oNewData);
             oViewModel.refresh();
+
+            this.validator.clearValueState(this.byId("pritemTable"));
+			this.byId("pritemTable").clearSelection();
         },
 
         /**
@@ -545,7 +555,7 @@ sap.ui.define([
 		 * Save button press
 		 * @public
 		 */
-        onPageSaveButtonPress: function(){
+        onSaveButtonPress: function(){
 			var oView = this.getView(),
                 that = this;
                 
@@ -554,23 +564,18 @@ sap.ui.define([
 			// 	oMessageContents.setValueState(sap.ui.core.ValueState.Error);
 			// 	return;
             // }
+
+            if(this.validator.validate(this.byId("pageSectionMain")) !== true){
+                MessageToast.show(this.getModel("I18N").getText("/NCM005"));
+                return;
+            }
             
 			MessageBox.confirm("저장 하시겠습니까 ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-
                         that._fnPrSave("SAVE");
-
-						// oView.setBusy(true);
-						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
-						// 	me._toShowMode();
-						// 	oView.setBusy(false);
-                        //     MessageToast.show("Success to save.");
-						// }).catch(function(err){
-                        //     MessageBox.error("Error while saving.");
-						// });
 					};
 				}
 			});
@@ -580,30 +585,102 @@ sap.ui.define([
 		 * Draft Button press
 		 * @public
 		 */
-        onPageDraftButtonPress: function(){
+        onDraftButtonPress: function(){
 			var oView = this.getView(),
                 that = this;
+            var oPrItemTable = oView.byId("pritemTable");
+            
+            if(this.validator.validate(this.byId("pageSectionMain")) !== true){
+                MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
+                return;
+            }
+           
+            
+            if(!this._fnTableValidator("pritemTable")){
+                return false;
+            }
             
 			MessageBox.confirm("임시 저장 하시겠습니까 ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-
                         that._fnPrSave("DRAFT");
-
-						// oView.setBusy(true);
-						// oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
-						// 	me._toShowMode();
-						// 	oView.setBusy(false);
-                        //     MessageToast.show("Success to save.");
-						// }).catch(function(err){
-                        //     MessageBox.error("Error while saving.");
-						// });
 					};
 				}
 			});
         },
+
+        /**
+         * sap.ui.table validator
+         */
+        _fnTableValidator: function(tableId){
+            var oView = this.getView(),
+                that = this;
+            var oTable = oView.byId(tableId);
+
+            var oViewModel = this.getModel("viewModel");
+            var oViewData = $.extend(true, {}, oViewModel.getData());
+
+debugger;
+
+            var bReturn=true;
+            var aViewDataPrDtl = oViewData.Pr_Dtl;
+            if(aViewDataPrDtl.length > 0){
+                //aViewDataPrDtl.forEach(function(item, idx){
+                aViewDataPrDtl.some(function(item, idx){
+
+                    if(item["org_code"] === null || item["org_code"] === ""){
+                        var msg = that.getModel("I18N").getText("/ECM01002");
+                        msg += "\r\n(" + idx + "번째 열의" + that.getModel("I18N").getText("/ORG_CODE") + ")";
+                        MessageToast.show(msg);
+                        bReturn = false;
+                        return bReturn;
+                    }
+                    if(item["pr_desc"] === null || item["pr_desc"] === ""){
+                        var msg = that.getModel("I18N").getText("/ECM01002");
+                        msg += "\r\n(" + idx + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
+                        MessageToast.show(msg);
+                        bReturn = false;
+                        return bReturn;
+                    }
+
+                    console.log("item : " + item.key + " : " + item.value);
+                    for(var key in item){
+                        console.log("item : " + key.toUpperCase() + " : " + item[key]);                        
+                    }
+                });
+            }
+
+            return bReturn;
+
+
+            // var aColumns = oTable.getColumns();
+            // aColumns.forEach(function(oCol, idx){
+            //     var sLabelText = oCol.getLabel().getText();
+            //     console.log("sLabelText : " + sLabelText);
+
+            //     var oControl = oCol.getTemplate();
+
+            //     if(oControl){
+            //         if(that.validator.validate(oControl) !== true){
+            //             MessageToast.show(that.getModel("I18N").getText("/NCM005"));
+            //             return;
+            //         }
+            //     }
+
+            //     // if(oControl && oControl.getProperty("required")){
+            //     //     if(this.validator.validate(oControl) !== true){
+            //     //         MessageToast.show(this.getModel("I18N").getText("/NCM005"));
+            //     //         return;
+            //     //     }
+            //     // }
+                
+            // });
+
+        },
+
+
         
         /**
          * 구매요청 저장
@@ -839,7 +916,7 @@ sap.ui.define([
         /**
          * Fotter : Cancel 버튼 클릭
          */
-        onPageCancelButtonPress: function () {
+        onCancelButtonPress: function () {
             this._fnNavigationMainPage();
         },
         
@@ -865,7 +942,8 @@ sap.ui.define([
 
 
             if(!this.oSearchMultiMaterialMasterDialog){
-                this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                //this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
+                this.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({                
                     title: "Choose MaterialMaster",
                     multiSelection: false,
                     items: {
@@ -978,6 +1056,29 @@ sap.ui.define([
         // },
         //==================== Material Code Dialog 끝 ====================
  
+        //==================== WBS 검색 Dialog 시작 ====================  
+		onOpenSearchWbsDialog: function (oEvent) {
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+            
+            if(!this.oSearchWbsDialog){
+                this.oSearchWbsDialog = new WbsDialog({
+                    title: "Choose WBS Code"
+                });
+                this.oSearchWbsDialog.attachEvent("apply", function(oEvent){
+                    var oItemData = oEvent.getParameter("item");
+                    var oViewModel = that.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                    if(oItemData.wbs_code && oItemData.wbs_code !== ""){
+                        oSelectedData.wbs_code = oItemData.wbs_code;                    
+                        oViewModel.refresh();
+                    }                    
+                }.bind(that));
+            }
+            this.oSearchWbsDialog.open();
+        }, 
+
         //==================== 사원정보 검색 Dialog 시작 ====================  
 		onOpenSearchEmpDialog: function (oEvent) {
             sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
