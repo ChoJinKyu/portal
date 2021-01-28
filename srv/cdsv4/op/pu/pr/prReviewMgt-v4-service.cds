@@ -4,7 +4,7 @@ namespace op;
 service PrReviewMgtV4Service {
 
     /* PR Item Type */
-    type inPrItemType : {
+    type inPrItemType {
         transaction_code : String(1);
         tenant_id : String(5);
         company_code : String(10);
