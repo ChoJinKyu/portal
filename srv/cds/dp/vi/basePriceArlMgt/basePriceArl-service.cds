@@ -5,6 +5,7 @@ using {dp.VI_Base_Price_Arl_Mst as arlMaster} from '../../../../../db/cds/dp/vi/
 using {dp.VI_Base_Price_Arl_Dtl as arlDetail} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
 using {dp.VI_Base_Price_Arl_Price as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
 using {dp.VI_Base_Price_Arl_requestor_his as arlRequestorHis} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_REQUESTOR_HIS-model';
+using {dp.Base_Price_Info as priceInfo} from '../../../../../db/cds/dp/vi/DP_BASE_PRICE_INFO-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
@@ -22,6 +23,45 @@ namespace dp;
 
 @path : '/dp.BasePriceArlService'
 service BasePriceArlService {
+
+    entity Base_Price_Info              as
+        select from priceInfo pi
+        {
+            key pi.tenant_id,
+            key pi.company_code,
+            key pi.org_type_code,
+            key pi.org_code,
+            key pi.material_code,
+            key pi.supplier_code,
+            key pi.market_code,
+            key pi.base_date,
+                pi.approval_number,
+                pi.item_sequence,
+                pi.base_uom_code,
+                pi.new_base_price,
+                pi.new_base_price_currency_code,
+                pi.base_price_ground_code,
+                pi.base_price_start_date,
+                pi.base_price_end_date,
+                pi.first_purchasing_net_price,
+                pi.first_pur_netprice_curr_cd,
+                pi.first_pur_netprice_str_dt,
+                pi.effective_flag,
+                pi.buyer_empno,
+                pi.new_change_type_code,
+                pi.repr_material_org_code,
+                pi.repr_material_code,
+                pi.repr_material_supplier_code,
+                pi.repr_material_market_code,
+                pi.erp_interface_flag,
+                pi.erp_interface_date,
+                pi.local_create_dtm,
+                pi.local_update_dtm,
+                pi.create_user_id,
+                pi.update_user_id,
+                pi.system_create_dtm,
+                pi.system_update_dtm
+        };
 
     entity Base_Price_Arl_Master        as
         select from arlMasterSuper sup
