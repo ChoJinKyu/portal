@@ -15,7 +15,7 @@ History        : 2021-01-22 initial creation
 ***************************************************************************/
 AS
 BEGIN
-    DECLARE v_Record_Cnt INT := 0;
+    -- DECLARE v_Record_Cnt INT := 0;
 
     -- 10. 품의서 마스터(공통) 수정
     MERGE INTO CM_APPROVAL_MST T
@@ -73,7 +73,10 @@ BEGIN
 
     -- 21. 품의서 승인자 삭제
     DELETE FROM CM_APPROVER
-    WHERE (TENANT_ID, APPROVAL_NUMBER, APPROVE_SEQUENCE, APPROVER_EMPNO) IN  (
+    WHERE 
+        (TENANT_ID, APPROVAL_NUMBER) IN (SELECT DISTINCT TENANT_ID, APPROVAL_NUMBER FROM :I_APPROVER)
+        AND
+        (TENANT_ID, APPROVAL_NUMBER, APPROVE_SEQUENCE, APPROVER_EMPNO) IN  (
             SELECT 
                 T.TENANT_ID, T.APPROVAL_NUMBER, T.APPROVE_SEQUENCE, T.APPROVER_EMPNO 
             FROM 
@@ -84,9 +87,9 @@ BEGIN
         );
 
     -- 30. 품의서 참조자 저장 : 빈 테이블(옵션 정보)일 수 있으므로 데이터가 있는지 체크
-    SELECT COUNT(*) INTO v_Record_Cnt FROM :I_REFERER;
+    -- SELECT COUNT(*) INTO v_Record_Cnt FROM :I_REFERER;
 
-    IF v_Record_Cnt > 0 THEN
+    IF RECORD_COUNT(:I_REFERER) > 0 THEN
         -- 31. 품의서 참조자 등록
         MERGE INTO CM_REFERER T
             USING :I_REFERER S 
@@ -106,7 +109,10 @@ BEGIN
 
         -- 32. 품의서 참조자 삭제
         DELETE FROM CM_REFERER
-        WHERE (TENANT_ID, APPROVAL_NUMBER, REFERER_EMPNO) IN  (
+        WHERE 
+            (TENANT_ID, APPROVAL_NUMBER) IN (SELECT DISTINCT TENANT_ID, APPROVAL_NUMBER FROM :I_REFERER)
+            AND
+            (TENANT_ID, APPROVAL_NUMBER, REFERER_EMPNO) IN  (
                 SELECT 
                     T.TENANT_ID, T.APPROVAL_NUMBER, T.REFERER_EMPNO 
                 FROM 
@@ -150,7 +156,10 @@ BEGIN
 
     -- 41. 품의서 상세 삭제
     DELETE FROM DP_VI_BASE_PRICE_ARL_DTL
-    WHERE (TENANT_ID, APPROVAL_NUMBER, ITEM_SEQUENCE) IN  (
+    WHERE 
+        (TENANT_ID, APPROVAL_NUMBER) IN (SELECT DISTINCT TENANT_ID, APPROVAL_NUMBER FROM :I_DETAIL)
+        AND
+        (TENANT_ID, APPROVAL_NUMBER, ITEM_SEQUENCE) IN  (
             SELECT 
                 T.TENANT_ID, T.APPROVAL_NUMBER, T.ITEM_SEQUENCE
             FROM 
@@ -158,7 +167,7 @@ BEGIN
                 ON T.TENANT_ID = S.TENANT_ID AND T.APPROVAL_NUMBER = S.APPROVAL_NUMBER AND T.ITEM_SEQUENCE = S.ITEM_SEQUENCE
             WHERE
                 S.TENANT_ID IS NULL
-        );
+            );
 
     -- 50. 금액정보 등록/수정
     MERGE INTO DP_VI_BASE_PRICE_ARL_PRICE T
@@ -194,7 +203,10 @@ BEGIN
 
     -- 51. 금액정보 삭제
     DELETE FROM DP_VI_BASE_PRICE_ARL_PRICE
-    WHERE (TENANT_ID, APPROVAL_NUMBER, ITEM_SEQUENCE, MARKET_CODE) IN  (
+    WHERE 
+        (TENANT_ID, APPROVAL_NUMBER) IN (SELECT DISTINCT TENANT_ID, APPROVAL_NUMBER FROM :I_PRICE)
+        AND
+        (TENANT_ID, APPROVAL_NUMBER, ITEM_SEQUENCE, MARKET_CODE) IN  (
             SELECT 
                 T.TENANT_ID, T.APPROVAL_NUMBER, T.ITEM_SEQUENCE, T.MARKET_CODE
             FROM 
