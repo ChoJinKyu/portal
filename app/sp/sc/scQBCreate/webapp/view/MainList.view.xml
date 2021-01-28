@@ -59,14 +59,14 @@
                                 width="10%" height="auto" id= "aaa"  >
                                 <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd "
                                     alignContent="Center" alignItems="Center" justifyContent="Center" >
-                                    <Text text="{I18N>/PRICE}" class="mText "/>
+                                    <Text text="{rbg>/evaluation_type/OP}" class="mText " textAlign="Right"/>
                                 </VBox>
                             </VBox>
                             <VBox width="90%" height="100%" class="" >
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd leftM  mouseP whiteBG" displayInline="true"  id="vboxB1">
                                     <VBox class=" sapUiSmallMarginBeginEnd">
                                         <!-- <Text id="text1"  class="sText oMouseP sapMLabelNoText" /> -->
-                                        <Text text="{I18N>/NEGOTIATION_TYPE_01} ({I18N>/QUOTATION_PLAN})" class="tText mouseP" />
+                                        <Text text="{rbg>/RFQ/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_01}" class="dText mouseP"/>
                                     </VBox>
                                     <VBox class="">
@@ -142,14 +142,15 @@
                                     <VBox>
                                         <!-- <Label text="Outcome" /> -->
                                         <Label labelFor="rbg1" text="Outcome"  class="sapMLabelNoText" design="Bold" />
-                                        <RadioButtonGroup id="rbg1"   >
-                                            <RadioButton id="RB1-1" text="BPA" class="rbgButton" />
+                                        <RadioButtonGroup id="rbg1" buttons="{rbg>/RFQ/outcome}"   >
+                                            <RadioButton text="{rbg>name}" class="rbgButton"/>
+                                            <!-- <RadioButton id="RB1-1" text="BPA" class="rbgButton" />
                                             <RadioButton id="RB1-2" text="Tentative Price" class="rbgButton" />
                                             <RadioButton id="RB1-3" text="Supplier Development" class="rbgButton" />
                                             <RadioButton id="RB1-4" text="Investment PO" class="rbgButton" />
                                             <RadioButton id="RB1-5" text="Budget Price" class="rbgButton" />
                                             <RadioButton id="RB1-6" text="Negotiation Price" class="rbgButton" />
-                                            <RadioButton id="RB1-7" text="Subsidiary Dev Unit Price" class="rbgButton" />
+                                            <RadioButton id="RB1-7" text="Subsidiary Dev Unit Price" class="rbgButton" /> -->
                                         </RadioButtonGroup>
                                     </VBox>
                                     <HBox justifyContent="End" >
@@ -161,7 +162,7 @@
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd mouseP whiteBG topM leftM" displayInline="true"  id="vboxB2"  >
                                     <VBox class="sapUiSmallMarginBeginEnd">
                                         <!-- <Text id="text2" class="sText oMouseP" /> -->
-                                        <Text text="{I18N>/NEGOTIATION_TYPE_02} ({I18N>/BIDDING_PLAN})" class="tText mouseP" />
+                                        <Text text="{rbg>/CPB/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_02}" class="dText mouseP"/>
                                     </VBox>
                                     <VBox class="sapUiSmallMarginBegin">
@@ -221,14 +222,16 @@
                                     <VBox>
                                         <!-- <Label text="Outcome" /> -->
                                         <Label labelFor="rbg2" text="Outcome"  class="sapMLabelNoText" design="Bold" />
-                                        <RadioButtonGroup id="rbg2"  >
-                                            <RadioButton id="RB2-1" text="BPA" class="rbgButton" />
+                                        <!-- <RadioButtonGroup id="rbg2"  > -->
+                                        <RadioButtonGroup id="rbg2" buttons="{rbg>/CPB/outcome}"   >
+                                            <RadioButton text="{rbg>name}" class="rbgButton"/>
+                                            <!-- <RadioButton id="RB2-1" text="BPA" class="rbgButton" />
                                             <RadioButton id="RB2-2" text="Tentative Price" class="rbgButton" />
                                             <RadioButton id="RB2-3" text="Supplier Development" class="rbgButton" />
                                             <RadioButton id="RB2-4" text="Investment PO" class="rbgButton"/>
                                             <RadioButton id="RB2-5" text="Budget Price" class="rbgButton"/>
                                             <RadioButton id="RB2-6" text="Negotiation Price" class="rbgButton"/>
-                                            <RadioButton id="RB2-7" text="Subsidiary Dev Unit Price" class="rbgButton"/>
+                                            <RadioButton id="RB2-7" text="Subsidiary Dev Unit Price" class="rbgButton"/> -->
                                         </RadioButtonGroup>
                                     </VBox>
                                     <HBox justifyContent="End" >
@@ -247,14 +250,14 @@
                                 width="10%" height="auto"   >
                                 <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd  "
                                     alignContent="Center" alignItems="Center" justifyContent="Center" >
-                                    <Text text="{I18N>/PRICE} + {I18N>/NON_PRICE}" class="mText" />
+                                    <Text text="{rbg>/evaluation_type/PNP}" class="mText" />
                                 </VBox>
                             </VBox>
                             <VBox width="90%" height="100%" >
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop mouseP whiteBG leftM" displayInline="true" id="vboxB3" >
                                     <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
                                         <!-- <Text id="text3" class="sText oMouseP" /> -->
-                                        <Text text="{I18N>/NEGOTIATION_TYPE_03} ({I18N>/QUOTATION_PLAN})" class="tText mouseP" />
+                                        <Text text="{rbg>/RFP/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_03}" class="dText mouseP"/>
                                     </VBox>
                                     <VBox class="sapUiSmallMarginBegin">
@@ -313,14 +316,16 @@
                                     <VBox>
                                         <!-- <Label text="Outcome" /> -->
                                         <Label labelFor="rbg3" text="Outcome"  class="sapMLabelNoText" design="Bold" />
-                                        <RadioButtonGroup id="rbg3"  >
-                                            <RadioButton id="RB3-1" text="BPA" class="rbgButton" />
+                                        <RadioButtonGroup id="rbg3" buttons="{rbg>/RFP/outcome}"   >
+                                            <RadioButton text="{rbg>name}" class="rbgButton"/>
+                                        <!-- <RadioButtonGroup id="rbg3"  > -->
+                                            <!-- <RadioButton id="RB3-1" text="BPA" class="rbgButton" />
                                             <RadioButton id="RB3-2" text="Tentative Price" class="rbgButton" />
                                             <RadioButton id="RB3-3" text="Supplier Development" class="rbgButton" />
                                             <RadioButton id="RB3-4" text="Investment PO" class="rbgButton" />
                                             <RadioButton id="RB3-5" text="Budget Price" class="rbgButton"/>
                                             <RadioButton id="RB3-6" text="Negotiation Price" class="rbgButton" />
-                                            <RadioButton id="RB3-7" text="Subsidiary Dev Unit Price" class="rbgButton" />
+                                            <RadioButton id="RB3-7" text="Subsidiary Dev Unit Price" class="rbgButton" /> -->
                                         </RadioButtonGroup>
                                     </VBox>
                                     <HBox justifyContent="End" >
@@ -332,7 +337,7 @@
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd  mouseP whiteBG topM leftM" displayInline="true"  id="vboxB4">
                                     <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
                                         <!-- <Text id="text4"  class="sText oMouseP"/> -->
-                                        <Text text="{I18N>/NEGOTIATION_TYPE_04} ({I18N>/BIDDING_PLAN})" class="tText mouseP" />
+                                        <Text text="{rbg>/TSB/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_04}" class="dText mouseP"/>
                                         
                                     </VBox>
@@ -409,14 +414,16 @@
                                     <VBox>
                                         <!-- <Label text="Outcome" /> -->
                                         <Label labelFor="rbg4" text="Outcome"  class="sapMLabelNoText" design="Bold" />
-                                        <RadioButtonGroup id="rbg4"  >
+                                        <RadioButtonGroup id="rbg4" buttons="{rbg>/TSB/outcome}">
+                                            <RadioButton text="{rbg>name}" class="rbgButton"/>
+                                        <!-- <RadioButtonGroup id="rbg4"  >
                                             <RadioButton id="RB4-1" text="BPA" class="rbgButton" />
                                             <RadioButton id="RB4-2" text="Tentative Price"  class="rbgButton"/>
                                             <RadioButton id="RB4-3" text="Supplier Development" class="rbgButton"/>
                                             <RadioButton id="RB4-4" text="Investment PO" class="rbgButton"/>
                                             <RadioButton id="RB4-5" text="Budget Price"  class="rbgButton"/>
                                             <RadioButton id="RB4-6" text="Negotiation Price" class="rbgButton" />
-                                            <RadioButton id="RB4-7" text="Subsidiary Dev Unit Price"  class="rbgButton"/>
+                                            <RadioButton id="RB4-7" text="Subsidiary Dev Unit Price"  class="rbgButton"/> -->
                                         </RadioButtonGroup>
                                     </VBox>
                                     <HBox justifyContent="End" >

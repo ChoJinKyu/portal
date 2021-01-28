@@ -382,9 +382,10 @@
                                                     <VBox width="25%">
                                                         <Label  text="Award Type" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <ComboBox width="90%" placeholder="Target Price Setup" class=" "> 
-                                                            <core:Item key="1" text="Target Price Setup" />
-                                                        </ComboBox > 
+                                                        <Select width="90%" selectedKey="1" class=" " change="selectAwardTypeChange"> 
+                                                            <core:Item key="1" text="Award by Lines" />
+                                                            <core:Item key="2" text="Award by Total Amount" />
+                                                        </Select > 
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -419,15 +420,47 @@
 
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
                                                     <VBox width="25%">
-                                                        <Label  text="Selection of Suppliers" 
+                                                        <Label  text="Award Method" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <ComboBox  width="90%" placeholder="Lowest Price Supplier"> 
-                                                            <core:Item key="1" text="Target Price Setup" />
-                                                        </ComboBox > 
+                                                        <Select selectedKey="1" width="90%" change="selectAwardMethodChange" id="selectAwardMethod" > 
+                                                            <core:Item key="1" text="Multi Supplier" enabled="{= ${award>/key} === '1' ? true : false}" />
+                                                            <core:Item key="2" text="Lowest Price Supplier"  />
+                                                        </Select > 
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
+                                                    <VBox width="75%" visible="{= ${award>/method} === '1' ? true : false }">
+                                                        <Label  text="Number of Award Supplier" 
+                                                                class="sapMLabelNoText"/> 
+                                                        <HBox >
+                                                            <Select width="100%" selectedKey="1" change="selectNumberSupplierChange"
+                                                                id="selectNumberSupplier" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
+                                                                <core:Item key="1" text="1" />
+                                                                <core:Item key="2" text="2" />
+                                                                <core:Item key="3" text="3" />
+                                                                <core:Item key="4" text="4" />
+                                                                <core:Item key="5" text="5" />
+                                                            </Select >
+                                                            <Text text="Order Rate ( 1st :  " class="sapUiTinyMarginBeginEnd" />
+                                                            <Input id="inputAwardSup1"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 1 ? true : false }" liveChange="inputAwardSupChange"/>
+                                                            <Text text="2nd :  " class="sapUiTinyMarginBeginEnd" />
+                                                            <Input id="inputAwardSup2"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 2 ? true : false }"/>
+                                                            <Text text="3rd :  " class="sapUiTinyMarginBeginEnd" />
+                                                            <Input id="inputAwardSup3"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 3 ? true : false }"/>
+                                                            <Text text="4th :  " class="sapUiTinyMarginBeginEnd" />
+                                                            <Input id="inputAwardSup4"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 4 ? true : false }"/>
+                                                            <Text text="5th :  " class="sapUiTinyMarginBeginEnd" />
+                                                            <Input id="inputAwardSup5"  type="Number" width="4rem" class="sapUiTinyMarginEnd" enabled="{= ${supplierNum>/number} >= 5 ? true : false }"/>
+                                                            <Text text=") Unit : %" />
+                                                        </HBox> 
+                                                        <layoutData>
+                                                            <layout:GridData span="XL3 L4 M6 S12"/>
+                                                        </layoutData>
+                                                    </VBox>
+                                                    
+                                                </HBox>
+                                                <HBox width="100%" class="sapUiSmallMarginBottom"  >
                                                     <VBox width="25%" class=" "  >
                                                         <Label  text="Participative" 
                                                                 class="sapMLabelNoText"/>
@@ -485,14 +518,12 @@
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
-                                                    
                                                 </HBox>
-
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
-                                                    <VBox width="50%">
+                                                    <VBox width="75%">
                                                         <Label  text="On-site presentation Place" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input width="95%" class=" "/>
+                                                        <Input width="97%" class=" "/>
                                                     </VBox>
                                                     
                                                 </HBox>

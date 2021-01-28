@@ -22,12 +22,117 @@ sap.ui.define([
         
 		return Controller.extend("sp.sc.scQBPages.controller.DetailPage2", {
             supplierSelection :  new SupplierSelection(),
+
+            inputAwardSupChange: function(e){
+
+                var oId = e.getParameters().id;
+                var oValue = e.getParameters().value;
+                var oInput = this.byId(oId);
+                if(oValue == ""){
+                    alert("숫자만 입력 가능");
+                }else{
+                    
+
+                    var idLength = oId.length - 1;
+                    var lastId = oId.substring(idLength);
+
+                    var tempScore =  { id:lastId , value: parseInt(oValue) } ;
+
+                    var oInputFlag = this._sumSupplierScore(tempScore);
+                    if(oInputFlag == true){ 
+                        this._SupplierTotalScore = this._SupplierTotalScore + parseInt(oValue);
+                        oInput.setValueState("None");
+                    }else{
+                        oInput.setValueState("Error");
+                    }
+                    
+                }
+
+
+                
+            },
+            _sumSupplierScore: function(pScore){
+                var flag;
+                if(pScore.value + this._SupplierTotalScore > 100){
+                    flag =  false;
+                }else{
+                    flag =  true;
+                }
+
+                return flag;
+
+            },
+            selectNumberSupplierChange: function(e){
+                
+                var oKey = e.getParameters().selectedItem.getKey();
+                this._supplierNumberModel(oKey);
+                
+            },
+            _supplierNumberModel: function(pKey){
+                var supplierModel = this.getView().getModel("supplierNum");
+                supplierModel.oData.number = parseInt(pKey);
+                supplierModel.refresh(true);
+                this._awardNumberClear(pKey);
+            },
+            _awardNumberClear: function(pKey){
+                var forName = "inputAwardSup";
+                for( var i=parseInt(pKey)+1; i<6; i++){
+                    var fName = forName + String(i);
+                    this.byId(fName).setValue("");
+                }
+            },
+            selectAwardMethodChange: function(e){
+                var oKey = e.getParameters().selectedItem.getKey();
+                var awardTypeModel = this.getView().getModel("award");
+                awardTypeModel.oData.method = oKey;
+                awardTypeModel.refresh(true);
+                this._awardNumberClear(oKey);
+                this._supplierNumberModel("1");
+                this.byId("selectNumberSupplier").setSelectedKey("1");
+            },
+
+            selectAwardTypeChange: function(e){
+                var oKey = e.getParameters().selectedItem.getKey();
+                var awardTypeModel = this.getView().getModel("award");
+                awardTypeModel.oData.key = oKey;
+                awardTypeModel.oData.method = oKey;
+                var awardMethod = this.byId("selectAwardMethod");
+                awardMethod.setSelectedKey(oKey);
+                awardTypeModel.refresh(true);
+                this._awardNumberClear(oKey);
+                this._supplierNumberModel("1");
+                this.byId("selectNumberSupplier").setSelectedKey("1");
+            },
             
 			onInit: function () {
+
+                this._SupplierScore = {};
                 
                 this.oRouter = this.getOwnerComponent().getRouter();
                 // this.oRouter.attachBeforeRouteMatched(this._onProductMatched, this);
                 this.oRouter.getRoute("detailPage2").attachPatternMatched(this._onProductMatched, this);
+                var forName = "inputAwardSup";
+                for( var i=1; i<6; i++){
+                    var fName = forName + String(i);
+                    this.byId(fName).setTextAlign("End");
+                }
+
+                this._SupplierTotalScore = 0;
+
+                // supplier number 부분 컨트롤
+                var temp = { number : 1 };
+                var supplierNum = new JSON(temp);
+                this.getView().setModel(supplierNum, "supplierNum");
+
+                // award type 부분 컨트롤
+                var awardTemp = { key : "1" , method : "1" };
+                var awardModel = new JSON(awardTemp);
+                this.getView().setModel(awardModel, "award");
+
+                
+                // this.byId("inputAwardSup1").setTextAlign("End");
+                
+                // this.byId("inputAwardSup1").set
 
                 // var oRichTextEditor = new sap.ui.richtexteditor.RichTextEditor("myRTE", {
 				// 		editorType: new sap.ui.richtexteditor.EditorType.TinyMCE4,
@@ -238,6 +343,7 @@ sap.ui.define([
                 fromDate.setEnabled(false);
                 insertDate2.setHours( insertDate.getHours() + 120 );
                 toDate.setDateValue(insertDate2);
+
                 
                 
             },

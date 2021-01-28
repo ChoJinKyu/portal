@@ -12,6 +12,10 @@
     font-size: 1.2rem;
 }
 
+.RText {
+    text-align: right !important;
+}
+
 .mInput{
     margin: 0 !important;
     padding: 0 !important;
@@ -67,6 +71,15 @@
 .imageP {
     size : 1.6rem !important;
     color : #cccccc;
+}
+
+/* .filterDef {
+    width: 12rem !important;
+} */
+
+.sapUiAFLayoutItem {
+    /* max-width: 100% !important; */
+    
 }
 
 
