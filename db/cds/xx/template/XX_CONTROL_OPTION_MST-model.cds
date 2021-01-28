@@ -1,7 +1,7 @@
-namespace xx;
-
 using util from '../../cm/util/util-model';
 using { xx as detail } from './XX_CONTROL_OPTION_DTL-model';
+
+namespace xx;
 
 entity Control_Option_Mst {
 
