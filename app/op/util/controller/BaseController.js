@@ -82,7 +82,7 @@ sap.ui.define([
         // Service
         /////////////////////////////////////////////////////////////
         // 조회
-        search: function (searchModel, entity, listModel) {
+        search: function (searchModel, entity, model, isSingle) {
             // Call Service
             (function() {
                 var oDeferred = new $.Deferred();
@@ -99,8 +99,8 @@ sap.ui.define([
             // 성공시
             .done((function (oData) {
                 this.getView().setModel(new JSONModel({
-                    [(() => entity)()]: oData.results
-                }), listModel);
+                    [(() => entity)()]: !isSingle ? oData.results : oData.results[0]
+                }), model);
             }).bind(this))
             // 실패시
             .fail(function (oError) {
@@ -127,10 +127,6 @@ sap.ui.define([
         // default 액션의 경우 : 후단 처리를 위해서는 각 화면의 컨트롤러에서 후 처리만을 기재해주면 된다.
         onNavigationActions: function () {},
 
-        // 개인화
-        // I/F : 
-        onPersonalize: function () {},
-
         // Excel
         onExcel: function () {
             var [event, action, items, ...args] = arguments[0];
@@ -141,6 +137,10 @@ sap.ui.define([
                     data: items
                 });
             }
-        }
+        },
+
+        // 개인화
+        // I/F : 
+        onPersonalize: function () {},        
 	});
 });

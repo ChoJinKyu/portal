@@ -9,9 +9,7 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 
-    "sap/f/LayoutType",
-
-], function (BaseController, History, JSONModel, Filter, FilterOperator, Fragment, MessageBox, MessageToast, LayoutType) {
+], function (BaseController, History, JSONModel, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
      "use strict";
 
     /**
@@ -40,12 +38,8 @@ sap.ui.define([
                     var { tenant_id, company_code, pr_number, pr_item_number } = event.getParameter("arguments")["?query"];
                     this.setModel(new JSONModel({ tenant_id, company_code, pr_number, pr_item_number }), "jSearchDetail");
                     // Call Service
-                    this.search("jSearchDetail", "Pr_ReviewListView", "detail");
+                    this.search("jSearchDetail", "Pr_ReviewDtlView", "detail", true);
                 }, this);
-        },
-        onBeforeRendering : function(){            
-        },
-        onAfterRendering: function () {
         },
         onButtonPress: function () {
             var [event, action, ...args] = arguments;
@@ -69,6 +63,6 @@ sap.ui.define([
             })());
 
             return {action, value};
-        },
+        }
 	});
 });
