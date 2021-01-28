@@ -257,7 +257,7 @@
 			<smartTable:SmartTable id="sTable1" entitySet="NegoItemPrices" smartFilterId="smartFilterBar" tableType="Table" 
                             useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
                             useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
-                            enableAutoBinding="true" tableBindingPath="{viewModel>/NegoHeaders}"
+                            enableAutoBinding="true" 
                             class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
                             initiallyVisibleFields=""
                             beforeRebindTable="beforeRebindTable"

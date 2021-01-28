@@ -22,7 +22,7 @@ sap.ui.define([
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
 
                 this.oRouter = this.getOwnerComponent().getRouter();
-                this.oRouter.getRoute("createPage").attachPatternMatched(this._onProductMatched, this);
+                this.oRouter.getRoute("mainPage").attachPatternMatched(this._onProductMatched, this);
                 
                 this._oModel = new JSON();
             

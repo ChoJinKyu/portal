@@ -124,38 +124,13 @@
                     "name": "mainPage",
                     "pattern": "",
                     "target": ["mainObject"]
-                },{
-                    "name": "createPage",
-                    "pattern": "createObject",
-                    "target": ["createObject"]
-                },{
-                    "name": "detailPage",
-                    "pattern": "detailObject/{type},{outcome}",
-                    "target": ["detailObject"]
-                },{
-                    "name": "detailPage2",
-                    "pattern": "detailObject2/{type},{outcome}",
-                    "target": ["detailObject2"]
                 }
-            
             ],
 			"targets": {
 				"mainObject": {
 					"viewType": "XML",
 					"viewName": "MainList"
-                },
-                "createObject": {
-					"viewType": "XML",
-					"viewName": "CreatePage"
-				},
-                "detailObject": {
-					"viewType": "XML",
-					"viewName": "DetailPage"
-				},
-                "detailObject2": {
-					"viewType": "XML",
-					"viewName": "DetailPage2"
-				}
+                }
 			}
 		}
 	}
