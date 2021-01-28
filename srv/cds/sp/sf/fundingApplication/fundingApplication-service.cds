@@ -16,8 +16,8 @@ using { cm as CodeView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 namespace sp;
 @path : '/sp.FundingApplicationService'
 service FundingApplicationService {
-    entity SfFundingApplication as projection on sp.Sf_Funding_Application;
-    entity SfFundingInvestPlanMst as projection on sp.Sf_Funding_Invest_Plan_Mst;
+    // entity SfFundingApplication as projection on sp.Sf_Funding_Application;
+    // entity SfFundingInvestPlanMst as projection on sp.Sf_Funding_Invest_Plan_Mst;
     entity SfFundingInvestPlanDtl as projection on sp.Sf_Funding_Invest_Plan_Dtl;
     
 

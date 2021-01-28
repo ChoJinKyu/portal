@@ -308,7 +308,7 @@
 
 
             <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}" visible="false" id="attachBlock">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -337,19 +337,17 @@
 
 
             <!-- 결재라인 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="결재라인">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                            <!-- Approval & Reference 시작 -->
                             <HBox>
         
                             </HBox>
-                            <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
-            </uxap:ObjectPageSection>
+            </uxap:ObjectPageSection> -->
             <!-- 결재라인 끝 -->
 
 		</uxap:sections>

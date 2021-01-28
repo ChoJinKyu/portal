@@ -1,6 +1,5 @@
 sap.ui.define([
   "ext/lib/controller/BaseController",
-  "ext/lib/util/ValidatorUtil",
   "sap/ui/model/json/JSONModel",
   "ext/lib/model/TransactionManager",
   "ext/lib/model/ManagedModel",
@@ -18,7 +17,7 @@ sap.ui.define([
   "sap/m/ComboBox",
   "sap/ui/core/Item",
   "ext/lib/util/Multilingual",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Multilingual) {
+], function (BaseController, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Multilingual) {
     
     "use strict";
 
@@ -170,7 +169,7 @@ sap.ui.define([
             oModel.markRemoved(nIndex);
         });
         oTable.removeSelections(true);
-        this.validator.clearValueState(this.byId("midTable"));      
+        // this.validator.clearValueState(this.byId("midTable"));      
     },
 
     /**

@@ -4,7 +4,8 @@ sap.ui.define([
     "sap/ui/core/ValueState",
     "ext/lib/util/Multilingual",
     "sap/m/FlexBox",
-    "sap/m/InputBase"
+    "sap/m/InputBase",
+    "sap/ui/table/Table"
 ], function (Message, MessageType, ValueState, Multilingual) {
     "use strict";
 

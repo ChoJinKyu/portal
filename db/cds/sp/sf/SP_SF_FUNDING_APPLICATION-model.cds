@@ -47,12 +47,7 @@ entity Sf_Funding_Application {
         collateral_end_date           : Date                @title : '담보종료일자';
         collateral_attch_group_number : String(100)         @title : '담보첨부파일그룹번호';
         funding_step_code             : String(30) not null @title : '자금지원단계코드';
-        funding_status_code           : String(30) not null @title : '자금지원상태코드';
-
-        //투자계획 정보
-        invMstList                    : Association to many invPlanMst.Sf_Funding_Invest_Plan_Mst 
-                                            on invMstList.funding_appl_number = funding_appl_number;
-
+        funding_status_code           : String(30) not null @title : '자금지원상태코드';                               
 }
 
 extend Sf_Funding_Application with util.Managed;
