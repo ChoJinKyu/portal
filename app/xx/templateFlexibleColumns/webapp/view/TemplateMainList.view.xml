@@ -37,7 +37,7 @@
                         <VBox>
                             <Label text="{I18N>/CHAIN}:" labelFor="searchChain" required="true"></Label>
                             <ComboBox id="searchChain" width="100%" selectedKey="CM" items="{
-                                    path: 'common>/CodeDetails',
+                                    path: 'common>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
