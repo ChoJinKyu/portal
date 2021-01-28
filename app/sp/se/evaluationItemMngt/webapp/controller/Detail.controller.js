@@ -324,7 +324,7 @@ sap.ui.define([
                     return;
                 }
 
-                MessageBox.confirm(oI18NModel.getProperty("/NCM00001"),{
+                MessageBox.confirm(oI18NModel.getProperty("/NCM00003"),{
                     onClose: function (sAction) {
                         if(sAction === MessageBox.Action.CANCEL){
                             return;
@@ -338,9 +338,13 @@ sap.ui.define([
                             data: JSON.stringify(oSaveData),
                             contentType: "application/json",
                             success: function (data) {
-                                oView.setBusy(false);
-                                oComponent.getRouter().navTo("Master",{
-                                    search : true
+                                MessageBox.success(oI18NModel.getProperty("/NCM01002"), {
+                                    onClose : function (sAction) {
+                                        oView.setBusy(false);
+                                        oComponent.getRouter().navTo("Master",{
+                                            search : true
+                                        });
+                                    }
                                 });
                             },
                             error: function (e) {
@@ -398,9 +402,13 @@ sap.ui.define([
                             data: JSON.stringify(oSaveData),
                             contentType: "application/json",
                             success: function (data) {
-                                oView.setBusy(false);
-                                oComponent.getRouter().navTo("Master",{
-                                    search : true
+                                MessageBox.success(oI18NModel.getProperty("/NCM01001"), {
+                                    onClose : function (sAction) {
+                                        oView.setBusy(false);
+                                        oComponent.getRouter().navTo("Master",{
+                                            search : true
+                                        });
+                                    }
                                 });
                             },
                             error: function (e) {
