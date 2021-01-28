@@ -7,9 +7,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/f/LayoutType",
-    "ext/lib/util/ValidatorUtil",
+    "ext/lib/util/Validator",
     "ext/lib/model/ManagedListModel"
-], function (Controller, Multilingual, Filter, FilterOperator, Sorter, MessageBox, MessageToast, LayoutType, ValidatorUtil, ManagedListModel) {
+], function (Controller, Multilingual, Filter, FilterOperator, Sorter, MessageBox, MessageToast, LayoutType, Validator, ManagedListModel) {
 	"use strict";
 
 	return Controller.extend("cm.orgCodeMgt.controller.DetailDetail", {
@@ -221,7 +221,7 @@ sap.ui.define([
             var bCreateFlag = oContModel.getProperty("/detailDetail/createMode");
 
             if(bCreateFlag){
-                if(ValidatorUtil.isValid(this,"requiredField")){
+                if(Validator.isValid(this,"requiredField")){
                     MessageBox.confirm("추가 하시 겠습니까?", {
                         title : "Create",
                         initialFocus : sap.m.MessageBox.Action.CANCEL,

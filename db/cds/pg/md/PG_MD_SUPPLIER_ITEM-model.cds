@@ -14,6 +14,7 @@ entity Md_Supplier_Item {
         spmd_character_group_name : String(100)          @title : 'SPMD특성그룹명';
         spmd_character_desc       : String(500)          @title : 'SPMD특성설명';
         spmd_character_type_code  : String(30)           @title : 'SPMD특성유형코드';
+        spmd_character_mark_size  : Integer64 default 15 @title : 'SPMD특성표시크기';
         spmd_character_sort_seq   : Integer64 not null   @title : 'SPMD특성정렬순서';
         spmd_character_serial_no  : Integer64 not null   @title : 'SPMD특성일련번호';
 

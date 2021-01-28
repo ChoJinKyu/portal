@@ -44,11 +44,6 @@ entity Sf_Funding_Invest_Plan_Mst {
         execution_yyyymm         : String(6) not null   @title : '집행년월';
         investment_effect        : String(500)          @title : '투자효과';
         investment_place         : String(500)          @title : '투자장소';
-
-        //투자계획 상세 리스트
-        invDtlList               : Association to many invPlanDtl.Sf_Funding_Invest_Plan_Mst
-                                       on  invDtlList.funding_appl_number      = funding_appl_number
-                                       and invDtlList.investment_plan_sequence = investment_plan_sequence;
 }
 
 extend Sf_Funding_Invest_Plan_Mst with util.Managed;

@@ -130,7 +130,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Supplier" labelFor="search_supplier_code"></Label>
-                                <!-- <lib-m:CodePicker id="search_supplier_code"
+                                <lib-m:CodePicker id="search_supplier_code"
                                     placeholder="Enter a Supplier name"
                                     keyField="supplier_code"
                                     textField="supplier_local_name"
@@ -145,7 +145,7 @@
                                     }" value="" change=".cvtSupplier">
                                     <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
                                         keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
-                                </lib-m:CodePicker> -->
+                                </lib-m:CodePicker>
                                 <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
                             <VBox>

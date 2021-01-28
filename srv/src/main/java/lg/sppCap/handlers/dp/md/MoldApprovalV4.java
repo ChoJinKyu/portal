@@ -504,6 +504,7 @@ public class MoldApprovalV4 implements EventHandler {
                 System.out.println("QuotationV4 ::::" + row);
                 if(row.getSupplierCode()!=null && row.getSequence()!=null){   
                     Quotation q = Quotation.create();
+                    q.setTenantId(aMaster.getTenantId());
                     q.setMoldId(row.getMoldId());
                     if(row.getApprovalNumber().equals("New")){
                         q.setApprovalNumber(this.APPROVAL_NUMBER);
@@ -538,30 +539,17 @@ public class MoldApprovalV4 implements EventHandler {
         System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
 
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
-        Collection<MoldMasterV4> mMasterList = data.getMoldMaster(); 
+            // 취소품의는 mold item  을 업데이트 할 일은 없음. 
         Collection<QuotationV4> qtnList= data.getQuotation();
     
         if(aMaster.getApprovalNumber().equals("New")){ // 신규 
-            if(!mMasterList.isEmpty() && mMasterList.size() > 0){
-                for(MoldMasterV4 row : mMasterList ){
-                    System.out.println(" ApprovalMasterV4 " + row);           
-                    MoldMasters m = MoldMasters.create();
-                    m.setTenantId(row.getTenantId());
-                    m.setMoldId(row.getMoldId());
-                    m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                    m.setUpdateUserId(aMaster.getUpdateUserId()); 
-                    m.setTargetAmount(new BigDecimal((String)(row.getTargetAmount()==null?"0":row.getTargetAmount())));
-                    m.setCurrencyCode(row.getCurrencyCode());
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                    Result rst = moldApprovalService.run(u);      
-                }  
-            }
-
+ 
             if(!qtnList.isEmpty() && qtnList.size() > 0){
                 for(QuotationV4 row : qtnList ){
                     System.out.println("QuotationV4 ::::" + row);
                     if(row.getSupplierCode()!=null && row.getSequence()!=null){   
                         Quotation q = Quotation.create();
+                        q.setTenantId(aMaster.getTenantId());
                         q.setMoldId(row.getMoldId());
                         q.setApprovalNumber(this.APPROVAL_NUMBER);
                         q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
@@ -576,29 +564,7 @@ public class MoldApprovalV4 implements EventHandler {
             }
 
         }else{
-            // update 
-            if(!mMasterList.isEmpty() && mMasterList.size() > 0){
-                for(MoldMasterV4 row : mMasterList ){
-                    MoldMasters m = MoldMasters.create();
-                    m.setTenantId(row.getTenantId());
-                    m.setMoldId(row.getMoldId());
-                    m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                    m.setUpdateUserId(aMaster.getUpdateUserId()); 
-
-                    if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
-                        m.setTargetAmount(null);
-                        m.setCurrencyCode("");
-                        CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                        Result rst = moldApprovalService.run(u);
-                    }else{ 
-                        m.setTargetAmount(new BigDecimal((String)(row.getTargetAmount()==null?"0":row.getTargetAmount())));
-                        m.setCurrencyCode(row.getCurrencyCode());
-                        CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                        Result rst = moldApprovalService.run(u);
-                    }     
-                }  
-            }
-
+          
             // 모두 지웠다가 다시 insert 함 
             Quotation del = Quotation.create();
             del.setApprovalNumber(this.APPROVAL_NUMBER); 
@@ -609,6 +575,7 @@ public class MoldApprovalV4 implements EventHandler {
                 for(QuotationV4 row : qtnList ){
                     if(row.getSupplierCode()!=null && row.getSequence()!=null){   
                         Quotation q = Quotation.create();
+                        q.setTenantId(aMaster.getTenantId());
                         q.setMoldId(row.getMoldId());
                         q.setApprovalNumber(this.APPROVAL_NUMBER);
                         q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());

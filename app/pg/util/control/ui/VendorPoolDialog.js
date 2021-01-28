@@ -166,6 +166,11 @@ sap.ui.define([
         },
 
         loadData: function () {
+
+            this.oVendorPoolCode.setValue(null);
+            this.oDialog.oMultiInput.setTokens(null)
+
+            this.oDialog.oTable.clearSelection();
             if (this.oSearchObj.vendor_pool_code) {
                 this.oVendorPoolCode.setValue(this.oSearchObj.vendor_pool_code);
             }
