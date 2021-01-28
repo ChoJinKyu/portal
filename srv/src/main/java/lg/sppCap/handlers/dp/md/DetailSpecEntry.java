@@ -1,49 +1,30 @@
 package lg.sppCap.handlers.dp.md;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
-import java.util.Set;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import com.sap.cds.Result;
+import com.sap.cds.ql.Update;
+import com.sap.cds.ql.cqn.CqnUpdate;
+import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.cds.CdsUpdateEventContext;
+import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.On;
+import com.sap.cds.services.handler.annotations.ServiceName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.sap.cds.reflect.CdsModel;
-import com.sap.cds.services.EventContext;
-import com.sap.cds.services.cds.CdsCreateEventContext;
-import com.sap.cds.services.cds.CdsReadEventContext;
-import com.sap.cds.services.cds.CdsUpdateEventContext;
-import com.sap.cds.services.cds.CdsDeleteEventContext;
-import com.sap.cds.services.cds.CdsService;
-import com.sap.cds.services.handler.EventHandler;
-import com.sap.cds.services.handler.annotations.On;
-import com.sap.cds.services.handler.annotations.Before;
-import com.sap.cds.services.handler.annotations.After;
-import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.request.ParameterInfo;
-import com.sap.cds.ql.cqn.CqnUpdate;
-import com.sap.cds.ql.cqn.CqnInsert;
-import com.sap.cds.ql.cqn.CqnDelete;
-import com.sap.cds.ql.Update;
-import com.sap.cds.ql.Insert;
-import com.sap.cds.ql.Delete;
-import com.sap.cds.Result;
-
-
-import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
-import cds.gen.dp.detailspecentryservice.*;
+import cds.gen.dp.detailspecentryservice.DetailSpecEntryService_;
+import cds.gen.dp.detailspecentryservice.MoldMasterSpec;
+import cds.gen.dp.detailspecentryservice.MoldMasterSpec_;
+import cds.gen.dp.detailspecentryservice.MoldMasters;
+import cds.gen.dp.detailspecentryservice.MoldMasters_;
 
 @Component
 @ServiceName(DetailSpecEntryService_.CDS_NAME)
@@ -62,9 +43,7 @@ public class DetailSpecEntry implements EventHandler {
         List<MoldMasterSpec> v_results = new ArrayList<MoldMasterSpec>();
 
         List<Map<String, Object>> entries = context.getCqn().entries();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date today = new Date();
-        String strToday = sdf.format(today);
+        String strToday = this.getToday();
 
         for (Map<String, Object> row : entries) {
 
@@ -109,6 +88,40 @@ public class DetailSpecEntry implements EventHandler {
             //}
         //}
 
+    }
+
+    // MoldMasters update 때 progress status 필드를 progress status 테이블에 insert 해야한다(프로시저 호출)
+    @On(event = CdsService.EVENT_UPDATE, entity=MoldMasters_.CDS_NAME)
+    public void onUpdateMoldMaster(CdsUpdateEventContext context) {
+
+        List<Map<String, Object>> entries = context.getCqn().entries();
+        String v_sql_callProc = "CALL DP_MD_PROGRESS_STATUS_INSERT_PROC(TENANT_ID => ?, MOLD_ID => ?, PROG_STATUS_CODE => ?, PROG_STATUS_CHANGE_DATE => ?, PROG_STATUS_CHANGER_EMPNO => ?, PROG_STATUS_CHANGER_DEPT_CODE => ?, REMARK => ?)";
+        String strToday = this.getToday();
+        String userEmpNo = "ShTester";
+        String userDeptCd = "ShTestDept";
+
+        for (Map<String, Object> row : entries) {
+            //어차피 단건이다
+
+            String tenantId = (String)row.get("tenant_id");
+            String moldId = (String)row.get("mold_id");
+            String progStatus = (String)row.get("mold_progress_status_code");
+            String changeDate = strToday;
+            String remark = "";
+
+            //progress status 테이블에 insert 하는 프로시저 호출
+            jdbc.update(v_sql_callProc, tenantId, moldId, progStatus, changeDate, userEmpNo, userDeptCd, remark);
+
+
+            //끝
+        }
+
+    }
+
+    private String getToday() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date today = new Date();
+        return sdf.format(today);
     }
 
 }
