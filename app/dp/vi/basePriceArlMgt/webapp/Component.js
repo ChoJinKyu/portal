@@ -38,21 +38,6 @@ sap.ui.define([
                         });
                         
                         oRootModel.setProperty("/config", oConfig);
-
-                        var aFilters2 = [];
-                        aFilters2.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
-                        aFilters2.push(new Filter("message_code", FilterOperator.EQ, oConfig.DP_VI_PURORG_DISPLAY_NM));
-                        this.getModel("commonODataModel").read("/Message", {
-                            filters : aFilters2,
-                            success : function(data){
-                                if( data ) {
-                                    oRootModel.setProperty("/plantLabel", data.results[0].message_contents);
-                                }
-                            }.bind(this),
-                            error : function(data){
-                                console.log("error", data);
-                            }
-                        });
                     }
                 }.bind(this),
                 error : function(data){

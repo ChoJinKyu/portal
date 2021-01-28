@@ -18,7 +18,7 @@ entity Uc_Approval_Dtl_View {
         net_price_contract_start_date  : Date;
         net_price_contract_end_date    : Date;
         net_price_contract_status_code : String(30);
-        net_price_contract_status      : String(10);
+        effective_status_name          : String(10);
         net_price_contract_day_count   : Decimal;
         delete_reason                  : String(3000);
 

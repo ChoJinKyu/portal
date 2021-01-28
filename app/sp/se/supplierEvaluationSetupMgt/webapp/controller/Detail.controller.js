@@ -10,10 +10,10 @@ sap.ui.define([
 
 		return Controller.extend("sp.se.supplierEvaluationSetupMgt.controller.Detail", {
 			onInit: function () {
-                // this.getOwnerComponent().getModel("viewModel").setProperty("/App",{
-                //     layout : "OneColumn",
-                //     EditMode : false
-                // });
+                this.getOwnerComponent().getModel("viewModel").setProperty("/App",{
+                    layout : "OneColumn",
+                    EditMode : false
+                });
             }
 		});
 	});

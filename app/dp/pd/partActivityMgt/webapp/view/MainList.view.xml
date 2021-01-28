@@ -12,7 +12,7 @@
     xmlns:co="sap.suite.ui.commons"
     height="100%">
 
-    <f:DynamicPage id="page2"
+    <f:DynamicPage id="page"
         headerExpanded="{mainListViewModel>/headerExpanded}" 
         toggleHeaderOnTitleClick="true">        
         <!-- DynamicPage Title -->

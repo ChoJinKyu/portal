@@ -201,9 +201,7 @@
                             </VBox>
                             <VBox>
                                 <!-- <Input id="test" type="Text" liveChange=".chkReplaceChange" /> -->
-                                <Input id="test" type="Text" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".vhVendorPoolCode" showSuggestion="true"
-                                    startSuggestion="3">
-                                </Input>
+                                <MultiInput id="test" type="Text" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".vhVendorPoolCode" />
                                 <!-- <pg-m:CodePicker id="search_supplier_code"
                                     placeholder="Enter a Supplier name"
                                     keyField="supplier_code"

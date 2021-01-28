@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.pd.partActivityMgt.controller.IdeaSelection" 
+<mvc:View controllerName="dp.pd.partActivityMgt.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

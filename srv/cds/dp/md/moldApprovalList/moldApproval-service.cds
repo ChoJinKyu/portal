@@ -4,6 +4,7 @@ using { cm as approver } from '../../../../../db/cds/cm/CM_APPROVER-model';
 using { cm as referer } from '../../../../../db/cds/cm/CM_REFERER-model';
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 using { dp as qtn } from '../../../../../db/cds/dp/md/DP_MD_QUOTATION-model';
+using { dp as ass } from '../../../../../db/cds/dp/md/DP_MD_ASSET-model';
 
 /**
  * @description : 품의서 내용 저장하는 entity 모음 
@@ -21,5 +22,6 @@ service MoldApprovalService {
     entity Referers as projection on referer.Referer;
     entity MoldMasters as projection on moldMst.Md_Mst;
     entity Quotation as projection on qtn.Md_Quotation;
+    entity Asset as projection on ass.Md_Asset;
     
 }

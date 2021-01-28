@@ -4,65 +4,35 @@ sap.ui.define(["jquery.sap.global"],
         var i = 0;            
         var _columns = [           
             {
-                id: "partBaseActivityMgt-mainList-mainColumnCompany",
+                id: "partBaseActivityMgt-mainList-mainColumnActivityCode",
                 order: i++,
-                text: "Company",
+                text: "부품 Activity 코드",
                 visible: true
             },
             {
-                id: "partBaseActivityMgt-mainList-mainColumnOrg",
+                id: "partBaseActivityMgt-mainList-mainColumnActivityName",
                 order: i++,
-                text: "조직코드",
+                text: "부품 Activity 명",
                 visible: true
             },            
             {
-                id: "partBaseActivityMgt-mainList-mainColumnPartProjectType",
+                id: "partBaseActivityMgt-mainList-mainColumnDescription",
                 order: i++,
-                text: "Project Type",
+                text: "설명",
                 visible: true
             },
             {
-                id: "partBaseActivityMgt-mainList-mainColumnActivity",
+                id: "partBaseActivityMgt-mainList-mainColumnSequence",
                 order: i++,
-                text: "Activity 명",
+                text: "순번",
                 visible: true
             },            
             {
-                id: "partBaseActivityMgt-mainList-mainColumnDevelopeEvent",
+                id: "partBaseActivityMgt-mainList-mainColumnActiveFlag",
                 order: i++,
-                text: "EVENT",
+                text: "Status",
                 visible: true
-            },
-            {
-                id: "partBaseActivityMgt-mainList-mainColumnActualRole",
-                order: i++,
-                text: "역할",
-                visible: true
-            },
-            {
-                id: "partBaseActivityMgt-mainList-mainColumnAttachmentMandatory",
-                order: i++,
-                text: "산출물 필수",
-                visible: true
-            },
-            {
-                id: "partBaseActivityMgt-mainList-mainColumnApproveMandatory",
-                order: i++,
-                text: "결재 필수",
-                visible: true
-            },
-            {
-                id: "partBaseActivityMgt-mainList-mainColumnActivityCompleteType",
-                order: i++,
-                text: "Activity 완료 유형",
-                visible: true
-            },
-            {
-                id: "partBaseActivityMgt-mainList-mainColumnJobType",
-                order: i++,
-                text: "업무 유형",
-                visible: true
-            },
+            },            
             {
                 id: "partBaseActivityMgt-mainList-mainColumnLocalUpdateDtm",
                 order: i++,
@@ -120,8 +90,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "Company") {
-                        return "Company (Important!)";
+                    if (oColumn.getHeader().getText() === "부품 Activity 코드") {
+                        return "부품 Activity 코드 (Important!)";
                     }
                 }
                 return null;
@@ -129,10 +99,8 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnCompany") != -1 ||
-                    sId.indexOf("mainColumnOrg") != -1 ||
-					sId.indexOf("mainColumnPartProjectType") != -1 ||
-					sId.indexOf("mainColumnActivity") != -1) {
+                if (sId.indexOf("mainColumnActivityCode") != -1 ||
+                    sId.indexOf("mainColumnActivityName") != -1 ) {
                     return "Columns of Key";
                 }
                 return "Others";

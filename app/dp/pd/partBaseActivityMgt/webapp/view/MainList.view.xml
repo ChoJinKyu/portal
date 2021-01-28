@@ -12,7 +12,7 @@
     xmlns:co="sap.suite.ui.commons"
     height="100%">
 
-    <f:DynamicPage id="page2"
+    <f:DynamicPage id="page"
         headerExpanded="{mainListViewModel>/headerExpanded}" 
         toggleHeaderOnTitleClick="true">        
         <!-- DynamicPage Title -->
@@ -70,8 +70,8 @@
                                 width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" width="3em"/>
-                                    <SegmentedButtonItem text="Yes" width="3em" key="true"/>
-                                    <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                    <SegmentedButtonItem text="Active" width="5em" key="true"/>
+                                    <SegmentedButtonItem text="Inactive" width="5em" key="false"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -140,19 +140,19 @@
                     <Text text="{list>activity_code}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="activity_name" hAlign="Center">
+                <t:Column id="activity_name" hAlign="Left">
                 <Label text="{I18N>/PROD_ACTIVITY_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>activity_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="description" hAlign="Center">
+                <t:Column id="description" hAlign="Left">
                 <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>description}"/>
                 </t:template>
                 </t:Column>                
-                <t:Column id="sequence">
+                <t:Column id="sequence" hAlign="Center">
                 <Label text="{I18N>/SEQUENCE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>sequence}"/>
@@ -162,6 +162,7 @@
                 <Label text="{I18N>/STATUS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>active_flag}"/>
+                    <Text text="{= !!${list>active_flag} ? 'Active' : 'Inactive'}" wrapping="false" />
                 </t:template>
                 </t:Column>                
                 <t:Column id="local_update_dtm" hAlign="Center">

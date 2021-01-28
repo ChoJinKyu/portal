@@ -427,7 +427,8 @@ sap.ui.define([
             var source = oEvent.getSource();
             var params = oEvent.getParameters();
 
-            var id = source.sId.split('--')[1];
+            var sIds = source.sId.split('--');
+            var id = sIds[sIds.length-1];
             var idPreFix = id.substr(0, id.length-1);
             var selectedKeys = [];
 

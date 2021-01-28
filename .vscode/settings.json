@@ -10,6 +10,17 @@
             "password": "Wj8zii9gndgCym3r98eEXpt7T38Zx6GtZtmjwpImEmOAHdosHVm6GVwIKcGS7uU9Tb6mGk6l4EvnY9b5Rsdfp3uBTChhCC9x7nzy5AKwmjCM.D9OEnICQB1HultLYDKA",
             "isActive": false,
             "isConnected": false
+        },
+        {
+            "dialect": "SAPHana",
+            "port": 443,
+            "server": "70a17eb4-b47d-487c-97f6-c9a91288dff2.hana.prod-jp10.hanacloud.ondemand.com",
+            "name": "sppDb_hdi_dev_RT",
+            "database": "8BF87896D3244B1B999EDBA857B1C829",
+            "username": "8BF87896D3244B1B999EDBA857B1C829_5FDM7S96HVTX3VMPCB4O997HQ_RT",
+            "password": "Hy4YPihsAUm8B5VTuOogp1HPvXjr.okxWXWJyY-xXnMmNdPa3Trf4eRXyN.G684suWo1du3FLpekcwPYhObt2iINF3ArBS7Sh2bD.KTWLDf9MCWx_IJKNkLGOMGqeE-k",
+            "isActive": false,
+            "isConnected": false
         }
     ],
     "actions": [],

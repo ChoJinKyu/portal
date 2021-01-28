@@ -24,8 +24,8 @@ using { cm as CodeView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 
 namespace sp;
 
-@path : '/sp.FundingApplicationSupV4Service'
-service FundingApplicationSupV4Service {
+@path : '/sp.FundingApplicationV4Service'
+service FundingApplicationV4Service {
 
     //************************************************
     // 테이블정보 entity
@@ -165,8 +165,4 @@ service FundingApplicationSupV4Service {
     ) returns rtnObjInvDtl;
 
     
-
-
-
-
 }

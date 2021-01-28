@@ -424,7 +424,7 @@
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Begin" width="10rem">
-                        <Label text="{I18N>/BUSINESS_DIVISION}" />
+                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>bizdivision_text}" />
                         </t:template>

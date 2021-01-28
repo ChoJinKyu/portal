@@ -1,10 +1,209 @@
 <mvc:View
 	controllerName="sp.se.supplierEvaluationSetupMgt.controller.Two"
-	displayBlock="true"
-	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc">
 
-	<!-- <App id="app"/> -->
-    <Page>
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:uxap="sap.uxap"
+    xmlns:table="sap.ui.table"
+    xmlns:f="sap.ui.layout.form"
+    class="sapUiSizeCompact"
+    displayBlock="true"
+    xmlns:lib-m="ext.lib.control.m"
+    xmlns:cm-ui="cm.util.control.ui"
+    xmlns:flex="sap.f"
+    >
+
+    <Page title="{I18N>/CREATE_EVALUATION_TYPE}" 
+        showNavButton="true" 
+        navButtonType="Back" 
+        navButtonPress="onNavToBack"
+        > 
+        <!-- showNavButton="true"  : 상단 < 버튼  -->
+        <content>  
+            <uxap:ObjectPageLayout
+                id="two"
+                showTitleHeaderContent="true"
+                showEditHeaderButton="true"
+                editHeaderButtonPress="handleEditBtnPress"
+                showFooter="true" 
+                preserveHeaderStateOnScroll="true"
+                enableLazyLoading="true"
+                class="sapUiContentPadding"
+
+                  alwaysShowContentHeader="false" 
+                    headerContentPinnable="false" 
+                    upperCaseAnchorBar="false" 
+                >
+
+                    <uxap:headerTitle/>
+                    <uxap:headerContent/>                
+
+                    <!-- id="page" 
+                    alwaysShowContentHeader="false" 
+                    preserveHeaderStateOnScroll="true" 
+                    headerContentPinnable="false" 
+                    upperCaseAnchorBar="false" 
+                    enableLazyLoading="true" 
+                    showFooter="true" 
+                    class="sapUiContentPadding"
+                     -->
+
+             <uxap:sections>
+                    <uxap:ObjectPageSection titleUppercase="true" title="ObjectPageSection">
+                        <uxap:subSections>            
+                            <uxap:ObjectPageSubSection id="pageSubSection1"/>
+                        </uxap:subSections>
+                    </uxap:ObjectPageSection>
+            </uxap:sections>
+
+            <uxap:sections>
+                    <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/VALUATION_TYPE}">
+                        <uxap:subSections>
+                            <uxap:ObjectPageSubSection>
+                                <uxap:blocks>
+                                    <VBox>
+                                    <!-- sap.ui.layout.form -->
+                                        <f:SimpleForm 
+                                            id="SimpleFormChange354" 
+                                            layout="ColumnLayout"
+                                            maxContainerCols="2"
+                                            adjustLabelSpan="false">
+
+                                            <f:content>
+                                                <!-- Column1. 평가유형코드 -->
+                                                <Label text="{I18N>/EVALUATION_TYPE_CODE}"/>                                                                        
+                                                <Input   
+                                                        width="100%" 
+                                                        placeholder="EVALUATION_TYPE_CODE"
+                                                        value="{TwoView>/evaluationType2/evaluation_type_code}"
+                                                        editable="{=${TwoView>/isEditMode}}"
+                                                        />      
+                                                <!--  평가 비율 -->
+                                                <Label text="{I18N>/EVALUATION_RATE}"/>                                                
+                                                <Input
+                                                        width="100%" 
+                                                        placeholder="EVALUATION_RATE"
+                                                        value="{TwoView>/evaluationType2/evaluation_type_distrb_score_rate}"
+                                                        editable="{=${TwoView>/isEditMode}}"
+                                                        />
+                                                        
+                                                <!-- Column2. 평가 유형 명 -->
+                                                <Label text="{I18N>/EVALUATION_TYPE_NAME}"/>
+                                                <Input  
+                                                        width="100%" 
+                                                        placeholder="EVALUATION_TYPE_NAME"
+                                                        value="{TwoView>/evaluationType2/evaluation_type_name}"
+                                                        editable="{=${TwoView>/isEditMode}}"
+                                                        />
+                                                
+                                                 <!-- 사용여부  -->
+                                                <Label text="{I18N>/USE_FLAG}"/> 
+                                                <SegmentedButton 
+                                                        selectedKey="{=${TwoView>/evaluationType2/use_flag} === true? 'Yes' : 'No'}"
+                                                        enabled="{TwoView>/isEditMode}">                                                       
+                                                        <items>
+                                                            <SegmentedButtonItem text="Yes" key="Yes" />
+                                                            <SegmentedButtonItem text="No" key="No" />
+                                                        </items>
+                                                </SegmentedButton>
+                                            </f:content>
+                                         </f:SimpleForm>
+
+                                    </VBox>
+                                </uxap:blocks>
+                            </uxap:ObjectPageSubSection>                            
+                        </uxap:subSections>
+                    </uxap:ObjectPageSection>
+            </uxap:sections>
+
+            <uxap:sections>
+                <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/SCALE}">
+                    <uxap:subSections>
+                        <uxap:ObjectPageSubSection>
+                            <uxap:blocks>
+
+                                <Table id="detailValuationTable"
+                                        inset="false"
+                                        class="sapFDynamicPageAlignContent"
+                                        width="auto"
+                                        items="{
+                                            path: 'TwoView>/scale'
+                                            }"
+                                        mode="MultiSelect"    
+                                            >
+                                    <headerToolbar>
+                                        <Toolbar>
+                                            <ToolbarSpacer/>
+                                            <HBox>
+                                                <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onEvalAdd" enabled="{=${TwoView>/isEditMode}}"/>
+                                                <Button text="{I18N>/DELETE}" type="Transparent" press="onEvalDelete" enabled="{=${TwoView>/isEditMode}}"/>
+                                            </HBox>
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column>
+                                            <Text text="{I18N>/EVALUATION_GRAD}" />
+                                        </Column>
+                                        <Column>
+                                            <Text text="{I18N>/OVER}" />
+                                        </Column>
+                                        <Column>
+                                            <Text text="{I18N>/LESS_THAN}" />
+                                        </Column>
+                                        <Column>
+                                            <Text text="{I18N>/INCENTIVE AND PENALTY}" />
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Input   
+                                                width="100%" 
+                                                placeholder="EVALUATION_GRADE"
+                                                value="{TwoView>evaluation_grade}"
+                                                editable="{=${TwoView>/isEditMode}}"
+                                                />
+                                                <Input   
+                                                width="100%" 
+                                                placeholder="OVER"
+                                                value="{TwoView>evaluation_grade_start_score}"
+                                                editable="{=${TwoView>/isEditMode}}"
+                                                />
+                                                <Input   
+                                                width="100%" 
+                                                placeholder="LESS_THAN"
+                                                value="{TwoView>evaluation_grade_end_score}"
+                                                editable="{=${TwoView>/isEditMode}}"
+                                                />
+                                                <Input   
+                                                width="100%" 
+                                                placeholder="INCENTIVE AND PENALTY"
+                                                value="{TwoView>inp_apply_code}"
+                                                editable="{=${TwoView>/isEditMode}}"
+                                                />                                                
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+
+                            </uxap:blocks>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+            </uxap:sections>              
+
+            <uxap:footer>
+                <OverflowToolbar>
+                    <ToolbarSpacer/>
+                    <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
+                    <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
+                    <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
+                    <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
+                </OverflowToolbar>
+            </uxap:footer>
+            
+            </uxap:ObjectPageLayout>       
+        </content>
     </Page>
 </mvc:View>

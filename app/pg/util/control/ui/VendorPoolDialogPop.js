@@ -97,7 +97,8 @@ sap.ui.define([
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
+                    that.oDialog.setData(aRecords, false);
+                    this.oDialog.oTable.setBusy(false);
                 }.bind(this)
             });
         },

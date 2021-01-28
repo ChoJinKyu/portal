@@ -219,8 +219,8 @@
 							<Text text="{partListModel>material_code}"/>
 						</t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="auto" >
-                        <Label text="자재설명" />
+                    <t:Column hAlign="Left" width="auto" >
+                        <Label text="자재설명" textAlign="Center" width="100%"/>
                         <t:template>
 							<Text text="{partListModel>material_desc}"/>
 						</t:template>
