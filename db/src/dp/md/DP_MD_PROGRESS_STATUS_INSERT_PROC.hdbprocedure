@@ -17,7 +17,7 @@ BEGIN
     VALUES(
         :TENANT_ID
         ,:MOLD_ID
-        ,DP_MD_PROGRESS_STATUS_SEQ.NEXTVAL
+        ,(select ifnull(max(PROG_STATUS_CHANGE_SEQ),0)+1 PROG_STATUS_CHANGE_SEQ from DP_MD_PROGRESS_STATUS where tenant_id=:TENANT_ID and mold_id=:MOLD_ID)
         ,:PROG_STATUS_CODE
         ,:PROG_STATUS_CHANGE_DATE
         ,:PROG_STATUS_CHANGER_EMPNO
