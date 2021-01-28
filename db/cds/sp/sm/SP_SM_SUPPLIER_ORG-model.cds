@@ -35,6 +35,7 @@ entity Sm_Supplier_Org {   
   key   supplier_code                   : String(10)  not null  @title: '공급업체 코드' ;	
         supplier_status_code            : String(1)             @title: '공급업체 상태코드' ;	
         supplier_register_status_code   : String(30)            @title: '공급업체 진행상태 코드' ;	
+        supplier_register_progress_code : String(30)            @title: '공급업체 등록진행 코드' ;	
         biz_request_reason              : String(1000)          @title: '거래희망 사유' ;	
 }   
 
