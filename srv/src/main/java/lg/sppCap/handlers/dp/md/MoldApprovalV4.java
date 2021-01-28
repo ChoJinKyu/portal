@@ -504,6 +504,7 @@ public class MoldApprovalV4 implements EventHandler {
                 System.out.println("QuotationV4 ::::" + row);
                 if(row.getSupplierCode()!=null && row.getSequence()!=null){   
                     Quotation q = Quotation.create();
+                    q.setTenantId(aMaster.getTenantId());
                     q.setMoldId(row.getMoldId());
                     if(row.getApprovalNumber().equals("New")){
                         q.setApprovalNumber(this.APPROVAL_NUMBER);
