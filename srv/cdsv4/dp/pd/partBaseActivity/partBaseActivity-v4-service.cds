@@ -35,10 +35,10 @@ service partBaseActivityV4Service {
 
     type ProcInputType : {
         crud_type  : String(1);
-        pdMst      : array of PdpartBaseActivityType;
+        pdMst      : PdpartBaseActivityType;
         pdDtl      : array of PdpartBaseActivityLngType;
     }
 
-    action PdpartBaseActivitySaveProc(inputData : array of ProcInputType) returns array of OutType;
+    action PdpartBaseActivitySaveProc(inputData : ProcInputType) returns OutType;
 
 }
