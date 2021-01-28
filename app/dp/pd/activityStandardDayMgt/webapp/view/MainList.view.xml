@@ -54,7 +54,7 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -72,7 +72,7 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -82,7 +82,7 @@
                                 <Input id="searchPCInput" placeholder="Input data" visible ="false"></Input>
                             </HBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -104,14 +104,14 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Activity 명: " labelFor="searchActivity"></Label>
                             <Input id="searchActivity" placeholder="Activity Name"></Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
