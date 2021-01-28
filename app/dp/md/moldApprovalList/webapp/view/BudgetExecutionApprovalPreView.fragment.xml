@@ -339,31 +339,31 @@
 								<Text text="{mdItemMaster>approval_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="20em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
 								<Text text="{mdItemMaster>model}"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="10em" hAlign="Center">
+						<table:Column width="12em"  hAlign="Center">
 							<Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text  text="{mdItemMaster>mold_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="5em" hAlign="Center">
+						<table:Column  width="4em" hAlign="Center">
 							<Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" />
 							<table:template>
-								<Text  text="{mdItemMaster>mold_sequence}"/>
+								<Text  text="{mdItemMaster>mold_sequence}" textAlign="Center"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="15em" hAlign="Center">
+						<table:Column  width="10em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
 								<Text  text="{mdItemMaster>spec_name}"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="10em" hAlign="Center">
+						<table:Column  width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
                                 <ComboBox editable="false"  
@@ -379,7 +379,7 @@
 								</ComboBox>
 							</table:template>
 						</table:Column>
-						<table:Column  width="10em" hAlign="Center">
+						<table:Column  width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
 							<table:template>
 								<ComboBox  editable="false" 
@@ -395,24 +395,23 @@
 								</ComboBox>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="6em" hAlign="Center">
 							<Label text="{path:'I18N>/BOOK_CURRENCY', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text text="{mdItemMaster>book_currency_code}"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="10em" hAlign="Center">
+						<table:Column  width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}"/>
 							<table:template>
                                 <Text  text="{mdItemMaster>provisional_budget_amount}" textAlign="Right"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="10em" hAlign="Center">
+						<table:Column  width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
                                 <ComboBox 
                                         editable="false" 
-                                        
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
@@ -424,10 +423,10 @@
 								</ComboBox>
 							</table:template>
 						</table:Column>
-						<table:Column  width="15em" hAlign="Center">
-							<Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}"/>
+						<table:Column  width="40em" hAlign="Center">
+							<Label text="{path:'I18N>/FAMILY_PART_NUMBER'}"/>
 							<table:template>
-								<Text  text="{mdItemMaster>family_part_number_1}"/>
+								<Text text="{mdItemMaster>family_part_number_1}" textAlign="Left"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
