@@ -44,7 +44,11 @@ BEGIN
         IF CRUD_TYPE = 'U' THEN
             UPDATE DP_PD_PRODUCT_ACTIVITY_TEMPLATE M
                SET (M.DESCRIPTION, M.ACTIVE_FLAG, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
-                   (SELECT DESCRIPTION, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW() FROM :I_M )
+                   ( SELECT DESCRIPTION, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW()
+                       FROM :I_M
+                      WHERE TENANT_ID = M.TENANT_ID 
+                        AND PRODUCT_ACTIVITY_CODE = M.PRODUCT_ACTIVITY_CODE
+                   )
             WHERE   (M.TENANT_ID, M.PRODUCT_ACTIVITY_CODE ) IN
                     ( SELECT TENANT_ID, PRODUCT_ACTIVITY_CODE FROM :I_M )
             ;
@@ -60,18 +64,18 @@ BEGIN
                         ,UPDATE_USER_ID
                         ,SYSTEM_CREATE_DTM
                         ,SYSTEM_UPDATE_DTM
-                    )
-            SELECT TENANT_ID
-                    ,PRODUCT_ACTIVITY_CODE
-                    ,DESCRIPTION
-                    ,ACTIVE_FLAG
-                    ,NOW()
-                    ,NOW()
-                    ,UPDATE_USER_ID
-                    ,UPDATE_USER_ID
-                    ,NOW()
-                    ,NOW()
-            FROM :I_M 
+                      )
+                 SELECT TENANT_ID
+                        ,PRODUCT_ACTIVITY_CODE
+                        ,DESCRIPTION
+                        ,ACTIVE_FLAG
+                        ,NOW()
+                        ,NOW()
+                        ,UPDATE_USER_ID
+                        ,UPDATE_USER_ID
+                        ,NOW()
+                        ,NOW()
+                FROM :I_M 
             ;                
 
         END IF;
