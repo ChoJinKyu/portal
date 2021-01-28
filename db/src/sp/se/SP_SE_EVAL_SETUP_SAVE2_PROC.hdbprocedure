@@ -149,7 +149,7 @@ BEGIN
               ,NOW()
               ,NOW()
         FROM   :I_EGRAD
-        WHERE  TRANSACTION_CODE = 'D'
+        WHERE  TRANSACTION_CODE = 'I'
         ;
     
         MERGE INTO SP_SE_EVAL_GRADE AS GRA
