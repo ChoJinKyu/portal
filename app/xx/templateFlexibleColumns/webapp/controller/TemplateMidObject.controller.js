@@ -230,8 +230,8 @@ sap.ui.define([
                         //Restore the data
                         oMasterModel.setData(this._oCloneMasterModelData);
                         
-                        var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
-                        oDetailsModel.setProperty("/"+sDetailModelEntityName, this._oCloneDetailsModelData);
+                        //var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
+                        //oDetailsModel.setProperty("/"+sDetailModelEntityName, this._oCloneDetailsModelData);
 
 						this.validator.clearValueState(this.byId("page"));
 						this._toShowMode();
