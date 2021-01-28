@@ -104,8 +104,13 @@ service BudgetExecutionApprovalService {
                 com.company_name as import_company_code_nm : String(240) ,
                 mst.import_company_org_code,
                 plant.org_name as import_company_org_code_nm : String(240) , 
-                mst.inspection_date,
-                mst.family_part_number_1,
+                mst.inspection_date, 
+                ifnull(mst.family_part_number_1,'')  
+                || case  when mst.family_part_number_2 is null or mst.family_part_number_2 = '' then '' else ',' end || ifnull(mst.family_part_number_2,'') 
+                || case  when mst.family_part_number_3 is null or mst.family_part_number_3 = '' then '' else ',' end || ifnull(mst.family_part_number_3,'')
+                || case  when mst.family_part_number_4 is null or mst.family_part_number_4 = '' then '' else ',' end || ifnull(mst.family_part_number_4,'')
+                || case  when mst.family_part_number_5 is null or mst.family_part_number_5 = '' then '' else ',' end || ifnull(mst.family_part_number_5,'') 
+                        as family_part_number_1 : String(300) ,
                 mst.family_part_number_2,
                 mst.family_part_number_3,
                 mst.family_part_number_4,
