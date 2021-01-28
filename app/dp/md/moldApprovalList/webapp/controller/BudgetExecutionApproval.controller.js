@@ -95,7 +95,7 @@ sap.ui.define([
             // this.getView().setModel(new ManagedModel(), "mdCommon");
             var md = this.getModel('mdCommon');
             this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                console.log(" ItemBudgetExecution >>> ", oData);
+                // console.log(" ItemBudgetExecution >>> ", oData);
                 if (oData.results != undefined && oData.results.length > 0) {
                     md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
                     md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
@@ -115,7 +115,7 @@ sap.ui.define([
                     }
                     if(oData.results[0].investment_ecst_type_code != undefined && oData.results[0].investment_ecst_type_code != ""){
                         that._searchAssetType(oData.results[0].investment_ecst_type_code, function(oData){
-                        console.log(oData);
+                        // console.log(oData);
                     });
                     }
                     
@@ -157,8 +157,8 @@ sap.ui.define([
         },
         onBudgetChange : function ( oEvent ){
             this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'), function(oData){
-               console.log("/// investment_ecst_type_code " , oData);
-                console.log(oData);
+            //    console.log("/// investment_ecst_type_code " , oData);
+                // console.log(oData);
             });
         } ,
         _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회 
@@ -206,8 +206,8 @@ sap.ui.define([
          */
         onBCompanyChange: function (oEvent) {
             var company_code = this.getModel("mdCommon").getData().import_company_code;
-            console.log("oEvent >>>> " , oEvent);
-            console.log("getForceSelection >>>> " , this.byId('importCompany').getSelectedItem());
+            // console.log("oEvent >>>> " , oEvent);
+            // console.log("getForceSelection >>>> " , this.byId('importCompany').getSelectedItem());
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
@@ -226,7 +226,7 @@ sap.ui.define([
             oModel.read("/Pur_Operation_Org", {
                 filters: aFilter,
                 success: function (oData) { 
-                    console.log(" Pur_Operation_Org " , oData);
+                    // console.log(" Pur_Operation_Org " , oData);
                     oView.setBusy(false); 
                 }
             });
@@ -345,8 +345,6 @@ sap.ui.define([
             var oModel = this.getModel("moldMaster");
             /*
             approverData = verModel.getData().Approvers;*/
-            console.log();
-            console.log();
         },
 
         _toEditModeEachApproval: function () {
