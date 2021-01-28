@@ -44,6 +44,7 @@ sap.ui.define([
         supplier_local_name: new String,
         tenant_id: new String,
         statusGloCode: new String,
+        supplierType: Boolean,
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -61,6 +62,13 @@ sap.ui.define([
             this.tenant_id = "L2100";
             this.supplier_code = "KR01820500";
             this.supplier_local_name = "공급업체";
+            this.supplierType = true;
+
+            if(!this.supplierType){
+                this.getView().byId('attachBlock').setVisible(true);
+            }
+            
+
             //법인 필터
             this.setCompanyFilter();
 

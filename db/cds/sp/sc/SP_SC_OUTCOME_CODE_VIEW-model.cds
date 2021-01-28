@@ -122,7 +122,7 @@ entity Sc_Outcome_Code {
 
 extend Sc_Outcome_Code with util.Managed;
 
-@cds.autoexpose  // 
+@cds.autoexpose  // SP_SC_NEGO_PROG_STATUS_CODE : 협상 상태 코드[예:Approval]
 define view Sc_Nego_Prog_Status_Code_View as
     select from codeMst.Code_Dtl as cd {
         key cd.tenant_id,
@@ -130,10 +130,9 @@ define view Sc_Nego_Prog_Status_Code_View as
             cd.sort_no,
             children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as nego_progress_status_name
     } 
-    where
-        group_code = 'SP_SC_NEGO_PROG_STATUS_CODE';
+    where group_code = 'SP_SC_NEGO_PROG_STATUS_CODE';
 
-@cds.autoexpose  // SP_SC_AWARD_TYPE_CODE
+@cds.autoexpose  // SP_SC_AWARD_TYPE_CODE : 어워드 유형[예:Award By Lines]
 define view Sc_Award_Type_Code_View as
     select from codeMst.Code_Dtl as cd {
         key cd.tenant_id,
@@ -142,6 +141,39 @@ define view Sc_Award_Type_Code_View as
             children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as award_type_name
     }
     where group_code = 'SP_SC_AWARD_TYPE_CODE';
+
+@cds.autoexpose  // OP_INCOTERMS : 인커텀즈 코드[예:]
+define view Sc_Incoterms_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as incoterms_code,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as incoterms_name
+    } 
+    where group_code = 'OP_INCOTERMS';
+    
+@cds.autoexpose  // PAYMENT_TERMS : 페이먼트텀즈 코드[예:]
+define view Sc_Payment_Terms_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as payment_terms_code,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as payment_terms_name
+    } 
+    where group_code = 'PAYMENT_TERMS';
+
+@cds.autoexpose  // DP_VI_MARKET_CODE : 마켓 코드[예:]
+define view Sc_Market_Code_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as market_code,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as market_name
+    } 
+    where group_code = 'DP_VI_MARKET_CODE';
 
 @cds.autoexpose  //
 define view Sc_Award_Type_Code_View1 as

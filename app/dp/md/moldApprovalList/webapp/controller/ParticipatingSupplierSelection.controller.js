@@ -57,7 +57,8 @@ sap.ui.define([
             // between the busy indication for loading the view's meta data
             var oViewModel = new JSONModel({
                 busy: true,
-                delay: 0
+                delay: 0 ,
+                cancelBtn : false 
             });
             
             this.setModel(oViewModel, "participatingSupplierSelectionView");//change
@@ -76,6 +77,9 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
             this.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
   
+            // 취소품의 버튼 벨리데이션 
+            this.getView().setModel(new ManagedListModel(), "cancelList"); 
+
             console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
             var schFilter2 = [];
@@ -100,6 +104,8 @@ sap.ui.define([
                 });
                
            // }  
+
+
         },
 
         _bindViewParticipating : function (sObjectPath, sModel, aFilter, callback) { 
@@ -128,6 +134,19 @@ sap.ui.define([
                 }
             });
         },
+        _pssCancelSearch : function(aFilter,callback){ 
+            var oView = this.getView(),
+                oModel = this.getModel("cancelList");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("dpMdUtil"));
+            oModel.read("/MoldItemStatus", {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        }, 
 
         onSupplierSelection: function (oEvent){
                 var oTable = this.byId("psTable")
@@ -337,7 +356,8 @@ sap.ui.define([
             this._viewMode();
         },
 
-        _toEditModeEachApproval : function(){             
+        _toEditModeEachApproval : function(){    
+            console.log("_toEditModeEachApproval ")          
             // var oRows = this.byId("psTable").getRows();
             // oRows.forEach(function(oCell, idx){
             //    oCell.mAggregations.cells.forEach(function(item, jdx){ 
@@ -345,9 +365,11 @@ sap.ui.define([
             //              item.removeStyleClass("readonlyField");
             //         }
             //     });
-            // });
+            // }); 
+     
          },
         _toShowModeEachApproval : function(){ 
+             console.log("_toShowModeEachApproval ")          
             // var oRows = this.byId("psTable").getRows();
             // oRows.forEach(function(oCell, idx){
             //    oCell.mAggregations.cells.forEach(function(item, jdx){ 
@@ -357,8 +379,29 @@ sap.ui.define([
             //     });
             // });
             // this.byId("currency").addStyleClass("readonlyField");
-            // this.byId("target_amount").addStyleClass("readonlyField");
+            // this.byId("target_amount").addStyleClass("readonlyField"); 
          } ,
+
+         _pssRequestCancelBtn : function(){
+             
+            console.log(" _valCancel appMaster "  ,  this.getModel('appMaster').getProperty("/approve_status_code"));
+            var model = this.getModel('participatingSupplierSelectionView');
+            if(this.getModel('appMaster').getData().approve_status_code == 'AP'){ // 승인이면 
+                var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                ];        
+                this._pssCancelSearch(schFilter, function(item){  
+                    console.log("item>>>> " , item);
+                    var isTrue = item.results.length > 0 ? true : false;
+                    model.setProperty("/cancelBtn" , isTrue);
+                });
+            }else{ // 승인이 아니면 
+                model.setProperty("/cancelBtn" , false);
+            }
+
+            console.log(" participatingSupplierSelectionView "  ,  this.getModel('participatingSupplierSelectionView'));
+         } ,
+
 
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 

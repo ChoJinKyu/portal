@@ -2,6 +2,7 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form" 
+    xmlns:f="sap.ui.layout.form" 
     xmlns:core="sap.ui.core" 
     xmlns:layout="sap.ui.layout"
     xmlns:tnt="sap.tnt"
@@ -61,12 +62,12 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="{I18N>/PR_NUMBER} :"/>
                     <ObjectStatus
-                        text="{detailModel>/mst/pr_number}"
+                        text="{detail>/Pr_ReviewDtlView/pr_number}"
                     />
                     <Label text="{I18N>/PR_REQUEST_DATE} :"/>
                     <ObjectStatus
                         text="{ 
-                            path: 'detailModel>/mst/request_date',
+                            path: 'detail>/Pr_ReviewDtlView/request_date',
                             type: 'sap.ui.model.type.Date',
                             formatOptions: {
                                 pattern: 'yyyy-MM-dd'
@@ -76,24 +77,24 @@
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="{I18N>/PR_TEMPLATE_NUMBER} :"/>
+                    <!-- <Label text="{I18N>/PR_TEMPLATE_NUMBER} :"/>
                     <ObjectStatus
-                        text="{detailModel>/mst/pr_number}"/>
+                        text="{detail>/Pr_ReviewDtlView/pr_number}"/> -->
                     <Label text="{I18N>/REQUESTOR_NAME} :"/>
                     <ObjectStatus
-                        text="{detailModel>/mst/requestor_name}"/>
+                        text="{detail>/Pr_ReviewDtlView/requestor_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<Label text="{I18N>/PR_CREATE_STATUS_CODE} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{detailModel>/mst/pr_create_status_name}"
+                        text="{detail>/Pr_ReviewDtlView/pr_create_status_name}"
                         state="Error" />
 				</layout:VerticalLayout>
                 
                 <!-- Process 시작 -->
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
                         <Title text="Process"/>
                     </HBox>
@@ -113,243 +114,291 @@
                         <Text text="{I18N>/BIDDING}" width="7em" textAlign="Center" />
                         <Text text="{I18N>/PURCHASE_ORDER}" width="5em" textAlign="Center" />
                     </HBox>
-                </layout:VerticalLayout>
+                </layout:VerticalLayout> -->
 			</FlexBox>
 		</uxap:headerContent>
 
 		<uxap:sections id="pss">
-
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="{I18N>/BASIC_INFO}">
+            <!-- 기본정보 -->
+			<uxap:ObjectPageSection titleUppercase="true" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                            <HBox alignItems="Center">
-                                <VBox>
-                                    <Label
-                                        text="{I18N>/APPROVAL_TITLE}"                                      
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                    />
-                                </VBox> 
-                                <VBox alignItems="Center">
-                                    <Label
-                                        text="{detailModel>/mst/pr_header_text}"
-                                        visible="true"
-                                        width="40em"
-                                    />
-                                </VBox>
-                            </HBox>
-                            <HBox alignItems="Center">
-                                <VBox>
-                                <Label
-                                    text="{I18N>/APPROVAL_CONTENTS}"
-                                    class="sapUiTinyMarginEnd"
-                                    textAlign="Left"
-                                    labelFor="input"
-                                />
-                                </VBox> 
-                                <VBox alignItems="Center">
-                                    <FormattedText htmlText="{detailModel>/mst/approval_contents}"  width="40em"/>
-                                </VBox>
-                            </HBox>
-                            
-                        </layout:VerticalLayout> 						
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-
-            <!-- 품목 정보 시작 -->
-            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ITEM_INFO}">
-				<uxap:subSections>
-                    <uxap:ObjectPageSubSection>
-                        <!-- Participating Supplier Table -->
-                        <table:Table 
-                            id="pritemTable"
-                            selectionMode="None"
-                            fixedColumnCount="1"
-                            visibleRowCountMode="Auto"
-                            rows="{detailModel>/dtl}"
-                        >
-                            <table:extension>
-                                <OverflowToolbar>
-                                    <Title text="{I18N>/ITEM} ({= ${detailModel>/dtl}.length || 0})" level="H2"/>
-                                    <ToolbarSpacer/>
-                                    <Button icon="sap-icon://group-2" />
-                                    <Button icon="sap-icon://action-settings" />
-                                </OverflowToolbar>
-                            </table:extension>          
-
-                            <table:columns>
-                                <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/ITEM_NUMBER}"/>
-                                    <table:template>
-                                        <Text id="t_model" text="{detailModel>pr_item_number}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/ORG_CODE}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>org_code}" />
-                                    </table:template>
-                                </table:Column>
-                                <table:Column width="8em" hAlign="Center">
-                                    <Label text="{I18N>/MATERIAL_CODE}" />           
-                                    <table:template>
-                                        <Text  text="{detailModel>material_code}" />
-                                    </table:template>
-                                </table:Column>                                
-                                <table:Column  width="20em" hAlign="Center">
-                                    <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/ITEM_NAME}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>pr_desc}"/>
-                                    </table:template>
-                                </table:Column>       
-                                <table:Column width="5em" hAlign="Center">
-                                    <Label text="{I18N>/REQUEST_QUANTITY}"/>
-                                    <table:template>
-                                        <Text text="{detailModel>pr_quantity}"/>
-                                    </table:template>
-                                </table:Column>                                     
-                                <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/UNIT}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>pr_unit}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column  width="8em" hAlign="Center">
-                                    <Label text="납품일" />           
-                                    <table:template>
-                                        <Text text="{
-                                                path:'detailModel>delivery_request_date',
-                                                type:'sap.ui.model.odata.type.DateTime',
-                                                formatOptions: {
-                                                    UTC: true,
-                                                    pattern: 'yyyy-MM-dd'
-                                                }
-                                            }"
-                                        />
-                                    </table:template>
-                                </table:Column>    
-                                <table:Column  width="10em" hAlign="Center">
-                                    <Label text="{I18N>/PRICE}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>estimated_price}"/>
-                                    </table:template>
-                                </table:Column>                               
-                                <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/CURRENCY}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>currency_code}"/>
-                                    </table:template>
-                                </table:Column> 
-
-                                <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/PRICE_UNIT}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>price_unit}"/>
-                                    </table:template>
-                                </table:Column>    
-
-                                <table:Column  width="8em" hAlign="Center">
-                                    <Label text="{I18N>/BUYER}"/>           
-                                    <table:template>
-                                        <Text text="{detailModel>buyer_empno}"/>
-                                    </table:template>
-                                </table:Column> 
-
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="{I18N>/PURCHASING_GROUP_CODE}"/>           
-                                    <table:template>
-                                        <Text text="{detailModel>purchasing_group_code}"/>
-                                    </table:template>
-                                </table:Column>
-
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="{I18N>/MATERIAL_GROUP_CODE}"/>           
-                                    <table:template>
-                                        <Text text="{detailModel>material_group_code}"/>
-                                    </table:template>
-                                </table:Column>
-
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="{I18N>/STORAGE_LOCATION}"/>           
-                                    <table:template>
-                                        <Text text="{detailModel>sloc_code}"/>
-                                    </table:template>
-                                </table:Column>
-
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="{I18N>/REMARK}"/>           
-                                    <table:template>
-                                        <Text text="{detailModel>remark}"/>
-                                    </table:template>
-                                </table:Column>  
-
-                            </table:columns>
-                          </table:Table>
-                       
-                        <!-- // -->
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-            <!-- 품목 정보 끝 -->
-
-            <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachment">
-				<uxap:subSections>
-                    <uxap:ObjectPageSubSection title="외부용" level="H2">
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
-                            <UploadCollection
-                                id="UploadCollectionOuter"
-                                maximumFilenameLength="55"
-                                maximumFileSize="10"
-                                multiple="true"
-                                sameFilenameAllowed="false"
-                                instantUpload="false"
-                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                change="onChange"
-                                fileDeleted="onFileDeleted"
-                                filenameLengthExceed="onFilenameLengthExceed"
-                                fileSizeExceed="onFileSizeExceed"
-                                typeMissmatch="onTypeMissmatch"
-                                uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />                            
-                        </layout:VerticalLayout>
-					</uxap:ObjectPageSubSection>
-
-                    <uxap:ObjectPageSubSection title="내부용" level="H2">
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
-                            <UploadCollection
-                                id="UploadCollectionInner"
-                                maximumFilenameLength="55"
-                                maximumFileSize="10"
-                                multiple="true"
-                                sameFilenameAllowed="false"
-                                instantUpload="false"
-                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                change="onChange"
-                                fileDeleted="onFileDeleted"
-                                filenameLengthExceed="onFilenameLengthExceed"
-                                fileSizeExceed="onFileSizeExceed"
-                                typeMissmatch="onTypeMissmatch"
-                                uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />                            
-                        </layout:VerticalLayout>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-            <!-- 첨부파일 끝 -->
-
-			<uxap:ObjectPageSection titleUppercase="false" title="Report Line">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection titleUppercase="false">
 						<uxap:blocks>
+                            <form:SimpleForm editable="false">
+                                    <core:Title text="{I18N>/BASIC_INFO}" />
+                                    <Label text="(미정)구매요청번호"/>
+                                    <Text text="{detail>/Pr_ReviewDtlView/pr_number}" width="10em" textAlign="Left" />
+                                    <Label text="(미정)품목번호"/>
+                                    <Text text="{detail>/Pr_ReviewDtlView/pr_item_number}" width="10em" textAlign="Left" />
+                                    <Label text="(미정)ERP구매요청번호"/>
+                                    <Text text="{detail>/Pr_ReviewDtlView/erp_pr_number}" width="10em" textAlign="Left" />
+                                    <Label text="(미정)진행상태"/>
+                                    <Text text="{detail>/Pr_ReviewDtlView/pr_progress_status_name}" width="10em" textAlign="Left" />
+
+                                    <core:Title text="" />
+                                    <Label text="(미정)구매요청유형"/>
+                                    <Text text="{detail>/Pr_ReviewDtlView/pr_type_name}" width="10em" textAlign="Left" />
+                                    <Label text="(미정)품목그룹"/>
+                                    <Text text="{detail>/Pr_ReviewDtlView/pr_type_name_2}" width="10em" textAlign="Left" />
+                                    <Label text="(미정)품목"/>
+                                    <Text text="{detail>/Pr_ReviewDtlViewpr_type_name_3}" width="10em" textAlign="Left" />
+                                    <Label text="(미정)구매요청템플릿"/>
+                                    <Text text="{detail>/Pr_ReviewDtlView/pr_tempalte_number}" width="10em" textAlign="Left" />
+                            </form:SimpleForm>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
-
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+            
+            <!-- 품목/담당자 정보 -->
+			<uxap:ObjectPageSection titleUppercase="true" title="(미정)품목/담당자정보">
+				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
+                            <form:SimpleForm editable="false">
+                                <core:Title text="(미정)품목정보" />
+                                <Label text="(미정)조직코드"/>
+                                <Text text="{detail>/Pr_ReviewDtlView/org_name}" width="10em" textAlign="Left" />
+                                <Label text="(미정)자재코드"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/material_code}] {detail>/Pr_ReviewDtlView/material_name}" width="10em" textAlign="Left"
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/material_code}}"
+                                />
+                                <Label text="(미정)품명"/>
+                                <Text text="{detail>/Pr_ReviewDtlView/pr_desc}" width="10em" textAlign="Left" />
+                                <Label text="(미정)비고"/>
+                                <Text text="{detail>/Pr_ReviewDtlView/remark}" width="10em" textAlign="Left" />
+
+                                <Label text="(미정)자재그룹"/>
+                                <Text text="{detail>/Pr_ReviewDtlView/material_group_name}" width="10em" textAlign="Left" />
+                                <Label text="(미정)품목범주"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/item_category_code}] {detail>/Pr_ReviewDtlView/item_category_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/item_category_code}}"
+                                />
+                                <Label text="(미정)저장위치"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/slot_code}] {detail>/Pr_ReviewDtlView/slot_name}" width="10em" textAlign="Left"
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/slot_code}}"
+                                />
+                            
+                                <core:Title text="(미정)담당자정보"/>
+                                <Label text="(미정)구매요청자"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/requestor_department_name}] {detail>/Pr_ReviewDtlView/requestor_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/requestor_department_name}}"
+                                />
+                                <Label text="(미정)구매담당자"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/buyer_department_name}] {detail>/Pr_ReviewDtlView/buyer_name}" width="10em" textAlign="Left"
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/buyer_department_name}}"
+                                />
+
+                                <Label text="(미정)요청자명"/>
+                                <Text text="{detail>/Pr_ReviewDtlView/erp_requestor_name}" width="10em" textAlign="Left" />
+                                <Label text="(미정)구매그룹"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/purchasing_group_code}] {detail>/Pr_ReviewDtlView/purchasing_group_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/purchasing_group_code}}"
+                                />
+                                <Label text="(미정)자재구매그룹"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/material_purchasing_group_code}] {detail>/Pr_ReviewDtlView/material_purchasing_group_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/material_purchasing_group_code}}"
+                                />
+                            </form:SimpleForm>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+            
+            <!-- 수량/금액/일자/공급업체 정보 -->
+			<uxap:ObjectPageSection titleUppercase="true" title="(미정)수량/금액/일자정보">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <form:SimpleForm editable="false">
+                                <core:Title text="(미정)수량/금액정보"/>
+                                <Label text="(미정)요청수량"/>
+                                <Text 
+                                    text="{
+                                        path: 'detail>/Pr_ReviewDtlView/pr_quantity', 
+                                        formatter: '.numberFormatter.toNumberString'
+                                    }" 
+                                    width="10em" 
+                                    textAlign="Left" 
+                                />
+                                <Label text="(미정)잔여수량"/>
+                                <Text 
+                                    text="{
+                                        path: 'detail>/Pr_ReviewDtlView/remain_quantity', 
+                                        formatter: '.numberFormatter.toNumberString'
+                                    }" 
+                                    width="10em" 
+                                    textAlign="Left" 
+                                />
+                                <Label text="(미정)단가예산"/>
+                                <Text 
+                                    text="{
+                                        parts: [
+                                            { path: 'detail>/Pr_ReviewDtlView/estimated_price', formatter: '.numberFormatter.toNumberString' },
+                                            { path: 'detail>/Pr_ReviewDtlView/currency_code' }
+                                        ]
+                                    }"
+                                    width="10em" 
+                                    textAlign="Left" 
+                                />
+
+                                <Label text="(미정)Per"/>
+                                <Text text="{detail>/Pr_ReviewDtlView/price_unit}" width="10em" textAlign="Left" />
+                                <Label text="(미정)금액"/>
+                                <Text 
+                                    text="{
+                                        parts: [
+                                            { path: 'detail>/Pr_ReviewDtlView/pr_amount', formatter: '.numberFormatter.toNumberString' },
+                                            { path: 'detail>/Pr_ReviewDtlView/currency_code' }
+                                        ]
+                                    }"
+                                    width="10em" 
+                                    textAlign="Left" 
+                                />
+
+                                <core:Title text="(미정)일자정보" />
+                                <Label text="(미정)생성일자"/>
+                                <Text 
+                                    text="{
+                                        path: 'detail>/Pr_ReviewDtlView/request_date',
+                                        formatter: '.dateFormatter.toUTCDateString'
+                                    }"
+                                    width="10em" 
+                                    textAlign="Left"
+                                />
+                                <Label text="(미정)납품요청일자"/>
+                                <Text 
+                                    text="{
+                                        path: 'detail>/Pr_ReviewDtlView/delivery_request_date',
+                                        formatter: '.dateFormatter.toUTCDateString'
+                                    }"
+                                    width="10em" 
+                                    textAlign="Left"
+                                />
+                                <Label text="(미정)결재일자"/>
+                                <Text 
+                                    text="{
+                                        path: 'detail>/Pr_ReviewDtlView/approval_date',
+                                        formatter: '.dateFormatter.toUTCDateString'
+                                    }"
+                                    width="10em" 
+                                    textAlign="Left"
+                                />
+                                <Label text="(미정)변경일자"/>
+                                <Text 
+                                    text="{
+                                        path: 'detail>/Pr_ReviewDtlView/locale_update_dtm',
+                                        formatter: '.dateFormatter.toUTCDateString'
+                                    }"
+                                    width="10em" 
+                                    textAlign="Left"
+                                />
+                            </form:SimpleForm>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+            
+            <!-- 계정지정 정보 -->
+			<uxap:ObjectPageSection titleUppercase="true" title="(미정)공급업체정보" visible="{= !!${detail>/Pr_ReviewDtlView/supplier_code}}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <form:SimpleForm>
+                                <core:Title text="(미정)공급업체정보" />
+                                <Label text="(미정)공급업체"/>
+                                <Text text="[{detail>/Pr_ReviewDtlView/supplier_code}] {detail>/Pr_ReviewDtlView/supplier_name}" width="10em" textAlign="Left" />
+                                
+                                <core:Title text="" />
+                            </form:SimpleForm>
+                        </uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- 계정지정 정보 -->
+			<uxap:ObjectPageSection titleUppercase="true" title="(미정)계정지정정보" visible="{= ${accounts>/Pr_ReviewDtlAcctView}.length > 0}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <VBox class="sapUiSmallMargin">
+                                <Table 
+                                    id="accountsTable" 
+                                    visible="true"
+                                    sticky="HeaderToolbar,ColumnHeaders" 
+                                    inset="false" 
+                                    growing="true"
+                                    mode="None"
+                                    growingThreshold="10"
+                                    class="sapFDynamicPageAlignContent" 
+                                    items="{
+                                        path : 'accounts>/Pr_ReviewDtlAcctView',
+                                        sorter: {
+                                            path: 'pr_number',
+                                            descending: true
+                                        }
+                                    }"                        
+                                    width="auto"
+                                >
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <!-- <Title text="(미정)계정지정정보 ({= ${accounts>/Pr_ReviewDtlAcctView}.length || 0})" level="H2"/> -->
+                                            <!-- <Title text="(미정)계정지정정보" level="H2"/> -->
+                                            <ToolbarSpacer/>
+                                            <Button icon="sap-icon://excel-attachment" press="onExcelDownload($event, 'Download', ${list>/Pr_ReviewDtlAcctView}, {fileName: 'Account List', tId: 'accountsTable' })">
+                                                <layoutData>
+                                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                                </layoutData>
+                                            </Button>
+                                            <Button icon="sap-icon://action-settings" press=".onPersonalize($event)" >
+                                                <layoutData>
+                                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                                </layoutData>
+                                            </Button> 
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <!-- 구매요청 번호 -->
+                                        <Column hAlign="Center" width="auto">
+                                            <Text text="(미정)코스트센터" />
+                                        </Column>
+                                        <!-- 구매요청 유형 -->
+                                        <Column hAlign="Center" width="auto">
+                                            <Text text="(미정)계정코드" />
+                                        </Column>
+                                        <!-- 품목 번호 -->
+                                        <Column hAlign="Center" width="auto">
+                                            <Text text="(미정)WBS코드" />
+                                        </Column>
+                                        <!-- 조직코드 -->
+                                        <Column hAlign="Center" width="auto">
+                                            <Text text="(미정)자산번호" />
+                                        </Column>
+                                        <!-- 자재코드 -->
+                                        <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto">
+                                            <Text text="(미정)계정지정범주" />
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem type="Navigation" press=".onColumnListItemPress.call(this, $event, '${list>/this}')">
+                                            <cells>
+                                                <!-- 코스트센터 -->
+                                                <Text text="[{accounts>cctr_code}] {accounts>cctr_name}" width="10em" textAlign="Left" />
+                                                <!-- 계정코드 -->
+                                                <Text text="[{accounts>account_code}] {accounts>account_name}" width="10em" textAlign="Left" />
+                                                <!-- WBS코드 -->
+                                                <Text text="[{accounts>wbs_code}] {accounts>wbs_name}" width="10em" textAlign="Left" />
+                                                <!-- 오더번호 -->
+                                                <Text text="[{accounts>order_number}] {accounts>order_name}" width="10em" textAlign="Left" />
+                                                <!-- 자산번호 -->
+                                                <Text text="[{accounts>asset_number}] {accounts>asset_name}" width="10em" textAlign="Left" />
+                                                <!-- 계정지정범주 -->
+                                                <Text text="[{accounts>account_assignment_category_code}] {accounts>account_assignment_category_name}" width="10em" textAlign="Left" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -359,6 +408,7 @@
 		<uxap:footer>
 			<OverflowToolbar>
                 <ToolbarSpacer />
+                <Button text="(미정)공사물량" type="Transparent" press=".onButtonPress($event, 'builds')" />
                 <Button text="(미정)변경이력" type="Transparent" press=".onButtonPress($event, 'changed')" />
                 <Button text="(미정)발주이력" type="Transparent" press=".onButtonPress($event, 'ordered')" />
                 <Button text="(미정)사용실적" type="Transparent" press=".onButtonPress($event, 'results')" />

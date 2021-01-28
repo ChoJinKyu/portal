@@ -14,13 +14,13 @@ sap.ui.define([
 ], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-    var PurOperationOrgDialog = Parent.extend("cm.util.control.ui.PurOperationOrgDialog", {
+    var DepartmentDialog = Parent.extend("op.util.control.ui.OrderDialog", {
 
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
-                keyField: { type: "string", group: "Misc", defaultValue: "org_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "org_name" },
+                keyField: { type: "string", group: "Misc", defaultValue: "department_id" },
+                textField: { type: "string", group: "Misc", defaultValue: "department_local_name" },
                 items: { type: "sap.ui.core.Control"}
             }
         },
@@ -32,7 +32,7 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/ORG_CODE") +" or "+ this.getModel("I18N").getText("/ORG_NAME")}),
+                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT_CODE") +" or "+ this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -41,18 +41,17 @@ sap.ui.define([
         },
 
         createTableColumns: function(){
-            //타이틀 다국어 처리
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/OPERATION_ORG"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/DEPARTMENT"));
             return [
                 new Column({
                     width: "30%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/ORG_CODE")}),
+                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_CODE")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/ORG_NAME")}),
+                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 })
                 
@@ -74,7 +73,7 @@ sap.ui.define([
                     })
                 );
             }
-            ODataV2ServiceProvider.getService("cm.orgProcOrgTypeMgtService").read("/PurOrgTypeView", {
+            ODataV2ServiceProvider.getService("cm.util.HrService").read("/Department", {
                 
                 filters: aFilters,
                 sorters: aSorters,
@@ -87,5 +86,5 @@ sap.ui.define([
 
     });
 
-    return PurOperationOrgDialog;
+    return DepartmentDialog;
 }, /* bExport= */ true);

@@ -407,7 +407,12 @@ sap.ui.define([
             if (approvalNumber !== "New") {
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
                     this.firstStatusCode = oData.approve_status_code; // 저장하시겠습니까? 하고 취소 눌렀을 경우 다시 되돌리기 위해서 처리 
-                    this._toButtonStatus();
+                    this._toButtonStatus(); 
+
+                    if(oData.approval_type_code == 'E'){
+                        this._pssRequestCancelBtn();
+                    }
+
                 }.bind(this));
             }else{
                  this._toButtonStatus();
