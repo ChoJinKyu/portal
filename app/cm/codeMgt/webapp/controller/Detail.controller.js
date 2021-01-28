@@ -7,9 +7,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/f/LayoutType",
-    "ext/lib/util/ValidatorUtil",
+    // "ext/lib/util/ValidatorUtil",
     "./Master.controller"
-], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, ValidatorUtil, Master) {
+], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, /*ValidatorUtil,*/ Master) {
 	"use strict";
 
 	return BaseController.extend("cm.codeMgt.controller.Detail", {
@@ -165,7 +165,8 @@ sap.ui.define([
             var bCreateFlag = oContModel.getProperty("/detail/createMode");
 
             if(bCreateFlag){
-                if(ValidatorUtil.isValid(this.getView(),"requiredField")){
+                // if(ValidatorUtil.isValid(this.getView(),"requiredField")){
+                    //ValidatorUtil 삭제로 Validator 추가 필요
                     MessageBox.confirm("추가 하시 겠습니까?", {
                         title : "Create",
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -175,9 +176,9 @@ sap.ui.define([
                             }
                         }.bind(this)
                     });
-                }else{
-                    console.log("checkRequire")
-                }
+                // }else{
+                //     console.log("checkRequire")
+                // }
             }else{
                 MessageBox.confirm("수정 하시 겠습니까?", {
                     title : "Update",

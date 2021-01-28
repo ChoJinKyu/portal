@@ -8,13 +8,12 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "ext/lib/model/ManagedListModel",
-    "ext/lib/util/ValidatorUtil",
     "ext/lib/util/ControlUtil"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, Multilingual, JSONModel, MessageToast, MessageBox, LayoutType, Filter, FilterOperator, ManagedListModel, ValidatorUtil, ControlUtil) {
+	function (BaseController, Multilingual, JSONModel, MessageToast, MessageBox, LayoutType, Filter, FilterOperator, ManagedListModel, ControlUtil) {
 		"use strict";
 
 		return BaseController.extend("cm.orgCodeMgt.controller.Master", {
