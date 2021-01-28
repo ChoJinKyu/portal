@@ -72,6 +72,8 @@ service BasePriceArlService {
         };
 
     annotate Base_Price_Arl_Master with {
+        approval_type_code      @description : '공통코드(CM_CODE_DTL, DP_VI_APPROVAL_TYPE) : VI10(신규), VI20(변경)';
+        approval_type_code_nm   @title       : '품의유형명'  @description  : '품의유형코드 이름';
         approve_status_code     @description : '공통코드(CM_CODE_DTL, CM_APPROVE_STATUS) : DR(Draft), AR(Approval Request), IA(In-Approval), AP(Approved), RJ(Rejected)';
         approve_status_code_nm  @title       : '결재상태명'  @description  : '결재상태코드 이름';
         requestor_local_nm      @title       : '요청자 이름'  @description : '요청자 이름';
@@ -258,6 +260,69 @@ service BasePriceArlService {
 
     entity Base_Price_Arl_Requestor_His as projection on arlRequestorHis;
 
+    @readonly
+    entity Base_Price_Arl_Config        as
+        select from controlDtl m {
+            key tenant_id,
+            key control_option_code,
+                case
+                    when
+                        control_option_code = 'DP_VI_COMPANY_EDITABLE_FLAG'
+                        and control_option_val is null
+                    then
+                        'N'
+                    when
+                        control_option_code = 'DP_VI_SUPPLY_DISPLAY_FLAG'
+                        and control_option_val is null
+                    then
+                        'N'
+                    when
+                        control_option_code = 'DP_VI_MARKETCODE0_DISPLAY_FLAG'
+                        and control_option_val is null
+                    then
+                        'N'
+                    when
+                        control_option_code = 'DP_VI_MARKETCODE1_DISPLAY_FLAG'
+                        and control_option_val is null
+                    then
+                        'N'
+                    when
+                        control_option_code = 'DP_VI_MARKETCODE2_DISPLAY_FLAG'
+                        and control_option_val is null
+                    then
+                        'N'
+                    else
+                        control_option_val
+                end as control_option_val : String(100)
+        }
+        where
+            control_option_code in (
+                'DP_VI_COMPANY_EDITABLE_FLAG', 'DP_VI_SUPPLY_DISPLAY_FLAG', 'DP_VI_MARKETCODE0_DISPLAY_FLAG', 'DP_VI_MARKETCODE1_DISPLAY_FLAG', 'DP_VI_MARKETCODE2_DISPLAY_FLAG'
+            )
+            and control_option_level_code = 'T'
+            and org_type_code = '*'
+            and control_option_level_val = 'Default'
+            and $now between start_date and end_date;
+
+    // @readonly
+    // entity Material_Vw             as
+    //     select from materialMst m
+    //     left outer join materialOrg o
+    //         on  m.tenant_id     = o.tenant_id
+    //         and m.material_code = o.material_code
+    //     {
+    //         key m.tenant_id,
+    //         key m.material_code,
+    //             m.material_type_code,
+    //             m.material_desc,
+    //             ifnull(
+    //                 m.material_spec, ''
+    //             ) as material_spec : String(1000),
+    //             m.base_uom_code,
+    //             m.purchasing_uom_code,
+    //             o.material_status_code
+    //     };
+
     // @readonly
     // entity Code_Dtl                as
     //     select from codeDtl as d {
@@ -326,54 +391,5 @@ service BasePriceArlService {
     //             m.purchasing_uom_code,
     //             o.material_status_code
     //     };
-
-    @readonly
-    entity Base_Price_Arl_Config        as
-        select from controlDtl m {
-            key tenant_id,
-            key control_option_code,
-                case
-                    when
-                        control_option_code = 'DP_VI_COMPANY_EDITABLE_FLAG'
-                        and control_option_val is null
-                    then
-                        'N'
-                    when
-                        control_option_code = 'DP_VI_SUPPLY_DISPLAY_FLAG'
-                        and control_option_val is null
-                    then
-                        'N'
-                    when
-                        control_option_code = 'DP_VI_PURORG_DISPLAY_NM'
-                        and control_option_val is null
-                    then
-                        'Pur Org'
-                    when
-                        control_option_code = 'DP_VI_MARKETCODE0_DISPLAY_FLAG'
-                        and control_option_val is null
-                    then
-                        'N'
-                    when
-                        control_option_code = 'DP_VI_MARKETCODE1_DISPLAY_FLAG'
-                        and control_option_val is null
-                    then
-                        'N'
-                    when
-                        control_option_code = 'DP_VI_MARKETCODE2_DISPLAY_FLAG'
-                        and control_option_val is null
-                    then
-                        'N'
-                    else
-                        control_option_val
-                end as control_option_val : String(100)
-        }
-        where
-            control_option_code in (
-                'DP_VI_COMPANY_EDITABLE_FLAG', 'DP_VI_SUPPLY_DISPLAY_FLAG', 'DP_VI_PURORG_DISPLAY_NM', 'DP_VI_MARKETCODE0_DISPLAY_FLAG', 'DP_VI_MARKETCODE1_DISPLAY_FLAG', 'DP_VI_MARKETCODE2_DISPLAY_FLAG'
-            )
-            and control_option_level_code = 'T'
-            and org_type_code = '*'
-            and control_option_level_val = 'Default'
-            and $now between start_date and end_date;
 
 }

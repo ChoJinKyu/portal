@@ -157,11 +157,11 @@
 						</table:Column>
 						<table:Column width="15em" hAlign="Center">
 							<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}"/>
-					        <table:template>
+					        <table:template> 
+                            <!-- Md_Asset > acq_department_code -->
                                 <Input 
                                    id="acq_department_code" 
                                     editable="{mode>/editFlag}" 
-                                    
                                     showValueHelp="true" 
                                     valueHelpOnly="true"
                                     value="{mdRecepit>acq_department_code_nm}"

@@ -197,7 +197,10 @@
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib",
-      "dputil": "../../../../dp/util"
+      "dputil": "../../../../dp/util",
+      "dpmd": "../../../../dp/md",
+      "sp": "../../../../sp",
+      "cm": "../../../../cm"
     },
     "routing": {
       "config": {

@@ -2,6 +2,7 @@
 using {sp as mkCntry} from '../../../../../db/cds/sp/sm/SP_SM_COUNTRY_MST-model';
 // View
 using {sp as mkView} from '../../../../../db/cds/sp/sm/SP_SM_MAKER_VIEW-model';
+using {sp as mkMstView} from '../../../../../db/cds/sp/sm/SP_SM_MASTER_CAL_VIEW-model';
 //Common Organization
 using {cm as OrgCompany} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using {cm as OrgUnit} from '../../../../../db/cds/cm/CM_ORG_UNIT-model';
@@ -91,6 +92,19 @@ service makerViewService {
             tenant_id,
             code
         ;
+    view MakerCalView @(title : '제조사 View') as
+        select from mkMstView.Sm_Master_Cal_View as makerView {
+            key makerView.tenant_id,
+            key makerView.code,
+                makerView.sort_no,
+                makerView.code_name
+        }
+        where
+            group_code = 'SP_SM_SUPPLIER_STATUS_CODE'
+            and code <> 'S'
+        order by
+            tenant_id,
+            sort_no;
 
     //Maker Registration Request Status View
     @readonly
@@ -136,9 +150,22 @@ service makerViewService {
             code
         ;
 
+    view MakerRegistrationRequestStatusCalView @(title : '제조사 View') as
+        select from mkMstView.Sm_Master_Cal_View as makerView {
+            key makerView.tenant_id,
+            key makerView.code,
+                makerView.sort_no,
+                makerView.code_name
+        }
+        where
+            group_code = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
+        order by
+            tenant_id,
+            sort_no;
+
     //BP Role Code View
     @readonly
-    view BpRoleCodeiew @(title : 'BP Role Code View') as
+    view BpRoleCodeView @(title : 'BP Role Code View') as
         // select
         //     key Code_Dtl.tenant_id  as tenant_id,
         //     key Code_Dtl.code       as code,
@@ -180,6 +207,19 @@ service makerViewService {
             tenant_id,
             code
         ;
+
+    view BpRoleCodeCalView @(title : '제조사 View') as
+        select from mkMstView.Sm_Master_Cal_View as makerView {
+            key makerView.tenant_id,
+            key makerView.code,
+                makerView.sort_no,
+                makerView.code_name
+        }
+        where
+            group_code = 'SP_SM_BP_ROLE_CODE'
+        order by
+            tenant_id,
+            sort_no;
 
     //Contry View
     @readonly

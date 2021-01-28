@@ -26,7 +26,7 @@ sap.ui.define([
         FilterOperator, FilterType, MessageStrip, MessageBox, MessageToast, BaseController, Multilingual, Validator, Item) {
         "use strict";
 
-        return BaseController.extend("sp.se.supplierEvaluationSetupMgtMgt.controller.Main", {
+        return BaseController.extend("sp.se.supplierEvaluationSetupMgt.controller.Main", {
             //Validator
             validator: new Validator(),
             onInit: function () {

@@ -133,7 +133,7 @@ sap.ui.define([
 
                 var nFilters = [];
                 oArges.mold_progress_status_code.forEach(function (mold_progress_status_code) {
-                    nFilters.push(new Filter("prog_status_code", FilterOperator.EQ, String(mold_progress_status_code)));
+                    nFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, String(mold_progress_status_code)));
                 });
                 
                 var oInFilter = {

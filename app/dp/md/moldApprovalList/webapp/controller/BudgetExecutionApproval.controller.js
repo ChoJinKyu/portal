@@ -151,6 +151,7 @@ sap.ui.define([
         },
         onBudgetChange : function ( oEvent ){
             this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'), function(oData){
+               console.log("/// investment_ecst_type_code " , oData);
                 console.log(oData);
             });
         } ,
@@ -477,6 +478,7 @@ sap.ui.define([
             var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [];
             this.moldMaster_data = [];
+            this.asset_data = [];
 
             if (this.validator.validate(this.byId("generalInfoLayout")) !== true) {
                 MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
@@ -504,18 +506,6 @@ sap.ui.define([
             var that = this;
 
             if (bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0) {
-                /**
-                 *   md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
-                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
-                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
-                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
-                    md.setProperty("/project_code", oData.results[0].project_code);
-                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
-                    md.setProperty("/account_code", oData.results[0].account_code);
-                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
-                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
-                 */
-
 
                 var account_code = mModel.getData().account_code;
                 var investment_ecst_type_code = mModel.getData().investment_ecst_type_code;
@@ -537,7 +527,7 @@ sap.ui.define([
                         , mold_id: item.mold_id
                         , account_code: account_code
                         , investment_ecst_type_code: investment_ecst_type_code
-                        , acq_department_code: acq_department_code
+                        // , acq_department_code: acq_department_code
                         , accounting_department_code: accounting_department_code
                         , import_company_code: import_company_code
                         , project_code: project_code
@@ -545,9 +535,19 @@ sap.ui.define([
                         , mold_production_type_code: item.mold_production_type_code
                         , mold_item_type_code: item.mold_item_type_code
                         , provisional_budget_amount: item.provisional_budget_amount
-                        , asset_type_code: item.asset_type_code
+                      //  , asset_type_code: item.asset_type_code
                         , _row_state_: item._row_state_ == undefined ? "U" : item._row_state_
                     });
+
+                    that.asset_data.push({
+                        tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , acq_department_code : acq_department_code
+                        , asset_type_code : item.asset_type_code 
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+
+
                 });
 
             }
@@ -574,6 +574,11 @@ sap.ui.define([
                         , mold_item_type_code: item.mold_item_type_code
                         , provisional_budget_amount: item.provisional_budget_amount
                         , asset_type_code: item.asset_type_code
+                        , _row_state_: "D"
+                    });
+                    that.asset_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
                         , _row_state_: "D"
                     });
                 });

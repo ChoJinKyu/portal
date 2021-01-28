@@ -390,9 +390,9 @@
                 class="sapFDynamicPageAlignContent" 
                 visibleRowCountMode="Auto">
                 <t:extension>
-                    <OverflowToolbar class="sapFDynamicPageAlignContent">
+                    <OverflowToolbar>
                         <!-- <Title text="{I18N>/PART_NO_LIST}" level="H2"/> -->
-                        <Title text="{I18N>/PROJECT} {I18N>/MANAGEMENT} {I18N>/LIST} ({= ${listModel>/results}.length})" level="H2"/>
+                        <Title text="{I18N>/PROJECT} {I18N>/MANAGEMENT} {I18N>/LIST} ({= ${listModel>/results}.length || 0})" level="H2"/>
                         <ToolbarSpacer />
                         <Button text="{I18N>/QUOTATION_MCST}" type="Emphasized" press=".onGoalCreatePress">
                             <customData>
@@ -424,7 +424,7 @@
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Begin" width="10rem">
-                        <Label text="{I18N>/BUSINESS_DIVISION}" />
+                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>bizdivision_text}" />
                         </t:template>

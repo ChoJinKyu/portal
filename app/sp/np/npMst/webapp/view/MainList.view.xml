@@ -7,6 +7,7 @@
     xmlns:core="sap.ui.core" 
     xmlns:table="sap.ui.table"
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:pg-m="ext.pg.util.control.m"
     height="100%">
     <App id="app">
         <f:DynamicPage id="page"
@@ -129,7 +130,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Supplier" labelFor="search_supplier_code"></Label>
-                                <lib-m:CodePicker id="search_supplier_code"
+                                <!-- <lib-m:CodePicker id="search_supplier_code"
                                     placeholder="Enter a Supplier name"
                                     keyField="supplier_code"
                                     textField="supplier_local_name"
@@ -144,7 +145,7 @@
                                     }" value="" change=".cvtSupplier">
                                     <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
                                         keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
-                                </lib-m:CodePicker>
+                                </lib-m:CodePicker> -->
                                 <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
                             <VBox>
@@ -200,7 +201,24 @@
                             </VBox>
                             <VBox>
                                 <!-- <Input id="test" type="Text" liveChange=".chkReplaceChange" /> -->
-                                <Input id="test" type="Text" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhVendorPoolCode"/>
+                                <MultiInput id="test" type="Text" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".vhVendorPoolCode" />
+                                <!-- <pg-m:CodePicker id="search_supplier_code"
+                                    placeholder="Enter a Supplier name"
+                                    keyField="supplier_code"
+                                    textField="supplier_local_name"
+                                    startSuggestion="3"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
+                                        entityName: 'VpSupplierDtlView'
+                                    }" value="">
+                                    <pg-m:SupplierValueHelp contentWidth="800px" title="Choose a supplier"
+                                        keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
+                                </pg-m:CodePicker> -->
                             </VBox>
                         </form:content>
                     </form:SimpleForm>

@@ -67,7 +67,7 @@
                                 items="{
                                     path: '/PdOperationOrg',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}    
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}    
                                     ],
                                     sorter: { path: 'operation_org_code'}
                                 }">
@@ -98,7 +98,7 @@
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                         {path: 'group_code', operator: 'EQ', value1: 'DP_PART_PJT_TYPE'}
                                     ],
                                     sorter: { path: 'sort_no'}
@@ -150,10 +150,10 @@
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column id="mainColumnCom" minScreenWidth="Tablet" hAlign="Center">
-                        <Text text="Company" />
+                    <Column id="mainColumnCom" minScreenWidth="Tablet" hAlign="Center" width="6rem">
+                        <Text text="회사" />
                     </Column>
-                    <Column id="mainColumnAU" minScreenWidth="Tablet" hAlign="Center">
+                    <Column id="mainColumnAU" minScreenWidth="Tablet" hAlign="Center" width="6rem">
                         <Text text="조직코드" />
                     </Column>
                     <Column id="mainColumnPC" minScreenWidth="Tablet" hAlign="Center">
@@ -189,7 +189,7 @@
                     <Column id="mainColumnUDM" minScreenWidth="Tablet" hAlign="Right">
                         <Text text="수정일자" />
                     </Column>
-                    <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Center">
+                    <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Center" width="6rem">
                         <Text text="수정자" />
                     </Column>
                 </columns>
@@ -208,7 +208,7 @@
                             <Text text="{list>b_grade_standard_days}" />
                             <Text text="{list>c_grade_standard_days}" />
                             <Text text="{list>d_grade_standard_days}" />
-                            <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" />
+                            <Text text="{path:'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" />
                             <Text text="{list>update_user_id}" />
                         </cells>
                     </ColumnListItem>

@@ -8,7 +8,6 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
     "sap/m/TablePersoController",
-    //"./NpSearchService",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     'sap/ui/core/Fragment',
@@ -48,7 +47,6 @@ sap.ui.define([
         ManagedListModel,
         DateFormatter,
         TablePersoController,
-        //NpSearchService,
         Filter,
         FilterOperator,
         Fragment,
@@ -159,8 +157,8 @@ sap.ui.define([
 
             fnSearch: function () {
 
-                this.validator.validate(this.byId('pageSearchFormE'));
-                if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
+                //this.validator.validate(this.byId('pageSearchFormE'));
+                //if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
 
                 var status = "";
                 var oFilter = [];
@@ -316,12 +314,12 @@ sap.ui.define([
 
             vhVendorPoolCode: function(oEvent) {
                 var vendorPoolCode;
-                var oSearchValue = this.byId(oEvent.getSource().sId).getValue();
+                var oSearch = this.byId(oEvent.getSource().sId);
 
                 if (!this.oSearchVendorPollDialog) {
                     this.oSearchVendorPollDialog = new VendorPoolDialog({
                         title: "Choose VendorPool",
-                        MultiSelection: true,
+                        multiSelection: true,
                         items: {
                             filters: [
                                 new Filter("tenant_id", "EQ", "L2100")
@@ -329,25 +327,21 @@ sap.ui.define([
                         }
                     });
 
-                    //여기에 다가 받을 아이디를 셋팅한다. searchField면 아이디를 그리드 아이탬이면 sPath의 경로의 셀 번호를 지정해주면됨다.
-                    /*
-                        그리드의 경우
-                        function에서 받은 oEvent를 활용하여 셋팅
-                        var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                        sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item);
-                    */                    
-                    // this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
-                    //     vendorPoolCode = oEvent.mParameters.item;
-                    //     //console.log("materialItem : ", materialItem);
-                    //     that.byId("search_material_code").setValue(vendorPoolCode.material_code);
-
-                    // }.bind(this));
+                    this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
+                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                        oSearch.setTokens(jQuery.map(oEvent.mParameters.items, function(oToken){
+                            return new Token({
+                                key: oToken.vendor_pool_code,
+                                text: oToken.vendor_pool_local_name,
+                            });
+                        }));
+                    }.bind(this));
                 }
 
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
                 sSearchObj.tanent_id = "L2100";
-                sSearchObj.vendor_pool_code = oSearchValue;
+                sSearchObj.vendor_pool_code = oSearch.getValue();
                 this.oSearchVendorPollDialog.open(sSearchObj);
             },
 

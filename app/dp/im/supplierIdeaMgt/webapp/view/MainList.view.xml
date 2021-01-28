@@ -55,7 +55,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/PROGRESS}{I18N>/STATUS}: " labelFor="searchIdeaProcess" ></Label>
+                            <Label text="{I18N>/PROGRESS}{I18N>/STATUS}: " labelFor="searchIdeaProcess" ></Label>
                             <MultiComboBox id="searchIdeaProcess" width="100%" items="{
                                 path: 'common>/Code',
                                 parameters: {
@@ -181,90 +181,102 @@
             </t:rowSettingsTemplate>
             <t:columns>
                 <t:Column id="idea_number" width="7rem">
-                <Label text="{I18N>/IDEA} {I18N>/SEQUENCE}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>idea_number}"/>
-                </t:template>
+                    <Label text="{I18N>/IDEA} {I18N>/SEQUENCE}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <Text text="{list>idea_number}"/>
+                    </t:template>
                 </t:Column>
                 <t:Column id="idea_title" width="20rem">
-                <Label text="{I18N>/IDEA} {I18N>/NAME}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>idea_title}"/>
-                </t:template>
+                    <Label text="{I18N>/IDEA} {I18N>/NAME}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <Text text="{list>idea_title}"/>
+                    </t:template>
                 </t:Column>
                 <t:Column id="idea_progress_status_name" width="10rem">
-                <Label text="{I18N>/PROGRESS}{I18N>/STATUS}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <tnt:InfoLabel
-                        text="{list>idea_progress_status_name}"
-                        displayOnly="true"
-                        colorScheme= "{
-                            parts: [
-                                {path: 'list>idea_progress_status_code'}
-                            ],
-                            formatter: '.onStatusColor'
-                        }" />
-                </t:template>
+                    <Label text="{I18N>/PROGRESS}{I18N>/STATUS}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <tnt:InfoLabel
+                            text="{list>idea_progress_status_name}"
+                            displayOnly="true"
+                            colorScheme= "{
+                                parts: [
+                                    {path: 'list>color_type_code'}
+                                ],
+                                formatter: '.onStatusColor'
+                            }" />
+                    </t:template>
                 </t:Column>
                 <t:Column id="idea_create_user_local_name" width="9rem">
-                <Label text="{I18N>/IDEA} {I18N>/WRITER}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>idea_create_user_local_name}"/>
-                </t:template>
+                    <Label text="{I18N>/IDEA} {I18N>/WRITER}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <Text text="{list>idea_create_user_local_name}"/>
+                    </t:template>
                 </t:Column>  
                 <t:Column id="idea_type_name" width="9rem">
-                <Label text="{I18N>/IDEA} {I18N>/TYPE}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>idea_type_name}"/>
-                </t:template>
+                    <Label text="{I18N>/IDEA} {I18N>/TYPE}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <Text text="{list>idea_type_name}"/>
+                    </t:template>
                 </t:Column>
                 <t:Column id="idea_manager_local_name" width="9rem">
-                <Label text="{I18N>/IDEA} {I18N>/MANAGER}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>idea_manager_local_name}"/>
-                    <!--
-                    <Text text="{list>idea_manager_local_name} ( {list>idea_manager_empno} )"/>
-                    -->
-                </t:template>
+                    <Label text="{I18N>/IDEA} {I18N>/MANAGER}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <Text text="{list>idea_manager_local_name}"/>
+                        <!--
+                        <Text text="{list>idea_manager_local_name} ( {list>idea_manager_empno} )"/>
+                        -->
+                    </t:template>
                 </t:Column>
                 <t:Column id="idea_product_group_name" width="7rem">
-                <Label text="{I18N>/PRODUCT_GROUP}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>idea_product_group_name}" />
-                </t:template>
+                    <Label text="{I18N>/PRODUCT_GROUP}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <Text text="{list>idea_product_group_name}" />
+                    </t:template>
                 </t:Column> 
 
 
                 
                 <t:Column id="idea_part_desc" width="15rem">
-                <Label text="{I18N>/PART} {I18N>/NAME}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>idea_part_desc}"/>
-                </t:template>
+                    <Label text="{I18N>/PART} {I18N>/NAME}" textAlign="Center" width="100%"/>
+                    <t:template>
+                        <Text text="{list>idea_part_desc}"/>
+                    </t:template>
                 </t:Column>
                 <t:Column id="vi_amount" width="6rem"  hAlign="End">
-                <Label text="VI {I18N>/AMOUNT} (KRW)" textAlign="Center" width="100%" wrapping="true"/>
-                <t:template>
-                    <Text text="{list>vi_amount}"/>
-                </t:template>
+                    <Label text="VI {I18N>/AMOUNT} (KRW)" textAlign="Center" width="100%" wrapping="true"/>
+                    <t:template>
+                        <Text text="{
+                                        path: 'list>vi_amount', 
+                                        formatter: '.numberFormatter.toNumberString'
+                                    }" textAlign="Right"/>
+                    </t:template>
                 </t:Column>
                 <t:Column id="monthly_mtlmob_quantity" width="6rem"  hAlign="End">
-                <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA)" textAlign="Center" width="100%" wrapping="true"/>
-                <t:template>
-                    <Text text="{list>monthly_mtlmob_quantity}"/>
-                </t:template>
+                    <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA)" textAlign="Center" width="100%" wrapping="true"/>
+                    <t:template>
+                        <Text text="{
+                                        path: 'list>monthly_mtlmob_quantity', 
+                                        formatter: '.numberFormatter.toNumberString'
+                                    }" textAlign="Right"/>
+                    </t:template>
                 </t:Column>                
                 <t:Column id="monthly_purchasing_amount" width="6rem"  hAlign="End">
                     <Label text="{I18N>/MM} impact (KRW)" textAlign="Center" width="100%" wrapping="true"/>
                     <t:template>
-                        <Text text="{list>monthly_purchasing_amount}"/>
+                        <Text text="{
+                                        path: 'list>monthly_purchasing_amount', 
+                                        formatter: '.numberFormatter.toNumberString'
+                                    }" textAlign="Right"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="annual_purchasing_amount" width="6rem"  hAlign="End">
-                <Label text="{I18N>/ANNUAL} impact (KRW)" textAlign="Center" width="100%" wrapping="true" />
-                <t:template>
-                    <Text text="{list>annual_purchasing_amount}"/>
-                </t:template>
+                    <Label text="{I18N>/ANNUAL} impact (KRW)" textAlign="Center" width="100%" wrapping="true" />
+                    <t:template>
+                        <Text text="{
+                                        path: 'list>annual_purchasing_amount', 
+                                        formatter: '.numberFormatter.toNumberString'
+                                    }" textAlign="Right"/>
+                    </t:template>
                 </t:Column>                                                                                                                                        
             </t:columns>
             </t:Table>

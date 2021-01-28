@@ -322,7 +322,9 @@ sap.ui.define([
                 sReturnValue = 8;
             }
 
-            return sReturnValue;
+            //return sReturnValue;
+            if(sStautsCodeParam==null ||sStautsCodeParam=="")sStautsCodeParam=5;
+            return parseInt(sStautsCodeParam);
         },
 
 

@@ -18,12 +18,12 @@
         showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+				<uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBackPress" />
                         <Title text="{I18N>/PROJECT} {I18N>/INFORMATION}" wrapping="true"/>
                     </HBox>
-				</uxap:expandedHeading>
+				</uxap:heading>
                 <uxap:navigationActions>
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -34,6 +34,8 @@
             <IconTabBar
                 id="itbProgress"
                 applyContentPadding="false"
+                class="sapUiNoContentPadding"
+                selectedKey="1"
                 select=".onTabSelect">
                 <items>
                     <IconTabFilter
@@ -130,7 +132,7 @@
                                     </layoutData>
                                 </Text>
 
-                                <Label text="{I18N>/DIVISION}">
+                                <Label text="{I18N>/BUSINESS_DIVISION}">
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData>

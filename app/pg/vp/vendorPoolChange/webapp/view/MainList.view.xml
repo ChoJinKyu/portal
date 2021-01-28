@@ -178,7 +178,7 @@
                                 </layoutData>
                             </VBox>                        
                             <VBox>
-                            <Label text="Working Status: " labelFor="searchCodeSegmentButton"></Label>
+                            <Label text="{I18N>/STATUS}" labelFor="searchCodeSegmentButton"></Label>
                             <SegmentedButton id="searchCodeSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key="" width="6em" />

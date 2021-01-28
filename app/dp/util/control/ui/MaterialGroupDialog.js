@@ -29,13 +29,13 @@ sap.ui.define([
 
         createSearchFilters: function(){
 
-            this.oMaterialGroup = new SearchField({ placeholder: "Group Name(x)"});
+            this.oMaterialGroup = new SearchField({ placeholder: this.getModel("I18N").getText("/GROUP_CODE")});
             this.oMaterialGroup.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
                     items: [
-                        new Label({ text: "Group Name(x)"}),
+                        new Label({ text: this.getModel("I18N").getText("/GROUP_CODE")}),
                         this.oMaterialGroup
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M6 S12"})
@@ -47,12 +47,12 @@ sap.ui.define([
             return [
                 new Column({
                     width: "30%",
-                    label: new Label({text: "Group Code(x)"}),
+                    label: new Label({text: this.getModel("I18N").getText("/GROUP_CODE")}),
                     template: new Text({text: "{material_group_code}"})
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: "Group Name(x)"}),
+                    label: new Label({text: this.getModel("I18N").getText("/GROUP_CODE_NAME")}),
                     template: new Text({text: "{material_group_name}"})
                 })
             ];

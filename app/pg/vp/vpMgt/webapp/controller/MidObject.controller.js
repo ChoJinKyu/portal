@@ -316,11 +316,11 @@ sap.ui.define([
             this._sTempType = oArgs.temptype;
             
 
-            alert("_sTenantId : " + this._sTenantId + 
-                  "_sVendorPool : " + this._sVendorPool + 
-                  "_sOrgCode : " + this._sOrgCode + 
-                  "_sOperationUnitCode : " + this._sOperationUnitCode +
-                  "_sTempType : " + this._sTempType );
+            // alert("_sTenantId : " + this._sTenantId + 
+            //       "_sVendorPool : " + this._sVendorPool + 
+            //       "_sOrgCode : " + this._sOrgCode + 
+            //       "_sOperationUnitCode : " + this._sOperationUnitCode +
+            //       "_sTempType : " + this._sTempType );
 
 
             var predicates = [];
@@ -421,7 +421,7 @@ sap.ui.define([
         },
         _settreeInputValue : function(sOrg, sOper) {
 
-            alert("sOrg : " +sOrg  + "    sOper : " +sOper);
+            // alert("sOrg : " +sOrg  + "    sOper : " +sOper);
             this.getView().byId("mid_Tree_Operation_ORG_S").setSelectedKey(sOrg);
             this.getView().byId("mid_Tree_Operation_UNIT_S").setSelectedKey(sOper);
             this.getView().byId("mid_Tree_Operation_ORG_E").setSelectedKey(sOrg);

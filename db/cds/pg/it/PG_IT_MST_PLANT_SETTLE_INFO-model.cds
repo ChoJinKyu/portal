@@ -21,12 +21,12 @@ using util from '../../cm/util/util-model';
 
 
 entity It_Mst_Plant_Settle_Info {
-    key tenant_id          : String(5) not null  @title : '테넌트ID';
-    key company_code       : String(10) not null @title : '회사코드';
-    key org_type_code      : String(30) not null @title : '조직유형코드';
-    key org_code           : String(10) not null @title : '조직코드';
-    key plant_code         : String(4) not null  @title : '플랜트코드';
-        product_group_code : String(50)          @title : '제품군코드';
+    key tenant_id               : String(5) not null  @title : '테넌트ID';
+    key company_code            : String(10) not null @title : '회사코드';
+    key org_type_code           : String(30) not null @title : '조직유형코드';
+    key org_code                : String(10) not null @title : '조직코드';
+    key plant_code              : String(4) not null  @title : '플랜트코드';
+        sale_product_group_code : String(2)           @title : '판매제품군코드';
 }
 
 extend It_Mst_Plant_Settle_Info with util.Managed;

@@ -21,7 +21,7 @@ BEGIN
 	END;
 
 	SELECT
-		'{"cellNo":"'||:COL_SORT_NO||'","cateCode":"'||IFNULL(MAIN.SPMD_CATEGORY_CODE,'')||'",itemCode":"'||IFNULL(MAIN.SPMD_CHARACTER_CODE,'')||'","itemSerialNo":"'||IFNULL(TO_CHAR(MAIN.SPMD_CHARACTER_SERIAL_NO),'')||'","attrValue":"'||IFNULL(MAIN.ATTR_VALUE,'')||'"}'
+		'{"cellNo":"'||:COL_SORT_NO||'","cateCode":"'||IFNULL(MAIN.SPMD_CATEGORY_CODE,'')||'","itemCode":"'||IFNULL(MAIN.SPMD_CHARACTER_CODE,'')||'","itemSerialNo":"'||IFNULL(TO_CHAR(MAIN.SPMD_CHARACTER_SERIAL_NO),'')||'","attrValue":"'||IFNULL(MAIN.ATTR_VALUE,'')||'"}'
 		INTO OUT_INFO
 	FROM (
 		SELECT 

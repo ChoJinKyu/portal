@@ -12,7 +12,7 @@
     xmlns:co="sap.suite.ui.commons"
     height="100%">
 
-    <f:DynamicPage id="page2"
+    <f:DynamicPage id="page"
         headerExpanded="{mainListViewModel>/headerExpanded}" 
         toggleHeaderOnTitleClick="true">        
         <!-- DynamicPage Title -->
@@ -78,7 +78,7 @@
                             <ComboBox id="searchPrjType" width="100%" selectedKey="" items="{
                                     path: 'util>/Code',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
                                         {path: 'group_code', operator: 'EQ', value1: 'DP_PART_PJT_TYPE'}
                                     ]
                                 }">
@@ -131,7 +131,7 @@
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title id="mainTableTitle" text="Activity List {= ${list>/pdPartactivityTemplateView}.length > 0 ? '(' + ${list>/pdPartactivityTemplateView}.length + ')' : ''}" level="H2"/>
                     <ToolbarSpacer/>
-                    <Button text="Copy" id="buttonCopy" press=""  type="Transparent"/>
+                    <Button text="Copy" id="buttonCopy" press=".onCopy"  type="Transparent"/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
                     <!-- <Button text="{I18N>/DELETE}" id="buttonDelete" press="onMainTableDeleteButtonPress"  type="Transparent"/> -->
                     <!-- <Button text="{I18N>/SAVE}" id="buttonSave" press=""  type="Transparent"/> -->

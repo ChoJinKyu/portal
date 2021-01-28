@@ -20,6 +20,9 @@
 using { dp as uom } from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 using { dp as uomLng } from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
 
+using { dp as Class } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS-model';
+using { dp as ClassLng } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS_LNG-model';
+
 //using { dp as uomConversion } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CONVERSION_PROC-model';
 
 
@@ -28,13 +31,34 @@ namespace dp;
 
 service UomMgtService {
 
+    entity UomClass as projection on Class.Mm_Uom_Class;
+    entity UomClassLng as projection on ClassLng.Mm_Uom_Class_Lng;
     entity Uom as projection on uom.Mm_Unit_Of_Measure;
     entity UomLng as projection on uomLng.Mm_Unit_Of_Measure_Lng;
+
+    view UomClassView as
+    select Key m.tenant_id,
+           Key m.uom_class_code,
+           ifnull((select l.uom_class_name
+                  from UomClassLng l
+                  where l.tenant_id = m.tenant_id
+                  and l.uom_class_name = m.uom_class_name
+                  and l.language_code = 'KO') , m.uom_class_name) as uom_class_name : String(20),
+           m.uom_class_desc,
+           m.base_uom_code,
+           m.base_uom_name,
+           m.disable_date
+    from  UomClass m
+    ;
 
     view UomView as
     select key u.tenant_id,
            key u.uom_code,
-           ifnull(l.uom_name, u.uom_name) as uom_name : String(30),
+           ifnull((select l.uom_name
+                  from UomLng l
+                  where l.tenant_id = u.tenant_id
+                  and l.uom_code = u.uom_code
+                  and l.language_code = 'KO') , u.uom_name) as uom_name : String(30),
            u.uom_class_code,
            u.base_unit_flag,
            u.uom_desc,
@@ -46,20 +70,8 @@ service UomMgtService {
            u.conversion_rate,
            u.conversion_addition_constant,
            u.decplaces_rounding,
-           u.family_unit_flag,
-           u.uom_iso_code,
-           u.uom_iso_primary_code_flag,
-           u.commercial_unit_flag,
-           u.value_base_commitment_flag,
-           u.disable_date,
-           l.language_code
-    from  uom.Mm_Unit_Of_Measure  u
-    left join uomLng.Mm_Unit_Of_Measure_Lng l
-    on l.tenant_id = u.tenant_id
-    and l.uom_code = u.uom_code
-    and l.language_code = 'KO'
+           u.disable_date
+    from  Uom  u
     ;
-
     
-
 }

@@ -17,7 +17,8 @@ using {dp.Mm_Material_Org as materialOrg} from '../../../../../db/cds/dp/mm/DP_M
 using {dp.Mm_Material_Val as materialVal} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_VAL-model';
 using {sp.Sm_Supplier_Mst as supplierMst} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 using {cm.Currency as curr} from '../../../../../db/cds/cm/CM_CURRENCY-model';
-using {pg.Vp_Vendor_Pool_Item_Dtl as VPool} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
+using {pg.Vp_Vendor_Pool_Item_Dtl as VPoolDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
+using {pg.Vp_Vendor_Pool_Mst as VPoolMst} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';
 
 namespace sp;
 
@@ -26,6 +27,9 @@ service BasePriceAprlService {
 
     entity Base_Price_Aprl_Master        as
         select from arlMasterSuper sup
+        inner join arlItem sub
+            on sup.tenant_id = sub.tenant_id
+            and sup.approval_number = sub.approval_number
         inner join arlTyp typ 
             on sup.tenant_id = typ.tenant_id
             and sup.approval_number = typ.approval_number    
@@ -166,4 +170,43 @@ service BasePriceAprlService {
         referer_dept_local_nm @title       : '참조자 부서'  @description : '참조자 부서';
     };
 
-}
+    entity Base_Price_Aprl_Material       as
+        select from materialMst mat
+        inner join materialVal val
+            on mat.tenant_id = val.tenant_id
+            and mat.material_code = val.material_code
+        inner join VPoolDtl pooldtl
+            on mat.tenant_id = pooldtl.tenant_id
+            and mat.material_code = pooldtl.material_code
+        inner join VPoolMst poolmst
+            on poolmst.tenant_id = pooldtl.tenant_id
+            and poolmst.company_code = pooldtl.company_code
+            and poolmst.org_type_code = pooldtl.org_type_code
+            and poolmst.org_code = pooldtl.org_code
+            and poolmst.vendor_pool_code = pooldtl.vendor_pool_code    
+        {
+            key mat.tenant_id,
+            key mat.material_code,
+                mat.material_desc,
+                mat.material_type_code,
+                mat.base_uom_code,
+                val.material_price_unit,
+                val.company_code,
+                val.org_type_code,
+                poolmst.org_code as plant_code,
+            key pooldtl.vendor_pool_code,
+                poolmst.vendor_pool_local_name,
+                poolmst.vendor_pool_english_name,
+                mat.local_create_dtm,
+                mat.local_update_dtm,
+                mat.create_user_id,
+                mat.update_user_id,
+                mat.system_create_dtm,
+                mat.system_update_dtm
+        };
+
+    annotate Base_Price_Aprl_Material with {
+        plant_code      @title       : '플랜트코드'  @description : '플랜트코드';
+    };
+
+ }

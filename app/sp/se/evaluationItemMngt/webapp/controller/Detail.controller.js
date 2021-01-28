@@ -99,6 +99,15 @@ sap.ui.define([
                     ]
                 });
 
+                this._setBindItems({
+                    id : "comboNodeType",
+                    path : "common>/Code",
+                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                    filters : [
+                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                        new Filter("group_code", "EQ", "SP_SE_EVAL_NODE_TYPE_CD")
+                    ]
+                });
 
                 
             }
@@ -169,6 +178,7 @@ sap.ui.define([
                     new Filter({ path:"evaluation_article_code", operator:"EQ", value1 : oHeader.evaluation_article_code })
                 ];
 
+
                 oViewModel.setProperty("/Detail/Item", []);
                 oView.setBusyIndicatorDelay(0);
                 oView.setBusy(true);
@@ -178,7 +188,12 @@ sap.ui.define([
                         new Sorter("sort_sequence")
                     ],
                     success : function(oData){
-                        oViewModel.setProperty("/Detail/Item", oData.results);
+                        oViewModel.setProperty("/Detail/Item", 
+                            oData.results.map(function(oRowData){
+                                oRowData.rowEditable = false;
+                                return oRowData;
+                            })
+                        );
                         oView.setBusy(false);
                     },
                     error : function(){
@@ -186,24 +201,254 @@ sap.ui.define([
                     }
                 });
             }
+            , onSelectTableItem : function(oEvent){
+                var sEvaluResultInType, oHeader, oView, oViewModel, oSelectItem,
+                    oBindContxtPath, oRowData, bSeletFlg, bEditMode;
+
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                bEditMode = oViewModel.getProperty("/App/EditMode");
+
+                if(!bEditMode){
+                    return;
+                }
+
+                oSelectItem = oEvent.getParameter("listItem");
+                oBindContxtPath = oSelectItem.getBindingContextPath();
+                oRowData = oViewModel.getProperty(oBindContxtPath);
+                bSeletFlg = oEvent.getParameter("selected");
+
+                if(oRowData.crudFlg === "D" || oRowData.crudFlg === "C"){
+                    return;
+                }
+
+                oRowData.rowEditable = bSeletFlg;
+                oRowData.crudFlg = "U";
+
+                oViewModel.setProperty(oBindContxtPath, oRowData);
+            }
+
+            , onPressItemDelete : function(){
+                var oTable, oView, oViewModel, aSelectedItems;
+                
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oTable = this.byId("tblEvalItemScle");
+                aSelectedItems = oTable.getSelectedItems();
+
+                aSelectedItems.forEach(function(oItem){
+                    var sItemPath, oItemData;
+                    sItemPath = oItem.getBindingContextPath();
+                    oItemData = oViewModel.getProperty(sItemPath);
+                    
+                    oItemData.crudFlg = "D";
+                    
+                    oViewModel.setProperty(sItemPath, oItemData);
+                })
+            }
+            , onPressItemAdd : function(){
+                var oView, oViewModel, aItems, oNewData;
+                
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                aItems = oViewModel.getProperty("/Detail/Item");
+                oNewData = {
+                    crudFlg : "C",
+                    rowEditable : true
+                };
+                
+                aItems.push(oNewData);
+
+                oViewModel.setProperty("/Detail/Item", aItems);
+            }
+            , onPressItemCancle : function(){
+                var oI18NModel, oView;
+
+                oView = this.getView();
+                oI18NModel = oView.getModel("I18N");
+                MessageBox.warning(oI18NModel.getProperty("/NPG00013"),{
+                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                    onClose: function (sAction) {
+                        if(sAction === MessageBox.Action.CANCEL){
+                            return;
+                        }
+                        this._readItem();
+                        this.byId("tblEvalItemScle").removeSelections(true);
+                    }.bind(this)
+                });
+
+            }
+
             , onPressPageNavBack : function(){
                 
                 this.getOwnerComponent().getRouter().navTo("Master");
             }
 
             , onPressSave : function(){
+                var sURLPath, oSaveData, oView, oViewModel, oArgs;
 
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oArgs = oViewModel.getProperty("/Args");
+
+                if(oArgs.new === "Y"){
+                    sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/CreateEvalItemSaveProc";
+                }else{
+                    sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
+                }
+
+                oSaveData = this._getSaveData();
+
+                $.ajax({
+                    url: sURLPath,
+                    type: "POST",
+                    data: JSON.stringify(oSaveData),
+                    contentType: "application/json",
+                    success: function (data) {
+
+                    },
+                    error: function (e) {
+
+                    }
+                });
             }
+            , _getSaveData : function(){
+                var oSaveData, oUserInfo, oView, oViewModel,
+                    aItemFields, aScleFields, oHeader, oItemType,
+                    sHeadField, aScleItem, oNewHeader, sLevel, oArgs;
 
+                oUserInfo = this._getUserSession();
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oHeader = oViewModel.getProperty("/Detail/Header");
+                oArgs = oViewModel.getProperty("/Args");
+                
+                if(oArgs.new === "Y"){
+                    oNewHeader = oViewModel.getProperty("/Detail/NewHeader");
+                    sLevel = oArgs.level;
+                    oSaveData = {
+                        "tenant_id" : oHeader.tenant_id,
+                        "company_code" : oHeader.company_code,
+                        "org_type_code" : oHeader.org_type_code,
+                        "org_code" : oHeader.org_code,
+                        "evaluation_operation_unit_code" : oHeader.evaluation_operation_unit_code,
+                        "evaluation_type_code" : oHeader.evaluation_type_code,
+                        "parent_evaluation_article_code" : "",
+                        "evaluation_article_name" : oNewHeader.evaluation_article_name,
+                        "evaluation_article_lvl_attr_cd" : oNewHeader.evaluation_article_lvl_attr_cd,
+                        "user_id" : oUserInfo.loginUserId
+                    };
+
+                    if(sLevel === "same"){
+                        oSaveData.parent_evaluation_article_code = oHeader.parent_evaluation_article_code;
+                    }else if(sLevel === "low"){
+                        oSaveData.parent_evaluation_article_code = oHeader.evaluation_article_code;
+                    }
+
+                    return oSaveData;
+                }
+
+
+
+
+
+
+                aItemFields = [
+                    "transaction_code", "tenant_id", "company_code",
+                    "org_type_code", "org_code", "evaluation_operation_unit_code",
+                    "evaluation_type_code", "evaluation_article_code",
+                    "evaluation_execute_mode_code", "evaluation_article_type_code",
+                    "evaluation_distrb_scr_type_cd", "evaluation_result_input_type_cd",
+                    "qttive_item_uom_code", "qttive_eval_article_calc_formula",
+                    "evaluation_article_desc", "sort_sequence",
+                ];
+                aScleFields = [
+                    "transaction_code", "tenant_id", "company_code",
+                    "org_type_code", "org_code", "evaluation_operation_unit_code",
+                    "evaluation_type_code", "evaluation_article_code",
+                    "option_article_number", "option_article_name",
+                    "option_article_start_value", "option_article_end_value",
+                    "evaluation_score", "sort_sequence"
+                ];
+
+                oSaveData = {
+                    ItemType : [],
+                    ScleType : [],
+                    user_id : oUserInfo.loginUserId
+                };
+
+                oItemType = {};
+
+                for(sHeadField in oHeader){
+                    if(
+                        oHeader.hasOwnProperty(sHeadField) && aItemFields.indexOf(sHeadField) > -1
+                    ){
+                        oItemType[sHeadField] = oHeader[sHeadField];
+                    }
+                }
+
+                oItemType.sort_sequence = parseInt(oItemType.sort_sequence) || null;
+
+                oSaveData.ItemType.push(oItemType);
+
+                aScleItem = oViewModel.getProperty("/Detail/Item");
+                aScleItem.forEach(function(oRowData){
+                    var oNewRowData, sScleField;
+                    oNewRowData = {};
+
+                    for(sScleField in oRowData){
+                        if(
+                            oRowData.hasOwnProperty(sScleField) && aScleFields.indexOf(sScleField) > -1
+                        ){
+                            oNewRowData[sScleField] = oRowData[sScleField];
+                        }
+                    }
+
+                    oNewRowData.evaluation_score = parseInt(oNewRowData.evaluation_score) || null;
+                    oNewRowData.sort_sequence = parseInt(oNewRowData.sort_sequence) || null;
+
+                    oSaveData.ScleType.push(oNewRowData);
+                });
+
+
+                return oSaveData;
+            }
             
-            , onPressModeChange : function(){
-                var oView, oViewModel, bEditFlg;
+            , onPressModeChange : function(oEvent, sGubun){
+                var oView, oViewModel, bEditFlg, oComponent, oMasterPage, oTreeTable,
+                    aSelectedIdices, oContext, oRowData, oI18NModel;
 
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 bEditFlg = oViewModel.getProperty("/App/EditMode");
 
-                oViewModel.setProperty("/App/EditMode", !bEditFlg);
+                if(sGubun === "CANCEL"){
+                    oI18NModel = oView.getModel("I18N");
+                    MessageBox.warning(oI18NModel.getProperty("/NPG00013"),{
+                        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                        onClose: function (sAction) {
+                            if(sAction === MessageBox.Action.CANCEL){
+                                return;
+                            }
+
+                            oComponent = this.getOwnerComponent();
+                            oMasterPage = oComponent.byId("Master");
+                            
+                            if(oMasterPage){
+                                oTreeTable = oMasterPage.byId("treeTable");
+                                aSelectedIdices = oTreeTable.getSelectedIndices();
+                                oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
+                                oRowData = oContext.getObject();
+        
+                                oViewModel.setProperty("/Detail/Header", oRowData);
+                            }
+                            oViewModel.setProperty("/App/EditMode", !bEditFlg);
+                            this._readItem();
+                        }.bind(this)
+                    });
+                }else{
+                    oViewModel.setProperty("/App/EditMode", !bEditFlg);
+                }
             }
 
 		});

@@ -103,10 +103,10 @@ service BasePriceArlV4Service {
         update_user_id         : String(255);
     };
 
-    type CmdType : String enum { insert; upsert; delete; };
+    //type CmdType : String enum { insert; upsert; delete; };
 
     type InputArlDataType : {
-        cmd               : CmdType;
+        cmd               : String(30);
         basePriceArlMst   : array of BasePriceArlMstType;
         debug             : Boolean;
     }
@@ -121,7 +121,7 @@ service BasePriceArlV4Service {
     action DpViBasePriceArlProc(inputData : InputArlDataType) returns OutputDataType;
 
     type InputRequestorDataType : {
-        cmd                           : CmdType;        // only upsert
+        cmd                           : String(30);        // only upsert
         BasePriceArlChangeRequestor   : array of BasePriceArlChangeRequestorType;
         debug                         : Boolean;
     }

@@ -93,7 +93,7 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTenantId = "L1100",
+            var sTenantId = "L2101",
                 oSearchCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
                 oSearchAUCombo = this.getView().byId("searchAUCombo").getSelectedKey(),
                 oSearchPCField = this.getView().byId("searchPCField").getValue(),
@@ -178,7 +178,42 @@ sap.ui.define([
 
             this.treeDialog.then(function (tDialog) {
                 tDialog.open();
+                this.onDialogTreeSearch();
             }.bind(this));
+        },
+
+        onDialogTreeSearch: function (oEvent) {
+
+            var treeFilter = [];
+
+            treeFilter.push(new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                    new Filter("category_group_code", FilterOperator.EQ, "CO")
+                ],
+                and: false
+            }));
+            
+            this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
+            this.treeListModel
+                .read("/pdPartCategoryView", {
+                     filters: treeFilter
+                })
+                // 성공시
+                .then((function (jNodes) {
+                    this.getView().setModel(new JSONModel({
+                        "pdPartCategoryView": {
+                            "nodes": jNodes
+                        }
+                    }), "tree");
+                }).bind(this))
+                // 실패시
+                .catch(function (oError) {
+                })
+                // 모래시계해제
+                .finally((function () {
+                }).bind(this));
+
         },
 
         partCategoryPopupClose: function (oEvent) {
@@ -186,7 +221,7 @@ sap.ui.define([
         },
 
         selectPartCategoryValue: function (oEvent) {
-            var row = this.getView().getModel("pdActivityStdDayView").getObject(oEvent.getParameters().rowContext.sPath);
+            var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
 
             this.getView().byId("searchPCField").setValue(row.category_name);
             this.getView().byId("searchPCInput").setValue(row.category_code);
