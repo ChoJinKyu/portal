@@ -27,8 +27,7 @@ sap.ui.define([
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "35em"},
                 contentHeight: { type: "string", group: "Appearance" },
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
-                textField: { type: "string", group: "Misc", defaultValue: "code_name" },
-                getValue: { type: "string", group: "Misc"}
+                textField: { type: "string", group: "Misc", defaultValue: "code_name" }
             },
             defaultAggregation: "items",
             aggregations: {
