@@ -369,12 +369,30 @@ public class MoldApprovalV4 implements EventHandler {
 
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
         Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
-    
+        Collection<AssetV4> mAssetList = data.getAsset();
+        if(!mAssetList.isEmpty() && mAssetList.size() > 0){
+             for(AssetV4 row : mAssetList ){
+                Asset as = Asset.create();
+                as.setTenantId(row.getTenantId());
+                as.setMoldId(row.getMoldId());
+                as.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                as.setUpdateUserId(aMaster.getUpdateUserId()); 
+                if(row.getRowState().equals("D")){
+                    as.setAcqDepartmentCode("");
+                    as.setAssetTypeCode("");
+                }else{
+                   as.setAcqDepartmentCode(row.getAcqDepartmentCode());
+                   as.setAssetTypeCode(row.getAssetTypeCode()); 
+                }
+                CqnUpdate u = Update.entity(Asset_.CDS_NAME).data(as); 
+               Result rst = moldApprovalService.run(u);
+             }
+        }
+
+
         if(!mMasterList.isEmpty() && mMasterList.size() > 0){
             for(MoldMasterV4 row : mMasterList ){
-
                 System.out.println(" ApprovalMasterV4 " + row);
-
                 MoldMasters m = MoldMasters.create();
                 m.setTenantId(row.getTenantId());
                 m.setMoldId(row.getMoldId());
@@ -383,7 +401,7 @@ public class MoldApprovalV4 implements EventHandler {
 
                 if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
                     m.setAccountCode("");
-                    m.setAcqDepartmentCode("");
+                 //   m.setAcqDepartmentCode("");
                     m.setInvestmentEcstTypeCode("");
                     m.setAccountingDepartmentCode("");
                     m.setImportCompanyCode("");
@@ -392,13 +410,12 @@ public class MoldApprovalV4 implements EventHandler {
                     m.setMoldProductionTypeCode("");
                     m.setMoldItemTypeCode("");
                     m.setProvisionalBudgetAmount(null);
-                    m.setAssetTypeCode("");
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                    Result rst = moldApprovalService.run(u);
+                  //  m.setAssetTypeCode("");
+                 
                 }else{ 
                     m.setAccountCode(row.getAccountCode());
                     m.setInvestmentEcstTypeCode(row.getInvestmentEcstTypeCode());
-                    m.setAcqDepartmentCode(row.getAcqDepartmentCode());
+                //    m.setAcqDepartmentCode(row.getAcqDepartmentCode());
                     m.setAccountingDepartmentCode(row.getAccountingDepartmentCode());
                     m.setImportCompanyCode(row.getImportCompanyCode());
                     m.setProjectCode(row.getProjectCode());
@@ -406,11 +423,10 @@ public class MoldApprovalV4 implements EventHandler {
                     m.setMoldProductionTypeCode(row.getMoldProductionTypeCode());
                     m.setMoldItemTypeCode(row.getMoldItemTypeCode());
                     m.setProvisionalBudgetAmount(new BigDecimal((String)(row.getProvisionalBudgetAmount()==null?"0":row.getProvisionalBudgetAmount())));
-                    m.setAssetTypeCode(row.getAssetTypeCode());
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                    Result rst = moldApprovalService.run(u);
+                  //  m.setAssetTypeCode(row.getAssetTypeCode());
                 }
-
+                CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
+                Result rst = moldApprovalService.run(u);
             }  
         }
     } 
@@ -422,29 +438,24 @@ public class MoldApprovalV4 implements EventHandler {
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
         Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
     
-        if(!mMasterList.isEmpty() && mMasterList.size() > 0){
-            for(MoldMasterV4 row : mMasterList ){
-
-                System.out.println(" ApprovalMasterV4 " + row);
-
-                MoldMasters m = MoldMasters.create();
-                m.setTenantId(row.getTenantId());
-                m.setMoldId(row.getMoldId());
-                m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                m.setUpdateUserId(aMaster.getUpdateUserId()); 
-
-                if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
-                    m.setAcqDepartmentCode("");
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                    Result rst = moldApprovalService.run(u);
-                }else{ 
-                    m.setAcqDepartmentCode(row.getAcqDepartmentCode());
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                    Result rst = moldApprovalService.run(u);
+         Collection<AssetV4> mAssetList = data.getAsset();
+        if(!mAssetList.isEmpty() && mAssetList.size() > 0){
+             for(AssetV4 row : mAssetList ){
+                Asset as = Asset.create();
+                as.setTenantId(row.getTenantId());
+                as.setMoldId(row.getMoldId());
+                as.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                as.setUpdateUserId(aMaster.getUpdateUserId()); 
+                if(row.getRowState().equals("D")){
+                 //   as.setAcqDepartmentCode("");
+                }else{
+                   as.setAcqDepartmentCode(row.getAcqDepartmentCode());
                 }
-
-            }  
+                CqnUpdate u = Update.entity(Asset_.CDS_NAME).data(as); 
+               Result rst = moldApprovalService.run(u);
+             }
         }
+
     } 
 
     // ParticipatingSelection 
@@ -527,30 +538,17 @@ public class MoldApprovalV4 implements EventHandler {
         System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
 
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
-        Collection<MoldMasterV4> mMasterList = data.getMoldMaster(); 
+            // 취소품의는 mold item  을 업데이트 할 일은 없음. 
         Collection<QuotationV4> qtnList= data.getQuotation();
     
         if(aMaster.getApprovalNumber().equals("New")){ // 신규 
-            if(!mMasterList.isEmpty() && mMasterList.size() > 0){
-                for(MoldMasterV4 row : mMasterList ){
-                    System.out.println(" ApprovalMasterV4 " + row);           
-                    MoldMasters m = MoldMasters.create();
-                    m.setTenantId(row.getTenantId());
-                    m.setMoldId(row.getMoldId());
-                    m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                    m.setUpdateUserId(aMaster.getUpdateUserId()); 
-                    m.setTargetAmount(new BigDecimal((String)(row.getTargetAmount()==null?"0":row.getTargetAmount())));
-                    m.setCurrencyCode(row.getCurrencyCode());
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                    Result rst = moldApprovalService.run(u);      
-                }  
-            }
-
+ 
             if(!qtnList.isEmpty() && qtnList.size() > 0){
                 for(QuotationV4 row : qtnList ){
                     System.out.println("QuotationV4 ::::" + row);
                     if(row.getSupplierCode()!=null && row.getSequence()!=null){   
                         Quotation q = Quotation.create();
+                        q.setTenantId(aMaster.getTenantId());
                         q.setMoldId(row.getMoldId());
                         q.setApprovalNumber(this.APPROVAL_NUMBER);
                         q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
@@ -565,29 +563,7 @@ public class MoldApprovalV4 implements EventHandler {
             }
 
         }else{
-            // update 
-            if(!mMasterList.isEmpty() && mMasterList.size() > 0){
-                for(MoldMasterV4 row : mMasterList ){
-                    MoldMasters m = MoldMasters.create();
-                    m.setTenantId(row.getTenantId());
-                    m.setMoldId(row.getMoldId());
-                    m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                    m.setUpdateUserId(aMaster.getUpdateUserId()); 
-
-                    if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
-                        m.setTargetAmount(null);
-                        m.setCurrencyCode("");
-                        CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                        Result rst = moldApprovalService.run(u);
-                    }else{ 
-                        m.setTargetAmount(new BigDecimal((String)(row.getTargetAmount()==null?"0":row.getTargetAmount())));
-                        m.setCurrencyCode(row.getCurrencyCode());
-                        CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
-                        Result rst = moldApprovalService.run(u);
-                    }     
-                }  
-            }
-
+          
             // 모두 지웠다가 다시 insert 함 
             Quotation del = Quotation.create();
             del.setApprovalNumber(this.APPROVAL_NUMBER); 
@@ -598,6 +574,7 @@ public class MoldApprovalV4 implements EventHandler {
                 for(QuotationV4 row : qtnList ){
                     if(row.getSupplierCode()!=null && row.getSequence()!=null){   
                         Quotation q = Quotation.create();
+                        q.setTenantId(aMaster.getTenantId());
                         q.setMoldId(row.getMoldId());
                         q.setApprovalNumber(this.APPROVAL_NUMBER);
                         q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());

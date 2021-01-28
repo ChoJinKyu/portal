@@ -6,7 +6,6 @@ sap.ui.define([
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
-    "ext/lib/util/ValidatorUtil",
     "ext/lib/formatter/Formatter",
     "ext/lib/util/Validator",
 	"sap/ui/model/Filter",
@@ -21,7 +20,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,  ValidatorUtil, Formatter, Validator,
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Formatter, Validator,
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast,
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
@@ -242,11 +241,15 @@ sap.ui.define([
 				return;
             }
 
-            if(this.validator.validate(this.byId("midTable")) !== true) 
-            {
+            // if(this.validator.validate(this.byId("midTable")) !== true) 
+            // {
+            //     return;
+            // }   
+
+            if(this.validator.validate(this.byId("page")) !== true) {
                 return;
-            }   
-            
+            }
+
             // this._onMasterDataChanged();
             
 
@@ -302,7 +305,7 @@ sap.ui.define([
 					}
 				});
                 this._toShowMode();
-                this.validator.clearValueState(this.byId("page"));
+                // this.validator.clearValueState(this.byId("page"));
                 this._newCheck(this._sTenantId);
             }
         },

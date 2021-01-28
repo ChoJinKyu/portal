@@ -1,15 +1,88 @@
-<mvc:View controllerName="xx.exampleControls.controller.ControlValidation" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:lib-m="ext.lib.m" height="100%">
+<mvc:View controllerName="xx.exampleControls.controller.ControlValidation" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:t="sap.ui.table"
+    xmlns:lib-m="ext.lib.m" 
+    height="100%">
 
     <Page id="page" title="Control Validation" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <subHeader>
             <Toolbar>
                 <ToolbarSpacer />
-                <Title text="Search Area Controls" level="H3" />
-                <ToolbarSpacer />
-                <Text text="SearchAreaControls.view.xml" />
+                <Text text="ControlValidation.view.xml" />
             </Toolbar>
         </subHeader>
         <content>
+
+            <VBox>
+                <t:Table id="mainTable" 
+                        rows="{form>/list}"
+                        selectionMode="Single"
+                        visibleRowCount="4"
+                        width="auto">
+                    <t:extension>
+                        <OverflowToolbar>
+                            <Title text="Grid Table" level="H2"/>
+                            <ToolbarSpacer/>
+                        </OverflowToolbar>
+                    </t:extension>
+                    <t:columns>
+                        <t:Column hAlign="Center" >
+                            <Label text="ValueState" />
+                            <t:template>
+                                <Text text="{form>__metadata/_valueStates/value3/valueState}" />
+                            </t:template>
+                        </t:Column>
+                        <t:Column hAlign="Center" >
+                            <Label text="Level" />
+                            <t:template>
+                                <Input type="Number" value="{
+                                        path: 'form>/value1',
+                                        type: 'sap.ui.model.type.Integer',
+                                        constraints: {
+                                            minimum: '100',
+                                            maximum: '999'
+                                        }
+                                    }" placeholder="Enter 100 to 999 digit number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column hAlign="Center" >
+                            <Label text="Level Value" required="true" />
+                            <t:template>
+                                <HBox>
+                                    <Input value="{
+                                            path: 'form>value3', 
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                search: '\\S+@\\S+\\.\\S+'
+                                            }
+                                        }" required="true" valueState="{form>__metadata/_valueStates/value3/valueState}" valueStateText="{form>__metadata/_valueStates/value3/valueStateText}"/>
+                                    <Text text="{form>__metadata/_valueStates/value3/valueStateText}" />
+                                </HBox>
+                            </t:template>
+                        </t:Column>
+                        <t:Column hAlign="Center" >
+                            <Label text="eMail" />
+                            <t:template>
+                                <HBox>
+                                    <Input value="{
+                                            path: 'form>value4', 
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                search: '\\S+@\\S+\\.\\S+'
+                                            }
+                                        }" valueState="{form>__metadata/_valueStates/value4/valueState}" valueStateText="{form>__metadata/_valueStates/value4/valueStateText}"/>
+                                    <Text text="{form>__metadata/_valueStates/value4/valueStateText}" />
+                                </HBox>
+                            </t:template>
+                        </t:Column>
+                    </t:columns>
+                </t:Table>
+            </VBox>
+            
             <VBox>
 
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
@@ -99,15 +172,21 @@
                         updateFinished=".onMidTableUpdateFinished"
                         mode="SingleSelectLeft" 
                         width="auto">
+                    <headerToolbar>
+                        <Toolbar>
+                            <Title text="Responsible Table" level="H2"/>
+                            <ToolbarSpacer/>
+                        </Toolbar>
+                    </headerToolbar>
                     <columns>
                         <Column minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="Level" />
+                            <Label text="Level" />
                         </Column>
                         <Column minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="Level Value" />
+                            <Label text="Level Value" required="true" />
                         </Column>
                         <Column minScreenWidth="Tablet" hAlign="Center" >
-                            <Text text="eMail" />
+                            <Label text="eMail" />
                         </Column>
                     </columns>
                     <items>
@@ -116,7 +195,6 @@
                                 <Input value="{
                                         path: 'form>value2', 
                                         constraints: {
-
                                         }
                                     }"/>
                                 <Input value="{
@@ -125,7 +203,7 @@
                                         constraints: {
                                             search: '\\S+@\\S+\\.\\S+'
                                         }
-                                    }"/>
+                                    }" required="true"/>
                                 <Input value="{
                                         path: 'form>value4', 
                                         type: 'sap.ui.model.type.String',
@@ -137,7 +215,6 @@
                         </ColumnListItem>
                     </items>
                 </Table>
-
             </VBox>
         </content>
 		<footer>

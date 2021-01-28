@@ -162,7 +162,8 @@ service MoldApprovalV4Service {
         acq_department_code   : String;
         acq_date              : String;
         scrap_date            : String;
-        acq_amount            : Decimal;
+        acq_amount            : Decimal; 
+        _row_state_           : String;
     }; 
 
 

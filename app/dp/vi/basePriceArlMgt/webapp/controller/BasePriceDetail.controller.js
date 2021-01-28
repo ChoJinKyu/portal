@@ -13,11 +13,13 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
-    "dputil/control/ui/MaterialOrgDialog",
+    "./MaterialOrgDialog",
+    "sp/util/control/ui/SupplierDialog",
+    "dpmd/util/controller/EmployeeDeptDialog",
     "sap/m/Token"
 ],
-  function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter,
-        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, Token) {
+  function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter, JSONModel, ODataModel, RichTextEditor, 
+        MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, SupplierDialog, EmployeeDeptDialog, Token) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oOpenDialog;
@@ -26,25 +28,24 @@ sap.ui.define([
     return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceDetail", {
         dateFormatter: DateFormatter,
 
-        onNumberComma: function (iPricaeParam) {
-            if( iPricaeParam ) {
-                return iPricaeParam.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-            }else {
-                return iPricaeParam;
-            }
-        },
-
-        onSetStatus: function (sStatusCodeParam) {
+        /**
+         * 상태 Text 변환
+         */
+        onSetStatusText: function (sStatusCodeParam) {
             var oRootModel = this.getModel("rootModel");
+            var sReturnValue = "";
 
             if( oRootModel ) {
                 var aProcessList = oRootModel.getProperty("/processList");
-                var sReturnValue = aProcessList[0].code_name;
-    
-                if( sStatusCodeParam === "AR" ) {
-                    sReturnValue = aProcessList[1].code_name;
-                }else if( sStatusCodeParam === "AP" ) {
-                    sReturnValue = aProcessList[2].code_name;
+                
+                if( aProcessList ) {
+                    sReturnValue = aProcessList[0].code_name;
+
+                    if( sStatusCodeParam === "AR" ) {
+                        sReturnValue = aProcessList[1].code_name;
+                    }else if( sStatusCodeParam === "AP" ) {
+                        sReturnValue = aProcessList[2].code_name;
+                    }
                 }
             }
 
@@ -52,10 +53,44 @@ sap.ui.define([
         },
 
         /**
-         *  상태값에 따른 Icon 선택
+         * 프로세스 Flow State 
          */
-        onSetProcessIcon: function (sStatusParam) {
+        onSetFlowState: function (oEvent, sApproveStatusCode, iFlowState) {
+            console.log(oEvent);
+            console.log(sApproveStatusCode);
+            console.log(iFlowState);
+        },
 
+         /**
+         * Process Flow State & Icon 세팅
+         */
+        onSetProcessFlowStateAndIcon: function (oDetailViewModelParam, sApproveStatusCodeParam) {
+            var aProcessFlowState = [];
+            var aProcessFlowIcon = [];
+            var iSatus = 1;
+
+            switch (sApproveStatusCodeParam) {
+                case "AP":
+                    iSatus = 4;
+                    break;
+                case "IA":
+                    iSatus = 3;
+                    break;
+                case "AR":
+                    iSatus = 2;
+                    break;
+            }
+
+            for( var i=1; i<iSatus; i++ ) {
+                aProcessFlowState.push("None");
+                aProcessFlowIcon.push("sap-icon://complete");
+            }
+
+            aProcessFlowState.push("Error");
+            aProcessFlowIcon.push("sap-icon://circle-task");
+
+            oDetailViewModelParam.setProperty("/processFlowStates", aProcessFlowState);
+            oDetailViewModelParam.setProperty("/processFlowIcons", aProcessFlowIcon);
         },
 
         onInit: function () {
@@ -63,8 +98,8 @@ sap.ui.define([
             sTenantId = oRootModel.getProperty("/tenantId");
 
             this._oFragments = [];
+            this.getView().setModel(new ManagedListModel(), "approver");
 
-            // 하드코딩 시작
             var oCodeData = {
                 basis: [],
                 currency: [],
@@ -73,7 +108,6 @@ sap.ui.define([
             var oDetailViewModel = new JSONModel(oCodeData);
             oDetailViewModel.setSizeLimit(1000);
             this.setModel(oDetailViewModel, "detailViewModel");
-            // 하드코딩 끝
 
             switch (sTenantId) {
                 case "L2100" :
@@ -138,6 +172,8 @@ sap.ui.define([
             var oSelectedData = oRootModel.getProperty("/selectedData");
 
             sTenantId = oRootModel.getProperty("/tenantId");
+
+            this.getModel('approver').setProperty("/entityName", "Approvers");
 
             // 리스트에서 선택해서 넘어오는 경우
             if( oSelectedData && oSelectedData.approval_number ) {
@@ -225,13 +261,37 @@ sap.ui.define([
 
                     // Approver 조회
                     this._readData("/Base_Price_Arl_Approver", aMasterFilters, function (data) {
-                        oDetailModel.setProperty("/Approvers", data.results);
-                    });
+                        var aApprovers = data.results;
+                        //oDetailModel.setProperty("/Approvers", data.results);
+
+                        aApprovers.forEach(function (oApprover) {
+                            oApprover.approver_name = oApprover.approver_local_nm + " / " + oApprover.approver_dept_local_nm;
+                        });
+                        
+                        this.getModel('approver').setProperty("/Approvers", data.results);
+                    }.bind(this));
 
                     // Referer 조회
                     this._readData("/Base_Price_Arl_Referer", aMasterFilters, function (data) {
-                        oDetailModel.setProperty("/Referers", data.results);
-                    });
+                        //oDetailModel.setProperty("/Referers", data.results);
+
+                        var referMulti = this.byId("referMulti");
+                        var tokens = [] ;
+                    
+                        var refer = data.results;
+                        if(refer && refer.length > 0){
+                            refer.forEach(function(item){ 
+                                var oToken = new Token();
+                                oToken.setKey(item.referer_empno);
+                                oToken.setText(item.referer_local_nm + "/" +item.referer_job_title + "/" + item.referer_dept_local_nm);
+                                tokens.push(oToken);
+                            });
+                            referMulti.setTokens(tokens);
+                        }
+                    }.bind(this));
+
+                    // Process에 표시될 상태 및 아이콘 데이터 세팅
+                    this.onSetProcessFlowStateAndIcon(oDetailViewModel, oMaster.approve_status_code);
                 }.bind(this));
             }else
             // Create 버튼으로 넘어오는 경우
@@ -246,11 +306,22 @@ sap.ui.define([
                                     "requestor_empno": "5452",
                                     "create_user_id": "5460", 
                                     "update_user_id": "5460", 
-                                    "request_date": this._changeDateFormat(oToday),
+                                    "request_date": this._changeDateString(oToday),
                                     "details": []};
                 oDetailModel.setData(oNewBasePriceData);
                 oDetailViewModel.setProperty("/detailsLength", 0);
                 oDetailViewModel.setProperty("/viewMode", true);
+                
+                this.getModel("approver").setProperty("/Approvers", null);
+
+                if( this.byId("referMulti") ) {
+                    this.byId("referMulti").removeAllTokens();
+                }
+
+                this.onApproverAdd(0);
+
+                // Process에 표시될 상태 및 아이콘 데이터 세팅
+                this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
             }
             
             this._setTableFragment(oRootModel.getProperty("/selectedApprovalType"));
@@ -356,7 +427,7 @@ sap.ui.define([
                 aPrice = [{market_code: "0", local_create_dtm: oToday, local_update_dtm: oToday}];
             }
 
-            aDetails.push({base_date:oToday, 
+            aDetails.push({base_date:new Date((oToday.getFullYear()-1)+"-12-31"), 
                         company_code: "LGCKR",
                         purOrg: this.getModel("rootModel").getProperty("/purOrg/LGCKR"),
                         org_code: "",
@@ -462,7 +533,7 @@ sap.ui.define([
                     delete oDetail.system_create_dtm;
                     delete oDetail.system_update_dtm;
                     delete oDetail.purOrg;
-                    oDetail.base_date = this._changeDateFormat(oDetail.base_date, "-");
+                    oDetail.base_date = this._changeDateString(oDetail.base_date, "-");
 
                     // prices entity에 없는 property 삭제
                     oDetail.prices.forEach(function (oPrice) {
@@ -473,6 +544,46 @@ sap.ui.define([
                     });
                 }.bind(this));
             }
+
+            // Approvers 데이터 세팅
+            var aApprovers = this.getModel("approver").getData().Approvers;
+            var aApproversTemp = [];
+            var bCheckApp = false;
+
+            // 결재라인에 한명이라도 없으면 저장 불가
+            if( !aApprovers || 0 === aApprovers.length || !aApprovers[0].approver_empno ) {
+                MessageBox.error("결재라인은 필수입니다.");
+                return;
+            }
+
+            aApprovers.forEach(function (oApprover) {
+                var oApproverTemp = {};
+                oApproverTemp.approve_sequence = oApprover.approve_sequence;
+                oApproverTemp.approver_empno = oApprover.approver_empno;
+                oApproverTemp.approver_type_code = oApprover.approver_type_code;
+                oApproverTemp.approve_status_code = oApprover.approve_status_code;
+
+                aApproversTemp.push(oApproverTemp);
+
+                if( oApprover.approver_type_code === "APP" ) {
+                    bCheckApp = true;
+                }
+            });
+
+            oData.Approvers = aApproversTemp;
+
+
+            // Referer 데이터 세팅
+            var oReferMulti = this.byId("referMulti");
+            var aReferTokens = this.byId("referMulti").getTokens();
+            var aRefersTemp = [];
+
+            aReferTokens.forEach(function (oToken) {
+                aRefersTemp.push({referer_empno: oToken.getKey()});
+            });
+
+            oData.Referers = aRefersTemp;
+
 
             // 상신일 경우 approve_status_code를 20으로 변경
             if( sActionParam === "approval" ) {
@@ -597,125 +708,6 @@ sap.ui.define([
         /**
          * ==================== Dialog 시작 ==========================
          */
-        /**
-         * Material Dialog.fragment open
-         */
-		_openMaterialCodeDialog: function (sQueryParam) {
-            var oView = this.getView();
-
-            if ( !this._oMaterialDialog ) {
-                this._oMaterialDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.vi.basePriceArlMgt.view.MaterialDialog",
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                });
-            }
-
-            oOpenDialog = this._oMaterialDialog;
-            
-            this._oMaterialDialog.then(function(oDialog) {
-                oDialog.open();
-                this._setTableQueryText(sQueryParam, "materialCodeTable");
-            }.bind(this));
-        },
-
-         /**
-         * Material Code Dialog data 조회
-         */
-        onGetMaterialCodeDialogData: function (oEvent) {
-            // Table에서 클릭한 경우 oBindingcontext 객체가 있고 Dialog에서 조회한 경우 undefined
-            var oBindingContext = oEvent.getSource().getBindingContext("detailModel");
-            if( oBindingContext ) {
-                sSelectedDialogPath = oBindingContext.getPath();
-            }
-            
-            var oModel = this.getModel();
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            var sQuery = oEvent.getSource().getValue();
-
-            if( sQuery ) {
-                aFilters.push(new Filter("material_code", FilterOperator.Contains, sQuery));
-            }
-
-            oModel.read("/Material_Mst", {
-                filters : aFilters,
-                success: function(data) {
-                    if( oBindingContext ) { 
-                        this._openMaterialCodeDialog(sQuery);
-                    }
-
-                    this.getModel("dialogModel").setProperty("/materialCode", data.results);
-                }.bind(this),
-                error: function(data){
-                    console.log('error', data);
-                    MessageBox.error(JSON.parse(data.responseText).error.message);
-                }
-            });
-        },
-
-        /**
-         * Supplier Dialog.fragment open
-         */
-		_openSupplierDialog: function (sQueryParam, sTableIdParam) {
-            var oView = this.getView();
-
-            if ( !this._oSupplierDialog ) {
-                this._oSupplierDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.vi.basePriceArlMgt.view.SupplierDialog",
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                });
-            }
-
-            oOpenDialog = this._oSupplierDialog;
-            
-            this._oSupplierDialog.then(function(oDialog) {
-                oDialog.open();
-                this._setTableQueryText(sQueryParam, "supplierTable");
-            }.bind(this));
-        },
-        
-         /**
-         * Supplier Dialog data 조회
-         */
-        onGetSupplierDialogData: function (oEvent) {
-            // Table에서 클릭한 경우 oBindingcontext 객체가 있고 Dialog에서 조회한 경우 undefined
-            var oBindingContext = oEvent.getSource().getBindingContext("detailModel");
-            if( oBindingContext ) {
-                sSelectedDialogPath = oBindingContext.getPath();
-            }
-            
-            var oSupplierODataModel = this.getModel("supplierODataModel");
-            //var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            var aFilters = [];
-            var sQuery = oEvent.getSource().getValue();
-
-            if( sQuery ) {
-                aFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, sQuery));
-            }
-
-            oSupplierODataModel.read("/Suppliers", {
-                filters : aFilters,
-                //urlParameters: {"$top": 40},
-                success: function(data) {
-                    if( oBindingContext ) { 
-                        this._openSupplierDialog(sQuery);
-                    }
-
-                    this.getModel("dialogModel").setProperty("/supplier", data.results);
-                }.bind(this),
-                error: function(data){
-                    console.log('error', data);
-                    MessageBox.error(JSON.parse(data.responseText).error.message);
-                }
-            });
-        },
         
         /**
          * Family Material Code Dialog.fragment open
@@ -775,162 +767,6 @@ sap.ui.define([
                 }
             });
         },
-
-        /**
-         * Table SearchField에 검색에 세팅
-         */
-        _setTableQueryText: function (sQueryParam, sTableIdParam) {
-            var oTable = this.byId(sTableIdParam);
-            // 테이블 SearchField 검색값 초기화
-            if( oTable ) {
-                oTable.getHeaderToolbar().getContent()[2].setValue(sQueryParam);
-            }
-        },
-
-        /**
-         * Dialog data 조회
-         */
-        // onGetDialogData: function (oEvent) {
-        //     // Table에서 클릭한 경우 oBindingcontext 객체가 있고 Dialog에서 조회한 경우 undefined
-        //     var oBindingContext = oEvent.getSource().getBindingContext("detailModel");
-        //     if( oBindingContext ) {
-        //         sSelectedDialogPath = oBindingContext.getPath();
-        //     }
-            
-        //     var sSelectedDialogInfo = oEvent.getSource().data("dialog");
-        //     var oModel = this.getModel();
-        //     var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-        //     var oDialogInfoModel = this.getModel("dialogInfoModel");
-        //     var sQuery = oEvent.getSource().getValue();
-
-            
-        //     // open된 Dialog에 정보. json데이터에서 읽어드림
-        //     // sTableId: 각 Dialog의 table id
-        //     // oDdataUrl: OData Url
-        //     // filterPropertyName: 추가할 Filter property
-        //     // modelPath: dialogModel에 바인딩할  path
-        //     var oSelectedDialogInfo = oDialogInfoModel.getProperty("/"+sSelectedDialogInfo);
-            
-        //     if( sQuery ) {
-        //         aFilters.push(new Filter(oSelectedDialogInfo.filterPropertyName, FilterOperator.Contains, sQuery));
-        //     }
-
-        //     var sUrlParameter = {};
-        //     if( sSelectedDialogInfo === "supplier" ) {
-        //         sUrlParameter = {"$top": 40};
-        //     }
-
-        //     oModel.read(oSelectedDialogInfo.oDataUrl, {
-        //         filters : aFilters,
-        //         urlParameters: sUrlParameter,
-        //         success: function(data) {
-        //             // Table에서 클릭한 경우
-        //             if( oBindingContext ) { 
-        //                 // 검색데이터가 한개인 경우 Dialog Open하지 않고 데이터 세팅
-        //                 if( 1 === data.results.length ) {
-        //                     var oDetailModel = this.getModel("detailModel");
-        //                     var oSelectedDetall = oDetailModel.getProperty(sSelectedDialogPath);
-        //                     var oResultData = data.results[0];
-
-        //                     this._setDialogData(data.results[0], sSelectedDialogInfo);
-        //                 }
-        //                 // 검샘데이터가 없거나 여러개인 경우 Dialog Open
-        //                 else {
-        //                     switch(sSelectedDialogInfo) {
-        //                         case "materialCode":
-        //                             this._openMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);
-        //                             break;
-        //                         case "supplier":
-        //                             this._openSupplierDialog(sQuery, oSelectedDialogInfo.tableId);
-        //                             break;
-        //                         case "familyMaterialCode":
-        //                             this._openFamilyMaterialCodeDialog(sQuery, oSelectedDialogInfo.tableId);
-        //                             break;
-        //                     }
-                            
-        //                     this.getModel("dialogModel").setProperty("/"+sSelectedDialogInfo, data.results);
-        //                 }
-        //             }
-        //             // Dialog에서 조회한 경우
-        //             else {
-        //                 this.getModel("dialogModel").setProperty("/"+sSelectedDialogInfo, data.results);
-        //             }
-        //         }.bind(this),
-        //         error: function(data){
-        //             console.log('error', data);
-        //             MessageBox.error(JSON.parse(data.responseText).error.message);
-        //         }
-        //     });
-        // },
-
-        /**
-         * Dialog에서 Row 선택 시
-         */
-        onSelectDialogRow: function (oEvent) {
-            var oDialogModel = this.getModel("dialogModel");
-            var oParameters = oEvent.getParameters();
-
-            oDialogModel.setProperty(oParameters.listItems[0].getBindingContext("dialogModel").getPath()+"/checked", oParameters.selected);
-
-            this.onDailogRowDataApply(oEvent);
-        },
-
-        /**
-         * Dialog Row Data 선택 후 apply
-         */
-        onDailogRowDataApply: function (oEvent) {
-            var sDialogSelectedPath = oEvent.getSource().getSelectedContextPaths()[0];
-            var sSelectedDialog = sDialogSelectedPath.substring(sDialogSelectedPath.indexOf("/")+1, sDialogSelectedPath.lastIndexOf("/"));
-            var aDialogData = this.getModel("dialogModel").getProperty("/"+sSelectedDialog);
-            var bChecked = false;
-
-            for( var i=0; i<aDialogData.length; i++ ) {
-                var oDialogData = aDialogData[i];
-
-                if( oDialogData.checked ) {
-                    this._setDialogData(oDialogData, sSelectedDialog);
-
-                    delete oDialogData.checked;
-                    bChecked = true;
-                    break;
-                }
-            }
-
-            // 선택된 Material Code가 있는지 경우
-            if( bChecked ) {
-                oEvent.getSource().removeSelections();
-                this.onClose(sSelectedDialog);
-            }
-            // 선택된 Material Code가 없는 경우
-            else {
-                MessageBox.error("추가할 데이터를 선택해 주십시오.");
-            }
-        },
-
-        /**
-         * 선택한 데이터 Detail Model에 세팅
-         */
-        _setDialogData: function (oGetDataParam, sSelectedDialogParam) {
-            var oDetailModel = this.getModel("detailModel");
-            var oSelectedDetail = oDetailModel.getProperty(sSelectedDialogPath);
-
-            switch(sSelectedDialogParam) {
-                case "materialCode":
-                    if( !oSelectedDetail.material_code_fk ) {
-                        oSelectedDetail.material_code_fk = {};
-                    }
-                    oSelectedDetail.material_code = oGetDataParam.material_code;
-                    oSelectedDetail.material_code_fk.material_desc = oGetDataParam.material_desc;
-                    oSelectedDetail.material_code_fk.material_spec = oGetDataParam.material_spec;
-                    break;
-                case "supplier":
-                    oSelectedDetail.supplier_code = oGetDataParam.supplier_code;
-                    oSelectedDetail.supplier_local_name = oGetDataParam.supplier_local_name;
-                    break;
-            }
-
-            oDetailModel.refresh();
-        },
           
         /**
          * Dialog Close
@@ -946,6 +782,7 @@ sap.ui.define([
          */
 
          onMaterialMasterMultiDialogPress: function (oEvent) {
+             var oRootModel = this.getModel("rootModel");
              var oDetailModel = this.getModel("detailModel");
              var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
              var oDetail = oDetailModel.getProperty(sSelectedPath);
@@ -955,6 +792,10 @@ sap.ui.define([
                  this.oSearchMultiMaterialOrgDialog = new MaterialOrgDialog({
                      title: "Choose MaterialMaster",
                      multiSelection: false,
+                     tenantId: sTenantId,
+                     companyCode: oDetail.company_code,
+                     orgCode: oDetail.org_code,
+                     purOrg: oRootModel.getProperty("/purOrg"),
                      items: {
                          filters:[
                              new Filter("tenant_id", FilterOperator.EQ, sTenantId)
@@ -964,6 +805,10 @@ sap.ui.define([
 
                  this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent) {
                      var oSelectedDialogItem = oEvent.getParameter("item");
+                     this._oDetail.company_code = oSelectedDialogItem.company_code;
+                     //this._oDetail.company_name = oSelectedDialogItem.company_name;
+                     this._oDetail.org_code = oSelectedDialogItem.org_code;
+                     this._oDetail.org_name = oSelectedDialogItem.org_name;
                      this._oDetail.material_code = oSelectedDialogItem.material_code;
                      this._oDetail.material_desc = oSelectedDialogItem.material_desc;
                      this._oDetail.material_spec = oSelectedDialogItem.material_spec;
@@ -976,7 +821,381 @@ sap.ui.define([
 
              var aTokens = [new Token({key: oDetail.material_code, text: oDetail.material_desc})];
              this.oSearchMultiMaterialOrgDialog.setTokens(aTokens);
-         }
+         },
+
+         onSupplierDialogPress: function (oEvent) {
+             var oDetailModel = this.getModel("detailModel");
+             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+             var oDetail = oDetailModel.getProperty(sSelectedPath);
+             this._oDetail = oDetail;
+
+             if( !this.oSearchSupplierOrgDialog ) {
+                 this.oSearchSupplierOrgDialog = new SupplierDialog({
+                     title: "Choose Supplier",
+                     multiSelection: false,
+                     items: {
+                         filters:[
+                             new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                         ]
+                     }
+                 })
+
+                 this.oSearchSupplierOrgDialog.attachEvent("apply", function(oEvent) {
+                     var oSelectedDialogItem = oEvent.getParameter("item");
+                     this._oDetail.supplier_code = oSelectedDialogItem.supplier_code;
+                     this._oDetail.supplier_local_name = oSelectedDialogItem.supplier_local_name;
+                     oDetailModel.refresh();
+                 }.bind(this));
+             }
+
+             this.oSearchSupplierOrgDialog.open();
+
+             var aTokens = [new Token({key: oDetail.supplier_code, text: oDetail.supplier_local_name})];
+             this.oSearchSupplierOrgDialog.setTokens(aTokens);
+         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         /**
+         * @description Approval Line Event 
+         * @param {*} oEvent 
+         */
+        /**
+         * 드래그시작
+         */
+        onDragStartTable: function (oEvent) {
+            console.log(" *** start >> onDragStart", oEvent);
+            console.log(" *** target", oEvent.getParameter("target"));
+
+            var oDraggedRow = oEvent.getParameter("target");
+            var oDragSession = oEvent.getParameter("dragSession");
+            console.log(" *** oDragSession", oDragSession);
+            oDragSession.setComplexData("draggedRowContext", oDraggedRow.getBindingContext("approver"));
+            console.log(" *** end >> onDragStart");
+        },
+        /**
+         * 드래그 도착위치 
+         */
+        onDragDropTable: function (oEvent) {
+            console.log(" ***  start >> onDragDrop", oEvent);
+            //  var oSwap = this.byId("ApproverTable").getSelectedItems();
+            var oDragSession = oEvent.getParameter("dragSession");
+            //    console.log(" *** oDragSession" , oDragSession );
+            //    console.log(" *** getDropControl" , oDragSession.getDropControl() );
+            //    console.log(" *** getDropInfo" , oDragSession.getDropInfo() );
+            //    console.log(" *** getTextData" , oDragSession.getTextData() );
+            //    console.log(" *** getDropControl" , oDragSession.getDropControl().mAggregations );
+            //    console.log(" *** getDropPosition" , oDragSession.getDropPosition() );
+            //    console.log(" *** draggedRowContext" ,  oDragSession.getComplexData("draggedRowContext") );
+
+            // After 
+            var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
+            if (!oDraggedRowContext) {
+                return;
+            }
+
+            var data = oDragSession.getDropControl().mAggregations.cells;
+            var dropPosition = {
+                approver_empno: data[0].mProperties.text
+                , approve_sequence: data[1].mProperties.text
+                , approver_type_code: data[2].mProperties.text
+                , approver_name: data[3].mProperties.text
+                , approve_status_code: data[4].mProperties.text
+                , approve_comment: data[5].mProperties.text
+            };
+
+            var approver = this.getView().getModel('approver');
+            var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath()); // 내가 선택한 아이템 
+
+            console.log("dropPosition >>>> ", dropPosition);
+            console.log("item >>>> ", item);
+
+
+            var sequence = 0;
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                if (approver.getData().Approvers[i].approve_sequence == item.approve_sequence) { // 선택한 아이템 위치의 데이터 삭제
+                    approver.removeRecord(i);
+                }
+            }
+
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                if (approver.getData().Approvers[i].approve_sequence == dropPosition.approve_sequence) { // 드래그가 도착한 위치의 상단 시퀀스  
+                    if (oDragSession.getDropPosition() == 'After') {
+                        sequence = i + 1;
+                    } else {
+                        sequence = i;
+                    }
+                }
+            }
+
+            approver.addRecord({
+                "tenant_id": item.tenant_id,
+                "approval_number": item.approval_number,
+                "approve_sequence": item.approve_sequence,
+                "approver_type_code": item.approver_type_code,
+                "approver_empno": item.approver_empno,
+                "approver_name": item.approver_name,
+                "selRow": item.selRow,
+            }, "/Approvers", sequence); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+
+            // 시퀀스 순서 정렬 
+            this.setOrderByApproval();
+            console.log(" ***  end >> onDragDrop");
+        },
+        onListMainTableUpdateFinished: function (oEvent) {
+            var item = this.byId("ApproverTable").getSelectedItems();
+            console.log("//// onListMainTableUpdateFinished", oEvent);
+
+        },
+        onApproverAdd : function (oParam){
+             console.log("//// onApproverAdd", oParam);
+            var approver = this.getView().getModel('approver');
+             approver.addRecord({
+                "tenant_id": this.tenant_id,
+                "approval_number": this.approval_number,
+                "approve_sequence": "",
+                "approver_type_code": "",
+                "approver_empno": "",
+                "approver_name": "",
+                "selRow": true,
+            }, "/Approvers", oParam); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+            this.setOrderByApproval();
+            this.setSelectedApproval(String(Number(oParam)+1));
+        },
+        onItemPress : function (oEvent) {
+            console.log("//// onApproverItemPress", oEvent);
+        },
+
+
+        // 삭제 
+        setApproverRemoveRow: function (oParam) {
+            var oModel = this.getModel("approver");
+            oModel.removeRecord(oParam - 1);
+            this.setOrderByApproval();
+        },
+        // 시퀀스 정렬 
+        setOrderByApproval: function () {
+            var approver = this.getModel("approver");
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                approver.getData().Approvers[i].approve_sequence = String(i + 1);
+            }
+            this.getModel("approver").refresh(true);
+        },
+        // 선택행 플래그 정리  
+        setSelectedApproval : function (row) { 
+             var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == approver.getData().Approvers[i].approve_sequence){
+                     approver.getData().Approvers[i].selRow = true;
+                  }else{
+                     approver.getData().Approvers[i].selRow = false;
+                  }
+            }
+            console.log(" setSelectedApproval " , approver);
+            this.getModel("approver").refresh(true);
+        } ,
+
+        getApprovalSeletedRow : function () {
+            var approver = this.getModel("approver");
+            var row = 0;
+            for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(approver.getData().Approvers[i].selRow){
+                    row = i;
+                  }
+            }
+            return row;
+        } ,
+
+        /**
+         * @description employee 이벤트 1
+         */
+        onApproverSearch: function (event) {
+            var oItem = event.getParameter("suggestionItem");
+            this.handleEmployeeSelectDialogPress(event);
+        },
+        /**
+          * @description employee 이벤트 2
+          */
+        onSuggest: function (event) {
+            var sValue = event.getParameter("suggestValue"),
+                aFilters = [];
+            console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
+        },
+
+        /**
+         * @description employee 팝업 열기 (돋보기 버튼 클릭시)
+         */
+        handleEmployeeSelectDialogPress: function (oEvent) { 
+
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
+            var that = this;
+     
+            console.log(" row " , row);
+
+            if (approver.getData().Approvers[row].approver_type_code == undefined
+                || approver.getData().Approvers[row].approver_type_code == "") {
+                MessageToast.show("Type 을 먼저 선택해주세요.");
+            } else {
+                var oView = this.getView();
+                console.log("handleEmployeeSelectDialogPress >>> this._oDialog ", this._oDialog);
+                if (!this._oDialog) {
+                    this._oDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "dp.md.moldApprovalList.view.Employee",
+                        controller: this
+                    }).then(function (oDialog) {
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                }
+
+                this._oDialog.then(function (oDialog) {
+                    oDialog.open();
+                    that.byId("btnEmployeeSrch").firePress();
+                });
+            }
+        },
+        /**
+         * @description employee 팝업에서 search 버튼 누르기 
+         */
+        onEmployeeSearch: function () {
+
+            var aSearchFilters = [];
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+            var employee = this.byId('employSearch').getValue().trim();
+            if (employee != undefined && employee != "" && employee != null) {
+                var nFilters = [];
+
+                nFilters.push(new Filter("approver_name", FilterOperator.Contains, String(employee)));
+                nFilters.push(new Filter("employee_number", FilterOperator.Contains, String(employee)));
+
+                var oInFilter = {
+                    filters: nFilters,
+                    and: false
+                };
+                aSearchFilters.push(new Filter(oInFilter));
+            }
+
+            this._bindView("/RefererSearch", "oEmployee", aSearchFilters, function (oData) {
+                console.log("/RefererSearch ", oData);
+            }.bind(this));
+
+           // console.log(" oEmployee ", this.getModel('oEmployee'));
+
+        },
+
+        /**
+         * @description employee 팝업에서 apply 버튼 누르기 
+         */
+        onEmploySelectionApply: function () {
+            var oTable = this.byId("employeeSelectTable");
+            var aItems = oTable.getSelectedItems();
+
+            aItems.forEach(function (oItem) {
+                var obj = new JSONModel({
+                    approver_empno: oItem.getCells()[0].getText(),
+                    approver_name: oItem.getCells()[1].getText()
+                });
+               this._setApprvalItemSetting( obj.oData ); 
+            }.bind(this));
+            this.onExitEmployee();
+        },
+        /**
+         * @description employee 팝업 닫기 
+         */
+        onExitEmployee: function () {
+            if (this._oDialog) {
+                this._oDialog.then(function (oDialog) {
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialog = undefined;
+            }
+        },
+        _setApprvalItemSetting : function(obj){
+      //  console.log("_setApprvalItemSetting  " , obj);
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == i){
+                     approver.getData().Approvers[i].approver_empno = obj.approver_empno;
+                     approver.getData().Approvers[i].approver_name = obj.approver_name;
+                  }
+            }
+             this.getModel("approver").refresh(true);
+        },
+        /**
+         * today
+         * @private
+         * @return yyyy-mm-dd
+         */
+        _getToday: function () {
+            var date_ob = new Date();
+            var date = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+
+            console.log(year + "-" + month + "-" + date);
+            return year + "" + month + "" + date;
+        },
+
+         onInputWithEmployeeValuePress: function(oEvent){
+            var index = oEvent.getSource().getBindingContext("approver").getPath().split('/')[2];
+     
+            if (this.getModel("approver").getData().Approvers[index].approver_type_code === "") {
+                MessageToast.show("Type 을 먼저 선택해주세요.");
+            } else {
+                this.onInputWithEmployeeValuePress["row"] = index;
+
+                this.byId("employeeDialog").open();
+            }
+        },
+
+        onEmployeeDialogApplyPress: function(oEvent){
+            var employeeNumber = oEvent.getParameter("item").employee_number,
+                userName = oEvent.getParameter("item").user_local_name,
+                departmentLocalName = oEvent.getParameter("item").department_local_name,
+                oModel = this.getModel("approver"),
+                rowIndex = this.onInputWithEmployeeValuePress["row"];
+
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_empno", employeeNumber);
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_name", userName + " / " + departmentLocalName);
+        },
+
+       onMultiInputWithEmployeeValuePress: function(){ 
+          
+            if(!this.oEmployeeMultiSelectionValueHelp){
+               this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
+                    title: "Choose Referer",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2600")
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
+                 
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("referMulti").getTokens());
+        },
 
     });
 

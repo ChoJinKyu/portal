@@ -45,4 +45,4 @@ entity Pd_Part_Category_View {
         hierarchy_root_rank   : Integer;
         hierarchy_level       : Integer;
         drill_state           : String;
-}
+};

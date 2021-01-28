@@ -35,18 +35,14 @@
                 <form:content>
                     <!-- Type 시작 -->
                     <VBox>
-                        <Label text="{I18N>/TYPE} "></Label>
+                        <Label text="{I18N>/APPROVAL_TYPE_CODE} "></Label>
                         <!-- <Label text="Type"></Label> -->
                         <ComboBox
                             width="100%"
                             selectedKey="{filterModel>/type}"
-                            items="{
-                            path: 'filterModel>/type_list',
-                            filters: [
-                            ]
-                            }">
+                            items="{filterModel>/type_list}">
                             <items>
-                            <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                            <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
                             </items>
                         </ComboBox>
                         <layoutData>
@@ -134,6 +130,7 @@
                                 <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="{rootModel>/processList/1/code}" width="5.2rem" />
                                 <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="{rootModel>/processList/2/code}" width="4.8rem" />
                                 <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="{rootModel>/processList/3/code}" width="4.5rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/4/code_name}" key="{rootModel>/processList/4/code}" width="4.5rem" />
                             </items>
                         </SegmentedButton>
                         <layoutData>
@@ -200,11 +197,11 @@
                 <t:Column>
                     <Label text="{I18N>/APPROVAL_TITLE}" textAlign="Center" width="100%" />
                     <t:template>
-                        <Text text="{listModel>approval_title}" />
+                        <Text text="{listModel>approval_title}" tooltip="{listModel>approval_title}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
-                    <Label text="{I18N>/STATUS}"  textAlign="Center" width="100%" />
+                    <Label text="{I18N>/STATUS}" textAlign="Center" width="100%" />
                     <t:template>
                         <tnt:InfoLabel 
                             text="{listModel>approve_status_code_nm}" 
@@ -218,13 +215,15 @@
                     <Label text="{I18N>/REQUEST_DATE}" />
                     <t:template>
                         <Text text="{
-                                path: 'listModel>request_date'}" />
+                                path: 'listModel>request_date',
+                                formatter: '.onChangeDateFormat'}" />
                     </t:template>
                 </t:Column>
-                <t:Column hAlign="Center" width="12rem">
-                    <Label text="{I18N>/REQUESTOR}" />
+                <t:Column width="25rem">
+                    <Label text="{I18N>/REQUESTOR}" textAlign="Center" width="100%" />
                     <t:template>
-                        <Text text="{listModel>requestor_local_nm}" />
+                        <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title} / {listModel>requestor_dept_local_nm}" 
+                            tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title} / {listModel>requestor_dept_local_nm}"  />
                     </t:template>
                 </t:Column>
             </t:columns>

@@ -5,7 +5,7 @@ using {dp as creationRequest} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEG
 namespace dp;
 @path : '/dp.PartCategoryCreationRequestService'
 
-service PartCategoryService {
+service PartCategoryCreationRequestService {
     entity pdPartCategoryCreationRequestView as projection on creationRequest.Pd_Part_Category_Creation_Request_View ;
     entity pdPartCategoryCreationRequest as projection on creationRequest.Pd_Part_Category_Creation_Request;
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
