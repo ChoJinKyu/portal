@@ -57,15 +57,15 @@ sap.ui.define([
 				}]
 			}), "form");
 
-			sap.ui.getCore().attachValidationError(function (oEvent) {
-				debugger;
-				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
-			});
+			// sap.ui.getCore().attachValidationError(function (oEvent) {
+			// 	debugger;
+			// 	oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
+			// });
 	
-			sap.ui.getCore().attachValidationSuccess(function (oEvent) {
-				debugger;
-				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
-			});
+			// sap.ui.getCore().attachValidationSuccess(function (oEvent) {
+			// 	debugger;
+			// 	oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
+			// });
 
 			oMessageManager = sap.ui.getCore().getMessageManager();
             this.getView().setModel(oMessageManager.getMessageModel(), "message");

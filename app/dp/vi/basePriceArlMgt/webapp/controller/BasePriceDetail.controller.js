@@ -550,6 +550,12 @@ sap.ui.define([
             var aApproversTemp = [];
             var bCheckApp = false;
 
+            // 결재라인에 한명이라도 없으면 저장 불가
+            if( !aApprovers || 0 === aApprovers.length || !aApprovers[0].approver_empno ) {
+                MessageBox.error("결재라인은 필수입니다.");
+                return;
+            }
+
             aApprovers.forEach(function (oApprover) {
                 var oApproverTemp = {};
                 oApproverTemp.approve_sequence = oApprover.approve_sequence;
@@ -563,12 +569,6 @@ sap.ui.define([
                     bCheckApp = true;
                 }
             });
-
-            // 승인자가 없으면 저장 불가
-            if( !bCheckApp ) {
-                MessageBox.error("승인자는 필수입니다.");
-                return;
-            }
 
             oData.Approvers = aApproversTemp;
 
