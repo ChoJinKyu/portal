@@ -105,7 +105,7 @@
                             <VBox>
                                 <HBox alignItems="Center">
                                     <Label text="{I18N>/TITLE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
-                                    <Input width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approval_title}">
+                                    <Input width="20rem" placeholder="" editable="true" value="{detailModel>/approval_title}">
                                     </Input>
                                 </HBox>
                                 <VBox>
@@ -144,21 +144,17 @@
                                             <Title text="{I18N>/BASE_PRICE_LIST}" level="H2"/>
                                         <ToolbarSpacer />
                                         <Label text="{I18N>/MANAGEMENT}/{I18N>/MARKET_PRICE}" class="sapUiTinyMarginEnd" textAlign="Left" /> 
-                                        <ComboBox id="listManagementComboBox" width="7rem" selectedKey="" items="{
-                                            path: 'currencyODataModel>/Currency',
-                                            filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}                                        
-                                                ]
-                                            }">
+                                        <ComboBox id="listManagementComboBox" width="7rem" selectedKey="" 
+                                            items="{path: 'rootModel>/management_mprice_code'}">
                                             <items>
-                                                <core:Item key="{currencyODataModel>currency_code}" text="{currencyODataModel>currency_code}" />
+                                                <core:Item key="{rootModel>code}" text="{rootModel>text}" />
                                             </items>
                                         </ComboBox>
                                         <ToolbarSeparator/>
-                                        <Button text="{I18N>/ROW_ADD}" type="Emphasized" press=".onListRowAdd" />
-                                        <Button text="{I18N>/ROW_DELETE}" type="Emphasized" press=".onListRowDelete" />
                                         <Button text="{I18N>/TEMPLATE}" type="Emphasized" press=".onTemplateDownload" />
                                         <Button text="{I18N>/UPLOAD}" type="Emphasized" press=".onExcelUpload" />
+                                        <Button text="{I18N>/ROW_ADD}" type="Emphasized" press=".onListRowAdd" />
+                                        <Button text="{I18N>/ROW_DELETE}" type="Emphasized" press=".onListRowDelete" />
                                         <!-- <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
                                         <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
                                         <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/> --> 
@@ -194,7 +190,7 @@
                                             <t:template>
                                                 <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" required="true"
                                                             displayFormat="y-MM" class="sapUiSmallMarginBottom" 
-                                                            value="{ path: 'detailModel>/apply_start_date' }" />
+                                                            value="{ path: 'detailModel>apply_start_date' }" />
                                             </t:template>
                                         </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
@@ -202,7 +198,7 @@
                                         <t:template>
                                             <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" required="true"
                                                         displayFormat="y-MM" class="sapUiSmallMarginBottom" 
-                                                        value="{ path: 'detailModel>/apply_end_date' }" />
+                                                        value="{ path: 'detailModel>apply_end_date' }" />
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="10rem">
@@ -230,9 +226,7 @@
                                             </ComboBox>
                                         </t:template>
                                     </t:Column>
-                                    <!-- <t:Column hAlign="Center" width="6rem"> -->
                                     <t:Column hAlign="Center" width="8rem">
-                                        <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" /> -->
                                         <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" />
                                         <t:template>
                                             <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
@@ -351,7 +345,8 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <!-- Approval & Reference 시작 -->
-                            <VBox>
+                            <core:Fragment fragmentName="sp.vi.basePriceMgt.view.ApprovalLine" type="XML" />
+                            <!-- <VBox>
                             <Table id="ApprovalTable"
                                     growing="true"
                                     growingThreshold="20"
@@ -385,7 +380,6 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                             <Text text="{appdetailModel>no}" />
                                             <ComboBox  width="100%"
                                                 selectedKey="{appdetailModel>type}"
@@ -416,7 +410,7 @@
                             <Input value="{detailModel>/abc}"
                                 showValueHelp="true"
                                 valueHelpRequest=".onOpenMaterialCode" />
-                            </VBox>
+                            </VBox> -->
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>

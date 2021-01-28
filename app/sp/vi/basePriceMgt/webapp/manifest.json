@@ -61,6 +61,13 @@
             "settings": {
                 "odataVersion": "2.0"
             }
+        },
+        "basePriceArlService": {
+            "uri": "srv-api/odata/v2/sp.BasePriceArlService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
         }
     }
   },
@@ -160,6 +167,16 @@
                "refreshAfterChange": false,
                "useBatch": true
            }
+       }, 
+       "basePriceArl": {
+           "dataSource": "basePriceArlService",
+           "preload": true,
+           "settings": {
+               "defaultBindingMode": "TwoWay",
+               "defaultCountMode": "Inline",
+               "refreshAfterChange": false,
+               "useBatch": true
+           }
        }
     },
     "resources": {
@@ -171,6 +188,7 @@
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib",
+      "dpmd": "../../../../dp/md",
       "dputil": "../../../../dp/util",
       "sp.util": "../../../util",
       "dp.util": "../../../../dp/util",
