@@ -81,7 +81,7 @@
             <t:Table id="mainTable"
             selectionMode="MultiSelect"
             rows="{
-                path: 'list>/pdPartCategoryCreationRequest',
+                path: 'list>/pdPartCategoryCreationRequestView',
                 sorter: { 
                     path: 'request_number',
                     descending: true 
