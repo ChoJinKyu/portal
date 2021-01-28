@@ -144,8 +144,7 @@
                         </t:Column>
                         <t:Column label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Right">    
                             <t:template>
-                                <Text text="{path: 'tree>local_update_dtm',
-                                  formatter: '.dateFormatter.toDateTimeString'}" wrapping="false" />
+                                <Text text="{tree>local_update_dtm}" wrapping="false" />
                             </t:template>
                         </t:Column>
                         <t:Column label="" width="2rem" >
