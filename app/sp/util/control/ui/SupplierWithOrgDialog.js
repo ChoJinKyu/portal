@@ -236,7 +236,10 @@ sap.ui.define([
                     label: new Label({text: this.getModel("I18N").getText("/TAX_ID")}),
                     template: new Text({text: "{tax_id}", wrapping:false})
                 }),
-
+                new Column({
+                    label: new Label({text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE")}),
+                    template: new Text({text: "{old_supplier_code}"})
+                }),
                 new Column({
                     hAlign: "Center",
                     label: new Label({text: this.getModel("I18N").getText("/STATUS_CODE")}),
@@ -254,10 +257,6 @@ sap.ui.define([
                                     return oColor;
                                 }
                              }),
-                }),
-                new Column({
-                    label: new Label({text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE")}),
-                    template: new Text({text: "{old_supplier_code}"})
                 })
             ];
         },
