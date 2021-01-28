@@ -45,6 +45,7 @@ sap.ui.define([
             //this.oSupplierCode.attachEvent("change", this.loadData.bind(this));
             this.oSupplierName = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
             this.oTaxId = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
+            this.oOldSupplierCode = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
             this.oStatus = new sap.m.SegmentedButton({
                  items : {
                     path : "SUPPLIERVIEW>/supplierStatus",
@@ -81,6 +82,13 @@ sap.ui.define([
                 }),
                 new VBox({
                     items: [
+                        new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE")}),
+                        this.oOldSupplierCode
+                    ],
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10"})
+                }),
+                new VBox({
+                    items: [
                         new Label({ text: this.getModel("I18N").getText("/STATUS_CODE")}),
                         this.oStatus
                     ],
@@ -101,17 +109,17 @@ sap.ui.define([
                 new Column({
                     width: "25%",
                     label: new Label({text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME")}),
-                    template: new Text({text: "{supplier_local_name}"})
+                    template: new Text({text: "{supplier_local_name}", wrapping:false})
                 }),
                 new Column({
                     width: "25%",
                     label: new Label({text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME")}),
-                    template: new Text({text: "{supplier_english_name}"})
+                    template: new Text({text: "{supplier_english_name}", wrapping:false})
                 }),
                 new Column({
                     hAlign: "Center",
                     label: new Label({text: this.getModel("I18N").getText("/TAX_ID")}),
-                    template: new Text({text: "{tax_id}"})
+                    template: new Text({text: "{tax_id}", wrapping:false})
                 }),
 
                 new Column({
@@ -168,6 +176,7 @@ sap.ui.define([
                 sSupplierCode = this.oSupplierCode.getValue(),
                 sSupplierName = this.oSupplierName.getValue(),
                 sTaxId = this.oTaxId.getValue(),
+                sOldSupplierCode = this.oOldSupplierCode.getValue(),
                 sStatus = this.oStatus.getSelectedKey();
 
             if(sSupplierCode){
@@ -187,6 +196,11 @@ sap.ui.define([
                 )
             }
             if(sTaxId)aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
+            if(sOldSupplierCode){
+                sOldSupplierCode = sOldSupplierCode.toUpperCase();
+                this.oOldSupplierCode.setValue(sOldSupplierCode);
+                aFilters.push(new Filter("old_supplier_code", FilterOperator.Contains, sOldSupplierCode));
+            }
             if(sStatus)aFilters.push(new Filter("supplier_status_code", FilterOperator.EQ, sStatus));
 
             this.oDialog.setBusy(true);
