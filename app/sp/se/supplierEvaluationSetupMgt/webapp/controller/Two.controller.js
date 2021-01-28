@@ -42,6 +42,7 @@ sap.ui.define([
                             evaluationType2 : [],
                             scale : []
                         });
+            this.getView().byId("detailValuationTable").removeSelections(true);
             
 
             oArgs = oEvent.getParameter("arguments");
@@ -124,7 +125,8 @@ sap.ui.define([
                 "evaluation_grade": "",
                 "evaluation_grade_start_score": "",
                 "evaluation_grade_end_score": "",
-                "inp_apply_code": ""
+                "inp_apply_code": "",
+                "crudFlg" : "C"
             });
            oView.setProperty("/manager",oModel);
             },
@@ -180,7 +182,7 @@ sap.ui.define([
 
         }
 
-            ,/**
+        ,/**
         * 메인화면으로 이동
         * @public
         */
@@ -192,7 +194,7 @@ sap.ui.define([
             if (that.getModel("TwoView").getProperty("/isEditMode") === false) {
                 if (sPreviousHash !== undefined) {
                     // eslint-disable-next-line sap-no-history-manipulation
-                    history.go(-1);
+                    history.back();
                 } else {
                     
                 }
@@ -226,7 +228,7 @@ sap.ui.define([
         },
 
             onPageEditButtonPress: function () {
-                this._toEditMode();
+            this._toEditMode();
             },
 
         /**

@@ -66,8 +66,7 @@ sap.ui.define([
             // 로그인 세션 작업완료시 수정해야함!
             this.tenant_id = "L2100";
             this.company_code = "LGCKR";    
-            this.language_cd ="KO";                    
-            this.iNum = 1;
+            this.language_cd ="KO"; 
 
             // 자주쓸것같은 Filter
             var aSearchFilters = [];                
@@ -95,7 +94,8 @@ sap.ui.define([
                 "evaluation_op_unt_person_empno": "",
                 "user_local_name": "",
                 "department_local_name": "",
-                "evaluation_execute_role_code": this.iNum++	
+                "evaluation_execute_role_code": "",
+                "crudFlg" : "C"
             });
            oView.setProperty("/manager",oModel);
                 
@@ -190,9 +190,7 @@ sap.ui.define([
                        
                         oView.byId("managerTable").clearSelection();                        
 
-                        } else if (sButton === MessageBox.Action.CANCEL) { 
-
-                        }; 
+                        } 
                         
                         
                     }
@@ -224,7 +222,8 @@ sap.ui.define([
                 "qttive_item_uom_code": "",
                 "qttive_item_measure_mode_code": "",
                 "qttive_item_desc": "",
-                "sort_sequence": ""
+                "sort_sequence": "",
+                "crudFlg":"C"
             });
            oView.setProperty("/quantitative",oModel);
 
@@ -382,6 +381,43 @@ sap.ui.define([
 
             },
 
+             onCreateTwo: function (oEvent) {
+            
+                // var oContext = oEvent.getSource().getBindingContext("DetailView");
+                // var oModel = oContext.getModel();
+                // var oItem = oModel.getProperty(oContext.getPath());     
+
+                    
+                //     var tenant_id = oItem.tenant_id,
+                //      company_code = oItem.company_code,
+                //      org_code = oItem.org_code ,
+                //      org_type_code = oItem.org_type_code;
+                    //  ,                     
+                    //  evaluation_operation_unit_code = oItem.evaluation_operation_unit_code,
+                    //  evaluation_type_code = oItem.evaluation_type_code
+                    
+                    // this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
+                    // this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
+                    // this.company_code = oEvent.getParameter("arguments")["company_code"],            
+                    // this.org_code = oEvent.getParameter("arguments")["org_code"];
+                    // this.org_type_code = oEvent.getParameter("arguments")["org_type_code"];
+                    // this.evaluation_operation_unit_code = oEvent.getParameter("arguments")["evaluation_operation_unit_code"];
+                    // this.evaluation_operation_unit_name = oEvent.getParameter("arguments")["evaluation_operation_unit_name"],            
+                    // this.use_flag = oEvent.getParameter("arguments")["use_flag"];   
+
+                    this.getRouter().navTo("two", {
+                        scenario_number: "New",
+                        tenant_id: this.tenant_id,
+                        company_code: this.company_code,
+                        org_code: this.org_code,
+                        org_type_code: this.org_type_code,
+                        evaluation_operation_unit_code : this.evaluation_operation_unit_code,
+                        evaluation_type_code :" "
+                    });
+                    // evaluation_operation_unit_code : this.evaluation_operation_unit_code,
+                    //     evaluation_type_code : this.evaluation_type_code
+                },
+
         /**
          * footer Cancel 버튼 기능
          * @public
@@ -404,6 +440,7 @@ sap.ui.define([
             //oEvent.getSource().getId
             this.byId("employeeDialog").data("inputWithEmployeeValueHelp",oEvent.getSource())
         },
+        
         onEmployeeDialogApplyPress: function(oEvent){
             debugger;
             // this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
@@ -462,7 +499,6 @@ sap.ui.define([
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
                 oViewModel.setProperty("/App/layout", "OneColumn");
-
                 
             this.getView().getModel("DetailView").setProperty("/",{
                 vendor_pool_operation_unit_code : [],
@@ -508,7 +544,8 @@ sap.ui.define([
                 OpUnitViewFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code));
                 OpUnitViewFilters.push(new Filter("org_code", 'EQ', this.org_code));     
                 OpUnitViewFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
-                      
+
+                if(!this.getModel("DetailView").getProperty("/isEditMode")){
                 oView.getModel().read("/OpUnitView", {
                     filters: OpUnitViewFilters,
                     success: function (oData) {
@@ -605,6 +642,8 @@ sap.ui.define([
                    
 
                 });
+
+                }
 
              }
              

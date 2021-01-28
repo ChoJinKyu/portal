@@ -220,13 +220,25 @@ xmlns:flex="sap.f"
                                             </table:extension>
 
                                             <table:columns>
+
+                                                <table:Column hAlign="Center" width="3rem">
+                                                    <core:Icon src="sap-icon://edit"/>
+                                                    <table:template>
+                                                        <core:Icon 
+                                                            src="{=
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
+                                                            }"
+                                                            visible="{=
+                                                                !!${DetailView>crudFlg}
+                                                            }"
+                                                        />
+                                                    </table:template>
+                                                </table:Column>   
                                           
                                                 <table:Column hAlign="Center">
                                                     <Label text="{I18N>/ROLE}" textAlign="Center" width="100%" required="true" />
                                                     <table:template>
-                                                        
-
-                                                            <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
+                                                        <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
                                                             path: 'common>/Code',
                                                             filters: [
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -296,7 +308,7 @@ xmlns:flex="sap.f"
                                                         <Button 
                                                             type="Transparent" 
                                                             text="{I18N>/NEW}" 
-                                                            press=".onAddDetailDetailPress"
+                                                            press=".onCreateTwo"
                                                             enabled="{DetailView>/isEditMode}"
                                                             />
                                                     </HBox>
@@ -359,6 +371,19 @@ xmlns:flex="sap.f"
                                             </table:extension>
 
                                             <table:columns>
+                                                <table:Column hAlign="Center" width="3rem">
+                                                    <core:Icon src="sap-icon://edit"/>
+                                                    <table:template>
+                                                        <core:Icon 
+                                                            src="{=
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
+                                                            }"
+                                                            visible="{=
+                                                                !!${DetailView>crudFlg}
+                                                            }"
+                                                        />
+                                                    </table:template>
+                                                </table:Column>   
                                                 <table:Column hAlign="Center">
                                                     <Label text="{I18N>/QUANTITATIVE_ITEM_CODE}"/>
                                                     <table:template>
