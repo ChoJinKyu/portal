@@ -144,6 +144,7 @@ sap.ui.define([
             if(!this.oEmployeeMultiSelectionValueHelp){
                 this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
                     title: "Choose Employees",
+                    closeWhenApplied: false,
                     multiSelection: true,
                     items: {
                         filters: [
@@ -153,6 +154,7 @@ sap.ui.define([
                 });
                 this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
                     this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
+                    oEvent.getSource().close();
                 }.bind(this));
             }
             this.oEmployeeMultiSelectionValueHelp.open();
