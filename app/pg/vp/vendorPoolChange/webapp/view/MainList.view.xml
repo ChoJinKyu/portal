@@ -178,7 +178,7 @@
                                 </layoutData>
                             </VBox>                        
                             <VBox>
-                            <Label text="Working Status: " labelFor="searchCodeSegmentButton"></Label>
+                            <Label text="{I18N>/STATUS}" labelFor="searchCodeSegmentButton"></Label>
                             <SegmentedButton id="searchCodeSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key="" width="6em" />
@@ -240,7 +240,7 @@
 
                             <table:Column label="{I18N>/APPROVAL_STATUS_NAME}" width="8rem" hAlign="Center" >
                                 <table:template>
-                                    <Text text="{ path: 'list>approval_status' , formatter : '.labelFormatter' }" wrapping="false"/>
+                                    <Text text="{ path: 'list>approval_status' , formatter : '.labelColorFormatter' }" wrapping="false"/>
                                 </table:template>
                             </table:Column>
 

@@ -58,7 +58,7 @@
 				</VBox>
 				<VBox height="6em">
 					<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
-                    <!-- edit Mode -->
+                    <!-- Md_Asset > acq_department_code -->
 					<Input id="acquisition_department" 
                            value="{mdCommon>/acq_department_code_nm}"
                           
@@ -86,8 +86,8 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/IMPORT_COMPANY', formatter:'I18NFormatter'}"/>
                     <!-- edit Mode -->
-					<ComboBox  editable="{mode>/editFlag}" 
-                              
+					<Select  editable="{mode>/editFlag}" 
+                              forceSelection="false"  
                               width="100%" 
                               id="importCompany" 
                               change=".onBCompanyChange"
@@ -101,7 +101,7 @@
                                         sorter: { path: 'company_code'}
                               }">
 						<core:Item key="{importCompany>company_code}" text="[{importCompany>company_code}] {importCompany>company_name}" />
-					</ComboBox>
+					</Select>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -111,7 +111,7 @@
 					<Label text="{I18N>/PROJECT_CODE}" required="true"/> 
                     <!-- edit Mode -->
 					<Select editable="{mode>/editFlag}" 
-                              
+                              forceSelection="false" 
                               width="100%" 
                               id="projectCode" 
                               selectedKey="{mdCommon>/project_code}" 
@@ -125,9 +125,9 @@
 				</VBox>
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/IMPORT_PLANT', formatter:'I18NFormatter'}" />
-					<ComboBox width="100%" 
+					<Select width="100%" 
                               editable="{mode>/editFlag}" 
-                              
+                              forceSelection="false" 
                               id="importPlant" 
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
@@ -135,7 +135,7 @@
                                   path: 'importPlant>/Pur_Operation_Org'
                               }">
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
-					</ComboBox>
+					</Select>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -143,7 +143,7 @@
 				<VBox  height="6em">
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
 					<Select editable="{mode>/editFlag}" 
-                                
+                              forceSelection="false"  
                               width="100%" 
                               id="account" 
                               required="true"
@@ -258,8 +258,8 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
-								<ComboBox id="b_mold_production_type_code" 
-                                        
+								<Select id="b_mold_production_type_code"  
+                                        forceSelection="false"  
                                         editable="{mode>/editFlag}"
                                         selectedKey="{mdItemMaster>mold_production_type_code}" 
                                         items="{ path : 'util>/Code',
@@ -270,16 +270,16 @@
                                         sorter: { path: 'sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
-								</ComboBox>
+								</Select>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
 							<table:template>
-								<ComboBox  id="b_mold_item_type_code"
+								<Select  id="b_mold_item_type_code"
                                         editable="{mode>/editFlag}" 
                                         selectedKey="{mdItemMaster>mold_item_type_code}" 
-                                        
+                                        forceSelection="false"  
                                         items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
@@ -288,7 +288,7 @@
                                         sorter: { path: 'sort_no'}
                                     }">
 									<core:Item key="{util>code}" text="{util>code_name}"/>
-								</ComboBox>
+								</Select>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
@@ -304,12 +304,13 @@
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
-							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/>
+							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/> 
+                            <!-- Md_Asset > asset_type_code -->
 							<table:template>
 								<Select id="b_asset_type_code" 
                                         required="true" 
                                         editable="{mode>/editFlag}" 
-                                        
+                                        forceSelection="false"  
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'assetTypeCodeList>/CodeView',
                                                 sorter: { path: 'sort_no'}

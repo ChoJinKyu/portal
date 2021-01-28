@@ -28,18 +28,17 @@ service UomClassMgtService {
 
     view UomClassView as
     select Key m.tenant_id,
-           Key m.uom_class_code
-          ,ifnull(l.uom_class_name, m.uom_class_name) as uom_class_name : String(20)
-          ,ifnull(l.uom_class_desc, m.uom_class_desc) as uom_class_desc : String(50)
-          ,m.base_uom_code
-          ,m.base_uom_name
-          ,m.disable_date
-          ,l.language_code
-    from  Class.Mm_Uom_Class  m
-    left outer join ClassLng.Mm_Uom_Class_Lng l
-    on l.tenant_id = m.tenant_id
-    and l.uom_class_code = m.uom_class_code
-    and l.language_code = 'EN'
+           Key m.uom_class_code,
+           ifnull((select l.uom_class_name
+                  from UomClassLng l
+                  where l.tenant_id = m.tenant_id
+                  and l.uom_class_name = m.uom_class_name
+                  and l.language_code = 'KO') , m.uom_class_name) as uom_class_name : String(20),
+           m.uom_class_desc,
+           m.base_uom_code,
+           m.base_uom_name,
+           m.disable_date
+    from  UomClass m
     ;
 
 }

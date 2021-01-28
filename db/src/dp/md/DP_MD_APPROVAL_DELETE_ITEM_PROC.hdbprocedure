@@ -1,6 +1,7 @@
 PROCEDURE DP_MD_APPROVAL_DELETE_ITEM_PROC(
     IN I_APPROVAL_NUMBER NVARCHAR(30),
-    IN I_APPROVAL_TYPE_CODE NVARCHAR(30)
+    IN I_APPROVAL_TYPE_CODE NVARCHAR(30),
+    IN I_TENANT_ID NVARCHAR(5)
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
@@ -45,13 +46,14 @@ BEGIN
 
 
 
-    /* 1. 몰드 정보 배열로 담음*/
+    /* 1. 몰드 정보 배열로 담음(커서 생성)*/
 	DECLARE CURSOR CUR FOR
         SELECT 
             TENANT_ID,
             MOLD_ID
         FROM DP_MD_APPROVAL_DTL
-		WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER;
+        WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER;
+        
     FOR loop_cur AS CUR DO
         BEGIN
             /* 2. 배열가져와서 각 품의별 몰드 테이블 업데이트 NULL치는 작업*/	
@@ -62,30 +64,41 @@ BEGIN
                             INVESTMENT_ECST_TYPE_CODE=NULL, IMPORT_COMPANY_CODE=NULL,
                             IMPORT_COMPANY_ORG_CODE=NULL, PROJECT_CODE=NULL,
                             MOLD_PRODUCTION_TYPE_CODE=NULL, MOLD_ITEM_TYPE_CODE=NULL,
-                            PROVISIONAL_BUDGET_AMOUNT=NULL, ASSET_TYPE_CODE=NULL,
+                            PROVISIONAL_BUDGET_AMOUNT=NULL
+                        WHERE MOLD_ID = loop_cur.MOLD_ID
+                        AND TENANT_ID = loop_cur.TENANT_ID;
+
+                    /* 20210126 솔루션화 진행하면서 ASSET_TYPE_CODE, ACQ_DEPARTMENT_CODE는 DP_MD_ASSET 테이블로 넘어감.(업데이트) */
+                    UPDATE DP_MD_ASSET
+                        SET ASSET_TYPE_CODE=NULL,
                             ACQ_DEPARTMENT_CODE=NULL
-                            WHERE MOLD_ID = loop_cur.MOLD_ID
-                            AND TENANT_ID = loop_cur.TENANT_ID;
+                        WHERE MOLD_ID = loop_cur.MOLD_ID
+                        AND TENANT_ID = loop_cur.TENANT_ID;
                 END;  
             END IF;
+
+            /* 20210126솔루션화 작업 진행으로 인해 SPLIT_PAY_TYPE_CODE, PREPAY_RATE, PROGRESSPAY_RATE, RPAY_RATE는 DP_MD_PARTIAL_PAYMENT로 넘어감.(삭제) */
+            /*
             IF I_APPROVAL_TYPE_CODE = 'V' THEN
                 BEGIN 
-                    UPDATE DP_MD_MST
-                        SET SPLIT_PAY_TYPE_CODE=NULL
-                            /*, PREPAY_RATE=NULL, PROGRESSPAY_RATE=NULL, RPAY_RATE=NULL */
-                            WHERE MOLD_ID = loop_cur.MOLD_ID
-                            AND TENANT_ID = loop_cur.TENANT_ID;
-                    DELETE FROM DP_MD_PARTIAL_PAYMENT WHERE MOLD_ID = loop_cur.MOLD_ID AND TENANT_ID = loop_cur.TENANT_ID;
+                    DELETE FROM DP_MD_PARTIAL_PAYMENT 
+                    WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER 
+                    AND TENANT_ID = loop_cur.TENANT_ID;
                 END;  
             END IF;
+            */
+            
+
             IF I_APPROVAL_TYPE_CODE = 'E' THEN
                 BEGIN 
                     UPDATE DP_MD_MST
                         SET CURRENCY_CODE=NULL, TARGET_AMOUNT=NULL
-                            WHERE MOLD_ID = loop_cur.MOLD_ID
-                            AND TENANT_ID = loop_cur.TENANT_ID;
+                    WHERE MOLD_ID = loop_cur.MOLD_ID
+                    AND TENANT_ID = loop_cur.TENANT_ID;
                 END;  
             END IF;
+            /* 
+            //업데이트 할 내용이 없음 (입고품의, Mold Recepit) 20210126 변경
             IF I_APPROVAL_TYPE_CODE = 'I' THEN
                 BEGIN 
                     UPDATE DP_MD_MST
@@ -94,12 +107,25 @@ BEGIN
                             AND TENANT_ID = loop_cur.TENANT_ID;
                 END;  
             END IF;
+            */
         END;
     END FOR;
 
+   
+    IF I_APPROVAL_TYPE_CODE = 'V' THEN 
+        BEGIN 
+            DELETE FROM DP_MD_PARTIAL_PAYMENT 
+            WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER 
+            AND TENANT_ID = I_TENANT_ID;
+        END ;
+    END IF;
+    
+    
     IF I_APPROVAL_TYPE_CODE = 'A' OR I_APPROVAL_TYPE_CODE = 'E' THEN 
         BEGIN 
-            DELETE FROM DP_MD_QUOTATION WHERE APPROVAL_NUMBER =I_APPROVAL_NUMBER; 
+            DELETE FROM DP_MD_QUOTATION 
+            WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER 
+            AND TENANT_ID = I_TENANT_ID; 
         END ;
     END IF;
 
@@ -107,9 +133,9 @@ BEGIN
 	
 		
 	/* 3. 품의서 공통으로 포함되는 테이블 데이터 삭제*/
-    DELETE FROM CM_REFERER WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER;
-    DELETE FROM CM_APPROVER WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER;
-    DELETE FROM DP_MD_APPROVAL_DTL WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER;
-    DELETE FROM CM_APPROVAL_MST WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER;
+    DELETE FROM CM_REFERER WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER AND TENANT_ID = I_TENANT_ID;
+    DELETE FROM CM_APPROVER WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER AND TENANT_ID = I_TENANT_ID;
+    DELETE FROM DP_MD_APPROVAL_DTL WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER AND TENANT_ID = I_TENANT_ID;
+    DELETE FROM CM_APPROVAL_MST WHERE APPROVAL_NUMBER = I_APPROVAL_NUMBER AND TENANT_ID = I_TENANT_ID;
 	
 END;

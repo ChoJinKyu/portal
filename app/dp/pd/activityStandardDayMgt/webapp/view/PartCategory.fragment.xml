@@ -9,7 +9,7 @@
     xmlns:lib-m="ext.lib.m"
     height="100%">
     
-    <Dialog id="PartCategory" class="sapUiSizeCompact" title="Select Part Category" contentWidth="40%" >
+    <Dialog id="PartCategory" class="sapUiSizeCompact" title="Select Part Category" contentWidth="30%" >
         <content>
             <VBox>
                 <table:TreeTable
@@ -20,9 +20,10 @@
                     enableColumnReordering="false"
                     expandFirstLevel="true"
                     rows="{
-                        path : '/pdPartCategoryView',
+                        path : 'tree>/pdPartCategoryView',
                         parameters : {
-                            numberOfExpandedLevels: 3
+                            arrayNames: ['nodes'],
+                        	numberOfExpandedLevels: 3
                         }
                     }">
                 <table:extension>
@@ -30,7 +31,7 @@
                 <table:columns>
                     <table:Column label="Part Category Name" >
                         <table:template>
-                            <Text id="categoryName" text="{category_name}" wrapping="false" />
+                            <Text id="categoryName" text="{tree>category_name} ({tree>category_code})" wrapping="false" />
                         </table:template>
                     </table:Column>
                 </table:columns>

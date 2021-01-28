@@ -1,5 +1,5 @@
 VIEW DP_PD_PART_CATEGORY_VIEW
-/* ( i_tenant_id NVARCHAR(5), i_org_type_code NVARCHAR(2), i_org_code NVARCHAR(10), i_parent_category_code NVARCHAR(40), i_active_flag BOOLEAN)  */
+/* ( i_tenant_id NVARCHAR(5), i_category_group_code NVARCHAR(30), i_active_flag BOOLEAN)  */
  AS
 SELECT X.NODE_ID
       ,X.PARENT_ID
@@ -36,8 +36,8 @@ SELECT X.NODE_ID
          AND M.CATEGORY_CODE = L.CATEGORY_CODE
          AND M.CATEGORY_GROUP_CODE = L.CATEGORY_GROUP_CODE
          AND L.LANGUAGE_CD = 'KO'
-         AND m.tenant_id = 'L1100'
-	     AND m.category_group_code = 'HE'
+         AND m.tenant_id = 'L2101'
+	     AND m.category_group_code = 'CO'
     )
     START WHERE PARENT_CATEGORY_CODE = '@TOP'
     SIBLING ORDER BY PARENT_ID, SEQUENCE

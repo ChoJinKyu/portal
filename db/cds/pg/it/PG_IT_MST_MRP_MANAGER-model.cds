@@ -21,18 +21,13 @@ using util from '../../cm/util/util-model';
 
 
 entity It_Mst_Mrp_Manager {
-    key tenant_id              : String(5) not null  @title : '테넌트ID';
-    key company_code           : String(10) not null @title : '회사코드';
-    key org_type_code          : String(30) not null @title : '조직유형코드';
-    key org_code               : String(10) not null @title : '조직코드';
-    key plant_code             : String(4) not null  @title : '플랜트코드';
-    key mrp_manager_code       : String(30) not null @title : 'MRP관리자코드';
-        mrp_manager_name       : String(30)          @title : 'MRP관리자명';
-        mrp_manager_tel_number : String(30)          @title : 'MRP관리자전화번호';
-        purchasing_group_code  : String(3)           @title : '구매그룹코드';
-        receiver_name          : String(30)          @title : '수신자명';
-        business_area_code     : String(30)          @title : '사업영역코드';
-        prctr_code             : String(15)          @title : '손익센터코드';
+    key tenant_id        : String(5) not null  @title : '테넌트ID';
+    key company_code     : String(10) not null @title : '회사코드';
+    key org_type_code    : String(30) not null @title : '조직유형코드';
+    key org_code         : String(10) not null @title : '조직코드';
+    key plant_code       : String(4) not null  @title : '플랜트코드';
+    key mrp_manager_code : String(3) not null  @title : 'MRP관리자코드';
+        mrp_manager_name : String(30)          @title : 'MRP관리자명';
 }
 
 extend It_Mst_Mrp_Manager with util.Managed;

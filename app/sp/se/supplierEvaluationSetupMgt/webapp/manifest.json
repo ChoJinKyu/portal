@@ -22,10 +22,6 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
-            },            
-            "up": {
-                "uri": "../uploadCollection.json",
-                "type": "JSON"
             }
         }
     },
@@ -85,6 +81,9 @@
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": true
                 }
+            },
+            "viewModel" : {
+                "type" : "sap.ui.model.json.JSONModel"
             }
         },
         "resources": {
@@ -102,10 +101,10 @@
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
-                "controlId": "app",
+                "async": true,
                 "viewPath": "sp.se.supplierEvaluationSetupMgt.view",
-                "controlAggregation": "pages",
-                "async": true
+                "controlId": "app",               
+                "controlAggregation": "pages"                
             },
             "routes": [
                 {
@@ -114,13 +113,16 @@
                     "target": [
                         "main"
                     ]
-                },
+                },              
                 {
                     "name": "detail",
                     "pattern": "detail/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code},{evaluation_operation_unit_code},{evaluation_operation_unit_name},{use_flag}",
-                    "target": [
-                        "detail"
-                    ]
+                    "target": ["detail"]
+                },
+                {   
+                    "name": "two",
+                    "pattern":"two/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code},{evaluation_operation_unit_code},{evaluation_type_code}",
+                    "target": ["detail"]
                 }
             ],
             "targets": {
@@ -129,17 +131,28 @@
                     "viewType": "XML",
                     "viewLevel": 1,
                     "viewId": "main"
+                },                
+                "one": {
+                    "viewName": "One",
+                    "viewType": "XML",
+                    "viewLevel": 1,
+                    "viewId": "one",
+                    "clearControlAggregation": true,
+					"controlAggregation": "beginColumnPages"
+                },                
+                "two": {
+                    "viewName": "Two",
+                    "viewType": "XML",
+                    "viewLevel": 2,
+                    "viewId": "two"                    
+                    ,"clearControlAggregation": true,
+					"controlAggregation": "midColumnPages"
                 },
                 "detail": {
                     "viewName": "Detail",
                     "viewType": "XML",
-                    "viewLevel": 2,
+                    "viewLevel": 1,
                     "viewId": "detail"
-                },
-                "notFound": {
-                    "viewName": "NotFound",
-                    "viewPath": "ext.lib.view",
-                    "viewId": "notFound"
                 }
             }
         }

@@ -326,6 +326,7 @@ sap.ui.define([
 
         onInputChange: function(oEvent){
             // String upperCaseOnly = "^[A-Z]*$";
+            // oEvent.getSource().getParent().getParent().getBinding("items").getModel().getProperty(oEvent.getSource().getBindingInfo("value").binding.getContext().getPath())[oEvent.getSource().getBindingInfo("value").binding.getPath()]
             var _oInput = oEvent.getSource();
             var val = _oInput.getValue();
             if(this.isValNull(val))

@@ -258,14 +258,14 @@ sap.ui.define([
             /*
                 화면 변경
             */
-            //  Fragment.load({
-            //          type: "XML",
-            //          definition: '<core:FragmentDefinition xmlns="sap.m"                          xmlns:uxap="sap.uxap"                          xmlns:form="sap.ui.layout.form"                          xmlns:core="sap.ui.core"                          xmlns:layout="sap.ui.layout"                          xmlns:tnt="sap.tnt"                          xmlns:co="sap.suite.ui.commons"                          xmlns:si="sap.suite.ui.commons.statusindicator"                          xmlns:u="sap.ui.unified"                          xmlns:table="sap.ui.table">                                <Label text="LG Compan1251y" labelFor="searchCompanyS" required="true"></Label>                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{                                    path: \'org>/Org_Company\',                                    filters: [                                        {path: \'tenant_id\', operator: \'EQ\', value1: \'L2600\'}                                    ],                                    sorter: { path: \'company_code\'}                                }">                                    <items>                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />                                    </items>                                </MultiComboBox>                                <layoutData>                                    <layout:GridData span="XL2 L3 M6 S12" />                                </layoutData>                            </VBox>                            <VBox>                                <Label text="LG Division" labelFor="searchDivisionS" required="true"></Label>                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{                                    path: \'/Divisions\',                                    filters: [                                        {path: \'tenant_id\', operator: \'EQ\', value1: \'L2600\'}                                    ],                                    sorter: { path: \'org_code\'}                                }">                                    <items>                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />                                    </items>                                </MultiComboBox>                                <layoutData>                                    <layout:GridData span="XL2 L3 M6 S12" />                                </layoutData>                            </VBox>                            <VBox>                                <Label text="{I18N>/DATE}" labelFor="searchDateS" required="true"></Label>                                <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>                                <layoutData>                                    <layout:GridData span="XL2 L3 M6 S12" />                                </layoutData>                            </core:FragmentDefinition>'
-			//  	}).then(function(oFragment){
-            //          var oPageSubSection = this.getView().byId("vbox");
-            //              oPageSubSection.removeAllItems();
-            //              oPageSubSection.addItem(oFragment);
-			//  	}.bind(this));
+              Fragment.load({
+                    id: this.getView().getId(),
+					name: "tmp.detailSpecEntry.view.test_grid",
+					controller: this          
+            }).then(function(oFragment){
+                      var oPageSubSection = this.getView().byId("page");
+                          oPageSubSection.setContent(oFragment);
+			 	}.bind(this));
 
             // oModel.read("/Pur_Org_Type_Mapping", {
             //     filters: [

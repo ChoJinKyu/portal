@@ -107,7 +107,8 @@ service SupplierIdeaMgtService {
             idea.vi_amount,
             idea.monthly_purchasing_amount,
             idea.annual_purchasing_amount,
-            idea.perform_contents
+            idea.perform_contents,
+            idea.color_type_code
     from IdeaMgtView as idea
     inner join Supplier.Sm_Supplier_Mst  ssm 
     on ssm.tenant_id = idea.tenant_id

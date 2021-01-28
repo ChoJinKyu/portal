@@ -55,7 +55,11 @@ service MaterialMasterMgtService {
     view MaterialMstView as
     select  key m.tenant_id,
             key m.material_code,
-            ifnull(l.material_desc, m.material_desc) as material_desc: String(300),
+            ifnull((select l.material_desc 
+             from MaterialDesc l
+             where l.tenant_id = m.tenant_id
+             and l.material_code = m.material_code
+             and l.language_code = 'KO' ), m.material_desc) as material_desc: String(300),
             m.material_spec,
             m.material_type_code,
             m.base_uom_code,
@@ -68,11 +72,7 @@ service MaterialMasterMgtService {
             m.maker_code,
             m.maker_part_profile_code,
             m.maker_material_code
-    from Master.Mm_Material_Mst m
-    left join Description.Mm_Material_Desc_Lng l
-    on l.tenant_id = m.tenant_id 
-    and l.material_code = m.material_code
-    and l.language_code = 'KO'
+    from MaterialMst m
     ;
 
     @readonly
@@ -82,13 +82,23 @@ service MaterialMasterMgtService {
            mst.material_desc,
            mst.material_spec,
            mst.material_type_code,
-           cd1.code_name  as material_type_name : String(240),
+           (select cd.code_name
+            from Code.Code_View cd
+            where cd.tenant_id = mst.tenant_id
+            and cd.group_code = 'DP_MM_MATERIAL_TYPE'
+            and cd.code = mst.material_type_code
+            and cd.language_cd = 'KO' ) as material_type_name : String(240),
            mst.base_uom_code,
            mst.material_group_code,
            grp.material_group_name,
            mst.purchasing_uom_code,
            mst.variable_po_unit_indicator,
-           cd2.code_name as variable_po_unit_indic_name : String(240),
+           (select cd.code_name
+            from Code.Code_View cd
+            where cd.tenant_id = mst.tenant_id
+            and cd.group_code = 'DP_MM_VAR_PO_UNIT_INDICATOR'
+            and cd.code = mst.variable_po_unit_indicator
+            and cd.language_cd = 'KO') as variable_po_unit_indic_name : String(240),
            mst.material_class_code,
            cls.material_class_name,
            mst.commodity_code,
@@ -107,16 +117,6 @@ service MaterialMasterMgtService {
     left join MtlCommodity.MtlCommodityView com
     on com.tenant_id = mst.tenant_id
     and com.commodity_code = mst.commodity_code
-    left join Code.Code_View cd1
-    on cd1.tenant_id = mst.tenant_id
-    and cd1.group_code = 'DP_MM_MATERIAL_TYPE'
-    and cd1.code = mst.material_type_code
-    and cd1.language_cd = 'KO'
-    left join Code.Code_View cd2
-    on cd1.tenant_id = mst.tenant_id
-    and cd1.group_code = 'DP_MM_VAR_PO_UNIT_INDICATOR'
-    and cd1.code = mst.variable_po_unit_indicator
-    and cd1.language_cd = 'KO'
     ;
 
     // 자재조직 View
@@ -182,15 +182,30 @@ service MaterialMasterMgtService {
            mst.maker_part_profile_code,
            mst.maker_material_code,
            org.material_status_code,
-           cd1.code_name as material_status_name : String(240),
+           (select cd.code_name
+            from Code.Code_View cd
+            where cd.tenant_id = org.tenant_id
+            and cd.group_code = 'DP_MM_MATERIAL_STATUS'
+            and cd.code = org.material_status_code
+            and cd.language_cd = 'KO')  as material_status_name : String(240),
            org.purchasing_group_code,
            org.batch_management_flag,
            org.automatic_po_allow_flag,
            org.hs_code,
            org.import_group_code,
-           cd2.code as import_group_name : String(240),
+           (select cd.code_name
+            from Code.Code_View cd
+            where cd.tenant_id = org.tenant_id
+            and cd.group_code = 'DP_MM_IMPORT_GROUP_CODE'
+            and cd.code = org.import_group_code
+            and cd.language_cd = 'KO' ) as import_group_name : String(240),
            org.user_item_type_code,
-           cd3.code_name as user_item_type_name : String(240),
+           (select cd.code_name
+            from Code.Code_View cd
+            where cd.tenant_id = org.tenant_id
+            and cd.group_code = 'DP_MM_USER_ITEM_TYPE'
+            and cd.code = org.user_item_type_code
+            and cd.language_cd = 'KO')  as user_item_type_name : String(240),
            org.purchasing_item_flag,
            org.purchasing_enable_flag,
            org.osp_item_flag,
@@ -204,21 +219,6 @@ service MaterialMasterMgtService {
     left join MaterialMstAllView mst
     on mst.tenant_id = org.tenant_id
     and mst.material_code = org.material_code
-    left join Code.Code_View cd1
-    on cd1.tenant_id = org.tenant_id
-    and cd1.group_code = 'DP_MM_MATERIAL_STATUS'
-    and cd1.code = org.material_status_code
-    and cd1.language_cd = 'KO'
-    left join Code.Code_View cd2
-    on cd1.tenant_id = org.tenant_id
-    and cd1.group_code = 'DP_MM_IMPORT_GROUP_CODE'
-    and cd1.code = org.import_group_code
-    and cd1.language_cd = 'KO'
-    left join Code.Code_View cd3
-    on cd1.tenant_id = org.tenant_id
-    and cd1.group_code = 'DP_MM_USER_ITEM_TYPE'
-    and cd1.code = org.user_item_type_code
-    and cd1.language_cd = 'KO'
     left join Employee.Hr_Employee hr1
     on hr1.tenant_id = org.tenant_id
     and hr1.employee_number = org.buyer_empno
@@ -260,10 +260,25 @@ service MaterialMasterMgtService {
            key val.valuation_area_code,
            key val.valuation_class_code,
            mst.material_desc,
-           cd1.code_name as valuation_area_name : String(240),
-           cd2.code_name as valuation_class_name : String(240),
+           (select cd.code_name
+            from Code.Code_View cd
+            where cd.tenant_id = val.tenant_id
+            and cd.group_code = 'DP_MM_MTL_VALUATION_AREA'
+            and cd.code = val.valuation_area_code
+            and cd.language_cd = 'KO' ) as valuation_area_name : String(240),
+           (select cd.code_name
+            from  Code.Code_View cd
+            where cd.tenant_id = val.tenant_id
+            and cd.group_code = 'DP_MM_MTL_VALUATION_CLASS'
+            and cd.code = val.valuation_class_code
+            and cd.language_cd = 'KO')  as valuation_class_name : String(240),
            val.valuation_type_code,
-           cd3.code_name as valuation_type_name : String(240),
+           (select cd.code_name
+            from Code.Code_View cd
+            where cd.tenant_id = val.tenant_id
+            and cd.group_code = 'DP_MM_MTL_VALUATION_TYPE'
+            and cd.code = val.valuation_type_code
+            and cd.language_cd = 'KO')  as valuation_type_name : String(240),
            val.material_price_unit,
            val.standard_price,
            val.moving_average_price
@@ -271,21 +286,6 @@ service MaterialMasterMgtService {
     left join MaterialMstView mst
     on mst.tenant_id = val.tenant_id
     and mst.material_code = val.material_code
-    left join Code.Code_View cd1 
-    on cd1.tenant_id = val.tenant_id
-    and cd1.group_code = 'DP_MM_MTL_VALUATION_AREA'
-    and cd1.code = val.valuation_area_code
-    and cd1.language_cd = 'KO'
-    left join Code.Code_View cd2
-    on cd1.tenant_id = val.tenant_id
-    and cd2.group_code = 'DP_MM_MTL_VALUATION_CLASS'
-    and cd2.code = val.valuation_class_code
-    and cd2.language_cd = 'KO'
-    left join Code.Code_View cd3
-    on cd1.tenant_id = val.tenant_id
-    and cd2.group_code = 'DP_MM_MTL_VALUATION_TYPE'
-    and cd2.code = val.valuation_type_code
-    and cd2.language_cd = 'KO'
     ;
 
 

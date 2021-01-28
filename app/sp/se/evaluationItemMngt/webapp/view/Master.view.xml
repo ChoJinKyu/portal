@@ -43,7 +43,7 @@
                             id="orgCode" 
                             width="100%" 
                             showSecondaryValues="true"
-                            selectionChange=""
+                            selectionChange="onSelectionChangeOrgCode"
                             selectedKey="{viewModel>/cond/EQ/org_code}"
                         />
                         <layoutData>
@@ -57,7 +57,7 @@
                             id="unitCode" 
                             width="100%" 
                             showSecondaryValues="true"
-                            selectionChange=""
+                            selectionChange="onSelectionChangeUnitCode"
                             selectedKey="{viewModel>/cond/EQ/evaluation_operation_unit_code}"
                         />
                         <layoutData>

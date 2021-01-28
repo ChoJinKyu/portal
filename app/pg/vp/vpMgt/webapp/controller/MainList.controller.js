@@ -33,6 +33,8 @@ sap.ui.define([
     "ext/pg/util/control/ui/VendorPoolDialog",
     "ext/pg/util/control/ui/SupplierDialog",
     "ext/pg/util/control/ui/MatrialDialog",
+    
+
 
 ], function (BaseController,
     History,
@@ -68,6 +70,7 @@ sap.ui.define([
     VendorPoolDialog,
     SupplierDialog,
     MatrialDialog,
+    
 
 ) {
     "use strict";
@@ -1444,6 +1447,48 @@ sap.ui.define([
 
 
         },
+        onMainTableEditButtonPress: function(){
+            var oView = this.getView(),
+                oTable = this.byId("mainTable"),         
+                that = this;
+            var items = oTable.getSelectedIndices();
+            if(items.length>1){
+                MessageToast.show("정보변경은 단건만 가능합니다.");
+                return;
+            }else if(items.length==0){
+                MessageToast.show("선택된 정보가 없습니다.");
+                return;
+            }
+
+
+            var nSelIdx = oTable.getSelectedIndex();
+            var oContext = oTable.getContextByIndex(nSelIdx);
+            var sPath = oContext.getPath();
+            var oData = oTable.getBinding().getModel().getProperty(sPath);
+
+
+            pVendorPool = oData.vendor_pool_code;
+            pTenantId = oData.tenant_id;
+            pOrg_code = oData.org_code;
+            pOperation_unit_code = oData.operation_unit_code;
+            pTemp_type = oData.temp_type;
+
+            
+
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            this.getRouter().navTo("midPage", {
+                // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+                layout: sap.f.LayoutType.OneColumn,
+                tenantId: pTenantId,
+                vendorPool: pVendorPool,
+                orgCode: pOrg_code,
+                operationUnitCode: pOperation_unit_code,
+                temptype: pTemp_type,
+                target: "NEXT"
+            });
+
+
+        },
 
 		/**
 		 * Event handler when a table item gets pressed
@@ -1900,6 +1945,35 @@ sap.ui.define([
             }
             this.oSearchSupplierDialog.open(sSearchObj);
         },
+        vhSupplier: function () {
+
+            if (this.byId("search_Vp_Code").getValue()) {
+                var vendor_pool_code = this.byId("search_Vp_Code").getValue();
+            }
+            if(!this.oCodeMultiSelectionValueHelp){
+                this.oCodeMultiSelectionValueHelp = new CodeDialog({
+                    title: "Choose Supplier",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("group_code", FilterOperator.EQ, vendor_pool_code)
+                        ],
+                        sorters: [
+                            new Sorter("sort_no")
+                        ],
+                        serviceName: "cm.util.CommonService",
+                        entityName: "Code"
+                    }
+                });
+                this.oCodeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithCodeDialog").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oCodeMultiSelectionValueHelp.open();
+            this.oCodeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCodeDialog").getTokens());
+        },
+
         onValueHelpRequested: function () {
             // console.group("onValueHelpRequested");
 

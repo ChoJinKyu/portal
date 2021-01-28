@@ -2,7 +2,10 @@ sap.ui.define([
     "sap/ui/core/message/Message",
     "sap/ui/core/MessageType",
     "sap/ui/core/ValueState",
-	"ext/lib/util/Multilingual",
+    "ext/lib/util/Multilingual",
+    "sap/m/FlexBox",
+    "sap/m/InputBase",
+    "sap/ui/table/Table"
 ], function (Message, MessageType, ValueState, Multilingual) {
     "use strict";
 
@@ -52,7 +55,7 @@ sap.ui.define([
     Validator.prototype.validate = function (oControl) {
         this._isValid = true;
         sap.ui.getCore().getMessageManager().removeAllMessages();
-        this._validate(oControl);
+        this._validate.apply(this, arguments);
         return this.isValid();
     };
 
@@ -77,6 +80,10 @@ sap.ui.define([
         var i,
             isValidatedControl = true,
             isValid = true;
+
+        if(oControl instanceof sap.ui.table.Table){
+            isValid = this._validateGridTable(oControl);
+        }
 
         // only validate controls and elements which have a 'visible' property
         // and are visible controls (invisible controls make no sense checking)
@@ -113,6 +120,72 @@ sap.ui.define([
         this._isValidationPerformed = true;
     };
 
+    Validator.prototype._validateGridTable = function(oControl){
+        if(!this.mModels) return true;
+        var isValid = true,
+            aColumns = oControl.getAggregation("columns"),
+            oBinding = oControl.getBindingInfo("rows"),
+            oModel = this.mModels[oBinding.model],
+            aData = oModel.getProperty(oBinding.path),
+            oTemplates, oTemplate, 
+            oMetadata, oValueState;
+
+        function _checkValid(oTemplate, oData, oMetadata){
+            var oTemplateBindingInfo, oTemplateValue;
+            if(oTemplate instanceof sap.m.InputBase){
+                oTemplateBindingInfo = oTemplate.getBindingInfo("value");
+
+                if(oTemplateBindingInfo.parts && oTemplateBindingInfo.parts.length > 0){
+                    oTemplateValue = oData[oTemplateBindingInfo.parts[0].path];
+                    if(oTemplate.getRequired() && (oTemplateValue == undefined || oTemplateValue == null || oTemplateValue == "")){
+                        oMetadata._valueStates[oTemplateBindingInfo.parts[0].path] = {
+                            valueState: ValueState.Error,
+                            valueStateText: this._i18n.getText("/ECM01001")
+                        };
+                        return false;
+                    }
+                    if(oTemplateBindingInfo.type){
+                        try{
+                            oTemplateBindingInfo.type.validateValue(oTemplateValue);
+                        }catch(e){
+                            oMetadata._valueStates[oTemplateBindingInfo.parts[0].path] = {
+                                valueState: ValueState.Error,
+                                valueStateText: e.message
+                            }
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+            
+        aData.forEach(function(oData){
+            oMetadata = oData["__metadata"] || {};
+            oMetadata._valueStates = {};
+
+            aColumns.forEach(function(oColumn){
+                oTemplate = oColumn.getTemplate();
+                if(oTemplate){
+                    if(oTemplate instanceof sap.m.FlexBox){
+                        oTemplates = oTemplate.getItems();
+                        oTemplates.forEach(function(oTemplate){
+                            isValid = _checkValid.call(this, oTemplate, oData, oMetadata);
+                        }.bind(this));
+                    }else{
+                        isValid = _checkValid.call(this, oTemplate, oData, oMetadata);
+                    }
+                }
+            }.bind(this));
+
+            oData["__metadata"] = oMetadata;
+
+        }.bind(this));
+
+        oModel.refresh();
+
+        return isValid;
+    },
+
     /**
      * Check if the control is required
      * @memberof ext.lib.util.Validator
@@ -144,7 +217,7 @@ sap.ui.define([
                 try {
                     //oControl.getBinding(_aValidateProperties[i]);
                     oValue = oControl.getProperty(_aValidateProperties[i]);
-                    if (!oValue == undefined || oValue === "" || oValue === null) {
+                    if (oValue == undefined || oValue === "" || oValue === null) {
                         this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM01002"));
                         isValid = false;
                         break;
@@ -332,6 +405,13 @@ sap.ui.define([
         }
         return eMessageType;
     };
+
+    Validator.prototype.setModel = function(oModel, sName){
+        if(!this.mModels) {
+            this.mModels = {};
+        }
+        this.mModels[sName] = oModel;
+    }
 
     return Validator;
 });

@@ -22,10 +22,11 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel",
     "sap/ui/model/FilterType",
-    "dp/util/control/ui/IdeaManagerDialog"
+    "dp/util/control/ui/IdeaManagerDialog",
+    "ext/lib/formatter/NumberFormatter"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog) {
+    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog,NumberFormatter) {
     "use strict";
 
     var oTransactionManager;
@@ -33,6 +34,7 @@ sap.ui.define([
     return BaseController.extend("dp.im.supplierIdeaMgt.controller.IdeaSelection", {
 
         dateFormatter: DateFormatter,
+        numberFormatter: NumberFormatter,
 
         validator: new Validator(),
 
@@ -42,6 +44,7 @@ sap.ui.define([
         supplier_local_name: new String,
         tenant_id: new String,
         statusGloCode: new String,
+        supplierType: Boolean,
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -59,6 +62,13 @@ sap.ui.define([
             this.tenant_id = "L2100";
             this.supplier_code = "KR01820500";
             this.supplier_local_name = "공급업체";
+            this.supplierType = true;
+
+            if(!this.supplierType){
+                this.getView().byId('attachBlock').setVisible(true);
+            }
+            
+
             //법인 필터
             this.setCompanyFilter();
 
@@ -232,7 +242,7 @@ sap.ui.define([
                 }
             });
             
-            var sObjectPath2 = "/SupplierIdea(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + this._sIdeaNumber + "')";
+            var sObjectPath2 = "/SupplierIdea(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number+ "')";
             var oDetailsModel = this.getModel("details");
             
             oView.setBusy(true);
@@ -263,10 +273,6 @@ sap.ui.define([
                     inputdata : {}
                 };
             if (this._sIdeaNumber !== "new"){
-                if(!oDetailsModel.isChanged() ) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                    return;
-                }
                 CUType = "U";
                 /*
                     진행상태에 대한 정의가 필요 하며 정의에 따른 진행상태 셋팅 필요
@@ -274,12 +280,27 @@ sap.ui.define([
                     업체에서 SUBMIT인 경우 정의 필요
                 */
                 if( flag == "D"){
-                    statsCode = oData.idea_progress_status_code;
+                    if(!oDetailsModel.isChanged() ) {
+                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                        return;
+                    }
+                    statsCode = "DRAFT";
                 }else if( flag == "R"){
-                    statsCode = oData.idea_progress_status_code;
+                    statsCode = "SUBMIT";
                 }
             }
-
+            if(oData.vi_amount==null){
+                oData.vi_amount = "0";
+            }
+            if(oData.monthly_mtlmob_quantity==null){
+                oData.monthly_mtlmob_quantity = "0";
+            }
+            if(oData.monthly_purchasing_amount==null){
+                oData.monthly_purchasing_amount = "0";
+            }
+            if(oData.annual_purchasing_amount==null){
+                oData.annual_purchasing_amount = "0";
+            }
 
             inputData.inputdata = {
                 tenant_id                            : oData.tenant_id                  ,
@@ -321,7 +342,7 @@ sap.ui.define([
 
             var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
             
-
+            // console.log(inputData);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -335,16 +356,24 @@ sap.ui.define([
                             data: JSON.stringify(inputData),
                             contentType: "application/json",
                             success: function (rst) {
+                                console.log(rst);
                                 if(rst.return_code =="S"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    v_this.onSearch(rst.return_msg );
+                                    if( flag == "D"){
+                                        v_this.onSearch(rst.return_msg );
+                                    }else if( flag == "R"){
+                                        v_this.onPageNavBackButtonPress();
+                                    }
                                 }else{
+                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
+                                    console.log("eeeeee");
+                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
-
+                                    v_this.onSearch(rst.return_msg );
                             }
                         });
 					};
@@ -474,10 +503,7 @@ sap.ui.define([
             var oView = this.getView();
             var ideaManagerId = this.getView().byId("ideaManagerId");
             ideaManagerId.setValue("");
-        },
-
-
-
+        }
 
     });
 });
