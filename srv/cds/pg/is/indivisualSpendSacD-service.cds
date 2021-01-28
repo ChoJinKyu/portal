@@ -30,6 +30,7 @@ using {pg.It_Mst_Wbs as WbsMst} from '../../../../db/cds/pg/it/PG_IT_MST_WBS-mod
 using {pg.It_Mst_Cost_Center as CctrMst} from '../../../../db/cds/pg/it/PG_IT_MST_COST_CENTER-model';              // COST CENTER Mst(코스트센터)
 using {pg.It_Mst_Item_Category as ItemCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_ITEM_CATEGORY-model';  // ITEM CATEGORY Mst(품목범주)
 using {pg.It_Mst_Aa_Category as AaCategoryMst} from '../../../../db/cds/pg/it/PG_IT_MST_AA_CATEGORY-model';        // AA CATEGORY Mst(계정범주)
+using {pg.It_Mst_Gl_Account as GlAccountMst} from '../../../../db/cds/pg/it/PG_IT_MST_GL_ACCOUNT-model';           // GL ACCOUNT Mst(GL계정)
 
 //PG MD
 using {pg.Md_Material_Item_Value as MaterialItemValue} from '../../../../db/cds/pg/md/PG_MD_MATERIAL_ITEM_VALUE-model';        // Material Item Value(자재특성값)
@@ -411,5 +412,19 @@ service individualSpendSacDService {
                ,language_cd     as  LANGUAGE_CODE
         from  CmCodeDtlView
         where group_code  =  'OP_INCOTERMS';
+
+    // GL ACCOUNT Mst View: GL계정
+    view PgGlAccountMstView @(title : 'GL계정 View') as
+        select
+            key tenant_id           as  TENANT_ID
+           ,key company_code||'_'||org_type_code||'_'||org_code||'_'||coa_code||'_'||gl_account_code  as  ID : String
+               ,gl_account_desc     as  Description
+               ,coa_code            as  COA_CODE
+               ,gl_account_code     as  GL_ACCOUNT_CODE
+               ,company_code        as  COMPANY_CODE
+               ,org_type_code       as  ORG_TYPE_CODE
+               ,org_code            as  ORG_CODE
+        from  GlAccountMst
+        ;
 
 }
