@@ -15,7 +15,7 @@ History        : 2021-01-22 initial creation
 ***************************************************************************/
 AS
 BEGIN
-    DECLARE v_Record_Cnt INT := 0;
+    -- DECLARE v_Record_Cnt INT := 0;
 
     -- 10. 품의서 마스터(공통) 저장
     INSERT INTO CM_APPROVAL_MST (
@@ -47,9 +47,9 @@ BEGIN
     FROM :I_APPROVER;
 
     -- 40. 품의서 참조자 저장 : 빈 테이블(옵션 정보)일 수 있으므로 데이터가 있는지 체크
-    SELECT COUNT(*) INTO v_Record_Cnt FROM :I_REFERER;
+    -- SELECT COUNT(*) INTO v_Record_Cnt FROM :I_REFERER;
 
-    IF v_Record_Cnt > 0 THEN
+    IF RECORD_COUNT(:I_REFERER) > 0 THEN
         INSERT INTO CM_REFERER (
                TENANT_ID, APPROVAL_NUMBER, REFERER_EMPNO,
                LOCAL_CREATE_DTM, LOCAL_UPDATE_DTM, CREATE_USER_ID, UPDATE_USER_ID, SYSTEM_CREATE_DTM, SYSTEM_UPDATE_DTM
@@ -69,9 +69,9 @@ BEGIN
     FROM :I_DETAIL;
 
     -- 60. 금액정보 저장 : 빈 테이블(옵션 정보)일 수 있으므로 데이터가 있는지 체크
-    SELECT COUNT(*) INTO v_Record_Cnt FROM :I_PRICE;
+    -- SELECT COUNT(*) INTO v_Record_Cnt FROM :I_PRICE;
 
-    IF v_Record_Cnt > 0 THEN
+    IF RECORD_COUNT(:I_PRICE) > 0 THEN
         INSERT INTO DP_VI_BASE_PRICE_ARL_PRICE (
                TENANT_ID, APPROVAL_NUMBER, ITEM_SEQUENCE, MARKET_CODE, NEW_BASE_PRICE, NEW_BASE_PRICE_CURRENCY_CODE,
                CURRENT_BASE_PRICE, CURRENT_BASE_PRICE_CURRENCY_CODE, FIRST_PURCHASING_NET_PRICE, FIRST_PUR_NETPRICE_CURR_CD, FIRST_PUR_NETPRICE_STR_DT, CHANGE_REASON_CODE,
