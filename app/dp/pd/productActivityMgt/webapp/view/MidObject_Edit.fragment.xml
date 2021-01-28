@@ -1,0 +1,77 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
+		
+		<core:Title text="Normal" />
+		<Label text="Code"/>
+		<Input value="{
+			path: 'master>/control_option_code',
+			type: 'sap.ui.model.type.String',
+			constraints: {
+				maxLength: 30
+			}
+		}" required="true" editable="{midObjectView>/isAddedMode}"/>
+		<Label text="Chain"/>
+		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" required="true" items="{
+				path: 'common>/Code',
+				filters: [
+					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+					{path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+				]
+			}">
+			<items>
+				<core:Item key="{common>code}" text="{common>code}: {common>code_name}" />
+			</items>
+		</ComboBox>
+		<Label text="Name"/>
+		<Input value="{
+				path: 'master>/control_option_name',
+				type: 'sap.ui.model.type.String',
+				constraints: {
+				    maxLength: 240
+				}
+			}" required="true"/>
+
+		<core:Title text="Effect" />
+		<Label text="From"/>
+		<DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{master>/start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		<Label text="To"/>
+		<DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{master>/end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		
+		<core:Title text="Boundry" />
+		<Label text="Site"/>
+		<Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="Company"/>
+		<Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="Role"/>
+		<Switch state="{master>/role_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="Organization"/>
+		<Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="User"/>
+		<Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+
+	</form:SimpleForm>
+</core:FragmentDefinition>

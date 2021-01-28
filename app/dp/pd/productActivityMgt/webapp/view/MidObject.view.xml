@@ -1,0 +1,158 @@
+<mvc:View controllerName="dp.pd.productActivityMgt.controller.MidObject" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+    xmlns:t="sap.ui.table"
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:lib-m="ext.lib.control.m"
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="true">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="Product Activity 상세(x)" wrapping="true" />
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					<Title text="Product Activity 상세(x)" wrapping="true" />
+				</uxap:snappedHeading>
+				<uxap:expandedContent>
+				</uxap:expandedContent>
+				<uxap:snappedContent>
+				</uxap:snappedContent>
+				<uxap:snappedTitleOnMobile>
+					<Title text="Product Activity 상세(x)" />
+				</uxap:snappedTitleOnMobile>
+                <uxap:navigationActions>
+					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="수정사용자ID : (x)" />
+						<Text text="사용자 데이터"/>
+					</layout:HorizontalLayout>
+				</layout:VerticalLayout>
+
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Update Date : (x)"/>
+						<Text text="업데이트 데이터"/>
+					</layout:HorizontalLayout>
+				</layout:VerticalLayout>
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="General Info(x)">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1" >
+
+                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
+                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                                <Label  
+                                    text="Activity Code(x) :" 
+                                    design="Bold" 
+                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
+                                    <Text text="Activity Code Data(x)" class="sapMLabelNoText"/> 
+                                    <!-- <Input id="input_category_text" visible="false"/> -->
+                            </layout:VerticalLayout>
+                        </FlexBox>
+
+                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
+                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                                <Label  
+                                    text="Activity Code(x) :" 
+                                    design="Bold" 
+                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
+                                    <Text text="Activity Code(x)" class="sapMLabelNoText"/> 
+                                    <!-- <Input id="input_category_text" visible="false"/> -->
+                            </layout:VerticalLayout>
+                        </FlexBox>
+
+                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
+                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                                 <Label  
+                                    text="Status(x) :" 
+                                    design="Bold" 
+                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
+                                <SegmentedButton 
+                                    id="segmentedbutton_use_flag"
+                                    selectedKey="true"
+                                    width="100%">
+                                    <items>
+                                        <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                        <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                    </items>
+                                </SegmentedButton> 
+                            </layout:VerticalLayout>
+                        </FlexBox>
+
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="언어(x)">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<t:Table id="detailTable" 
+                            rows="{details>/PdProdActivityTemplateView}"
+                            selectionMode="Single"
+                            selectionBehavior="RowOnly"
+                            visibleRowCountMode="Auto"
+                            columnResize=".onColumnResize"
+                            rowSelectionChange=".onMainTableItemPress"
+                            width="auto">
+                        <t:columns>
+
+                            <t:Column hAlign="Center">
+                                <Text text="언어 코드(x)" />
+                                <t:template>
+                                    <Text text="{details>product_activity_code}" ></Text>  
+                                </t:template>
+                            </t:Column>
+
+                            <t:Column hAlign="Center">
+                                <Text text="Activity 명(x)" />
+                                <t:template>
+                                    <Text text="{details>product_activity_code}" ></Text>  
+                                </t:template>
+                            </t:Column>
+
+                        </t:columns>  
+                    </t:Table>
+
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+		</uxap:sections>
+		
+		<uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+				<Button type="Transparent" id="pageCancelButton" text="취소(x)" press=".onPageCancelButton" />
+				<Button type="Transparent" id="pageUpdateButton" text="수정(x)" press=".onPageUpdateButton" />
+                <Button type="Transparent" id="pageDeleteButton" text="삭제(x)" press=".onPageDeleteButton" />
+                <Button type="Emphasized" id="pageSaveButton" text="저장(x)" press=".onPageSaveButton" />
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>

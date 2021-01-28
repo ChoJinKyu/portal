@@ -1,6 +1,5 @@
 {
   "_version": "1.12.0",
-  
   "sap.app": {
     "id": "dp.pd.productActivityMgt",
     "type": "application",
@@ -20,30 +19,23 @@
           "odataVersion": "2.0"
         }
       },
-      "commonUtilService": {
+      "commonService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
         }
-      },
-        "v4Proc": {
-            "uri": "srv-api/odata/v4/dp.ProductActivityMgtV4Service/",
-            "type": "OData",
-            "settings": {
-                "odataVersion": "4.0"
-            }
-        }
+      }
     }
   },
-  "sap.cloud": {
-    "public": true,
-    "service": "sppCap_ui_dev"
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
   },
   "sap.ui": {
     "technology": "UI5",
     "icons": {
-      "icon": "",
+      "icon": "sap-icon://task",
       "favIcon": "",
       "phone": "",
       "phone@2": "",
@@ -57,7 +49,6 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": false,
     "rootView": {
       "viewName": "dp.pd.productActivityMgt.view.App",
       "type": "XML",
@@ -65,17 +56,18 @@
       "id": "app"
     },
     "dependencies": {
-      "minUI5Version": "1.60.1",
+      "minUI5Version": "1.66.0",
       "libs": {
         "sap.ui.core": {},
         "sap.m": {},
-        "sap.ui.layout": {}
+        "sap.f": {}
       }
     },
     "contentDensities": {
       "compact": true,
       "cozy": true
     },
+    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
@@ -83,8 +75,8 @@
           "bundleName": "dp.pd.productActivityMgt.i18n.i18n"
         }
       },
-      "util": {
-        "dataSource": "commonUtilService",
+      "common": {
+        "dataSource": "commonService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -97,28 +89,19 @@
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
         }
-      },
-        "v4Proc": {
-            "dataSource": "v4Proc",
-            "preload": false,
-            "settings": {
-                "synchronizationMode": "None",
-                "operationMode": "Server",
-                "autoExpandSelect": false
-            }
-        }
+      }
     },
     "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib"
@@ -127,29 +110,52 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "async": true,
         "viewPath": "dp.pd.productActivityMgt.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
+        "controlId": "fcl",
+				"transition": "slide",
+        "bypassed": {
+          "target": [
+            "notFound"
+          ]
+        },
+        "async": true
       },
       "routes": [
-        {
-          "pattern": "",
-          "name": "productActivityMgt",
-          "target": [
-            "productActivityMgt"
-          ]
-        }
+          {
+              "pattern": ":layout:",
+              "name": "mainPage",
+              "target": [
+                  "mainObject"
+              ]
+          },
+          {
+              "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}",
+              "name": "midPage",
+              "target": [
+                  "mainObject",
+                  "midObject"
+              ]
+          }
       ],
       "targets": {
-        "productActivityMgt": {
-          "viewId": "productActivityMgt",
-          "viewName": "productActivityMgt",
-          "viewLevel": 1,
-          "title": "{{appTitle}}"
-        }
+          "mainObject": {
+              "viewName": "MainList",
+              "controlAggregation": "beginColumnPages"
+          },
+          "midObject": {
+              "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "notFound": {
+            "viewName": "NotFound",
+            "viewPath": "ext.lib.view",
+            "viewId": "notFound"
+          }
       }
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "sppCap_ui_dev"
   }
 }
