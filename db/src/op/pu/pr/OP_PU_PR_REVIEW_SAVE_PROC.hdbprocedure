@@ -5,7 +5,7 @@ PROCEDURE OP_PU_PR_REVIEW_SAVE_PROC (
                                                            ,TENANT_ID NVARCHAR(5)
                                                            ,COMPANY_CODE NVARCHAR(10)
                                                            ,PR_NUMBER NVARCHAR(50)
-                                                           ,PR_ITEM_NUMBER BIGINT
+                                                           ,PR_ITEM_NUMBER NVARCHAR(10)
                                                            )
                                     ,IN I_BUYER_EMPNO NVARCHAR(30)  -- 구매담당자변경 일때 사용
                                     ,IN I_BUYER_DEPARTMENT_CODE NVARCHAR(30)  -- 구매담당자변경 일때 사용
@@ -131,7 +131,7 @@ BEGIN
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
-                        --AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                        --AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
                         --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
@@ -145,7 +145,7 @@ BEGIN
                     WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                     AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                     AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
-                    AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
                     --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰적성등 버튼 클릭시 update해야하나?
                     ;
 
@@ -168,7 +168,7 @@ BEGIN
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
-                        AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                        AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
                         --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
@@ -182,7 +182,7 @@ BEGIN
                     WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                     AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                     AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
-                    AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
                     --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰적성등 버튼 클릭시 update해야하나?
                     ;
 
@@ -205,7 +205,7 @@ BEGIN
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
-                        AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                        AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
                         --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;

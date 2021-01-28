@@ -123,7 +123,8 @@
 		},
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "dp.util": "../../../../dp/util"
+            "dp.util": "../../../../dp/util",
+            "sp.util": "../../../util"
         },
 		"routing": {
 			"config": {
@@ -139,18 +140,6 @@
                     "name": "mainPage",
                     "pattern": "",
                     "target": ["mainObject"]
-                },{
-                    "name": "createPage",
-                    "pattern": "createObject",
-                    "target": ["createObject"]
-                },{
-                    "name": "detailPage",
-                    "pattern": "detailObject/{type},{outcome},{header_id}",
-                    "target": ["detailObject"]
-                },{
-                    "name": "detailPage2",
-                    "pattern": "detailObject2/{type},{outcome}",
-                    "target": ["detailObject2"]
                 }
             
             ],
@@ -158,18 +147,6 @@
 				"mainObject": {
 					"viewType": "XML",
 					"viewName": "MainList"
-                },
-                "createObject": {
-					"viewType": "XML",
-					"viewName": "CreatePage"
-				},
-                "detailObject": {
-					"viewType": "XML",
-					"viewName": "DetailPage"
-				},
-                "detailObject2": {
-					"viewType": "XML",
-					"viewName": "DetailPage2"
 				}
 			}
 		}

@@ -153,7 +153,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/pdPartCategoryCreationRequest", {
+            oModel.read("/pdPartCategoryCreationRequestView", {
                 filters: aSearchFilters,
                 sorters: aSorter,
                 success: function (oData) {
@@ -195,7 +195,7 @@ sap.ui.define([
             
             var oTable = this.byId(sTableId);
             var sFileName = "PART CATEGORY CREATION REQUEST List";
-            var oData = this.getModel("list").getProperty("/pdPartCategoryCreationRequest"); //binded Data
+            var oData = this.getModel("list").getProperty("/pdPartCategoryCreationRequestView"); //binded Data
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,

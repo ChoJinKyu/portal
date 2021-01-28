@@ -13,7 +13,7 @@ sap.ui.define([
                 // this.getOwnerComponent().getRouter().navTo("mainPage", {} );
 
                 // apply content density mode to root view
-                // this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
                 
                 var sHash = sap.ui.core.routing.HashChanger.getInstance().getHash();
                 
@@ -43,7 +43,7 @@ sap.ui.define([
                 
                 var routeName;
                 debugger;
-                if (pType === "1" || pType === "3") {
+                if (pType === "RFQ" || pType === "RFP") {
                     routeName = "detailPage";
                 } else {
                     routeName = "detailPage2";

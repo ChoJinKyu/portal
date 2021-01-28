@@ -156,7 +156,7 @@
 
                                         selectedKey="A"
                                     >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
                                     </ComboBox>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
@@ -302,7 +302,7 @@
 
                                         selectedKey="{applicationSup>/collateral_type_code}"
                                     >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
                                     </ComboBox>
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />

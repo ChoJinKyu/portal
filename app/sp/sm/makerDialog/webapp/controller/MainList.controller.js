@@ -3,6 +3,7 @@ sap.ui.define([
     "sp/util/control/ui/SupplierDialog",
     "sp/util/control/ui/SupplierWithOrgDialog",
     "sp/util/control/ui/MakerDialog",
+    "sp/util/control/ui/BPDialog",
     "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
@@ -25,6 +26,7 @@ sap.ui.define([
         SupplierDialog,
         SupplierWithOrgDialog,
         MakerDialog,
+        BPDialog,
         History,
         JSONModel,
         Filter,
@@ -142,6 +144,32 @@ sap.ui.define([
                 }
                 this.oMakerMultiSelectionValueHelp.open();
                 this.oMakerMultiSelectionValueHelp.setTokens(this.byId("multiinput_maker_code").getTokens());
+            },
+
+            onInputBPValuePress: function () {
+                if (!this.oBPSelectionValueHelp) {
+                    this.oBPSelectionValueHelp = new BPDialog({
+                        multiSelection: false
+                    });
+
+                    this.oBPSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                        this.byId("input_bp_code").setValue(oEvent.getParameter("item").supplier_code);
+                    }.bind(this));
+                }
+                this.oBPSelectionValueHelp.open();
+            },
+            onMultiInputBPValuePress: function () {
+                if (!this.oBPMultiSelectionValueHelp) {
+                    this.oBPMultiSelectionValueHelp = new BPDialog({
+                        multiSelection: true
+                    });
+
+                    this.oBPMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                        this.byId("multiinput_bp_code").setTokens(oEvent.getSource().getTokens());
+                    }.bind(this));
+                }
+                this.oBPMultiSelectionValueHelp.open();
+                this.oBPMultiSelectionValueHelp.setTokens(this.byId("multiinput_bp_code").getTokens());
             }
         });
     });

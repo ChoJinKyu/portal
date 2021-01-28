@@ -315,7 +315,7 @@ sap.ui.define([
                     oNavParam.level = "low";
                 }
                 oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = oContext.getObject();
+                oRowData = this._deepCopy( oContext.getObject() );
                 oViewModel = this.getView().getModel("viewModel");
 
                 oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
@@ -553,7 +553,7 @@ sap.ui.define([
                 }
 
                 oContext = oTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = oContext.getObject();
+                oRowData = this._deepCopy( oContext.getObject() );
                 oViewModel = this.getView().getModel("viewModel");
 
                 oNavParam.evaluArticleCode = oRowData.evaluation_article_code;

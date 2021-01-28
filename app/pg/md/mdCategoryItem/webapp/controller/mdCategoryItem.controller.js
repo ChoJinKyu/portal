@@ -55,12 +55,77 @@ sap.ui.define([
         // this.byId("textCategoryName").setText();
       },
 
+      //window창 파라메터 분리
+        getQueryStringObject: function() {
+            var a = window.location.search.substr(1).split('&');
+            if (a == null) return {};
+            var b = {};
+            for (var i = 0; i < a.length; ++i) {
+                var p = a[i].split('=', 2);
+                if (p.length == 1)
+                    b[p[0]] = "";
+                else
+                    b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+            }
+            return b;
+        },
 
       onMainTablePersoButtonPressed: function (event) {
         this._oTPC.openDialog();
       },
+
+
       // Display row number without changing data
       onAfterRendering: function () {
+
+        var qs = this.getQueryStringObject();
+
+        if(qs != ""){
+            var tenant_id = qs.tenant_id; 
+            var org_code = qs.org_code; 
+            var spmd_category_code = qs.spmd_category_code; 
+            this.getView().byId("searchTenantCombo").setSelectedKey(tenant_id);
+            this.getView().byId("searchChain").setSelectedKey(org_code);
+            this.getView().byId("searchCategory").setSelectedKey(spmd_category_code);
+
+
+            var business_combo = this.getView().byId("searchChain");  
+                business_combo.setValue("");
+            var aFiltersComboBox = [];
+            aFiltersComboBox.push( new Filter("tenant_id", "EQ", tenant_id));
+            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);   
+            
+            business_combo.bindAggregation("items", {
+                path: "org>/Org_Unit",
+                sorter: businessSorter,
+                filters: aFiltersComboBox,
+                // @ts-ignore
+                template: new sap.ui.core.Item({
+                    key: "{org>bizunit_code}",
+                    text: "{org>bizunit_code}: {org>bizunit_name}"
+                })
+            });
+            
+                        
+            var category_combo = this.getView().byId("searchCategory");  
+            category_combo.setValue("");
+            aFiltersComboBox = [];
+            aFiltersComboBox.push( new Filter("tenant_id", "EQ", tenant_id));
+            aFiltersComboBox.push( new Filter("org_code", "EQ", org_code));
+            var businessSorter = new sap.ui.model.Sorter("spmd_category_code", false); 
+            
+            category_combo.bindAggregation("items", {
+                path: "category>/MdCategory",
+                sorter: businessSorter,
+                filters: aFiltersComboBox,
+                // @ts-ignore
+                template: new sap.ui.core.Item({
+                    key: "{category>spmd_category_code}",
+                    text: "{category>spmd_category_code}: {category>spmd_category_code_name}"
+                })
+            });  
+        }
+         
         this.onSearch();
       },
     

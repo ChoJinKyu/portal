@@ -3,6 +3,7 @@ using { pg as vpSearchView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL
 using { pg as vpPopupView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_POPUP_VIEW-model';
 using { pg as vpMst } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';
 using { pg as vpMaxLevel } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MAX_LEVEL_VIEW-model';
+using { pg as vpCode } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_CODE_VIEW-model';
 
 namespace pg; 
 @path : '/pg.vendorPoolSearchService'
@@ -77,6 +78,27 @@ service VpSearchService {
             vpMaxLevel.Vp_Vendor_Pool_Max_Level_View(
                 p_tenant_id: 'L2100',
                 p_language_code: 'KO'
+            ) mst
+        ;        
+
+    @readonly
+    view vpCodeView as 
+        select
+            key mst.tenant_id,
+            key mst.company_code,
+            key mst.org_type_code,
+            key mst.org_code,
+            key mst.operation_unit_code,
+            key mst.code,
+            mst.code_name,
+            mst.parent_code,
+            mst.leaf_flag,
+            mst.vendor_pool_level               
+        from
+            vpCode.Vp_Vendor_Pool_Code_View(
+                p_tenant_id: 'L2100',
+                p_company_code: '*',
+                p_org_type_code: 'BU'
             ) mst
         ;        
 }

@@ -150,7 +150,7 @@
                                 placeholder="Choose codes from the ValueHelp"
                                 showValueHelp="true" 
                                 valueHelpRequest=".onMultiInputWithEmployeeValuePress"
-                                editable="{detailViewModel>/viewMode}"
+                                editable="true"
                                 >
                         </MultiInput>
                         <!-- <MultiComboBox

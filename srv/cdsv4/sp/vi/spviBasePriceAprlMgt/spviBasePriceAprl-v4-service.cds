@@ -19,10 +19,6 @@ service spviBasePriceArlV4Service {
         local_update_dtm       : DateTime;
         create_user_id         : String(255);
         update_user_id         : String(255);
-
-        Approvers              : array of BasePriceAprlApproverType;
-        Referers               : array of BasePriceAprlRefererType;
-        details                : array of BasePriceAprlDtlType;
     };
 
     //양산가품의서유형
@@ -95,8 +91,6 @@ service spviBasePriceArlV4Service {
         local_update_dtm       : DateTime;
         create_user_id         : String(255);
         update_user_id         : String(255);
-
-        dtl                 : array of BasePriceAprlDtlType;
     };
 
     type BasePriceAprlDtlType : {
@@ -127,15 +121,18 @@ service spviBasePriceArlV4Service {
     //type CmdType : String enum { insert; upsert; delete; };
 
     type InputAprlDataType : {
-        cmd               : String(30);
-        basePriceArlMst   : array of BasePriceAprlMstType;
-        debug             : Boolean;
+        BasePriceAprlMstType   : array of BasePriceAprlMstType;
+        BasePriceAprlApproverType             : array of BasePriceAprlApproverType;
+        BasePriceAprlRefererType              : array of BasePriceAprlRefererType;
+        BasePriceAprlTypeType                 : array of BasePriceAprlTypeType;
+        BasePriceAprlItemType                 : array of BasePriceAprlItemType;
+        BasePriceAprlDtlType                  : array of BasePriceAprlDtlType;
+        type_code   : String(10);
     }
 
     type OutputDataType : {
         return_code     : String(30);
         return_msg      : String(1000);
-        return_rs       : array of BasePriceAprlMstType;
     };
 
     action SpViBasePriceAprlProc(inputData : InputAprlDataType) returns OutputDataType;

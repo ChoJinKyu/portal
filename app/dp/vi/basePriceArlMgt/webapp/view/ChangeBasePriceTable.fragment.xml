@@ -118,7 +118,7 @@
                             templateShareable:false}"
                         selectedKey="{detailModel>base_price_ground_code}">
                         <items>
-                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>code_description}" />
+                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>code_name}" />
                         </items>
                     </Select>
                     <Text text="{detailModel>base_price_ground_code_name}" visible="{= !${detailViewModel>/viewMode}}" />

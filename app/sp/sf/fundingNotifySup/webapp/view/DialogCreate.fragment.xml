@@ -23,7 +23,7 @@
                             <Label text="거래사업부 :"/>
                             <Input editable="false"
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/org_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 30
@@ -37,7 +37,7 @@
                             <Label text="협력회사명 :"/>
                             <Input editable="false"
                                 value="{
-                                    path: '',
+                                    path: 'applicationSup>/popUpInvestPlanMst/supplier_local_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 30
@@ -55,13 +55,14 @@
                                             path : 'util>/Code',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_INVESTMENT_TYPE_CODE'}
+                                                {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_INVESTMENT_TYPE_CODE'},
+                                                {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
                                             ]
                                         }"
 
                                 selectedKey="{applicationSup>/popUpInvestPlanMst/investment_type_code}"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12"/>

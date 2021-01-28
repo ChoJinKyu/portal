@@ -310,7 +310,7 @@ sap.ui.define([
 
                 var oMasterModel = this.getModel("master");
                 oMasterModel.setData({
-                    "tenant_id": "L2100",
+                    "tenant_id": "L1100",
                     "funding_notify_title": "[안내] '21년 협력회사 무이자 직접자금 지원 신청",
                     "funding_notify_contents": notifyContent,
                 }, "/SfFundingNotify", 0);

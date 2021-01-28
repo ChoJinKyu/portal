@@ -171,38 +171,44 @@ service BasePriceAprlService {
     };
 
     entity Base_Price_Aprl_Material       as
-        select from materialMst mat
-        inner join materialVal val
-            on mat.tenant_id = val.tenant_id
-            and mat.material_code = val.material_code
-        inner join VPoolDtl pooldtl
-            on mat.tenant_id = pooldtl.tenant_id
-            and mat.material_code = pooldtl.material_code
-        inner join VPoolMst poolmst
-            on poolmst.tenant_id = pooldtl.tenant_id
-            and poolmst.company_code = pooldtl.company_code
-            and poolmst.org_type_code = pooldtl.org_type_code
-            and poolmst.org_code = pooldtl.org_code
-            and poolmst.vendor_pool_code = pooldtl.vendor_pool_code    
+        select from materialOrg matorg
+         left join materialVal val
+                 on matorg.tenant_id      = val.tenant_id 
+                 and matorg.material_code = val.material_code 
+                 and matorg.company_code  = val.company_code 
+                 and matorg.org_type_code = val.org_type_code 
+                 and matorg.org_code      = val.org_code
+         inner join materialMst mat
+                 on  mat.tenant_id = matorg.tenant_id
+                 and mat.material_code = matorg.material_code
+         inner join VPoolDtl pooldtl
+                 on matorg.tenant_id      = pooldtl.tenant_id 
+                 and matorg.material_code = pooldtl.material_code 
+         inner join VPoolMst poolmst
+                 on poolmst.tenant_id = pooldtl.tenant_id 
+                 and poolmst.company_code = pooldtl.company_code
+                 and poolmst.org_type_code = pooldtl.org_type_code
+                 and poolmst.org_code = pooldtl.org_code
+                 and poolmst.vendor_pool_code = pooldtl.vendor_pool_code
         {
-            key mat.tenant_id,
-            key mat.material_code,
+            key matorg.tenant_id,
+            key matorg.material_code,
                 mat.material_desc,
                 mat.material_type_code,
                 mat.base_uom_code,
                 val.material_price_unit,
-                val.company_code,
-                val.org_type_code,
-                poolmst.org_code as plant_code,
+            key matorg.company_code,
+            key matorg.org_type_code,
+            key matorg.org_code as plant_code,
             key pooldtl.vendor_pool_code,
                 poolmst.vendor_pool_local_name,
                 poolmst.vendor_pool_english_name,
-                mat.local_create_dtm,
-                mat.local_update_dtm,
-                mat.create_user_id,
-                mat.update_user_id,
-                mat.system_create_dtm,
-                mat.system_update_dtm
+                matorg.local_create_dtm,
+                matorg.local_update_dtm,
+                matorg.create_user_id,
+                matorg.update_user_id,
+                matorg.system_create_dtm,
+                matorg.system_update_dtm
         };
 
     annotate Base_Price_Aprl_Material with {

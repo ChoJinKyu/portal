@@ -124,5 +124,26 @@ sap.ui.define([
                 oControl.setValueStateText();
             });
         }
+
+        , _deepCopy : function(oData){
+            var oNewObj;
+            
+            if(oData && typeof oData === "object"){
+                if(Array.isArray(oData)){
+                    oNewObj = [];
+                }else{
+                    oNewObj = {};
+                }
+                for(var key in oData){
+                    if(oData.hasOwnProperty(key)){
+                        oNewObj[key] = this._deepCopy( oData[key] );
+                    }
+                }
+            }else{
+                oNewObj = oData;
+            }
+
+            return oNewObj;
+        }
 	});
 });

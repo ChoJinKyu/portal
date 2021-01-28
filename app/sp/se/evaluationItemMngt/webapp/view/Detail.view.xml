@@ -333,7 +333,9 @@
                                          -->
                                         <core:Icon 
                                             src="{=
-                                                ${viewModel>crudFlg} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
+                                                ${viewModel>crudFlg} === 'D' ? 
+                                                    'sap-icon://delete' : 
+                                                    (${viewModel>crudFlg} === 'C' ? 'sap-icon://add' : 'sap-icon://edit')
                                             }"
                                             visible="{=
                                                 !!${viewModel>crudFlg}

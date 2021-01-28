@@ -251,12 +251,13 @@ sap.ui.define([
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
 				var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
-				var oDetailsData = oDetailsModel.getData();
+                
+                var sEntityName = oDetailsModel.getProperty("/entityName");
+                var oDetailsData = oDetailsModel.getProperty("/"+sEntityName);
 				oDetailsData.forEach(function(oItem, nIndex){
-					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
+					oDetailsModel.setProperty("/"+sEntityName+"/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/"+sEntityName+"/"+nIndex+"/control_option_code", sControlOPtionCode);
 				});
-				oDetailsModel.setData(oDetailsData);
 			}
 		},
 

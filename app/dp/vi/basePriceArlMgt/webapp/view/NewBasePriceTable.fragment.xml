@@ -106,7 +106,7 @@
                     <Text text="{detailModel>base_uom_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
-            <t:Column width="12rem">
+            <t:Column width="14rem">
                 <Label text="{I18N>/BASIS}" textAlign="Center" width="100%" />
                 <t:template>
                     <VBox>
@@ -118,10 +118,10 @@
                             templateShareable:false}"
                         selectedKey="{detailModel>base_price_ground_code}">
                         <items>
-                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>code_description}" />
+                            <core:Item key="{detailViewModel>code}" text="{detailViewModel>code_name}" />
                         </items>
                     </Select>
-                    <Text text="{detailModel>base_price_ground_code_name}" visible="{= !${detailViewModel>/viewMode}}" />
+                    <Text text="{detailModel>base_price_ground_code_nm}" visible="{= !${detailViewModel>/viewMode}}" />
                     </VBox>
                 </t:template>
             </t:Column>
