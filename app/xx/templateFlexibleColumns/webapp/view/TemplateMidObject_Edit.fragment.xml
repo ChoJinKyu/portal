@@ -13,7 +13,7 @@
 			constraints: {
 				maxLength: 30
 			}
-		}" required="true" editable="{midObjectView>/isAddedMode}"/>
+		}" required="true" editable="{midObjectViewModel>/isAddedMode}"/>
 		<Label text="Chain"/>
 		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" required="true" items="{
 				path: 'common>/Code',
