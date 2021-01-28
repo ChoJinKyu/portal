@@ -31,7 +31,7 @@ BEGIN
     DECLARE v_sql_rowcnt INT := 0;
 
     -- Cursor 선언
-    DECLARE CURSOR cur_pr_item FOR
+    DECLARE CURSOR c_pr_item FOR
         SELECT *
         FROM   :I_PR_ITEM_TBL
         ORDER BY TENANT_ID, COMPANY_CODE, PR_NUMBER, PR_ITEM_NUMBER
@@ -95,9 +95,9 @@ BEGIN
     /**** Business Logic - Start ****/
 
     -- Cursor 실행
-    FOR loop_pr_item AS cur_pr_item DO
+    FOR l_pr_item AS c_pr_item DO
 
-        IF (loop_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제
+        IF (l_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제
 
             -- 재작성요청(REWRITE), 마감(CLOSING), 담당자변경(CHANGE)
                 IF (:I_JOB_TYPE = 'REWRITE') THEN
@@ -106,9 +106,9 @@ BEGIN
                     SELECT COUNT(*)
                     INTO   v_sql_rowcnt
                     FROM   OP_PU_PR_DTL PD
-                    WHERE  PD.TENANT_ID      = loop_pr_item.TENANT_ID
-                    AND    PD.COMPANY_CODE   = loop_pr_item.COMPANY_CODE
-                    AND    PD.PR_NUMBER      = loop_pr_item.PR_NUMBER
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                     --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰작성등 버튼 클릭시 update해야하나?
                     ;
 
@@ -128,11 +128,11 @@ BEGIN
                               ,PD.LOCAL_UPDATE_DTM  = NOW()  -- CURRENT_TIMESTAMP
                               ,PD.UPDATE_USER_ID    = :I_USER_ID  -- CURRENT_USER
                               ,PD.SYSTEM_UPDATE_DTM = NOW()  -- CURRENT_TIMESTAMP
-                        WHERE  PD.TENANT_ID      = loop_pr_item.TENANT_ID
-                        AND    PD.COMPANY_CODE   = loop_pr_item.COMPANY_CODE
-                        AND    PD.PR_NUMBER      = loop_pr_item.PR_NUMBER
-                        --AND    PD.PR_ITEM_NUMBER = loop_pr_item.PR_ITEM_NUMBER
-                        --AND    loop_pr_item.TRANSACTION_CODE = 'U'
+                        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        --AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
 
@@ -142,10 +142,10 @@ BEGIN
                     SELECT COUNT(*)
                     INTO   v_sql_rowcnt
                     FROM   OP_PU_PR_DTL PD
-                    WHERE  PD.TENANT_ID      = loop_pr_item.TENANT_ID
-                    AND    PD.COMPANY_CODE   = loop_pr_item.COMPANY_CODE
-                    AND    PD.PR_NUMBER      = loop_pr_item.PR_NUMBER
-                    AND    PD.PR_ITEM_NUMBER = loop_pr_item.PR_ITEM_NUMBER
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
                     --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰적성등 버튼 클릭시 update해야하나?
                     ;
 
@@ -165,11 +165,11 @@ BEGIN
                             ,PD.LOCAL_UPDATE_DTM  = NOW()  -- CURRENT_TIMESTAMP
                             ,PD.UPDATE_USER_ID    = :I_USER_ID  -- CURRENT_USER
                             ,PD.SYSTEM_UPDATE_DTM = NOW()  -- CURRENT_TIMESTAMP
-                        WHERE  PD.TENANT_ID      = loop_pr_item.TENANT_ID
-                        AND    PD.COMPANY_CODE   = loop_pr_item.COMPANY_CODE
-                        AND    PD.PR_NUMBER      = loop_pr_item.PR_NUMBER
-                        AND    PD.PR_ITEM_NUMBER = loop_pr_item.PR_ITEM_NUMBER
-                        --AND    loop_pr_item.TRANSACTION_CODE = 'U'
+                        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
 
@@ -179,10 +179,10 @@ BEGIN
                     SELECT COUNT(*)
                     INTO   v_sql_rowcnt
                     FROM   OP_PU_PR_DTL PD
-                    WHERE  PD.TENANT_ID      = loop_pr_item.TENANT_ID
-                    AND    PD.COMPANY_CODE   = loop_pr_item.COMPANY_CODE
-                    AND    PD.PR_NUMBER      = loop_pr_item.PR_NUMBER
-                    AND    PD.PR_ITEM_NUMBER = loop_pr_item.PR_ITEM_NUMBER
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
                     --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰적성등 버튼 클릭시 update해야하나?
                     ;
 
@@ -202,11 +202,11 @@ BEGIN
                             ,PD.LOCAL_UPDATE_DTM      = NOW()  -- CURRENT_TIMESTAMP
                             ,PD.UPDATE_USER_ID        = :I_USER_ID  -- CURRENT_USER
                             ,PD.SYSTEM_UPDATE_DTM     = NOW()  -- CURRENT_TIMESTAMP
-                        WHERE  PD.TENANT_ID      = loop_pr_item.TENANT_ID
-                        AND    PD.COMPANY_CODE   = loop_pr_item.COMPANY_CODE
-                        AND    PD.PR_NUMBER      = loop_pr_item.PR_NUMBER
-                        AND    PD.PR_ITEM_NUMBER = loop_pr_item.PR_ITEM_NUMBER
-                        --AND    loop_pr_item.TRANSACTION_CODE = 'U'
+                        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        AND    PD.PR_ITEM_NUMBER = l_pr_item.PR_ITEM_NUMBER
+                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
 
@@ -214,7 +214,7 @@ BEGIN
                     SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Processing error.(Please Check Job Type)';
                 END IF;
 
-        END IF;  -- loop_pr_item.TRANSACTION_CODE = 'U'
+        END IF;
 
     END FOR;
 

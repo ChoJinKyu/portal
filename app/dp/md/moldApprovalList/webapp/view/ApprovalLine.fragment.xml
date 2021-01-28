@@ -62,12 +62,13 @@
                         <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
                             <HBox><Text text="{I18N>/NAME}" /><Text text="/" /><Text text="{I18N>/DEPARTMENT}" /></HBox>
                         </Column>
-                        <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="{I18N>/STATUS}" />
-                        </Column> 
+                  
                         <Column id="comment" minScreenWidth="Tablet" hAlign="Center" >
                             <Text text="{I18N>/COMMENT}" />
                         </Column>
+                        <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="{I18N>/STATUS}" />
+                        </Column> 
                         <Column id="add" minScreenWidth="Tablet" hAlign="Center" width="5em" >
                             <Text text="{I18N>/ROW_ADD}"  />
                         </Column>					
@@ -105,8 +106,8 @@
                                     editable="{approver>selRow}"
                                     showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                 </Input>
-                                <Text text="{approver>approve_status_code}" />
                                 <Text text="{approver>approve_comment}" />
+                                <Text text="{approver>approve_status_code}" />
                                 <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
                                 <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
                             </cells>

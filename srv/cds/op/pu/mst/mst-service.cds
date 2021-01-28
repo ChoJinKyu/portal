@@ -43,12 +43,5 @@ service MstService {
     entity Order_Mst as projection on op.Pu_Order_Mst;
     entity Wbs_Mst as projection on op.Pu_Wbs_Mst;
 
-    @readonly
-    view Department as
-        select
-            key d.tenant_id,
-            key d.company_id,
-            key d.department_id,
-                d.department_local_name
-        from Dept as d;
+   
 }

@@ -13,11 +13,13 @@ entity Uc_Approval_Dtl_View {
         org_code                       : String(10);
         net_price_contract_title       : String(100);
         ep_item_class_code             : String(50);
+        ep_item_class_name             : String(100);
         supplier_code                  : String(10);
         supplier_name                  : String(240);
         net_price_contract_start_date  : Date;
         net_price_contract_end_date    : Date;
         net_price_contract_status_code : String(30);
+        effective_status_code          : String(3);
         effective_status_name          : String(10);
         net_price_contract_day_count   : Decimal;
         delete_reason                  : String(3000);

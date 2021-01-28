@@ -224,7 +224,7 @@
 				<Button type="Transparent" text="{I18N>/DRAFT}"     press=".onPageDraftButtonPress"   visible="{mode>/btnDraftFlag}"/>
 				<Button type="Transparent" text="{I18N>/PREVIEW}"   press=".onPagePreviewButtonPress"  />
                 <!-- 입찰대상 협력사 취소품의 가는 버튼 -->
-				<Button type="Emphasized"  text="Cancellation Req"   press=".onPageCancellationButtonPress" visible="{= ${appMaster>/approve_status_code} === 'AP'?true:false }"/>
+				<Button type="Emphasized"  text="Cancellation Req"   press=".onPageCancellationButtonPress" visible="{participatingSupplierSelectionView>/cancelBtn}"/>
                 <Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" visible="{mode>/btnRequestCancelFlag}" />
 				<Button type="Emphasized"  text="{I18N>/REQUEST}"   press=".onPageRequestButtonPress" visible="{mode>/btnRequestFlag}"/>
 			</OverflowToolbar>

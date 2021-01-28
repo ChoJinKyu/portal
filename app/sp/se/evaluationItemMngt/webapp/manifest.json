@@ -127,13 +127,13 @@
 			},
 			"routes": [
                 {
-                    "name": "Master",
-                    "pattern": "",
+                    "name": "Detail",
+                    "pattern": "Detail/{new}/:level:/:leaf:/:evaluArticleCode:",
                     "target": ["Master", "Detail"]
                 },
                 {
-                    "name": "Detail",
-                    "pattern": "Detail/{new}/:level:/:leaf:/:evaluArticleCode:",
+                    "name": "Master",
+                    "pattern": ":search:",
                     "target": ["Master", "Detail"]
                 }
             ],

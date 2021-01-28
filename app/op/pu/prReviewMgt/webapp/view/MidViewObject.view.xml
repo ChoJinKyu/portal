@@ -160,7 +160,9 @@
                                 <Label text="(미정)조직코드"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/org_name}" width="10em" textAlign="Left" />
                                 <Label text="(미정)자재코드"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/material_code}] {detail>/Pr_ReviewDtlView/material_name}" width="10em" textAlign="Left" />
+                                <Text text="[{detail>/Pr_ReviewDtlView/material_code}] {detail>/Pr_ReviewDtlView/material_name}" width="10em" textAlign="Left"
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/material_code}}"
+                                />
                                 <Label text="(미정)품명"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/pr_desc}" width="10em" textAlign="Left" />
                                 <Label text="(미정)비고"/>
@@ -169,22 +171,34 @@
                                 <Label text="(미정)자재그룹"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/material_group_name}" width="10em" textAlign="Left" />
                                 <Label text="(미정)품목범주"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/item_category_code}] {detail>/Pr_ReviewDtlView/item_category_name}" width="10em" textAlign="Left" />
+                                <Text text="[{detail>/Pr_ReviewDtlView/item_category_code}] {detail>/Pr_ReviewDtlView/item_category_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/item_category_code}}"
+                                />
                                 <Label text="(미정)저장위치"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/slot_code}] {detail>/Pr_ReviewDtlView/slot_name}" width="10em" textAlign="Left" />
+                                <Text text="[{detail>/Pr_ReviewDtlView/slot_code}] {detail>/Pr_ReviewDtlView/slot_name}" width="10em" textAlign="Left"
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/slot_code}}"
+                                />
                             
                                 <core:Title text="(미정)담당자정보"/>
                                 <Label text="(미정)구매요청자"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/requestor_department_name}] {detail>/Pr_ReviewDtlView/requestor_name}" width="10em" textAlign="Left" />
+                                <Text text="[{detail>/Pr_ReviewDtlView/requestor_department_name}] {detail>/Pr_ReviewDtlView/requestor_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/requestor_department_name}}"
+                                />
                                 <Label text="(미정)구매담당자"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/buyer_department_name}] {detail>/Pr_ReviewDtlView/buyer_name}" width="10em" textAlign="Left" />
+                                <Text text="[{detail>/Pr_ReviewDtlView/buyer_department_name}] {detail>/Pr_ReviewDtlView/buyer_name}" width="10em" textAlign="Left"
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/buyer_department_name}}"
+                                />
 
                                 <Label text="(미정)요청자명"/>
-                                <Text text="{detail>/Pr_ReviewDtlView/requestor_name}" width="10em" textAlign="Left" />
+                                <Text text="{detail>/Pr_ReviewDtlView/erp_requestor_name}" width="10em" textAlign="Left" />
                                 <Label text="(미정)구매그룹"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/purchasing_group_code}] {detail>/Pr_ReviewDtlView/purchasing_group_name}" width="10em" textAlign="Left" />
+                                <Text text="[{detail>/Pr_ReviewDtlView/purchasing_group_code}] {detail>/Pr_ReviewDtlView/purchasing_group_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/purchasing_group_code}}"
+                                />
                                 <Label text="(미정)자재구매그룹"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/material_purchasing_group_code}] {detail>/Pr_ReviewDtlView/material_purchasing_group_name}" width="10em" textAlign="Left" />
+                                <Text text="[{detail>/Pr_ReviewDtlView/material_purchasing_group_code}] {detail>/Pr_ReviewDtlView/material_purchasing_group_name}" width="10em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/material_purchasing_group_code}}"
+                                />
                             </form:SimpleForm>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -303,7 +317,7 @@
             </uxap:ObjectPageSection>
 
             <!-- 계정지정 정보 -->
-			<uxap:ObjectPageSection titleUppercase="true" title="(미정)계정지정정보" visible="{= ${accounts>/Pr_ReviewDtlAcctView}.length} > 0}">
+			<uxap:ObjectPageSection titleUppercase="true" title="(미정)계정지정정보" visible="{= ${accounts>/Pr_ReviewDtlAcctView}.length > 0}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -394,6 +408,7 @@
 		<uxap:footer>
 			<OverflowToolbar>
                 <ToolbarSpacer />
+                <Button text="(미정)공사물량" type="Transparent" press=".onButtonPress($event, 'builds')" />
                 <Button text="(미정)변경이력" type="Transparent" press=".onButtonPress($event, 'changed')" />
                 <Button text="(미정)발주이력" type="Transparent" press=".onButtonPress($event, 'ordered')" />
                 <Button text="(미정)사용실적" type="Transparent" press=".onButtonPress($event, 'results')" />

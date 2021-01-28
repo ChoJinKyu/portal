@@ -1,9 +1,9 @@
 namespace sp;
 using util from '../../cm/util/util-model';
-// using {sp as netPrice} from '../netPrice/SP_NP_NET_PRICE_APPROVAL_MST-model';	
+using sp   from './SP_NP_NET_PRICE_APPROVAL_DTL-model';
 	
 entity Np_Net_Price_Approval_Mst {	
-  key tenent_id                       : String(5)    not null  @title: 'L1100' ;	
+  key tenant_id                       : String(5)    not null  @title: 'L1100' ;	
   key company_code                    : String(10)   not null  @title: '*,LGEKR' ;	
   key operation_type                  : String(10)   not null  @title: 'operating unit' ;	
   key operation_code                  : String(10)   not null  @title: 'operating code' ;	
@@ -22,5 +22,14 @@ entity Np_Net_Price_Approval_Mst {
       approval_contents               : LargeBinary            @title: '품의내용' ;	
       base_price_input_flag           : Boolean                @title: '기준단가입력여부' ;	
       approval_excl_flag              : Boolean                @title: '승인제외여부' ;
+
+      detailes                        : Association to many    sp.Np_Net_Price_Approval_Dtl    /* Detail 연결 */
+                                                            on detailes.tenant_id       = tenant_id 
+                                                           and detailes.company_code    = company_code 
+                                                           and detailes.operation_type  = operation_type
+                                                           and detailes.operation_code  = operation_code
+                                                           and detailes.approval_number = approval_number
+                                       ;
+
 }	
 extend Np_Net_Price_Approval_Mst with util.Managed;
