@@ -63,6 +63,7 @@
                             </layoutData>
                         </VBox>
 
+                        
                         <VBox>
                             <Label text="Single Maker" labelFor="input_maker_code"></Label>
                             <Input id="input_maker_code"
@@ -87,6 +88,29 @@
                             </layoutData>
                         </VBox>
 
+                        <VBox>
+                            <Label text="Single BP" labelFor="input_bp_code"></Label>
+                            <Input id="input_bp_code"
+                            placeholder="Choose a BP from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputBPValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi BP" labelFor="multiinput_bp_code"></Label>
+                            <MultiInput id="multiinput_bp_code"
+                            placeholder="Choose a BP from the ValueHelp"
+                            tokens="{/processTypes}"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputBPValuePress">
+                                <tokens>
+                                    <Token key="{key}" text="{text}" />
+                                </tokens>
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
                     </form:content>
                 </form:SimpleForm>
             </VBox>

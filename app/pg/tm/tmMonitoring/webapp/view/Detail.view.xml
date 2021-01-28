@@ -26,7 +26,7 @@
 														<Text text="{=${manager_local_name} === ''? 'No Manager Data' : ${manager_local_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
 														<MultiInput id="multiInputWithEmployeeValueHelp" visible="{=${DetailView>/isEditMode}}" tokenUpdate="onTokenUpdate" showValueHelp="false"/>
 														<layoutData>
-															<l:GridData span="XL4 L4 M6 S12"/>
+															<l:GridData span="XL3 L3 M6 S12"/>
 														</layoutData>
 													</VBox>
 													<VBox id="managerVBox" class="sapUiNoMarginTop">
