@@ -38,9 +38,11 @@ sap.ui.define([
             this.setModel(new JSONModel(), "contModel");
 
             this.getView().setModel(oViewTableModel, "localModel");
+            
+            var oAppSupModel = this.getOwnerComponent().getModel("fundingApp");
 
-            this._onComCodeListView();
-            this._onTransactionDivision();
+            this._onComCodeListView(oAppSupModel);
+            this._onTransactionDivision(oAppSupModel);
             this.getRouter().getRoute("mainCreateObject").attachPatternMatched(this._onRoutedThisPage, this);
             
         },
@@ -73,8 +75,51 @@ sap.ui.define([
             oModel.setProperty("/popUpInvestPlanDtl", dtlModel);
         },
 
-        onPageSaveButtonPress : function() {
-            alert("준비중");
+        onPageSaveButtonPress : function(oEvent) {
+
+            var oModel = this.getModel("fundingApp"),
+                applSavelist = {},
+                procSaveTemp = {
+                },
+                urlPram=this.getModel("contModel").getProperty("/oArgs");
+
+
+            procSaveTemp = {
+                // funding_appl_number				: ""
+                funding_notify_number           : urlPram.fundingNotifyNumber 
+                ,supplier_code                   : urlPram.supplierCode
+                ,tenant_id                       : urlPram.tenantId
+                ,company_code                    : "LGEKR" 
+                ,org_type_code                   : "AU" 
+                ,org_code                        : "WWZ" 
+                ,purchasing_department_name      : "에어솔루션구매팀" 
+                ,pyear_sales_amount              : 123000
+                ,main_bank_name                  : "하나은행" 
+                ,funding_appl_amount             : 300000
+                ,funding_hope_yyyymm             : "202104" 
+                ,repayment_method_code           : "A" 
+                ,appl_user_name                  : "" 
+                ,appl_user_tel_number            : "" 
+                ,appl_user_email_address         : "" 
+                ,funding_reason_code             : "1,2,,,," 
+                ,collateral_type_code            : "CT02" 
+                ,collateral_amount               : 0 
+                ,collateral_attch_group_number   : "" 
+                ,funding_step_code               : "" 
+                ,funding_status_code             : "" 
+            };
+
+            
+
+            jQuery.ajax({
+                url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcSaveTemp",
+                type: "POST",
+                data: JSON.stringify(procSaveTemp),
+                contentType: "application/json",
+                success: function(oData){
+                    
+                }
+            });
         },
         
         onOpenInvestmentDtl : function(oEvent) {
@@ -101,18 +146,17 @@ sap.ui.define([
             bFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, this.getModel("applicationSup").getProperty(rowPath+"/investment_plan_sequence")));
 
             this.pDialog.then(function (oDialog) {
-                oModel.read("/SfFundingInvestPlanMst", {
+                //투자계획 팝업 마스터 조회
+                oModel.read("/InvestPlanMstView", {
                     filters : bFilters,
-                    urlParameters:{
-                        $expand: "invDtlList"
-                    },
                     success: function(oRetrievedResult) {
                         that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", oRetrievedResult.results[0]);
 
                         cFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
                         cFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, oRetrievedResult.results[0].investment_plan_sequence));
 
-                        oModel.read("/SfFundingInvestPlanDtl", {
+                        //투자계획 팝업 디테일 조회
+                        oModel.read("/InvestPlanDtlView", {
                             filters : cFilters,
                             success: function(Result) {
                                 that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", Result.results);
@@ -167,7 +211,8 @@ sap.ui.define([
 
             bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
             
-            oModel.read("/SfFundingInvestPlanMst", {
+            //투자계획 마스터 리스트 조회
+            oModel.read("/InvestPlanMstListView", {
                 //Filter : 신청번호
                 filters : bFilters,
                 success: function(oRetrievedResult) {
@@ -177,10 +222,6 @@ sap.ui.define([
                     
                 }
             });
-        },
-
-        onSelectObject : function(oEvent) {
-            
         },
 
         onPurchasingAtm : function(oEvent) {
@@ -202,37 +243,58 @@ sap.ui.define([
 
         },
 
-        _onComCodeListView : function(oEvent) {
+        _onComCodeListView : function(oAppSupModel) {
             var that = this,
-                tenant_id = "L1100",
-                group_code = "SP_SF_FUNDING_REASON_CODE",
-                language_cd = "KO";
-            
-            jQuery.ajax({
-                url: "srv-api/odata/v4/sp.fundingApplicationSupV4Service/ComCodeListView(tenant_id='"+tenant_id+"',chain_code='SP',group_code='"+group_code+"',language_cd='"+language_cd+"')/Set",
-                contentType: "application/json",
-                success: function(oData){
+                sTenant_id = "L1100",
+                sGroup_code = "SP_SF_FUNDING_REASON_CODE",
+                sChain_code = "SP",
+                aFilters=[];
+
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
+            aFilters.push(new Filter("group_code", FilterOperator.EQ, sGroup_code));
+            //aFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain_code));
+            aFilters.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
+
+            oAppSupModel.read("/ComCodeListView", {
+                //Filter : 공고번호, sub 정보
+                filters : aFilters,
+                success: function(oData) {
                     var aArr=[];
-                    for(var i = 0; i < oData.value.length; i++) {
-                        that.byId("checkBoxContent").addItem(new CheckBox({text: oData.value[i].code  +". " + oData.value[i].code_name, selected:"{contModel>/detail/checkModel/" + i + "}"}));
+                    for(var i = 0; i < oData.results.length; i++) {
+                        that.byId("checkBoxContent").addItem(new CheckBox({text: oData.results[i].code  +". " + oData.results[i].code_name, selected:"{contModel>/detail/checkModel/" + i + "}"}));
                         aArr.push(false);
-                    }
-                    that.getModel("contModel").setProperty("/detail/checkModel", aArr);
+                    };
+
+                    if(!that.getModel("contModel").getProperty("/detail/checkModel")){
+                        that.getModel("contModel").setProperty("/detail/checkModel", aArr);
+                    };
+                },
+                error: function(oError) {
+                    
                 }
             });
         },
 
-        _onTransactionDivision : function(oEvent) {
-            var tenant_id = "L1100",
-                company_code = "LGEKR";
+        _onTransactionDivision : function(oAppSupModel) {
+            var that = this,
+                sTenant_id = "L1100",
+                sCompany_code = "LGEKR",
+                aFilters=[];
 
-            jQuery.ajax({
-                url: "srv-api/odata/v4/sp.fundingApplicationSupV4Service/OrgCodeListView(tenant_id='"+tenant_id+"',company_code='"+ company_code +"')/Set", 
-                contentType: "application/json",
-                success: function(oData){ 
-                    this.getModel("transactionDivision").setData(oData.value);
-                }.bind(this)                        
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompany_code));;
+
+            oAppSupModel.read("/OrgCodeListView", {
+                //Filter : 공고번호, sub 정보
+                filters : aFilters,
+                success: function(oData) {
+                    that.getModel("transactionDivision").setData(oData.results);
+                },
+                error: function(oError) {
+                    
+                }
             });
+            
         },
 
         /**
@@ -255,45 +317,46 @@ sap.ui.define([
                 that  = this,
                 aFilters = [],
                 bFilters = [];
-
-            
-
+                
+            this.getModel("contModel").setProperty("/oArgs", oArgs);
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, this._sSupplierCode));
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
             
-            oModel.read("/SfFundingApplication", {
+            //신청서 마스터 조회
+            oModel.read("/FundingApplDataView", {
                 //Filter : 공고번호, sub 정보
                 filters : aFilters,
-                success: function(oRetrievedResult) { 
-                        var aArr = [];
-                        var aCheckedData = that.getModel("contModel").getProperty("/detail/checkModel") || [];
-                        if(!!oRetrievedResult.results[0]){
-                            that.getModel("applicationSup").setData(oRetrievedResult.results[0]);
-                            var aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
-                            //var aChecked = test.split(",");
-                            aChecked.forEach(function(item){
-                                aArr.push(!!item);
-                            });
-                            bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
-                            oModel.read("/SfFundingInvestPlanMst", {
-                                //Filter : 공고번호, sub 정보
-                                filters : bFilters,
-                                success: function(oRetrievedResult) {
-                                    that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
-                                },
-                                error: function(oError) {
-                                    
-                                }
-                            });
-                            
-                        }else{
-                            aArr = aCheckedData.map(function(item){
-                                return false;
-                            });   
-                        }
-                        that.getModel("contModel").setProperty("/detail/checkModel", aArr);
-                        //that.getModel("checkModel").setData(aArr);
+                success: function(oRetrievedResult) {
+                    var aArr = [];
+                    var aCheckedData = that.getModel("contModel").getProperty("/detail/checkModel") || [];
+                    if(!!oRetrievedResult.results[0]){
+                        that.getModel("applicationSup").setData(oRetrievedResult.results[0]);
+                        var aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
+                        //var aChecked = test.split(",");
+                        aChecked.forEach(function(item){
+                            aArr.push(!!item);
+                        });
+                        bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
+                        //투자계획 마스터 조회
+                        oModel.read("/InvestPlanMstListView", {
+                            //Filter : 공고번호, sub 정보
+                            filters : bFilters,
+                            success: function(oRetrievedResult) {
+                                that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                            },
+                            error: function(oError) {
+                                
+                            }
+                        });
+                        
+                    }else{
+                        aArr = aCheckedData.map(function(item){
+                            return false;
+                        });   
+                    }
+                    that.getModel("contModel").setProperty("/detail/checkModel", aArr);
+                    //that.getModel("checkModel").setData(aArr);
                     
                     // }
                 },
@@ -302,6 +365,7 @@ sap.ui.define([
                 }
             });
         },
+
         _fnInitControlModel : function(){
             var oData = {
                 createMode : null,
@@ -313,6 +377,7 @@ sap.ui.define([
 
             this.getModel("applicationSup").setData([]);
         },
+
         _fnSetEditMode : function(){
             this._fnSetMode("edit");
         },
