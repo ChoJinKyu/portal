@@ -110,6 +110,11 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(){
+            //Clone the data
+            this._oCloneMasterModelData = Object.assign({}, this.getModel("master").getData());  
+            var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
+            this._oCloneDetailsModelData = Object.assign({}, this.getModel("details").getProperty("/"+sDetailModelEntityName));  
+            
 			this._toEditMode();
 		},
 		
@@ -222,6 +227,12 @@ sap.ui.define([
 					if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
 						this.onPageNavBackButtonPress.call(this);
 					}else{
+                        //Restore the data
+                        oMasterModel.setData(this._oCloneMasterModelData);
+                        
+                        //var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
+                        //oDetailsModel.setProperty("/"+sDetailModelEntityName, this._oCloneDetailsModelData);
+
 						this.validator.clearValueState(this.byId("page"));
 						this._toShowMode();
 					}
