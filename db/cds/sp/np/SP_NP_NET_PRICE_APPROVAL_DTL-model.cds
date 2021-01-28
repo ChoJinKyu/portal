@@ -3,7 +3,7 @@ using util from '../../cm/util/util-model';
 // using {sp as netPrice} from '../netPrice/SP_NP_NET_PRICE_APPROVAL_DTL-model';	
 	
 entity Np_Net_Price_Approval_Dtl {
-  key tenent_id                       : String(5)   not null   @title: '테넌트ID' ;	
+  key tenant_id                       : String(5)   not null   @title: '테넌트ID' ;	
   key company_code                    : String(10)  not null   @title: '회사코드' ;	
   key operation_type                  : String(10)  not null   @title: '구매운영조직유형' ;	
   key operation_code                  : String(10)  not null   @title: '구매운영조직코드' ;	
