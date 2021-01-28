@@ -2,7 +2,6 @@ sap.ui.define([
     "./BaseController",
     "ext/lib/util/Multilingual",    
     "sap/ui/model/json/JSONModel",
-    "ext/lib/util/ValidatorUtil",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
@@ -10,7 +9,7 @@ sap.ui.define([
     "sap/ui/core/ValueState",
     "ext/lib/util/Validator",
     "sap/ui/core/Fragment"
-], function (BaseController, Multilingual, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator, Fragment) {
+], function (BaseController, Multilingual, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator, Fragment) {
     "use strict";
     return BaseController.extend("pg.mi.miBom.controller.MidObject", {
         validator: new Validator(),

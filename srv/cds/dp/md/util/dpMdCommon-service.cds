@@ -48,6 +48,18 @@ service DpMdCommonService {
     from approvalMst.Approval_Mst mst 
     join approvalDtl.Md_Approval_Dtl dtl on mst.approval_number = dtl.approval_number and dtl.tenant_id = mst.tenant_id 
     join moldMst.Md_Mst dm on dm.mold_id = dtl.mold_id and dm.tenant_id =  dtl.tenant_id 
+    where mst.approval_type_code = 'E' /* 협력사선정품의 */
+    and mst.approve_status_code = 'AP' /* 승인 */
+    and dm.mold_progress_status_code in ('SUP_APP','BUD_APP')  /* 다음단계 넘어가기 전까지의 몰드상태 */
+    and dm.mold_id not in (
+        select dtl.mold_id 
+        from approvalMst.Approval_Mst m2  
+        join approvalDtl.Md_Approval_Dtl dtl2 on m2.approval_number = dtl2.approval_number 
+        and m2.tenant_id = dtl2.tenant_id
+        and m2.approval_type_code = 'A'  /* 이미 취소품의 진행중인거 제외 */
+    )
+
+
     ; 
 
 
