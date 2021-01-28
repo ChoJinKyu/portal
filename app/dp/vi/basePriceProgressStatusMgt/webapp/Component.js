@@ -38,23 +38,23 @@ sap.ui.define([
                         });
                         
                         oRootModel.setProperty("/config", oConfig);
-
-                        var aFilters2 = [];
-                        aFilters2.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
-                        aFilters2.push(new Filter("message_code", FilterOperator.EQ, oConfig.DP_VI_PURORG_DISPLAY_NM));
-                        this.getModel("commonODataModel").read("/Message", {
-                            filters : aFilters2,
-                            success : function(data){
-                                if( data ) {
-                                    oRootModel.setProperty("/plantLabel", data.results[0].message_contents);
-                                }
-                            }.bind(this),
-                            error : function(data){
-                                console.log("error", data);
-                            }
-                        });
                     }
                 }.bind(this),
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+
+            // 회사 조회
+            var oOrgModel = this.getModel("org");
+            var aOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            oOrgModel.read("/Company", {
+                filters : aOrgFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        oRootModel.setProperty("/company", data.results);
+                    }
+                },
                 error : function(data){
                     console.log("error", data);
                 }
@@ -110,14 +110,5 @@ sap.ui.define([
             });
         },
 
-        /**
-         * 세팅값에 따라 Text 변경
-         */
-        onSetPurOrgText: function (sTextParam) {
-            var oI18NModel = this.getModel("I18N");
-            var sPurOrgDisplayNm = this.getModel("rootModel").getProperty("/config/PURORG_DISPLAY_NM");
-
-            return oI18NModel.getText("/"+sPurOrgDisplayNm) || oI18NModel.getText("/PLANT");
-        }
     });
 });
