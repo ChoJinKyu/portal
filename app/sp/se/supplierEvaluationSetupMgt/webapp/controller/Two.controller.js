@@ -64,11 +64,11 @@ sap.ui.define([
             // Create 버튼 눌렀을때
             if (this.scenario_number === "New") {
                 this.getModel("TwoView").setProperty("/isEditMode", true);
-                this.getModel("TwoView").setProperty("/isCreate", true);
+                this.getModel("TwoView").setProperty("/isCreateMode", true);
 
             } else { // Detail 일때
                 this.getModel("TwoView").setProperty("/isEditMode", false);
-                this.getModel("TwoView").setProperty("/isCreate", false);     
+                this.getModel("TwoView").setProperty("/isCreateMode", false);     
  
              
                 var TwoFilters = [];      
@@ -137,16 +137,8 @@ sap.ui.define([
             var oTable = this.byId("detailValuationTable"),                
                 oView = this.getView(),
                 oModel = this.getModel("TwoView"),
-
                 aItems = oTable.getSelectedItems(),
                 aIndices = [];
-
-            var that = this;
-            var sendData = {}, aInputData=[];
-
-            sendData.inputData = aInputData;
-
-            console.log("delPrList >>>>", aIndices);
 
             if (aItems.length > 0) {
                 MessageBox.confirm(i18nModel.getText("/NCM00003"), {
@@ -160,17 +152,13 @@ sap.ui.define([
                         aIndices.sort().reverse();
                         //aIndices = aItems.sort(function(a, b){return b-a;});
                         aIndices.forEach(function(nIndex){     
-                            oModel.getProperty("/scale").splice(nIndex,1);                      
-                           
+                            oModel.getProperty("/scale").splice(nIndex,1);     
                         });
 
-                            oModel.setProperty("/scale",oModel.getProperty("/scale"));
-                       
-                            oView.byId("detailValuationTable").removeSelections(true);                        
+                        oModel.setProperty("/scale",oModel.getProperty("/scale"));
+                        oView.byId("detailValuationTable").removeSelections(true);                        
 
-                        } else if (sButton === MessageBox.Action.CANCEL) { 
-
-                        }; 
+                        }
                         
                         
                     }

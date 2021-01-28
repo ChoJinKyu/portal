@@ -77,7 +77,7 @@
                                                         width="100%" 
                                                         placeholder="EVALUATION_TYPE_CODE"
                                                         value="{TwoView>/evaluationType2/evaluation_type_code}"
-                                                        editable="{=${TwoView>/isEditMode}}"
+                                                        editable="{=${TwoView>/isCreateMode}}"
                                                         />      
                                                 <!--  평가 비율 -->
                                                 <Label text="{I18N>/EVALUATION_RATE}"/>                                                
@@ -219,10 +219,10 @@
             <uxap:footer>
                 <OverflowToolbar>
                     <ToolbarSpacer/>
-                    <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
+                    <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" visible="{=!${TwoView>/isCreateMode}}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
                     <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
                     <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
-                    <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
+                    <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${TwoView>/isEditMode}}"/>
                 </OverflowToolbar>
             </uxap:footer>
             
