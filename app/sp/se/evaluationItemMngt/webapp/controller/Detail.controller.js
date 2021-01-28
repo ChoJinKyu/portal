@@ -11,7 +11,9 @@ sap.ui.define([
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, Sorter, MessageBox, Multilingual, ListItem, SegmentedButtonItem, CalculationBuilderVariable) {
+    function ( Controller, Filter, Sorter, MessageBox, 
+        Multilingual, ListItem, SegmentedButtonItem, 
+        CalculationBuilderVariable ) {
         "use strict";
         
 		return Controller.extend("sp.se.evaluationItemMngt.controller.Detail", {
@@ -122,15 +124,20 @@ sap.ui.define([
             }
 
             , _onPatternMatched: function (e) {
-                var oArgs, oComponent, oViewModel, oHeader;
+                var oArgs, oComponent, oViewModel, oHeader,
+                    oView, aControls;
 
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
                 oHeader = oViewModel.getProperty("/Detail/Header");
+                oView = this.getView();
 
                 if( oArgs.new === "Y" ){
                     oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");
+                    aControls = oView.getControlsByFieldGroupId("newRequired");
+                    this._clearValueState(aControls);
+
                 }else{
                     oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
                     oViewModel.setProperty("/App/EditMode", false);
@@ -224,6 +231,7 @@ sap.ui.define([
 
                 oRowData.rowEditable = bSeletFlg;
                 oRowData.crudFlg = "U";
+                oRowData.transaction_code = "U";
 
                 oViewModel.setProperty(oBindContxtPath, oRowData);
             }
@@ -242,6 +250,7 @@ sap.ui.define([
                     oItemData = oViewModel.getProperty(sItemPath);
                     
                     oItemData.crudFlg = "D";
+                    oItemData.transaction_code = "D"
                     
                     oViewModel.setProperty(sItemPath, oItemData);
                 })
@@ -252,13 +261,14 @@ sap.ui.define([
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 aItems = oViewModel.getProperty("/Detail/Item");
+
                 oNewData = {
                     crudFlg : "C",
-                    rowEditable : true
+                    rowEditable : true,
+                    transaction_code : "I"
                 };
                 
                 aItems.push(oNewData);
-
                 oViewModel.setProperty("/Detail/Item", aItems);
             }
             , onPressItemCancle : function(){
@@ -285,32 +295,84 @@ sap.ui.define([
             }
 
             , onPressSave : function(){
-                var sURLPath, oSaveData, oView, oViewModel, oArgs;
+                var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
+                    oI18NModel;
 
+                oView = this.getView();
+                oI18NModel = oView.getModel("I18N");
+                oViewModel = oView.getModel("viewModel");
+                oArgs = oViewModel.getProperty("/Args");
+                oComponent = this.getOwnerComponent();
+
+                MessageBox.confirm(oI18NModel.getProperty("/NCM00001"),{
+                    onClose: function (sAction) {
+                        if(sAction === MessageBox.Action.CANCEL){
+                            return;
+                        }
+                        if(!this._checkValidation()){
+                            return;
+                        }
+                        if(oArgs.new === "Y"){
+                            sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/CreateEvalItemSaveProc";
+                        }else{
+                            sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
+                        }
+                        
+                        oSaveData = this._getSaveData();
+                        oView.setBusy(true);
+                        $.ajax({
+                            url: sURLPath,
+                            type: "POST",
+                            data: JSON.stringify(oSaveData),
+                            contentType: "application/json",
+                            success: function (data) {
+                                oView.setBusy(false);
+                                oComponent.getRouter().navTo("Master",{
+                                    search : true
+                                });
+                            },
+                            error: function (e) {
+                                var sDetails;
+
+                                sDetails = "";
+                                try{
+                                    sDetails += "<p><strong>" + e.responseJSON.error.code + "</strong></p>\n" +
+                                    "<ul>" +
+                                        "<li>" + e.responseJSON.error.message + "</li>" +
+                                    "</ul>";
+                                }catch(error){
+                                    
+                                }
+
+                                MessageBox.error(e.status + " - " + e.statusText,{
+                                    title: "Error",
+                                    details : sDetails
+                                })
+                                oView.setBusy(false);
+                            }
+                        });
+                    }.bind(this)
+                });
+            }
+            , _checkValidation : function(){
+                var bValid, oView, oViewModel, oArgs, aControls;
+                
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 oArgs = oViewModel.getProperty("/Args");
+                bValid = false;
 
                 if(oArgs.new === "Y"){
-                    sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/CreateEvalItemSaveProc";
+                    aControls = oView.getControlsByFieldGroupId("newRequired");
+                    bValid = this._isValidControl(aControls);
                 }else{
-                    sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
+                    aControls = oView.getControlsByFieldGroupId("detailRequired");
+                    bValid = this._isValidControl(aControls);
                 }
 
-                oSaveData = this._getSaveData();
 
-                $.ajax({
-                    url: sURLPath,
-                    type: "POST",
-                    data: JSON.stringify(oSaveData),
-                    contentType: "application/json",
-                    success: function (data) {
 
-                    },
-                    error: function (e) {
-
-                    }
-                });
+                return bValid;
             }
             , _getSaveData : function(){
                 var oSaveData, oUserInfo, oView, oViewModel,
@@ -381,13 +443,16 @@ sap.ui.define([
 
                 for(sHeadField in oHeader){
                     if(
-                        oHeader.hasOwnProperty(sHeadField) && aItemFields.indexOf(sHeadField) > -1
+                        oHeader.hasOwnProperty(sHeadField) && 
+                        aItemFields.indexOf(sHeadField) > -1 && 
+                        oHeader[sHeadField]
                     ){
                         oItemType[sHeadField] = oHeader[sHeadField];
                     }
                 }
 
                 oItemType.sort_sequence = parseInt(oItemType.sort_sequence) || null;
+                oItemType.transaction_code = "I";
 
                 oSaveData.ItemType.push(oItemType);
 
@@ -398,7 +463,9 @@ sap.ui.define([
 
                     for(sScleField in oRowData){
                         if(
-                            oRowData.hasOwnProperty(sScleField) && aScleFields.indexOf(sScleField) > -1
+                            oRowData.hasOwnProperty(sScleField) && 
+                            aScleFields.indexOf(sScleField) > -1 && 
+                            oRowData[sScleField]
                         ){
                             oNewRowData[sScleField] = oRowData[sScleField];
                         }
