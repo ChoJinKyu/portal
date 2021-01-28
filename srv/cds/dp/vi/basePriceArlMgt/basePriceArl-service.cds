@@ -161,6 +161,9 @@ service BasePriceArlService {
 
     entity Base_Price_Arl_Detail        as
         select from arlDetail as dtl
+        inner join comp as comp
+            on dtl.tenant_id = comp.tenant_id
+            and dtl.company_code = comp.company_code
         left outer join org as org
             on dtl.tenant_id = org.tenant_id
             and dtl.company_code = org.company_code
@@ -182,6 +185,7 @@ service BasePriceArlService {
             key dtl.approval_number,
             key dtl.item_sequence,
                 dtl.company_code,
+                comp.company_name,
                 dtl.org_type_code,
                 dtl.org_code,
                 org.org_name,

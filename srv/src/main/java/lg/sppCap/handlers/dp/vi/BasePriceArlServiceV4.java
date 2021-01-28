@@ -1058,41 +1058,40 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
 
         if (procName.equals("approval")) {
             // 1. BasePriceArlMstType 관련 테이블
-            String v_sql_dropTable_BasePriceArlMaster = "DROP TABLE #LOCAL_TEMP_MASTER";
-            jdbc.execute(v_sql_dropTable_BasePriceArlMaster);
-
+            destoryTempTable("#LOCAL_TEMP_MASTER", isDisplaySql);
+            
             // 2. BasePriceArlApproverType 관련 테이블
-            String v_sql_dropTable_BasePriceArlApprover = "DROP TABLE #LOCAL_TEMP_APPROVER";
-            jdbc.execute(v_sql_dropTable_BasePriceArlApprover);
+            destoryTempTable("#LOCAL_TEMP_APPROVER", isDisplaySql);
 
             // 3. BasePriceArlRefererType 관련 테이블
-            String v_sql_dropTable_BasePriceArlReferer = "DROP TABLE #LOCAL_TEMP_REFERER";
-            jdbc.execute(v_sql_dropTable_BasePriceArlReferer);
+            destoryTempTable("#LOCAL_TEMP_REFERER", isDisplaySql);
 
             // 4. BasePriceArlDtlType 관련 테이블
-            String v_sql_dropTable_BasePriceArlDetail = "DROP TABLE #LOCAL_TEMP_DETAIL";
-            jdbc.execute(v_sql_dropTable_BasePriceArlDetail);
+            destoryTempTable("#LOCAL_TEMP_DETAIL", isDisplaySql);
 
             // 5. BasePriceArlPriceType 관련 테이블
-            String v_sql_dropTable_BasePriceArlPrice = "DROP TABLE #LOCAL_TEMP_PRICE";
-            jdbc.execute(v_sql_dropTable_BasePriceArlPrice);
-
-            if (isDisplaySql) {
-                System.out.println(v_sql_dropTable_BasePriceArlMaster + ";");
-                System.out.println(v_sql_dropTable_BasePriceArlApprover + ";");
-                System.out.println(v_sql_dropTable_BasePriceArlReferer + ";");
-                System.out.println(v_sql_dropTable_BasePriceArlDetail + ";");
-                System.out.println(v_sql_dropTable_BasePriceArlPrice + ";");
-            }
+            destoryTempTable("#LOCAL_TEMP_PRICE", isDisplaySql);
         } else if (procName.equals("change")) {
-            // 5. BasePriceArlPriceType 관련 테이블
-            String v_sql_dropTable_BasePriceArlChangeRequestor = "DROP TABLE #LOCAL_TEMP_CHANGE_REQUESTOR";
-            jdbc.execute(v_sql_dropTable_BasePriceArlChangeRequestor);
-
-            if (isDisplaySql) {
-                System.out.println(v_sql_dropTable_BasePriceArlChangeRequestor + ";");
-            }
+            // 6. BasePriceArlChangeRequestorType 관련 테이블
+            destoryTempTable("#LOCAL_TEMP_CHANGE_REQUESTOR", isDisplaySql);
         }
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    private void destoryTempTable(String tempTableName, boolean isDisplaySql) {
+        log.info("## destoryTempTable Method Started.... : " + tempTableName);
+
+        String v_sql_dropTable = "";
+
+        v_sql_dropTable  = "DO BEGIN";
+        v_sql_dropTable += "  IF EXISTS (SELECT * FROM m_temporary_tables WHERE table_name = '" + tempTableName + "') THEN ";
+        v_sql_dropTable += "     DROP TABLE " + tempTableName + ";";
+        v_sql_dropTable += "  END IF;";
+        v_sql_dropTable += "END;";
+        jdbc.execute(v_sql_dropTable);
+
+        if (isDisplaySql) 
+            System.out.println(v_sql_dropTable + ";");
     }
 
 }
