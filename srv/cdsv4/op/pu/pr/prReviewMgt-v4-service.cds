@@ -9,7 +9,8 @@ service PrReviewMgtV4Service {
         tenant_id : String(5);
         company_code : String(10);
         pr_number : String(50);
-        pr_item_number : Integer64;
+        //pr_item_number : Integer64;
+        pr_item_number : String(10);
     };
 
     /* Return Type */
