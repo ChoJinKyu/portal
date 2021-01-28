@@ -137,7 +137,7 @@ sap.ui.define([
         },
       
       onAdd: function () {
-          debugger;
+          
             var orgCode = this.getView().byId("searchChain").setSelectedItem().getSelectedKey();
             if(orgCode=="" || orgCode==null){
                 MessageToast.show("사업본부를 설정해주세요.");

@@ -34,7 +34,7 @@
                     <form:content>
                         <!-- Type 시작 -->
                         <VBox>
-                            <Label text="{I18N>/TYPE}"></Label>
+                            <Label text="{I18N>/APPROVAL_TYPE_CODE}"></Label>
                             <ComboBox
                                 width="100%"
                                 selectedKey="{filterModel>/type}"
@@ -44,7 +44,7 @@
                                 ]
                                 }">
                                 <items>
-                                <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                                <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -58,16 +58,10 @@
                             <Label text="{I18N>/COMPANY}"></Label>
                             <ComboBox width="100%" 
                                 selectedKey="{filterModel>/company_code}" 
-                                items="{
-                                    path: 'org>/Company',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    sorter: { path: 'company_code'}
-                                }"
+                                items="{rootModel>/company}"
                                 change=".onChangeCompany">
                                 <items>
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    <core:Item key="{rootModel>company_code}" text="[{rootModel>company_code}] {rootModel>company_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -138,22 +132,10 @@
                         <!-- Requset By 시작 -->
                         <VBox height="56px">
                             <Label text="{I18N>/REQUESTOR}"></Label>
-                            <lib-m:CodePicker id="searchEmployeePicker"
-                                placeholder="Enter a Employee name"
-                                value="{filterModel>/requestBy}"
-                                keyField="employee_number"
-                                textField="user_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Employee'
-                                }">
-                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                            </lib-m:CodePicker>
+                            <MultiInput id="multiInputWithEmployeeValueHelp"
+                            placeholder="Choose employees from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
+                            </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -261,8 +243,8 @@
                             <Text text="{listModel>material_spec}" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="12rem">
-                        <Label text="{I18N>/STATUS}"  textAlign="Center" width="100%" />
+                    <t:Column hAlign="Center" width="12rem">
+                        <Label text="{I18N>/STATUS}" />
                         <t:template>
                             <tnt:InfoLabel 
                                 text="{listModel>approve_status_code_nm}" 
@@ -281,13 +263,13 @@
                             <Text text="{listModel>supplier_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="15rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NAME}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
-                            <Text text="{listModel>supplier_local_name}" textAlign="Center" width="100%" />
+                            <Text text="{listModel>supplier_local_name}" />
                         </t:template>
                     </t:Column>
                     <t:Column width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -423,7 +405,8 @@
                         <Label text="{I18N>/REQUEST_DATE}" />
                         <t:template>
                             <Text text="{
-                                    path: 'listModel>request_date'}" />
+                                    path: 'listModel>request_date',
+                                    formatter: '.onChangeDateFormat'}" textAlign="Center" width="100%" />       
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center"  width="8rem">

@@ -518,7 +518,7 @@ sap.ui.define([
                     ],
                     template: new Item({
                         key: "{util>code}",
-                        text: "{util>code_description}"
+                        text: "{util>code_name}"
                     })
                 }); 
 
