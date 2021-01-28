@@ -105,7 +105,7 @@
                                     textAlign="Left"
                                     labelFor="input"/>
                             </VBox> 
-                             <VBox alignItems="Center">
+                             <VBox alignItems="Left" width="100%">
                                 <Label
                                     text="{detailModel>/mst/pr_header_text}"
                                     visible="true"

@@ -163,19 +163,28 @@ sap.ui.define([
                 var status = "";
                 var oFilter = [];
                 var aFilter = [];
+                var searchCompany = [];
                 var searchOperationOrg = [];
 
                 if (this.sSurffix === "E") {
+                    searchCompany = that.byId("search_company_e").getSelectedKeys();
                     status = that.byId("status_e").getSelectedKey();
                     searchOperationOrg = that.byId("search_operation_org_e").getSelectedKeys();
                 }
 
                 if (this.sSurffix === "S") {
+                    searchCompany = that.byId("search_company_s").getSelectedKeys();
                     status = that.byId("status_s").getSelectedKey();
                     searchOperationOrg = that.byId("search_operation_org_s").getSelectedKeys();
                 }
 
-                //console.log("searchOperationOrg:" + searchOperationOrg);
+                // if (searchCompany.length > 0) {
+                //     for (var i = 0; i < searchCompany.length; i++) {
+                //         aFilter.push(new Filter("org_code", FilterOperator.EQ, searchCompany[i]));
+                //     }
+                //     oFilter.push(new Filter(aFilter, false));
+                // }
+
                 if (searchOperationOrg.length > 0) {
                     for (var i = 0; i < searchOperationOrg.length; i++) {
                         aFilter.push(new Filter("org_code", FilterOperator.EQ, searchOperationOrg[i]));

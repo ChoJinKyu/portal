@@ -34,13 +34,13 @@ sap.ui.define([
             BaseController.prototype["op.init"].apply(this, arguments);
             // today
             var lToday = new Date();
-            var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()));
+            var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), 11/*lToday.getDate()*/));
             // 화면제어
             this.setModel(new JSONModel(), "mainListViewModel");
             // 조회조건 : 
             this.setModel(new JSONModel({
                 tenant_id: "L2100",
-                company_code: null,
+                company_code: "LGCKR",
                 pr_type_code: {
                     FilterOperator: FilterOperator.Any,
                     values: []
@@ -163,25 +163,26 @@ sap.ui.define([
             var [event, action, ...args] = arguments;
             var value;
             // 재작성요청
-            action == 'rewrite'
+            action == 'REWRITE'
             &&
             (value = (function() {
             })());
 
-            // 닫기
-            action == 'close'
+            // 마감
+            action == 'CLOSING'
             &&
             (value = (function() {
             })());
 
             // 구매담당자변경
-            action == 'change'
+            action == 'CHANGE'
             &&
             (value = (function() {
             })());
 
             return {action, value};
         },
+        
         // Excel Download - 추가 화일명이 필요한 경우, arguments 뒤에 인자로 붙인다.
         // 어쩔 수 없음, Binding Expression 에서 함수 Parsing 해결이 되면, 다시 재작성
         onExcelDownload: function () {
