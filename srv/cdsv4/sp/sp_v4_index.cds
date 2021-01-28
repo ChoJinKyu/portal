@@ -6,3 +6,6 @@ using from './se/sp_se_v4_index';
 
 //협력사 자금지원관리
 using from './sf/sp_sf_v4_index';
+
+//양산기준가 품의
+using from './vi/sp_vi_index';
