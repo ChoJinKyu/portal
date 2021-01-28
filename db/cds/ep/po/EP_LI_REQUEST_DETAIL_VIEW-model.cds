@@ -23,7 +23,7 @@ entity Li_Request_Detail_View {
         spec_desc                  : String(1000)        @title : '규격설명';
         delivery_request_date      : Date                @title : '납품요청일자';
         request_amount             : Decimal             @title : '요청금액';
-        supplier_code              : String(10)         @title : '공급업체코드';
+        supplier_code              : String(100)         @title : '공급업체코드';
         supplier_name              : String(100)         @title : '공급업체';
         buyer_empno                : String(30)          @title : '구매자사번';
         buyer_name                 : String(30)          @title : '구매자이름';
