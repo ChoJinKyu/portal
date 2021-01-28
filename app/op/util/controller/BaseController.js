@@ -35,7 +35,12 @@ sap.ui.define([
         // Filter
         generateFilters: function(model, filters) {
             // model Object
-            var jData = this.getModel(model||"").getData();
+            // var jData = this.getModel(model||"").getData();
+            var jData = 
+                typeof model == "string" 
+                ? this.getModel(model||"").getData() 
+                : model.getData();
+
             // Filter: keyword 쪽은 보완 필요
             return Object.keys(jData)
                 // EQ, BT 만 해당
@@ -82,7 +87,10 @@ sap.ui.define([
         // Service
         /////////////////////////////////////////////////////////////
         // 조회
-        search: function (searchModel, entity, model, isSingle) {
+        search: function (searchModel, model, entity, isSingle) {
+
+            var mDeferred = new $.Deferred();
+
             // Call Service
             (function() {
                 var oDeferred = new $.Deferred();
@@ -101,6 +109,7 @@ sap.ui.define([
                 this.getView().setModel(new JSONModel({
                     [(() => entity)()]: !isSingle ? oData.results : oData.results[0]
                 }), model);
+                mDeferred.resolve(oData);
             }).bind(this))
             // 실패시
             .fail(function (oError) {
@@ -109,6 +118,8 @@ sap.ui.define([
             .always((function () {
                 this.getView().setBusy(false);
             }).bind(this));
+
+            return mDeferred.promise();
         },
 
         /////////////////////////////////////////////////////////////
@@ -116,13 +127,13 @@ sap.ui.define([
         /////////////////////////////////////////////////////////////
         // 버튼클릭
         // I/F : [event, action[, a, b, ...], ...args]
-        // action == 'default' 인 경우는 (args.action IN ("NavBack", "Full", "Exit")을 참고하여)자동처리
+        // action == 'default' 인 경우는 (args[args.length-1]["action"] IN ("NavBack", "Full", "Exit")을 참고하여)자동처리
         // default 액션의 경우 : 후단 처리를 위해서는 각 화면의 컨트롤러에서 후 처리만을 기재해주면 된다.
         onButtonPress: function () {},
 
         // 네비게이션
         // I/F : [event, action[, a, b, ...], ...args]
-        // action == 'default' 인 경우는 (args.action IN ("NavBack", "Full", "Exit")을 참고하여)자동처리
+        // action == 'default' 인 경우는 (args[args.length-1]["action"] IN ("NavBack", "Full", "Exit")을 참고하여)자동처리
         // NavBack: 이전, Full: 전체화면, Exit: 전체화면해제
         // default 액션의 경우 : 후단 처리를 위해서는 각 화면의 컨트롤러에서 후 처리만을 기재해주면 된다.
         onNavigationActions: function () {},

@@ -97,11 +97,24 @@ sap.ui.define([
 			this._updateUIElements();
 			// Replace the URL with the new layout if a navigation arrow was used
 			if (bIsNavigationArrow) {
-				this.oRouter.navTo(this.sCurrentRouteName, {
-					layout: sLayout, 
-					tenantId: this.sCurrentTenantId, 
-					controlOptionCode: this.sCurrentControlOptionCode
-				}, true);
+				// this.oRouter.navTo(this.sCurrentRouteName, {
+				// 	layout: sLayout, 
+				// 	tenantId: this.sCurrentTenantId, 
+				// 	controlOptionCode: this.sCurrentControlOptionCode
+                // }, true);
+                
+                // this.oRouter.navTo(this.sCurrentRouteName, {
+                //     layout: this.getOwnerComponent()
+                //                 .getHelper()
+                //                 .getNextUIState(1)
+                //                 .layout,
+                //     "?query": {
+                //         tenant_id: record.tenant_id,
+                //         company_code: record.company_code,
+                //         pr_number: record.pr_number,
+                //         pr_item_number: record.pr_item_number
+                //     }
+                // });
 			}
 		},
 

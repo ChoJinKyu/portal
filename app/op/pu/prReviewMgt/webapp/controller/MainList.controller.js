@@ -34,7 +34,8 @@ sap.ui.define([
             BaseController.prototype["op.init"].apply(this, arguments);
             // today
             var lToday = new Date();
-            var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), 11/*lToday.getDate()*/));
+            var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()));
+            var uStart = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()-30));
             // 화면제어
             this.setModel(new JSONModel(), "mainListViewModel");
             // 조회조건 : 
@@ -67,7 +68,7 @@ sap.ui.define([
                 requestor_name: null,
                 request_date: {
                     FilterOperator: FilterOperator.BT,
-                    values: [ uToday, uToday ]
+                    values: [ uStart, uToday ]
                 },
                 accept_date: {
                     FilterOperator: FilterOperator.BT,
@@ -81,7 +82,8 @@ sap.ui.define([
                 price_unit: null,
                 pr_progress_status_code: {
                     FilterOperator: FilterOperator.Any,
-                    values: []
+                    // 30: 결재완료, 50: 생성완료
+                    values: ["30", "50"]
                 },
                 remark: null,
                 attch_group_number: null,
@@ -101,7 +103,7 @@ sap.ui.define([
         },
         // 화면호출시실행
         onRenderedFirst: function () {
-            this.search("jSearch", "Pr_ReviewListView", "list");
+            return this.search("jSearch", "list", "Pr_ReviewListView");
         },
         /* =========================================================== */
         /* event handlers                                              */
@@ -137,7 +139,7 @@ sap.ui.define([
         // 조회
         onSearch: function (event) {
             // Call Service
-            this.search("jSearch", "Pr_ReviewListView", "list");
+            return this.search("jSearch", "list", "Pr_ReviewListView");
         },
 		/**
 		 * Event handler when pressed the item of table
@@ -145,7 +147,9 @@ sap.ui.define([
 		 * @public
 		 */
         onColumnListItemPress: function () {
+
             var [event, record] = arguments;
+
             this.getRouter().navTo("midView", {
                 layout: this.getOwnerComponent()
                             .getHelper()
@@ -160,8 +164,10 @@ sap.ui.define([
             });
         },
         onButtonPress: function () {
+
             var [event, action, ...args] = arguments;
             var value;
+
             // 재작성요청
             action == 'REWRITE'
             &&
@@ -186,6 +192,7 @@ sap.ui.define([
         // Excel Download - 추가 화일명이 필요한 경우, arguments 뒤에 인자로 붙인다.
         // 어쩔 수 없음, Binding Expression 에서 함수 Parsing 해결이 되면, 다시 재작성
         onExcelDownload: function () {
+
             return BaseController.prototype["onExcel"].call(this, arguments);
         }
     });
