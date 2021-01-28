@@ -139,7 +139,6 @@ service FundingApplicationV4Service {
                         company_code                  : String(10),    //회사코드
                         org_type_code                 : String(2),     //조직유형코드
                         org_code                      : String(10),    //조직코드
-                        funding_appl_date             : Date,          //자금지원신청일자
                         purchasing_department_name    : String(100),   //구매부서명
                         pyear_sales_amount            : Decimal,       //전년매출금액
                         main_bank_name                : String(100),   //주요은행명
@@ -152,8 +151,6 @@ service FundingApplicationV4Service {
                         funding_reason_code           : String(30),    //자금지원사유코드
                         collateral_type_code          : String(30),    //담보구분코드
                         collateral_amount             : Decimal,       //담보금액
-                        collateral_start_date         : Date,          //담보시작일자
-                        collateral_end_date           : Date,          //담보종료일자
                         collateral_attch_group_number : String(100),   //담보첨부파일그룹번호
                         funding_step_code             : String(30),    //자금지원단계코드
                         funding_status_code           : String(30),    //자금지원상태코드

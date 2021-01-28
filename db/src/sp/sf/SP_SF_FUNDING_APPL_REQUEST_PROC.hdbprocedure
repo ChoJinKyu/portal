@@ -19,7 +19,6 @@ PROCEDURE SP_SF_FUNDING_APPL_REQUEST_PROC(
 	,IN I_COMPANY_CODE                   NVARCHAR(10)  	--회사코드
 	,IN I_ORG_TYPE_CODE                  NVARCHAR(2)   	--조직유형코드
 	,IN I_ORG_CODE                       NVARCHAR(10)  	--조직코드
-	,IN I_FUNDING_APPL_DATE              DATE          	--자금지원신청일자
 	,IN I_PURCHASING_DEPARTMENT_NAME     NVARCHAR(100) 	--구매부서명
 	,IN I_PYEAR_SALES_AMOUNT             DECIMAL       	--전년매출금액
 	,IN I_MAIN_BANK_NAME                 NVARCHAR(100) 	--주요은행명
@@ -32,8 +31,6 @@ PROCEDURE SP_SF_FUNDING_APPL_REQUEST_PROC(
 	,IN I_FUNDING_REASON_CODE            NVARCHAR(30)  	--자금지원사유코드
 	,IN I_COLLATERAL_TYPE_CODE           NVARCHAR(30)  	--담보구분코드
 	,IN I_COLLATERAL_AMOUNT              DECIMAL       	--담보금액
-	,IN I_COLLATERAL_START_DATE          DATE          	--담보시작일자
-	,IN I_COLLATERAL_END_DATE            DATE          	--담보종료일자
 	,IN I_COLLATERAL_ATTCH_GROUP_NUMBER  NVARCHAR(100) 	--담보첨부파일그룹번호
 	,IN I_FUNDING_STEP_CODE              NVARCHAR(30)  	--자금지원단계코드
 	,IN I_FUNDING_STATUS_CODE            NVARCHAR(30)  	--자금지원상태코드
@@ -230,6 +227,7 @@ BEGIN
 			,MAIN_BANK_NAME					= :I_MAIN_BANK_NAME					--주요은행명
 			,FUNDING_APPL_AMOUNT			= :I_FUNDING_APPL_AMOUNT			--자금지원신청금액
 			,FUNDING_HOPE_YYYYMM			= :I_FUNDING_HOPE_YYYYMM			--자금지원희망년월
+            ,REPAYMENT_METHOD_CODE          = :I_REPAYMENT_METHOD_CODE          --상환방법코드
 			,APPL_USER_NAME					= :I_APPL_USER_NAME					--신청사용자명
 			,APPL_USER_TEL_NUMBER			= :I_APPL_USER_TEL_NUMBER			--신청사용자전화번호
 			,APPL_USER_EMAIL_ADDRESS		= :I_APPL_USER_EMAIL_ADDRESS		--신청사용자이메일주소
