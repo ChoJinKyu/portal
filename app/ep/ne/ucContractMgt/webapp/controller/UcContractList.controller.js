@@ -154,7 +154,7 @@ sap.ui.define([
 
             if (this.validator.validate(this.byId("dialogContractEnd")) !== true) return;
 
-            var url = "ep/ne/ucContractMgt/webapp/srv-api/odata/v4/ep.UcContractMgtService/NetContractEndProc";
+            var url = "ep/ne/ucContractMgt/webapp/srv-api/odata/v4/ep.UcContractMgtV4Service/NetContractEndProc";
 
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
@@ -171,7 +171,7 @@ sap.ui.define([
                                 console.log("#########Success#####", data.value);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.validator.clearValueState(that.byId("dialogContractEnd"));
-                                that.onExitRfq();
+                                that.onExitContractEnd();
                                 that.byId("pageSearchButton").firePress();
                             },
                             error: function (e) {
@@ -188,7 +188,7 @@ sap.ui.define([
          * @description employee 팝업 닫기 
          */
         onExitContractEnd: function () {
-            this.byId("contractEnd").close();
+            this.byId("dialogContractEnd").close();
         },
 
 		/**
@@ -212,11 +212,11 @@ sap.ui.define([
                     /*
                         향후 견적테이블이 생성되면 1번로직 주석 2번 로직 주석해제
                     */
-                    console.log("net_price_contract_document_no========", oModel.getData().UcApprovalMstlView[chkIdx].net_price_contract_document_no);
-                    console.log("net_price_contract_degree========", oModel.getData().UcApprovalMstlView[chkIdx].net_price_contract_degree);
-                    console.log("net_price_contract_chg_type_cd========", oModel.getData().UcApprovalMstlView[chkIdx].net_price_contract_chg_type_cd);
+                    console.log("net_price_contract_document_no========", oModel.getData()[chkIdx].net_price_contract_document_no);
+                    console.log("net_price_contract_degree========", oModel.getData()[chkIdx].net_price_contract_degree);
+                    console.log("net_price_contract_chg_type_cd========", oModel.getData()[chkIdx].net_price_contract_chg_type_cd);
 
-                    if (oModel.getData().UcApprovalMstlView[chkIdx].net_price_contract_chg_type_cd == "D") {
+                    if (oModel.getData()[chkIdx].net_price_contract_chg_type_cd == "D") {
                         MessageToast.show("계약종료건이 있습니다.");
                         canSelect = false;
                         return true;
@@ -238,11 +238,11 @@ sap.ui.define([
 
                 if (oSelected.length > 0) {
                     oSelected.forEach(function (chkIdx) {
-                        var tenantId = oModel.getData().LOIPublishItemView[chkIdx].tenant_id;
-                        var companyCode = oModel.getData().UcApprovalMstlView[chkIdx].company_code;
-                        var netPriceContractDocumentNo = oModel.getData().UcApprovalMstlView[chkIdx].net_price_contract_document_no;
-                        var netPriceContractDegree = oModel.getData().UcApprovalMstlView[chkIdx].net_price_contract_degree;
-                        deleteReason = oModel.getData().UcApprovalMstlView[chkIdx].delete_reason;
+                        var tenantId = oModel.getData()[chkIdx].tenant_id;
+                        var companyCode = oModel.getData()[chkIdx].company_code;
+                        var netPriceContractDocumentNo = oModel.getData()[chkIdx].net_price_contract_document_no;
+                        var netPriceContractDegree = oModel.getData()[chkIdx].net_price_contract_degree;
+                        deleteReason = oModel.getData()[chkIdx].delete_reason;
 
 
                         console.log("####tenant_id====", tenantId);
@@ -255,8 +255,8 @@ sap.ui.define([
                             "tenant_id": tenantId,
                             "company_code": companyCode,
                             "net_price_contract_document_no": netPriceContractDocumentNo,
-                            "net_price_contract_degree": netPriceContractDegree,
-                            "deleteReason": ""
+                            "net_price_contract_degree": parseInt(netPriceContractDegree),
+                            "delete_reason": ""
                         }
 
                         saveContractEnd.push(inputData);
@@ -301,7 +301,7 @@ sap.ui.define([
                 that = this;
 
             oView.setBusy(true);
-            oRootModel.read("/UcApprovalMstlView", {
+            oRootModel.read("/UcApprovalMstView", {
                 filters: aSearchFilters,
                 sorters: aSorter,
                 success: function (oData) {
