@@ -36,7 +36,7 @@ BEGIN
     BEGIN
     	DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            O_MSG = SELECT  'NG' RETURN_CODE, 'Evaluation type processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')' RETURN_MSG FROM  DUMMY;
+            :O_MSG.INSERT(('NG', 'Evaluation type processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
         END;
     
         MERGE INTO SP_SE_EVAL_TYPE AS ET
@@ -96,7 +96,7 @@ BEGIN
     BEGIN
     	DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            O_MSG = SELECT  'NG' RETURN_CODE, 'Evaluation grade processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')' RETURN_MSG FROM  DUMMY;
+            :O_MSG.INSERT(('NG', 'Evaluation grade processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
         END;
         
         DELETE FROM SP_SE_EVAL_GRADE
