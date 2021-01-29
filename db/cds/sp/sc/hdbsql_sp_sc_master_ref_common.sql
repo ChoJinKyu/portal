@@ -72,13 +72,76 @@ SELECT TOP 50 * FROM DUMMY WHERE 1=1
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name TABLES - 설명
-SELECT TOP 50 * FROM DUMMY WHERE 1=1 
--- AND FIELD = "VALUE"
+SELECT TOP 50 * FROM cm_Code_Mst WHERE 1=1 
+AND ( 1=0 
+    -- OR upper(group_code) like upper('%Incoterms%')
+    -- OR upper(group_code) like upper('%Payment%Terms%')
+    -- OR upper(group_code) like upper('%Market%')
+    -- OR upper(group_code) like upper('%Award%')
+    -- OR upper(group_code) like upper('%Nego%')
+    OR upper(group_code) like upper('%DP_VI_MARKET_CODE%')
+    OR upper(group_code) like upper('%PAYMENT_TERMS%')
+    OR upper(group_code) like upper('%OP_INCOTERMS%')
+    OR upper(group_code) like upper('%SP_SC_AWARD_PROG_STATUS_CODE%')
+    OR upper(group_code) like upper('%SP_SC_NEGO_PROG_STATUS_CODE%')
+    OR upper(group_code) like upper('%SP_SC_AWARD_TYPE_CODE%')
+    OR upper(group_code) like upper('%SP_SC_AWARD_METHOD_CODE%')
+)
 ;
 
-
-
-
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name TABLES - 설명
+SELECT TOP 500 
+  TENANT_ID
+, GROUP_CODE
+, CHAIN_CODE
+, GROUP_NAME
+, GROUP_DESCRIPTION
+, MAXIMUM_COLUMN_SIZE
+-- , USE_FLAG
+-- , LOCAL_CREATE_DTM
+-- , LOCAL_UPDATE_DTM
+-- , CREATE_USER_ID
+-- , UPDATE_USER_ID
+-- , SYSTEM_CREATE_DTM
+-- , SYSTEM_UPDATE_DTM
+-- , children.TENANT_ID
+-- , children.GROUP_CODE
+, children.CODE
+, children.CODE_DESCRIPTION
+, children.SORT_NO
+-- , children.START_DATE
+-- , children.END_DATE
+-- , children.PARENT_GROUP_CODE
+-- , children.PARENT_CODE
+-- , children.REMARK
+-- , children.COLOR_TYPE_CODE
+-- , children.LOCAL_CREATE_DTM
+-- , children.LOCAL_UPDATE_DTM
+-- , children.CREATE_USER_ID
+-- , children.UPDATE_USER_ID
+-- , children.SYSTEM_CREATE_DTM
+-- , children.SYSTEM_UPDATE_DTM
+-- , children.children.TENANT_ID
+-- , children.children.GROUP_CODE
+-- , children.children.CODE
+, children.children[LANGUAGE_CD='KO'].LANGUAGE_CD
+, children.children[LANGUAGE_CD='KO'].CODE_NAME
+-- , children.children.LOCAL_CREATE_DTM
+-- , children.children.LOCAL_UPDATE_DTM
+-- , children.children.CREATE_USER_ID
+-- , children.children.UPDATE_USER_ID
+-- , children.children.SYSTEM_CREATE_DTM
+-- , children.children.SYSTEM_UPDATE_DTM
+FROM cm_Code_Mst WHERE 1=1 
+AND ( 1=0 
+    -- OR upper(group_code) like upper('%Incoterms%')
+    -- OR upper(group_code) like upper('%Payment%Terms%')
+    -- OR upper(group_code) like upper('%Market%')
+    -- OR upper(group_code) like upper('%Award%')
+    OR upper(group_code) like upper('%Nego%')
+);
 
 /**********************************************************************************************************/
 --** dd
