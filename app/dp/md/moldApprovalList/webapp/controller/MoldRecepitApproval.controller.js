@@ -337,7 +337,8 @@ sap.ui.define([
         } , 
         onPageRequestCancelButtonPress : function () { 
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
-            this._moldRecepitApprovalDataSetting();
+            this.approvalRequestCancel(); 
+           // this._moldRecepitApprovalDataSetting();
         } , 
 
         _moldRecepitApprovalDataSetting : function () { 

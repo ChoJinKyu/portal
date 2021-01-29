@@ -439,7 +439,8 @@ sap.ui.define([
         },
         onPageRequestCancelButtonPress: function () {
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
-            this._budgetExecutionDataSetting();
+            this.approvalRequestCancel(); 
+          //  this._budgetExecutionDataSetting();
         },
         _budgetExecutionDataSetting: function () {
             this.approval_type_code = "B";
