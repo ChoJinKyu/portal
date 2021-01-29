@@ -22,8 +22,10 @@ using {pg.Vp_Vendor_Pool_Mst as VendorPoolMst} from '../../../../db/cds/pg/vp/PG
 using {pg.Vp_Vendor_Pool_Item_Dtl as VendorPoolItemDtl} from '../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';  // Vendor Pool Item Dtl(Vendor Pool 품목연결상세)
 
 //PG MI
-using {pg.MI_Material_Code as MaterialCode} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE-model';  // Material Code(시황자재)
-using {pg.MI_Material_Code_Lng as MaterialCodeLng} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_LNG-model';  // Material Code Lng(시황자재언어코드)
+using {pg.MI_Material_Code as MaterialCode} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE-model';                  // Material Code(시황자재)
+using {pg.MI_Material_Code_Lng as MaterialCodeLng} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_LNG-model';       // Material Code Lng(시황자재언어코드)
+using {pg.MI_Category_Hichy_Stru as CategoryHichy} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_HICHY_STRU-model';     // Category Hierarchy Structure (Category 계층구조)
+using {pg.MI_Category_Lng as  CategoryLng} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_LNG-model';                    // Category Lng(범주 내역)
 
 // SP SM
 using {sp.Sm_Supplier_Mst as SupplierMst} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';     // Supplier Mst(공급업체 Mst)
@@ -351,6 +353,21 @@ service marketIntelligenceSacDService {
                ,replace(fmytr_name, char(10), '')               as  FMYTR_NAME : String
                ,credit_evaluation_interface_code                as  CREDIT_EVAL_IF_NO : String
         from  SupplierMst
+        ;
+
+    // Mi Category Code View: Mi Category Code 
+    view MiCategoryCodeView @(title : '시황자재 품목 범주 View') as
+        select
+            key pmchs.tenant_id         as  TENANT_ID
+           ,key pmchs.category_code     as  ID : String
+               ,pmcl.category_name      as  Description
+               ,pmchs.parent_category_code
+           ,key language_code
+               ,pmchs.sort_sequence
+        from  CategoryHichy  pmchs
+              inner join  CategoryLng  pmcl
+                  on  pmchs.tenant_id      =  pmcl.tenant_id
+                  and pmchs.category_code  =  pmcl.category_code
         ;
 
 }
