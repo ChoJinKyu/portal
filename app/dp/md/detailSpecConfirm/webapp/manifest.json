@@ -34,14 +34,7 @@
         }
       },
       "orgMgrService": {
-        "uri": "srv-api/odata/v2/cm.OrgMgtService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "purOrgMgrService": {
-        "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
+        "uri": "srv-api/odata/v2/cm.util.OrgService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -128,16 +121,6 @@
       },
       "org": {
         "dataSource": "orgMgrService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": true,
-          "useBatch": true
-        }
-      },
-      "purOrg": {
-        "dataSource": "purOrgMgrService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
