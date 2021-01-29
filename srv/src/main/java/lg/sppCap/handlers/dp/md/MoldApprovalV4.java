@@ -610,7 +610,7 @@ public class MoldApprovalV4 implements EventHandler {
             v_sql_createTable.append("SPLIT_PAY_TYPE_CODE NVARCHAR(30),");
             v_sql_createTable.append("PAY_RATE DECIMAL(20, 2),");
             v_sql_createTable.append("PAY_PRICE DECIMAL(20, 2),");
-            v_sql_createTable.append("UPDATE_USER_ID NVARCHAR(50)");
+            v_sql_createTable.append("UPDATE_USER_ID NVARCHAR(50))");
 
             String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP VALUES (?, ?, ?, ?, ?, ?, ?)";
             String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP";
@@ -629,8 +629,8 @@ public class MoldApprovalV4 implements EventHandler {
                         v_inRow.get("approval_number"),
                         v_inRow.get("pay_sequence"),
                         v_inRow.get("split_pay_type_code"),
-                        v_inRow.get("pay_rate"),
-                        v_inRow.get("pay_price"),
+                        new BigDecimal((String)((v_inRow.get("pay_rate")==null||v_inRow.get("pay_rate")=="")?"0":v_inRow.get("pay_rate"))),
+                        new BigDecimal((String)((v_inRow.get("pay_price")==null||v_inRow.get("pay_price")=="")?"0":v_inRow.get("pay_price"))),
                         "anonymous"};
                     batch.add(valuesM);
                 }
@@ -640,8 +640,8 @@ public class MoldApprovalV4 implements EventHandler {
                     this.APPROVAL_NUMBER,
                     "",
                     "",
-                    0,
-                    0,
+                    null,
+                    null,
                     "anonymous"};
                 batch.add(valuesM);
             }

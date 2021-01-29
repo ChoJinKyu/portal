@@ -79,9 +79,10 @@ public class DevelopmentReceiptV4 implements EventHandler {
         msg.setMessageCode("001");
         msg.setResultCode(0);
 
+        String statusCode = "DEV_RCV";
         String v_sql_createSetId = "SELECT DP_MD_MST_SET_ID_SEQ.NEXTVAL FROM DUMMY";
         String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(TENANT_ID => ?, MOLD_ID => ?)";
-        
+        String v_progressSql_callProc = "CALL DP_MD_PROGRESS_STATUS_INSERT_PROC(TENANT_ID => ?, MOLD_ID => ?, PROG_STATUS_CODE => ?, PROG_STATUS_CHANGE_DATE => ?, PROG_STATUS_CHANGER_EMPNO => ?, PROG_STATUS_CHANGER_DEPT_CODE => ?, REMARK => ?)";
 
         // Set Id 뒤 5자리 생성
         int setIdSeq = jdbc.queryForObject(v_sql_createSetId, Integer.class);
@@ -122,6 +123,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
                 
                 // Procedure Call
                 jdbc.update(v_sql_callProc, row.get("tenant_id"), row.get("mold_id"));
+                jdbc.update(v_progressSql_callProc, row.get("tenant_id"), row.get("mold_id"), statusCode, current, "anonymous", "anonymous", "");
             }
         }
 

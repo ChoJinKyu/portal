@@ -69,13 +69,15 @@ public class DevelopmentReceipt implements EventHandler {
 
         List<Map<String, Object>> entries = context.getCqn().entries();
 
+        String statusCode = "DEV_RCV";
         String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(TENANT_ID => ?, MOLD_ID => ?)";
+        String v_progressSql_callProc = "CALL DP_MD_PROGRESS_STATUS_INSERT_PROC(TENANT_ID => ?, MOLD_ID => ?, PROG_STATUS_CODE => ?, PROG_STATUS_CHANGE_DATE => ?, PROG_STATUS_CHANGER_EMPNO => ?, PROG_STATUS_CHANGER_DEPT_CODE => ?, REMARK => ?)";
         
             for (Map<String, Object> row : entries) {
                 MoldMstView v_result = MoldMstView.create();
                 v_result.setTenantId((String) row.get("tenant_id"));
                 v_result.setMoldId((String) row.get("mold_id"));
-                v_result.setMoldProgressStatusCode("DEV_RCV");
+                v_result.setMoldProgressStatusCode(statusCode);
                 
                 v_result.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
                 v_result.setMoldItemTypeCode((String) row.get("mold_item_type_code"));
@@ -97,7 +99,7 @@ public class DevelopmentReceipt implements EventHandler {
                     MoldMasters master = MoldMasters.create();
                     master.setTenantId((String) row.get("tenant_id"));
                     master.setMoldId((String) row.get("mold_id"));
-                    master.setMoldProgressStatusCode("DEV_RCV");
+                    master.setMoldProgressStatusCode(statusCode);
                     master.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
                     master.setMoldItemTypeCode((String) row.get("mold_item_type_code"));
                     master.setMoldTypeCode((String) row.get("mold_type_code"));
@@ -129,6 +131,7 @@ public class DevelopmentReceipt implements EventHandler {
 
                     // Procedure Call
                     jdbc.update(v_sql_callProc, row.get("tenant_id"), row.get("mold_id"));
+                    jdbc.update(v_progressSql_callProc, row.get("tenant_id"), row.get("mold_id"), statusCode, current, "anonymous", "anonymous", "");
                 }
 
                 v_results.add(v_result);

@@ -56,6 +56,7 @@ sap.ui.define([
             this.approvalDetails_data = [];
             this.moldMaster_data = [];
             this.quotation_data = [];  // supplier 전용 
+            this.payment_data = [];  // 발주품의 분할결제
             this.asset_data = [];  // budget 과 mold Receipt 
 
             var oMultilingual = new Multilingual();
@@ -976,6 +977,7 @@ sap.ui.define([
                     , moldMaster: this.moldMaster_data
                     , referer: refArr
                     , quotation: this.quotation_data 
+                    , payment: this.payment_data
                     , asset : this.asset_data 
                 }
             }
