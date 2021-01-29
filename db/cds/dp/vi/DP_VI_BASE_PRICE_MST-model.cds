@@ -4,7 +4,7 @@ using util from '../../cm/util/util-model';
 using {dp.VI_Base_Price_Arl_Dtl as dtl} from './DP_VI_BASE_PRICE_ARL_DTL-model';
 // using {cm.Code_Dtl as code} from '../../cm/CM_CODE_DTL-model';
 
-entity Base_Price_Info {
+entity VI_Base_Price_Mst {
     key tenant_id                    : String(5) not null;
     key company_code                 : String(10) not null;
     key org_type_code                : String(2) not null;
@@ -44,11 +44,11 @@ entity Base_Price_Info {
         //                                 and base_price_ground_code_fk.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
         //                                 and base_price_ground_code_fk.code       = base_price_ground_code;
 };
-extend Base_Price_Info with util.Managed;
+extend VI_Base_Price_Mst with util.Managed;
 
-annotate Base_Price_Info with @title : '개발기준단가'  @description : '개발기준단가';
+annotate VI_Base_Price_Mst with @title : '개발기준단가'  @description : '개발기준단가';
 
-annotate Base_Price_Info with {
+annotate VI_Base_Price_Mst with {
     tenant_id                    @title : '테넌트ID'  @description      : '테넌트ID';
     company_code                 @title : '회사코드'  @description       : '회사코드';
     org_type_code                @title : '조직유형코드'  @description     : '조직유형코드';
@@ -68,13 +68,13 @@ annotate Base_Price_Info with {
     first_purchasing_net_price   @title : '최초구매단가'  @description     : '최초구매단가';
     first_pur_netprice_curr_cd   @title : '최초구매단가통화코드'  @description : '최초구매단가통화코드';
     first_pur_netprice_str_dt    @title : '최초구매시작일자'  @description   : '최초구매시작일자';
-    effective_flag               @title : '유효여부'  @description       : '최초구매시작일자';
-    buyer_empno                  @title : '구매담당자사번'  @description    : '최초구매시작일자';
-    new_change_type_code         @title : '신규변경구분코드'  @description   : '최초구매시작일자';
-    repr_material_org_code       @title : '대표자재조직코드'  @description   : '최초구매시작일자';
-    repr_material_code           @title : '대표자재코드'  @description     : '최초구매시작일자';
-    repr_material_supplier_code  @title : '대표자재공급업체코드'  @description : '최초구매시작일자';
-    repr_material_market_code    @title : '대표자재납선코드'  @description   : '최초구매시작일자';
+    effective_flag               @title : '유효여부'  @description       : '유효여부';
+    buyer_empno                  @title : '구매담당자사번'  @description    : '구매담당자사번';
+    new_change_type_code         @title : '신규변경구분코드'  @description   : '공통코드(CM_CODE_DTL, DP_NEW_CHANGE_CODE) : 10(NEW), 20(CHANGE)';
+    repr_material_org_code       @title : '대표자재조직코드'  @description   : '대표자재조직코드';
+    repr_material_code           @title : '대표자재코드'  @description     : '대표자재코드';
+    repr_material_supplier_code  @title : '대표자재공급업체코드'  @description : '대표자재공급업체코드';
+    repr_material_market_code    @title : '대표자재납선코드'  @description   : '대표자재납선코드';
     erp_interface_flag           @title : 'ERP인터페이스여부'  @description : 'ERP인터페이스여부';
     erp_interface_date           @title : 'ERP인터페이스일자'  @description : 'ERP인터페이스일자';
 };
