@@ -82,9 +82,6 @@ entity It_Txn_Po_Doc {
         delivery_schedule_item_number    : String(10)          @title : '납품일정품목번호';
         delivery_request_date            : Date                @title : '납품요청일자';
         special_note                     : LargeString         @title : '특기사항';
-        svc_sheet_number                 : String(50)          @title : '서비스입력서번호';
-        svc_sheet_delete_flag            : String(1)           @title : '서비스입력서삭제지시자';
-        compepnsatoin_levy_flag          : String(1)           @title : '지체상금부과여부';
 }
 
 extend It_Txn_Po_Doc with util.Managed;
