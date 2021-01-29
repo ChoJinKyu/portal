@@ -110,6 +110,11 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(){
+            //Clone the data
+            this._oCloneMasterModelData = Object.assign({}, this.getModel("master").getData());  
+            var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
+            this._oCloneDetailsModelData = Object.assign({}, this.getModel("details").getProperty("/"+sDetailModelEntityName));  
+            
 			this._toEditMode();
 		},
 		
@@ -222,6 +227,12 @@ sap.ui.define([
 					if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
 						this.onPageNavBackButtonPress.call(this);
 					}else{
+                        //Restore the data
+                        oMasterModel.setData(this._oCloneMasterModelData);
+                        
+                        //var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
+                        //oDetailsModel.setProperty("/"+sDetailModelEntityName, this._oCloneDetailsModelData);
+
 						this.validator.clearValueState(this.byId("page"));
 						this._toShowMode();
 					}
@@ -251,12 +262,13 @@ sap.ui.define([
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
 				var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
-				var oDetailsData = oDetailsModel.getData();
+                
+                var sEntityName = oDetailsModel.getProperty("/entityName");
+                var oDetailsData = oDetailsModel.getProperty("/"+sEntityName);
 				oDetailsData.forEach(function(oItem, nIndex){
-					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
+					oDetailsModel.setProperty("/"+sEntityName+"/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/"+sEntityName+"/"+nIndex+"/control_option_code", sControlOPtionCode);
 				});
-				oDetailsModel.setData(oDetailsData);
 			}
 		},
 

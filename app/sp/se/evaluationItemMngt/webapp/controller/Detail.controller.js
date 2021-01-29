@@ -148,8 +148,10 @@ sap.ui.define([
                 if(!oHeader){
                     return;
                 }
-
-                this.byId("calculationBuilder").bindAggregation("variables",{
+                
+                var oCalculationBuilder;
+                oCalculationBuilder = this.byId("calculationBuilder");
+                oCalculationBuilder.bindAggregation("variables",{
                     path : "/QttiveItemCode",
                     template : new CalculationBuilderVariable({ key : "{qttive_item_code}", label : "{qttive_item_name}" }),
                     filters : [
@@ -225,7 +227,11 @@ sap.ui.define([
                 oRowData = oViewModel.getProperty(oBindContxtPath);
                 bSeletFlg = oEvent.getParameter("selected");
 
-                if(oRowData.crudFlg === "D" || oRowData.crudFlg === "C"){
+                if(oRowData.crudFlg === "D"){
+                    return;
+                }else if(oRowData.crudFlg === "C"){
+                    oRowData.rowEditable = bSeletFlg;
+                    oViewModel.setProperty(oBindContxtPath, oRowData);
                     return;
                 }
 
@@ -237,23 +243,40 @@ sap.ui.define([
             }
 
             , onPressItemDelete : function(){
-                var oTable, oView, oViewModel, aSelectedItems;
+                var oTable, oView, oViewModel, aSelectedItems, aContxtPath, aScaleListData;
                 
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 oTable = this.byId("tblEvalItemScle");
+                aScaleListData = oViewModel.getProperty("/Detail/Item");
                 aSelectedItems = oTable.getSelectedItems();
+                aContxtPath = oTable.getSelectedContextPaths();
 
-                aSelectedItems.forEach(function(oItem){
-                    var sItemPath, oItemData;
-                    sItemPath = oItem.getBindingContextPath();
-                    oItemData = oViewModel.getProperty(sItemPath);
+                for(var i = aContxtPath.length - 1; i >= 0; i--){
+                    var idx = aContxtPath[i].split("/")[3];
+
+                    if( aScaleListData[idx].crudFlg === "C" ){
+                        aScaleListData.splice(idx, 1);
+                    }else{
+                        aScaleListData[idx].crudFlg = "D";
+                        aScaleListData[idx].transaction_code = "D"
+                        aScaleListData[idx].rowEditable = false;
+                    }
+                }
+
+                oTable.removeSelections();
+                oViewModel.setProperty("/Detail/Item", aScaleListData);
+
+                // aSelectedItems.forEach(function(oItem){
+                //     var sItemPath, oItemData;
+                //     sItemPath = oItem.getBindingContextPath();
+                //     oItemData = oViewModel.getProperty(sItemPath);
                     
-                    oItemData.crudFlg = "D";
-                    oItemData.transaction_code = "D"
+                //     oItemData.crudFlg = "D";
+                //     oItemData.transaction_code = "D"
                     
-                    oViewModel.setProperty(sItemPath, oItemData);
-                })
+                //     oViewModel.setProperty(sItemPath, oItemData);
+                // })
             }
             , onPressItemAdd : function(){
                 var oView, oViewModel, oHeader, aItems, oNewData, aFields;
@@ -284,7 +307,7 @@ sap.ui.define([
                     }
                 });
                 
-                aItems.push(oNewData);
+                aItems.unshift(oNewData);
                 oViewModel.setProperty("/Detail/Item", aItems);
             }
             , onPressItemCancle : function(){
@@ -589,7 +612,7 @@ sap.ui.define([
                                 oTreeTable = oMasterPage.byId("treeTable");
                                 aSelectedIdices = oTreeTable.getSelectedIndices();
                                 oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
-                                oRowData = oContext.getObject();
+                                oRowData = this._deepCopy( oContext.getObject() );
         
                                 oViewModel.setProperty("/Detail/Header", oRowData);
                             }

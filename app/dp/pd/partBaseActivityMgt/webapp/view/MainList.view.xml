@@ -19,7 +19,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Part Base Activity Management" />
+                    <Title text="{I18N>/PART_BASE_ACTIVITY}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -92,7 +92,7 @@
 
         <f:content>
             <t:Table id="mainTable"
-            selectionMode="MultiToggle"
+            selectionMode="None"
             rows="{
                 path: 'list>/PdPartBaseActivityView',
                 sorter: { 

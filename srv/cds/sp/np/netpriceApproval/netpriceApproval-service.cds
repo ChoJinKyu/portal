@@ -23,15 +23,51 @@
     -. 2021.01.27 : 윤상봉 최초작성
 *************************************************/
 
-using { sp as npApprovalMst } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_APPROVAL_MST-model';
-using { sp as npApprovalDtl } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_APPROVAL_DTL-model';
-using { sp as npBasePriceMst } from '../../../../../db/cds/sp/np/SP_NP_BASE_PRICE_MST-model';
+using { cm.Approval_Mst              as Cm_Approval_Mst}               from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
+using { sp.Np_Net_Price_Approval_Mst as Sp_Np_Net_Price_Approval_Mst } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_APPROVAL_MST-model';
+using { sp.Np_Net_Price_Approval_Dtl as Sp_Np_Net_Price_Approval_Dtl } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_APPROVAL_DTL-model';
+using { sp.Np_Base_Price_Mst         as Sp_Np_Base_Price_Mst }         from '../../../../../db/cds/sp/np/SP_NP_BASE_PRICE_MST-model';
 
 namespace sp; 
 
 @path : '/sp.netpriceApprovalService'
 service NpApprovalService {
-    entity Sp_Np_Net_Price_Approval_Mst as projection on npApprovalMst.Np_Net_Price_Approval_Mst;
-    entity Sp_Np_Net_Price_Approval_Dtl as projection on npApprovalDtl.Np_Net_Price_Approval_Dtl;
-    entity Sp_Np_Base_Price_Mst as projection on npBasePriceMst.Np_Base_Price_Mst;
+
+    entity CmApprovalMst     as projection on Cm_Approval_Mst;              // 공통 품의 Master
+    entity NpApprovalMst     as projection on Sp_Np_Net_Price_Approval_Mst; // 단가 품의 Master
+    entity NpApprovalDtl     as projection on Sp_Np_Net_Price_Approval_Dtl; // 단가 품의 Detail
+    entity BasePriceMst      as projection on Sp_Np_Base_Price_Mst;         // 기본 단가 Master
+
+    /* 단가 품의 내역 조회 View */
+    view NpApprovalListView as
+        SELECT
+               key pam.tenant_id
+             , key pam.company_code
+             , key pam.operation_type
+             , key pam.operation_code	      /* operating org */
+             , key pam.approval_number
+             /*
+             , cam.company_code				
+             , cam.org_type_code
+             , cam.org_code
+             , cam.chain_code
+             , cam.approval_type_code
+             */
+             , cam.approval_title              /* title */
+             , cam.approve_status_code         /* status */
+             , cam.requestor_empno             /* requestor */
+                                                 /* requestor team */
+                                                 /* ??? outcome ??? */
+             , cam.request_date                /* request date */
+                                                 /* ??? negotiation no ??? */
+ 
+             , pam.local_create_dtm as creation_date           /* creation date */
+
+          FROM Sp_Np_Net_Price_Approval_Mst  pam
+
+         INNER JOIN Cm_Approval_Mst          cam
+            ON cam.tenant_id         = pam.tenant_id
+           AND cam.approval_number   = pam.approval_number
+        ;
+    
 }

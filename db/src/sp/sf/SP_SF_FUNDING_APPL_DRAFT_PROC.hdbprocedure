@@ -60,7 +60,8 @@ BEGIN
 		VALIDATION
 		************************************************/
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
-		BEGIN
+        BEGIN
+            ROLLBACK;
 			O_RESULT =  SELECT 
 							'NG' AS RESULT_CODE
 							,'VALID_ERR' AS ERR_TYPE
@@ -80,14 +81,15 @@ BEGIN
 	저장처리 시작
 	**********************************************/
 	BEGIN
-		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN
+            ROLLBACK;
 			O_RESULT =  SELECT 
-							'NG' AS RESULT_CODE
-							,'SAVE_ERR' AS ERR_TYPE
-							,::SQL_ERROR_CODE AS ERR_CODE
-							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-						FROM DUMMY;
+                        'NG' AS RESULT_CODE
+                        ,'SAVE_ERR' AS ERR_TYPE
+                        ,::SQL_ERROR_CODE AS ERR_CODE
+                        ,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+                    FROM DUMMY;
 		END;
 	
 		/***********************************************
@@ -96,7 +98,7 @@ BEGIN
 		 - 신청번호가 있으면 UPDATE
 		**********************************************/
 		IF (COALESCE(:V_FUNDING_APPL_NUMBER,'') = '') THEN
-		
+            
 			/************************************************
 			자금지원 신청번호 신규 채번
 			************************************************/
@@ -207,8 +209,9 @@ BEGIN
 			
 		END IF;
 		
-	END;
-	
+        COMMIT;
+    END;
+    
 	
 	/***********************************************
 	저장처리 끝

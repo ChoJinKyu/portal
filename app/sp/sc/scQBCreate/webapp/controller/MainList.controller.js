@@ -5,16 +5,26 @@ sap.ui.define([
         "sap/ui/core/Component",
         "sap/ui/core/routing/HashChanger",
         "sap/ui/core/ComponentContainer",
-        "sap/m/MessageToast"
+        "sap/m/MessageToast",
+        "sap/ui/model/odata/v4/ODataModel"
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, JSON, Multilingual, Component, HashChanger, ComponentContainer, MessageToast) {
+	function (Controller, JSON, Multilingual, Component, HashChanger, ComponentContainer, MessageToast, ODataModel) {
         "use strict";
+        
                
 
 		return Controller.extend("sp.sc.scQBCreate.controller.MainList", {
+            oServiceModel: new ODataModel({
+                serviceUrl: "srv-api/odata/v4/sp.negoHeadersService/",
+                // defaultBindingMode: "OneWay",
+                // defaultCountMode: "Inline",
+                // refreshAfterChange: false,
+                synchronizationMode:"None"
+                // useBatch: true
+            }),
 			onInit: function () {
 
                 // I18N 모델 SET
@@ -22,7 +32,7 @@ sap.ui.define([
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
 
                 this.oRouter = this.getOwnerComponent().getRouter();
-                this.oRouter.getRoute("createPage").attachPatternMatched(this._onProductMatched, this);
+                this.oRouter.getRoute("mainPage").attachPatternMatched(this._onProductMatched, this);
                 
                 this._oModel = new JSON();
             
@@ -48,13 +58,153 @@ sap.ui.define([
                     this._clickEvent("4");
                 }, this);
                 // this.oRouter.attachPatternMatched(this._onProductMatched, this);
+                // debugger;
+
+                var a =
+                jQuery.ajax({
+                    async: false,
+                    // url: "sp/sc/scQBCreate/webapp/srv-api/odata/v4/sp.negoHeadersService/Sc_Nego_Type_Code?&$orderby=evaluation_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($select=outcome_name)", 
+                    url: "sp/sc/scQBCreate/webapp/srv-api/odata/v4/sp.negoHeadersService/Sc_Nego_Type_Code?&$orderby=evaluation_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($orderby=sort_no;$select=outcome_name)", 
+                    contentType: "application/json",
+                    success: function(oData2){ 
+                        debugger;
+                        return oData2.value;
+                        
+                        // this.getModel("tblModel").setProperty("/right",oData2.value);
+                        //setTimeout(this.onSetColor(), 3000); //화면그려지고 호출될때도 있지만 그려지기 전에 호출되기도 함
+                    }.bind(this)                        
+                });
+
+
+                // var b = this.byId("rbg1");
+                // var addButton = new sap.m.RadioButton( {text: "123"} );
+                // b.addButton(addButton);
+                // b.addButton(addButton);
+                // b.addButton(addButton);
+
+
+
+
+                var oNego = a.responseJSON.value;
+                console.log("Array ========================== ", oNego);
+
+                // Outcome Radio Button Text
+                var oRbg = [];
+                var temp = {
+                    "evaluation_type": { OP : "", PNP : ""  },
+                    "RFQ": { nego_name : "", outcome: [] }, 
+                    "CPB": { nego_name : "", outcome: [] }, 
+                    "RFP": { nego_name : "", outcome: [] }, 
+                    "TSB": { nego_name : "", outcome: [] }  
+                };
+                for(var i=0; i<oNego.length; i++){
+                    var oNegoRow = oNego[i];
+                    if(oNegoRow.nego_type_code == "RFQ"){    //견적
+                        temp.RFQ.nego_name =  oNegoRow.nego_type_name;
+                        temp.evaluation_type.OP = oNegoRow.evaluation_type.evaluation_type_name ;   //가격 Text
+                        for(var j=0; j<oNegoRow.Outcomes.length; j++){
+                            var outcome = oNegoRow.Outcomes[j];
+                            temp.RFQ.outcome.push({ name : outcome.outcome_name});
+                        }
+                    }else if(oNegoRow.nego_type_code == "CPB"){    //입찰 
+                        temp.CPB.nego_name =  oNegoRow.nego_type_name;
+                        for(var j=0; j<oNegoRow.Outcomes.length; j++){
+                            var outcome = oNegoRow.Outcomes[j];
+                            temp.CPB.outcome.push({ name : outcome.outcome_name});
+                        }
+                    }else if(oNegoRow.nego_type_code == "RFP"){    //견적
+                        temp.RFP.nego_name =  oNegoRow.nego_type_name;
+                        temp.evaluation_type.PNP = oNegoRow.evaluation_type.evaluation_type_name ;   //가격 + 비가격 Text
+                        for(var j=0; j<oNegoRow.Outcomes.length; j++){
+                            var outcome = oNegoRow.Outcomes[j];
+                            temp.RFP.outcome.push({ name : outcome.outcome_name});
+                        }
+                    }else if(oNegoRow.nego_type_code == "TSB"){    //견적
+                        temp.TSB.nego_name =  oNegoRow.nego_type_name;
+                        for(var j=0; j<oNegoRow.Outcomes.length; j++){
+                            var outcome = oNegoRow.Outcomes[j];
+                            temp.TSB.outcome.push({ name : outcome.outcome_name});
+                        }
+                    }
+                }
+                
+                var radioModel = new JSON(temp);
+                // radioModel.setData(oRbg);
+                this.getView().setModel(radioModel ,"rbg");
+                var nego = new JSON(oNego);
+                this.getView().setModel(nego ,"nego");
+
+                // debugger;
+
+                // this.oServiceModel.read("/Sc_Nego_Type_Code",{
+                // // oModel.read("mainV4/Sc_Nego_Type_Code?&$orderby=evaluation_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($select=outcome_name)",{
+                //     success: function(oData){
+                //         debugger;
+                //     }.bind(this)                    
+                // });
+
+                // oModel.read("/NegoHeaders", {
+                //     // filters: aTableSearchState,
+                //     // sorters: [
+                //     // 	new Sorter("chain_code"),
+                //     // 	new Sorter("message_code"),
+                //     //     new Sorter("language_code", true)
+                //     // ],
+                //     success: function(oData){
+                //         // this.validator.clearValueState(this.byId("mainTable"));
+                //         // this.byId("mainTable").clearSelection();
+                //         oView.setBusy(false);
+                //     }.bind(this)
+                // });
+
+                
+
+
 
             },
-            
+            alignPartnerStatus: function(e){
+                return "Center";
+            },
             onApplyePress: function(e){
+
+                if(!this._nego){
+                    this._nego = this.getView().getModel("nego").oData;
+                }
+                var type ;      // Negotiation Type
+                if(this._cNum == "1"){                          // RFQ (견적 계획)
+                    type ="RFQ";
+                }else if(this._cNum == "2"){                    // Competitive Bidding (입찰 계획)
+                    type ="CPB";
+                }else if(this._cNum == "3"){                    // RFP (견적 계획)
+                    type ="RFP";
+                }else if(this._cNum == "4"){                    // 2-Step Bidding (입찰 계획)
+                    type ="TSB";
+                }
+                
+
                 var oRbgName = "rbg" + this._cNum ;
                 var oRbg = this.getView().byId(oRbgName);
-                var outcome = oRbg.getSelectedIndex() + 1;
+                var outcomeText =oRbg.getSelectedButton().getText();
+                var outcomeCode;
+
+                for(var i=0; i<this._nego.length; i++){
+                    var nego = this._nego[i];
+                    if(nego.nego_type_code == type){
+                        var negoOutcomes = nego.Outcomes;
+                        for(var j=0; j<negoOutcomes.length; j++){
+                            var negoOutcome = negoOutcomes[j];
+                            if(negoOutcome.outcome_name == outcomeText){
+                                outcomeCode = negoOutcome.outcome_code;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+
+
+
+                // var outcome = oRbg.getSelectedIndex() + 1;
                 
                 // // 기존 시작 =========================================================================================
                 // if( this._cNum == "1" || this._cNum =="3"){
@@ -74,7 +224,7 @@ sap.ui.define([
                     sUrl = "../sp/sc/scQBPages/webapp";
                     
                 //  생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome 
-                var changeHash =  "NC/" + this._cNum + "/" + String(outcome) ;   
+                var changeHash =  "NC/" + type + "/" + outcomeCode ;   
                 HashChanger.getInstance().replaceHash("");
 
                 Component.load({
@@ -97,6 +247,10 @@ sap.ui.define([
                 
             },
             _clickEvent: function(num){
+
+                //test
+                debugger;
+
                 // 라디오 그룹 동적 visibled
                 this._oData = { flag : parseInt(num) };
                 this._oModel.setData(this._oData);

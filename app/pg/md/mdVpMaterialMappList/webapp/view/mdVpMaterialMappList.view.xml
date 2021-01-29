@@ -130,9 +130,9 @@
                                 selectedKey="" 
                                 width="100%">
                                 <items>
-                                    <SegmentedButtonItem text="All" width="3em"/>
-                                    <SegmentedButtonItem text="등록" width="3em" key="100"/>
-                                    <SegmentedButtonItem text="미등록" width="3em" key="200"/>
+                                    <SegmentedButtonItem text="All" width="4em"/>
+                                    <SegmentedButtonItem text="등록" width="4em" key="100"/>
+                                    <SegmentedButtonItem text="미등록" width="4em" key="200"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -151,9 +151,9 @@
                                 selectedKey="" 
                                 width="100%">
                                 <items>
-                                    <SegmentedButtonItem text="All" width="3em"/>
-                                    <SegmentedButtonItem text="사용" width="3em" key="100"/>
-                                    <SegmentedButtonItem text="미사용" width="3em" key="200"/>
+                                    <SegmentedButtonItem text="All" width="4em"/>
+                                    <SegmentedButtonItem text="사용" width="4em" key="100"/>
+                                    <SegmentedButtonItem text="미사용" width="4em" key="200"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>

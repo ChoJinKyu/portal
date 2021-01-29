@@ -8,7 +8,7 @@ entity Np_Net_Price_Approval_Mst {
   key operation_type                  : String(10)   not null  @title: 'operating unit' ;	
   key operation_code                  : String(10)   not null  @title: 'operating code' ;	
   key approval_number                 : String(50)   not null  @title: '품의번호' ;	
-      approval_title                  : String(300)            @title: '품의제목' ;	
+      //approval_title                  : String(300)            @title: '품의제목' ;	
       net_price_document_type_code    : String(30)             @title: '단가문서유형코드' ;	
       net_price_source_code           : String(30)             @title: '견적번호' ;	
       quotation_number                : Decimal                @title: '견적번호' ;	
@@ -18,8 +18,8 @@ entity Np_Net_Price_Approval_Mst {
       effective_start_date            : Date                   @title: '유효시작일자' ;	
       effective_end_date              : Date                   @title: '유효종료일자' ;	
       tentprc_flag                    : Boolean                @title: '가단가여부' ;	
-      requestor_empno                 : String(30)             @title: '요청자사번' ;	
-      approval_contents               : LargeBinary            @title: '품의내용' ;	
+      //requestor_empno                 : String(30)             @title: '요청자사번' ;	
+      //approval_contents               : LargeBinary            @title: '품의내용' ;	
       base_price_input_flag           : Boolean                @title: '기준단가입력여부' ;	
       approval_excl_flag              : Boolean                @title: '승인제외여부' ;
 

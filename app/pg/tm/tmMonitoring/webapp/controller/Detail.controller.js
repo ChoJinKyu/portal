@@ -87,7 +87,7 @@ sap.ui.define([
             });
 
             //필수입력항목 검사 결과 초기화
-            this.validator.clearValueState(sap.ui.getCore().byId("simpleform_edit"));
+            this.validator.clearValueState(this._oFragments.Detail_Edit);
 
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
@@ -257,7 +257,7 @@ sap.ui.define([
                 onClose: function (sAction) {
                     if (sAction === MessageBox.Action.OK) {
                         //필수입력항목 검사
-                        if (that.validator.validate(sap.ui.getCore().byId("simpleform_edit")) !== true) {
+                        if (that.validator.validate(that._oFragments.Detail_Edit) !== true) {
                             MessageToast.show(i18nModel.getText("/ECM01002"));
                             return;
                         }
@@ -290,7 +290,7 @@ sap.ui.define([
                     that.getRouter().navTo("main", {}, true);
 
                 }
-
+               
             } else {
                 MessageBox.confirm(i18nModel.getText("/NPG00013"), {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -328,9 +328,9 @@ sap.ui.define([
                 oSelectedkey = this.tenant_id;
             }
             // var oSelectedkey = sap.ui.getCore().byId("tenant_edit_combo").getSelectedKey();
-            var company_combo = sap.ui.getCore().byId("company_edit_combo");                            //법인  
+            var company_combo = this.byId("company_edit_combo");                            //법인  
             // @ts-ignore
-            var bizunit_combo = sap.ui.getCore().byId("bizunit_edit_combo");                          //사업본부
+            var bizunit_combo = this.byId("bizunit_edit_combo");                          //사업본부
             // var oCompanyBindingComboBox = company_combo.getBinding("items");                       //법인 items
             var aFiltersComboBox = [];
             // @ts-ignore
@@ -420,12 +420,11 @@ sap.ui.define([
         _resetView: function () {
             //담당자 multiInput reset
             this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
-            //회사, 법인 combobox item reset
-            sap.ui.getCore().byId("company_edit_combo").removeAllItems();
-            sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
             //richTextEditorValue reset
             this.removeRichTextEditorValue();
             this.removeFormattedTextValue();
+            //담당자 테이블
+            this.byId("managerListTable").getBinding("items").filter(new Filter("employee_number", FilterOperator.Contains, " "));
             //refresh model
             this.getView().getModel().refresh(true);
         },
@@ -451,7 +450,7 @@ sap.ui.define([
                 this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText);
             }
             //회사,법인,사업본부 SelectionChange Event
-            sap.ui.getCore().byId("tenant_edit_combo").fireSelectionChange();
+            // sap.ui.getCore().byId("tenant_edit_combo").fireSelectionChange();
 
         },
 
@@ -661,7 +660,7 @@ sap.ui.define([
                     }),
                     // @ts-ignore
                     new sap.m.Text({
-                        text: "{=${monitoring_super_authority_flag} === true ? 'Yes' : 'No'}"
+                        text: "{=${monitoring_super_authority_flag} === true ? 'Y' : 'N'}"
                     })
                 ],
                 // @ts-ignore
@@ -747,30 +746,30 @@ sap.ui.define([
         /**
         * Detail_Edit, Detail_Show Fragment load 
         */
+
         _oFragments: {},
         _showFormFragment: function (sFragmentName) {
             var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function (_oFragments) {
+            this._loadFragment(sFragmentName, function (oFragment) {
                 oPageSubSection.removeAllBlocks();
-                oPageSubSection.addBlock(_oFragments);
-
+                oPageSubSection.addBlock(oFragment);
             })
         },
-
         _loadFragment: function (sFragmentName, oHandler) {
             if (!this._oFragments[sFragmentName]) {
-                var _oFragments = this._oFragments[sFragmentName];
-                // @ts-ignore
-                _oFragments = sap.ui.xmlfragment("pg.tm.tmMonitoring.view." + sFragmentName, this);
-
-                this._oFragments[sFragmentName] = _oFragments;
-                if (oHandler) { oHandler(_oFragments) };
-
+                Fragment.load({
+                    id: this.getView().getId(),
+                    name: "pg.tm.tmMonitoring.view." + sFragmentName,
+                    controller: this
+                }).then(function (oFragment) {
+                    this._oFragments[sFragmentName] = oFragment;
+                    if (oHandler) oHandler(oFragment);
+                }.bind(this));
+                // this.getView().addDependent(this._oFragments[sFragmentName]);
             } else {
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
             }
         },
-
 
         onMultiInputWithEmployeeValuePress: function () {
             if (!this.oEmployeeMultiSelectionValueHelp) {
@@ -972,8 +971,8 @@ sap.ui.define([
             var masterObj = {
                 "tenant_id": "L2100",
                 "scenario_number": scenario_number,
-                "monitoring_type_code": sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey(),
-                "activate_flag": sap.ui.getCore().byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
+                "monitoring_type_code": this.byId("combo_monitoring_type").getSelectedKey(),
+                "activate_flag": this.byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
                 "monitoring_purpose": this.htmlEncoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
                 "scenario_desc": this.htmlEncoding(scenarioDescValue, this.byId("reMonitoringPurpose").getId()),
                 "source_system_desc": this.htmlEncoding(sourceSystemDescValue, this.byId("reMonitoringPurpose").getId()),
@@ -991,7 +990,7 @@ sap.ui.define([
                     "tenant_id": "L2100",
                     "scenario_number": scenario_number,
                     "language_code": code,
-                    "scenario_name": sap.ui.getCore().byId("Input_scenarioName").getValue(),
+                    "scenario_name": this.byId("Input_scenarioName").getValue(),
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date(),
                     "create_user_id": "Admin",
@@ -1002,7 +1001,7 @@ sap.ui.define([
                 scenarioArr.push(scenarioObj);
             }
             //구매유형 
-            var purchasing_types = sap.ui.getCore().byId("combo_purchasing_type").getSelectedItems(),
+            var purchasing_types = this.byId("combo_purchasing_type").getSelectedItems(),
                 purchasingTypeArr = [];
             purchasing_types.forEach(function (type) {
                 for (code of language_code) {
@@ -1023,7 +1022,7 @@ sap.ui.define([
                 }
             });
             //법인 
-            var companyCodes = sap.ui.getCore().byId("company_edit_combo").getSelectedKeys(),
+            var companyCodes = this.byId("company_edit_combo").getSelectedKeys(),
                 companyArr = [];
             companyCodes.forEach(function (code) {
                 var companyObj = {
@@ -1041,7 +1040,7 @@ sap.ui.define([
             });
             //사업본부 
             // @ts-ignore
-            var bizunitCodes = sap.ui.getCore().byId("bizunit_edit_combo").getSelectedKeys(),
+            var bizunitCodes = this.byId("bizunit_edit_combo").getSelectedKeys(),
                 bizunitArr = [];
             for (code of bizunitCodes) {
                 var bizunitObj = {
@@ -1063,9 +1062,9 @@ sap.ui.define([
                 var typeObj = {
                     "tenant_id": "L2100",
                     "scenario_number": scenario_number,
-                    "monitoring_type_code": sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey(),
+                    "monitoring_type_code": this.byId("combo_monitoring_type").getSelectedKey(),
                     "language_code": code,
-                    "monitoring_type_name": sap.ui.getCore().byId("combo_monitoring_type").getValue(),
+                    "monitoring_type_name": this.byId("combo_monitoring_type").getValue(),
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date(),
                     "create_user_id": "Admin",
@@ -1153,7 +1152,7 @@ sap.ui.define([
                     "sourceOperation": operationDataArr
                 }
             };
-            // console.log(inputInfo);
+            console.log(inputInfo);
 
             $.ajax({
                 url: urlInfo,

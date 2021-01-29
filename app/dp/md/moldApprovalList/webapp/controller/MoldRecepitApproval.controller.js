@@ -353,7 +353,8 @@ sap.ui.define([
             var bModel = this.getModel("mdRecepit");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            
+            this.asset_data = [];
+
             if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
@@ -371,12 +372,14 @@ sap.ui.define([
                         , mold_id : item.mold_id 
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
-                    that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
+
+                    that.asset_data.push({
+                        tenant_id : that.tenant_id 
                         , mold_id : item.mold_id 
-                        , acq_department_code : item.acq_department_code 
+                        , acq_department_code : item.acq_department_code
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
+
                 });
 
             }
@@ -389,11 +392,12 @@ sap.ui.define([
                         , mold_id : item.mold_id 
                         , _row_state_ : "D"
                     });
-                    that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
+
+                    that.asset_data.push({
+                        tenant_id : that.tenant_id 
                         , mold_id : item.mold_id 
-                        , acq_department_code : item.acq_department_code  
-                        , _row_state_ : "D"
+                        , acq_department_code : item.acq_department_code
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
                 });
             }

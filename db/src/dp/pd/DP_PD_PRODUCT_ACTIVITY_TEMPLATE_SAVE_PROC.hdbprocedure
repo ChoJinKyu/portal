@@ -1,4 +1,4 @@
-PROCEDURE PD_PRODUCT_ACTIVITY_TEMPLATE_PROC (		
+PROCEDURE DP_PD_PRODUCT_ACTIVITY_TEMPLATE_SAVE_PROC (		
     IN  CRUD_TYPE NVARCHAR(1),
     IN  I_M TABLE ( TENANT_ID NVARCHAR(5), 
                     PRODUCT_ACTIVITY_CODE NVARCHAR(40), 
@@ -40,16 +40,17 @@ BEGIN
         ;
 
     ELSE
-/*
+
         IF CRUD_TYPE = 'U' THEN
             UPDATE DP_PD_PRODUCT_ACTIVITY_TEMPLATE M
-                SET M.DESCRIPTION = :I_M.DESCRIPTION[1],
-                    M.ACTIVE_FLAG = :I_M.ACTIVE_FLAG[1],
-                    M.LOCAL_UPDATE_DTM = NOW(),
-                    M.UPDATE_USER_ID = :I_M.UPDATE_USER_ID[1],
-                    M.SYSTEM_UPDATE_DTM = NOW()
-             WHERE M.TENANT_ID = 'L2100'
-               AND M.PRODUCT_ACTIVITY_CODE = 'L1111'
+               SET (M.DESCRIPTION, M.ACTIVE_FLAG, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
+                   ( SELECT DESCRIPTION, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW()
+                       FROM :I_M
+                      WHERE TENANT_ID = M.TENANT_ID 
+                        AND PRODUCT_ACTIVITY_CODE = M.PRODUCT_ACTIVITY_CODE
+                   )
+            WHERE   (M.TENANT_ID, M.PRODUCT_ACTIVITY_CODE ) IN
+                    ( SELECT TENANT_ID, PRODUCT_ACTIVITY_CODE FROM :I_M )
             ;
         ELSE
             INSERT INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE M
@@ -63,22 +64,22 @@ BEGIN
                         ,UPDATE_USER_ID
                         ,SYSTEM_CREATE_DTM
                         ,SYSTEM_UPDATE_DTM
-                    )
-                VALUES ( :I_M.TENANT_ID[1]
-                        ,:I_M.PRODUCT_ACTIVITY_CODE[1]
-                        ,:I_M.DESCRIPTION[1]
-                        ,:I_M.ACTIVE_FLAG[1]
+                      )
+                 SELECT TENANT_ID
+                        ,PRODUCT_ACTIVITY_CODE
+                        ,DESCRIPTION
+                        ,ACTIVE_FLAG
                         ,NOW()
                         ,NOW()
-                        ,:I_M.UPDATE_USER_ID[1]
-                        ,:I_M.UPDATE_USER_ID[1]
+                        ,UPDATE_USER_ID
+                        ,UPDATE_USER_ID
                         ,NOW()
                         ,NOW()
-                    )
+                FROM :I_M 
             ;                
 
         END IF;
-*/
+
         /*  I_D Table의 Data 일괄 삭제 */
         DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE_LNG D
         WHERE ( D.TENANT_ID,D.PRODUCT_ACTIVITY_CODE,D.LANGUAGE_CD ) IN

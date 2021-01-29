@@ -6,14 +6,17 @@ sap.ui.define([
     "sap/m/MessageBox",
     "ext/lib/util/Multilingual",
     "sap/ui/core/ListItem",
-    "sap/m/SegmentedButtonItem"
+    "sap/m/SegmentedButtonItem",
+    "ext/lib/util/ExcelUtil",
+    "sap/ui/table/TablePersoController",
+	"./MainListPersoService",
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      * 2021-01-20 개발시작
      * A61987
      */
-	function (Controller, fioriLibrary, Filter, Sorter, MessageBox, Multilingual, ListItem, SegmentedButtonItem) {
+	function (Controller, fioriLibrary, Filter, Sorter, MessageBox, Multilingual, ListItem, SegmentedButtonItem, ExcelUtil, TablePersoController, MainListPersoService) {
         "use strict";
         
 		return Controller.extend("sp.se.evaluationItemMngt.controller.Master", {
@@ -36,6 +39,7 @@ sap.ui.define([
                 
                 this._bindOrgCodeComboItem();
                 this._setEvaluExecuteModeItem();
+                this._doInitTablePerso();
 
                 oComponent.getRouter().getRoute("Master").attachPatternMatched(this._onProductMatched, this);
             }
@@ -54,6 +58,10 @@ sap.ui.define([
                 if(oArgs.search){
                     this.onPressSearch();
                 }
+
+                this._clearValueState(
+                    this.getView().getControlsByFieldGroupId("searchRequired")
+                );
 
                 oViewModel.setProperty("/App/layout", "OneColumn");
             }
@@ -311,11 +319,12 @@ sap.ui.define([
                     oNavParam.level = "low";
                 }
                 oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = oContext.getObject();
+                oRowData = this._deepCopy( oContext.getObject() );
                 oViewModel = this.getView().getModel("viewModel");
 
                 oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
+                oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData,
@@ -343,7 +352,15 @@ sap.ui.define([
                     new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
                     new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode }),
 
-                ]
+                ];
+
+                //필수입력체크
+                var aControls = oView.getControlsByFieldGroupId("searchRequired"),
+                    bValid = this._isValidControl(aControls);
+
+                if(!bValid){
+                    return;
+                }
 
                 //미리 세팅해둔 경로를 바탕으로 Filter를 생성한다.
                 /**
@@ -540,7 +557,7 @@ sap.ui.define([
                 }
 
                 oContext = oTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = oContext.getObject();
+                oRowData = this._deepCopy( oContext.getObject() );
                 oViewModel = this.getView().getModel("viewModel");
 
                 oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
@@ -549,11 +566,102 @@ sap.ui.define([
 
                 oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
+                oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
+                
                 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData
                 });
                 this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
+            }
+
+            , onExcelExport : function(){
+                var oTable, oView, aFilters, oUserInfo, oViewModel, oCondData, oODataModel;
+
+                oTable = this.byId("treeTable");
+                oView = this.getView();
+                oUserInfo = this._getUserSession();
+                oViewModel = oView.getModel("viewModel");
+                
+                oODataModel = oView.getModel();
+                //조회용 데이터
+                oCondData = oViewModel.getProperty("/cond");
+                aFilters = [
+                    new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
+                    new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
+                    new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode }),
+
+                ];
+
+                //필수입력체크
+                var aControls = oView.getControlsByFieldGroupId("searchRequired"),
+                    bValid = this._isValidControl(aControls);
+
+                if(!bValid){
+                    return;
+                }
+
+                //미리 세팅해둔 경로를 바탕으로 Filter를 생성한다.
+                /**
+                 * EQ {
+                 *    Field
+                 * }
+                 * Contains {
+                 *    Field
+                 * }
+                 */
+                for(var operator in oCondData){
+                    if(oCondData.hasOwnProperty(operator)){
+                        for(var field in oCondData[operator]){
+                            if(oCondData[operator].hasOwnProperty(field) && oCondData[operator][field]){
+                                aFilters.push(
+                                    new Filter({ path : field, operator : operator, value1 : oCondData[operator][field] })
+                                );
+                            }
+                        }
+                    }
+                }
+
+
+                var oI18nModel = oView.getModel("i18n"),
+                    oResourceBundle = oI18nModel.getResourceBundle();
+
+                /***
+                 * 
+                 */
+                oView.setBusy(true);
+                this._readOdata({
+                    model : oODataModel,
+                    entity : "/EvalItemListView",
+                    param : {
+                        path : "/EvalItemListView", 
+                        filters : aFilters,
+                        error : function(){
+                            oView.setBusy(false);
+                        },
+                        success : function(oData){
+                            oView.setBusy(false);
+                            ExcelUtil.fnExportExcel({
+                                fileName : oResourceBundle.getText("appTitle"),
+                                table : oTable,
+                                data : oData.results
+                            });
+                        }
+                    }
+                });
+            }
+
+            , _doInitTablePerso: function () {
+                // init and activate controller
+                this._oTPC = new TablePersoController({
+                    table: this.byId("treeTable"),
+                    persoService: MainListPersoService
+                });
+            }
+            ,  onMainTablePersoButtonPressed: function () {
+                this._oTPC.openDialog({
+                    contentHeight : "30em"
+                });
             }
 
 		});

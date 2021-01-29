@@ -4,12 +4,13 @@ namespace op;
 service PrReviewMgtV4Service {
 
     /* PR Item Type */
-    type inPrItemType : {
+    type inPrItemType {
         transaction_code : String(1);
         tenant_id : String(5);
         company_code : String(10);
         pr_number : String(50);
-        pr_item_number : Integer64;
+        //pr_item_number : Integer64;
+        pr_item_number : String(10);
     };
 
     /* Return Type */

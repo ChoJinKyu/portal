@@ -29,7 +29,7 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oTenantId =  new Input({ placeholder: this.getModel("I18N").getText("/TENANT_ID") });
+            //this.oTenantId =  new Input({ placeholder: this.getModel("I18N").getText("/TENANT_ID") });
             this.oSearchCode = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
             this.oSearchDesc = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
             this.oSearchSpec = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")});
@@ -45,7 +45,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.oTenantId.getValue()),
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100"),
                         new Filter("org_type_code", FilterOperator.EQ, "PL")
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.PurOrgMgtService',
@@ -64,7 +64,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.oTenantId.getValue()),
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100"),
                         new Filter("group_code", FilterOperator.EQ, "DP_MM_USER_ITEM_TYPE")
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.util.CommonService',
@@ -80,7 +80,7 @@ sap.ui.define([
                 items:{
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.oTenantId.getValue())
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ],
                     serviceUrl: 'srv-api/odata/v2/dp.HsCodeMgtService',
                     entityName: 'HsCode'
@@ -88,13 +88,13 @@ sap.ui.define([
             });
 
             return [
-                new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/TENANT_ID"), required:true}),  //테넌트ID
-                        this.oTenantId
-                    ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
-                }),
+                // new VBox({
+                //     items: [
+                //         new Label({ text: this.getModel("I18N").getText("/TENANT_ID"), required:true}),  //테넌트ID
+                //         this.oTenantId
+                //     ],
+                //     layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                // }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/ORG_CODE"), required:true}),  //조직코드
@@ -195,7 +195,7 @@ sap.ui.define([
         },
  
         loadData: function(){
-            var sTenantId = this.oTenantId.getValue();
+            var sTenantId = "L2100";
 
             var oParam = this.getProperty("getValue");
             var sOrg;
@@ -216,7 +216,7 @@ sap.ui.define([
                 sDesc = this.oSearchDesc.getValue(),
                 sSpec = this.oSearchSpec.getValue(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ];
                               
             if(sOrg){
@@ -270,7 +270,7 @@ sap.ui.define([
         },
         
         beforeOpen: function() {
-            this.oTenantId.setValue("L2100");
+            // this.oTenantId.setValue("L2100");
         }
 
 

@@ -12,6 +12,22 @@
     font-size: 1.2rem;
 }
 
+.RText {
+    text-align: right !important;
+}
+
+.AlignL {
+    text-align: left !important;
+}
+
+.AlignR {
+    text-align: right !important;
+}
+
+.sapMObjStatus {
+    margin-bottom: 0rem !important;
+}
+
 .mInput{
     margin: 0 !important;
     padding: 0 !important;
@@ -69,6 +85,14 @@
     color : #cccccc;
 }
 
+/* .filterDef {
+    width: 12rem !important;
+} */
+
+.sapUiAFLayoutItem {
+    max-width: 24rem !important;
+}
+
 
 
 
@@ -111,6 +135,14 @@
     /* background-color: rgb(252, 221, 233); */
     background-color:  #f2f2f2;
     
+}
+
+#abcd {
+    max-width: 48rem !important;
+}
+
+.maxWidth48 {
+    max-width: 48rem !important;
 }
 
 

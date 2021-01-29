@@ -1,86 +1,100 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core">
+<core:FragmentDefinition id="fragment_edit" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core">
 	<f:SimpleForm id="simpleform_edit" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
 		<f:content id="informationPageSectionForm">
 			<VBox>
 				<Label text="{I18N>/TYPE_NAME}" required="true"/>
-				<ComboBox items="{path: '/TaskMonitoringTypedCodeView', templateShareable: true}" required="true" placeholder="{I18N>/TYPE_NAME}" id="combo_monitoring_type" selectedKey="{monitoring_type_code}" width="100%">
+				<ComboBox items="{path: '/TaskMonitoringTypedCodeView', templateShareable: true}" required="true" id="combo_monitoring_type" selectedKey="{=${DetailView>/isCreate} === true ? null :  ${monitoring_type_code}}" width="100%">
 					<core:Item key="{code}" text="{code_name}"/>
 				</ComboBox>
 				<layoutData>
-					<l:GridData span="XL4 L4 M4 S12"/>
+					<l:GridData span="XL3 L3 M3 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
 				<Label text="{I18N>/PURCHASING_TYPE_NAME}" required="true"/>
-				<MultiComboBox width="100%" selectedKeys="{=${monitoring_purchasing_type_code}.split(';')}" id="combo_purchasing_type" items="{path: '/TaskMonitoringPurchaingTypeCodeView', templateShareable: true}" required="true">
+				<MultiComboBox width="100%" selectedKeys="{=${DetailView>/isCreate} === true ? null : ${monitoring_purchasing_type_code}.split(';')}" id="combo_purchasing_type" items="{path: '/TaskMonitoringPurchaingTypeCodeView', templateShareable: true}" required="true">
 					<core:ListItem key="{code}" text="{code_name}"/>
 				</MultiComboBox>
 				<layoutData>
-					<l:GridData span="XL4 L4 M4 S12"/>
+					<l:GridData span="XL3 L3 M3 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
 				<Label text="{I18N>/ACTIVATE}"/>
 				<!-- <Switch id="switch_activate" state="{activate_flag}" customTextOn="Yes" customTextOff="No" enabled="true"/> -->
-				<SegmentedButton id="segmentButton_activate" selectedKey="{=${activate_flag} === true? 'Yes' : 'No'}">
+				<SegmentedButton id="segmentButton_activate" selectedKey="{=${DetailView>/isCreate} === true ? 'No' : ${activate_flag} === true? 'Yes' : 'No'}">
 					<items>
 						<SegmentedButtonItem text="Yes" key="Yes"/>
 						<SegmentedButtonItem text="No" key="No"/>
 					</items>
 				</SegmentedButton>
 				<layoutData>
-					<l:GridData span="XL4 L4 M4 S12"/>
+					<l:GridData span="XL3 L3 M3 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
 				<Label text="{I18N>/SCENARIO}" required="true"/>
-				<Input width="100%" id="Input_scenarioName" editable="{=${DetailView>/isCreate}}" type="Text" value="{
-                                    path: 'scenario_name',
-                                    type: 'sap.ui.model.type.String',
-                                    constraints: {
-                                        minLength: 1,
-                                        maxLength: 240
-                                    },
-                                    templateShareable: true
-                                }" showValueHelp="false" required="true">
+				<Input 
+                    width="100%" 
+                    id="Input_scenarioName" 
+                    editable="{=${DetailView>/isCreate}}" 
+                    type="Text" 
+                    value="{=${DetailView>/isCreate} === true ? null : ${ path: 'scenario_name', type: 'sap.ui.model.type.String', constraints: { minLength: 1, maxLength: 240}}}" 
+                    showValueHelp="false" 
+                    required="true">
 					<core:Item key="{scenario_number}" text="{scenario_name}"/>
 				</Input>
 				<layoutData>
-					<l:GridData span="XL6 L6 M12 S12"/>
-				</layoutData>
-			</VBox>
-			<VBox>
-				<Text text=""/>
-				<Text text=""/>
-				<layoutData>
-					<l:GridData span="XL6 L6 M12 S12"/>
+					<l:GridData span="XL6 L6 M12 S12" />
 				</layoutData>
 			</VBox>
 			<VBox>
 				<Label text="{I18N>/TENANT_NAME}" required="true"/>
-				<ComboBox id="tenant_edit_combo" editable="{=${DetailView>/isCreate}}" selectedKey="L2100" items="{path: '/OrgTenantView', templateShareable: true}" selectionChange=".onChangeTenant" width="100%" required="true">
+				<ComboBox id="tenant_edit_combo" editable="{=${DetailView>/isCreate}}" selectedKey="L2100" items="{path: '/OrgTenantView', templateShareable: true}" width="100%" required="true">
 					<core:Item key="{tenant_id}" text="{tenant_name}"/>
 				</ComboBox>
 				<layoutData>
-					<l:GridData span="XL4 L4 M4 S12"/>
+					<l:GridData span="XL3 L3 M3 S12" linebreak="true"/>
 				</layoutData>
 			</VBox>
 			<VBox>
 				<Label text="{I18N>/COMPANY}" required="true"/>
-				<MultiComboBox width="100%" required="true" id="company_edit_combo" selectedKeys="{=${company_code}.split(';')}" maxWidth="100%">
+				<MultiComboBox 
+                    width="100%" 
+                    required="true" 
+                    id="company_edit_combo" 
+                    items="{
+                    path: '/OrgCompanyView',
+                    sorter: {path: 'company_name'},
+                    filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                    ]}" 
+                    selectedKeys="{=${DetailView>/isCreate} === true ? null : ${company_code}.split(';')}" 
+                    maxWidth="100%">
 					<core:ListItem key="{company_code}" text="{company_name}"/>
 				</MultiComboBox>
 				<layoutData>
-					<l:GridData span="XL4 L4 M4 S12"/>
+					<l:GridData span="XL3 L3 M3 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
 				<Label text="{I18N>/BUSINESS_UNIT}" required="true"/>
-				<MultiComboBox id="bizunit_edit_combo" width="100%" selectedKeys="{=${bizunit_code}.split(';')}" required="true" maxWidth="100%">
+				<MultiComboBox 
+                    id="bizunit_edit_combo" 
+                    width="100%" 
+                    selectedKeys="{=${DetailView>/isCreate} === true ? null : ${bizunit_code}.split(';')}"
+                    items="{
+                    path: '/OrgUnitView',
+                    sorter: {path: 'bizunit_name'},
+                    filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                    ]}" 
+                    required="true" 
+                    maxWidth="100%">
 					<core:ListItem key="{bizunit_code}" text="{bizunit_name}"/>
 				</MultiComboBox>
 				<layoutData>
-					<l:GridData span="XL4 L4 M4 S12"/>
+					<l:GridData span="XL3 L3 M3 S12"/>
 				</layoutData>
 			</VBox>
 		</f:content>

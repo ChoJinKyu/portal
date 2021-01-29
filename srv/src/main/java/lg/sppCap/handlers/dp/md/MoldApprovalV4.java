@@ -142,6 +142,7 @@ public class MoldApprovalV4 implements EventHandler {
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
                     this.saveParticipatingSelection(data);
                 }else if(aMaster.getApprovalTypeCode().equals("I")){ // 금형 입고품의 
+                    System.out.println(" >>>>>> " + aMaster);
                     this.saveMoldRecepitApproval(data);
                 }else if(aMaster.getApprovalTypeCode().equals("A")){ // 취소 품의 
                      this.saveParticipatingSelectionCancel(data);
@@ -435,7 +436,7 @@ public class MoldApprovalV4 implements EventHandler {
     // moldRecepitApproval 
     private void saveMoldRecepitApproval( Data data ){
 
-        System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
+        System.out.println(" moldRecepitApproval approvalNumer " + this.APPROVAL_NUMBER);
 
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
         Collection<MoldMasterV4> mMasterList = data.getMoldMaster();

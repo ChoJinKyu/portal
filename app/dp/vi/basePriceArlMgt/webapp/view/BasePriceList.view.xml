@@ -97,22 +97,10 @@
                         <Label text="{I18N>/REQUESTOR} "></Label>
                         <!-- <Label text="Request By"></Label> -->
                         <!-- <SearchField value="{filterModel>/requestBy}" /> -->
-                        <lib-m:CodePicker
-                            placeholder="Enter a Employee name"
-                            value="{filterModel>/requestBy}"
-                            keyField="employee_number"
-                            textField="user_local_name"
-                            suggestionItems="{
-                                path: '/',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                ],
-                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                entityName: 'Employee'
-                            }">
-                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                        </lib-m:CodePicker>
+                        <MultiInput id="multiInputWithEmployeeValueHelp"
+                            placeholder="Choose employees from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
+                        </MultiInput>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>

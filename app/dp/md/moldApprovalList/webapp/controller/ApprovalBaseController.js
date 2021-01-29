@@ -65,7 +65,7 @@ sap.ui.define([
         },
 
         onAfterRendering: function () {
-            console.log(" >>>> onAfterRendering");
+          //  console.log(" >>>> onAfterRendering");
 
         },
 
@@ -87,7 +87,7 @@ sap.ui.define([
                     //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
-                    console.log(sPropertyName);
+                    console.log("onPageNavBackButtonPress destroy >>>> " , sPropertyName);
                     //}
                 }
             }
@@ -126,11 +126,11 @@ sap.ui.define([
               //  if(sPropertyName !== "GeneralInfo"){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
-                    console.log(sPropertyName);
+                 //   console.log(sPropertyName);
               //  }
             }
 
-            console.log(" onPageCancellationButtonPress ");
+         //   console.log(" onPageCancellationButtonPress ");
 
            
         },
@@ -169,7 +169,7 @@ sap.ui.define([
            //  this.getView().setModel(new ManagedModel(), "refererMultiCB");
 
             var oArgs = oEvent.getParameter("arguments");
-            console.log(oArgs);
+            // console.log(oArgs);
             this._createViewBindData(oArgs);
 
             this.oSF = this.getView().byId("approverSearch");
@@ -180,7 +180,7 @@ sap.ui.define([
          */
         _createViewBindData: function (args) { 
 
-            console.log("args>>>>> " , args);
+            // console.log("args>>>>> " , args);
 
             this.tenant_id = "L2600";
             this.approval_number = args.approval_number;
@@ -208,7 +208,7 @@ sap.ui.define([
                 + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
-                    console.log("orgName ", oData);
+                    // console.log("orgName ", oData);
                 }
             });
 
@@ -347,7 +347,7 @@ sap.ui.define([
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection"); 
-            console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
+            // console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
             oPageGeneralInfoSection.removeAllBlocks();
             this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
@@ -741,7 +741,7 @@ sap.ui.define([
                      approver.getData().Approvers[i].selRow = false;
                   }
             }
-            console.log(" setSelectedApproval " , approver);
+            // console.log(" setSelectedApproval " , approver);
             this.getModel("approver").refresh(true);
         } , 
         // 돋보기 클릭시 해당 row 에 데이터를 넣어야 하므로 row 계산 
@@ -769,7 +769,7 @@ sap.ui.define([
         onSuggest: function (event) {
             var sValue = event.getParameter("suggestValue"),
                 aFilters = [];
-            console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
+            // console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
         },
 
         /**
@@ -889,7 +889,7 @@ sap.ui.define([
             var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
             var year = date_ob.getFullYear();
 
-            console.log(year + "-" + month + "-" + date);
+            // console.log(year + "-" + month + "-" + date);
             return year + "" + month + "" + date;
         },
 

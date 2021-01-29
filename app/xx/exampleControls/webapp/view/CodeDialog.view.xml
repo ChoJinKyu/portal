@@ -172,6 +172,7 @@
         
         <cm-ui:EmployeeDialog id="employeeDialog" 
             title="직원 검색"
+            closeWhenApplied="true"
             items="{
                 filters: [
                 ]

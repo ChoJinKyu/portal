@@ -13,7 +13,7 @@ sap.ui.define([
                 // this.getOwnerComponent().getRouter().navTo("mainPage", {} );
 
                 // apply content density mode to root view
-                // this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
                 
                 var sHash = sap.ui.core.routing.HashChanger.getInstance().getHash();
                 
@@ -42,29 +42,20 @@ sap.ui.define([
                 // }
                 
                 var routeName;
-                debugger;
-                if (pType === "1" || pType === "3") {
+                
+                if (pType === "RFQ" || pType === "RFP") {
                     routeName = "detailPage";
                 } else {
                     routeName = "detailPage2";
                 }
                 
-                this.getOwnerComponent().getRouter().navTo(routeName, { type : pType, outcome : pOutcome, header_id : pHeaderId } );
+                this.getOwnerComponent().getRouter().navTo(routeName, { mode : pMode, type : pType, outcome : pOutcome, header_id : pHeaderId } );
 
 
                 var inputModel = new JSONModel();
                 inputModel.setData({ type : "E"});
                 this.getView().setModel(inputModel, "defaultModel");
                 
-                // this.getRouter().navTo(routeName);
-
-
-                // if( this._cNum == "1" || this._cNum =="3"){
-                //      this.getRouter().navTo("detailPage", { type : this._cNum, outcome : outcome } );
-                // }else{
-                //     this.getOwnerComponent().getRouter().navTo("detailPage2", { type : this._cNum, outcome : outcome } );
-                // }
-                // this._clickEvent("0");
 
 			}
 		});

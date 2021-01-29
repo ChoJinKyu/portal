@@ -30,15 +30,13 @@ BEGIN
 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		--EXEC (:var_rollback);
-		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+		ROLLBACK;
 	END;
     
     BEGIN
     	DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            --EXEC (:var_rollback);
-            O_MSG = SELECT  'NG' RETURN_CODE, 'Evaluation type processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')' RETURN_MSG FROM  DUMMY;
+            :O_MSG.INSERT(('NG', 'Evaluation type processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
         END;
     
         MERGE INTO SP_SE_EVAL_TYPE AS ET
@@ -90,13 +88,17 @@ BEGIN
                    ,NOW())
         ;
     END;
+
+    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
+        SIGNAL SQL_ERROR_CODE 10000;
+    END IF;
     
     BEGIN
-    	  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    	DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            --EXEC (:var_rollback);
-            O_MSG = SELECT  'NG' RETURN_CODE, 'Evaluation grade processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')' RETURN_MSG FROM  DUMMY;
+            :O_MSG.INSERT(('NG', 'Evaluation grade processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
         END;
+        
         DELETE FROM SP_SE_EVAL_GRADE
         WHERE  (TENANT_ID,
                 COMPANY_CODE,
@@ -167,8 +169,16 @@ BEGIN
             SET    EVALUATION_GRADE_START_SCORE = IGRA.EVALUATION_GRADE_START_SCORE
                   ,EVALUATION_GRADE_END_SCORE = IGRA.EVALUATION_GRADE_END_SCORE
                   ,INP_APPLY_CODE = IGRA.INP_APPLY_CODE
+                  ,LOCAL_UPDATE_DTM = NOW()
+                  ,UPDATE_USER_ID = :I_USER_ID
+                  ,SYSTEM_UPDATE_DTM = NOW()
         ;
     END;
+
+    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
+        SIGNAL SQL_ERROR_CODE 10001;
+    END IF;
     
+    COMMIT;
     O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
 END;

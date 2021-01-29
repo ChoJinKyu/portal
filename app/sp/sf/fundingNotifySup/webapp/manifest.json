@@ -26,13 +26,6 @@
                     "odataVersion": "2.0"
                 }
             },
-            "OrgCodeListViewService": {
-                "uri": "srv-api/odata/v4/sp.FundingApplicationSupV4Service/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
-            },
             "comCodeService": {
                 "uri": "srv-api/odata/v2/cm.CodeMgtService/",
                 "type": "OData",

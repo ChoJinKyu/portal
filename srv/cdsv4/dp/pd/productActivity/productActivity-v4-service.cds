@@ -35,10 +35,10 @@ service ProductActivityV4Service {
 
     type ProcInputType : {
         crud_type  : String(1);
-        pdMst      : array of PdProductActivityTemplateType;
+        pdMst      : PdProductActivityTemplateType;
         pdDtl      : array of PdProductActivityTemplateLngType;
     }
 
-    action PdProductActivitySaveProc(inputData : array of ProcInputType) returns array of OutType;
+    action PdProductActivitySaveProc(inputData : ProcInputType) returns OutType;
 
 }

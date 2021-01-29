@@ -7,9 +7,10 @@ sap.ui.define([
   "sap/ui/core/Fragment",
   "sap/m/MessageBox",
   "ext/lib/formatter/NumberFormatter",
+  "cm/util/control/ui/EmployeeDialog",
   "dp/util/control/ui/MaterialMasterDialog"
 ],
-  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, NumberFormatter, MaterialMasterDialog) {
+  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, NumberFormatter, EmployeeDialog, MaterialMasterDialog) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oDialogInfo;
@@ -38,23 +39,30 @@ sap.ui.define([
             sTenantId = oRootModel.getProperty("/tenantId");
 
             var oToday = new Date();
-            var oFilterData = {tenantId: sTenantId,
+            var oFilter = {tenantId: sTenantId,
                                 materialCodes: [],
-                                type: "1",
-                                dateValue: new Date(this._changeDateFormat(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
-                                secondDateValue: new Date(this._changeDateFormat(oToday, "-")),
-                                type_list:[{code:"1", text:"개발구매"}]};
-
+                                dateValue: new Date(this._changeDateString(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
+                                secondDateValue: new Date(this._changeDateString(oToday, "-")),
+                                type_list:[]};
             this.setModel(new JSONModel(), "listModel");
-            this.setModel(new JSONModel(oFilterData), "filterModel");
+            this.setModel(new JSONModel(oFilter), "filterModel");
 
-            switch (sTenantId) {
-                case "L2100" :
-                    oRootModel.setProperty("/switchColumnVisible", true);
-                    break;
-                default :
-                    oRootModel.setProperty("/switchColumnVisible", false);
-            }
+
+            // 품의 유형 조회
+            var aApprovalTypeCodeFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")),
+                                        new Filter("group_code", FilterOperator.EQ, "DP_VI_APPROVAL_TYPE")];
+            this.getOwnerComponent().getModel("commonODataModel").read("/Code", {
+                filters : aApprovalTypeCodeFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        this.getModel("filterModel").setProperty("/type_list", data.results);
+                    }
+                }.bind(this),
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+
 
             // Dialog에서 사용할 Model 생성
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
@@ -66,18 +74,19 @@ sap.ui.define([
          * Search 버튼 클릭(Filter 추출)
          */
         onSearch: function () {
-            var oFilterModel = this.getModel("filterModel"),
-                oFilterModelData = oFilterModel.getData(),
-                aMasterFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
-                aDetailFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
-                sCompanyCode = oFilterModelData.company_code,
-                sOrgCode = oFilterModelData.org_code,
-                sStatus = oFilterModelData.status,
-                aMaterialCodes = oFilterModelData.materialCodes,
-                sApprovalNumber = oFilterModelData.approvalNumber,
-                sRequestBy = oFilterModelData.requestBy,
-                oDateValue = oFilterModelData.dateValue,
-                oSecondDateValue = oFilterModelData.secondDateValue;
+            var oFilterModel = this.getModel("filterModel");
+            var oFilterModelData = oFilterModel.getData();
+            var aMasterFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            var aDetailFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            var sCompanyCode = oFilterModelData.company_code;
+            var sOrgCode = oFilterModelData.org_code;
+            var sStatus = oFilterModelData.status;
+            var aMaterialCodes = oFilterModelData.materialCodes;
+            var sApprovalNumber = oFilterModelData.approvalNumber;
+            var sRequestBy = oFilterModelData.requestBy;
+            var oDateValue = oFilterModelData.dateValue;
+            var oSecondDateValue = oFilterModelData.secondDateValue;
+            var aRequestors = this.byId("multiInputWithEmployeeValueHelp").getTokens();
 
             // Company Code가 있는 경우
             if( sCompanyCode ) {
@@ -116,12 +125,24 @@ sap.ui.define([
 
             // Request Date가 있는 경우
             if( oDateValue ) {
-                aMasterFilters.push(new Filter("request_date", FilterOperator.BT, this._changeDateFormat(oDateValue), this._changeDateFormat(oSecondDateValue)));
+                aMasterFilters.push(new Filter("request_date", FilterOperator.BT, this._changeDateString(oDateValue), this._changeDateString(oSecondDateValue)));
             }
 
             // Request By가 있는 경우
             if( sRequestBy ) {
                 aMasterFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestBy));
+            }
+            if( 0<aRequestors.length ) {
+                var aRequestorsFilter = [];
+                
+                aRequestors.forEach(function (oRequestor) {
+                    aRequestorsFilter.push(new Filter("requestor_empno", FilterOperator.EQ, oRequestor.getKey()));
+                });
+
+                aMasterFilters.push(new Filter({
+                    filters: aRequestorsFilter,
+                    and: false
+                }));
             }
 
             this._getBasePriceList(aMasterFilters, aDetailFilters);
@@ -217,7 +238,7 @@ sap.ui.define([
         /**
          * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
          */
-        _changeDateFormat: function (oDateParam, sGubun) {
+        _changeDateString: function (oDateParam, sGubun) {
             var oDate = oDateParam || new Date(),
                 sGubun = sGubun || "",
                 iYear = oDate.getFullYear(),
@@ -301,7 +322,33 @@ sap.ui.define([
         onChangeMaterialCode: function (oEvent) {
             var oFilterModel = this.getModel("filterModel"); 
             oFilterModel.setProperty("/materialCodes", oEvent.getSource().getTokens());
-        }
+        },
+
+
+        /**
+         * 요청자 Dialog
+         */
+        onMultiInputWithEmployeeValuePress: function(){
+            if(!this.oEmployeeMultiSelectionValueHelp){
+                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                    title: "Choose Employees",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
+        },
+
+
+
     });
   }
 );

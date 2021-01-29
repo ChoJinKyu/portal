@@ -68,10 +68,12 @@
                 >
                     <VBox>
                         <!-- 평가조직 -->
-                        <Label text="{I18N>/EVAL_ORG}" />
+                        <Label text="{I18N>/EVAL_ORG}" required="true"/>
                         <ComboBox 
                             id="orgCode" 
                             width="100%" 
+                            required="true"
+                            fieldGroupIds="searchRequired"
                             showSecondaryValues="true"
                             selectionChange="onSelectionChangeOrgCode"
                             selectedKey="{viewModel>/cond/EQ/org_code}"
@@ -82,10 +84,12 @@
                     </VBox>
                     <VBox>
                         <!-- 평가운영단위 -->
-                        <Label text="{I18N>/EVAL_OP_UNT}" />
+                        <Label text="{I18N>/EVAL_OP_UNT}" required="true"/>
                         <ComboBox 
                             id="unitCode" 
                             width="100%" 
+                            required="true"
+                            fieldGroupIds="searchRequired"
                             showSecondaryValues="true"
                             selectionChange="onSelectionChangeUnitCode"
                             selectedKey="{viewModel>/cond/EQ/evaluation_operation_unit_code}"
@@ -96,7 +100,7 @@
                     </VBox>
                     <VBox>
                         <!-- 평가유형명 -->
-                        <Label text="{I18N>/EVALUATION_TYPE_NAME}" />
+                        <Label text="{I18N>/EVALUATION_TYPE_NAME}" required="true"/>
                         <SegmentedButton 
                             id="evaluType" 
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
@@ -146,12 +150,26 @@
                 <t:extension>
                     <OverflowToolbar>
                         <Title id="title" text="{I18N>/EVAL_ITEM}" level="H2"/> 
+                        <ToolbarSeparator/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
                         <Button text="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
                         <Button text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" />
                         <Button text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" />
-                        <ToolbarSeparator/>
+                        <Button icon="sap-icon://action-settings" type="Transparent" press="onMainTablePersoButtonPressed"/>
+                        <Button icon="sap-icon://excel-attachment" type="Transparent" press="onExcelExport" />
+                        <!-- <MenuButton 
+                            defaultAction="onExcelExport" 
+                            buttonMode="Split"
+                            icon="sap-icon://excel-attachment"
+                        >
+                            <menu>
+                                <Menu>
+                                    <MenuItem text="엑스포트" />
+                                    <MenuItem text="다른 이름으로 엑스포트" />
+                                </Menu>
+                            </menu>
+                        </MenuButton> -->
                     </OverflowToolbar>
                 </t:extension>
                 

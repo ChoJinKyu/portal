@@ -6,7 +6,6 @@ using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-
 using {op.Pu_Pr_Template_Mst as prTMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MST-model';
 using {op.Pu_Pr_Template_Map as prTMap} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
 using {op.Pu_Pr_Template_Lng as prTLng}         from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
-using {op.Pu_Pr_Template_DtlView as prTDtlView}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_DTLVIEW-model';  
 using {op.Pu_Pr_Template_Ett as prTEtt}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_ETT-model';
 using {op.Pu_Pr_Template_Txn as prTXtn}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_TXN-model';
 using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
@@ -111,7 +110,7 @@ service PrMgtService {
     entity Pr_TDtl    as projection on op.Pu_Pr_Template_Dtl;
     entity Pr_TLng    as projection on op.Pu_Pr_Template_Lng;
     entity Pr_TMap    as projection on op.Pu_Pr_Template_Map;
-    entity Pr_TDtlVIew as projection on op.Pu_Pr_Template_DtlView;
+   
 
 
     // 간단한 View 생성
