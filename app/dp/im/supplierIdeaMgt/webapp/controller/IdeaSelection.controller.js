@@ -292,16 +292,16 @@ sap.ui.define([
                 CUType = "D";
                 statsCode = "DELETE";
             }
-            if(oData.vi_amount==null){
+            if(oData.vi_amount=="" ||  oData.vi_amount==null || parseInt(oData.vi_amount) == undefined || parseInt(oData.vi_amount) == NaN){
                 oData.vi_amount = "0";
             }
-            if(oData.monthly_mtlmob_quantity==null){
+            if(oData.monthly_mtlmob_quantity=="" || oData.monthly_mtlmob_quantity==null || parseInt(oData.monthly_mtlmob_quantity) == undefined || parseInt(oData.monthly_mtlmob_quantity) == NaN){
                 oData.monthly_mtlmob_quantity = "0";
             }
-            if(oData.monthly_purchasing_amount==null){
+            if(oData.monthly_purchasing_amount=="" || oData.monthly_purchasing_amount==null || parseInt(oData.monthly_purchasing_amount) == undefined || parseInt(oData.monthly_purchasing_amount) == NaN){
                 oData.monthly_purchasing_amount = "0";
             }
-            if(oData.annual_purchasing_amount==null){
+            if(oData.annual_purchasing_amount=="" || oData.annual_purchasing_amount==null || parseInt(oData.annual_purchasing_amount) == undefined || parseInt(oData.annual_purchasing_amount) == NaN){
                 oData.annual_purchasing_amount = "0";
             }
 
@@ -345,7 +345,7 @@ sap.ui.define([
 
             var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
             
-            console.log(inputData);
+            // console.log(inputData);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -359,7 +359,7 @@ sap.ui.define([
                             data: JSON.stringify(inputData),
                             contentType: "application/json",
                             success: function (rst) {
-                                console.log(rst);
+                                // console.log(rst);
                                 if(rst.return_code =="S"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     if( flag == "T"){
@@ -370,13 +370,13 @@ sap.ui.define([
                                         v_this.onPageNavBackButtonPress();
                                     }
                                 }else{
-                                    console.log(rst);
+                                    // console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
-                                    console.log("eeeeee");
-                                    console.log(rst);
+                                    // console.log("eeeeee");
+                                    // console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     v_this.onSearch(rst.return_msg );
                             }
