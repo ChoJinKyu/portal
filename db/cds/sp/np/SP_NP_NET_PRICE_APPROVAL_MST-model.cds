@@ -4,9 +4,9 @@ using sp   from './SP_NP_NET_PRICE_APPROVAL_DTL-model';
 	
 entity Np_Net_Price_Approval_Mst {	
   key tenant_id                       : String(5)    not null  @title: 'L1100' ;	
-  key company_code                    : String(10)   not null  @title: '*,LGEKR' ;	
-  key operation_type                  : String(10)   not null  @title: 'operating unit' ;	
-  key operation_code                  : String(10)   not null  @title: 'operating code' ;	
+  key company_code                    : String(10)   not null  @title: '회사코드' ;
+  key org_type_code                   : String(2)    not null  @title: '구매운영조직유형' ;
+  key org_code                        : String(10)   not null  @title: '구매운영조직코드' ;
   key approval_number                 : String(50)   not null  @title: '품의번호' ;	
       //approval_title                  : String(300)            @title: '품의제목' ;	
       net_price_document_type_code    : String(30)             @title: '단가문서유형코드' ;	
@@ -26,8 +26,8 @@ entity Np_Net_Price_Approval_Mst {
       detailes                        : Association to many    sp.Np_Net_Price_Approval_Dtl    /* Detail 연결 */
                                                             on detailes.tenant_id       = tenant_id 
                                                            and detailes.company_code    = company_code 
-                                                           and detailes.operation_type  = operation_type
-                                                           and detailes.operation_code  = operation_code
+                                                           and detailes.org_type_code   = org_type_code
+                                                           and detailes.org_code        = org_code
                                                            and detailes.approval_number = approval_number
                                        ;
 
