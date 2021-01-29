@@ -14,13 +14,13 @@ sap.ui.define([
 ], function (Parent, Renderer, ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-    var OrderDialog = Parent.extend("op.util.control.ui.OrderDialog", {
+    var AccountDialog = Parent.extend("op.util.control.ui.AccountDialog", {
 
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},                
-                keyField:  { type: "string", group: "Misc", defaultValue: "order_number" },
-                textField: { type: "string", group: "Misc", defaultValue: "order_name" },
+                keyField:  { type: "string", group: "Misc", defaultValue: "account_code" },
+                textField: { type: "string", group: "Misc", defaultValue: "account_name" },
                 items: { type: "sap.ui.core.Control"}
             }
         },
@@ -32,7 +32,7 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/ORDER_NUMBER") +" or "+ this.getModel("I18N").getText("/ORDER_NAME")}),
+                        new Label({ text: this.getModel("I18N").getText("/ACCOUNT_CODE") +" or "+ this.getModel("I18N").getText("/ACCOUNT_NAME")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -41,23 +41,24 @@ sap.ui.define([
         },
 
         createTableColumns: function(){
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/ORDER"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/ACCOUT"));
             return [
-                // new Column({
-                //     width: "20%",
-                //     hAlign: "Center",
-                //     label: new Label({text: this.getModel("I18N").getText("/COMPANY_CODE")}),
-                //     template: new Text({text: "{company_code}"})
-                // }),
                 new Column({
-                    width: "30%",
+                    width: "20%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/ORDER_NUMBER")}),
+                    label: new Label({text: this.getModel("I18N").getText("/LANGUAGE_CODE")}),
+                    template: new Text({text: "{language_code}"})
+                }),
+
+                new Column({
+                    width: "20%",
+                    hAlign: "Center",
+                    label: new Label({text: this.getModel("I18N").getText("/ACCOUNT_CODE")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 }),
                 new Column({
-                    width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/ORDER_NAME")}),
+                    width: "60%",
+                    label: new Label({text: this.getModel("I18N").getText("/ACCOUNT_NAME")}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 })
                 
@@ -102,7 +103,7 @@ sap.ui.define([
 
              
 
-             aSorters.push(new Sorter("order_number", false));
+             aSorters.push(new Sorter("account_code", false));
 
             // var oQuery = {
             //     // urlParameters: {
@@ -113,7 +114,7 @@ sap.ui.define([
 
            
             this.oDialog.setBusy(true);
-            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Order_Mst", {
+            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Account_Mst", {
                 fetchAll: true,  //TODL: please disable fetchAll option for performance
                 filters: aFilters,
                 sorters: aSorters,
@@ -133,5 +134,5 @@ sap.ui.define([
         }
     });
 
-    return OrderDialog;
+    return AccountDialog;
 }, /* bExport= */ true);

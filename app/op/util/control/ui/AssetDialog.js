@@ -14,13 +14,13 @@ sap.ui.define([
 ], function (Parent, Renderer, ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-    var OrderDialog = Parent.extend("op.util.control.ui.OrderDialog", {
+    var AssetDialog = Parent.extend("op.util.control.ui.AssetDialog", {
 
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},                
-                keyField:  { type: "string", group: "Misc", defaultValue: "order_number" },
-                textField: { type: "string", group: "Misc", defaultValue: "order_name" },
+                keyField:  { type: "string", group: "Misc", defaultValue: "asset_number" },
+                textField: { type: "string", group: "Misc", defaultValue: "asset_name" },
                 items: { type: "sap.ui.core.Control"}
             }
         },
@@ -32,7 +32,7 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/ORDER_NUMBER") +" or "+ this.getModel("I18N").getText("/ORDER_NAME")}),
+                        new Label({ text: this.getModel("I18N").getText("/ASSET_NUMBER") +" or "+ this.getModel("I18N").getText("/ASSET_NAME")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -41,7 +41,7 @@ sap.ui.define([
         },
 
         createTableColumns: function(){
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/ORDER"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/ASSET"));
             return [
                 // new Column({
                 //     width: "20%",
@@ -52,12 +52,12 @@ sap.ui.define([
                 new Column({
                     width: "30%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/ORDER_NUMBER")}),
+                    label: new Label({text: this.getModel("I18N").getText("/ASSET_NUMBER")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/ORDER_NAME")}),
+                    label: new Label({text: this.getModel("I18N").getText("/ASSET_NAME")}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 })
                 
@@ -71,17 +71,6 @@ sap.ui.define([
                     ],
                 oFilters = this.getProperty("items").filters || [],
                 aSorters = this.getProperty("items").sorters || [];
-
-
-            // aFilters.push(
-            //     new Filter({
-            //         filters: [                            
-            //             new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantid") )
-            //         ],
-            //         and: true
-            //     })
-            // );
-
 
 
             if(sKeyword){
@@ -102,18 +91,10 @@ sap.ui.define([
 
              
 
-             aSorters.push(new Sorter("order_number", false));
-
-            // var oQuery = {
-            //     // urlParameters: {
-            //     //     "$select": "company_code,order_number,order_name"
-            //     // },             
-                
-            // };
-
+             aSorters.push(new Sorter("asset_number", false));
            
             this.oDialog.setBusy(true);
-            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Order_Mst", {
+            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Asset_Mst", {
                 fetchAll: true,  //TODL: please disable fetchAll option for performance
                 filters: aFilters,
                 sorters: aSorters,
@@ -133,5 +114,5 @@ sap.ui.define([
         }
     });
 
-    return OrderDialog;
+    return AssetDialog;
 }, /* bExport= */ true);

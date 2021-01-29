@@ -7,12 +7,18 @@ sap.ui.define([
     "cm/util/control/ui/EmployeeDialog",
     "cm/util/control/ui/CompanyDetailDialog",
     "cm/util/control/ui/CmDialogHelp",
+    "op/util/control/ui/OrderDialog", 
+    "op/util/control/ui/AssetDialog", 
+    "op/util/control/ui/AccountDialog", 
+    "op/util/control/ui/CctrDialog", 
+    "op/util/control/ui/WbsDialog", 
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "dp/util/control/ui/MaterialOrgDialog"
 ], function (Controller, JSONModel, MessageBox, MessageToast, CodeDialog, EmployeeDialog, CompanyDetailDialog, CmDialogHelp,
-        Filter, FilterOperator, Sorter, MaterialOrgDialog) {
+             OrderDialog, AssetDialog, AccountDialog, CctrDialog, WbsDialog,
+             Filter, FilterOperator, Sorter, MaterialOrgDialog) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.CodeCombo", {
@@ -185,6 +191,128 @@ sap.ui.define([
             
             this.byId("searchMultiMaterialOrgFromDialog").setValue("");
         },
+
+
+
+        // OP.. 
+        
+        onMultiInputWithOrderPress: function(){
+            if(!this.oOrderMultiSelectionValueHelp){
+                this.oOrderMultiSelectionValueHelp = new OrderDialog({
+                    title: "Choose Orders",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+                        ]
+                    }
+                });
+                this.oOrderMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithOrderValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oOrderMultiSelectionValueHelp.open();
+            this.oOrderMultiSelectionValueHelp.setTokens(this.byId("multiInputWithOrderValueHelp").getTokens());
+        },
+
+
+        onMultiInputWithAssetPress: function(){
+            if(!this.oAssetMultiSelectionValueHelp){
+                this.oAssetMultiSelectionValueHelp = new AssetDialog({
+                    title: "Choose Assets",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+                        ]
+                    }
+                });
+                this.oAssetMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithAssetValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oAssetMultiSelectionValueHelp.open();
+            this.oAssetMultiSelectionValueHelp.setTokens(this.byId("multiInputWithAssetValueHelp").getTokens());
+        },
+
+        onMultiInputWithAccountPress: function(){
+            if(!this.oAccountMultiSelectionValueHelp){
+                this.oAccountMultiSelectionValueHelp = new AccountDialog({
+                    title: "Choose Accounts",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+                        ]
+                    }
+                });
+                this.oAccountMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithAccountValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oAccountMultiSelectionValueHelp.open();
+            this.oAccountMultiSelectionValueHelp.setTokens(this.byId("multiInputWithAssetValueHelp").getTokens());
+        },
+
+
+         onMultiInputWithCctrPress: function(){
+            if(!this.oCctrMultiSelectionValueHelp){
+                this.oCctrMultiSelectionValueHelp = new CctrDialog({
+                    title: "Choose Cctrs",
+                    multiSelection: true,
+                    effectiveDate: this.getFormatDate( new Date()),
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+                        ]
+                    }
+                });
+                this.oCctrMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithCctrValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oCctrMultiSelectionValueHelp.open();
+            this.oCctrMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCctrValueHelp").getTokens());
+        },
+
+
+        onMultiInputWithWbsPress: function(){
+            if(!this.oWbsMultiSelectionValueHelp){
+                this.oWbsMultiSelectionValueHelp = new WbsDialog({
+                    title: "Choose Wbss",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+                        ]
+                    }
+                });
+                this.oWbsMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithWbsValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oWbsMultiSelectionValueHelp.open();
+            this.oWbsMultiSelectionValueHelp.setTokens(this.byId("multiInputWithWbsValueHelp").getTokens());
+        },
+        
+        getFormatDate: function (date) {
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
+
+
+        // OP...
+
+
 
 	});
 });
