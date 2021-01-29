@@ -49,7 +49,7 @@ sap.ui.define([
                     routeName = "detailPage2";
                 }
                 
-                this.getOwnerComponent().getRouter().navTo(routeName, { type : pType, outcome : pOutcome, header_id : pHeaderId } );
+                this.getOwnerComponent().getRouter().navTo(routeName, { mode : pMode, type : pType, outcome : pOutcome, header_id : pHeaderId } );
 
 
                 var inputModel = new JSONModel();
