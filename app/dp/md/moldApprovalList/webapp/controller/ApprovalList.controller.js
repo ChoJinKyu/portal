@@ -1189,10 +1189,10 @@ sap.ui.define([
 
 
                     }               
-                    
-                    oView.setBusy(false);
-                    
+                    nModel.refresh(true);
+                    oView.setBusy(false);       
                 }
+                
             });
            
             
