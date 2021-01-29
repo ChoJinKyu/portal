@@ -50,20 +50,27 @@ public class PrReviewMgtV4Service implements EventHandler {
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
         v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PR_REVIEW ( ")
-                .append("TRANSACTION_CODE NVARCHAR(1), ").append("TENANT_ID NVARCHAR(5), ")
-                .append("COMPANY_CODE NVARCHAR(10), ").append("PR_NUMBER NVARCHAR(50), ")
-                .append("PR_ITEM_NUMBER NVARCHAR(10) ").append(")");
+                         .append("TRANSACTION_CODE NVARCHAR(1), ")
+                         .append("TENANT_ID NVARCHAR(5), ")
+                         .append("COMPANY_CODE NVARCHAR(10), ")
+                         .append("PR_NUMBER NVARCHAR(50), ")
+                         .append("PR_ITEM_NUMBER NVARCHAR(10) ")
+                         .append(")");
 
         String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP_PR_REVIEW";
-        String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PR_REVIEW VALUES (?, ?, ?, ?)";
+        String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PR_REVIEW VALUES (?, ?, ?, ?, ?)";
 
         log.info("### LOCAL_TEMP Table Create Success ###");
 
         StringBuffer v_sql_callProc = new StringBuffer();
-        v_sql_callProc.append("CALL OP_PU_PR_REVIEW_SAVE_PROC ( ").append("I_JOB_TYPE => ?, ")
-                .append("I_PR_ITEM_TBL => #LOCAL_TEMP_PR_REVIEW, ").append("I_BUYER_EMPNO => ?, ")
-                .append("I_BUYER_DEPARTMENT_CODE => ?, ").append("I_PROCESSED_REASON => ?, ").append("I_USER_ID => ?, ")
-                .append("O_MSG_TBL => ? ").append(")");
+        v_sql_callProc.append("CALL OP_PU_PR_REVIEW_SAVE_PROC ( ")
+                       .append("I_JOB_TYPE => ?, ")
+                       .append("I_PR_ITEM_TBL => #LOCAL_TEMP_PR_REVIEW, ")
+                       .append("I_BUYER_EMPNO => ?, ")
+                       .append("I_BUYER_DEPARTMENT_CODE => ?, ")
+                       .append("I_PROCESSED_REASON => ?, ")
+                       .append("I_USER_ID => ?, ")
+                       .append("O_MSG_TBL => ? ").append(")");
 
         log.info("### DB Connect Start ###");
         ProcInputType v_inData = context.getInputData();
