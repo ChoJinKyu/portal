@@ -287,6 +287,7 @@ public class SupplierIdeaMgtV4 implements EventHandler {
             public IdeaStatusResult mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 v_row.setReturnCode(v_rs.getString("return_code"));
                 v_row.setReturnMsg(v_rs.getString("return_msg"));
+                v_row.setReturnMsgCode(v_rs.getString("return_msg_code"));
                 v_result.add(v_row);
                 return v_row;
             }

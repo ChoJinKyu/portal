@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController"
+	"ext/lib/controller/BaseController"
 ], function (BaseController) {
 	"use strict";
 
