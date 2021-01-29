@@ -109,9 +109,9 @@ sap.ui.define([
 				"tenant_id": "L2100",
 				"chain_code": "CM",
 				"language_code": "KO",
-				"message_code": "",
+				"message_code": null,
 				"message_type_code": "LBL",
-				"message_contents": ""
+				"message_contents": null
             }, "/Message", 0);
             this.validator.clearValueState(this.byId("mainTable"));
 			this.byId("mainTable").clearSelection();
@@ -150,8 +150,8 @@ sap.ui.define([
 				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
 				return;
             }
-            if(this.validator.validate(oTable) !== true) return;
-            if(this.validator.validate(oModel) !== true) return;
+            if(this.validator.validate(this.byId("page")) !== true) return;
+            // if(this.validator.validate(oModel) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),

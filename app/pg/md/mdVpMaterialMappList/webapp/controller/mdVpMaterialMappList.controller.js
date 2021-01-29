@@ -112,7 +112,11 @@ sap.ui.define([
 
 
         onSearch:function () {
+
+            //체크 리셋
+            var oTable = this.byId("mainTable");
             var oView = this.getView();
+            oTable.clearSelection();
 
             //filters
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),
@@ -162,7 +166,7 @@ sap.ui.define([
                 oView = this.getView(),
                 that = this; 
 
-            //treeList-item mapping
+            //table header
             if(dataArr.length>0){
                 var itemArr;
                 //전체 개수
@@ -208,8 +212,6 @@ sap.ui.define([
                                                 hAlign: "Center",
                                                 width: "8rem",
                                                 template: new Input({value:"{list>"+dataArrNameArr[idx]+"_attrValue}"})
-                                                // template: new Text({text:"{list>"+dataArrNameArr[idx]+"}"})
-                                                // template: new Text({text:"{list>"+dataArrName+"_attrValue}"})
                                             }));
                                         }else{
                                             oTable.addColumn(new Column({
@@ -222,8 +224,6 @@ sap.ui.define([
                                                 hAlign: "Center",
                                                 width: "8rem",
                                                 template: new Input({value:"{list>"+dataArrNameArr[idx]+"_attrValue}"})
-                                                // template: new Text({text:"{list>"+dataArrNameArr[idx]+"}"})
-                                                // template: new Text({text:"{list>"+dataArrName+"_attrValue}"})
                                             }));
                                         }
                                     }
@@ -274,100 +274,13 @@ sap.ui.define([
                                     }
                                 }
                             }
-                            
-                            // this.oTableColumns = this.byId("tableColumns");
-                            // this.oTableColumns.setHeaderSpan(2);
-                            //"title>/MdVpMatrial/"+i+"/"+dataArrName+"_cateName",
-                            // this.oTableColumns.bindAggregation("multiLabels", "title>/MdVpMatrial", function(index, context) {
-                            //     console.log(index, context)
-                            //     // // return new multiLabels({
-                            //     // template : new Label({
-                            //     //     text: "{title>"+dataArrName+"_cateName}"
-                            //     //     // label: new Label({ text: "{list>"+dataArrName+"_cateName}"})
-                            //     //     // template: new Text({ text: ""})
-                            //     // }), new Label({
-                            //     //     text: "{title>"+dataArrName+"_itemName}"
-                            //     // });
-                                
-                            //     return new Label({
-                            //         text: "{title>"+dataArrName+"_cateName}"
-                            //     }),
-                            //     new Label({
-                            //         text: "{title>"+dataArrName+"_itemName}"
-                            //     });
-                            // });
-
-
-                            // console.log("{title>"+dataArrName+"_cateName}");
-                            // oTable.addColumn(new Column({
-                            //     headerSpan:2,
-                            //     multiLabels: [
-                            //         new Label({text: item.cateName}),
-                            //         // new Label({text: item.itemName}) 
-                            //         new Label({text: categoryItems[idx]}) 
-                            //     ],
-                            //     template: "",
-                            //     hAlign: "Center"
-                            //     // template: new sap.m.ObjectIdentifier({title:"{title>org_type_code}", text:"{title>org_type_code}"}),
-                            //     // sortProperty: "name",
-                            //     // filterProperty: "name",
-                            //     // width: "400px"
-                            // }));
-
-
-                            
-                            // that.byId("tableColumns").appendChildf('<t:Column headerSpan="2" hAlign="Center">'
-                            //             +'<t:multiLabels>'
-                            //                 +'<Label text="Contact"/>'
-                            //                 +'<Label text="Phone" textAlign="Center" width="100%"/>'
-                            //             +'</t:multiLabels>'
-                            //             +'<t:template>'
-                            //                 +'<Text text="{list>attrItemName1}" wrapping="false" />'
-                            //             +'</t:template>'
-                            //         +'</t:Column>'
-                            //         +'<t:Column>'
-                            //             +'<t:multiLabels>'
-                            //                 +'<Label text="Contact"/>'
-                            //                 +'<Label text="Phone22" textAlign="Center" width="100%"/'>
-                            //             +'</t:multiLabels>'
-                            //             +'<t:template>'
-                            //                 +'<Text text="{list>attrItemName1}" wrapping="false" />'
-                            //             +'</t:template>'
-                            //         +'</t:Column>');
-
-
-                            // if(categoryCode != item.cateCode){
-                            //     if(categoryCode != ""){
-                            //         this.byId("tableColumns").html('<t:Column headerSpan="2" hAlign="Center">'
-                            //             +'<t:multiLabels>'
-                            //                 +'<Label text="Contact"/>'
-                            //                 +'<Label text="Phone" textAlign="Center" width="100%"/>'
-                            //             +'</t:multiLabels>'
-                            //             +'<t:template>'
-                            //                 +'<Text text="{list>attrItemName1}" wrapping="false" />'
-                            //             +'</t:template>'
-                            //         +'</t:Column>'
-                            //         +'<t:Column>'
-                            //             +'<t:multiLabels>'
-                            //                 +'<Label text="Contact"/>'
-                            //                 +'<Label text="Phone22" textAlign="Center" width="100%"/'>
-                            //             +'</t:multiLabels>'
-                            //             +'<t:template>'
-                            //                 +'<Text text="{list>attrItemName1}" wrapping="false" />'
-                            //             +'</t:template>'
-                            //         +'</t:Column>');
-                            //     }
-                            //     categoryCode = item.cateCode,
-                            //     categoryName = item.cateName,
-                            //     categoryItems.push(item.itemName);
-                            // }else{
-                            //     categoryItems.push(item.itemName);
-                            // }  
 
                         }
                         
                     }
                 }
+
+                //헤더 매핑 후 리스트 조회
                 var url = "pg/md/mdVpMaterialMappList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMaterialMappListView(language_code='KO',tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200',vendor_pool_code='VP202101070085')/Set"
  
                 jQuery.ajax({
@@ -375,11 +288,7 @@ sap.ui.define([
                     contentType: "application/json",
                     type: "GET",
                     success: function(oData2){ 
-                        debugger;
                         this.byId("title").setText("List ("+oData2.value.length+")");
-                        // var v_list = oView.getModel("list").getData();
-                        // v_list.MdVpMatrial = oData2.value;
-                        // oView.getModel("list").updateBindings(true);
                         this.setItemList(oData2);
                     }.bind(this)   
                                         
@@ -421,9 +330,9 @@ sap.ui.define([
                         }
                     }
                 }
-                        var v_list = oView.getModel("list").getData();
-                        v_list.MdVpMatrial = oData.value;
-                        oView.getModel("list").updateBindings(true);
+
+                oView.getModel("list").setData(oData.value, "/MdVpMatrial");
+                oView.getModel("list").updateBindings(true);
             }
             
         },
@@ -527,10 +436,11 @@ sap.ui.define([
         },
 
         onMainTableCancelButtonPress:function() {
-            debugger;
-            if(this.getModel("list").isChanged() === true){
-				MessageBox.confirm(this.getModel("I18N").getText("/NCM00005"), {
-					title : this.getModel("I18N").getText("/SEARCH"),
+            var oModel = this.getModel("list");
+
+            if(oModel.isChanged() === true){
+				MessageBox.confirm("변경된 사항이 존재합니다. 취소 하시겠습니까?", {
+					title : "취소",
 					initialFocus : sap.m.MessageBox.Action.CANCEL,
 					onClose : function(sButton) {
 						if (sButton === MessageBox.Action.OK) {
@@ -539,49 +449,55 @@ sap.ui.define([
 					}.bind(this)
 				});
 			}else{
-				this.onSearch();
+                MessageToast.show("변경된 사항이 없습니다.");
+                return;
             }
             
         },
         
         onMainTableSaveButtonPress:function() {
-            var that = this;
-            var selectedItems = this.getModel("list").getProperty("/MdVpMatrial");
-
+            var oTable = this.byId("mainTable"),
+                oModel = this.getModel("list"),
+                that = this;
+            //var selectedItems = this.getModel("list").getProperty("/MdVpMatrial");
+            var selectedItems = oTable.getSelectedIndices();
+            
+            if (selectedItems.length > 0) {
 
                 var param = {};
                 var VpValueInfo = {};
                 var values = [];
-                
-            
-			values.push({material_code:"MCode-1", supplier_code:"SCode-1", item_serial_no:"1", attr_value:"Value-1값"});
-			values.push({material_code:"MCode-1", supplier_code:"SCode-1", item_serial_no:"2", attr_value:"Value-2값"});
-            values.push({material_code:"MCode-1", supplier_code:"SCode-1", item_serial_no:"4", attr_value:"Value-4값"});
-            
-            values.push({material_code:"MCode-2", supplier_code:"SCode-2", item_serial_no:"1", attr_value:"Value-1값"});
-            
-            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"1", attr_value:"Value-1값"});
-            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"2", attr_value:"Value-2값"});
-            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"3", attr_value:"Value-3값"});
-            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"4", attr_value:"Value-4값"});
-            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"5", attr_value:"Value-5값"});
-            values.push({material_code:"MCode-3", supplier_code:"SCode-3", item_serial_no:"10", attr_value:"Value-10값"});
+
+                VpValueInfo.tenant_id = "L2100";//selectedItems[i].tenant_id
+                VpValueInfo.company_code = "*";//selectedItems[i].company_code;
+                VpValueInfo.org_type_code = "BU";//selectedItems[i].org_type_code;
+                VpValueInfo.org_code = "BIZ00200";//selectedItems[i].org_code;
+                VpValueInfo.vendor_pool_code = "VP202101070085";
 
                 for(var i = 0 ; i < selectedItems.length; i++){
-                    // var selectedItemstPath = selectedItems[i].getBindingContextPath();
-                    // var curData = this.getView().getModel().getProperty(selectedItemstPath);
-                    
-                    values.push({
-                        tenant_id: selectedItems[i].tenant_id,
-                        company_code: selectedItems[i].company_code,
-                        org_type_code: selectedItems[i].org_type_code,
-                        org_code: selectedItems[i].org_code,
-                        vendor_pool_code: "VP201610260087"  
-                    });
+                    var oItem = this.getModel("list").getProperty("/MdVpMatrial/"+selectedItems[i]);
+
+                    for(var idx = 1; idx <= oItem.vendor_pool_item_mapping_cnt; idx++){
+
+                        var dataArrName="";
+                        if(idx<10){
+                            dataArrName = "spmd_attr_info_00"+idx
+                        }else if(idx<100){
+                            dataArrName = "spmd_attr_info_0"+idx
+                        }
+
+                        values.push({
+                            material_code:oItem.material_code,
+                            supplier_code:oItem.supplier_code,
+                            item_serial_no:oItem[dataArrName+"_itemSerialNo"],
+                            attr_value:oItem[dataArrName+"_attrValue"]
+                        });
+                    }
 
                 }
 
                 VpValueInfo.values = values;
+
 			    param.params = VpValueInfo;
                 var url = "pg/md/mdVpItemMapping/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMaterialMappSaveProc";
 
@@ -593,6 +509,7 @@ sap.ui.define([
                     success: function(data){
                         if(data.rsltCd=="000"){
                             MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                            that.onSearch();
                         }else{
                             alert("["+data.rsltCd+"] ["+data.rsltMesg+"]");
                         }
@@ -602,6 +519,13 @@ sap.ui.define([
 					    alert("Ajax Error => "+req.status);
                     }
                 });
+
+            }else{
+                MessageToast.show("한개이상 선택해주세요.");
+                return;
+            }
+                
+
         }
     });
   }

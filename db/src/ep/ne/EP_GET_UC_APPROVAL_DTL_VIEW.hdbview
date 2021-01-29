@@ -1,0 +1,28 @@
+view EP_GET_UC_APPROVAL_DTL_VIEW as
+select
+     dtl.ep_item_code	                --설비공사용품목코드
+    ,dtl.item_desc                      --품목명
+    ,dtl.spec_desc	                    --규격설명
+    ,dtl.unit	                        --단위
+    ,dtl.material_net_price	            --자재단가
+    ,dtl.labor_net_price	            --노무단가
+    ,mst.net_price_contract_title	    --단가계약제목
+    ,mst.net_price_contract_start_date	--단가계약시작일자
+    ,mst.net_price_contract_end_date	--단가계약종료일자
+    ,dtl.tenant_id
+    ,dtl.company_code
+    ,dtl.net_price_contract_document_no
+    ,dtl.net_price_contract_degree
+    ,dtl.local_create_dtm
+    ,dtl.local_update_dtm
+    ,dtl.create_user_id
+    ,dtl.update_user_id
+    ,dtl.system_create_dtm
+    ,dtl.system_update_dtm
+from ep_uc_approval_dtl as dtl
+left outer join ep_uc_approval_mst as mst
+on dtl.tenant_id = mst.tenant_id
+and dtl.company_code = mst.company_code
+and dtl.net_price_contract_document_no = mst.net_price_contract_document_no
+and dtl.net_price_contract_degree = mst.net_price_contract_degree
+;

@@ -17,14 +17,16 @@ sap.ui.define([
     "sap/m/Token",
     "sp/util/control/ui/SupplierDialog",
     "dp/util/control/ui/MaterialMasterDialog",
-    "cm/util/control/ui/EmployeeDialog"
+    "cm/util/control/ui/EmployeeDialog",
+    "dpmd/util/controller/EmployeeDeptDialog"
 ],
   function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter,
         JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, Token
-        , SupplierDialog, MaterialMasterDialog, EmployeeDialog) {
+        , SupplierDialog, MaterialMasterDialog, EmployeeDialog,EmployeeDeptDialog) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oOpenDialog;
+    let i = 0;
 
     return BaseController.extend("sp.vi.basePriceMgt.controller.BasePriceDetail", {
         dateFormatter: DateFormatter,
@@ -70,7 +72,17 @@ sap.ui.define([
              */
             // 해당 View(BasePriceDetail)에서 사용할 메인 Model 생성
             this.setModel(new JSONModel(), "detailModel");
+            this.setModel(new JSONModel(), "metaldetailMdoel");
+            this.setModel(new JSONModel(), "refererMdoel");
+            this.setModel(new JSONModel(), "approverMdoel");
 
+            //관리 시세 combobox 데이터 하드코딩
+            oRootModel.setProperty("/management_mprice_code", [{code : "MINGT", text:"관리"}, {code : "MPRICE", text:"시세"}]);
+            debugger;
+            this.getModel("approverMdoel").setProperty("/List",[{code : "1000005", text:"OLEIC ACID"}]);
+            this.getModel("refererMdoel").setProperty("/List",[{code : "1000005", text:"OLEIC ACID"}]);
+            this.getModel("metaldetailMdoel").setProperty("/List",[{code : "1000005", text:"OLEIC ACID"}]);
+            
             /**
              *  끝 LSH
              */
@@ -127,8 +139,6 @@ sap.ui.define([
             this.oRouter.getRoute("basePriceDetail").attachPatternMatched(this._getBasePriceDetail, this);
 
             //this.setRichEditor();
-            
-            
         }
 
         /**
@@ -136,9 +146,14 @@ sap.ui.define([
          */
 
          /**
-         * Base Price 라인 추가
-         */
+          * Base Price 라인 추가
+          */
         , onListRowAdd: function () {
+            if (!(this.byId("listManagementComboBox").getValue())){
+                MessageBox.show("관리/시세 선택후 추가 가능합니다.");
+                return;
+            }
+
             var oView = this.getView();
             var oModel = this.getModel("detailModel");
             var aDetails = oModel.getProperty("/details");
@@ -169,7 +184,38 @@ sap.ui.define([
                         });
             oModel.refresh();
         }
+
+        /**
+         * 체크된 detail 데이터 삭제
+         */
+        , onListRowDelete : function (oEvent) {
+            var oDetailModel = this.getModel("detailModel"),
+                aDetails = oDetailModel.getProperty("/details"),
+                oDetailTable = oEvent.getSource().getParent().getParent();
+
+            for( var i=aDetails.length-1; 0<=i; i-- ) {
+                if( aDetails[i].checked ) {
+                    aDetails.splice(i, 1);
+                }
+            }
+
+            oDetailModel.refresh();
+            oDetailTable.clearSelection();
+        }
+
+        , onTemplateDownload : function (oEvent) {
+            MessageBox.show("템플릿 버튼 준비중");
+            return;
+        }
+
+        , onExcelUpload : function (oEvent) {
+            MessageBox.show("업로드 버튼 준비중");
+            return;
+        }
         
+        /**
+         * 법인 변경시 플랜트 데이터 변경 
+         */
         , onChangeCorporation : function (oEvent) {
             var oDetailModel = this.getModel("detailModel");
             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
@@ -178,12 +224,17 @@ sap.ui.define([
             oDetailModel.setProperty(sSelectedPath+"/org_Plant", this.getModel("rootModel").getProperty("/org_Plant/"+oDetailModel.getProperty(sSelectedPath+"/corporation")));
         }
 
-
-        ,onInputSupplierWithOrgValuePress: function(oEvent){
+        /**
+         * 공급업체 Dialog 창
+         */
+        , onInputSupplierWithOrgValuePress : function(oEvent){
+            debugger;
             var oRootModel = this.getModel("rootModel");
             var RootTenantId = oRootModel.getProperty("/tenantId");
             var oDetailModel = this.getModel("detailModel");
             var oDetailModelPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oDetail = oDetailModel.getProperty(oDetailModelPath);
+            this._oDetail = oDetail;
         
             if(!this.oSupplierWithOrgValueHelp){
                 this.oSupplierWithOrgValueHelp = new SupplierDialog({
@@ -194,19 +245,29 @@ sap.ui.define([
                     }, 
                     multiSelection: false
                 });
+                
                 this.oSupplierWithOrgValueHelp.attachEvent("apply", function(oEvent){
-                    oDetailModel.setProperty(oDetailModelPath+"/supplier_code", oEvent.getParameter("item").supplier_code);        
-                    oDetailModel.setProperty(oDetailModelPath+"/supplier", oEvent.getParameter("item").supplier_local_name);        
+                    debugger;
+                    var oSelectedDialogItem = oEvent.getParameter("item");
+                    this._oDetail.supplier_code = oSelectedDialogItem.supplier_code;
+                    this._oDetail.supplier = oSelectedDialogItem.supplier_local_name;
+                     oDetailModel.refresh();
                 }.bind(this));
             }
             this.oSupplierWithOrgValueHelp.open();
         }
 
-        ,onMaterialMasterMultiDialogPress: function(oEvent){
+        /**
+         * 자재 마스터 Dialog 창
+         */
+        , onMaterialMasterMultiDialogPress : function(oEvent){  
+            debugger;          
             var oRootModel = this.getModel("rootModel");
             var RootTenantId = oRootModel.getProperty("/tenantId");
             var oDetailModel = this.getModel("detailModel");
             var oDetailModelPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oDetail = oDetailModel.getProperty(oDetailModelPath);
+            this._oDetail = oDetail;
         
             if(!this.oSearchMultiMaterialMasterDialog){
                 this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
@@ -217,19 +278,98 @@ sap.ui.define([
                     }, 
                     multiSelection: false
                 });
+
                 this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
-                    oDetailModel.setProperty(oDetailModelPath+"/material_code", oEvent.getParameter("item").material_code);        
-                    oDetailModel.setProperty(oDetailModelPath+"/material", oEvent.getParameter("item").material_desc);        
+                    debugger;
+                    //자매 코드 추가시 자재, 협력사,수량 자동세팅                    
+                    var oSelectedDialogItem = oEvent.getParameter("item");
+                    this._oDetail.material_code = oSelectedDialogItem.material_code;
+                    this._oDetail.material = oSelectedDialogItem.material_desc;
+
+                    var material = this.getModel("rootModel").getProperty("/material_code/"+this._oDetail.material_code);
+
+                    if(!material) {
+                        MessageBox.show(oEvent.getParameter("item").material_code+"없는 코드입니다.");
+                        this._oDetail.vendor_pool = "";
+                        this._oDetail.basePriceUnit = "";
+                        oDetailModel.refresh();
+                        return;
+                    }
+                    this._oDetail.vendor_pool = material[0].vendor_pool_local_name;
+                    this._oDetail.basePriceUnit = material[0].material_price_unit;
+                    oDetailModel.refresh();
                 }.bind(this));
             }
             this.oSearchMultiMaterialMasterDialog.open();
+
+             
+
         }
 
-        ,onEmployeeDialogPress: function(oEvent){
+        /**
+         * 구매 담당자 Dialog 창
+         */
+        , onEmployeeDialogPress : function(oEvent){
+            debugger;
             var oRootModel = this.getModel("rootModel");
             var RootTenantId = oRootModel.getProperty("/tenantId");
             var oDetailModel = this.getModel("detailModel");
             var oDetailModelPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oDetail = oDetailModel.getProperty(oDetailModelPath);
+            this._oDetail = oDetail;
+
+            if(!this.oEmployeeDialog){
+                this.oEmployeeDialog = new EmployeeDialog({
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, RootTenantId)
+                        ]
+                    }, 
+                    multiSelection: false
+                });
+
+                this.oEmployeeDialog.attachEvent("apply", function(oEvent){
+                    debugger;
+                    var oSelectedDialogItem = oEvent.getParameter("item");
+                    this._oDetail.buyer = oSelectedDialogItem.employee_number;
+
+                    oDetailModel.refresh();
+                }.bind(this));
+            }
+            this.oEmployeeDialog.open();
+        }
+
+        /**
+         * detail 선택 데이터 체크
+         */
+        , onRowSelectionChange : function (oEvent) {
+            debugger;
+            var oDetailModel = this.getModel("detailModel"),
+                oParameters = oEvent.getParameters(),
+                bSelectAll = !!oParameters.selectAll;
+
+            // 전체 선택일 경우
+            if( bSelectAll || oParameters.rowIndex === -1 ) {
+                var aDetails = oDetailModel.getProperty("/details");
+                aDetails.forEach(function(oDetail) {
+                    oDetail.checked = bSelectAll;
+                });
+            }
+            // 단독 선택일 경우
+            else {
+                var oDetail = oDetailModel.getProperty(oParameters.rowContext.getPath());
+                oDetail.checked = !oDetail.checked;
+            }
+        }
+
+        /**
+         * Referrer(결재참조자) Dialog 창
+         */
+        , onEmployeeDialogReferrerPress : function(oEvent){
+            var oView = this.getView();
+            var oRootModel = this.getModel("rootModel");
+            var RootTenantId = oRootModel.getProperty("/tenantId");
+            var oDetailModel = this.getModel("detailModel");
         
             if(!this.oEmployeeDialog){
                 this.oEmployeeDialog = new EmployeeDialog({
@@ -241,15 +381,224 @@ sap.ui.define([
                     multiSelection: false
                 });
                 this.oEmployeeDialog.attachEvent("apply", function(oEvent){
-                    oDetailModel.setProperty(oDetailModelPath+"/buyer", oEvent.getParameter("item").employee_number);        
+                    oDetailModel.setProperty("/referrer", oEvent.getParameter("item").employee_number);
                 }.bind(this));
             }
             this.oEmployeeDialog.open();
         }
-         /**
-         * 끝 LSH
-         */
 
+        /**
+         * 저장
+         */
+        , onSave: function (oEvent) {
+            MessageBox.confirm("저장 하시겠습니까?", {
+                title : "저장",
+                initialFocus : MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        this._SendDataModel();
+                    }
+                }.bind(this)
+            });
+            
+        }
+
+        , _SendDataModel : function(){  
+            debugger;          
+            var oDetailModel = this.getModel("detailModel");
+            var oData = oDetailModel.getData();
+            var date = new Date();
+            var today = new Date();
+            date = this.getFormatDate(date);
+            var type_code = "NPT01";
+
+            /**
+             * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_MST_TYPE
+             */
+            var oViMst = {
+                    tenant_id               : oData.tenant_id,               //테넌트
+                    approval_number         : null,                          //품의번호(자동채번)
+                    chain_code              : "SP",                          //체인코드(SP)
+                    approval_type_code      : type_code,                     //타입코드(일반(NPT01), SRS(NPT02), 알박/동박(NPT03), 양극재/전구체(NPT04), 사내거래(NPT05), Pack(NPT06))
+                    approval_title          : oData.approval_title,          //제목
+                    approval_contents       : oData.approval_request_desc,   //설명
+                    approval_status_code    : oData.approval_status_code,    //프로세스상태코드(임시저장00, 초안(10), 승인요청(20), 결재완료(30))
+                    requestor_empno         : oData.create_user_id,          //요청자(임시A5392)세션정보 받아야함
+                    requestor_date          : date,                          //요청일자(YYYYMMDD)
+                    attch_group_number      : null,                          //??
+                    local_create_dtm        : today,                          
+                    local_update_dtm        : today,                          
+                    create_user_id          : oData.create_user_id,
+                    update_user_id          : oData.create_user_id
+                };
+            var aViMst = [oViMst];
+
+
+            /**
+             * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_APPROVER_TYPE
+             */
+            var aViApproverType =[];
+            var oApproverModel = this.getModel("approverMdoel");
+            var oApproverData = oApproverModel.getData();
+            var aApproverList = oApproverData.List;
+            aApproverList.forEach(function(oPrice, idx) {
+                var oNewApproverObj = {};
+                    oNewApproverObj['tenant_id'] = oData.tenant_id;
+                    oNewApproverObj['approval_number'] = null;
+                    oNewApproverObj['approve_sequence'] = null;
+                    oNewApproverObj['approve_empno'] = aApproverList[idx].approve_empno;
+                    oNewApproverObj['approver_type_code'] = type_code;
+                    oNewApproverObj['approve_status_code'] = oData.approval_status_code;
+                    oNewApproverObj['local_create_dtm'] = today;
+                    oNewApproverObj['local_update_dtm'] = today;
+                    oNewApproverObj['create_user_id'] = oData.create_user_id;
+                    oNewApproverObj['update_user_id'] = oData.create_user_id;
+                aViApproverType.push(oNewApproverObj);
+            });
+
+            /**
+             * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_REFERER_TYPE
+             */
+            var aViRefererType =[];
+            var oRefererModel = this.getModel("refererMdoel");
+            var oRefererData = oRefererModel.getData();
+            var aRefererList = oRefererData.List;
+            aRefererList.forEach(function(oPrice, idx) {
+                var oNewRefererObj = {};
+                    oNewRefererObj['tenant_id'] = oData.tenant_id;
+                    oNewRefererObj['approval_number'] = null;
+                    oNewRefererObj['referer_empno'] = oRefererData.referer_empno;
+                    oNewRefererObj['local_create_dtm'] = today;
+                    oNewRefererObj['local_update_dtm'] = today;
+                    oNewRefererObj['create_user_id'] = oData.create_user_id;
+                    oNewRefererObj['update_user_id'] = oData.create_user_id;
+                aViApproverType.push(oNewRefererObj);
+            });
+            
+            /**
+             * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_TYPE_TYPE
+             */
+            var oViType = {
+                    tenant_id               : oData.tenant_id,               //테넌트
+                    approval_number         : null,                          //품의번호(자동채번)
+                    approval_type_code      : type_code,                     //타입코드(일반(NPT01), SRS(NPT02), 알박/동박(NPT03), 양극재/전구체(NPT04), 사내거래(NPT05), Pack(NPT06))
+                    local_create_dtm        : today,                          
+                    local_update_dtm        : today,                          
+                    create_user_id          : oData.create_user_id,
+                    update_user_id          : oData.create_user_id
+                };
+            var aViType = [oViType];
+
+
+            /**
+             * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_ITEM_TYPE
+             */
+            var aPriceResult = [];
+            var aPriceData = oData.details;
+            aPriceData.forEach(function(oPrice, idx) {
+                var oNewPriceObj = {};
+                    oNewPriceObj['tenant_id'] = oData.tenant_id;
+                    oNewPriceObj['approval_number'] = null;
+                    oNewPriceObj['item_sequnce'] = null;
+                    oNewPriceObj['company_code'] = aPriceData[idx].corporation;
+                    oNewPriceObj['bizunit_code'] = null;
+                    oNewPriceObj['management_mprice_code'] = aPriceData[idx].management;
+                    oNewPriceObj['base_year'] = aPriceData[idx].base_year;
+                    oNewPriceObj['apply_start_yyyymm'] = aPriceData[idx].apply_start_date;
+                    oNewPriceObj['apply_end_yyyymm'] = aPriceData[idx].apply_end_date;
+                    oNewPriceObj['bizdivision_code'] = aPriceData[idx].bizdivision_code;
+                    oNewPriceObj['plant'] = aPriceData[idx].plant;
+                    oNewPriceObj['supply_plant_code'] = null;
+                    oNewPriceObj['supplier_code'] = aPriceData[idx].supplier_code;
+                    oNewPriceObj['material_code'] = aPriceData[idx].material_code;
+                    oNewPriceObj['material'] = aPriceData[idx].material;
+                    oNewPriceObj['vendor_pool_code'] = aPriceData[idx].vendor_pool;
+                    oNewPriceObj['currency_code'] = aPriceData[idx].currency;
+                    oNewPriceObj['material_price_unit'] = aPriceData[idx].basePriceUnit;
+                    oNewPriceObj['buyer_empno'] = aPriceData[idx].buyer;
+                    oNewPriceObj['base_price'] = aPriceData[idx].base_price;
+                    oNewPriceObj['pcst'] = null;
+                    oNewPriceObj['metal_net_price'] = null;
+                    oNewPriceObj['coating_mat_net_price'] = null;
+                    oNewPriceObj['fabric_net_price'] = null;
+                    oNewPriceObj['local_create_dtm'] = today;
+                    oNewPriceObj['local_update_dtm'] = today;
+                    oNewPriceObj['create_user_id'] = oData.create_user_id;
+                    oNewPriceObj['update_user_id'] = oData.create_user_id;                    
+                aPriceResult.push(oNewPriceObj);
+            });
+
+            /**
+             * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_DTL_TYPE
+             */
+            var aViMetalDetailType =[];
+            var oMetalDetailModel = this.getModel("metaldetailMdoel");
+            var oMetalDetailData = oMetalDetailModel.getData();
+            var aMetalDetailList = oMetalDetailData.List;
+            aMetalDetailList.forEach(function(oPrice, idx) {
+                var aMetalDetailList = {};
+                    aMetalDetailList['tenant_id'] = null;
+                    aMetalDetailList['approval_number'] = null;
+                    aMetalDetailList['item_sequence'] = null;
+                    aMetalDetailList['Metal_type_code'] = null;
+                    aMetalDetailList['metal_net_price'] = null;
+                    aMetalDetailList['local_create_dtm'] = null;
+                    aMetalDetailList['local_update_dtm'] = null;
+                    aMetalDetailList['create_user_id'] = null;
+                    aMetalDetailList['update_user_id'] = null;
+                aViMetalDetailType.push(aMetalDetailList);
+            });
+
+
+            
+            var oSendData = {
+                inputData : {
+                    ViMst              :  aViMst,
+                    ViApproverType     :  aViApproverType,
+                    ViRefererType      :  aViRefererType,
+                    ViType             :  aViType,
+                    PriceResult        :  aPriceResult,
+                    ViMetalDetailType  :  aViMetalDetailType,
+                    ViNetPriceTypeCode :  "NPT01"
+                }
+            };
+            debugger;
+            this._SendDataSave(oSendData);
+        }
+
+
+        , _SendDataSave: function (oSendData) {
+            if(oSendData){
+                MessageBox.show("받는 데이터를 자바핸들러로 이동");
+                console.log("oSendData");
+                console.log(oSendData);
+                return;
+            }
+            
+            var targetName = "TcUpdateProjectProc";
+            var url = "/sp/vi/basePriceMgt/webapp/srv-api/odata/v4/dp.basePriceMgtV4Service/" + targetName;
+            $.ajax({
+                url: url,
+                type: "POST",
+                data : JSON.stringify(oSendData),
+                contentType: "application/json",
+                success: function(data){
+                    console.log("_sendSaveData", data);
+                    //debugger;
+                    if(data.return_code === "OK") {
+                        MessageBox.show("적용되었습니다.", {at: "Center Center"});
+                        this._getProjectDetail();
+                    } else {
+                        MessageBox.show("저장 실패 하였습니다.", {at: "Center Center"});
+                    }
+                }.bind(this),
+                error: function(e){
+                    console.log("error", e);
+                    let eMessage = JSON.parse(e.responseText).error.message;
+                    MessageBox.show("저장 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
+                }
+            });
+        }
 
         /**
          * Base Price Detail 데이터 조회
@@ -300,16 +649,9 @@ sap.ui.define([
                 var oToday = new Date();
                 var oNewBasePriceData = {
                                     "tenant_id": oRootModel.getProperty("/tenantId"),
-                                    "approval_number": "",
                                     "approval_title": "",
-                                    "approval_type_code": "10",
-                                    "new_change_code": "10",
                                     "approval_status_code": "10",
-                                    "approval_request_desc": "",
-                                    "approval_requestor_empno": "5452",
-                                    "create_user_id": "5460", 
-                                    "update_user_id": "5460", 
-                                    "approval_request_date": oToday,
+                                    "create_user_id": "A53924", 
                                     "details": []};
                 oDetailModel.setData(oNewBasePriceData);
                 oDetailViewModel.setProperty("/detailsLength", 0);
@@ -319,29 +661,358 @@ sap.ui.define([
             }
 
             //this.setRichEditor();
+        }
+
+
+        /**
+         * 날짜 포맷변경 (YYYYMMDD)
+         */
+        ,getFormatDate : function (date){
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        }
+
+
+        /**
+         * @description Approval Line Event 
+         * @param {*} oEvent 
+         */
+        /**
+         * 드래그시작
+         */
+        ,onDragStartTable: function (oEvent) {
+            console.log(" *** start >> onDragStart", oEvent);
+            console.log(" *** target", oEvent.getParameter("target"));
+
+            var oDraggedRow = oEvent.getParameter("target");
+            var oDragSession = oEvent.getParameter("dragSession");
+            console.log(" *** oDragSession", oDragSession);
+            oDragSession.setComplexData("draggedRowContext", oDraggedRow.getBindingContext("approver"));
+            console.log(" *** end >> onDragStart");
+        },
+        /**
+         * 드래그 도착위치 
+         */
+        onDragDropTable: function (oEvent) {
+            console.log(" ***  start >> onDragDrop", oEvent);
+            //  var oSwap = this.byId("ApproverTable").getSelectedItems();
+            var oDragSession = oEvent.getParameter("dragSession");
+            //    console.log(" *** oDragSession" , oDragSession );
+            //    console.log(" *** getDropControl" , oDragSession.getDropControl() );
+            //    console.log(" *** getDropInfo" , oDragSession.getDropInfo() );
+            //    console.log(" *** getTextData" , oDragSession.getTextData() );
+            //    console.log(" *** getDropControl" , oDragSession.getDropControl().mAggregations );
+            //    console.log(" *** getDropPosition" , oDragSession.getDropPosition() );
+            //    console.log(" *** draggedRowContext" ,  oDragSession.getComplexData("draggedRowContext") );
+
+            // After 
+            var oDraggedRowContext = oDragSession.getComplexData("draggedRowContext");
+            if (!oDraggedRowContext) {
+                return;
+            }
+
+            var data = oDragSession.getDropControl().mAggregations.cells;
+            var dropPosition = {
+                approver_empno: data[0].mProperties.text
+                , approve_sequence: data[1].mProperties.text
+                , approver_type_code: data[2].mProperties.text
+                , approver_name: data[3].mProperties.text
+                , approve_status_code: data[4].mProperties.text
+                , approve_comment: data[5].mProperties.text
+            };
+
+            var approver = this.getView().getModel('approver');
+            var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath()); // 내가 선택한 아이템 
+
+            console.log("dropPosition >>>> ", dropPosition);
+            console.log("item >>>> ", item);
+
+
+            var sequence = 0;
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                if (approver.getData().Approvers[i].approve_sequence == item.approve_sequence) { // 선택한 아이템 위치의 데이터 삭제
+                    approver.removeRecord(i);
+                }
+            }
+
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                if (approver.getData().Approvers[i].approve_sequence == dropPosition.approve_sequence) { // 드래그가 도착한 위치의 상단 시퀀스  
+                    if (oDragSession.getDropPosition() == 'After') {
+                        sequence = i + 1;
+                    } else {
+                        sequence = i;
+                    }
+                }
+            }
+
+            approver.addRecord({
+                "tenant_id": item.tenant_id,
+                "approval_number": item.approval_number,
+                "approve_sequence": item.approve_sequence,
+                "approver_type_code": item.approver_type_code,
+                "approver_empno": item.approver_empno,
+                "approver_name": item.approver_name,
+                "selRow": item.selRow,
+            }, "/Approvers", sequence); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+
+            // 시퀀스 순서 정렬 
+            this.setOrderByApproval();
+            console.log(" ***  end >> onDragDrop");
+        },
+        onListMainTableUpdateFinished: function (oEvent) {
+            var item = this.byId("ApproverTable").getSelectedItems();
+            console.log("//// onListMainTableUpdateFinished", oEvent);
+
+        },
+        onApproverAdd : function (oParam){
+             console.log("//// onApproverAdd", oParam);
+            var approver = this.getView().getModel('approver');
+             approver.addRecord({
+                "tenant_id": this.tenant_id,
+                "approval_number": this.approval_number,
+                "approve_sequence": "",
+                "approver_type_code": "",
+                "approver_empno": "",
+                "approver_name": "",
+                "selRow": true,
+            }, "/Approvers", oParam); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+            this.setOrderByApproval();
+            this.setSelectedApproval(String(Number(oParam)+1));
+        },
+        onItemPress : function (oEvent) {
+            console.log("//// onApproverItemPress", oEvent);
         },
 
-        _getMasterData: function () {
+
+        // 삭제 
+        setApproverRemoveRow: function (oParam) {
+            var oModel = this.getModel("approver");
+            oModel.removeRecord(oParam - 1);
+            this.setOrderByApproval();
+        },
+        // 시퀀스 정렬 
+        setOrderByApproval: function () {
+            var approver = this.getModel("approver");
+            for (var i = 0; i < approver.getData().Approvers.length; i++) {
+                approver.getData().Approvers[i].approve_sequence = String(i + 1);
+            }
+            this.getModel("approver").refresh(true);
+        },
+        // 선택행 플래그 정리  
+        setSelectedApproval : function (row) { 
+             var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == approver.getData().Approvers[i].approve_sequence){
+                     approver.getData().Approvers[i].selRow = true;
+                  }else{
+                     approver.getData().Approvers[i].selRow = false;
+                  }
+            }
+            console.log(" setSelectedApproval " , approver);
+            this.getModel("approver").refresh(true);
+        } ,
+
+        getApprovalSeletedRow : function () {
+            var approver = this.getModel("approver");
+            var row = 0;
+            for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(approver.getData().Approvers[i].selRow){
+                    row = i;
+                  }
+            }
+            return row;
+        } ,
+
+        /**
+         * @description employee 이벤트 1
+         */
+        onApproverSearch: function (event) {
+            var oItem = event.getParameter("suggestionItem");
+            this.handleEmployeeSelectDialogPress(event);
+        },
+        /**
+          * @description employee 이벤트 2
+          */
+        onSuggest: function (event) {
+            var sValue = event.getParameter("suggestValue"),
+                aFilters = [];
+            console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
+        },
+
+        /**
+         * @description employee 팝업 열기 (돋보기 버튼 클릭시)
+         */
+        handleEmployeeSelectDialogPress: function (oEvent) { 
+
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
+            var that = this;
+     
+            console.log(" row " , row);
+
+            if (approver.getData().Approvers[row].approver_type_code == undefined
+                || approver.getData().Approvers[row].approver_type_code == "") {
+                MessageToast.show("Type 을 먼저 선택해주세요.");
+            } else {
+                var oView = this.getView();
+                console.log("handleEmployeeSelectDialogPress >>> this._oDialog ", this._oDialog);
+                if (!this._oDialog) {
+                    this._oDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "dp.md.moldApprovalList.view.Employee",
+                        controller: this
+                    }).then(function (oDialog) {
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                }
+
+                this._oDialog.then(function (oDialog) {
+                    oDialog.open();
+                    that.byId("btnEmployeeSrch").firePress();
+                });
+            }
+        },
+        /**
+         * @description employee 팝업에서 search 버튼 누르기 
+         */
+        onEmployeeSearch: function () {
+
+            var aSearchFilters = [];
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+            var employee = this.byId('employSearch').getValue().trim();
+            if (employee != undefined && employee != "" && employee != null) {
+                var nFilters = [];
+
+                nFilters.push(new Filter("approver_name", FilterOperator.Contains, String(employee)));
+                nFilters.push(new Filter("employee_number", FilterOperator.Contains, String(employee)));
+
+                var oInFilter = {
+                    filters: nFilters,
+                    and: false
+                };
+                aSearchFilters.push(new Filter(oInFilter));
+            }
+
+            this._bindView("/RefererSearch", "oEmployee", aSearchFilters, function (oData) {
+                console.log("/RefererSearch ", oData);
+            }.bind(this));
+
+           // console.log(" oEmployee ", this.getModel('oEmployee'));
 
         },
 
-        _getDetailsData: function () {
+        /**
+         * @description employee 팝업에서 apply 버튼 누르기 
+         */
+        onEmploySelectionApply: function () {
+            var oTable = this.byId("employeeSelectTable");
+            var aItems = oTable.getSelectedItems();
 
+            aItems.forEach(function (oItem) {
+                var obj = new JSONModel({
+                    approver_empno: oItem.getCells()[0].getText(),
+                    approver_name: oItem.getCells()[1].getText()
+                });
+               this._setApprvalItemSetting( obj.oData ); 
+            }.bind(this));
+            this.onExitEmployee();
+        },
+        /**
+         * @description employee 팝업 닫기 
+         */
+        onExitEmployee: function () {
+            if (this._oDialog) {
+                this._oDialog.then(function (oDialog) {
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oDialog = undefined;
+            }
+        },
+        _setApprvalItemSetting : function(obj){
+      //  console.log("_setApprvalItemSetting  " , obj);
+            var row = this.getApprovalSeletedRow();
+            var approver = this.getModel("approver");
+              for (var i = 0; i < approver.getData().Approvers.length; i++) { 
+                  if(row == i){
+                     approver.getData().Approvers[i].approver_empno = obj.approver_empno;
+                     approver.getData().Approvers[i].approver_name = obj.approver_name;
+                  }
+            }
+             this.getModel("approver").refresh(true);
+        },
+        /**
+         * today
+         * @private
+         * @return yyyy-mm-dd
+         */
+        _getToday: function () {
+            var date_ob = new Date();
+            var date = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+
+            console.log(year + "-" + month + "-" + date);
+            return year + "" + month + "" + date;
         },
 
-        _getPricesData: function () {
+         onInputWithEmployeeValuePress: function(oEvent){
+            var index = oEvent.getSource().getBindingContext("approver").getPath().split('/')[2];
+     
+            if (this.getModel("approver").getData().Approvers[index].approver_type_code === "") {
+                MessageToast.show("Type 을 먼저 선택해주세요.");
+            } else {
+                this.onInputWithEmployeeValuePress["row"] = index;
 
+                this.byId("employeeDialog").open();
+            }
         },
 
-        _getApprovalsData: function () {
+        onEmployeeDialogApplyPress: function(oEvent){
+            var employeeNumber = oEvent.getParameter("item").employee_number,
+                userName = oEvent.getParameter("item").user_local_name,
+                departmentLocalName = oEvent.getParameter("item").department_local_name,
+                oModel = this.getModel("approver"),
+                rowIndex = this.onInputWithEmployeeValuePress["row"];
 
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_empno", employeeNumber);
+            oModel.setProperty("/Approvers/"+rowIndex+"/approver_name", userName + " / " + departmentLocalName);
         },
 
-        _getReferersData: function () {
+       onMultiInputWithEmployeeValuePress: function(){ 
+          
+            if(!this.oEmployeeMultiSelectionValueHelp){
+               this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
+                    title: "Choose Referer",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
+                 
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("referMulti").getTokens());
+        }
+         /**
+         * 끝 LSH
+         */
 
-        },
 
-        _setTableFragment: function (sFragmentNamePAram) {
+        
+
+        ,_setTableFragment: function (sFragmentNamePAram) {
         //     var oSection = this.byId("bacePriceTableSection");
         //     oSection.removeAllBlocks();
 
@@ -349,9 +1020,9 @@ sap.ui.define([
         //        oSection.addBlock(oFragment);
         //    }.bind(this));
 
-        },
+        }
 
-        _loadFragment: function (sFragmentName, oHandler) {
+        ,_loadFragment: function (sFragmentName, oHandler) {
            if (!this._oFragments[sFragmentName]) {
                Fragment.load({
                    id: this.getView().getId(),
@@ -372,18 +1043,6 @@ sap.ui.define([
         onEditToggle: function () {
             var oDetailViewModel = this.getModel("detailViewModel");
             oDetailViewModel.setProperty("/viewMode", !oDetailViewModel.getProperty("/viewMode"));
-        },
-
-        /**
-         * compnay 변경 시 플랜트 리스트 변경
-         */
-        onChangeCompany: function (oEvent) {
-            var oDetailModel = this.getModel("detailModel");
-            var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
-            
-            oDetailModel.setProperty(sSelectedPath+"/purOrg", this.getModel("rootModel").getProperty("/purOrg/"+oDetailModel.getProperty(sSelectedPath+"/company_code")));
-            oDetailModel.setProperty(sSelectedPath+"/org_code", "");
-            //oEvent.getSource().getParent().mAggregations.cells[1].setValue("");
         },
 
         /**
@@ -449,48 +1108,6 @@ sap.ui.define([
             return oMaster;
         },
 
-        
-
-        /**
-         * detail 선택 데이터 체크
-         */
-        onRowSelectionChange: function (oEvent) {
-            var oDetailModel = this.getModel("detailModel"),
-                oParameters = oEvent.getParameters(),
-                bSelectAll = !!oParameters.selectAll;
-
-            // 전체 선택일 경우
-            if( bSelectAll || oParameters.rowIndex === -1 ) {
-                var aDetails = oDetailModel.getProperty("/details");
-                aDetails.forEach(function(oDetail) {
-                    oDetail.checked = bSelectAll;
-                });
-            }
-            // 단독 선택일 경우
-            else {
-                var oDetail = oDetailModel.getProperty(oParameters.rowContext.getPath());
-                oDetail.checked = !oDetail.checked;
-            }
-        },
-
-        /**
-         * 체크된 detail 데이터 삭제
-         */
-        onDeleteDetailRow: function (oEvent) {
-            var oDetailModel = this.getModel("detailModel"),
-                aDetails = oDetailModel.getProperty("/details"),
-                oDetailTable = oEvent.getSource().getParent().getParent();
-
-            for( var i=aDetails.length-1; 0<=i; i-- ) {
-                if( aDetails[i].checked ) {
-                    aDetails.splice(i, 1);
-                }
-            }
-
-            oDetailModel.refresh();
-            oDetailTable.clearSelection();
-        },
-
         /**
          * key값 추출
          */
@@ -503,91 +1120,6 @@ sap.ui.define([
             }
 
             return oKey;
-        },
-
-        /**
-         * 저장
-         */
-        onDraft: function (sActionParam) {
-            var that = this;
-            var oDetailModel = this.getModel("detailModel");
-            var oI18NModel = this.getModel("I18N");
-            var oModel = this.getModel();
-            var oData = $.extend(true, {}, oDetailModel.getData());
-            var aDetails = oData.details;
-            var sMessage = oI18NModel.getText("/NCM01001");
-
-            // entity에 없는 필드 삭제(OData에 없는 property 전송 시 에러)
-            delete oData.approval_requestor_empno_fk;
-            
-            // detail 데이터가 있을 경우 checked property 삭제(OData에 없는 property 전송 시 에러)
-            if( aDetails ) {
-                aDetails.forEach(function (oDetails) {
-                    delete oDetails.checked;
-                    //delete oDetails.basis;
-                    delete oDetails.material_code_fk;
-                    delete oDetails.supplier_local_name;
-                    delete oDetails.purOrg;
-                });
-            }
-
-            // 상신일 경우 approval_status_code를 20으로 변경
-            if( sActionParam === "approval" ) {
-                oData.approval_status_code = "20";
-                sMessage = oI18NModel.getText("/NCM01001");
-            }else if( oData.approval_number ) {
-                sMessage = oI18NModel.getText("/NPG00008");
-            }
-            
-            // approval_status_code 값이 10이 아닌 20일 경우 approval number유무에 상관없이 상신
-            // arppoval number가 없는 경우 저장
-            if( !oData.approval_number ) {
-                delete oData.approval_number;
-
-                oModel.create("/Base_Price_Arl_Master", oData, {
-                    //groupId: "saveBasePriceArl",
-                    success: function(data){
-                        // return 값이 있고 approval_number가 있는 경우에만 저장 완료
-                        if( data && data.approval_number ) {
-                            MessageToast.show(sMessage);
-                            // var oMaster = that._returnDataRearrange(data);
-                            // oDetailModel.setData(oMaster);
-
-                            this.onBack();
-                        }else {
-                            console.log('error', data);
-                            MessageBox.error("에러가 발생했습니다.");
-                        }
-                    }.bind(this),
-                    error: function(data){
-                        console.log('error', data);
-                        MessageBox.error(JSON.parse(data.responseText).error.message.value);
-                    }
-                });
-            }
-            // arppoval number가 있는 경우 수정
-            else {
-                var sUpdatePath = oModel.createKey("/Base_Price_Arl_Master", this._getMasterKey(oData, "Master"));
-                oModel.update(sUpdatePath, oData, {
-                    success: function(data){
-                        // if( data && data.approval_number ) {
-                            MessageToast.show(sMessage);
-
-                            // if( sActionParam === "approval" ) {
-                            //     oDetailModel.setProperty("/approval_status_code", "20");
-                            // }
-                        //     var oMaster = that._returnDataRearrange(data);
-                        //     oDetailModel.setData(oMaster);
-                        // }
-
-                        this.onBack();
-                    }.bind(this),
-                    error: function(data){
-                        console.log('error', data);
-                        MessageBox.error(JSON.parse(data.responseText).error.message.value);
-                    }
-                });
-            }
         },
 
         /**
@@ -999,40 +1531,6 @@ sap.ui.define([
         /**
          * ==================== Dialog 끝 ==========================
          */
-
-         onMaterialMasterMultiDialogPress: function (oEvent) {
-             var oDetailModel = this.getModel("detailModel");
-             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
-             var oDetail = oDetailModel.getProperty(sSelectedPath);
-             this._oDetail = oDetail;
-
-             if( !this.oSearchMultiMaterialOrgDialog ) {
-                 this.oSearchMultiMaterialOrgDialog = new MaterialOrgDialog({
-                     title: "Choose MaterialMaster",
-                     multiSelection: false,
-                     items: {
-                         filters:[
-                             new Filter("tenant_id", FilterOperator.EQ, sTenantId)
-                         ]
-                     }
-                 })
-
-                 this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent) {
-                     var oSelectedDialogItem = oEvent.getParameter("item");
-                     this._oDetail.material_code = oSelectedDialogItem.material_code;
-                     this._oDetail.material_code_fk = this._oDetail.material_code_fk || {};
-                     this._oDetail.material_code_fk.material_desc = oSelectedDialogItem.material_desc;
-                     this._oDetail.material_code_fk.material_spec = oSelectedDialogItem.material_spec;
-                     oDetailModel.refresh();
-                 }.bind(this));
-             }
-
-             this.oSearchMultiMaterialOrgDialog.open();
-
-             var aTokens = [new Token({key: oDetail.material_code, text: (oDetail.material_code_fk ? oDetail.material_code_fk.material_desc : "")})];
-             this.oSearchMultiMaterialOrgDialog.setTokens(aTokens);
-         }
-
     });
 
   }

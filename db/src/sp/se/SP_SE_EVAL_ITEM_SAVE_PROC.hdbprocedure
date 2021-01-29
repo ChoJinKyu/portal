@@ -41,16 +41,15 @@ AS
 BEGIN
     /*평가항목 관리 - 평가항목 Sort Sequence저장*/
     DECLARE V_OPTION_ARTICLE_NUMBER INT = 0;
-    DECLARE CURSOR CUR_ITEM FOR
-    SELECT *
-    FROM   :I_ITEM_TYPE;
-    
-    DECLARE CURSOR CUR_SCLE FOR
-    SELECT *
-    FROM   :I_SCLE_TYPE;
-    
+    DECLARE V_EVALUATION_EXECUTE_MODE_CODE    NVARCHAR(30); /*평가수행방식*/
+    DECLARE V_EVALUATION_RESULT_INPUT_TYPE_CD NVARCHAR(30); /*Scale 유형*/
+    DECLARE V_ITEM_TRANSACTION_CODE NVARCHAR(1);            /*ITEM TRANSACTION 유형*/
+    DECLARE V_ORG_EVALUATION_RESULT_INPUT_TYPE_CD NVARCHAR(30); /*Original Scale 유형*/
+    DECLARE IDX INT = 0;
+    DECLARE V_DELETE_FLAG NVARCHAR(1) = 'D';
+
     SELECT  IFNULL(:I_USER_ID, 'SYSTEM') INTO I_USER_ID FROM DUMMY;
-    
+
 
 
     /* SQL Error 처리 */
@@ -58,178 +57,276 @@ BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
-            O_MSG = SELECT  'NG' RETURN_CODE, 'Modify Evaluation Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
+            :O_MSG.INSERT(('NG','Modify Evaluation Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'),1);
         END;
     END;
 
-    FOR REC_ITEM AS CUR_ITEM DO
+    V_EVALUATION_EXECUTE_MODE_CODE    = :I_ITEM_TYPE.EVALUATION_EXECUTE_MODE_CODE[1];
+    V_EVALUATION_RESULT_INPUT_TYPE_CD = :I_ITEM_TYPE.EVALUATION_RESULT_INPUT_TYPE_CD[1];
+    V_ITEM_TRANSACTION_CODE           = :I_ITEM_TYPE.TRANSACTION_CODE[1];
 
-        BEGIN
-            DECLARE EXIT HANDLER FOR SQLEXCEPTION
-            BEGIN
-                ROLLBACK;
-                O_MSG = SELECT  'NG' RETURN_CODE, 'Modify Evaluation Item Sequnce Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
-            END;
+    /*Delete Scale*/
+    DELETE
+    FROM   SP_SE_EVAL_ITEM_OPT EIO
+    WHERE  EXISTS (SELECT 1
+                   FROM   :I_ITEM_TYPE    ITEM
+                   WHERE  ITEM.TENANT_ID     = EIO.TENANT_ID
+                   AND    ITEM.COMPANY_CODE  = EIO.COMPANY_CODE
+                   AND    ITEM.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
+                   AND    ITEM.ORG_CODE      = EIO.ORG_CODE
+                   AND    ITEM.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
+                   AND    ITEM.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
+                   AND    ITEM.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
+                   AND    ITEM.TRANSACTION_CODE               = :V_DELETE_FLAG
+                  );
 
-            IF REC_ITEM.TRANSACTION_CODE = 'D' THEN
-                --Delete Scale
-                DELETE 
+    /*Delete Item*/
+    DELETE
+    FROM   SP_SE_EVAL_ITEM_MST EIM
+    WHERE  EXISTS (SELECT 1
+                   FROM   :I_ITEM_TYPE    ITEM
+                   WHERE  ITEM.TENANT_ID     = EIM.TENANT_ID
+                   AND    ITEM.COMPANY_CODE  = EIM.COMPANY_CODE
+                   AND    ITEM.ORG_TYPE_CODE = EIM.ORG_TYPE_CODE
+                   AND    ITEM.ORG_CODE      = EIM.ORG_CODE
+                   AND    ITEM.EVALUATION_OPERATION_UNIT_CODE = EIM.EVALUATION_OPERATION_UNIT_CODE
+                   AND    ITEM.EVALUATION_TYPE_CODE           = EIM.EVALUATION_TYPE_CODE
+                   AND    ITEM.EVALUATION_ARTICLE_CODE        = EIM.EVALUATION_ARTICLE_CODE
+                   AND    ITEM.TRANSACTION_CODE               = :V_DELETE_FLAG
+                  );
+
+    IF V_ITEM_TRANSACTION_CODE <> V_DELETE_FLAG THEN
+        --Scale 유형 변경 유무.
+        SELECT EVALUATION_RESULT_INPUT_TYPE_CD
+        INTO   V_ORG_EVALUATION_RESULT_INPUT_TYPE_CD
+        FROM   SP_SE_EVAL_ITEM_MST EIM
+        WHERE  EXISTS (SELECT 1
+                       FROM   :I_ITEM_TYPE    ITEM
+                       WHERE  ITEM.TENANT_ID     = EIM.TENANT_ID
+                       AND    ITEM.COMPANY_CODE  = EIM.COMPANY_CODE
+                       AND    ITEM.ORG_TYPE_CODE = EIM.ORG_TYPE_CODE
+                       AND    ITEM.ORG_CODE      = EIM.ORG_CODE
+                       AND    ITEM.EVALUATION_OPERATION_UNIT_CODE = EIM.EVALUATION_OPERATION_UNIT_CODE
+                       AND    ITEM.EVALUATION_TYPE_CODE           = EIM.EVALUATION_TYPE_CODE
+                       AND    ITEM.EVALUATION_ARTICLE_CODE        = EIM.EVALUATION_ARTICLE_CODE
+                      );
+
+
+    END IF;
+
+
+    --Update Item
+    MERGE INTO SP_SE_EVAL_ITEM_MST EIM
+    USING (SELECT TRANSACTION_CODE
+                 ,TENANT_ID
+                 ,COMPANY_CODE
+                 ,ORG_TYPE_CODE
+                 ,ORG_CODE
+                 ,EVALUATION_OPERATION_UNIT_CODE
+                 ,EVALUATION_TYPE_CODE
+                 ,EVALUATION_ARTICLE_CODE
+                 ,EVALUATION_EXECUTE_MODE_CODE
+                 ,EVALUATION_ARTICLE_TYPE_CODE
+                 ,EVALUATION_DISTRB_SCR_TYPE_CD
+                 ,EVALUATION_RESULT_INPUT_TYPE_CD
+                 ,QTTIVE_ITEM_UOM_CODE
+                 ,QTTIVE_EVAL_ARTICLE_CALC_FORMULA
+                 ,EVALUATION_ARTICLE_DESC
+                 ,SORT_SEQUENCE
+           FROM   :I_ITEM_TYPE
+           WHERE  TRANSACTION_CODE NOT IN (:V_DELETE_FLAG)
+          ) ITEM
+    ON (    ITEM.TENANT_ID     = EIM.TENANT_ID
+        AND ITEM.COMPANY_CODE  = EIM.COMPANY_CODE
+        AND ITEM.ORG_TYPE_CODE = EIM.ORG_TYPE_CODE
+        AND ITEM.ORG_CODE      = EIM.ORG_CODE
+        AND ITEM.EVALUATION_OPERATION_UNIT_CODE = EIM.EVALUATION_OPERATION_UNIT_CODE
+        AND ITEM.EVALUATION_TYPE_CODE           = EIM.EVALUATION_TYPE_CODE
+        AND ITEM.EVALUATION_ARTICLE_CODE        = EIM.EVALUATION_ARTICLE_CODE
+       )
+    WHEN MATCHED THEN
+        UPDATE
+        SET    EIM.EVALUATION_EXECUTE_MODE_CODE      = ITEM.EVALUATION_EXECUTE_MODE_CODE
+              ,EIM.EVALUATION_ARTICLE_TYPE_CODE      = ITEM.EVALUATION_ARTICLE_TYPE_CODE
+              ,EIM.EVALUATION_DISTRB_SCR_TYPE_CD     = ITEM.EVALUATION_DISTRB_SCR_TYPE_CD
+              ,EIM.EVALUATION_RESULT_INPUT_TYPE_CD   = ITEM.EVALUATION_RESULT_INPUT_TYPE_CD
+              ,EIM.QTTIVE_ITEM_UOM_CODE              = CASE WHEN ITEM.EVALUATION_EXECUTE_MODE_CODE = 'QLTVE_EVAL' THEN NULL ELSE ITEM.QTTIVE_ITEM_UOM_CODE END             /*정성일 경우 Clear*/
+              ,EIM.QTTIVE_EVAL_ARTICLE_CALC_FORMULA  = CASE WHEN ITEM.EVALUATION_EXECUTE_MODE_CODE = 'QLTVE_EVAL' THEN NULL ELSE ITEM.QTTIVE_EVAL_ARTICLE_CALC_FORMULA END /*정성일 경우 Clear*/
+              ,EIM.EVALUATION_ARTICLE_DESC           = ITEM.EVALUATION_ARTICLE_DESC
+              ,EIM.SORT_SEQUENCE                     = ITEM.SORT_SEQUENCE
+              ,EIM.LOCAL_UPDATE_DTM                  = NOW()
+              ,EIM.UPDATE_USER_ID                    = :I_USER_ID
+              ,EIM.SYSTEM_UPDATE_DTM                 = NOW()
+    ;
+
+
+    /*Item의 Scale유형에 따른 처리.*/
+    IF V_EVALUATION_RESULT_INPUT_TYPE_CD = 'NSCLE' THEN
+        /*직접선택인 경우 전체 삭제*/
+        DELETE
+        FROM   SP_SE_EVAL_ITEM_OPT EIO
+        WHERE  EXISTS (SELECT 1
+                       FROM   :I_ITEM_TYPE    ITEM
+                       WHERE  ITEM.TENANT_ID     = EIO.TENANT_ID
+                       AND    ITEM.COMPANY_CODE  = EIO.COMPANY_CODE
+                       AND    ITEM.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
+                       AND    ITEM.ORG_CODE      = EIO.ORG_CODE
+                       AND    ITEM.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
+                       AND    ITEM.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
+                       AND    ITEM.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
+                      );
+
+    ELSE
+        /*직접선택이 아닌 경우 처리*/
+        /*Item의 Scale 유형이 변경됨 : Range -> 단일선택*/
+        IF V_ORG_EVALUATION_RESULT_INPUT_TYPE_CD <> V_EVALUATION_RESULT_INPUT_TYPE_CD AND V_EVALUATION_RESULT_INPUT_TYPE_CD = 'SCLE' THEN
+
+            UPDATE SP_SE_EVAL_ITEM_OPT EIO
+            SET    EIO.OPTION_ARTICLE_START_VALUE = NULL
+                  ,EIO.OPTION_ARTICLE_END_VALUE   = NULL
+                  ,EIO.LOCAL_UPDATE_DTM                  = NOW()
+                  ,EIO.UPDATE_USER_ID                    = :I_USER_ID
+                  ,EIO.SYSTEM_UPDATE_DTM                 = NOW()
+            WHERE  EXISTS (SELECT 1
+                           FROM   :I_ITEM_TYPE    ITEM
+                           WHERE  ITEM.TENANT_ID     = EIO.TENANT_ID
+                           AND    ITEM.COMPANY_CODE  = EIO.COMPANY_CODE
+                           AND    ITEM.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
+                           AND    ITEM.ORG_CODE      = EIO.ORG_CODE
+                           AND    ITEM.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
+                           AND    ITEM.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
+                           AND    ITEM.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
+                          );
+
+        END IF;
+
+        /*Scale 처리.*/
+        DELETE
+        FROM   SP_SE_EVAL_ITEM_OPT EIO
+        WHERE  EXISTS (SELECT 1
+                       FROM   :I_SCLE_TYPE    SCLE
+                       WHERE  SCLE.TENANT_ID     = EIO.TENANT_ID
+                       AND    SCLE.COMPANY_CODE  = EIO.COMPANY_CODE
+                       AND    SCLE.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
+                       AND    SCLE.ORG_CODE      = EIO.ORG_CODE
+                       AND    SCLE.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
+                       AND    SCLE.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
+                       AND    SCLE.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
+                       AND    SCLE.OPTION_ARTICLE_NUMBER          = EIO.OPTION_ARTICLE_NUMBER
+                       AND    SCLE.TRANSACTION_CODE               = :V_DELETE_FLAG
+                      );
+
+        /*OPTION_ARTICLE_NUMBER가 NULL인 경우 OPTION_ARTICLE_NUMBER 부여*/
+        FOR IDX IN 1..RECORD_COUNT(:I_SCLE_TYPE) DO
+            
+            IF IFNULL(:I_SCLE_TYPE.OPTION_ARTICLE_NUMBER[IDX],'X') = 'X' THEN
+                --Get Max OPTION_ARTICLE_NUMBER
+                SELECT TO_NUMBER(IFNULL(MAX(EIO.OPTION_ARTICLE_NUMBER),'0')) + 1
+                INTO   V_OPTION_ARTICLE_NUMBER
                 FROM   SP_SE_EVAL_ITEM_OPT EIO
-                WHERE  EIO.TENANT_ID     = REC_ITEM.TENANT_ID
-                AND    EIO.COMPANY_CODE  = REC_ITEM.COMPANY_CODE
-                AND    EIO.ORG_TYPE_CODE = REC_ITEM.ORG_TYPE_CODE
-                AND    EIO.ORG_CODE      = REC_ITEM.ORG_CODE
-                AND    EIO.EVALUATION_OPERATION_UNIT_CODE = REC_ITEM.EVALUATION_OPERATION_UNIT_CODE
-                AND    EIO.EVALUATION_TYPE_CODE           = REC_ITEM.EVALUATION_TYPE_CODE
-                AND    EIO.EVALUATION_ARTICLE_CODE        = REC_ITEM.EVALUATION_ARTICLE_CODE
-                ;  
-                --Delete Item Mst
-                DELETE 
-                FROM   SP_SE_EVAL_ITEM_MST EIM
-                WHERE  EIM.TENANT_ID     = REC_ITEM.TENANT_ID
-                AND    EIM.COMPANY_CODE  = REC_ITEM.COMPANY_CODE
-                AND    EIM.ORG_TYPE_CODE = REC_ITEM.ORG_TYPE_CODE
-                AND    EIM.ORG_CODE      = REC_ITEM.ORG_CODE
-                AND    EIM.EVALUATION_OPERATION_UNIT_CODE = REC_ITEM.EVALUATION_OPERATION_UNIT_CODE
-                AND    EIM.EVALUATION_TYPE_CODE           = REC_ITEM.EVALUATION_TYPE_CODE
-                AND    EIM.EVALUATION_ARTICLE_CODE        = REC_ITEM.EVALUATION_ARTICLE_CODE
+                WHERE  EXISTS (SELECT 1
+                               FROM   :I_SCLE_TYPE    SCLE
+                               WHERE  SCLE.TENANT_ID     = EIO.TENANT_ID
+                               AND    SCLE.COMPANY_CODE  = EIO.COMPANY_CODE
+                               AND    SCLE.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
+                               AND    SCLE.ORG_CODE      = EIO.ORG_CODE
+                               AND    SCLE.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
+                               AND    SCLE.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
+                               AND    SCLE.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
+                              )
                 ;
-               
-            ELSE
-                --Update Item Mst
-                UPDATE SP_SE_EVAL_ITEM_MST EIM
-                SET    EIM.EVALUATION_EXECUTE_MODE_CODE      = REC_ITEM.EVALUATION_EXECUTE_MODE_CODE    
-                      ,EIM.EVALUATION_ARTICLE_TYPE_CODE      = REC_ITEM.EVALUATION_ARTICLE_TYPE_CODE    
-                      ,EIM.EVALUATION_DISTRB_SCR_TYPE_CD     = REC_ITEM.EVALUATION_DISTRB_SCR_TYPE_CD   
-                      ,EIM.EVALUATION_RESULT_INPUT_TYPE_CD   = REC_ITEM.EVALUATION_RESULT_INPUT_TYPE_CD 
-                      ,EIM.QTTIVE_ITEM_UOM_CODE              = REC_ITEM.QTTIVE_ITEM_UOM_CODE            
-                      ,EIM.QTTIVE_EVAL_ARTICLE_CALC_FORMULA  = REC_ITEM.QTTIVE_EVAL_ARTICLE_CALC_FORMULA
-                      ,EIM.EVALUATION_ARTICLE_DESC           = REC_ITEM.EVALUATION_ARTICLE_DESC         
-                      ,EIM.SORT_SEQUENCE                     = REC_ITEM.SORT_SEQUENCE  
-                      ,EIM.LOCAL_UPDATE_DTM                  = NOW()
-                      ,EIM.UPDATE_USER_ID                    = :I_USER_ID
-                      ,EIM.SYSTEM_UPDATE_DTM                 = NOW()
-                WHERE  EIM.TENANT_ID     = REC_ITEM.TENANT_ID
-                AND    EIM.COMPANY_CODE  = REC_ITEM.COMPANY_CODE
-                AND    EIM.ORG_TYPE_CODE = REC_ITEM.ORG_TYPE_CODE
-                AND    EIM.ORG_CODE      = REC_ITEM.ORG_CODE
-                AND    EIM.EVALUATION_OPERATION_UNIT_CODE = REC_ITEM.EVALUATION_OPERATION_UNIT_CODE
-                AND    EIM.EVALUATION_TYPE_CODE = REC_ITEM.EVALUATION_TYPE_CODE
-                AND    EIM.EVALUATION_ARTICLE_CODE = REC_ITEM.EVALUATION_ARTICLE_CODE;
-                
-            END IF;
-            
-        END;
-    END FOR;
-    
-    
-    FOR REC_SCLE AS CUR_SCLE DO
-        BEGIN
-            DECLARE EXIT HANDLER FOR SQLEXCEPTION
-            BEGIN
-                ROLLBACK;
-                O_MSG = SELECT  'NG' RETURN_CODE, 'Modify Evaluation Item Scale Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
-            END;
 
-            IF REC_SCLE.TRANSACTION_CODE = 'D' THEN
-                --Delete Scale
-                DELETE 
-                FROM   SP_SE_EVAL_ITEM_OPT EIO
-                WHERE  EIO.TENANT_ID     = REC_SCLE.TENANT_ID
-                AND    EIO.COMPANY_CODE  = REC_SCLE.COMPANY_CODE
-                AND    EIO.ORG_TYPE_CODE = REC_SCLE.ORG_TYPE_CODE
-                AND    EIO.ORG_CODE      = REC_SCLE.ORG_CODE
-                AND    EIO.EVALUATION_OPERATION_UNIT_CODE = REC_SCLE.EVALUATION_OPERATION_UNIT_CODE
-                AND    EIO.EVALUATION_TYPE_CODE = REC_SCLE.EVALUATION_TYPE_CODE
-                AND    EIO.EVALUATION_ARTICLE_CODE = REC_SCLE.EVALUATION_ARTICLE_CODE
-                ; 
-               
-            ELSE
-                
-                IF REC_SCLE.TRANSACTION_CODE = 'I' THEN
-                    --Get Max OPTION_ARTICLE_NUMBER
-                    SELECT TO_NUMBER(IFNULL(MAX(EIO.OPTION_ARTICLE_NUMBER),'0')) + 1
-                    INTO   V_OPTION_ARTICLE_NUMBER
-                    FROM   SP_SE_EVAL_ITEM_OPT EIO 
-                    WHERE  EIO.TENANT_ID     = REC_SCLE.TENANT_ID
-                    AND    EIO.COMPANY_CODE  = REC_SCLE.COMPANY_CODE
-                    AND    EIO.ORG_TYPE_CODE = REC_SCLE.ORG_TYPE_CODE
-                    AND    EIO.ORG_CODE      = REC_SCLE.ORG_CODE
-                    AND    EIO.EVALUATION_OPERATION_UNIT_CODE = REC_SCLE.EVALUATION_OPERATION_UNIT_CODE
-                    AND    EIO.EVALUATION_TYPE_CODE = REC_SCLE.EVALUATION_TYPE_CODE
-                    AND    EIO.EVALUATION_ARTICLE_CODE = REC_SCLE.EVALUATION_ARTICLE_CODE
-                    ;
-                    --Insert Scale
-                    INSERT INTO SP_SE_EVAL_ITEM_OPT
-                    (TENANT_ID
-                    ,COMPANY_CODE
-                    ,ORG_TYPE_CODE
-                    ,ORG_CODE
-                    ,EVALUATION_OPERATION_UNIT_CODE
-                    ,EVALUATION_TYPE_CODE
-                    ,EVALUATION_ARTICLE_CODE
-                    ,OPTION_ARTICLE_NUMBER
-                    ,OPTION_ARTICLE_NAME
-                    ,OPTION_ARTICLE_START_VALUE
-                    ,OPTION_ARTICLE_END_VALUE
-                    ,EVALUATION_SCORE
-                    ,SORT_SEQUENCE
-                    ,LOCAL_CREATE_DTM
-                    ,LOCAL_UPDATE_DTM
-                    ,CREATE_USER_ID
-                    ,UPDATE_USER_ID
-                    ,SYSTEM_CREATE_DTM
-                    ,SYSTEM_UPDATE_DTM
-                    )
-                    VALUES
-                    (REC_SCLE.TENANT_ID
-                    ,REC_SCLE.COMPANY_CODE
-                    ,REC_SCLE.ORG_TYPE_CODE
-                    ,REC_SCLE.ORG_CODE
-                    ,REC_SCLE.EVALUATION_OPERATION_UNIT_CODE
-                    ,REC_SCLE.EVALUATION_TYPE_CODE
-                    ,REC_SCLE.EVALUATION_ARTICLE_CODE
-                    ,:V_OPTION_ARTICLE_NUMBER
-                    ,REC_SCLE.OPTION_ARTICLE_NAME
-                    ,REC_SCLE.OPTION_ARTICLE_START_VALUE
-                    ,REC_SCLE.OPTION_ARTICLE_END_VALUE
-                    ,REC_SCLE.EVALUATION_SCORE
-                    ,REC_SCLE.SORT_SEQUENCE
-                    ,NOW()
-                    ,NOW()
-                    ,:I_USER_ID
-                    ,:I_USER_ID
-                    ,NOW()
-                    ,NOW()
-                    );
-                    
-                ELSE
-                    --Update Scale
-                    UPDATE SP_SE_EVAL_ITEM_OPT EIO
-                    SET    EIO.OPTION_ARTICLE_NAME         = REC_SCLE.OPTION_ARTICLE_NAME
-                          ,EIO.OPTION_ARTICLE_START_VALUE  = REC_SCLE.OPTION_ARTICLE_START_VALUE
-                          ,EIO.OPTION_ARTICLE_END_VALUE    = REC_SCLE.OPTION_ARTICLE_END_VALUE
-                          ,EIO.EVALUATION_SCORE            = REC_SCLE.EVALUATION_SCORE
-                          ,EIO.SORT_SEQUENCE               = REC_SCLE.SORT_SEQUENCE
-                          ,EIO.LOCAL_UPDATE_DTM            = NOW()
-                          ,EIO.UPDATE_USER_ID              = :I_USER_ID
-                          ,EIO.SYSTEM_UPDATE_DTM           = NOW()
-                    WHERE  EIO.TENANT_ID     = REC_SCLE.TENANT_ID
-                    AND    EIO.COMPANY_CODE  = REC_SCLE.COMPANY_CODE
-                    AND    EIO.ORG_TYPE_CODE = REC_SCLE.ORG_TYPE_CODE
-                    AND    EIO.ORG_CODE      = REC_SCLE.ORG_CODE
-                    AND    EIO.EVALUATION_OPERATION_UNIT_CODE = REC_SCLE.EVALUATION_OPERATION_UNIT_CODE
-                    AND    EIO.EVALUATION_TYPE_CODE    = REC_SCLE.EVALUATION_TYPE_CODE
-                    AND    EIO.EVALUATION_ARTICLE_CODE = REC_SCLE.EVALUATION_ARTICLE_CODE
-                    AND    EIO.OPTION_ARTICLE_NUMBER   = REC_SCLE.OPTION_ARTICLE_NUMBER;
-                      
-                END IF;
-                
+                I_SCLE_TYPE.OPTION_ARTICLE_NUMBER[IDX] = :V_OPTION_ARTICLE_NUMBER;
+
             END IF;
-            
-        END;
-    END FOR;
+
+        END FOR;
+
+        MERGE INTO SP_SE_EVAL_ITEM_OPT EIO
+        USING (SELECT TRANSACTION_CODE
+                     ,TENANT_ID
+                     ,COMPANY_CODE
+                     ,ORG_TYPE_CODE
+                     ,ORG_CODE
+                     ,EVALUATION_OPERATION_UNIT_CODE
+                     ,EVALUATION_TYPE_CODE
+                     ,EVALUATION_ARTICLE_CODE
+                     ,OPTION_ARTICLE_NUMBER
+                     ,OPTION_ARTICLE_NAME
+                     ,OPTION_ARTICLE_START_VALUE
+                     ,OPTION_ARTICLE_END_VALUE
+                     ,EVALUATION_SCORE
+                     ,SORT_SEQUENCE
+               FROM   :I_SCLE_TYPE    SCLE
+               WHERE  TRANSACTION_CODE NOT IN (:V_DELETE_FLAG)
+              ) SCLE
+        ON (    SCLE.TENANT_ID     = EIO.TENANT_ID
+            AND SCLE.COMPANY_CODE  = EIO.COMPANY_CODE
+            AND SCLE.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
+            AND SCLE.ORG_CODE      = EIO.ORG_CODE
+            AND SCLE.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
+            AND SCLE.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
+            AND SCLE.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
+            AND SCLE.OPTION_ARTICLE_NUMBER          = EIO.OPTION_ARTICLE_NUMBER
+           )
+       WHEN MATCHED THEN
+           UPDATE
+           SET    EIO.OPTION_ARTICLE_NAME         = SCLE.OPTION_ARTICLE_NAME
+                 ,EIO.OPTION_ARTICLE_START_VALUE  = CASE WHEN V_EVALUATION_RESULT_INPUT_TYPE_CD = 'SCLE' THEN NULL ELSE SCLE.OPTION_ARTICLE_START_VALUE END
+                 ,EIO.OPTION_ARTICLE_END_VALUE    = CASE WHEN V_EVALUATION_RESULT_INPUT_TYPE_CD = 'SCLE' THEN NULL ELSE SCLE.OPTION_ARTICLE_END_VALUE END
+                 ,EIO.EVALUATION_SCORE            = SCLE.EVALUATION_SCORE
+                 ,EIO.SORT_SEQUENCE               = SCLE.SORT_SEQUENCE
+                 ,EIO.LOCAL_UPDATE_DTM            = NOW()
+                 ,EIO.UPDATE_USER_ID              = :I_USER_ID
+                 ,EIO.SYSTEM_UPDATE_DTM           = NOW()
+       WHEN NOT MATCHED THEN
+           INSERT
+           (TENANT_ID
+           ,COMPANY_CODE
+           ,ORG_TYPE_CODE
+           ,ORG_CODE
+           ,EVALUATION_OPERATION_UNIT_CODE
+           ,EVALUATION_TYPE_CODE
+           ,EVALUATION_ARTICLE_CODE
+           ,OPTION_ARTICLE_NUMBER
+           ,OPTION_ARTICLE_NAME
+           ,OPTION_ARTICLE_START_VALUE
+           ,OPTION_ARTICLE_END_VALUE
+           ,EVALUATION_SCORE
+           ,SORT_SEQUENCE
+           ,LOCAL_CREATE_DTM
+           ,LOCAL_UPDATE_DTM
+           ,CREATE_USER_ID
+           ,UPDATE_USER_ID
+           ,SYSTEM_CREATE_DTM
+           ,SYSTEM_UPDATE_DTM
+           )
+           VALUES
+           (SCLE.TENANT_ID
+           ,SCLE.COMPANY_CODE
+           ,SCLE.ORG_TYPE_CODE
+           ,SCLE.ORG_CODE
+           ,SCLE.EVALUATION_OPERATION_UNIT_CODE
+           ,SCLE.EVALUATION_TYPE_CODE
+           ,SCLE.EVALUATION_ARTICLE_CODE
+           ,SCLE.OPTION_ARTICLE_NUMBER
+           ,SCLE.OPTION_ARTICLE_NAME
+           ,SCLE.OPTION_ARTICLE_START_VALUE
+           ,SCLE.OPTION_ARTICLE_END_VALUE
+           ,SCLE.EVALUATION_SCORE
+           ,SCLE.SORT_SEQUENCE
+           ,NOW()
+           ,NOW()
+           ,:I_USER_ID
+           ,:I_USER_ID
+           ,NOW()
+           ,NOW()
+           );
+
+
+    END IF;
+
 
     COMMIT;
-    O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
+    :O_MSG.INSERT(('OK', 'Successfully Saved.'),1);
 END;

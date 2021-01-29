@@ -51,6 +51,14 @@ sap.ui.define([
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
 
+                if(oArgs.search){
+                    this.onPressSearch();
+                }
+
+                this._clearValueState(
+                    this.getView().getControlsByFieldGroupId("searchRequired")
+                );
+
                 oViewModel.setProperty("/App/layout", "OneColumn");
             }
             /***
@@ -307,8 +315,12 @@ sap.ui.define([
                     oNavParam.level = "low";
                 }
                 oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = oContext.getObject();
+                oRowData = this._deepCopy( oContext.getObject() );
                 oViewModel = this.getView().getModel("viewModel");
+
+                oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
+                oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
+                oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData,
@@ -336,7 +348,15 @@ sap.ui.define([
                     new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
                     new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode }),
 
-                ]
+                ];
+
+                //필수입력체크
+                var aControls = oView.getControlsByFieldGroupId("searchRequired"),
+                    bValid = this._isValidControl(aControls);
+
+                if(!bValid){
+                    return;
+                }
 
                 //미리 세팅해둔 경로를 바탕으로 Filter를 생성한다.
                 /**
@@ -533,11 +553,17 @@ sap.ui.define([
                 }
 
                 oContext = oTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = oContext.getObject();
+                oRowData = this._deepCopy( oContext.getObject() );
                 oViewModel = this.getView().getModel("viewModel");
 
                 oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
                 oNavParam.leaf = oRowData.leaf_flag;
+
+
+                oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
+                oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
+                oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
+                
                 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData

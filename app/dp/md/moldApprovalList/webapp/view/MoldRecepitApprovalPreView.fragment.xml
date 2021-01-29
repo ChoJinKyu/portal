@@ -180,25 +180,25 @@
 								<Text text="{mdRecepit>approval_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="20em" hAlign="Center">
+						<table:Column  width="8em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
 								<Text  text="{mdRecepit>model}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="12em" hAlign="Center">
 							<Label text="Mold No"/>
 							<table:template>
 								<Text  text="{mdRecepit>mold_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="5em" hAlign="Center">
+						<table:Column  width="4em" hAlign="Center">
 							<Label text="Seq"/>
 							<table:template>
 								<Text text="{mdRecepit>mold_sequence}"/>
 							</table:template>
 						</table:Column>
-						<table:Column  width="15em" hAlign="Center">
+						<table:Column  width="10em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
 								<Text  text="{mdRecepit>spec_name}"/>
@@ -211,25 +211,25 @@
 								<Text text="{mdRecepit>mold_item_type_code_nm}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="4em" hAlign="Center">
 							<Label text="Currency"/>
 							<table:template>
-								<Text text="{mdRecepit>currency_code_nm}"/>
+								<Text text="{mdRecepit>currency_code_nm}"  textAlign="Center"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="Receipt Amount"/>
 							<table:template>
-								<Text text="{mdRecepit>receiving_amount}"/>
+								<Text text="{mdRecepit>receiving_amount}" textAlign="Right" />
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="4em" hAlign="Center">
 							<Label text="Book Currency"/>
 							<table:template>
-								<Text text="{mdRecepit>book_currency_code}"/>
+								<Text text="{mdRecepit>book_currency_code}" textAlign="Center"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
 								<Text text="{mdRecepit>provisional_budget_amount}" textAlign="Right"/>

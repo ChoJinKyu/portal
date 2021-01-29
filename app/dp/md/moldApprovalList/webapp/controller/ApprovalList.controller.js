@@ -269,7 +269,6 @@ sap.ui.define([
 
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-            console.log("oRecord >>>  ", oRecord);
             var that = this;
             var approvalTarget = "";
             var approvalTypeCode = "";
@@ -293,7 +292,6 @@ sap.ui.define([
                 approvalTypeCode ="A"
             }
 
-            console.log(approvalTarget);
             that.getRouter().navTo(approvalTarget , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
@@ -320,7 +318,7 @@ sap.ui.define([
             if (params.selectedItems.length > 0) {
 
                 params.selectedItems.forEach(function (item, idx, arr) {
-                    console.log(item.getKey());
+
                     plantFilters.push(new Filter({
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
@@ -364,18 +362,19 @@ sap.ui.define([
             var source = oEvent.getSource();
             var params = oEvent.getParameters();
 
-            var id = source.sId.split('--')[2];
+            var sIds =source.sId.split('--');
+            var id = sIds[sIds.length-1];
+           
             var idPreFix = id.substr(0, id.length - 1);
             var selectedKeys = [];
-            console.log(idPreFix);
+
 
 
             params.selectedItems.forEach(function (item, idx, arr) {
-                console.log(item.getKey());
+
                 selectedKeys.push(item.getKey());
             });
-            console.log(selectedKeys);
-
+         
             this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
         },
@@ -495,12 +494,10 @@ sap.ui.define([
                 oTable.setModel(this.oColModel, "columns");
 
                 if (oTable.bindRows) {
-                    console.log(" Table.bindRows >>> ", oTable.bindRows);
                     oTable.bindAggregation("rows", path);
                 }
                 
                 if (oTable.bindItems) {
-                    console.log(" oTable.bindItems >>> ", oTable.bindItems);
                     oTable.bindAggregation("items", path, function () {
                         return new ColumnListItem({
                             cells: aCols.map(function (column) {
@@ -546,10 +543,8 @@ sap.ui.define([
         onFilterBarSearch: function (oEvent) {
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
-                console.log("aSelectionSet ::::", aSelectionSet);
             var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
                 if (oControl.getValue()) {
-                    console.log("oControl.getName()", oControl.getName());
                     aResult.push(new Filter({
                         path: oControl.getName(),
                         operator: FilterOperator.Contains,
@@ -569,9 +564,8 @@ sap.ui.define([
             },
             []);
             
-            console.log(this._oValueHelpDialog);
+            
             var _tempFilters = [];
-            console.log(path);
 
             if (path.indexOf("Models") > -1) {
                 // /Models
@@ -616,12 +610,10 @@ sap.ui.define([
             oValueHelpDialog.getTableAsync().then(function (oTable) {
                 if (oTable.bindRows) {
                     oTable.getBinding("rows").filter(oFilter);
-                    console.log("oTable.bindRows :::", oFilter);
                 }
 
                 if (oTable.bindItems) {
                     oTable.getBinding("items").filter(oFilter);
-                    console.log("oTable.bindItems :::", oFilter);
                 }
 
                 oValueHelpDialog.update();
@@ -641,8 +633,6 @@ sap.ui.define([
         _bindView: function (sObjectPath, sModel, aFilter, callback) {
             var oView = this.getView(),
                 oModel = this.getModel(sModel);
-            console.log(oView);
-            console.log(oModel);
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
             oModel.read(sObjectPath, {
@@ -682,7 +672,6 @@ sap.ui.define([
         copySelected: function (oEvent) {
             var source = oEvent.getSource();
             var selectedKey = source.getSelectedKey();
-            console.log(source.getSelectedKey());
             //this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
         },
 
@@ -760,9 +749,6 @@ sap.ui.define([
             var appTypeCode = "";
             var company_code = this.byId("searchCompanyF").getSelectedKey();
             var plant_code = this.byId("searchPlantF").getSelectedKey();
-            console.log(id);
-            console.log(company_code);
-            console.log(plant_code);
             if(this.validator.validate( this.byId('dialogCreateForm') ) !== true){
                 MessageBox.error("필수 입력 항목입니다.");
                 return;
@@ -815,10 +801,6 @@ sap.ui.define([
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
-                    console.log(groupId[i].mProperties.text);
-                    console.log(appTypeCode);
-                    console.log(this.byId("searchCompanyF").getValue());
-                    console.log(this.byId("searchPlantF").getValue());
                     this.getRouter().navTo(approvalTarget, {
                         company_code: company_code
                         , plant_code: plant_code
@@ -830,7 +812,6 @@ sap.ui.define([
         },
 
         createPopupClose: function (oEvent) {
-            console.log(oEvent);
             this.byId("dialogApprovalCategory").close();
         },
 
@@ -869,7 +850,6 @@ sap.ui.define([
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
 
             var that = this;
-            console.log("checkBoxs ::::", checkBoxs);
             for (var i = 0; i < checkBoxs.length; i++) {
                 
                 if (checkBoxs[i].mProperties.selected == true) {
@@ -877,10 +857,6 @@ sap.ui.define([
                     chkRow = chkRow.substring(11);
                     
                     chkArr.push(parseInt(chkRow));
-                    console.log("chkRow :::::", chkRow);
-                    console.log("chkArr :::::", chkArr);
-                    console.log("j :::::", j);
-                    console.log(lModel.getData());
                     delApprData.push({
                         approval_number : lModel.getData().Approvals[chkArr[j]].approval_number
                         ,tenant_id : lModel.getData().Approvals[chkArr[j]].tenant_id
@@ -925,8 +901,6 @@ sap.ui.define([
             //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
             //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
             var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
-            console.log("data >>>> " , data);
-            console.log("url >>>> " , url);
             that.onLoadThisPage();
             $.ajax({
                 url: url,
@@ -935,7 +909,7 @@ sap.ui.define([
                 data : JSON.stringify(data),
                 contentType: "application/json",
                 success: function(result){
-                    console.log("result>>>> " , result);
+                    console.log("DeleteResult>>>> " , result);
                     MessageToast.show(that.getModel("I18N").getText("/"+result.messageCode));
                     if(result.resultCode > -1){
                         that.onLoadThisPage(result);
@@ -981,11 +955,11 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
+
             this.validator.validate( this.byId('pageSearchFormE'));
             if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
 
             var aSearchFilters = this._getSearchStates();
-            console.log("aSearchFilters :::", aSearchFilters);
             this._applySearch(aSearchFilters);
         },
 
@@ -1126,7 +1100,7 @@ sap.ui.define([
 		 */
         
         _applySearch: function (aSearchFilters) {
-            console.log(aSearchFilters);
+            console.log("aSearchFilters :::", aSearchFilters);
             //aSearchFilters.push(n)
             // var aSorter = [];
             // aSorter.push(new Sorter("approval_number", true));
@@ -1153,7 +1127,7 @@ sap.ui.define([
 
 
                     }               
-                    console.log("nModel ::::", nModel);
+                    
                     oView.setBusy(false);
                     
                 }
@@ -1178,9 +1152,6 @@ sap.ui.define([
             var sFileName = "MOLD APPROVAL LIST"
             //var oData = this.getModel("list").getProperty("/Message"); //binded Data
             var oData = oTable.getModel("list").getProperty("/Approvals");
-            console.log(oTable);
-            console.log(sFileName);
-            console.log(oData);
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,

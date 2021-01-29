@@ -76,10 +76,40 @@ sap.ui.define([
                         oRootModel.setProperty("/org_Plant", oPurOrg);
                     }
                 },
-                //     if( data && data.results ) {
-                //         oRootModel.setProperty("/org_Plant", data.results);
-                //     }
-                // },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+
+            // 자재 조회
+            var oBasePriceArlModel = this.getModel("basePriceArl");
+            var aBasePriceArlFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            oBasePriceArlModel.read("/Base_Price_Aprl_Material", {
+                filters : aBasePriceArlFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        var aResults = data.results;
+                        var aCompoany = [];
+                        var oPurOrg = {};
+
+                        for( var i=0; i<aResults.length; i++ ) {
+                            var oResult = aResults[i];
+                            if( -1===aCompoany.indexOf(oResult.material_code) ) {
+                                aCompoany.push(oResult.material_code);
+                                oPurOrg[oResult.material_code] = [];
+                            }
+
+                            oPurOrg[oResult.material_code].push({material_code: oResult.material_code
+                                                                ,material_desc: oResult.material_desc
+                                                                ,material_price_unit : oResult.material_price_unit
+                                                                ,vendor_pool_code : oResult.vendor_pool_code
+                                                                ,vendor_pool_local_name : oResult.vendor_pool_local_name
+                                                                });
+                        }
+
+                        oRootModel.setProperty("/material_code", oPurOrg);
+                    }
+                },
                 error : function(data){
                     console.log("error", data);
                 }

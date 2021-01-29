@@ -13,8 +13,10 @@
     
     <f:DynamicPage 
         id="page"
-        headerExpanded="true" 
         toggleHeaderOnTitleClick="true"
+        headerExpanded="{=
+            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
+        }"
     >
         
         <f:title>
@@ -23,6 +25,34 @@
                      <!-- 평가항목 관리 -->
                     <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" />
                 </f:heading>
+
+                <!-- <f:expandedHeading> -->
+                     <!-- 평가항목 관리 -->
+                    <!-- <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" /> -->
+                <!-- </f:expandedHeading> -->
+                <f:expandedContent>
+                </f:expandedContent>
+
+                <!-- <f:snappedHeading> -->
+                     <!-- 평가항목 관리 -->
+                    <!-- <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" /> -->
+                <!-- </f:snappedHeading> -->
+                <f:snappedContent>
+                    <form:SimpleForm 
+                        layout="ResponsiveGridLayout"
+                    >
+                        <VBox>
+                            <!-- 평가항목명 -->
+                            <Label text="{I18N>/EVAL_ITEM_NM}" />
+                            <Input 
+                                value="{viewModel>/cond/Contains/evaluation_article_name}"
+                            />
+                            <layoutData>
+                                <layout:GridData span="L2 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:SimpleForm>
+                </f:snappedContent>
                 
                 <f:actions>
                     <!-- 조회 -->
@@ -38,10 +68,12 @@
                 >
                     <VBox>
                         <!-- 평가조직 -->
-                        <Label text="{I18N>/EVAL_ORG}" />
+                        <Label text="{I18N>/EVAL_ORG}" required="true"/>
                         <ComboBox 
                             id="orgCode" 
                             width="100%" 
+                            required="true"
+                            fieldGroupIds="searchRequired"
                             showSecondaryValues="true"
                             selectionChange="onSelectionChangeOrgCode"
                             selectedKey="{viewModel>/cond/EQ/org_code}"
@@ -52,10 +84,12 @@
                     </VBox>
                     <VBox>
                         <!-- 평가운영단위 -->
-                        <Label text="{I18N>/EVAL_OP_UNT}" />
+                        <Label text="{I18N>/EVAL_OP_UNT}" required="true"/>
                         <ComboBox 
                             id="unitCode" 
                             width="100%" 
+                            required="true"
+                            fieldGroupIds="searchRequired"
                             showSecondaryValues="true"
                             selectionChange="onSelectionChangeUnitCode"
                             selectedKey="{viewModel>/cond/EQ/evaluation_operation_unit_code}"
@@ -66,7 +100,7 @@
                     </VBox>
                     <VBox>
                         <!-- 평가유형명 -->
-                        <Label text="{I18N>/EVALUATION_TYPE_NAME}" />
+                        <Label text="{I18N>/EVALUATION_TYPE_NAME}" required="true"/>
                         <SegmentedButton 
                             id="evaluType" 
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
@@ -112,10 +146,10 @@
                 selectionBehavior="Row"
                 fixedColumnCount="1"
                 expandFirstLevel="true"
-                >
+            >
                 <t:extension>
                     <OverflowToolbar>
-                        <Title id="title" text="Category" level="H2"/> 
+                        <Title id="title" text="{I18N>/EVAL_ITEM}" level="H2"/> 
                         <ToolbarSpacer/>
                         <Button text="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
                         <Button text="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />

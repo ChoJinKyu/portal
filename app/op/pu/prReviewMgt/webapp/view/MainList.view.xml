@@ -286,9 +286,9 @@
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_ReviewListView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button text="(미정)재작성요청" type="Transparent" press=".onButtonPress($event, 'rewrite')" />
-                            <Button text="(미정)마감" type="Transparent" press=".onButtonPress($event, 'close')" />
-                            <Button text="(미정)구매담당자변경" type="Transparent" press=".onButtonPress($event, 'change')" />
+                            <Button text="(미정)재작성요청" type="Transparent" press=".onButtonPress($event, 'REWRITE')" />
+                            <Button text="(미정)마감" type="Transparent" press=".onButtonPress($event, 'CLOSING')" />
+                            <Button text="(미정)구매담당자변경" type="Transparent" press=".onButtonPress($event, 'CHANGE')" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press="onExcelDownload($event, 'Download', ${list>/Pr_ReviewListView}, {fileName: 'PR Review List', tId: 'mainTable' })">
                                 <layoutData>
@@ -306,6 +306,10 @@
                         <!-- 구매요청 번호 -->
                         <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_NUMBER}" />
+                        </Column>
+                        <!-- 구매요청 유형 -->
+                        <Column hAlign="Center" width="auto">
+                            <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
                         <!-- 품목 번호 -->
                         <Column hAlign="Center" width="auto">
@@ -362,29 +366,48 @@
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onColumnListItemPress.call(this, $event, '${list>/this}')">
-                            <cells>             
+                            <cells>
+                                <!-- 구매요청 번호 -->
                                 <Text text="{list>pr_number}" vAlign="Left" />
+                                <!-- 구매요청 유형 -->
+                                <Text text="{list>pr_type_name}" vAlign="Left" />
+                                <!-- 품목 번호 -->
                                 <Text text="{list>pr_item_number}" vAlign="Left"/>
+                                <!-- 조직코드 -->
                                 <Text text="{list>org_code}"/>
-                                <Text text="{list>material_code}"/>                                
-                                <Text text="{list>pr_desc}"/> 
+                                <!-- 자재코드 -->
+                                <Text text="{list>material_code}"/>
+                                <!-- 구매요청 품명 -->                            
+                                <Text text="{list>pr_desc}"/>
+                                <!-- 단위 -->
                                 <Text text="{list>pr_unit}"/>
+                                <!-- 요청수량 -->
                                 <Text text="{
                                     path: 'list>pr_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
                                 }" textAlign="Right"/>
+                                <!-- 잔여수량 -->
                                 <Text text="{
                                     path: 'list>remain_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
                                 }" textAlign="Right"/>
+                                <!-- 납품요청 일자 -->
                                 <Text text="{
                                     path: 'list>delivery_request_date',
                                     formatter: '.dateFormatter.toUTCDateString'
                                 }"/>
-                                <Text text="{list>estimated_price}"/>
+                                <!-- 금액 -->
+                                <Text text="{
+                                    path: 'list>estimated_price', 
+                                    formatter: '.numberFormatter.toNumberString'
+                                }" textAlign="Right"/>
+                                <!-- 통화 -->
                                 <Text text="{list>currency_code}"/>
+                                <!-- 구매담당자 -->
                                 <Text text="{list>buyer_name}"/>
+                                <!-- 구매요청자 -->
                                 <Text text="{list>requestor_name}"/>
+                                <!-- 구매요청 일자 -->
                                 <Text text="{
                                     path: 'list>request_date',
                                     formatter: '.dateFormatter.toUTCDateString'

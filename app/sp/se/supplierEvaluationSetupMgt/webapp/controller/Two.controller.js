@@ -42,6 +42,7 @@ sap.ui.define([
                             evaluationType2 : [],
                             scale : []
                         });
+            this.getView().byId("detailValuationTable").removeSelections(true);
             
 
             oArgs = oEvent.getParameter("arguments");
@@ -63,11 +64,11 @@ sap.ui.define([
             // Create 버튼 눌렀을때
             if (this.scenario_number === "New") {
                 this.getModel("TwoView").setProperty("/isEditMode", true);
-                this.getModel("TwoView").setProperty("/isCreate", true);
+                this.getModel("TwoView").setProperty("/isCreateMode", true);
 
             } else { // Detail 일때
                 this.getModel("TwoView").setProperty("/isEditMode", false);
-                this.getModel("TwoView").setProperty("/isCreate", false);     
+                this.getModel("TwoView").setProperty("/isCreateMode", false);     
  
              
                 var TwoFilters = [];      
@@ -124,7 +125,8 @@ sap.ui.define([
                 "evaluation_grade": "",
                 "evaluation_grade_start_score": "",
                 "evaluation_grade_end_score": "",
-                "inp_apply_code": ""
+                "inp_apply_code": "",
+                "crudFlg" : "C"
             });
            oView.setProperty("/manager",oModel);
             },
@@ -135,16 +137,8 @@ sap.ui.define([
             var oTable = this.byId("detailValuationTable"),                
                 oView = this.getView(),
                 oModel = this.getModel("TwoView"),
-
                 aItems = oTable.getSelectedItems(),
                 aIndices = [];
-
-            var that = this;
-            var sendData = {}, aInputData=[];
-
-            sendData.inputData = aInputData;
-
-            console.log("delPrList >>>>", aIndices);
 
             if (aItems.length > 0) {
                 MessageBox.confirm(i18nModel.getText("/NCM00003"), {
@@ -158,17 +152,13 @@ sap.ui.define([
                         aIndices.sort().reverse();
                         //aIndices = aItems.sort(function(a, b){return b-a;});
                         aIndices.forEach(function(nIndex){     
-                            oModel.getProperty("/scale").splice(nIndex,1);                      
-                           
+                            oModel.getProperty("/scale").splice(nIndex,1);     
                         });
 
-                            oModel.setProperty("/scale",oModel.getProperty("/scale"));
-                       
-                            oView.byId("detailValuationTable").removeSelections(true);                        
+                        oModel.setProperty("/scale",oModel.getProperty("/scale"));
+                        oView.byId("detailValuationTable").removeSelections(true);                        
 
-                        } else if (sButton === MessageBox.Action.CANCEL) { 
-
-                        }; 
+                        }
                         
                         
                     }
@@ -180,7 +170,7 @@ sap.ui.define([
 
         }
 
-            ,/**
+        ,/**
         * 메인화면으로 이동
         * @public
         */
@@ -192,7 +182,7 @@ sap.ui.define([
             if (that.getModel("TwoView").getProperty("/isEditMode") === false) {
                 if (sPreviousHash !== undefined) {
                     // eslint-disable-next-line sap-no-history-manipulation
-                    history.go(-1);
+                    history.back();
                 } else {
                     
                 }
@@ -226,7 +216,7 @@ sap.ui.define([
         },
 
             onPageEditButtonPress: function () {
-                this._toEditMode();
+            this._toEditMode();
             },
 
         /**

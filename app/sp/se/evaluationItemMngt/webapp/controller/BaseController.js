@@ -1,7 +1,11 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageBox"
-], function (Controller, MessageBox) {
+    "sap/m/MessageBox",
+	"sap/ui/core/message/Message",
+    "sap/ui/core/MessageType",
+    "sap/ui/core/ValueState"
+
+], function (Controller, MessageBox, Message, MessageType, ValueState) {
 	"use strict";
 
 	return Controller.extend("sp.se.evaluationItemMngt.controller.BaseController", {
@@ -55,6 +59,91 @@ sap.ui.define([
             );
 
             return $Dfferred;
+        }
+
+
+        , _isValidControl : function(aControls){
+            var oMessageManager = sap.ui.getCore().getMessageManager(),
+                bAllValid = false,
+                oI18n = this.getView().getModel("I18N");
+                
+            oMessageManager.removeAllMessages();
+            bAllValid = aControls.every(function(oControl){
+                var sEleName = oControl.getMetadata().getElementName(),
+                    sValue;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                    case "sap.m.TextArea":
+                        sValue = oControl.getValue();
+                        break;
+                    case "sap.m.ComboBox":
+                        sValue = oControl.getSelectedKey();
+                        break;
+                    default:
+                        return true;
+                }
+                
+                // if(!oControl.getProperty('enabled')) return true;
+                if(!oControl.getProperty('editable')) return true;
+                if(oControl.getProperty('required')){
+                    if(!sValue){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(oI18n.getText("/ECM01002"));
+                        oMessageManager.addMessages(new Message({
+                            message: oI18n.getText("/ECM01002"),
+                            type: MessageType.Error
+                        }));
+                        bAllValid = false;
+                        oControl.focus();
+                        return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                }
+                return true;
+            });
+
+            return bAllValid;
+        }
+
+        , _clearValueState : function(aControls){
+             aControls.forEach(function(oControl){
+                var sEleName = oControl.getMetadata().getElementName(),
+                    sValue;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                    case "sap.m.TextArea":
+                    case "sap.m.ComboBox":
+                        break;
+                    default:
+                        return;
+                }
+                oControl.setValueState(ValueState.None);
+                oControl.setValueStateText();
+            });
+        }
+
+        , _deepCopy : function(oData){
+            var oNewObj;
+            
+            if(oData && typeof oData === "object"){
+                if(Array.isArray(oData)){
+                    oNewObj = [];
+                }else{
+                    oNewObj = {};
+                }
+                for(var key in oData){
+                    if(oData.hasOwnProperty(key)){
+                        oNewObj[key] = this._deepCopy( oData[key] );
+                    }
+                }
+            }else{
+                oNewObj = oData;
+            }
+
+            return oNewObj;
         }
 	});
 });

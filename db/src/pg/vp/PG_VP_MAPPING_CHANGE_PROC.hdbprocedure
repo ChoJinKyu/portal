@@ -357,16 +357,6 @@ BEGIN
             SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	    END IF;
 	    
-	    IF IFNULL( loop_mst.VENDOR_POOL_LOCAL_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ) = '' THEN
-            --Level Name (Local) is a required value.
-            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00029'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
-	    END IF;
-	    
-	    IF IFNULL( loop_mst.VENDOR_POOL_ENGLISH_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ) = '' THEN
-            --Level Name (Eng) is a required value.
-            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00030'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
-	    END IF;
-	    
 	    IF TRIM( ' ' FROM loop_mst.CRUD_TYPE_CODE )  NOT IN ( 'C', 'U', 'D') THEN
             --No found CRUD TYPE CODE info.
             SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
@@ -446,6 +436,16 @@ BEGIN
 			IF V_NEW_VENDOR_POOL_CODE is NULL THEN 
                 --An error occurred while generating the VENDOR POOL code.
                 SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00028'||'-'||V_ERROR_PARAM||'-@-'||'Master Error(Vendor Pool Code Create Error).'||V_MSG_LOOP_PARAM;
+		    END IF;
+		    
+		    IF IFNULL( loop_mst.VENDOR_POOL_LOCAL_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ) = '' THEN
+	            --Level Name (Local) is a required value.
+	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00029'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+		    END IF;
+		    
+		    IF IFNULL( loop_mst.VENDOR_POOL_ENGLISH_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ) = '' THEN
+	            --Level Name (Eng) is a required value.
+	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00030'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 		    END IF;
 		    
 		    /****************************************************
@@ -549,6 +549,16 @@ BEGIN
 	    	IF V_MASTER_EXIST_CNT = 1 THEN
                 BEGIN
 					--DECLARE EXIT HANDLER FOR SQLEXCEPTION RESIGNAL SET MESSAGE_TEXT = 'EPG00099'||'-'||'Master Update Error.';
+					
+					IF IFNULL( loop_mst.VENDOR_POOL_LOCAL_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ) = '' THEN
+			            --Level Name (Local) is a required value.
+			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00029'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+				    END IF;
+				    
+				    IF IFNULL( loop_mst.VENDOR_POOL_ENGLISH_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ) = '' THEN
+			            --Level Name (Eng) is a required value.
+			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00030'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+				    END IF;
 					
 					/****************************************************
 				    동일한 노드에서 동일한 LOCAL NAME이 존재하는지 체크

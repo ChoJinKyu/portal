@@ -18,7 +18,9 @@ using {op.Pu_Cctr_Mst as CctrMst}     from '../../../../../db/cds/op/pu/cctr/OP_
 using {op.Pu_Order_Mst as OrderMst}     from '../../../../../db/cds/op/pu/order/OP_PU_ORDER_MST-model';
 using {op.Pu_Wbs_Mst as WbsMst}     from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
 
-using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
+using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
+
+using {cm.Code_Lng as cdLng}     from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
 @path : '/op.pu.MstService'
@@ -40,4 +42,6 @@ service MstService {
     entity Cctr_Mst as projection on op.Pu_Cctr_Mst;
     entity Order_Mst as projection on op.Pu_Order_Mst;
     entity Wbs_Mst as projection on op.Pu_Wbs_Mst;
+
+   
 }

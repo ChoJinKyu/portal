@@ -1176,12 +1176,13 @@ sap.ui.define([
         },
 
         copyMultiSelected: function (oEvent) {
-            var source = oEvent.getSource();
-            var params = oEvent.getParameters();
+            var source = oEvent.getSource(),
+                params = oEvent.getParameters();
 
-            var id = source.sId.split('--')[2];
-            var idPreFix = id.substr(0, id.length - 1);
-            var selectedKeys = [];
+            var sIds = source.sId.split('--'),
+                id = sIds[sIds.length-1],
+                idPreFix = id.substr(0, id.length - 1),
+                selectedKeys = [];
 
             params.selectedItems.forEach(function (item, idx, arr) {
                 selectedKeys.push(item.getKey());

@@ -109,14 +109,6 @@ sap.ui.define([
             oDetailViewModel.setSizeLimit(1000);
             this.setModel(oDetailViewModel, "detailViewModel");
 
-            switch (sTenantId) {
-                case "L2100" :
-                    oCodeData.switchColumnVisible = true;
-                    break;
-                default :
-                    oCodeData.switchColumnVisible = false;
-            }
-
             // Currency 데이터 조회 시작
             var oCurrencyODataModel = this.getOwnerComponent().getModel("currencyODataModel");
             oCurrencyODataModel.read("/Currency", {
@@ -169,11 +161,20 @@ sap.ui.define([
             var oDetailViewModel = this.getModel("detailViewModel");
             var oDetailModel = this.getModel("detailModel");
             var oRootModel = this.getModel("rootModel");
+            var oApproverModel = this.getModel("approver");
             var oSelectedData = oRootModel.getProperty("/selectedData");
 
             sTenantId = oRootModel.getProperty("/tenantId");
 
-            this.getModel('approver').setProperty("/entityName", "Approvers");
+            // Approval Line 초기화
+            oApproverModel.setProperty("/entityName", "Approvers");
+            oApproverModel.setProperty("/Approvers", null);
+
+            var oReferMulti = this.byId("referMulti");
+
+            if( oReferMulti ) {
+                oReferMulti.removeAllTokens();
+            }
 
             // 리스트에서 선택해서 넘어오는 경우
             if( oSelectedData && oSelectedData.approval_number ) {
@@ -262,20 +263,23 @@ sap.ui.define([
                     // Approver 조회
                     this._readData("/Base_Price_Arl_Approver", aMasterFilters, function (data) {
                         var aApprovers = data.results;
-                        //oDetailModel.setProperty("/Approvers", data.results);
-
-                        aApprovers.forEach(function (oApprover) {
-                            oApprover.approver_name = oApprover.approver_local_nm + " / " + oApprover.approver_dept_local_nm;
-                        });
                         
-                        this.getModel('approver').setProperty("/Approvers", data.results);
+                        // 저장된 Approver가 없는 경우 Line 추가
+                        if( 0 === aApprovers.length ) {
+                            this.onApproverAdd(0);
+                        }else {
+                            aApprovers.forEach(function (oApprover) {
+                                oApprover.approver_name = oApprover.approver_local_nm + " / " + oApprover.approver_dept_local_nm;
+                            });
+                            
+                            oApproverModel.setProperty("/Approvers", data.results);
+                        }
                     }.bind(this));
 
                     // Referer 조회
                     this._readData("/Base_Price_Arl_Referer", aMasterFilters, function (data) {
                         //oDetailModel.setProperty("/Referers", data.results);
 
-                        var referMulti = this.byId("referMulti");
                         var tokens = [] ;
                     
                         var refer = data.results;
@@ -286,7 +290,7 @@ sap.ui.define([
                                 oToken.setText(item.referer_local_nm + "/" +item.referer_job_title + "/" + item.referer_dept_local_nm);
                                 tokens.push(oToken);
                             });
-                            referMulti.setTokens(tokens);
+                            oReferMulti.setTokens(tokens);
                         }
                     }.bind(this));
 
@@ -303,7 +307,7 @@ sap.ui.define([
                                     "approval_title": "",
                                     "approval_type_code": "VI10",
                                     "approve_status_code": "DR",
-                                    "requestor_empno": "5452",
+                                    "requestor_empno": "5457",
                                     "create_user_id": "5460", 
                                     "update_user_id": "5460", 
                                     "request_date": this._changeDateString(oToday),
@@ -312,12 +316,6 @@ sap.ui.define([
                 oDetailViewModel.setProperty("/detailsLength", 0);
                 oDetailViewModel.setProperty("/viewMode", true);
                 
-                this.getModel("approver").setProperty("/Approvers", null);
-
-                if( this.byId("referMulti") ) {
-                    this.byId("referMulti").removeAllTokens();
-                }
-
                 this.onApproverAdd(0);
 
                 // Process에 표시될 상태 및 아이콘 데이터 세팅
@@ -433,7 +431,7 @@ sap.ui.define([
                         org_code: "",
                         org_type_code: "PU",
                         //au_code: "10",
-                        base_price_ground_code: "10",
+                        base_price_ground_code: "COST",
                         local_create_dtm: oToday, 
                         local_update_dtm: oToday, 
                         prices: aPrice
@@ -507,6 +505,7 @@ sap.ui.define([
             var aDetails = oData.details;
             var sMessage = oI18NModel.getText("/NCM01001");
             var sCmd = "insert";
+            var aApprovers = this.getModel("approver").getData().Approvers;
 
             // master entity에 없는 property 삭제
             delete oData.approval_type_code_nm;
@@ -526,6 +525,7 @@ sap.ui.define([
                 aDetails.forEach(function (oDetail) {
                     delete oDetail.checked;
                     delete oDetail.base_price_ground_code_nm;
+                    delete oDetail.company_name;
                     delete oDetail.material_desc;
                     delete oDetail.material_spec;
                     delete oDetail.org_name;
@@ -545,16 +545,17 @@ sap.ui.define([
                 }.bind(this));
             }
 
+            // 상신일 경우 approve_status_code를 AR으로 변경
+            if( sActionParam === "approval" ) {
+                oData.approve_status_code = "AR";
+                sMessage = oI18NModel.getText("/NCM01001");
+            }else if( oData.approval_number ) {
+                sMessage = oI18NModel.getText("/NPG00008");
+            }
+
             // Approvers 데이터 세팅
-            var aApprovers = this.getModel("approver").getData().Approvers;
             var aApproversTemp = [];
             var bCheckApp = false;
-
-            // 결재라인에 한명이라도 없으면 저장 불가
-            if( !aApprovers || 0 === aApprovers.length || !aApprovers[0].approver_empno ) {
-                MessageBox.error("결재라인은 필수입니다.");
-                return;
-            }
 
             aApprovers.forEach(function (oApprover) {
                 var oApproverTemp = {};
@@ -585,14 +586,6 @@ sap.ui.define([
             oData.Referers = aRefersTemp;
 
 
-            // 상신일 경우 approve_status_code를 20으로 변경
-            if( sActionParam === "approval" ) {
-                oData.approve_status_code = "AR";
-                sMessage = oI18NModel.getText("/NCM01001");
-            }else if( oData.approval_number ) {
-                sMessage = oI18NModel.getText("/NPG00008");
-            }
-            
             // approve_status_code 값이 10이 아닌 20일 경우 approval number유무에 상관없이 상신
             // arppoval number가 없는 경우 저장
             if( !oData.approval_number ) {
@@ -678,6 +671,14 @@ sap.ui.define([
          * 상신
          */
         onRequest : function () {
+            // 결재라인에 한명이라도 없으면 상신 불가
+            var aApprovers = this.getModel("approver").getData().Approvers;
+
+            if( !aApprovers || 0 === aApprovers.length || !aApprovers[0].approver_empno ) {
+                MessageBox.error("결재라인은 필수입니다.");
+                return;
+            }
+
             var oI18nModel = this.getModel("I18N");
 
             MessageBox.confirm("요청 하시겠습니까?", {
@@ -806,7 +807,7 @@ sap.ui.define([
                  this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent) {
                      var oSelectedDialogItem = oEvent.getParameter("item");
                      this._oDetail.company_code = oSelectedDialogItem.company_code;
-                     //this._oDetail.company_name = oSelectedDialogItem.company_name;
+                     this._oDetail.company_name = oSelectedDialogItem.company_name;
                      this._oDetail.org_code = oSelectedDialogItem.org_code;
                      this._oDetail.org_name = oSelectedDialogItem.org_name;
                      this._oDetail.material_code = oSelectedDialogItem.material_code;

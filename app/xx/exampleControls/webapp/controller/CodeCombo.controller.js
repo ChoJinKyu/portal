@@ -161,7 +161,7 @@ sap.ui.define([
             this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
         },
 
-        onMaterialOrgMultiDialogPress: function(){
+        onMaterialOrgMultiDialogPress: function(oEvent){
             if(!this.oSearchMultiMaterialOrgDialog){
                 this.oSearchMultiMaterialOrgDialog = new MaterialOrgDialog({
                     title: "Choose MaterialOrg",
@@ -170,12 +170,14 @@ sap.ui.define([
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, "L2100")
                         ]
-                    }
+                    },
+                    oParam: this.byId("searchMultiMaterialOrgFromDialog").getValue()
                 });
                 this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent){
                     this.byId("searchMultiMaterialOrgFromDialog").setTokens(oEvent.getSource().getTokens());
                 }.bind(this));
             }
+            
             this.oSearchMultiMaterialOrgDialog.open();
 
             var aTokens = this.byId("searchMultiMaterialOrgFromDialog").getTokens();

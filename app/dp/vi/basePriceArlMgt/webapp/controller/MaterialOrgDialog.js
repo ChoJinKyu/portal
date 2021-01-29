@@ -70,6 +70,8 @@ sap.ui.define([
                 change: this._onChangeCompany
             });
 
+            this.oSearchCompany.setSelectedKey(this.getProperty("companyCode"));
+
             if( this.tenantId === "L2100" ) {
                 this.oSearchOrg = new ComboBox();
             }else {
@@ -135,7 +137,7 @@ sap.ui.define([
             
             aFiltersControl.push(new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/DP_VI_AP_PUR_ORG"), required:true}),  //조직코드
+                        new Label({ text: this.getModel("I18N").getText("/DP_VI_AP_PUR_ORG")}),  //조직코드
                         this.oSearchOrg
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -221,12 +223,12 @@ sap.ui.define([
                     label: new Label({text: this.getModel("I18N").getText("/BASE_UOM_CODE")}),
                     template: new Text({text: "{base_uom_code}"})
                 }));
-            // aColumnsControl.push(new Column({
-            //         width: "10%",
-            //         hAlign: "Center",
-            //         label: new Label({text: this.getModel("I18N").getText("/PURCHASING") + this.getModel("I18N").getText("/ENABLE") }),   // 구매가능
-            //         template: new Text({text: "{purchasing_enable_flag}"})
-            //     }));
+            aColumnsControl.push(new Column({
+                    width: "10%",
+                    hAlign: "Center",
+                    label: new Label({text: this.getModel("I18N").getText("/STATUS") }),
+                    template: new Text({text: "{material_status_code_name}"})
+                }));
             // aColumnsControl.push(new Column({
             //         width: "10%",
             //         hAlign: "Center",
@@ -297,21 +299,19 @@ sap.ui.define([
             }
 
              if(true) {
-                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialOrgView", {
+                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.BasePriceArlService/").read("/Material_Vw", {
                     filters: aFilters,
                     success: function(oData){
                         var aRecords = oData.results;
                         this.oDialog.setData(aRecords, false);
-                        this.oDialog.getContent()[0].getItems()[1].setBusy(false);
                     }.bind(this),
                     error: function(e){
-                        this.oDialog.getContent()[0].getItems()[1].setBusy(false);
                         console.log(e);
                     }.bind(this)
                 });
             } else {
                 MessageToast.show(this.getModel("I18N").getText("/ORG_CODE") + "는 " + this.getModel("I18N").getText("/ECM01001"));
-                this.oDialog.getContent()[0].getItems()[1].setBusy(false);
+                //this.oDialog.getContent()[0].getItems()[1].setBusy(false);
                 return;
             }
         }

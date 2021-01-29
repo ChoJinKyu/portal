@@ -105,11 +105,12 @@ sap.ui.define([
         },
 
         onMenuAction: function (oEvent){ 
-            var oSelectedkey = oEvent.getParameters().item.getKey(); //"C001.."
-            var category_combo = this.getView().byId("searchCategory"); 
-            //debugger;             
+            var oTenantId = this.getView().byId("searchTenantCombo").getSelectedKey();
+            var oOrgCode = this.getView().byId("searchChain").getSelectedKey();
+            var oCategoryCode = oEvent.getParameters().item.getKey(); //"C001.."
+            // var category_combo = this.getView().byId("searchCategory"); 
             //팝업열기  
-            this.onOpenCategoryItemPage();    
+            this.onOpenCategoryItemPage(oTenantId,oOrgCode,oCategoryCode);    
         },
 
         onMainTableItemMappingButtonPress: function () {
@@ -492,8 +493,11 @@ sap.ui.define([
         ////////////////////////////////////Popup - Category////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		onOpenCategoryItemPage: function(){
-			window.open("/pg/md/mdCategoryItem/webapp/index.html","","_blank");
+		onOpenCategoryItemPage: function(oTenantId,oOrgCode,oCategoryCode){
+            window.open("/pg/md/mdCategoryItem/webapp/index.html?"
+                        +"tenant_id="+oTenantId
+                        +"&org_code="+oOrgCode
+                        +"&spmd_category_code="+oCategoryCode,"","_blank");
         }
         
     });

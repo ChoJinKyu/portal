@@ -1,5 +1,6 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
+    "op/util/controller/BaseController",
+    "op/util/controller/OPUi",
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
@@ -14,12 +15,10 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
     "ext/lib/util/ExcelUtil"
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, EmployeeDialog, Validator,
+], function (BaseController, OPUi, Multilingual, ManagedListModel, JSONModel, DateFormatter, EmployeeDialog, Validator,
     TablePersoController, MainListPersoService,
     Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil) {
     "use strict";
-
-    var toggleButtonId = "";
 
     return BaseController.extend("op.pu.prMgt.controller.MainList", {
 
@@ -35,8 +34,17 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            
+            var oOPUi = new OPUi({
+                tenantId: "L2100",
+                txnType: "CREATE",
+                templateNumber: "TCT0001"
+            });
+            this.setModel(oOPUi.getModel(), "OPUI");
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
             this.setModel(new JSONModel(), "excelModel");
@@ -45,14 +53,14 @@ sap.ui.define([
             this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
-            oMultilingual.attachEvent("ready", function (oEvent) {
-                var oi18nModel = oEvent.getParameter("model");
-                this.addHistoryEntry({
-                    title: oi18nModel.getText("/prMgt"),   //구매..
-                    icon: "sap-icon://table-view",
-                    intent: "#Template-display"
-                }, true);
-            }.bind(this));
+            // oMultilingual.attachEvent("ready", function (oEvent) {
+            //     var oi18nModel = oEvent.getParameter("model");
+            //     this.addHistoryEntry({
+            //         title: oi18nModel.getText("/prMgt"),   //구매..
+            //         icon: "sap-icon://table-view",
+            //         intent: "#Template-display"
+            //     }, true);
+            // }.bind(this));
 
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 

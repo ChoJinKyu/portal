@@ -95,7 +95,7 @@ sap.ui.define([
             // this.getView().setModel(new ManagedModel(), "mdCommon");
             var md = this.getModel('mdCommon');
             this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-
+                // console.log(" ItemBudgetExecution >>> ", oData);
                 if (oData.results != undefined && oData.results.length > 0) {
                     md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
                     md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
@@ -109,11 +109,16 @@ sap.ui.define([
                     md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
                     md.setProperty("/account_code", oData.results[0].account_code);
                     md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
-                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
-                    that._bindComboPlant(oData.results[0].import_company_code); 
-                    that._searchAssetType(oData.results[0].investment_ecst_type_code, function(oData){
-                        console.log(oData);
+                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount); 
+                    if(oData.results[0].import_company_code != undefined && oData.results[0].import_company_code != ""){
+                        that._bindComboPlant(oData.results[0].import_company_code); 
+                    }
+                    if(oData.results[0].investment_ecst_type_code != undefined && oData.results[0].investment_ecst_type_code != ""){
+                        that._searchAssetType(oData.results[0].investment_ecst_type_code, function(oData){
+                        // console.log(oData);
                     });
+                    }
+                    
                 } else {
                     md.setProperty("/investment_ecst_type_code", "I");
                     md.setProperty("/investment_ecst_type_code_nm", "");
@@ -129,6 +134,7 @@ sap.ui.define([
                     md.setProperty("/account_code_nm", "");
                     md.setProperty("/provisional_budget_amount", ""); 
                     that._searchAssetType("I");
+                    
                 }
 
             });
@@ -151,8 +157,8 @@ sap.ui.define([
         },
         onBudgetChange : function ( oEvent ){
             this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'), function(oData){
-               console.log("/// investment_ecst_type_code " , oData);
-                console.log(oData);
+            //    console.log("/// investment_ecst_type_code " , oData);
+                // console.log(oData);
             });
         } ,
         _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회 
@@ -200,14 +206,13 @@ sap.ui.define([
          */
         onBCompanyChange: function (oEvent) {
             var company_code = this.getModel("mdCommon").getData().import_company_code;
-            console.log("oEvent >>>> " , oEvent);
-            console.log("getForceSelection >>>> " , this.byId('importCompany').getSelectedItem());
+            // console.log("oEvent >>>> " , oEvent);
+            // console.log("getForceSelection >>>> " , this.byId('importCompany').getSelectedItem());
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
 
         _bindComboPlant: function (company_code) {
-
             var aFilter = [
                 new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 , new Filter("org_type_code", FilterOperator.EQ, 'PL')
@@ -221,26 +226,8 @@ sap.ui.define([
             oModel.read("/Pur_Operation_Org", {
                 filters: aFilter,
                 success: function (oData) { 
-                    console.log(" Pur_Operation_Org " , oData);
+                    // console.log(" Pur_Operation_Org " , oData);
                     oView.setBusy(false); 
-                    
-                   /* oModel.addRecord({
-                       affiliate_code: ""
-                        ,au_code: ""
-                        ,bizdivision_code: ""
-                        ,bizunit_code: ""
-                        ,company_code: ""
-                        ,create_user_id: ""
-                        ,hq_au_code: ""
-                        ,org_code: ""
-                        ,org_name: ""
-                        ,org_type_code: ""
-                        ,plant_code: ""
-                        ,purchase_org_code: ""
-                        ,tenant_id: "L2600"
-                        ,update_user_id: ""
-                   },"/Pur_Operation_Org",0); 
-                   */ 
                 }
             });
         },
@@ -358,8 +345,6 @@ sap.ui.define([
             var oModel = this.getModel("moldMaster");
             /*
             approverData = verModel.getData().Approvers;*/
-            console.log();
-            console.log();
         },
 
         _toEditModeEachApproval: function () {

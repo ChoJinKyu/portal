@@ -22,11 +22,13 @@ sap.ui.define([
         metadata: {
             properties: {
                 title: { type: "string", group: "Appearance" },
+                closeWhenApplied: { type: "boolean", group: "Misc", defaultValue: true },
                 multiSelection: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "35em"},
                 contentHeight: { type: "string", group: "Appearance" },
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
-                textField: { type: "string", group: "Misc", defaultValue: "code_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "code_name" },
+                getValue: { type: "string", group: "Misc"}
             },
             defaultAggregation: "items",
             aggregations: {
@@ -41,7 +43,7 @@ sap.ui.define([
         renderer: Renderer,
 
         constructor: function () {
-            Parent.apply(this, arguments);
+            Parent.prototype.constructor.apply(this, arguments);
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -59,6 +61,7 @@ sap.ui.define([
             this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
 
             this.oDialog = new ValueHelpDialog({
+                closeWhenApplied: this.getProperty("closeWhenApplied"),
                 multiSelection: this.getProperty("multiSelection"),
                 keyField: this.getProperty("keyField"),
                 textField: this.getProperty("textField"),
@@ -208,6 +211,10 @@ sap.ui.define([
             if(this.beforeOpen)
                 this.beforeOpen.call(this);
             this.oDialog.open();
+        },
+
+        close: function(){
+            this.oDialog.close();
         }
 
     });

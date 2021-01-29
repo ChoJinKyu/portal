@@ -82,7 +82,7 @@
                         <VBox>
                                  <smartTable:SmartTable height="100%" 
                                     id="MonitorList" 
-                                    entitySet="SupEvalOpUnitListView" 
+                                    entitySet="SupEvalOpUnitListView"
                                     initiallyVisibleFields="evaluation_operation_unit_code,evaluation_operation_unit_name" 
                                     smartFilterId="smartFilterBar"
                                     tableType="ResponsiveTable"

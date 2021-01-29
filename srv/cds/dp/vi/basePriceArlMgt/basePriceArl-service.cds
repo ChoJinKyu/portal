@@ -5,11 +5,13 @@ using {dp.VI_Base_Price_Arl_Mst as arlMaster} from '../../../../../db/cds/dp/vi/
 using {dp.VI_Base_Price_Arl_Dtl as arlDetail} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
 using {dp.VI_Base_Price_Arl_Price as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
 using {dp.VI_Base_Price_Arl_requestor_his as arlRequestorHis} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_REQUESTOR_HIS-model';
+using {dp.Base_Price_Info as priceInfo} from '../../../../../db/cds/dp/vi/DP_BASE_PRICE_INFO-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as comp} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using {cm.Pur_Operation_Org as org} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
+using {cm.Pur_Org_Type_Mapping as map} from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using {cm.Hr_Employee as employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm.Control_Option_Dtl as controlDtl} from '../../../../../db/cds/cm/CM_CONTROL_OPTION_DTL-model';
@@ -21,6 +23,45 @@ namespace dp;
 
 @path : '/dp.BasePriceArlService'
 service BasePriceArlService {
+
+    entity Base_Price_Info              as
+        select from priceInfo pi
+        {
+            key pi.tenant_id,
+            key pi.company_code,
+            key pi.org_type_code,
+            key pi.org_code,
+            key pi.material_code,
+            key pi.supplier_code,
+            key pi.market_code,
+            key pi.base_date,
+                pi.approval_number,
+                pi.item_sequence,
+                pi.base_uom_code,
+                pi.new_base_price,
+                pi.new_base_price_currency_code,
+                pi.base_price_ground_code,
+                pi.base_price_start_date,
+                pi.base_price_end_date,
+                pi.first_purchasing_net_price,
+                pi.first_pur_netprice_curr_cd,
+                pi.first_pur_netprice_str_dt,
+                pi.effective_flag,
+                pi.buyer_empno,
+                pi.new_change_type_code,
+                pi.repr_material_org_code,
+                pi.repr_material_code,
+                pi.repr_material_supplier_code,
+                pi.repr_material_market_code,
+                pi.erp_interface_flag,
+                pi.erp_interface_date,
+                pi.local_create_dtm,
+                pi.local_update_dtm,
+                pi.create_user_id,
+                pi.update_user_id,
+                pi.system_create_dtm,
+                pi.system_update_dtm
+        };
 
     entity Base_Price_Arl_Master        as
         select from arlMasterSuper sup
@@ -52,11 +93,11 @@ service BasePriceArlService {
                 sup.org_code,
                 sup.chain_code,
                 sup.approval_type_code,
-                cd01.code_name as approval_type_code_nm   : String(240),
+                cd01.code_name             as approval_type_code_nm   : String(240),
                 sup.approval_title,
                 sup.approval_contents,
                 sup.approve_status_code,
-                cd02.code_name as approve_status_code_nm  : String(240),
+                cd02.code_name             as approve_status_code_nm  : String(240),
                 sup.requestor_empno,
                 emp.user_local_name        as requestor_local_nm      : String(240),
                 emp.job_title              as requestor_job_title     : String(100),
@@ -108,10 +149,10 @@ service BasePriceArlService {
                 emp.job_title              as approver_job_title     : String(100),
                 dept.department_local_name as approver_dept_local_nm : String(240),
                 app.approver_type_code,
-                virtual cd01.code_name     as approver_type_code_nm: String(240),
+                virtual cd01.code_name     as approver_type_code_nm  : String(240),
                 app.approve_comment,
                 app.approve_status_code,
-                virtual cd02.code_name     as approve_status_code_nm: String(240),
+                virtual cd02.code_name     as approve_status_code_nm : String(240),
                 app.approve_date_time,
                 app.local_create_dtm,
                 app.local_update_dtm,
@@ -122,11 +163,11 @@ service BasePriceArlService {
         };
 
     annotate Base_Price_Arl_Approver with {
-        approver_local_nm      @title       : '결재자 이름'  @description : '결재자 이름';
-        approver_job_title     @title       : '결재자 직급'  @description : '결재자 직급';
-        approver_dept_local_nm @title       : '결재자 부서'  @description : '결재자 부서';
-        approver_type_code_nm  @title       : '결재유형명'  @description : '공통코드(CM_CODE_DTL, CM_APPROVER_TYPE)';
-        approve_status_code_nm @title       : '결재상태명'  @description : '공통코드(CM_CODE_DTL, CM_APPROVE_STATUS)';
+        approver_local_nm      @title : '결재자 이름'  @description : '결재자 이름';
+        approver_job_title     @title : '결재자 직급'  @description : '결재자 직급';
+        approver_dept_local_nm @title : '결재자 부서'  @description : '결재자 부서';
+        approver_type_code_nm  @title : '결재유형명'  @description  : '공통코드(CM_CODE_DTL, CM_APPROVER_TYPE)';
+        approve_status_code_nm @title : '결재상태명'  @description  : '공통코드(CM_CODE_DTL, CM_APPROVE_STATUS)';
     };
 
     entity Base_Price_Arl_Referer       as
@@ -153,13 +194,16 @@ service BasePriceArlService {
         };
 
     annotate Base_Price_Arl_Referer with {
-        referer_local_nm      @title       : '참조자 이름'  @description : '참조자 이름';
-        referer_job_title     @title       : '참조자 직급'  @description : '참조자 직급';
-        referer_dept_local_nm @title       : '참조자 부서'  @description : '참조자 부서';
+        referer_local_nm      @title : '참조자 이름'  @description : '참조자 이름';
+        referer_job_title     @title : '참조자 직급'  @description : '참조자 직급';
+        referer_dept_local_nm @title : '참조자 부서'  @description : '참조자 부서';
     };
 
     entity Base_Price_Arl_Detail        as
         select from arlDetail as dtl
+        inner join comp as comp
+            on dtl.tenant_id = comp.tenant_id
+            and dtl.company_code = comp.company_code
         left outer join org as org
             on dtl.tenant_id = org.tenant_id
             and dtl.company_code = org.company_code
@@ -181,6 +225,7 @@ service BasePriceArlService {
             key dtl.approval_number,
             key dtl.item_sequence,
                 dtl.company_code,
+                comp.company_name,
                 dtl.org_type_code,
                 dtl.org_code,
                 org.org_name,
@@ -304,92 +349,141 @@ service BasePriceArlService {
             and control_option_level_val = 'Default'
             and $now between start_date and end_date;
 
-    // @readonly
-    // entity Material_Vw             as
-    //     select from materialMst m
-    //     left outer join materialOrg o
-    //         on  m.tenant_id     = o.tenant_id
-    //         and m.material_code = o.material_code
-    //     {
-    //         key m.tenant_id,
-    //         key m.material_code,
-    //             m.material_type_code,
-    //             m.material_desc,
-    //             ifnull(
-    //                 m.material_spec, ''
-    //             ) as material_spec : String(1000),
-    //             m.base_uom_code,
-    //             m.purchasing_uom_code,
-    //             o.material_status_code
-    //     };
+    @readonly
+    entity Material_Vw                  as
+        select from materialMst as mst
+        inner join materialOrg as org
+            on mst.tenant_id = org.tenant_id
+            and mst.material_code = org.material_code
+        inner join comp as comp
+            on org.tenant_id = comp.tenant_id
+            and org.company_code = comp.company_code
+        inner join map as map
+            on org.tenant_id = map.tenant_id
+            and (
+                org.company_code = map.company_code
+                or map.company_code = '*'
+            )
+            and map.process_type_code = 'SP02'
+        left join org as porg
+            on porg.tenant_id = org.tenant_id
+            and porg.company_code = org.company_code
+            and porg.org_type_code = org.org_type_code
+            and porg.org_code = org.org_code
+        left outer join codeLng as cd01
+            on cd01.tenant_id = org.tenant_id
+            and cd01.group_code = 'DP_MM_MATERIAL_STATUS'
+            and cd01.code = org.material_status_code
+            and cd01.language_cd = 'KO'
+        {
+            key org.tenant_id,
+            key org.material_code,
+            key org.company_code,
+            key org.org_type_code,
+            key org.org_code,
+                comp.company_name,
+                porg.org_name,
+                mst.material_desc,
+                mst.material_spec,
+                mst.material_type_code,
+                mst.base_uom_code,
+                // mst.material_group_code,
+                // mst.purchasing_uom_code,
+                // mst.variable_po_unit_indicator,
+                // mst.material_class_code,
+                // mst.commodity_code,
+                // mst.maker_part_number,
+                // mst.maker_code,
+                // mst.maker_part_profile_code,
+                // mst.maker_material_code,
+                org.material_status_code,
+                cd01.code_name as material_status_code_name : String(240)
+                // org.purchasing_group_code,
+                // org.batch_management_flag,
+                // org.automatic_po_allow_flag,
+                // org.hs_code,
+                // org.import_group_code,
+                // org.user_item_type_code,
+                // org.purchasing_item_flag,
+                // org.purchasing_enable_flag,
+                // org.osp_item_flag,
+                // org.buyer_empno,
+                // org.eng_item_flag
+        };
 
-    // @readonly
-    // entity Code_Dtl                as
-    //     select from codeDtl as d {
-    //         key tenant_id,
-    //         key group_code,
-    //         key code,
-    //             (
-    //                 select code_name from codeLng l
-    //                 where
-    //                         l.tenant_id   = d.tenant_id
-    //                     and l.group_code  = d.group_code
-    //                     and l.code        = d.code
-    //                     and l.language_cd = 'KO'
-    //             ) as code_name : String(240),
-    //             code_description,
-    //             sort_no
-    //     }
-    //     where
-    //         $now between start_date and end_date;
+    annotate Material_Vw with {
+        company_name              @description : '회사 이름';
+        org_name                  @description : '조직 이름';
+        material_status_code_name @title       : '자재상태명'  @description : '공통코드(CM_CODE_DTL, DP_MM_MATERIAL_STATUS)';
+    };
 
-    // @readonly
-    // entity Org_Tenant              as projection on tenant;
+// @readonly
+// entity Code_Dtl                as
+//     select from codeDtl as d {
+//         key tenant_id,
+//         key group_code,
+//         key code,
+//             (
+//                 select code_name from codeLng l
+//                 where
+//                         l.tenant_id   = d.tenant_id
+//                     and l.group_code  = d.group_code
+//                     and l.code        = d.code
+//                     and l.language_cd = 'KO'
+//             ) as code_name : String(240),
+//             code_description,
+//             sort_no
+//     }
+//     where
+//         $now between start_date and end_date;
 
-    // @readonly
-    // entity Org_Company             as projection on comp;
+// @readonly
+// entity Org_Tenant              as projection on tenant;
 
-    // @readonly
-    // entity Pur_Operation_Org       as projection on org;
+// @readonly
+// entity Org_Company             as projection on comp;
 
-    // @readonly
-    // entity Hr_Employee             as projection on employee;
+// @readonly
+// entity Pur_Operation_Org       as projection on org;
 
-    // @readonly
-    // entity Supplier_Mst            as projection on supplierMst;
+// @readonly
+// entity Hr_Employee             as projection on employee;
 
-    // @readonly
-    // entity Material_Mst            as
-    //     select from materialMst {
-    //         tenant_id,
-    //         material_code,
-    //         material_type_code,
-    //         material_desc,
-    //         ifnull(
-    //             material_spec, ''
-    //         ) as material_spec : String(1000),
-    //         base_uom_code,
-    //         purchasing_uom_code,
-    //         commodity_code
-    //     };
+// @readonly
+// entity Supplier_Mst            as projection on supplierMst;
 
-    // @readonly
-    // entity Material_Vw             as
-    //     select from materialMst m
-    //     left outer join materialOrg o
-    //         on  m.tenant_id     = o.tenant_id
-    //         and m.material_code = o.material_code
-    //     {
-    //         key m.tenant_id,
-    //         key m.material_code,
-    //             m.material_type_code,
-    //             m.material_desc,
-    //             ifnull(
-    //                 m.material_spec, ''
-    //             ) as material_spec : String(1000),
-    //             m.base_uom_code,
-    //             m.purchasing_uom_code,
-    //             o.material_status_code
-    //     };
+// @readonly
+// entity Material_Mst            as
+//     select from materialMst {
+//         tenant_id,
+//         material_code,
+//         material_type_code,
+//         material_desc,
+//         ifnull(
+//             material_spec, ''
+//         ) as material_spec : String(1000),
+//         base_uom_code,
+//         purchasing_uom_code,
+//         commodity_code
+//     };
+
+// @readonly
+// entity Material_Vw             as
+//     select from materialMst m
+//     left outer join materialOrg o
+//         on  m.tenant_id     = o.tenant_id
+//         and m.material_code = o.material_code
+//     {
+//         key m.tenant_id,
+//         key m.material_code,
+//             m.material_type_code,
+//             m.material_desc,
+//             ifnull(
+//                 m.material_spec, ''
+//             ) as material_spec : String(1000),
+//             m.base_uom_code,
+//             m.purchasing_uom_code,
+//             o.material_status_code
+//     };
 
 }

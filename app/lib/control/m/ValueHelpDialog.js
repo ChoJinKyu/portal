@@ -28,6 +28,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                closeWhenApplied: { type: "boolean", group: "Misc", defaultValue: true },
                 multiSelection: { type: "boolean", group: "Misc", defaultValue: false },
                 keyField: { type: "string", group: "Misc", defaultValue: "key" },
                 textField: { type: "string", group: "Misc", defaultValue: "text" }
@@ -92,7 +93,8 @@ sap.ui.define([
                     enabled: isMultiSelection == true ? false : true,
                     press: function () {
                         this.doApply();
-                        this.close();
+                        if(this.getProperty("closeWhenApplied") === true)
+                            this.close();
                     }.bind(this)
                 }));
             }

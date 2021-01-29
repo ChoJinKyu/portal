@@ -4,6 +4,9 @@ using {ep as quotationCost} from '../../../../db/cds/ep/ne/EP_UC_QUOTATION_COST-
 using {ep as quotationExtra} from '../../../../db/cds/ep/ne/EP_UC_QUOTATION_EXTRA-model';
 using {ep as costItem} from '../../../../db/cds/ep/ne/EP_UC_COST_ITEM-model';
 
+using { ep as ucQuotationListView} from '../../../../db/cds/ep/ne/EP_UC_QUOTATION_LIST_VIEW-model';
+using { ep as getUcApprovalDtlView} from '../../../../db/cds/ep/ne/EP_GET_UC_APPROVAL_DTL_VIEW-model';
+
 namespace ep;
 
 @path : 'ep.UcQuotationMgtService'
@@ -13,4 +16,11 @@ service UcQuotationMgtService {
     entity UcQuotationCost  as projection on quotationCost.Uc_Quotation_Cost;
     entity UcQuotationExtra as projection on quotationExtra.Uc_Quotation_Extra;
     entity UcCostItem       as projection on costItem.Uc_Cost_Item;
+
+    entity UcQuotationListView as projection on ucQuotationListView.Uc_Quotation_List_View;
+    entity GetUcApprovalDtlView as projection on getUcApprovalDtlView.Get_Uc_Approval_Dtl_View;
+
+
+    
+
 }

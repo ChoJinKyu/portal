@@ -1,0 +1,41 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Show" editable="false">
+
+		<core:Title text="Normal" />
+		<Label text="Code"/>
+		<Text text="{master>/control_option_code}"/>
+		<Label text="Chain"/>
+		<Text text="{master>/chain_code}"/>
+		<Label text="Name"/>
+		<Text text="{master>/control_option_name}"/>
+
+		<core:Title text="Effect" />
+		<Label text="From"/>
+		<Text text="{
+				path: 'master>/start_date',
+				formatter: '.dateFormatter.toDateTimeString'
+			}"/>
+		<Label text="To"/>
+		<Text text="{
+				path: 'master>/end_date',
+				formatter: '.dateFormatter.toDateTimeString'
+			}"/>
+
+		<core:Title text="Boundry" />
+		<Label text="Site"/>
+		<Text text="{path: 'master>/site_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+		<Label text="Company"/>
+		<Text text="{path: 'master>/company_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+		<Label text="Role"/>
+		<Text text="{path: 'master>/role_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+		<Label text="Organization"/>
+		<Text text="{path: 'master>/organization_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+		<Label text="User"/>
+		<Text text="{path: 'master>/user_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+
+	</form:SimpleForm>
+</core:FragmentDefinition>

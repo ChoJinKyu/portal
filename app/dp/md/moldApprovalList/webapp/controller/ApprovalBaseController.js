@@ -65,7 +65,7 @@ sap.ui.define([
         },
 
         onAfterRendering: function () {
-            console.log(" >>>> onAfterRendering");
+          //  console.log(" >>>> onAfterRendering");
 
         },
 
@@ -87,7 +87,7 @@ sap.ui.define([
                     //if(!(sPropertyName === "GeneralInfo" || sPropertyName === "Attachments" || sPropertyName === "ApprovalLine")){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
-                    console.log(sPropertyName);
+                    console.log("onPageNavBackButtonPress destroy >>>> " , sPropertyName);
                     //}
                 }
             }
@@ -126,11 +126,11 @@ sap.ui.define([
               //  if(sPropertyName !== "GeneralInfo"){
                     this._oFragments[sPropertyName].destroy();
                     this._oFragments[sPropertyName] = null;
-                    console.log(sPropertyName);
+                 //   console.log(sPropertyName);
               //  }
             }
 
-            console.log(" onPageCancellationButtonPress ");
+         //   console.log(" onPageCancellationButtonPress ");
 
            
         },
@@ -169,7 +169,7 @@ sap.ui.define([
            //  this.getView().setModel(new ManagedModel(), "refererMultiCB");
 
             var oArgs = oEvent.getParameter("arguments");
-            console.log(oArgs);
+            // console.log(oArgs);
             this._createViewBindData(oArgs);
 
             this.oSF = this.getView().byId("approverSearch");
@@ -180,7 +180,7 @@ sap.ui.define([
          */
         _createViewBindData: function (args) { 
 
-            console.log("args>>>>> " , args);
+            // console.log("args>>>>> " , args);
 
             this.tenant_id = "L2600";
             this.approval_number = args.approval_number;
@@ -208,7 +208,7 @@ sap.ui.define([
                 + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
-                    console.log("orgName ", oData);
+                    // console.log("orgName ", oData);
                 }
             });
 
@@ -307,7 +307,7 @@ sap.ui.define([
                if(oModel.getData().approve_status_code == 'DR'){ // 임시저장 
                     oUiModel.setProperty("/btnEditFlag", true);
                     oUiModel.setProperty("/btnCancelFlag", false);
-                    oUiModel.setProperty("/btnDraftFlag", true);
+                    oUiModel.setProperty("/btnDraftFlag", false);
                     oUiModel.setProperty("/btnRequestCancelFlag", false);
                     oUiModel.setProperty("/btnRequestFlag", true);
                 }else if(oModel.getData().approve_status_code == 'AR'){ // 결재완료 
@@ -347,7 +347,7 @@ sap.ui.define([
         _oFragments: {},
         _showFormFragment: function () { // 이것은 init 시 한번만 호출됨 
             var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection"); 
-            console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
+            // console.log("oPageGeneralInfoSection >> " , oPageGeneralInfoSection);
             oPageGeneralInfoSection.removeAllBlocks();
             this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
@@ -407,7 +407,12 @@ sap.ui.define([
             if (approvalNumber !== "New") {
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
                     this.firstStatusCode = oData.approve_status_code; // 저장하시겠습니까? 하고 취소 눌렀을 경우 다시 되돌리기 위해서 처리 
-                    this._toButtonStatus();
+                    this._toButtonStatus(); 
+
+                    if(oData.approval_type_code == 'E'){
+                        this._pssRequestCancelBtn();
+                    }
+
                 }.bind(this));
             }else{
                  this._toButtonStatus();
@@ -609,20 +614,20 @@ sap.ui.define([
          * 드래그시작
          */
         onDragStartTable: function (oEvent) {
-            console.log(" *** start >> onDragStart", oEvent);
-            console.log(" *** target", oEvent.getParameter("target"));
+         //   console.log(" *** start >> onDragStart", oEvent);
+         //   console.log(" *** target", oEvent.getParameter("target"));
 
             var oDraggedRow = oEvent.getParameter("target");
             var oDragSession = oEvent.getParameter("dragSession");
-            console.log(" *** oDragSession", oDragSession);
+         //   console.log(" *** oDragSession", oDragSession);
             oDragSession.setComplexData("draggedRowContext", oDraggedRow.getBindingContext("approver"));
-            console.log(" *** end >> onDragStart");
+         //   console.log(" *** end >> onDragStart");
         },
         /**
          * 드래그 도착위치 
          */
         onDragDropTable: function (oEvent) {
-            console.log(" ***  start >> onDragDrop", oEvent);
+          //  console.log(" ***  start >> onDragDrop", oEvent);
             //  var oSwap = this.byId("ApproverTable").getSelectedItems();
             var oDragSession = oEvent.getParameter("dragSession");
             //    console.log(" *** oDragSession" , oDragSession );
@@ -652,9 +657,8 @@ sap.ui.define([
             var approver = this.getView().getModel('approver');
             var item = this.getModel("approver").getProperty(oDraggedRowContext.getPath()); // 내가 선택한 아이템 
 
-            console.log("dropPosition >>>> ", dropPosition);
-            console.log("item >>>> ", item);
-
+          //  console.log("dropPosition >>>> ", dropPosition);
+          //  console.log("item >>>> ", item);
 
             var sequence = 0;
             for (var i = 0; i < approver.getData().Approvers.length; i++) {
@@ -685,15 +689,15 @@ sap.ui.define([
 
             // 시퀀스 순서 정렬 
             this.setOrderByApproval();
-            console.log(" ***  end >> onDragDrop");
+         //   console.log(" ***  end >> onDragDrop");
         },
         onListMainTableUpdateFinished: function (oEvent) {
             var item = this.byId("ApproverTable").getSelectedItems();
-            console.log("//// onListMainTableUpdateFinished", oEvent);
+          //  console.log("//// onListMainTableUpdateFinished", oEvent);
 
         },
         onApproverAdd : function (oParam){
-             console.log("//// onApproverAdd", oParam);
+          //   console.log("//// onApproverAdd", oParam);
             var approver = this.getView().getModel('approver');
              approver.addRecord({
                 "tenant_id": this.tenant_id,
@@ -707,15 +711,10 @@ sap.ui.define([
             this.setOrderByApproval();
             this.setSelectedApproval(String(Number(oParam)+1));
         },
-        onItemApprovalPress : function (oEvent) {
+        onItemApprovalPress : function (oEvent) { // 테이블의 row 클릭
 
-         var sPath = oEvent.getSource().getBindingContext("approver").getPath(),
-            oRecord = this.getModel("approver").getProperty(sPath);
-
-            //  console.log("//// onApproverItemPress", oRecord);
-            // console.log("//// onApproverItemPress oEvent", oEvent);
-            // console.log("//// onApproverItemPress sPath", sPath);
-        
+         var sPath = oEvent.getSource().getBindingContext("approver").getPath(), 
+            oRecord = this.getModel("approver").getProperty(sPath);  // 해당 테이블의 path를 감지하여 editing 가능하게 하기 
            this.setSelectedApproval(String(oRecord.approve_sequence));   
         },
         // 삭제 
@@ -742,10 +741,10 @@ sap.ui.define([
                      approver.getData().Approvers[i].selRow = false;
                   }
             }
-            console.log(" setSelectedApproval " , approver);
+            // console.log(" setSelectedApproval " , approver);
             this.getModel("approver").refresh(true);
-        } ,
-
+        } , 
+        // 돋보기 클릭시 해당 row 에 데이터를 넣어야 하므로 row 계산 
         getApprovalSeletedRow : function () {
             var approver = this.getModel("approver");
             var row = 0;
@@ -770,12 +769,13 @@ sap.ui.define([
         onSuggest: function (event) {
             var sValue = event.getParameter("suggestValue"),
                 aFilters = [];
-            console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
+            // console.log("sValue>>> ", sValue, "this.oSF>>", this.oSF);
         },
 
         /**
          * @description employee 팝업 열기 (돋보기 버튼 클릭시)
          */
+        /* 
         handleEmployeeSelectDialogPress: function (oEvent) { 
 
             var row = this.getApprovalSeletedRow();
@@ -806,11 +806,11 @@ sap.ui.define([
                     that.byId("btnEmployeeSrch").firePress();
                 });
             }
-        },
+        }, */ 
         /**
          * @description employee 팝업에서 search 버튼 누르기 
          */
-        onEmployeeSearch: function () {
+     /*   onEmployeeSearch: function () {
 
             var aSearchFilters = [];
             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
@@ -834,11 +834,12 @@ sap.ui.define([
 
            // console.log(" oEmployee ", this.getModel('oEmployee'));
 
-        },
+        }, */ 
 
         /**
          * @description employee 팝업에서 apply 버튼 누르기 
          */
+        /* 
         onEmploySelectionApply: function () {
             var oTable = this.byId("employeeSelectTable");
             var aItems = oTable.getSelectedItems();
@@ -851,10 +852,11 @@ sap.ui.define([
                this._setApprvalItemSetting( obj.oData ); 
             }.bind(this));
             this.onExitEmployee();
-        },
+        }, */ 
         /**
          * @description employee 팝업 닫기 
          */
+        /* 
         onExitEmployee: function () {
             if (this._oDialog) {
                 this._oDialog.then(function (oDialog) {
@@ -863,7 +865,7 @@ sap.ui.define([
                 });
                 this._oDialog = undefined;
             }
-        },
+        }, 
         _setApprvalItemSetting : function(obj){
       //  console.log("_setApprvalItemSetting  " , obj);
             var row = this.getApprovalSeletedRow();
@@ -875,7 +877,7 @@ sap.ui.define([
                   }
             }
              this.getModel("approver").refresh(true);
-        },
+        }, */ 
         /**
          * today
          * @private
@@ -887,7 +889,7 @@ sap.ui.define([
             var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
             var year = date_ob.getFullYear();
 
-            console.log(year + "-" + month + "-" + date);
+            // console.log(year + "-" + month + "-" + date);
             return year + "" + month + "" + date;
         },
 

@@ -218,7 +218,39 @@ BEGIN
                                                     FROM   :I_MGR
                                                     WHERE  TRANSACTION_CODE = 'D')
         ;
-	   
+
+        INSERT INTO SP_SE_OPERATION_UNIT_MANAGER
+            (TENANT_ID
+            ,COMPANY_CODE
+            ,ORG_TYPE_CODE
+            ,ORG_CODE
+            ,EVALUATION_OPERATION_UNIT_CODE
+            ,EVALUATION_OP_UNT_PERSON_EMPNO
+            ,EVALUATION_EXECUTE_ROLE_CODE
+            ,LOCAL_CREATE_DTM
+            ,LOCAL_UPDATE_DTM
+            ,CREATE_USER_ID
+            ,UPDATE_USER_ID
+            ,SYSTEM_CREATE_DTM
+            ,SYSTEM_UPDATE_DTM)
+        SELECT TENANT_ID
+              ,COMPANY_CODE
+              ,ORG_TYPE_CODE
+              ,ORG_CODE
+              ,EVALUATION_OPERATION_UNIT_CODE
+              ,EVALUATION_OP_UNT_PERSON_EMPNO
+              ,EVALUATION_EXECUTE_ROLE_CODE
+              ,NOW()
+              ,NOW()
+              ,:I_USER_ID
+              ,:I_USER_ID
+              ,NOW()
+              ,NOW()
+        FROM   :I_MGR 
+        WHERE  TRANSACTION_CODE = 'I'
+        ;
+
+        
         MERGE INTO SP_SE_OPERATION_UNIT_MANAGER AS MGR
         USING :I_MGR AS IMGR
         ON    MGR.TENANT_ID = IMGR.TENANT_ID
@@ -227,41 +259,15 @@ BEGIN
         AND   MGR.ORG_CODE = IMGR.ORG_CODE
         AND   MGR.EVALUATION_OPERATION_UNIT_CODE = IMGR.EVALUATION_OPERATION_UNIT_CODE
         AND   MGR.EVALUATION_OP_UNT_PERSON_EMPNO = IMGR.EVALUATION_OP_UNT_PERSON_EMPNO
-        AND   IMGR.TRANSACTION_CODE IN ('I', 'U')
+        AND   IMGR.TRANSACTION_CODE = 'U'
         WHEN MATCHED THEN
             UPDATE
             SET    MGR.EVALUATION_EXECUTE_ROLE_CODE = IMGR.EVALUATION_EXECUTE_ROLE_CODE
                   ,MGR.LOCAL_UPDATE_DTM = NOW()
                   ,MGR.UPDATE_USER_ID = :I_USER_ID
                   ,MGR.SYSTEM_UPDATE_DTM = NOW()
-        WHEN NOT MATCHED THEN
-            INSERT (TENANT_ID
-                   ,COMPANY_CODE
-                   ,ORG_TYPE_CODE
-                   ,ORG_CODE
-                   ,EVALUATION_OPERATION_UNIT_CODE
-                   ,EVALUATION_OP_UNT_PERSON_EMPNO
-                   ,EVALUATION_EXECUTE_ROLE_CODE
-                   ,LOCAL_CREATE_DTM
-                   ,LOCAL_UPDATE_DTM
-                   ,CREATE_USER_ID
-                   ,UPDATE_USER_ID
-                   ,SYSTEM_CREATE_DTM
-                   ,SYSTEM_UPDATE_DTM)
-            VALUES (IMGR.TENANT_ID
-                   ,IMGR.COMPANY_CODE
-                   ,IMGR.ORG_TYPE_CODE
-                   ,IMGR.ORG_CODE
-                   ,IMGR.EVALUATION_OPERATION_UNIT_CODE
-                   ,IMGR.EVALUATION_OP_UNT_PERSON_EMPNO
-                   ,IMGR.EVALUATION_EXECUTE_ROLE_CODE
-                   ,NOW()
-                   ,NOW()
-                   ,:I_USER_ID
-                   ,:I_USER_ID
-                   ,NOW()
-                   ,NOW())
-        ;
+        
+        ; 
     END;
    
     BEGIN
@@ -285,7 +291,46 @@ BEGIN
                                       FROM   :I_QTT
                                       WHERE  TRANSACTION_CODE = 'D')
         ;
-	   
+
+        INSERT INTO SP_SE_QUANTITATIVE_ITEM
+            (TENANT_ID
+            ,COMPANY_CODE
+            ,ORG_TYPE_CODE
+            ,ORG_CODE
+            ,EVALUATION_OPERATION_UNIT_CODE
+            ,QTTIVE_ITEM_CODE
+            ,QTTIVE_ITEM_NAME
+            ,QTTIVE_ITEM_UOM_CODE
+            ,QTTIVE_ITEM_MEASURE_MODE_CODE
+            ,QTTIVE_ITEM_DESC
+            ,SORT_SEQUENCE
+            ,LOCAL_CREATE_DTM
+            ,LOCAL_UPDATE_DTM
+            ,CREATE_USER_ID
+            ,UPDATE_USER_ID
+            ,SYSTEM_CREATE_DTM
+            ,SYSTEM_UPDATE_DTM)
+        SELECT TENANT_ID
+              ,COMPANY_CODE
+              ,ORG_TYPE_CODE
+              ,ORG_CODE
+              ,EVALUATION_OPERATION_UNIT_CODE
+              ,QTTIVE_ITEM_CODE
+              ,QTTIVE_ITEM_NAME
+              ,QTTIVE_ITEM_UOM_CODE
+              ,QTTIVE_ITEM_MEASURE_MODE_CODE
+              ,QTTIVE_ITEM_DESC
+              ,SORT_SEQUENCE
+              ,NOW()
+              ,NOW()
+              ,:I_USER_ID
+              ,:I_USER_ID
+              ,NOW()
+              ,NOW()
+        FROM   :I_QTT
+        WHERE  TRANSACTION_CODE = 'I'
+        ;
+
         MERGE INTO SP_SE_QUANTITATIVE_ITEM AS QTT
         USING :I_QTT AS IQTT
         ON    QTT.TENANT_ID = IQTT.TENANT_ID
@@ -294,7 +339,7 @@ BEGIN
         AND   QTT.ORG_CODE = IQTT.ORG_CODE
         AND   QTT.EVALUATION_OPERATION_UNIT_CODE = IQTT.EVALUATION_OPERATION_UNIT_CODE
         AND   QTT.QTTIVE_ITEM_CODE = IQTT.QTTIVE_ITEM_CODE
-        AND   IQTT.TRANSACTION_CODE IN ('I', 'U')
+        AND   IQTT.TRANSACTION_CODE = 'U'
         WHEN MATCHED THEN
             UPDATE
             SET    QTT.QTTIVE_ITEM_NAME = IQTT.QTTIVE_ITEM_NAME
@@ -306,41 +351,6 @@ BEGIN
                   ,QTT.LOCAL_UPDATE_DTM = NOW()
                   ,QTT.UPDATE_USER_ID = :I_USER_ID
                   ,QTT.SYSTEM_UPDATE_DTM = NOW()
-        WHEN NOT MATCHED THEN
-            INSERT (TENANT_ID
-            	      ,COMPANY_CODE
-            	      ,ORG_TYPE_CODE
-            	      ,ORG_CODE
-            	      ,EVALUATION_OPERATION_UNIT_CODE
-            	      ,QTTIVE_ITEM_CODE
-            	      ,QTTIVE_ITEM_NAME
-            	      ,QTTIVE_ITEM_UOM_CODE
-            	      ,QTTIVE_ITEM_MEASURE_MODE_CODE
-            	      ,QTTIVE_ITEM_DESC
-            	      ,SORT_SEQUENCE
-            	      ,LOCAL_CREATE_DTM
-            	      ,LOCAL_UPDATE_DTM
-            	      ,CREATE_USER_ID
-            	      ,UPDATE_USER_ID
-            	      ,SYSTEM_CREATE_DTM
-            	      ,SYSTEM_UPDATE_DTM)
-            VALUES (IQTT.TENANT_ID
-            	      ,IQTT.COMPANY_CODE
-            	      ,IQTT.ORG_TYPE_CODE
-            	      ,IQTT.ORG_CODE
-            	      ,IQTT.EVALUATION_OPERATION_UNIT_CODE
-            	      ,IQTT.QTTIVE_ITEM_CODE
-            	      ,IQTT.QTTIVE_ITEM_NAME
-            	      ,IQTT.QTTIVE_ITEM_UOM_CODE
-            	      ,IQTT.QTTIVE_ITEM_MEASURE_MODE_CODE
-            	      ,IQTT.QTTIVE_ITEM_DESC
-            	      ,IQTT.SORT_SEQUENCE
-            	      ,NOW()
-            	      ,NOW()
-            	      ,:I_USER_ID
-            	      ,:I_USER_ID
-            	      ,NOW()
-            	      ,NOW())
         ;
     END;
  

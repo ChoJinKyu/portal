@@ -8,7 +8,7 @@ using {sp as negoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 
 // Operating Org	N	( PUR_ORG_TYPE_MAPPING-PROCESS_TYPE_CODE  & ORG_TYPE_CODE )
 // PUR_OPERATION_ORG-ORG_CODE
-// PUR_OPERATION_ORG- ORG_NAME	
+// PUR_OPERATION_ORG- ORG_NAME	 //COMPANY_CODE가 필요하다.
 // Requisition No	N	OP_PU_PR_MST-PR_NUMBER	구매요청번호 - 구매요청번호
 // Submission No	N	CM_APPROVAL_MST - 품의서번호	구매요청번호 - 승인된 품의서번호
 // Part No	N	MM_MATERIAL_MST-MATERIAL_CODE	

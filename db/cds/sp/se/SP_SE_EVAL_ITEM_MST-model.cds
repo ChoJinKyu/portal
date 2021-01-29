@@ -15,7 +15,7 @@ entity Se_Eval_Item_Mst {
       evaluation_article_type_code     : String(30)           @title: '평가항목구분코드' ;	
       evaluation_distrb_scr_type_cd    : String(30)           @title: '평가배점유형코드' ;	
       evaluation_result_input_type_cd  : String(30)           @title: '평가결과입력유형코드' ;	
-      qttive_item_uom_code             : String(3)            @title: '정량항목측정단위코드' ;	
+      qttive_item_uom_code             : String(30)           @title: '정량항목측정단위코드' ;	
       qttive_eval_article_calc_formula : String(1000)         @title: '정량평가항목계산공식' ;	
       evaluation_article_desc          : String(3000)         @title: '평가항목설명' ;	
       evaluation_article_lvl_attr_cd   : String(30)           @title: '평가항목레벨속성코드' ;

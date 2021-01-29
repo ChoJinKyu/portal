@@ -16,12 +16,14 @@ service ActivityStandardDayService {
     view CompanyView as
     select key company_code
     from  PartCategoryActivity.Pd_Part_Category_Activity
+    where tenant_id = 'L2101'
     group by company_code
     ;
 
     view OrgView as
     select key org_code
     from  PartCategoryActivity.Pd_Part_Category_Activity
+    where tenant_id = 'L2101'
     group by org_code 
     ;
-} 
+}

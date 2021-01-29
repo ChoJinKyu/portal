@@ -231,31 +231,31 @@
 								<Text id="b_approval_number" text="{mdItemMaster>approval_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="12em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
 								<Text id="b_model" text="{mdItemMaster>model}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="15em" hAlign="Center">
+						<table:Column width="12em" hAlign="Center">
 							<Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Text id="b_mold_number"  text="{mdItemMaster>mold_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="5em" hAlign="Center">
+						<table:Column width="4em" hAlign="Center">
 							<Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" />
 							<table:template>
-								<Text  id="b_mold_sequence" text="{mdItemMaster>mold_sequence}"/>
+								<Text id="b_mold_sequence" text="{mdItemMaster>mold_sequence}" textAlign="Center"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="12em" hAlign="Center">
+						<table:Column width="10em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
 								<Text text="{mdItemMaster>spec_name}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Select id="b_mold_production_type_code"  
@@ -273,7 +273,7 @@
 								</Select>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
 							<table:template>
 								<Select  id="b_mold_item_type_code"
@@ -291,26 +291,24 @@
 								</Select>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="6em" hAlign="Center">
 							<Label text="{path:'I18N>/BOOK_CURRENCY', formatter:'I18NFormatter'}" />
 							<table:template>
-								<Text id="b_book_currency_code" text="{mdItemMaster>book_currency_code}"/>
+								<Text id="b_book_currency_code" text="{mdItemMaster>book_currency_code}" textAlign="Center"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/BUDGET_AMOUNT', formatter:'I18NFormatter'}" required="true"/>
 							<table:template>
 								<Input id="b_provisional_budget_amount"  required="true" textAlign="Right" editable="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+						<table:Column width="8em" hAlign="Center">
 							<Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" required="true"/> 
                             <!-- Md_Asset > asset_type_code -->
 							<table:template>
-								<Select id="b_asset_type_code" 
-                                        required="true" 
+								<Select required="true" 
                                         editable="{mode>/editFlag}" 
-                                        forceSelection="false"  
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'assetTypeCodeList>/CodeView',
                                                 sorter: { path: 'sort_no'}
@@ -320,7 +318,7 @@
                                
 							</table:template>
 						</table:Column>
-						<table:Column width="15em" hAlign="Center">
+						<table:Column width="40em" hAlign="Center">
 							<Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}"/>
 							<table:template>
 								<Text id="b_family_part_number_1" text="{mdItemMaster>family_part_number_1}"/>

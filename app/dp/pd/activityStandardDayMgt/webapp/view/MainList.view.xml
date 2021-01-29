@@ -54,7 +54,7 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -65,18 +65,14 @@
                                 width="100%"
                                 selectedKey=""
                                 items="{
-                                    path: '/PdOperationOrg',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}    
-                                    ],
-                                    sorter: { path: 'operation_org_code'}
+                                    path: '/OrgView'
                                 }">
                                 <items>
-                                    <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                    <core:Item key="{org_code}" text="{org_code}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -86,7 +82,7 @@
                                 <Input id="searchPCInput" placeholder="Input data" visible ="false"></Input>
                             </HBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -108,14 +104,14 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Activity 명: " labelFor="searchActivity"></Label>
                             <Input id="searchActivity" placeholder="Activity Name"></Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
@@ -202,7 +198,7 @@
                             <Text text="{list>part_project_type_name}" />
                             <Text text="{list>activity_code}" />
                             <Text text="{list>activity_name}" />
-                            <Text text="{list>active_flag}" />
+                            <Text text="{= ${list>active_flag} ? 'Y' : 'N'}" />
                             <Text text="{list>s_grade_standard_days}" />
                             <Text text="{list>a_grade_standard_days}" />
                             <Text text="{list>b_grade_standard_days}" />

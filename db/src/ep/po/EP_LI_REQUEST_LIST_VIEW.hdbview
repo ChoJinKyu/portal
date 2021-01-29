@@ -12,11 +12,12 @@ select
     mst.loi_request_title,
     mst.loi_publish_purpose_desc,
     mst.special_note,
-    (select code_description
-    from   cm_code_dtl
-    where  tenant_id = mst.tenant_id
-    and    group_code = 'EP_LOI_REQUEST_STATUS'
-    and    code = mst.loi_request_status_code) loi_request_status_name,
+    --(select code_description
+    --from   cm_code_dtl
+    --where  tenant_id = mst.tenant_id
+    --and    group_code = 'EP_LOI_REQUEST_STATUS'
+    --and    code = mst.loi_request_status_code) loi_request_status_name,
+    (select cm_get_code_name_func(mst.tenant_id, 'EP_LOI_REQUEST_STATUS', mst.loi_request_status_code, 'KO') from dummy) as loi_request_status_name,
     mst.loi_request_status_code,
     mst.investment_review_flag,
     sub.buyer_empno,

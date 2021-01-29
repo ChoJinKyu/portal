@@ -98,10 +98,16 @@
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
                             <HBox alignItems="Center">
-                                <Label text="{I18N>/APPROVAL_TITLE}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" required="true"/>
-                                <Input value="{viewModel>/PrMst/pr_header_text}" width="50em" placeholder="필수" 
-                                    required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}" 
-                                    visible="true" />
+                                <Label text="{I18N>/APPROVAL_TITLE}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}"/>
+                                <Input width="50em" placeholder="필수" 
+                                    value="{
+                                        path: 'viewModel>/PrMst/pr_header_text',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 200
+                                        }
+                                    }"
+                                    required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}"/>
                             </HBox>
                             <HBox alignItems="Center">
                                 <Label text="{I18N>/APPROVAL_CONTENTS}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" />
@@ -117,7 +123,8 @@
                                     value="{viewModel>/PrMst/approval_contents}">
                                 </richtexteditor:RichTextEditor>
                             </HBox>                            
-                        </layout:VerticalLayout> 						
+                        </layout:VerticalLayout> 
+                        <!-- <layout:VerticalLayout id="approvalContentsTextEditor" class="sapUiContentPadding" width="100%"></layout:VerticalLayout> -->						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -146,49 +153,52 @@
                             </table:extension>          
 
                             <table:columns>
-                                <table:Column id="c_model" width="5em" hAlign="Center">
+                                <table:Column width="5em" hAlign="Center">
                                     <Label text="품목번호"/>
                                     <table:template>
-                                        <Text id="t_model" text="{viewModel>pr_item_number}"/>
+                                        <Text text="{viewModel>pr_item_number}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
-                                    <Label text="조직코드" required="true"/>           
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="{I18N>/ORG_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_CODE/mandatory_column_flag}"/>           
                                     <table:template>
                                         <Input
                                             value="{viewModel>org_code}"
                                             showValueHelp="true"
-                                            valueHelpRequest=".onOpenOrgcodeDialog" />
+                                            valueHelpRequest=".onOpenOrgcodeDialog" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}" >
-                                    <Label text="자재코드" required="true"/>           
+                                    <Label text="자재코드" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/mandatory_column_flag}"/>           
                                     <table:template>
                                         <Input id="i_material_code"
                                             value="{viewModel>material_code}"
                                             showValueHelp="true"
-                                            valueHelpRequest=".onOpenMaterialDialog" />
+                                            valueHelpRequest=".onOpenMaterialDialog" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_description" width="10em" hAlign="Center">
+                                <table:Column width="15em" hAlign="Center">
                                     <Label text="구매요청 품명" required="true"/>           
                                     <table:template>
-                                        <Input value="{viewModel>pr_desc}"/>
+                                        <Input textAlign="Begin" value="{viewModel>pr_desc}" required="true"/>
                                     </table:template>
                                 </table:Column>       
-                                <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
-                                    <Label text="요청수량" required="true"/>
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="요청수량" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input maxLength="20" value="{viewModel>pr_quantity}"/>
+                                        <Input textAlign="End" value="{viewModel>pr_quantity}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                     
-                                <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
-                                    <Label text="단위" required="true"/>           
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="단위" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>           
                                     <table:template>
                                         <Input maxLength="3" 
                                             value="{viewModel>pr_unit}"
                                             showValueHelp="true" 
-                                            valueHelpRequest=".onOpenUomDialog" />
+                                            valueHelpRequest=".onOpenUomDialog" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>   
                                 <table:Column id="c_delivery_request_date" width="10em" hAlign="Center">
@@ -206,25 +216,30 @@
                                                 }"/>
                                     </table:template>
                                 </table:Column>                                  
-                                <table:Column id="c_budetAmount" width="10em" hAlign="Center">
+                                <table:Column width="10em" hAlign="Center">
                                     <Label text="가격" required="true"/>           
                                     <table:template>
-                                        <Input maxLength="20" value="{viewModel>estimated_price}"/>
+                                        <Input
+                                            value="{
+                                                    path:'viewModel>estimated_price',
+                                                    type:'sap.ui.model.type.Currency'
+                                                    }"
+                                            textAlign="End"/>
                                     </table:template>
                                 </table:Column>                               
-                                <table:Column id="c_currency" width="10em" hAlign="Center">
+                                <table:Column  width="10em" hAlign="Center">
                                     <Label text="통화" required="true" labelFor="i_currency"/>           
                                     <table:template>
                                         <Input id="i_currency" value="{viewModel>currency_code}"/>
                                     </table:template>
                                 </table:Column>                                 
-                                <table:Column id="c_price_unit" width="10em" hAlign="Center">
+                                <table:Column width="10em" hAlign="Center">
                                     <Label text="가격단위" required="true" labelFor="i_price_unit"/>           
                                     <table:template>
-                                        <Input id="i_price_unit" value="{viewModel>price_unit}"/>
+                                        <Input textAlign="End" value="{viewModel>price_unit}"/>
                                     </table:template>
                                 </table:Column>                                   
-                                <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
+                                <table:Column width="10em" hAlign="Center">
                                     <Label text="구매담당자"/>           
                                     <table:template>
                                         <Input
@@ -251,7 +266,7 @@
                                         <Input value="{viewModel>sloc_code}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
+                                <table:Column width="10em" hAlign="Center">
                                     <Label text="비고"/>
                                     <table:template>
                                         <Input maxLength="2000" value="{viewModel>remark}" />
@@ -268,11 +283,15 @@
                                     <table:template>
                                         <Input value="{viewModel>cctr_code}" />
                                     </table:template>
-                                </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/display_column_flag}">
-                                    <Label text="WBS{I18N>/CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
+                                </table:Column>                                                                 
+                                <table:Column width="13em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/display_column_flag}">
+                                    <Label text="{I18N>/WBS_CODE}"/>           
                                     <table:template>
-                                        <Input value="{viewModel>wbs_code}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
+                                        <Input value="{viewModel>wbs_code}"
+                                            textAlign="Begin"
+                                            showValueHelp="true"
+                                            valueHelpRequest=".onOpenSearchWbsDialog"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ASSET_NUMBER/display_column_flag}">
@@ -289,7 +308,7 @@
                                 </table:Column>
                             </table:columns>
                           </table:Table>
-                       
+
                         <!-- // -->
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -430,10 +449,9 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelButtonPress" />
-				<!-- <Button type="Transparent" text="Delete" press=".onPageDeleteButtonPress" /> -->
-				<Button type="Emphasized"  text="Save" press=".onPageSaveButtonPress"/>
+				<Button type="Transparent" text="Draft" press=".onDraftButtonPress" />
+				<Button type="Transparent" text="Cancel" press=".onCancelButtonPress" />
+				<Button type="Emphasized"  text="Save" press=".onSaveButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

@@ -1,0 +1,56 @@
+PROCEDURE SP_VI_BASE_PRICE_APRL_DELETE_PROC (IN I_MASTER SP_VI_BASE_PRICE_APRL_MST_TYPE
+                                            ,OUT O_MSG SP_VI_BASE_PRICE_APRL_OUT_TYPE)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+/**************************************************************************
+Scrum          : SP/VI/품의서 삭제
+Procedure Name : SP_VI_BASE_PRICE_APRL_DELETE_PROC
+Creator        : 유남열
+Description    : 신규/변경 양산VI 품의서 등록
+History        : 2021-01-22 initial creation
+***************************************************************************/
+AS
+BEGIN
+    DECLARE v_Record_Cnt INT := 0;
+
+    -- 10. 메탈금액정보 삭제 : 빈 테이블(옵션 정보)일 수 있으므로 데이터가 있는지 체크
+    DELETE FROM SP_VI_BASE_PRICE_APRL_DTL
+    WHERE (TENANT_ID, APPROVAL_NUMBER) =  (
+            SELECT TENANT_ID, APPROVAL_NUMBER FROM :I_MASTER
+        );
+ 
+    -- 20. 자재코드 삭제
+    DELETE FROM SP_VI_BASE_PRICE_APRL_ITEM
+    WHERE (TENANT_ID, APPROVAL_NUMBER) =  (
+            SELECT TENANT_ID, APPROVAL_NUMBER FROM :I_MASTER
+        );
+		
+	  -- 30. 양산가유형 삭제
+    DELETE FROM SP_VI_BASE_PRICE_APRL_TYPE
+    WHERE (TENANT_ID, APPROVAL_NUMBER) =  (
+            SELECT TENANT_ID, APPROVAL_NUMBER FROM :I_MASTER
+        );	
+
+    -- 40. 품의서 참조자 삭제 : 빈 테이블(옵션 정보)일 수 있으므로 데이터가 있는지 체크
+    DELETE FROM CM_REFERER
+    WHERE (TENANT_ID, APPROVAL_NUMBER) =  (
+            SELECT TENANT_ID, APPROVAL_NUMBER FROM :I_MASTER
+        );
+
+    -- 50. 품의서 승인자 삭제
+    DELETE FROM CM_APPROVER
+    WHERE (TENANT_ID, APPROVAL_NUMBER) =  (
+            SELECT TENANT_ID, APPROVAL_NUMBER FROM :I_MASTER
+        );
+
+      -- 60. 품의서 마스터(공통) 삭제
+    DELETE FROM CM_APPROVAL_MST 
+    WHERE (TENANT_ID, APPROVAL_NUMBER) =  (
+            SELECT TENANT_ID, APPROVAL_NUMBER FROM :I_MASTER
+        );
+
+    O_MSG = SELECT '200' RETURN_CODE, 'Success' RETURN_MSG, '' RETURN_PARAM FROM DUMMY;
+    
+END;
+
+

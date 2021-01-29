@@ -11,7 +11,9 @@ sap.ui.define([
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, Filter, Sorter, MessageBox, Multilingual, ListItem, SegmentedButtonItem, CalculationBuilderVariable) {
+    function ( Controller, Filter, Sorter, MessageBox, 
+        Multilingual, ListItem, SegmentedButtonItem, 
+        CalculationBuilderVariable ) {
         "use strict";
         
 		return Controller.extend("sp.se.evaluationItemMngt.controller.Detail", {
@@ -122,15 +124,20 @@ sap.ui.define([
             }
 
             , _onPatternMatched: function (e) {
-                var oArgs, oComponent, oViewModel, oHeader;
+                var oArgs, oComponent, oViewModel, oHeader,
+                    oView, aControls;
 
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
                 oHeader = oViewModel.getProperty("/Detail/Header");
+                oView = this.getView();
 
                 if( oArgs.new === "Y" ){
                     oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");
+                    aControls = oView.getControlsByFieldGroupId("newRequired");
+                    this._clearValueState(aControls);
+
                 }else{
                     oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
                     oViewModel.setProperty("/App/EditMode", false);
@@ -141,8 +148,10 @@ sap.ui.define([
                 if(!oHeader){
                     return;
                 }
-
-                this.byId("calculationBuilder").bindAggregation("variables",{
+                
+                var oCalculationBuilder;
+                oCalculationBuilder = this.byId("calculationBuilder");
+                oCalculationBuilder.bindAggregation("variables",{
                     path : "/QttiveItemCode",
                     template : new CalculationBuilderVariable({ key : "{qttive_item_code}", label : "{qttive_item_name}" }),
                     filters : [
@@ -218,47 +227,87 @@ sap.ui.define([
                 oRowData = oViewModel.getProperty(oBindContxtPath);
                 bSeletFlg = oEvent.getParameter("selected");
 
-                if(oRowData.crudFlg === "D" || oRowData.crudFlg === "C"){
+                if(oRowData.crudFlg === "D"){
+                    return;
+                }else if(oRowData.crudFlg === "C"){
+                    oRowData.rowEditable = bSeletFlg;
+                    oViewModel.setProperty(oBindContxtPath, oRowData);
                     return;
                 }
 
                 oRowData.rowEditable = bSeletFlg;
                 oRowData.crudFlg = "U";
+                oRowData.transaction_code = "U";
 
                 oViewModel.setProperty(oBindContxtPath, oRowData);
             }
 
             , onPressItemDelete : function(){
-                var oTable, oView, oViewModel, aSelectedItems;
+                var oTable, oView, oViewModel, aSelectedItems, aContxtPath, aScaleListData;
                 
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 oTable = this.byId("tblEvalItemScle");
+                aScaleListData = oViewModel.getProperty("/Detail/Item");
                 aSelectedItems = oTable.getSelectedItems();
+                aContxtPath = oTable.getSelectedContextPaths();
 
-                aSelectedItems.forEach(function(oItem){
-                    var sItemPath, oItemData;
-                    sItemPath = oItem.getBindingContextPath();
-                    oItemData = oViewModel.getProperty(sItemPath);
+                for(var i = aContxtPath.length - 1; i >= 0; i--){
+                    var idx = aContxtPath[i].split("/")[3];
+
+                    if( aScaleListData[idx].crudFlg === "C" ){
+                        aScaleListData.splice(idx, 1);
+                    }else{
+                        aScaleListData[idx].crudFlg = "D";
+                        aScaleListData[idx].transaction_code = "D"
+                        aScaleListData[idx].rowEditable = false;
+                    }
+                }
+
+                oTable.removeSelections();
+                oViewModel.setProperty("/Detail/Item", aScaleListData);
+
+                // aSelectedItems.forEach(function(oItem){
+                //     var sItemPath, oItemData;
+                //     sItemPath = oItem.getBindingContextPath();
+                //     oItemData = oViewModel.getProperty(sItemPath);
                     
-                    oItemData.crudFlg = "D";
+                //     oItemData.crudFlg = "D";
+                //     oItemData.transaction_code = "D"
                     
-                    oViewModel.setProperty(sItemPath, oItemData);
-                })
+                //     oViewModel.setProperty(sItemPath, oItemData);
+                // })
             }
             , onPressItemAdd : function(){
-                var oView, oViewModel, aItems, oNewData;
+                var oView, oViewModel, oHeader, aItems, oNewData, aFields;
                 
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
+                oHeader = oViewModel.getProperty("/Detail/Header");
                 aItems = oViewModel.getProperty("/Detail/Item");
+                aFields = [
+                    "tenant_id",
+                    "company_code",
+                    "org_type_code",
+                    "org_code",
+                    "evaluation_operation_unit_code",
+                    "evaluation_type_code",
+                    "evaluation_article_code",
+                    "option_article_number"
+                ];
+
                 oNewData = {
                     crudFlg : "C",
-                    rowEditable : true
+                    rowEditable : true,
+                    transaction_code : "I"
                 };
+                aFields.forEach(function(sField){
+                    if(oHeader[sField]){
+                        oNewData[sField] = oHeader[sField];
+                    }
+                });
                 
-                aItems.push(oNewData);
-
+                aItems.unshift(oNewData);
                 oViewModel.setProperty("/Detail/Item", aItems);
             }
             , onPressItemCancle : function(){
@@ -283,36 +332,152 @@ sap.ui.define([
                 
                 this.getOwnerComponent().getRouter().navTo("Master");
             }
+            , onPressDelete : function(){
+                var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
+                    oI18NModel;
 
+                oView = this.getView();
+                oI18NModel = oView.getModel("I18N");
+                oViewModel = oView.getModel("viewModel");
+                oArgs = oViewModel.getProperty("/Args");
+                oComponent = this.getOwnerComponent();
+                sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
+
+                if(oArgs.new === "Y"){
+                    return;
+                }
+
+                MessageBox.confirm(oI18NModel.getProperty("/NCM00003"),{
+                    onClose: function (sAction) {
+                        if(sAction === MessageBox.Action.CANCEL){
+                            return;
+                        }
+                        
+                        oSaveData = this._getSaveData("D");
+                        oView.setBusy(true);
+                        $.ajax({
+                            url: sURLPath,
+                            type: "POST",
+                            data: JSON.stringify(oSaveData),
+                            contentType: "application/json",
+                            success: function (data) {
+                                MessageBox.success(oI18NModel.getProperty("/NCM01002"), {
+                                    onClose : function (sAction) {
+                                        oView.setBusy(false);
+                                        oComponent.getRouter().navTo("Master",{
+                                            search : true
+                                        });
+                                    }
+                                });
+                            },
+                            error: function (e) {
+                                var sDetails;
+
+                                sDetails = "";
+                                try{
+                                    sDetails += "<p><strong>" + e.responseJSON.error.code + "</strong></p>\n" +
+                                    "<ul>" +
+                                        "<li>" + e.responseJSON.error.message + "</li>" +
+                                    "</ul>";
+                                }catch(error){
+                                    
+                                }
+
+                                MessageBox.error(e.status + " - " + e.statusText,{
+                                    title: "Error",
+                                    details : sDetails
+                                })
+                                oView.setBusy(false);
+                            }
+                        });
+                    }.bind(this)
+                });
+            }
             , onPressSave : function(){
-                var sURLPath, oSaveData, oView, oViewModel, oArgs;
+                var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
+                    oI18NModel;
 
+                oView = this.getView();
+                oI18NModel = oView.getModel("I18N");
+                oViewModel = oView.getModel("viewModel");
+                oArgs = oViewModel.getProperty("/Args");
+                oComponent = this.getOwnerComponent();
+
+                MessageBox.confirm(oI18NModel.getProperty("/NCM00001"),{
+                    onClose: function (sAction) {
+                        if(sAction === MessageBox.Action.CANCEL){
+                            return;
+                        }
+                        if(!this._checkValidation()){
+                            return;
+                        }
+                        if(oArgs.new === "Y"){
+                            sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/CreateEvalItemSaveProc";
+                        }else{
+                            sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
+                        }
+                        
+                        oSaveData = this._getSaveData("U");
+                        oView.setBusy(true);
+                        $.ajax({
+                            url: sURLPath,
+                            type: "POST",
+                            data: JSON.stringify(oSaveData),
+                            contentType: "application/json",
+                            success: function (data) {
+                                MessageBox.success(oI18NModel.getProperty("/NCM01001"), {
+                                    onClose : function (sAction) {
+                                        oView.setBusy(false);
+                                        oComponent.getRouter().navTo("Master",{
+                                            search : true
+                                        });
+                                    }
+                                });
+                            },
+                            error: function (e) {
+                                var sDetails;
+
+                                sDetails = "";
+                                try{
+                                    sDetails += "<p><strong>" + e.responseJSON.error.code + "</strong></p>\n" +
+                                    "<ul>" +
+                                        "<li>" + e.responseJSON.error.message + "</li>" +
+                                    "</ul>";
+                                }catch(error){
+                                    
+                                }
+
+                                MessageBox.error(e.status + " - " + e.statusText,{
+                                    title: "Error",
+                                    details : sDetails
+                                })
+                                oView.setBusy(false);
+                            }
+                        });
+                    }.bind(this)
+                });
+            }
+            , _checkValidation : function(){
+                var bValid, oView, oViewModel, oArgs, aControls;
+                
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 oArgs = oViewModel.getProperty("/Args");
+                bValid = false;
 
                 if(oArgs.new === "Y"){
-                    sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/CreateEvalItemSaveProc";
+                    aControls = oView.getControlsByFieldGroupId("newRequired");
+                    bValid = this._isValidControl(aControls);
                 }else{
-                    sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
+                    aControls = oView.getControlsByFieldGroupId("detailRequired");
+                    bValid = this._isValidControl(aControls);
                 }
 
-                oSaveData = this._getSaveData();
 
-                $.ajax({
-                    url: sURLPath,
-                    type: "POST",
-                    data: JSON.stringify(oSaveData),
-                    contentType: "application/json",
-                    success: function (data) {
 
-                    },
-                    error: function (e) {
-
-                    }
-                });
+                return bValid;
             }
-            , _getSaveData : function(){
+            , _getSaveData : function(sTransactionCode){
                 var oSaveData, oUserInfo, oView, oViewModel,
                     aItemFields, aScleFields, oHeader, oItemType,
                     sHeadField, aScleItem, oNewHeader, sLevel, oArgs;
@@ -381,13 +546,16 @@ sap.ui.define([
 
                 for(sHeadField in oHeader){
                     if(
-                        oHeader.hasOwnProperty(sHeadField) && aItemFields.indexOf(sHeadField) > -1
+                        oHeader.hasOwnProperty(sHeadField) && 
+                        aItemFields.indexOf(sHeadField) > -1 && 
+                        oHeader[sHeadField]
                     ){
                         oItemType[sHeadField] = oHeader[sHeadField];
                     }
                 }
 
                 oItemType.sort_sequence = parseInt(oItemType.sort_sequence) || null;
+                oItemType.transaction_code = sTransactionCode;
 
                 oSaveData.ItemType.push(oItemType);
 
@@ -396,9 +564,15 @@ sap.ui.define([
                     var oNewRowData, sScleField;
                     oNewRowData = {};
 
+                    if(!oRowData.transaction_code){
+                        return;
+                    }
+
                     for(sScleField in oRowData){
                         if(
-                            oRowData.hasOwnProperty(sScleField) && aScleFields.indexOf(sScleField) > -1
+                            oRowData.hasOwnProperty(sScleField) && 
+                            aScleFields.indexOf(sScleField) > -1 && 
+                            oRowData[sScleField]
                         ){
                             oNewRowData[sScleField] = oRowData[sScleField];
                         }
@@ -438,7 +612,7 @@ sap.ui.define([
                                 oTreeTable = oMasterPage.byId("treeTable");
                                 aSelectedIdices = oTreeTable.getSelectedIndices();
                                 oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
-                                oRowData = oContext.getObject();
+                                oRowData = this._deepCopy( oContext.getObject() );
         
                                 oViewModel.setProperty("/Detail/Header", oRowData);
                             }

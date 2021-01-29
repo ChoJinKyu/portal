@@ -63,7 +63,7 @@ xmlns:flex="sap.f"
                                                             width="100%" 
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>/evaluation_operation_unit_code}"
-                                                            editable="{=${DetailView>/isEditMode}}"
+                                                            editable="{=${DetailView>/isCreateMode}}"
                                                             />
                                                             
                                                     <!-- 배점설계여부 -->
@@ -203,8 +203,77 @@ xmlns:flex="sap.f"
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>                                           
+                                        <Table id="managerTable"
+                                        inset="false"
+                                        class="sapFDynamicPageAlignContent"
+                                        width="auto"
+                                        items="{
+                                            path: 'DetailView>/manager'
+                                            }"
+                                        mode="MultiSelect"    
+                                            >
+                                            <headerToolbar>
+                                                <Toolbar>
+                                                    <ToolbarSpacer/>
+                                                    <HBox>
+                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onManagerAdd" enabled="{DetailView>/isEditMode}" />
+                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onManagerDelete" enabled="{DetailView>/isEditMode}"/>
+                                                    </HBox>
+                                                </Toolbar>
+                                            </headerToolbar>
+                                            <columns>
+                                                <Column width="3em">
+                                                    <core:Icon src="sap-icon://edit"/>
+                                                </Column>
+                                                <Column>
+                                                   <Text text="{I18N>/ROLE}"/>
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/PERSON}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/DEPARTMENT}" />
+                                                </Column>
+                                            </columns>
+                                            <items>
+                                                <ColumnListItem>
+                                                
+                                                    <cells>
+                                                        <core:Icon 
+                                                            src="{=
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : ${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
+                                                            }"
+                                                            visible="{=
+                                                                !${DetailView>crudFlg}
+                                                            }"
+                                                        />
+                                                        <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
+                                                            path: 'common>/Code',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_EVAL_EXECUTE_ROLE_CODE'}
+                                                            ]
+                                                            }"  enabled="{DetailView>/isEditMode}" required="true">
+                                                            <items>
+                                                                <core:Item key="{common>code}" text="{common>code_name}" />
+                                                            </items>
+                                                        </ComboBox>
+                                                        <Input 
+                                                                id="inputWithEmployeeValueHelp"
+                                                                width="100%"
+                                                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
+                                                                value="{DetailView>user_local_name}"
+                                                                enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" 
                                                                 
-                                        <table:Table                                             
+                                                                required="true"
+                                                                >
+                                                            </Input>
+                                                          <Text text="{DetailView>department_local_name}"  required="true" />                      
+                                                    </cells>
+                                                </ColumnListItem>
+                                            </items>
+                                        </Table>                        
+                                        <!-- <table:Table                                             
                                         id="managerTable"
                                         rows="{path: 'DetailView>/manager'}" 
                                         visibleRowCount="4"  
@@ -220,13 +289,25 @@ xmlns:flex="sap.f"
                                             </table:extension>
 
                                             <table:columns>
+
+                                                <table:Column hAlign="Center" width="3rem">
+                                                    <core:Icon src="sap-icon://edit"/>
+                                                    <table:template>
+                                                        <core:Icon 
+                                                            src="{=
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : ${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
+                                                            }"
+                                                            visible="{=
+                                                                !${DetailView>crudFlg}
+                                                            }"
+                                                        />
+                                                    </table:template>
+                                                </table:Column>   
                                           
                                                 <table:Column hAlign="Center">
                                                     <Label text="{I18N>/ROLE}" textAlign="Center" width="100%" required="true" />
                                                     <table:template>
-                                                        
-
-                                                            <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
+                                                        <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
                                                             path: 'common>/Code',
                                                             filters: [
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -249,7 +330,9 @@ xmlns:flex="sap.f"
                                                             width="100%"
                                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
                                                             value="{DetailView>user_local_name}"
-                                                            enabled="{DetailView>/isEditMode}" required="true"
+                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" 
+                                                            
+                                                            required="true"
                                                             >
                                                         </Input>
 
@@ -259,14 +342,12 @@ xmlns:flex="sap.f"
                                                 <table:Column hAlign="Center">
                                                     <Label text="{I18N>/DEPARTMENT}"/>
                                                     <table:template>
-                                                        <Text text="{DetailView>department_local_name}" 
-                                                        editable="{= ${list>_row_state_} === 'C' }" required="true"
-                                                      />  
+                                                        <Text text="{DetailView>department_local_name}"  required="true" />  
                                                     </table:template>
                                                 </table:Column>     
 
                                             </table:columns>
-                                        </table:Table>      
+                                        </table:Table>       -->
                                                 
 
                                     </uxap:blocks>
@@ -296,9 +377,11 @@ xmlns:flex="sap.f"
                                                         <Button 
                                                             type="Transparent" 
                                                             text="{I18N>/NEW}" 
-                                                            press=".onAddDetailDetailPress"
-                                                            enabled="{DetailView>/isEditMode}"
+                                                            press=".onCreateTwo"
+                                                            visible="{= !${DetailView>/isCreateMode}}"
+                                                            
                                                             />
+                                                            <!-- enabled="{DetailView>/isEditMode}" -->
                                                     </HBox>
                                                 </Toolbar>
                                             </headerToolbar>
@@ -344,7 +427,111 @@ xmlns:flex="sap.f"
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
-                                        <table:Table
+
+                                        <Table id="quantitativeTable"
+                                        inset="false"
+                                        class="sapFDynamicPageAlignContent"
+                                        width="auto"
+                                        items="{
+                                            path: 'DetailView>/quantitative'
+                                            }"
+                                        mode="MultiSelect"    
+                                            >
+                                            <headerToolbar>
+                                                <Toolbar>
+                                                    <ToolbarSpacer/>
+                                                    <HBox>
+                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onQunAdd" enabled="{=${DetailView>/isEditMode}}"/>
+                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onQunDelete" enabled="{=${DetailView>/isEditMode}}"/>
+                                                    </HBox>
+                                                </Toolbar>
+                                            </headerToolbar>
+                                            <columns>
+                                                <Column width="3em">
+                                                    <core:Icon src="sap-icon://edit"/>
+                                                </Column>
+                                                <Column>
+                                                   <Text text="{I18N>/QUANTITATIVE_ITEM_CODE}"/>
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/QUANTITATIVE_ITEM_NAME}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/UNIT}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/MEASURE_MODE}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/QUANTITATIVE_ITEM_DESC}" />
+                                                </Column>
+                                                <Column>
+                                                    <Text text="{I18N>/SORT_NUMBER}" />
+                                                </Column>
+                                            </columns>
+                                            <items>
+                                                <ColumnListItem>                                                
+                                                    <cells>
+                                                        <core:Icon 
+                                                            src="{=
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : ${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
+                                                            }"
+                                                            visible="{=
+                                                                !${DetailView>crudFlg}
+                                                            }"
+                                                        />
+                                                        <Input   
+                                                            width="100%" 
+                                                            placeholder="OPERATION_UNIT_CODE"
+                                                            value="{DetailView>qttive_item_code}"
+                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
+                                                            />
+                                                        <Input   
+                                                            width="100%" 
+                                                            placeholder="QUANTITATIVE_ITEM_NAME"
+                                                            value="{DetailView>qttive_item_name}"
+                                                            editable="{=${DetailView>/isEditMode}}"
+                                                            />
+                                                        <ComboBox selectedKey="{DetailView>qttive_item_uom_code}" width="100%" items="{
+                                                            path: 'common>/Code',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_QTTIVE_UOM_CODE'}
+                                                            ]
+                                                            }" editable="{DetailView>/isEditMode}" required="true">
+                                                            <items>
+                                                                <core:Item key="{common>code}" text="{common>code_name}" />
+                                                            </items>
+                                                        </ComboBox>  
+                                                        <ComboBox selectedKey="{DetailView>qttive_item_measure_mode_code}" width="100%" items="{
+                                                                path: 'common>/Code',
+                                                                filters: [
+                                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                    {path: 'group_code', operator: 'EQ', value1: 'SP_SE_MEASURE_MODE_CODE'}
+                                                                ]
+                                                                }" editable="{DetailView>/isEditMode}" required="true">
+                                                            <items>
+                                                                <core:Item key="{common>code}" text="{common>code_name}" />
+                                                            </items>
+                                                        </ComboBox> 
+                                                        <Input   
+                                                            width="100%" 
+                                                            placeholder="QUANTITATIVE_ITEM_DESC"
+                                                            value="{DetailView>qttive_item_desc}"
+                                                            editable="{DetailView>/isEditMode}"
+                                                            />     
+                                                        <Input   
+                                                            width="100%" 
+                                                            placeholder="SORT_NUMBER"
+                                                            value="{DetailView>sort_sequence}"
+                                                            editable="{DetailView>/isEditMode}"
+                                                        />             
+                                                    </cells>
+                                                </ColumnListItem>
+                                            </items>
+                                        </Table>            
+
+                                        <!-- <table:Table
                                         id="quantitativeTable"
                                         rows="{path: 'DetailView>/quantitative'}" 
                                         visibleRowCount="8"  
@@ -359,6 +546,19 @@ xmlns:flex="sap.f"
                                             </table:extension>
 
                                             <table:columns>
+                                                <table:Column hAlign="Center" width="3rem">
+                                                    <core:Icon src="sap-icon://edit"/>
+                                                    <table:template>
+                                                        <core:Icon 
+                                                            src="{=
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
+                                                            }"
+                                                            visible="{=
+                                                                !!${DetailView>crudFlg}
+                                                            }"
+                                                        />
+                                                    </table:template>
+                                                </table:Column>   
                                                 <table:Column hAlign="Center">
                                                     <Label text="{I18N>/QUANTITATIVE_ITEM_CODE}"/>
                                                     <table:template>
@@ -366,7 +566,7 @@ xmlns:flex="sap.f"
                                                             width="100%" 
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>qttive_item_code}"
-                                                            editable="{=${DetailView>/isEditMode}}"
+                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
                                                             />
                                                     </table:template>
                                                 </table:Column>      
@@ -442,7 +642,9 @@ xmlns:flex="sap.f"
                                                 </table:Column>    
 
                                             </table:columns>
-                                        </table:Table>  
+                                        </table:Table>   -->
+
+
                                     </uxap:blocks>
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>
@@ -452,7 +654,7 @@ xmlns:flex="sap.f"
                     <uxap:footer>
                     <OverflowToolbar>
                         <ToolbarSpacer/>
-                        <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
+                        <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" visible="{=!${DetailView>/isCreateMode}}" />
                         <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
                         <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
                         <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>

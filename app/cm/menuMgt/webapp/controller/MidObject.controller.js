@@ -1,6 +1,6 @@
 sap.ui.define([
   "ext/lib/controller/BaseController",
-  "ext/lib/util/ValidatorUtil",
+  "ext/lib/util/Validator",
   "sap/ui/model/json/JSONModel",
   "ext/lib/model/TransactionManager",
   "ext/lib/model/ManagedModel",
