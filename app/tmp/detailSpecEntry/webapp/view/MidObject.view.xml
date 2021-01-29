@@ -83,6 +83,13 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
+            <uxap:ObjectPageSection titleUppercase="false" title="Sample Grid">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection5" title="Grid">
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
 		</uxap:sections>
 		
 		<uxap:footer>

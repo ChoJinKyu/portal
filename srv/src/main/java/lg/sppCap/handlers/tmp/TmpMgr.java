@@ -14,7 +14,9 @@ import java.util.Map;
 import com.sap.cds.Result;
 import com.sap.cds.Row;
 import com.sap.cds.ql.Select;
+import com.sap.cds.ql.Update;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.CqnUpdate;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
@@ -112,19 +114,43 @@ public class TmpMgr implements EventHandler {
     @On(event = CreateTemplateSampleContext.CDS_NAME)
     public void onCreateTemplateSample(CreateTemplateSampleContext context){
         String tenantId = context.getTenantId();
-        //TO-DO : 템플릿 생성 조건 변경 필요. (ex. 파일 생성 기록이 없는 템플릿 일괄 생성)
-        CqnSelect viewSelect = Select.from(TmpCcConfigView_.class).where(
-            b->b.get("TENANT_ID").eq(tenantId)
-            .and(b.get("SCR_TMPL_ID").eq("SCTM002"))
-            .and(b.get("FORM_TYPE").eq("G"))
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        //File path가 Null 이거나 ""인 대상 추출하여 템플릿 생성
+        CqnSelect templateSelect = Select.from(TmpCcConfig001_.class).where(
+            b->b.get("FORM_FILE_PATH").isNull()
+            .or(b.get("FORM_FILE_PATH").eq(""))
         );
+        Result templates = db.run(templateSelect);
+        String fileName = "";
+        long updateCnt = 0;
 
-        Result result = db.run(viewSelect);
-        List row = result.list();
-        writeFile(row, tenantId,"");
+        params.put("tenantId", tenantId);
+        for(Row template : templates){
+            CqnSelect viewSelect = Select.from(TmpCcConfigView_.class).where(
+                b->b.get("TENANT_ID").eq(tenantId)
+                .and(b.get("SCR_TMPL_ID").eq(template.get("SCR_TMPL_ID")))
+            );
+            params.put("templateId", template.get("SCR_TMPL_ID"));
+            params.put("screenId", template.get("SCR_ID"));
+            params.put("formType", template.get("FORM_TYPE"));
+            params.put("funcType", template.get("FUNC_TYPE"));
 
-        //TO-DO : 템플릿 생성 후 파일 생성 일자 입력 로직 필요
+            Result result = db.run(viewSelect);
+            List<Row> rows = result.list();
+            fileName = writeFile(rows, params);
 
+            if(!"".equals(fileName)){
+                params.put("fileName", fileName);
+                updateCnt = saveTemplateName(params);
+            }
+            if(updateCnt > 0){
+                updateCnt = 0;
+            }else{
+                //TO-DO update가 안되었을 때 예외 처리
+            }
+
+        }        
         context.setResult("OK");
         context.setCompleted();
     }
@@ -152,32 +178,40 @@ public class TmpMgr implements EventHandler {
         context.setCompleted();
     }
 
-    private void writeFile(List<Row> result, String tenantId, String templateId) {
+    private String writeFile(List<Row> result, Map<String, Object> params) {
         // path 변경 필요. 전달 받거나 템플릿 전용 디렉토리 지정
         String path = "/home/user/projects/sppcap/app/tmp/detailSpecEntry/webapp/view/";
         //String content = "<core:FragmentDefinitionxmlns=\"sap.m\"xmlns:l=\"sap.ui.layout\"xmlns:form=\"sap.ui.layout.form\"xmlns:core=\"sap.ui.core\"xmlns:uxap=\"sap.uxap\" ><VBox class=\"sapUiSmallMargin\"><form:SimpleForm editable=\"false\" layout=\"ResponsiveGridLayout\" content=\"{";
         String content ="<core:FragmentDefinition xmlns=\"sap.m\"  xmlns:l=\"sap.ui.layout\" xmlns:form=\"sap.ui.layout.form\" xmlns:core=\"sap.ui.core\" xmlns:uxap=\"sap.uxap\" >";
-        BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()));
+        //BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()));
         
-        content += writeGrid(result, tenantId);
+        if("G".equals(params.get("formType"))){
+            content += writeGrid(result, params);
+        }else if("D".equals(params.get("formType"))){
+            content += writeForm(result, params);
+        }
         content += "\n</core:FragmentDefinition>";
 
-        //TO-DO: 파일명 규칙 구현 필요
-        File file = new File(path + tenantId + "_test_grid.fragment.xml");
+        String fileName = ("S".equals(params.get("funcType")) ? "_Save_":"_Retrieve_") + params.get("screenId") + "_" 
+        + params.get("templateId") + ("G".equals(params.get("formType")) ? "_Grid" : "Detail");
+        fileName += ".fragment.xml";
+
+        File file = new File(path + fileName);
         try {
             FileWriter writer = new FileWriter(file);
             writer.write(content);
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            fileName = "";
         }
 
-        
+        return fileName;
     }
 
-    private String writeForm(List<Row> result, String tenantId){
+    private String writeForm(List<Row> result, Map<String, Object> params){
+        String editable = "S".equals(params.get("funcType")) ? "true" : "false";
         String content ="\n<VBox class=\"sapUiSmallMargin\">\n<form:SimpleForm editable=\"false\" layout=\"ResponsiveGridLayout\">\n<form:content>";
 
         for(Row row : result){
@@ -187,7 +221,7 @@ public class TmpMgr implements EventHandler {
                     content += "\n\t\t<Input value=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + ">/" + ((String)row.get("COL_ID")).toLowerCase() + "}\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + "/>";
                     break;
                 case "RB":
-                    content += "\n\t\t<Switch state=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + ">/" + ((String)row.get("COL_ID")).toLowerCase() + "}\" customTextOn=\"Yes\" customTextOff=\"No\" enabled=\"false\" />";
+                    content += "\n\t\t<Switch state=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + ">/" + ((String)row.get("COL_ID")).toLowerCase() + "}\" customTextOn=\"Yes\" customTextOff=\"No\" enabled=\"" + editable + "\" />";
                     break;
                 case "CB":
                     content += "\n\t\t<Select   width=\"100%\" forceSelection=\"false\""
@@ -195,23 +229,22 @@ public class TmpMgr implements EventHandler {
                                 +"\n\t\t\titems=\"{"
                                 +"\n\t\t\t\t\t\tpath : 'util>/Code',"
                                 +"\n\t\t\t\t\t\tfilters : ["
-                                +"\n\t\t\t\t\t\t\t{path : 'tenant_id', operator : 'EQ', value1 : '" + tenantId + "'},"
+                                +"\n\t\t\t\t\t\t\t{path : 'tenant_id', operator : 'EQ', value1 : '" + params.get("tenantId") + "'},"
                                 +"\n\t\t\t\t\t\t\t{path : 'group_code', operator : 'EQ', value1 : '" + (String)row.get("COMMON_GROUP_CODE")  + "'}"
                                 +"\n\t\t\t\t\t\t]"
                                 +"\n\t\t\t\t\t}\""
-                                +"\n\t\t\teditable=\"true\">"
+                                +"\n\t\t\teditable=\"" + editable + "\">"
                                 +"\n\t\t\t<core:Item key=\"{util>code}\" text=\"{util>code_name}\" />"
                                 +"\n\t\t</Select>";
                     break;
             }
             content += "\n\t\t<layoutData>\n\t\t\t<l:GridData span=\"XL4 L4 M4 S6\" />\n\t\t</layoutData>\n\t</VBox>";
-
         }
         content += "\n</form:content>\n</form:SimpleForm>\n</VBox>";
 
         return content;
     }
-    private String writeGrid(List<Row> result, String tenantId){
+    private String writeGrid(List<Row> result, Map<String, Object> params){
         //FORM_TYPE
         String content = "\n\t<VBox>";
         content += "\n\t\t<Table id=\"mainTable\" ";
@@ -255,6 +288,18 @@ public class TmpMgr implements EventHandler {
         content += "\n\t\t</Table>\n\t</VBox>";
 
         return content;
+    }
 
+    private long saveTemplateName(Map<String, Object> params){
+        Map<String, Object> record = new HashMap<>();
+        record.put("FORM_FILE_PATH", params.get("fileName"));
+
+        //TO-DO: 생성 일자는 어떻게 입력? (SYSDATE)
+        CqnUpdate update = Update.entity(TmpCcConfig001_.class).data(record).where(
+            b->b.get("SCR_TMPL_ID").eq(params.get("templateId"))
+        );
+
+        Result result = db.run(update);
+        return result.rowCount();
     }
 }

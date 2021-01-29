@@ -26,6 +26,7 @@ entity It_Mst_Sales_Division {
     key org_type_code           : String(30) not null @title : '조직유형코드';
     key org_code                : String(10) not null @title : '조직코드';
     key sale_product_group_code : String(2) not null  @title : '판매제품군코드';
+    key language_cd             : String(30) not null @title : '언어코드';
         sale_product_group_name : String(30)          @title : '판매제품군명';
 }
 

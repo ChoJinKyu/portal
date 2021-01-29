@@ -279,7 +279,7 @@ sap.ui.define([
                     idea_progress_status_code
                     업체에서 SUBMIT인 경우 정의 필요
                 */
-                if( flag == "D"){
+                if( flag == "T"){
                     if(!oDetailsModel.isChanged() ) {
                         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                         return;
@@ -288,6 +288,9 @@ sap.ui.define([
                 }else if( flag == "R"){
                     statsCode = "SUBMIT";
                 }
+            }if( flag == "D"){
+                CUType = "D";
+                statsCode = "DELETE";
             }
             if(oData.vi_amount==null){
                 oData.vi_amount = "0";
@@ -342,7 +345,7 @@ sap.ui.define([
 
             var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
             
-            // console.log(inputData);
+            console.log(inputData);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -359,9 +362,11 @@ sap.ui.define([
                                 console.log(rst);
                                 if(rst.return_code =="S"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    if( flag == "D"){
+                                    if( flag == "T"){
                                         v_this.onSearch(rst.return_msg );
                                     }else if( flag == "R"){
+                                        v_this.onPageNavBackButtonPress();
+                                    }else if( flag == "D"){
                                         v_this.onPageNavBackButtonPress();
                                     }
                                 }else{

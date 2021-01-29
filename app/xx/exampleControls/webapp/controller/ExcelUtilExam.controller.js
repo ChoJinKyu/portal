@@ -1,12 +1,11 @@
 sap.ui.define([
     "./Empty.controller",
-    "ext/lib/model/v2/ODataDelegateModel",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "ext/lib/util/ExcelUtil",
     "ext/lib/formatter/Formatter"
-], function (Controller, DelegateModel, JSONModel, MessageBox, MessageToast, ExcelUtil, Formatter) {
+], function (Controller, JSONModel, MessageBox, MessageToast, ExcelUtil, Formatter) {
     "use strict";
 
     return Controller.extend("xx.exampleControls.controller.ExcelUtilExam", {

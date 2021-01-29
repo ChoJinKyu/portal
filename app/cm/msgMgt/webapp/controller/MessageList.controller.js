@@ -189,19 +189,18 @@ sap.ui.define([
 			oTable.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
-                fetchAll: true,
+                fetchOthers: true,
                 filters: aSearchFilters,
                 sorters: [
 					new Sorter("message_code"),
                     new Sorter("language_code", true),
 					new Sorter("chain_code")
 				],
-				success: function(oData, bHasMore){
+				success: function(oData){
 					this.validator.clearValueState(this.byId("mainTable"));
 					this.byId("mainTable").clearSelection();
-                    if(!bHasMore) oTable.setBusy(false);
 				}.bind(this),
-				fetchAllSuccess: function(aData, aErrors){
+				fetchOthersSuccess: function(aData, aErrors){
 					oTable.setBusy(false);
 				}.bind(this)
 			});
