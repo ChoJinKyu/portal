@@ -99,8 +99,7 @@ service MoldItemSelectionService {
                 m.production_supplier_code, 
                 '[' || m.production_supplier_code || '] ' || s2.supplier_local_name as  production_supplier_code_nm : String(240),
                 s2.supplier_local_name as production_supplier_local_name : String(240) ,
-                m.mold_progress_status_code , 
-                stat.prog_status_code ,  
+                m.mold_progress_status_code ,  
                 cast(ps.drawing_agreement_date as Date ) as drawing_consent_plan : Date , 
         		cast(rs.drawing_agreement_date as Date ) as drawing_consent_result : Date ,
         		cast(ps.first_production_date as Date ) as production_plan : Date , 
@@ -108,14 +107,6 @@ service MoldItemSelectionService {
                 cast(ps.production_complete_date as Date ) as completion_plan : Date ,
                 cast(rs.production_complete_date as Date ) as completion_result  : Date 
         from moldMst.Md_Mst m 
-        join (
-            select max(st.prog_status_change_seq) as prog_status_change_seq : Integer 
-                  , st.prog_status_code 
-                  , st.mold_id 
-                  , st.tenant_id 
-            from status.Md_Progress_Status st 
-            group by st.mold_id  , st.prog_status_code , st.tenant_id 
-        ) as stat on m.mold_id = stat.mold_id and m.tenant_id = stat.tenant_id 
         left join orgCodeLng.Org_Code_Lng as cur on m.company_code = cur.org_code 
                                     and cur.group_code = 'DP_MD_LOCAL_CURRENCY' 
                                     and cur.tenant_id = m.tenant_id 
