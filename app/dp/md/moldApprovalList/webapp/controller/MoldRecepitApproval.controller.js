@@ -254,14 +254,7 @@ sap.ui.define([
 
             if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                var len = 0; 
-
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
-                    len = ap.length;
-                }else{
-                    len =  ap.length -1;
-                }
-                for(var i = 0 ; i < len ; i++){
+                for(var i = 0 ; i < ap.length ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
