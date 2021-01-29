@@ -28,6 +28,37 @@
 				"syslog_drain_url": null,
 				"volume_mounts": []
             }
+        ],
+        "xsuaa":[
+            {
+                "name":"sppCap-xsuaa-service",
+                "instance_name":"sppCap-xsuaa-service",
+                "label":"xsuaa",
+                "tags":[
+                    "xsuaa",
+                    "endpoint:https://api.cf.jp10.hana.ondemand.com",
+                    "org:BizTech_Partners_Co.,_Ltd_lg-common-dev",
+                    "space:dev-po"
+                ],
+                "plan":"application",
+                "credentials":{
+                    "apiurl":"https://api.authentication.jp10.hana.ondemand.com",
+                    "clientid":"sb-sppcap!t522",
+                    "clientsecret":"SHbVUhSPtyLFSlItRqJD/yHUK/4=",
+                    "identityzone":"lg-common-dev",
+                    "identityzoneid":"894bc0fb-58c4-46c5-8d40-b3575a416eae",
+                    "sburl":"https://internal-xsuaa.authentication.jp10.hana.ondemand.com",
+                    "service_key_name":"key",
+                    "subaccountid":"894bc0fb-58c4-46c5-8d40-b3575a416eae",
+                    "tenantid":"894bc0fb-58c4-46c5-8d40-b3575a416eae",
+                    "tenantmode":"dedicated",
+                    "uaadomain":"authentication.jp10.hana.ondemand.com",
+                    "url":"https://lg-common-dev.authentication.jp10.hana.ondemand.com",
+                    "verificationkey":"-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1w6Tf4qS1cKeGifZK4zmxUu9Cce8vBVA57KmWqed2WZedpfgJtiTGpfjjgU7uoZMDgsnrtSj8CS7GsrYRUo/DMvI86WBo1Tq9Xo5kljwgfIb22NR9bc1jl5j7N1lshuun/rhM9wnwA4efrOzavlkBC6TwrbgDi0+RjbRK+PeDK4egcDgGv7Neubjarbihln6ubHkFv+ZFvdmJICkvzFyGcSkWHSarLecPnCzAvei1gY3x+kUHsIEb+XONOJjZtQzOxEGNeAWTtN/8Fx0n7jyRMQM8iAVnqlL2+3wBdC72C3s6vGstYfIbAUhf5nB07Lc6zFywOoCkewD8OoigP0YwIDAQAB-----END PUBLIC KEY-----",
+                    "xsappname":"sppcap!t522",
+                    "zoneid":"894bc0fb-58c4-46c5-8d40-b3575a416eae"
+                }
+            }
         ]
     }
 }
