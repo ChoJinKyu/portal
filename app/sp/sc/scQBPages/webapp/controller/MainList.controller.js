@@ -63,7 +63,7 @@ sap.ui.define([
                 //     }
                 //     tempJModel.setData(tempData);
                 //     oView.setModel(tempJModel, "viewModel");
-                //     debugger;
+                //      
                 // });
 
                 
@@ -158,7 +158,7 @@ sap.ui.define([
                 //     type: "GET",
                 //     contentType: "application/json",
                 //     success: function(data){
-                //         // debugger;
+                //         //  
                 //         // var viewM = oView.getModel();
                 //         // // viewM.oData.NegoHeaders = data.value[0];
                 //         console.log("data : ", data.value);
@@ -170,11 +170,11 @@ sap.ui.define([
                 //         // // oView.byId("testTable").setModel("viewModel");
                 //         // oView.getModel("viewModel").updateBindings(true);   
                         
-                //         // debugger;
+                //         //  
                 //         var v_viewHeaderModel = oView.getModel("viewModel").getData();
                 //         v_viewHeaderModel.NegoHeaders = data.value;
                 //         oView.getModel("viewModel").updateBindings(true);
-                //         debugger;
+                //          
                         
                         
 
@@ -182,7 +182,7 @@ sap.ui.define([
                         
 
                 //         // oView.byId("inputNegotiationNo").setValue(data.value[0].nego_document_number);
-                //         // debugger;
+                //         //  
                 //         // var oVerticalLayout = oView.byId('vLayout');
                 //         // oVerticalLayout.bindElement("viewModel>/NegoHeaders");
                 //     },
@@ -353,11 +353,11 @@ sap.ui.define([
                 }
                  this.getView().byId("multiStatus").setSelectedKeys( oSelect );
 
-                debugger;
+                 
             },
             rowSelection: function(e){
                 
-                debugger;
+                 
             },
             onPressManagerAdd: function () {
                 if (!this._isAddPersonalPopup) {
@@ -447,7 +447,7 @@ sap.ui.define([
                 this._ManagerDialog.close();
             },
             onPressManagerDialogSave: function (oEvent) {
-                debugger;
+                 
             
             },
             _onProductMatched: function (e) {

@@ -28,36 +28,88 @@ sap.ui.define([
                 var oId = e.getParameters().id;
                 var oValue = e.getParameters().value;
                 var oInput = this.byId(oId);
+                
                 if(oValue == ""){
-                    alert("숫자만 입력 가능");
+                    // alert("숫자만 입력 가능");
                 }else{
-                    
-
                     var idLength = oId.length - 1;
                     var lastId = oId.substring(idLength);
 
                     var tempScore =  { id:lastId , value: parseInt(oValue) } ;
 
-                    var oInputFlag = this._sumSupplierScore(tempScore);
-                    if(oInputFlag == true){ 
-                        this._SupplierTotalScore = this._SupplierTotalScore + parseInt(oValue);
-                        oInput.setValueState("None");
-                    }else{
-                        oInput.setValueState("Error");
+                    var oState = this._sumSupplierScore();
+                }
+                this._supplierNumInputStateChange(oState);
+                // var inputGroup = this.getView().getControlsByFieldGroupId("SupplierNumG1");
+                // for(var i=0; i< inputGroup.length; i++){
+                //     var cInput = inputGroup[i];
+                //     cInput.setValueState(oState);
+                //     console.log(cInput.sId);
+                // }
+                // oInput.setValueState(oState);
+            },
+            _supplierNumInputStateChange(pState){
+                var inputGroup = this.getView().getControlsByFieldGroupId("SupplierNumG1");
+                for(var i=0; i< inputGroup.length; i++){
+                    var cInput = inputGroup[i];
+                    cInput.setValueState(pState);
+                    console.log(cInput.sId);
+                }
+            },
+            _sumSupplierScore: function(){
+                var flag;
+                var tempScore = this._SupplierScore;
+                var inputGroup = this.getView().getControlsByFieldGroupId("SupplierNumG1");
+                var tempSum = 0;
+                for(var i=0; i< inputGroup.length; i++){
+                    var cInput = inputGroup[i];
+                    var oValue = cInput.getValue();
+                    if(oValue.length > 0){
+                        tempSum = tempSum + parseInt(oValue);
                     }
                     
                 }
 
+                this._SupplierTotalScore = tempSum;
+                
+                console.log("this._SupplierTotalScore =========================== ", this._SupplierTotalScore);
+                console.log("this._SupplierScore =========================== ", this._SupplierScore);
+
+                if(tempSum > 100){
+                    return "Error";
+                }else{
+                    return "None";
+                }
+
+                // 수정 여기까지
+
+                for(var i=0; i<tempScore.length; i++){
+                    if(tempScore[i].id == pScore.id){
+                        var sFlag = true;
+                        tempScore[i].value = pScore.value;
+                        break;
+                    }
+                }
+                if(sFlag != true){
+                    tempScore.push(pScore);
+                }
+                
+                for(var i=0; i<tempScore.length; i++){
+                    tempSum = tempSum + tempScore[i].value;
+                }
+                this._SupplierTotalScore = tempSum;
+                this._SupplierScore = tempScore;
 
                 
-            },
-            _sumSupplierScore: function(pScore){
-                var flag;
-                if(pScore.value + this._SupplierTotalScore > 100){
-                    flag =  false;
+
+                if(tempSum > 100){
+                    flag = false;
                 }else{
-                    flag =  true;
+                    flag = true;
                 }
+
+                console.log("this._SupplierTotalScore =========================== ", this._SupplierTotalScore);
+                console.log("this._SupplierScore =========================== ", this._SupplierScore);
 
                 return flag;
 
@@ -66,6 +118,8 @@ sap.ui.define([
                 
                 var oKey = e.getParameters().selectedItem.getKey();
                 this._supplierNumberModel(oKey);
+                var oState = this._sumSupplierScore();
+                this._supplierNumInputStateChange(oState);
                 
             },
             _supplierNumberModel: function(pKey){
@@ -73,20 +127,43 @@ sap.ui.define([
                 supplierModel.oData.number = parseInt(pKey);
                 supplierModel.refresh(true);
                 this._awardNumberClear(pKey);
+                var oState;
+                if(this._SupplierTotalScore > 100){
+                    oState = "Error";
+                }else{
+                    oState = "None";
+                }
+                this._supplierNumInputStateChange(oState);
             },
             _awardNumberClear: function(pKey){
                 var forName = "inputAwardSup";
                 for( var i=parseInt(pKey)+1; i<6; i++){
                     var fName = forName + String(i);
                     this.byId(fName).setValue("");
+
+                    for(var j=0; j<this._SupplierScore.length; j++){
+                        var supplierScore = this._SupplierScore[j];
+                        if(supplierScore.id == String(i)){
+                            this._SupplierScore.splice(j, 1);
+                            console.log(supplierScore.id, i);
+                        }
+                    }
                 }
+                var tempSum = 0;
+                for(var j=0; j<this._SupplierScore.length; j++){
+                    tempSum = tempSum + this._SupplierScore[j].value;
+                }
+                
+                this._SupplierTotalScore = tempSum;
+                console.log(" this._SupplierScore ======================", this._SupplierScore);
+                console.log("this._SupplierTotalScore =======================", this._SupplierTotalScore);
             },
             selectAwardMethodChange: function(e){
                 var oKey = e.getParameters().selectedItem.getKey();
                 var awardTypeModel = this.getView().getModel("award");
                 awardTypeModel.oData.method = oKey;
                 awardTypeModel.refresh(true);
-                this._awardNumberClear(oKey);
+                this._awardNumberClear(0);
                 this._supplierNumberModel("1");
                 this.byId("selectNumberSupplier").setSelectedKey("1");
             },
@@ -99,14 +176,14 @@ sap.ui.define([
                 var awardMethod = this.byId("selectAwardMethod");
                 awardMethod.setSelectedKey(oKey);
                 awardTypeModel.refresh(true);
-                this._awardNumberClear(oKey);
+                this._awardNumberClear(0);
                 this._supplierNumberModel("1");
                 this.byId("selectNumberSupplier").setSelectedKey("1");
             },
             
 			onInit: function () {
 
-                this._SupplierScore = {};
+                this._SupplierScore = [];
                 
                 this.oRouter = this.getOwnerComponent().getRouter();
                 // this.oRouter.attachBeforeRouteMatched(this._onProductMatched, this);

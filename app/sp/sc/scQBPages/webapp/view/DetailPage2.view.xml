@@ -443,15 +443,15 @@
                                                                 <core:Item key="5" text="5" />
                                                             </Select >
                                                             <Text text="Order Rate ( 1st :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup1"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 1 ? true : false }" liveChange="inputAwardSupChange"/>
+                                                            <Input id="inputAwardSup1"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 1 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="2nd :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup2"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 2 ? true : false }"/>
+                                                            <Input id="inputAwardSup2"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 2 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="3rd :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup3"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 3 ? true : false }"/>
+                                                            <Input id="inputAwardSup3"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 3 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="4th :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup4"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 4 ? true : false }"/>
+                                                            <Input id="inputAwardSup4"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 4 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="5th :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup5"  type="Number" width="4rem" class="sapUiTinyMarginEnd" enabled="{= ${supplierNum>/number} >= 5 ? true : false }"/>
+                                                            <Input id="inputAwardSup5"  type="Number" width="4rem" class="sapUiTinyMarginEnd" enabled="{= ${supplierNum>/number} >= 5 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text=") Unit : %" />
                                                         </HBox> 
                                                         <layoutData>

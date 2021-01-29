@@ -16,6 +16,18 @@
     text-align: right !important;
 }
 
+.AlignL {
+    text-align: left !important;
+}
+
+.AlignR {
+    text-align: right !important;
+}
+
+.sapMObjStatus {
+    margin-bottom: 0rem !important;
+}
+
 .mInput{
     margin: 0 !important;
     padding: 0 !important;
@@ -78,8 +90,7 @@
 } */
 
 .sapUiAFLayoutItem {
-    /* max-width: 100% !important; */
-    
+    max-width: 24rem !important;
 }
 
 
