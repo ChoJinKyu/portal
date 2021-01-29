@@ -25,7 +25,6 @@ sap.ui.define([
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
     'sap/m/SearchField',
-    "ext/lib/util/ValidatorUtil",
     "sap/f/library",
     "ext/lib/util/ControlUtil",
     "ext/dp/util/control/ui/MaterialMasterDialog",
@@ -64,7 +63,6 @@ sap.ui.define([
         syncStyleClass,
         Label,
         SearchField,
-        ValidatorUtil,
         library,
         ControlUtil,
         MaterialMasterDialog,
@@ -352,6 +350,39 @@ sap.ui.define([
                 sSearchObj.tanent_id = "L2100";
                 sSearchObj.vendor_pool_code = oSearch.getValue();
                 this.oSearchVendorPollDialog.open(sSearchObj);
+            },
+
+            vhSupplierCode: function(oEvent) {
+                var vendorPoolCode;
+                var oSearch = this.byId(oEvent.getSource().sId);
+
+                if (!this.oSearchSupplierDialog) {
+                    this.oSearchSupplierDialog = new SupplierDialog({
+                        title: "Choose Supplier",
+                        multiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", "L2100")
+                            ]
+                        }
+                    });
+
+                    this.oSearchSupplierDialog.attachEvent("apply", function (oEvent) {
+                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                        oSearch.setTokens(jQuery.map(oEvent.mParameters.items, function(oToken){
+                            return new Token({
+                                key: oToken.vendor_pool_code,
+                                text: oToken.vendor_pool_local_name,
+                            });
+                        }));
+                    }.bind(this));
+                }
+
+                //searObject : 태넌트아이디, 검색 인풋아이디
+                var sSearchObj = {};
+                sSearchObj.tanent_id = "L2100";
+                sSearchObj.vendor_pool_code = oSearch.getValue();
+                this.oSearchSupplierDialog.open(sSearchObj);
             },
 
             cvtSupplier: function (oEvent) {
