@@ -101,9 +101,7 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="전년도매출액(백만원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{applicationSup>/pyear_sales_amount}"
-                                        type="Number"/>
+                                    <Input type="Number" value="{path: 'applicationSup>/pyear_sales_amount', type: 'sap.ui.model.type.Integer'}" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
@@ -124,9 +122,12 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="신청금액(원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{applicationSup>/funding_appl_amount}"
-                                        type="Number"/>
+                                    <Input 
+                                        type="Number" 
+                                        value="{
+                                            path: 'applicationSup>/funding_appl_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
                                     </layoutData>
@@ -154,7 +155,7 @@
                                                     ]
                                                 }"
 
-                                        selectedKey="A"
+                                        selectedKey="{applicationSup>/repayment_method_code}"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                     </ComboBox>
@@ -310,9 +311,8 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="담보금액(원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{applicationSup>/collateral_amount}"
-                                        type="Number"/>
+                                    <Input type="Number" value="{path: 'applicationSup>/collateral_amount', type: 'sap.ui.model.type.Integer'}" />
+                                    
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>

@@ -103,7 +103,7 @@
                         <headerToolbar>
                             <OverflowToolbar>
                                 <content>
-                                    <Title text="Item Title Name" level="H2"/>
+                                    <!-- <Title text="Item Title Name" level="H2"/> -->
                                     <ToolbarSpacer />
                                     <Button  text="Add" type="Transparent" press=".onNonPriceItemAdd" />
                                     <Button  text="Delete" type="Transparent" press=".onNonPriceItemDelete" />

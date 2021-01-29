@@ -34,7 +34,6 @@ entity Md_Mst_App_Dtl_View {
         receiving_complete_date         : String(8)             @title:'입고완료일자';
         account_code                    : String(30)            @title:'계정코드';
         accounting_department_code      : String(30)            @title:'회계부서코드';
-        acq_department_code             : String(30)            @title:'취득부서코드';
         production_supplier_code        : String(100)           @title:'제작협력사ID';
         remark                          : String(3000)          @title:'비고';
         mold_develope_request_type_code : String(30)            @title:'금형개발요청유형코드';
@@ -66,7 +65,5 @@ entity Md_Mst_App_Dtl_View {
         mold_mfger_code                 : String(10)            @title:'금형공급업체코드';
         mold_developer_empno            : String(255)           @title:'금형개발자사번';
         scrap_date                      : String(8)             @title:'폐기일자';
-        acq_date                        : String(8)             @title:'취득일자';
-        acq_amount                      : Decimal(20,2)         @title:'취득금액';
         use_department_code             : String(30)            @title:'사용부서코드';
 }

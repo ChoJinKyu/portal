@@ -1,5 +1,16 @@
 <core:FragmentDefinition id="fragment_edit" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core">
-	<f:SimpleForm id="simpleform_edit" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+	<f:SimpleForm 
+        id="simpleform_edit" 
+        maxContainerCols="2" 
+        editable="true" 
+        layout="ResponsiveGridLayout" 
+        adjustLabelSpan="false" 
+        labelSpanL="4" 
+        labelSpanM="4" 
+        emptySpanL="0" 
+        emptySpanM="0" 
+        columnsL="2" 
+        columnsM="2">
 		<f:content id="informationPageSectionForm">
 			<VBox>
 				<Label text="{I18N>/TYPE_NAME}" required="true"/>
@@ -7,7 +18,7 @@
 					<core:Item key="{code}" text="{code_name}"/>
 				</ComboBox>
 				<layoutData>
-					<l:GridData span="XL3 L3 M3 S12"/>
+					<l:GridData span="XL3 L4 M4 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
@@ -16,7 +27,7 @@
 					<core:ListItem key="{code}" text="{code_name}"/>
 				</MultiComboBox>
 				<layoutData>
-					<l:GridData span="XL3 L3 M3 S12"/>
+					<l:GridData span="XL3 L4 M4 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
@@ -29,7 +40,7 @@
 					</items>
 				</SegmentedButton>
 				<layoutData>
-					<l:GridData span="XL3 L3 M3 S12"/>
+					<l:GridData span="XL3 L4 M4 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
@@ -54,7 +65,7 @@
 					<core:Item key="{tenant_id}" text="{tenant_name}"/>
 				</ComboBox>
 				<layoutData>
-					<l:GridData span="XL3 L3 M3 S12" linebreak="true"/>
+					<l:GridData span="XL3 L4 M4 S12" linebreak="true"/>
 				</layoutData>
 			</VBox>
 			<VBox>
@@ -74,7 +85,7 @@
 					<core:ListItem key="{company_code}" text="{company_name}"/>
 				</MultiComboBox>
 				<layoutData>
-					<l:GridData span="XL3 L3 M3 S12"/>
+					<l:GridData span="XL3 L4 M4 S12"/>
 				</layoutData>
 			</VBox>
 			<VBox>
@@ -94,7 +105,7 @@
 					<core:ListItem key="{bizunit_code}" text="{bizunit_name}"/>
 				</MultiComboBox>
 				<layoutData>
-					<l:GridData span="XL3 L3 M3 S12"/>
+					<l:GridData span="XL3 L4 M4 S12"/>
 				</layoutData>
 			</VBox>
 		</f:content>

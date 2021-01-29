@@ -2,7 +2,7 @@ sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
-	"sap/ui/core/routing/History",
+    "sap/ui/core/routing/History",
     "ext/lib/formatter/DateFormatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -25,12 +25,12 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
             var oViewTableModel = new JSONModel(
-                {items :[]}
+                { items: [] }
             );
 
             this.setModel(new JSONModel(), "applicationSup");
@@ -38,98 +38,218 @@ sap.ui.define([
             this.setModel(new JSONModel(), "contModel");
 
             this.getView().setModel(oViewTableModel, "localModel");
-            
+
             var oAppSupModel = this.getOwnerComponent().getModel("fundingApp");
 
             this._onComCodeListView(oAppSupModel);
             this._onTransactionDivision(oAppSupModel);
             this.getRouter().getRoute("mainCreateObject").attachPatternMatched(this._onRoutedThisPage, this);
-            
+
         },
 
-        onAfterRendering: function(oEvent){
+        onAfterRendering: function (oEvent) {
             this.getModel("fundingApp");
         },
 
-        onPageNavBackButtonPress : function() {
+        //전화면으로 전환
+        onPageNavBackButtonPress: function () {
             this.getRouter().navTo("mainList", {}, true);
         },
-        
-        onInvestmentDtlAddButtonPress : function() {
-            
+
+        //투자계획 상세 list 추가
+        onInvestmentDtlAddButtonPress: function () {
+
             // var oTable = this.byId("investmentDtl");
             var oModel = this.getModel("applicationSup"),
                 dtlModel = oModel.getProperty("/popUpInvestPlanDtl"),
                 oTableModel = {};
-                // oTableModel = oModel.getProperty("/items");
+            // oTableModel = oModel.getProperty("/items");
 
-            oTableModel={
-                            investment_item_name : "",
-                            investment_item_purchasing_price : "",
-                            investment_item_purchasing_qty : "",
-                            investment_item_purchasing_amt : ""
-                        };
-                
+            oTableModel = {
+                investment_item_name: "",
+                investment_item_purchasing_price: "",
+                investment_item_purchasing_qty: "",
+                investment_item_purchasing_amt: ""
+            };
+
             dtlModel.push(oTableModel);
 
             oModel.setProperty("/popUpInvestPlanDtl", dtlModel);
         },
 
-        onPageSaveButtonPress : function(oEvent) {
+        //신청서 작성
+        onPageSaveButtonPress: function (oEvent) {
 
-            var oModel = this.getModel("fundingApp"),
-                applSavelist = {},
-                procSaveTemp = {
-                },
-                urlPram=this.getModel("contModel").getProperty("/oArgs");
-
+            var procSaveTemp = {},
+                urlPram = this.getModel("contModel").getProperty("/oArgs"),
+                oPramDataModel = this.getModel("applicationSup"),
+                oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel");
 
             procSaveTemp = {
-                // funding_appl_number				: ""
-                funding_notify_number           : urlPram.fundingNotifyNumber 
-                ,supplier_code                   : urlPram.supplierCode
-                ,tenant_id                       : urlPram.tenantId
-                ,company_code                    : "LGEKR" 
-                ,org_type_code                   : "AU" 
-                ,org_code                        : "WWZ" 
-                ,purchasing_department_name      : "에어솔루션구매팀" 
-                ,pyear_sales_amount              : 123000
-                ,main_bank_name                  : "하나은행" 
-                ,funding_appl_amount             : 300000
-                ,funding_hope_yyyymm             : "202104" 
-                ,repayment_method_code           : "A" 
-                ,appl_user_name                  : "" 
-                ,appl_user_tel_number            : "" 
-                ,appl_user_email_address         : "" 
-                ,funding_reason_code             : "1,2,,,," 
-                ,collateral_type_code            : "CT02" 
-                ,collateral_amount               : 0 
-                ,collateral_attch_group_number   : "" 
-                ,funding_step_code               : "" 
-                ,funding_status_code             : "" 
+                funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
+                , funding_notify_number: urlPram.fundingNotifyNumber
+                , supplier_code: urlPram.supplierCode
+                , tenant_id: urlPram.tenantId
+                , company_code: "LGEKR"
+                , org_type_code: "AU"
+                , org_code: oPramDataModel.getProperty("/org_code")
+                , purchasing_department_name: oPramDataModel.getProperty("/purchasing_department_name")
+                , pyear_sales_amount: parseInt(oPramDataModel.getProperty("/pyear_sales_amount"))
+                , main_bank_name: oPramDataModel.getProperty("/main_bank_name")
+                , funding_appl_amount: parseInt(oPramDataModel.getProperty("/funding_appl_amount"))
+                , funding_hope_yyyymm: String(oPramDataModel.getProperty("/funding_hope_yyyymm")).replace("-", "")
+                , repayment_method_code: "A"
+                , appl_user_name: oPramDataModel.getProperty("/appl_user_name")
+                , appl_user_tel_number: oPramDataModel.getProperty("/appl_user_tel_number")
+                , appl_user_email_address: oPramDataModel.getProperty("/appl_user_email_address")
+                , funding_reason_code: oPramCheack.toString()
+                , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
+                , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
+                , collateral_attch_group_number: ""
             };
 
-            
+            MessageBox.confirm("Are you sure ?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        jQuery.ajax({
+                            url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcSaveTemp",
+                            type: "POST",
+                            data: JSON.stringify(procSaveTemp),
+                            contentType: "application/json",
+                            success: function (oData) {
+                                MessageToast.show("Success to save.");
+                            }
+                        });
+                    };
+                }
+            });
 
-            jQuery.ajax({
-                url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcSaveTemp",
-                type: "POST",
-                data: JSON.stringify(procSaveTemp),
-                contentType: "application/json",
-                success: function(oData){
-                    
+
+        },
+
+        //신청서 제출
+        onPageSubmissionButtonPress: function (oEvent) {
+
+            var procSaveTemp = {},
+                urlPram = this.getModel("contModel").getProperty("/oArgs"),
+                oPramDataModel = this.getModel("applicationSup"),
+                oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel");
+
+            procSaveTemp = {
+                funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
+                , funding_notify_number: urlPram.fundingNotifyNumber
+                , supplier_code: urlPram.supplierCode
+                , tenant_id: urlPram.tenantId
+                , company_code: "LGEKR"
+                , org_type_code: "AU"
+                , org_code: oPramDataModel.getProperty("/org_code")
+                , purchasing_department_name: oPramDataModel.getProperty("/purchasing_department_name")
+                , pyear_sales_amount: parseInt(oPramDataModel.getProperty("/pyear_sales_amount"))
+                , main_bank_name: oPramDataModel.getProperty("/main_bank_name")
+                , funding_appl_amount: parseInt(oPramDataModel.getProperty("/funding_appl_amount"))
+                , funding_hope_yyyymm: String(oPramDataModel.getProperty("/funding_hope_yyyymm")).replace("-", "")
+                , repayment_method_code: "A"
+                , appl_user_name: oPramDataModel.getProperty("/appl_user_name")
+                , appl_user_tel_number: oPramDataModel.getProperty("/appl_user_tel_number")
+                , appl_user_email_address: oPramDataModel.getProperty("/appl_user_email_address")
+                , funding_reason_code: oPramCheack.toString()
+                , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
+                , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
+                , collateral_attch_group_number: ""
+            };
+
+            MessageBox.confirm("Are you sure ?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        jQuery.ajax({
+                            url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcRequest",
+                            type: "POST",
+                            data: JSON.stringify(procSaveTemp),
+                            contentType: "application/json",
+                            success: function (oData) {
+                                MessageToast.show("Success to save.");
+                            }
+                        });
+                    };
                 }
             });
         },
-        
-        onOpenInvestmentDtl : function(oEvent) {
+
+        //투자계획 팝업 저장
+        onCreatePopupSave: function (oEvent) {
+            var procSaveInvPlan = {},
+                invPlanDtl = [],
+                oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),
+                oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl");
+
+            procSaveInvPlan = {
+                crud_type: oPramMstDataModel.crud_type
+                , funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")
+                , investment_plan_sequence: parseInt(oPramMstDataModel.investment_plan_sequence)
+                , investment_type_code: oPramMstDataModel.investment_type_code
+                , investment_project_name: oPramMstDataModel.investment_project_name
+                , investment_yyyymm: String(oPramMstDataModel.investment_yyyymm).replace("-", "")
+                , appl_amount: parseInt(oPramMstDataModel.appl_amount)
+                , investment_purpose: oPramMstDataModel.investment_purpose
+                , apply_model_name: oPramMstDataModel.apply_model_name
+                , annual_mtlmob_quantity: parseInt(oPramMstDataModel.annual_mtlmob_quantity)
+                , investment_desc: oPramMstDataModel.investment_desc
+                , execution_yyyymm: String(oPramMstDataModel.execution_yyyymm).replace("-", "")
+                , investment_effect: oPramMstDataModel.investment_effect
+                , investment_place: oPramMstDataModel.investment_place
+                , InvPlanDtlType:[]
+            };
+
+            var dtlcnt =this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl").length;
+            
+            for(var i = 0; i < dtlcnt; i++){
+                invPlanDtl.push({
+                     crud_type: ""                      		            //C:신규/R:읽기/U:수정/D:삭제
+                    , funding_appl_number: ""           			    //자금지원신청번호	
+                    , investment_plan_sequence: parseInt(oPramMstDataModel.investment_plan_sequence)            //투자계획순번	
+                    , investment_plan_item_sequence: parseInt(oPramDtlDataModel[i].investment_plan_item_sequence)       //투자계획품목순번	
+                    , investment_item_name: oPramDtlDataModel[i].investment_item_name                         //투자품목명	
+                    , investment_item_purchasing_price: parseInt(oPramDtlDataModel[i].investment_item_purchasing_price)    //투자품목구매가격	
+                    , investment_item_purchasing_qty: parseInt(oPramDtlDataModel[i].investment_item_purchasing_qty)      //투자품목구매수량	
+                    , investment_item_purchasing_amt: parseInt(oPramDtlDataModel[i].investment_item_purchasing_amt)      //투자품목구매금액
+                });
+            };
+
+            procSaveInvPlan.InvPlanDtlType=invPlanDtl;
+            
+            MessageBox.confirm("Are you sure ?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        jQuery.ajax({
+                            url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcSaveInvPlan",
+                            type: "POST",
+                            data: JSON.stringify(procSaveInvPlan),
+                            contentType: "application/json",
+                            success: function (oData) {
+                                MessageToast.show("Success to save.");
+                            }
+                        });
+                    };
+                }
+            });
+
+        },
+
+        //투자계획 팝업
+        onOpenInvestmentDtl: function (oEvent) {
             var oView = this.getView(),
                 oModel = this.getModel("fundingApp"),
                 bFilters = [],
                 cFilters = [],
                 that = this,
                 rowPath = oEvent.getSource().getParent().getBindingContext("applicationSup").getPath();
-            
+
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
                     id: oView.getId(),
@@ -143,13 +263,13 @@ sap.ui.define([
             };
 
             bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
-            bFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, this.getModel("applicationSup").getProperty(rowPath+"/investment_plan_sequence")));
+            bFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, this.getModel("applicationSup").getProperty(rowPath + "/investment_plan_sequence")));
 
             this.pDialog.then(function (oDialog) {
                 //투자계획 팝업 마스터 조회
                 oModel.read("/InvestPlanMstView", {
-                    filters : bFilters,
-                    success: function(oRetrievedResult) {
+                    filters: bFilters,
+                    success: function (oRetrievedResult) {
                         that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", oRetrievedResult.results[0]);
 
                         cFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
@@ -157,31 +277,32 @@ sap.ui.define([
 
                         //투자계획 팝업 디테일 조회
                         oModel.read("/InvestPlanDtlView", {
-                            filters : cFilters,
-                            success: function(Result) {
+                            filters: cFilters,
+                            success: function (Result) {
                                 that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", Result.results);
                             },
-                            error: function(oError) {
-                                
+                            error: function (oError) {
+
                             }
                         })
                     },
-                    error: function(oError) {
-                        
+                    error: function (oError) {
+
                     }
                 });
                 oDialog.open();
             });
         },
 
-        onInvestmentPlanAddButtonPress : function(oEvent) {
+        //투자계획 추가 팝업
+        onInvestmentPlanAddButtonPress: function (oEvent) {
             var oView = this.getView(),
                 checkNum = this.getModel("applicationSup").getProperty("/funding_appl_number"),
                 that = this;
 
-            if(!checkNum){
+            if (!checkNum) {
                 MessageBox.alert("저장하고 입력 하세요.");
-            }else{
+            } else {
                 if (!this.pDialog) {
                     this.pDialog = Fragment.load({
                         id: oView.getId(),
@@ -202,7 +323,8 @@ sap.ui.define([
             }
         },
 
-        onCreatePopupClose : function() {
+        //투자계획 팝업 닫기
+        onCreatePopupClose: function () {
             var oModel = this.getModel("fundingApp"),
                 bFilters = [],
                 that = this;
@@ -210,45 +332,47 @@ sap.ui.define([
             this.byId("investmentPlanDetails").close();
 
             bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
-            
+
             //투자계획 마스터 리스트 조회
             oModel.read("/InvestPlanMstListView", {
                 //Filter : 신청번호
-                filters : bFilters,
-                success: function(oRetrievedResult) {
+                filters: bFilters,
+                success: function (oRetrievedResult) {
                     that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
                 },
-                error: function(oError) {
-                    
+                error: function (oError) {
+
                 }
             });
         },
 
-        onPurchasingAtm : function(oEvent) {
+        //투자계획 상세 계산
+        onPurchasingAtm: function (oEvent) {
 
             var rowBindingContext = oEvent.oSource.getParent().getBindingContext("applicationSup"),
                 rowInvestmentPurchasingPrice = rowBindingContext.getObject().investment_item_purchasing_price,
                 rowInvestmentPurchasingQty = rowBindingContext.getObject().investment_item_purchasing_qty,
-                rowInvestmentPurchasingAmt = rowInvestmentPurchasingPrice*rowInvestmentPurchasingQty,
-                dtlLength=rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl").length,
+                rowInvestmentPurchasingAmt = rowInvestmentPurchasingPrice * rowInvestmentPurchasingQty,
+                dtlLength = rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl").length,
                 investmentPurchasingAmtSum = 0;
 
-                rowBindingContext.getModel().setProperty(rowBindingContext.getPath() + "/investment_item_purchasing_amt", rowInvestmentPurchasingAmt);
-                //rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl")[0].investment_item_purchasing_amt
-                for(var i= 0; i < dtlLength; i++){
-                    investmentPurchasingAmtSum += parseInt(rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl/"+i+"/investment_item_purchasing_amt"));
-                };
+            rowBindingContext.getModel().setProperty(rowBindingContext.getPath() + "/investment_item_purchasing_amt", rowInvestmentPurchasingAmt);
+            //rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl")[0].investment_item_purchasing_amt
+            for (var i = 0; i < dtlLength; i++) {
+                investmentPurchasingAmtSum += parseInt(rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl/" + i + "/investment_item_purchasing_amt"));
+            };
 
-                this.byId("investment_item_purchasing_amt_sum").setText(investmentPurchasingAmtSum);
+            this.byId("investment_item_purchasing_amt_sum").setText(investmentPurchasingAmtSum);
 
         },
 
-        _onComCodeListView : function(oAppSupModel) {
+        //동적 체크박스 
+        _onComCodeListView: function (oAppSupModel) {
             var that = this,
                 sTenant_id = "L1100",
                 sGroup_code = "SP_SF_FUNDING_REASON_CODE",
                 sChain_code = "SP",
-                aFilters=[];
+                aFilters = [];
 
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, sGroup_code));
@@ -256,45 +380,46 @@ sap.ui.define([
             aFilters.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
 
             oAppSupModel.read("/ComCodeListView", {
-                //Filter : 공고번호, sub 정보
-                filters : aFilters,
-                success: function(oData) {
-                    var aArr=[];
-                    for(var i = 0; i < oData.results.length; i++) {
-                        that.byId("checkBoxContent").addItem(new CheckBox({text: oData.results[i].code  +". " + oData.results[i].code_name, selected:"{contModel>/detail/checkModel/" + i + "}"}));
+                //Filter : 테넌트, 언어, 콤보내용
+                filters: aFilters,
+                success: function (oData) {
+                    var aArr = [];
+                    for (var i = 0; i < oData.results.length; i++) {
+                        that.byId("checkBoxContent").addItem(new CheckBox({ text: oData.results[i].code + ". " + oData.results[i].code_name, selected: "{contModel>/detail/checkModel/" + i + "}" }));
                         aArr.push(false);
                     };
 
-                    if(!that.getModel("contModel").getProperty("/detail/checkModel")){
+                    if (!that.getModel("contModel").getProperty("/detail/checkModel")) {
                         that.getModel("contModel").setProperty("/detail/checkModel", aArr);
                     };
                 },
-                error: function(oError) {
-                    
+                error: function (oError) {
+
                 }
             });
         },
 
-        _onTransactionDivision : function(oAppSupModel) {
+        //거래사업부
+        _onTransactionDivision: function (oAppSupModel) {
             var that = this,
                 sTenant_id = "L1100",
                 sCompany_code = "LGEKR",
-                aFilters=[];
+                aFilters = [];
 
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
             aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompany_code));;
 
             oAppSupModel.read("/OrgCodeListView", {
-                //Filter : 공고번호, sub 정보
-                filters : aFilters,
-                success: function(oData) {
+                //Filter : 회사정보, 테넌트
+                filters: aFilters,
+                success: function (oData) {
                     that.getModel("transactionDivision").setData(oData.results);
                 },
-                error: function(oError) {
-                    
+                error: function (oError) {
+
                 }
             });
-            
+
         },
 
         /**
@@ -302,7 +427,7 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
          * @private
          */
-        _onRoutedThisPage : function (oEvent) {
+        _onRoutedThisPage: function (oEvent) {
             this._fnInitControlModel();
 
             // this.onSelectObject(oEvent);
@@ -314,86 +439,88 @@ sap.ui.define([
 
             var oView = this.getView(),
                 oModel = this.getModel("fundingApp"),
-                that  = this,
+                that = this,
                 aFilters = [],
                 bFilters = [];
-                
+
             this.getModel("contModel").setProperty("/oArgs", oArgs);
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, this._sSupplierCode));
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
-            
+
             //신청서 마스터 조회
             oModel.read("/FundingApplDataView", {
                 //Filter : 공고번호, sub 정보
-                filters : aFilters,
-                success: function(oRetrievedResult) {
+                filters: aFilters,
+                success: function (oRetrievedResult) {
                     var aArr = [];
                     var aCheckedData = that.getModel("contModel").getProperty("/detail/checkModel") || [];
-                    if(!!oRetrievedResult.results[0]){
+                    if (!!oRetrievedResult.results[0]) {
                         that.getModel("applicationSup").setData(oRetrievedResult.results[0]);
                         var aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
                         //var aChecked = test.split(",");
-                        aChecked.forEach(function(item){
+                        aChecked.forEach(function (item) {
                             aArr.push(!!item);
                         });
                         bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
                         //투자계획 마스터 조회
                         oModel.read("/InvestPlanMstListView", {
                             //Filter : 공고번호, sub 정보
-                            filters : bFilters,
-                            success: function(oRetrievedResult) {
+                            filters: bFilters,
+                            success: function (oRetrievedResult) {
                                 that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
                             },
-                            error: function(oError) {
-                                
+                            error: function (oError) {
+
                             }
                         });
-                        
-                    }else{
-                        aArr = aCheckedData.map(function(item){
+
+                    } else {
+                        aArr = aCheckedData.map(function (item) {
                             return false;
-                        });   
+                        });
                     }
                     that.getModel("contModel").setProperty("/detail/checkModel", aArr);
                     //that.getModel("checkModel").setData(aArr);
-                    
+
                     // }
                 },
-                error: function(oError) {
-                    
+                error: function (oError) {
+
                 }
             });
         },
 
-        _fnInitControlModel : function(){
+        //모델초기화
+        _fnInitControlModel: function () {
             var oData = {
-                createMode : null,
-                editMode : null
+                createMode: null,
+                editMode: null
             }
 
             var oContModel = this.getModel("contModel");
-                oContModel.setProperty("/detail", oData);
+            oContModel.setProperty("/detail", oData);
 
             this.getModel("applicationSup").setData([]);
         },
 
-        _fnSetEditMode : function(){
+
+        _fnSetEditMode: function () {
             this._fnSetMode("edit");
         },
 
-        _fnSetCreateMode : function(){
+        _fnSetCreateMode: function () {
             this._fnSetMode("create");
         },
 
-        _fnSetMode : function(mode){
+        _fnSetMode: function (mode) {
             var bCreate = null,
                 bEdit = null;
 
-            if(mode === "edit"){
+            if (mode === "edit") {
                 bCreate = false;
                 bEdit = true;
-            }else if(mode === "create"){
+            } else if (mode === "create") {
                 bCreate = true;
                 bEdit = false;
             }
@@ -403,12 +530,12 @@ sap.ui.define([
             oContModel.setProperty("/detail/editMode", bEdit);
         },
 
-        _onCheckEmail: function (str) {                                                 
+        _onCheckEmail: function (str) {
             var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
 
-            if(!reg_email.test(str)) {
+            if (!reg_email.test(str)) {
                 return false;
-            }else {
+            } else {
                 return true;
             }
         }

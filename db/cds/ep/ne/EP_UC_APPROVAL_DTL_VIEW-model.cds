@@ -24,8 +24,6 @@ entity Uc_Approval_Dtl_View {
         effective_status_name          : String(10);
         net_price_contract_day_count   : Decimal;
         delete_reason                  : String(3000);
-
-
 }
 
 extend Uc_Approval_Dtl_View with util.Managed;

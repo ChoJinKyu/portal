@@ -87,10 +87,11 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list_temp");
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "requestors");
+            this.setModel(new ManagedListModel(), "SegmentedItem");
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
             
-            //this.setApproveStatus();
+            
         
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -176,30 +177,6 @@ sap.ui.define([
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
-
-        setApproveStatus: function(){
-            
-            var filter = new Filter({
-                            filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
-                                    new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS')
-                                ],
-                                and: true
-                        });
-           
-            var bindItemInfo = 
-                {
-                    path: 'util>/Code',
-                    filters: filter,
-                    template: new SegmentedButtonItem({
-                        width: '5em', key: "{util>code}", text: "{util>code_name}"
-                    })         
-                };
-            this.getView().byId("searchStatus").bindItems(bindItemInfo);
-            console.log(bindItemInfo);
-            // this.getView().byId("searchStatus").addItem()
-        },
-
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -973,9 +950,42 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("approvalListView").setProperty("/headerExpanded", true);
-            this.setModel(new ManagedListModel(), "orgMap");
+            this.setModel(new ManagedListModel(), "orgMap"); 
+
+            this._segmentSrch();
+
         },
         
+        _segmentSrch : function (){
+             
+            var oView = this.getView(),
+                oModel = this.getModel("SegmentedItem") ,
+                codeName = this.getModel('I18N').getText("/ALL")
+                ;
+             var aSearchFilters = [];
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
+
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("util"));
+            oModel.read("/Code", {
+                filters: aSearchFilters,
+                success: function (oData) {     
+                    oModel.addRecord({
+                        code: ""
+                      ,  code_name: "All"   
+                      ,  group_code: "CM_APPROVE_STATUS"
+                      ,  parent_code: null
+                      ,  parent_group_code: null
+                      ,  sort_no: "0"
+                    },"/Code",0);
+                    oView.setBusy(false);
+                    
+                }
+            });
+        } ,
+
         /**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -1154,10 +1164,10 @@ sap.ui.define([
 
 
                     }               
-                    
-                    oView.setBusy(false);
-                    
+                    nModel.refresh(true);
+                    oView.setBusy(false);       
                 }
+                
             });
            
             

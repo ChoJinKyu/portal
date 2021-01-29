@@ -36,7 +36,6 @@ SELECT
     ,a.mold_progress_status_code       
     ,a.spec_name                       
     ,a.model                           
-    ,a.asset_number                    
     ,a.mold_item_type_code             
     ,a.mold_production_type_code       
     ,a.mold_location_type_code         
@@ -57,7 +56,6 @@ SELECT
     ,a.receiving_complete_date         
     ,a.account_code                    
     ,a.accounting_department_code      
-    ,a.acq_department_code             
     ,a.production_supplier_code        
     ,a.remark   as remark_mst                           
     ,a.mold_develope_request_type_code 
@@ -74,10 +72,6 @@ SELECT
     ,a.book_currency_code              
     ,a.budget_exrate_date              
     ,a.budget_exrate                   
-    ,a.split_pay_type_code                  
-    ,a.prepay_rate                     
-    ,a.progresspay_rate                
-    ,a.rpay_rate                       
     ,a.mold_sales_status_code          
     ,a.pr_number                       
     ,a.import_company_code             
@@ -92,12 +86,6 @@ SELECT
     ,a.mold_type_code                  
     ,a.mold_mfger_code                 
     ,a.mold_developer_empno            
-    ,a.customer_asset_type_code        
-    ,a.asset_type_code                 
-    ,a.asset_status_code               
-    ,a.scrap_date                      
-    ,a.acq_date                        
-    ,a.acq_amount                      
     ,a.use_department_code
     ,a.receipt_confirmed_date
     ,a.receipt_confirmed_user_empno            

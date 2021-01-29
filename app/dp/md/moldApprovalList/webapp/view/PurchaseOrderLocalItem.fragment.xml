@@ -170,12 +170,6 @@
                             </table:template>
                         </table:Column>
                         <table:Column width="12em" hAlign="Center" visible="false">
-                            <Label text="Partial Payment"/>
-                            <table:template>
-                                <Text id="split_pay_type_code" text="{purOrderItem>split_pay_type_code}" />
-                            </table:template>
-                        </table:Column>
-                        <table:Column width="12em" hAlign="Center" visible="false">
                             <Label text="Account Code"/>
                             <table:template>
                                 <Text id="account_code" text="{purOrderItem>account_code}" />

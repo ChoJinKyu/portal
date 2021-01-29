@@ -9,6 +9,7 @@ using { sp.Sm_Supplier_Mst as supplier } from '../../../../../db/cds/sp/sm/SP_SM
 using { cm as cmDept } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model'; 
 using { dp as moldSche } from '../../../../../db/cds/dp/md/DP_MD_SCHEDULE-model';
 using { dp as status } from '../../../../../db/cds/dp/md/DP_MD_PROGRESS_STATUS-model';
+using {dp as asset } from '../../../../../db/cds/dp/md/DP_MD_ASSET-model';
 
 @path: '/dp.util.MoldItemSelectionService'
 service MoldItemSelectionService { 
@@ -39,7 +40,7 @@ service MoldItemSelectionService {
                 m.mold_sequence,
                 m.spec_name,
                 m.model,
-                m.asset_number,
+                ass.asset_number,
                 m.mold_item_type_code,
                 m.mold_production_type_code,
                 cl.code_name as mold_item_type_code_nm : String(240),
@@ -57,7 +58,7 @@ service MoldItemSelectionService {
                 m.receiving_complete_date,
                 m.account_code,
                 m.accounting_department_code,
-                m.acq_department_code, 
+                ass.acq_department_code, 
                 dep.department_local_name as acq_department_code_nm : String(240) ,
                 m.remark,
                 m.eco_number,
@@ -79,11 +80,11 @@ service MoldItemSelectionService {
                 m.family_part_number_4,
                 m.family_part_number_5,
                 m.mold_type_code,
-                m.asset_type_code,
-                m.asset_status_code,
-                m.scrap_date,
-                m.acq_date,
-                m.acq_amount,
+                ass.asset_type_code,
+                ass.asset_status_code,
+                ass.scrap_date,
+                ass.acq_date , 
+                ass.acq_amount,
                 m.purchasing_amount,
                 m.use_department_code,
                 m.local_create_dtm,
@@ -107,14 +108,16 @@ service MoldItemSelectionService {
                 cast(ps.production_complete_date as Date ) as completion_plan : Date ,
                 cast(rs.production_complete_date as Date ) as completion_result  : Date 
         from moldMst.Md_Mst m 
+        join asset.Md_Asset ass  on m.mold_id = ass.mold_id  and m.tenant_id = ass.tenant_id  
         left join orgCodeLng.Org_Code_Lng as cur on m.company_code = cur.org_code 
                                     and cur.group_code = 'DP_MD_LOCAL_CURRENCY' 
                                     and cur.tenant_id = m.tenant_id 
                                     and cur.code = m.currency_code 
-                                    and cur.language_cd = 'KO'
+                                    and cur.language_cd = 'KO' 
+                                   
         left join supplier s1 on s1.supplier_code = m.supplier_code  and s1.tenant_id = m.tenant_id 
         left join supplier s2 on s2.supplier_code = m.production_supplier_code and s2.tenant_id = m.tenant_id  
-        left join cmDept.Hr_Department dep on dep.department_id =  m.acq_department_code and dep.tenant_id = m.tenant_id 
+        left join cmDept.Hr_Department dep on dep.department_id = ass.acq_department_code and dep.tenant_id = ass.tenant_id 
         left join moldSche.Md_Schedule ps on ps.mold_id = m.mold_id and ps.mold_develope_date_type_code = 'P'
         left join moldSche.Md_Schedule rs on rs.mold_id = m.mold_id and rs.mold_develope_date_type_code = 'R' 
         left join codeLng.Code_Lng as cl on cl.code = m.mold_item_type_code 
